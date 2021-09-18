@@ -333,7 +333,8 @@ class TransactionJournalFactory
         if ($this->errorOnHash) {
             Log::debug('Will verify duplicate!');
             /** @var TransactionJournalMeta $result */
-            $result = TransactionJournalMeta::where('data', json_encode($hash, JSON_THROW_ON_ERROR))
+            $result = TransactionJournalMeta::withTrashed()
+                                            ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
                                             ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
                                             ->first();
         }
