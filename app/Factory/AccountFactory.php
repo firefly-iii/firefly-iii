@@ -49,8 +49,8 @@ class AccountFactory
     protected array                      $validAssetFields;
     protected array                      $validCCFields;
     protected array                      $validFields;
-    private array                        $canHaveVirtual;
     private array                        $canHaveOpeningBalance;
+    private array                        $canHaveVirtual;
     private User                         $user;
 
     /**

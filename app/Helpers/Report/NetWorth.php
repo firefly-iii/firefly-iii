@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -62,7 +63,7 @@ class NetWorth implements NetWorthInterface
      * @param Carbon     $date
      *
      * @return array
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array
     {
@@ -73,7 +74,7 @@ class NetWorth implements NetWorthInterface
         $cache->addProperty('net-worth-by-currency');
         $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         $netWorth = [];

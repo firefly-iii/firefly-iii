@@ -88,7 +88,7 @@ class CreateController extends Controller
      */
     public function store(RuleGroupFormRequest $request)
     {
-        $data      = $request->getRuleGroupData();
+        $data = $request->getRuleGroupData();
         $ruleGroup = $this->repository->store($data);
 
         session()->flash('success', (string)trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));

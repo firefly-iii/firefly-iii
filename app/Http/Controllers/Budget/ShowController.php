@@ -47,7 +47,7 @@ class ShowController extends Controller
     use PeriodOverview, AugumentData;
 
     protected JournalRepositoryInterface $journalRepos;
-    private BudgetRepositoryInterface  $repository;
+    private BudgetRepositoryInterface    $repository;
 
     /**
      * ShowController constructor.
@@ -183,7 +183,7 @@ class ShowController extends Controller
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {
         if ($budgetLimit->budget->id !== $budget->id) {
-            throw new FireflyException('This budget limit is not part of this budget.'); 
+            throw new FireflyException('This budget limit is not part of this budget.');
         }
 
         $page     = (int)$request->get('page');

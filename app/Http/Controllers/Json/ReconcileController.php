@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -35,6 +36,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 use Throwable;
 
@@ -215,8 +217,8 @@ class ReconcileController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {
@@ -256,6 +258,7 @@ class ReconcileController extends Controller
             Log::debug(sprintf('Could not render: %s', $e->getMessage()));
             $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
         }
+
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
 

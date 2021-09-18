@@ -81,6 +81,16 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
+     * @param int $linkTypeId
+     *
+     * @return LinkType|null
+     */
+    public function find(int $linkTypeId): ?LinkType
+    {
+        return LinkType::find($linkTypeId);
+    }
+
+    /**
      * @param string|null $name
      *
      * @return LinkType|null
@@ -109,16 +119,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $opposingCount = TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->count();
 
         return $count + $opposingCount > 0;
-    }
-
-    /**
-     * @param int $linkTypeId
-     *
-     * @return LinkType|null
-     */
-    public function find(int $linkTypeId): ?LinkType
-    {
-        return LinkType::find($linkTypeId);
     }
 
     /**

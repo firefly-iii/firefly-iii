@@ -69,7 +69,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Category withTrashed()
  * @method static Builder|Category withoutTrashed()
  * @mixin Eloquent
- * @property int|null $user_group_id
+ * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserGroupId($value)
  */
 class Category extends Model

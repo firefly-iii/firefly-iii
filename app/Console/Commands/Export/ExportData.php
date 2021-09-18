@@ -36,7 +36,6 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use League\Csv\CannotInsertRecord;
 use Log;
 
 /**

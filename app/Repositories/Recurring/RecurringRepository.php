@@ -132,15 +132,15 @@ class RecurringRepository implements RecurringRepositoryInterface
      *
      * @param RecurrenceTransaction $recTransaction
      *
-     * @return null|string
+     * @return null|int
      */
-    public function getCategoryName(RecurrenceTransaction $recTransaction): ?string
+    public function getCategoryId(RecurrenceTransaction $recTransaction): ?int
     {
         $return = '';
         /** @var RecurrenceTransactionMeta $meta */
         foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
-            if ('category_name' === $meta->name) {
-                $return = (string)$meta->value;
+            if ('category_id' === $meta->name) {
+                $return = (int)$meta->value;
             }
         }
 
@@ -152,15 +152,15 @@ class RecurringRepository implements RecurringRepositoryInterface
      *
      * @param RecurrenceTransaction $recTransaction
      *
-     * @return null|int
+     * @return null|string
      */
-    public function getCategoryId(RecurrenceTransaction $recTransaction): ?int
+    public function getCategoryName(RecurrenceTransaction $recTransaction): ?string
     {
         $return = '';
         /** @var RecurrenceTransactionMeta $meta */
         foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
-            if ('category_id' === $meta->name) {
-                $return = (int)$meta->value;
+            if ('category_name' === $meta->name) {
+                $return = (string)$meta->value;
             }
         }
 

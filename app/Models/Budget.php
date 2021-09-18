@@ -75,7 +75,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withoutTrashed()
  * @mixin Eloquent
  * @property string                               $email
- * @property int|null $user_group_id
+ * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserGroupId($value)
  */
 class Budget extends Model

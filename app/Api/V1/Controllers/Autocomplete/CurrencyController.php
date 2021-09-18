@@ -88,8 +88,9 @@ class CurrencyController extends Controller
      * https://api-docs.firefly-iii.org/#/autocomplete/getCurrenciesCodeAC
      *
      * @param AutocompleteRequest $request
-     * @deprecated
+     *
      * @return JsonResponse
+     * @deprecated
      */
     public function currenciesWithCode(AutocompleteRequest $request): JsonResponse
     {

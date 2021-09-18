@@ -42,11 +42,11 @@ use Log;
  */
 class RecurrenceTransformer extends AbstractTransformer
 {
+    private BillRepositoryInterface      $billRepos;
     private BudgetRepositoryInterface    $budgetRepos;
     private CategoryFactory              $factory;
     private PiggyBankRepositoryInterface $piggyRepos;
     private RecurringRepositoryInterface $repository;
-    private BillRepositoryInterface      $billRepos;
 
     /**
      * RecurrenceTransformer constructor.

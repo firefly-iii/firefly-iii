@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Events;
 
 use Illuminate\Queue\SerializesModels;
+
 class RequestedSendWebhookMessages extends Event
 {
     use SerializesModels;

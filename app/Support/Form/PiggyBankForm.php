@@ -22,20 +22,21 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
+
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 
 /**
  * Class PiggyBankForm
  *
-* See reference nr. 27
+ * See reference nr. 27
  */
 class PiggyBankForm
 {
     use FormSupport;
 
     /**
-* See reference nr. 28
+     * See reference nr. 28
      *
      * @param string     $name
      * @param mixed      $value

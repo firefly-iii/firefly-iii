@@ -98,7 +98,11 @@ class UpdatePiggybank implements ActionInterface
 
             return true;
         }
-        Log::info(sprintf('Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.', $source->account_id, $destination->account_id));
+        Log::info(
+            sprintf(
+                'Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.', $source->account_id, $destination->account_id
+            )
+        );
 
         return true;
     }

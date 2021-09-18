@@ -166,7 +166,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
      * @param Throwable $exception
      *
      * @return RedirectResponse|\Illuminate\Http\Response|Redirector|Response

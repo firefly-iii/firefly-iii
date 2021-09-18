@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use JetBrains\PhpStorm\ArrayShape;
+use JsonException;
 use Log;
 use Throwable;
 
@@ -195,7 +196,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      *
      * @return array
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     #[ArrayShape(['journals'         => "array", 'currency' => "mixed", 'exists' => "bool", 'end' => "string", 'endBalance' => "mixed", 'dayBefore' => "string",
                   'dayBeforeBalance' => "mixed"])] public function getAuditReport(Account $account, Carbon $date): array

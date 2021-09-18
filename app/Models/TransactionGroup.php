@@ -58,7 +58,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionGroup withTrashed()
  * @method static Builder|TransactionGroup withoutTrashed()
  * @mixin Eloquent
- * @property int|null $user_group_id
+ * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserGroupId($value)
  */
 class TransactionGroup extends Model

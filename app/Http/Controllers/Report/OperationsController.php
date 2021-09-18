@@ -27,6 +27,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 use Throwable;
 
@@ -66,7 +67,7 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -77,7 +78,7 @@ class OperationsController extends Controller
         $cache->addProperty('expense-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         $report = $this->tasker->getExpenseReport($start, $end, $accounts);
         $type   = 'expense-entry';
@@ -102,7 +103,7 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
@@ -113,7 +114,7 @@ class OperationsController extends Controller
         $cache->addProperty('income-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         $report = $this->tasker->getIncomeReport($start, $end, $accounts);
         $type   = 'income-entry';
@@ -138,7 +139,7 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -149,7 +150,7 @@ class OperationsController extends Controller
         $cache->addProperty('inc-exp-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         $incomes  = $this->tasker->getIncomeReport($start, $end, $accounts);

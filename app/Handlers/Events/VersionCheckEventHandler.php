@@ -61,7 +61,7 @@ class VersionCheckEventHandler
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user = $event->user;
+        $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
 
@@ -88,13 +88,14 @@ class VersionCheckEventHandler
 
     /**
      * @param RequestedVersionCheckStatus $event
+     *
      * @throws FireflyException
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user = $event->user;
+        $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
 

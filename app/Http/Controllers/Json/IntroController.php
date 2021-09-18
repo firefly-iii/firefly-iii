@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
@@ -103,7 +104,7 @@ class IntroController extends Controller
      * @param string|null $specialPage
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function postEnable(string $route, string $specialPage = null): JsonResponse
     {
@@ -127,7 +128,7 @@ class IntroController extends Controller
      * @param string|null $specialPage
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function postFinished(string $route, string $specialPage = null): JsonResponse
     {

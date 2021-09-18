@@ -116,7 +116,7 @@ class MigrateAttachments extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     /**

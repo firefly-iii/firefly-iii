@@ -83,7 +83,7 @@ class MigrateTagLocations extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     private function migrateTagLocations(): void

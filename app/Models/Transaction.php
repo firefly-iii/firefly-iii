@@ -35,31 +35,31 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * FireflyIII\Models\Transaction
  *
- * @property int                                              $id
- * @property \Illuminate\Support\Carbon|null                  $created_at
- * @property \Illuminate\Support\Carbon|null                  $updated_at
- * @property \Illuminate\Support\Carbon|null                  $deleted_at
- * @property bool                                             $reconciled
- * @property int                                              $account_id
- * @property int                                              $transaction_journal_id
- * @property string|null                   $description
- * @property int|null                      $transaction_currency_id
- * @property string                        $modified
- * @property string                        $modified_foreign
- * @property string                        $date
- * @property string                        $max_date
- * @property string                        $amount
- * @property string|null                   $foreign_amount
- * @property int|null                      $foreign_currency_id
- * @property int                           $identifier
- * @property-read Account                  $account
- * @property-read Collection|Budget[]      $budgets
- * @property-read int|null                 $budgets_count
- * @property-read Collection|Category[]    $categories
- * @property-read int|null                 $categories_count
- * @property-read TransactionCurrency|null $foreignCurrency
- * @property-read TransactionCurrency|null $transactionCurrency
- * @property-read TransactionJournal       $transactionJournal
+ * @property int                             $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property bool                            $reconciled
+ * @property int                             $account_id
+ * @property int                             $transaction_journal_id
+ * @property string|null                     $description
+ * @property int|null                        $transaction_currency_id
+ * @property string                          $modified
+ * @property string                          $modified_foreign
+ * @property string                          $date
+ * @property string                          $max_date
+ * @property string                          $amount
+ * @property string|null                     $foreign_amount
+ * @property int|null                        $foreign_currency_id
+ * @property int                             $identifier
+ * @property-read Account                    $account
+ * @property-read Collection|Budget[]        $budgets
+ * @property-read int|null                   $budgets_count
+ * @property-read Collection|Category[]      $categories
+ * @property-read int|null                   $categories_count
+ * @property-read TransactionCurrency|null   $foreignCurrency
+ * @property-read TransactionCurrency|null   $transactionCurrency
+ * @property-read TransactionJournal         $transactionJournal
  * @method static Builder|Transaction after(Carbon $date)
  * @method static Builder|Transaction before(Carbon $date)
  * @method static Builder|Transaction newModelQuery()
@@ -83,7 +83,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
  * @mixin Eloquent
- * @property int                                              $the_count
+ * @property int                             $the_count
  */
 class Transaction extends Model
 {

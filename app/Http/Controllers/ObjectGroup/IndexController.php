@@ -28,6 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
@@ -61,7 +62,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @return Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function index()
     {

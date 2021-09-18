@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Fiscal;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use Log;
 
 /**
@@ -67,7 +68,7 @@ class FiscalHelper implements FiscalHelperInterface
      * @param Carbon $date
      *
      * @return Carbon date object
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function startOfFiscalYear(Carbon $date): Carbon
     {

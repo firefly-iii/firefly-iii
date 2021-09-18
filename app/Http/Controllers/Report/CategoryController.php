@@ -34,6 +34,7 @@ use FireflyIII\Support\Report\Category\CategoryReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use JsonException;
 use Log;
 use Throwable;
 
@@ -488,7 +489,7 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -498,7 +499,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-expenses-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         // depending on the carbon format (a reliable way to determine the general date difference)
@@ -569,7 +570,7 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
@@ -579,7 +580,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-income-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         // depending on the carbon format (a reliable way to determine the general date difference)
@@ -648,7 +649,7 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -659,7 +660,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         /** @var CategoryReportGenerator $generator */
@@ -678,6 +679,7 @@ class CategoryController extends Controller
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
+
         return $result;
     }
 

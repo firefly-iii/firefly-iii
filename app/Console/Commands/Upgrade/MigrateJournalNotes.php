@@ -66,7 +66,7 @@ class MigrateJournalNotes extends Command
         }
 
         $count = 0;
-        $set = TransactionJournalMeta::whereName('notes')->get();
+        $set   = TransactionJournalMeta::whereName('notes')->get();
         /** @var TransactionJournalMeta $meta */
         foreach ($set as $meta) {
             $journal = $meta->transactionJournal;
@@ -114,7 +114,7 @@ class MigrateJournalNotes extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     /**

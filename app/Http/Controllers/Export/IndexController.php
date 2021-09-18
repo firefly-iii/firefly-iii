@@ -32,8 +32,6 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\View\View;
-use League\Csv\CannotInsertRecord;
-use League\Csv\Exception;
 
 /**
  * Class IndexController
@@ -87,7 +85,7 @@ class IndexController extends Controller
         $generator->setStart($firstDate);
         $result = $generator->export();
 
-        $name   = sprintf('%s_transaction_export.csv', date('Y_m_d'));
+        $name = sprintf('%s_transaction_export.csv', date('Y_m_d'));
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
         // headers for CSV file.
         /** @var LaravelResponse $response */

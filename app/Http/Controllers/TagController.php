@@ -327,7 +327,7 @@ class TagController extends Controller
         }
 
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUri('tags.create.uri'));
         if (1 === (int)$request->get('create_another')) {
@@ -368,7 +368,7 @@ class TagController extends Controller
         }
 
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUri('tags.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {

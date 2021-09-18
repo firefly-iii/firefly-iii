@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
+
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -33,8 +34,8 @@ use Throwable;
  *
  * All form methods that are account related.
  *
-* See reference nr. 29
-* See reference nr. 30
+ * See reference nr. 29
+ * See reference nr. 30
  */
 class AccountForm
 {
@@ -160,6 +161,7 @@ class AccountForm
 
         return $this->select($name, $grouped, $value, $options);
     }
+
     /**
      * Same list but all liabilities as well.
      *

@@ -84,7 +84,7 @@ class ShowController extends Controller
         $this->parameters->set('type', $type);
 
         // types to get, page size:
-        $types    = $this->mapAccountTypes($this->parameters->get('type'));
+        $types = $this->mapAccountTypes($this->parameters->get('type'));
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
@@ -95,7 +95,7 @@ class ShowController extends Controller
         // continue sort:
 
 
-        $accounts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $accounts = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));

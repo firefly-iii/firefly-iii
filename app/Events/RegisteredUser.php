@@ -40,6 +40,7 @@ class RegisteredUser extends Event
     public $ipAddress;
     /** @var User The user */
     public $user;
+
     /**
      * Create a new event instance. This event is triggered when a new user registers.
      *

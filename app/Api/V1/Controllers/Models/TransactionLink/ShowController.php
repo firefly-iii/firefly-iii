@@ -84,8 +84,8 @@ class ShowController extends Controller
         $linkType = $this->repository->findByName($name);
 
         // get list of transaction links. Count it and split it.
-        $collection   = $this->repository->getJournalLinks($linkType);
-        $count        = $collection->count();
+        $collection = $this->repository->getJournalLinks($linkType);
+        $count = $collection->count();
         $journalLinks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:

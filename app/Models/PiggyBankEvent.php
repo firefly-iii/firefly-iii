@@ -31,15 +31,15 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
- * @property int                             $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property int                             $piggy_bank_id
- * @property int|null                        $transaction_journal_id
- * @property Carbon      $date
- * @property string                          $amount
- * @property PiggyBank                       $piggyBank
- * @property-read TransactionJournal|null    $transactionJournal
+ * @property int                          $id
+ * @property Carbon|null                  $created_at
+ * @property Carbon|null                  $updated_at
+ * @property int                          $piggy_bank_id
+ * @property int|null                     $transaction_journal_id
+ * @property Carbon                       $date
+ * @property string                       $amount
+ * @property PiggyBank                    $piggyBank
+ * @property-read TransactionJournal|null $transactionJournal
  * @method static Builder|PiggyBankEvent newModelQuery()
  * @method static Builder|PiggyBankEvent newQuery()
  * @method static Builder|PiggyBankEvent query()

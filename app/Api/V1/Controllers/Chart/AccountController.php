@@ -105,9 +105,9 @@ class AccountController extends Controller
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
             if (null === $currency) {
-                $currency = $default; 
+                $currency = $default;
             }
-            $currentSet = [
+            $currentSet   = [
                 'label'                   => $account->name,
                 'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,

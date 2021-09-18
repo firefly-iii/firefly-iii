@@ -68,7 +68,7 @@ class DeleteController extends Controller
      */
     public function delete(ObjectGroup $objectGroup)
     {
-        $subTitle   = (string)trans('firefly.delete_object_group', ['title' => $objectGroup->title]);
+        $subTitle = (string)trans('firefly.delete_object_group', ['title' => $objectGroup->title]);
         $piggyBanks = $objectGroup->piggyBanks()->count();
 
         // put previous url in session
@@ -81,6 +81,7 @@ class DeleteController extends Controller
      * Destroy the piggy bank.
      *
      * @param ObjectGroup $objectGroup
+     *
      * @return RedirectResponse
      */
     public function destroy(ObjectGroup $objectGroup): RedirectResponse

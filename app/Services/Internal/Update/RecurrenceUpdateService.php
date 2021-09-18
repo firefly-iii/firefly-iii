@@ -49,7 +49,7 @@ class RecurrenceUpdateService
     /**
      * Updates a recurrence.
      *
-* See reference nr. 88
+     * See reference nr. 88
      *
      * @param Recurrence $recurrence
      * @param array      $data
@@ -217,7 +217,7 @@ class RecurrenceUpdateService
     }
 
     /**
-* See reference nr. 89
+     * See reference nr. 89
      *
      * @param Recurrence $recurrence
      * @param array      $transactions
@@ -296,7 +296,7 @@ class RecurrenceUpdateService
                 // can be removed when v1 is retired.
                 if (array_key_exists('category_name', $current) && '' === (string)$current['category_name']) {
                     $current['category_name'] = null;
-                    $current['category_id'] = 0;
+                    $current['category_id']   = 0;
                 }
 
                 if (array_key_exists('category_id', $current)) {

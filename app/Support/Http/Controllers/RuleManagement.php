@@ -78,7 +78,7 @@ trait RuleManagement
      */
     protected function getPreviousTriggers(Request $request): array
     {
-// See reference nr. 34
+        // See reference nr. 34
         $operators = config('firefly.search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
@@ -123,7 +123,7 @@ trait RuleManagement
      */
     protected function parseFromOperators(array $submittedOperators): array
     {
-// See reference nr. 35
+        // See reference nr. 35
         $operators       = config('firefly.search.operators');
         $renderedEntries = [];
         $triggers        = [];

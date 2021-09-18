@@ -58,6 +58,7 @@ class ObjectGroupController extends Controller
     /**
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/#/autocomplete/getObjectGroupsAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse

@@ -78,9 +78,9 @@ class ExportController extends Controller
      */
     private function returnExport(string $key): LaravelResponse
     {
-        $date     = date('Y-m-d-H-i-s');
+        $date = date('Y-m-d-H-i-s');
         $fileName = sprintf('%s-export-%s.csv', $date, $key);
-        $data     = $this->exporter->export();
+        $data = $this->exporter->export();
 
         /** @var LaravelResponse $response */
         $response = response($data[$key]);

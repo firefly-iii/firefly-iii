@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
+use JsonException;
 
 /**
  * Class BudgetLimitCurrency
@@ -51,7 +52,7 @@ class BudgetLimitCurrency extends Command
      *
      * @return int
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function handle(): int
     {
@@ -106,7 +107,7 @@ class BudgetLimitCurrency extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     /**

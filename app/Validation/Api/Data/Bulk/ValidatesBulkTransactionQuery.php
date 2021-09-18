@@ -66,10 +66,11 @@ trait ValidatesBulkTransactionQuery
             }
             if ($source->accountType->type !== $dest->accountType->type) {
                 $validator->errors()->add('query', (string)trans('validation.invalid_query_account_type'));
+
                 return;
             }
             // must have same currency:
-            if($repository->getAccountCurrency($source)->id !== $repository->getAccountCurrency($dest)->id) {
+            if ($repository->getAccountCurrency($source)->id !== $repository->getAccountCurrency($dest)->id) {
                 $validator->errors()->add('query', (string)trans('validation.invalid_query_currency'));
             }
         }

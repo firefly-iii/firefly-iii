@@ -61,6 +61,8 @@ use League\Csv\Writer;
  */
 class ExportDataGenerator
 {
+    private const ADD_RECORD_ERR = 'Could not add record to set: %s';
+    private const EXPORT_ERR     = 'Could not export to string: %s';
     private Collection $accounts;
     private Carbon     $end;
     private bool       $exportAccounts;
@@ -74,9 +76,6 @@ class ExportDataGenerator
     private bool       $exportTransactions;
     private Carbon     $start;
     private User       $user;
-
-    private const ADD_RECORD_ERR = 'Could not add record to set: %s';
-    private const EXPORT_ERR     = 'Could not export to string: %s';
 
     public function __construct()
     {
@@ -644,7 +643,7 @@ class ExportDataGenerator
      */
     private function exportTransactions(): string
     {
-// See reference nr. 41
+        // See reference nr. 41
         $header = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'amount', 'foreign_amount', 'currency_code',
                    'foreign_currency_code', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban',
                    'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes',

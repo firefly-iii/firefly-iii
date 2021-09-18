@@ -78,6 +78,18 @@ class UpdatedGroupEventHandler
     }
 
     /**
+     * @param UpdatedTransactionGroup $event
+     */
+    public function recalculateCredit(UpdatedTransactionGroup $event): void
+    {
+        $group = $event->transactionGroup;
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setGroup($group);
+        $object->recalculate();
+    }
+
+    /**
      * @param UpdatedTransactionGroup $updatedGroupEvent
      */
     public function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
@@ -98,18 +110,6 @@ class UpdatedGroupEventHandler
         $engine->generateMessages();
 
         event(new RequestedSendWebhookMessages);
-    }
-
-    /**
-     * @param UpdatedTransactionGroup $event
-     */
-    public function recalculateCredit(UpdatedTransactionGroup $event): void
-    {
-        $group = $event->transactionGroup;
-        /** @var CreditRecalculateService $object */
-        $object = app(CreditRecalculateService::class);
-        $object->setGroup($group);
-        $object->recalculate();
     }
 
     /**

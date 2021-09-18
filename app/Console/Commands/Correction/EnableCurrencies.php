@@ -85,8 +85,8 @@ class EnableCurrencies extends Command
             $found[] = (int)$entry->transaction_currency_id;
         }
 
-        $found   = array_values(array_unique($found));
-        $found   = array_values(
+        $found = array_values(array_unique($found));
+        $found = array_values(
             array_filter(
                 $found, function (int $currencyId) {
                 return $currencyId !== 0;

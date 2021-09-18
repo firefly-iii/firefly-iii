@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Rules;
+
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 use InvalidArgumentException;

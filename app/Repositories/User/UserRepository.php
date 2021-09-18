@@ -170,16 +170,6 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param string $email
-     *
-     * @return User|null
-     */
-    public function findByEmail(string $email): ?User
-    {
-        return User::where('email', $email)->first();
-    }
-
-    /**
      * @param int $userId
      *
      * @return User|null
@@ -187,6 +177,16 @@ class UserRepository implements UserRepositoryInterface
     public function find(int $userId): ?User
     {
         return User::find($userId);
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return User::where('email', $email)->first();
     }
 
     /**

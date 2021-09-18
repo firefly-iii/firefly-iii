@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
@@ -64,7 +65,7 @@ class PreferencesController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -145,7 +146,7 @@ class PreferencesController extends Controller
      * @param Request $request
      *
      * @return RedirectResponse|Redirector
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function postIndex(Request $request)
     {
@@ -167,9 +168,9 @@ class PreferencesController extends Controller
 
         // custom fiscal year
         $customFiscalYear = 1 === (int)$request->get('customFiscalYear');
-        $string = strtotime((string)$request->get('fiscalYearStart'));
-        if(false !== $string) {
-            $fiscalYearStart  = date('m-d', $string);
+        $string           = strtotime((string)$request->get('fiscalYearStart'));
+        if (false !== $string) {
+            $fiscalYearStart = date('m-d', $string);
             app('preferences')->set('customFiscalYear', $customFiscalYear);
             app('preferences')->set('fiscalYearStart', $fiscalYearStart);
         }

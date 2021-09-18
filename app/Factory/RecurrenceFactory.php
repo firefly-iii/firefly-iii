@@ -142,19 +142,19 @@ class RecurrenceFactory
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @return MessageBag
      */
     public function getErrors(): MessageBag
     {
         return $this->errors;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
 

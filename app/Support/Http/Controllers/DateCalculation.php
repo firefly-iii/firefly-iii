@@ -88,17 +88,18 @@ trait DateCalculation
         $step   = '1D';
         $months = $start->diffInMonths($end);
         if ($months > 3) {
-            $step = '1W'; 
+            $step = '1W';
         }
         if ($months > 24) {
-            $step = '1M'; 
+            $step = '1M';
         }
         if ($months > 100) {
-            $step = '1Y'; 
+            $step = '1Y';
         }
 
         return $step;
     }
+
     /**
      * Get a list of the periods that will occur after this date. For example,
      * March 2018, April 2018, etc.

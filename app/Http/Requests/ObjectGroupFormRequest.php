@@ -55,7 +55,7 @@ class ObjectGroupFormRequest extends FormRequest
     {
         /** @var ObjectGroup $objectGroup */
         $objectGroup = $this->route()->parameter('objectGroup');
-        $titleRule = 'required|between:1,255|uniqueObjectGroup';
+        $titleRule   = 'required|between:1,255|uniqueObjectGroup';
 
         if (null !== $objectGroup) {
             $titleRule = sprintf('required|between:1,255|uniqueObjectGroup:%d', $objectGroup->id);

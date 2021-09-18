@@ -91,7 +91,7 @@ class ReconcileController extends Controller
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); 
+            return $this->redirectAccountToAccount($account);
         }
         if (AccountType::ASSET !== $account->accountType->type) {
 
@@ -169,7 +169,7 @@ class ReconcileController extends Controller
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); 
+            return $this->redirectAccountToAccount($account);
         }
 
         Log::debug('In ReconcileController::submit()');
@@ -218,7 +218,7 @@ class ReconcileController extends Controller
     private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); 
+            return $this->redirectAccountToAccount($account);
         }
 
         $reconciliation = $this->accountRepos->getReconciliation($account);

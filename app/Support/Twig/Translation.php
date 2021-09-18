@@ -65,7 +65,7 @@ class Translation extends AbstractExtension
         return new TwigFunction(
             'journalLinkTranslation',
             static function (string $direction, string $original) {
-                $key         = sprintf('firefly.%s_%s', $original, $direction);
+                $key = sprintf('firefly.%s_%s', $original, $direction);
                 $translation = trans($key);
                 if ($key === $translation) {
                     return $original;

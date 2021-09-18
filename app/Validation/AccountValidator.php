@@ -30,11 +30,11 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use FireflyIII\Validation\Account\AccountValidatorProperties;
 use FireflyIII\Validation\Account\DepositValidation;
+use FireflyIII\Validation\Account\LiabilityValidation;
 use FireflyIII\Validation\Account\OBValidation;
 use FireflyIII\Validation\Account\ReconciliationValidation;
 use FireflyIII\Validation\Account\TransferValidation;
 use FireflyIII\Validation\Account\WithdrawalValidation;
-use FireflyIII\Validation\Account\LiabilityValidation;
 use Log;
 
 /**
@@ -203,21 +203,6 @@ class AccountValidator
     }
 
     /**
-     * @param string $accountType
-     *
-     * @return bool
-     */
-    protected function canCreateType(string $accountType): bool
-    {
-        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
-        if (in_array($accountType, $canCreate, true)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param array  $validTypes
      * @param int    $accountId
      * @param string $accountName
@@ -240,6 +225,21 @@ class AccountValidator
         }
 
         return null;
+    }
+
+    /**
+     * @param string $accountType
+     *
+     * @return bool
+     */
+    protected function canCreateType(string $accountType): bool
+    {
+        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
+        if (in_array($accountType, $canCreate, true)) {
+            return true;
+        }
+
+        return false;
     }
 
 }

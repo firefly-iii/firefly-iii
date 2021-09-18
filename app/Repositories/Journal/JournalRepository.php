@@ -37,6 +37,7 @@ use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use JsonException;
 
 /**
  * Class JournalRepository.
@@ -69,18 +70,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function findByType(array $types): Collection
-    {
-        return $this->user
-            ->transactionJournals()
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereIn('transaction_types.type', $types)
-            ->get(['transaction_journals.*']);
-    }
-
-    /**
      * Find a specific journal.
      *
      * @param int $journalId
@@ -90,6 +79,18 @@ class JournalRepository implements JournalRepositoryInterface
     public function find(int $journalId): ?TransactionJournal
     {
         return $this->user->transactionJournals()->find($journalId);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByType(array $types): Collection
+    {
+        return $this->user
+            ->transactionJournals()
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->whereIn('transaction_types.type', $types)
+            ->get(['transaction_journals.*']);
     }
 
     /**
@@ -129,7 +130,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      *
      * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getJournalTotal(TransactionJournal $journal): string
     {
@@ -137,7 +138,7 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->addProperty($journal->id);
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         // saves on queries:
@@ -186,7 +187,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param string $field
      *
      * @return null|Carbon
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getMetaDateById(int $journalId, string $field): ?Carbon
     {
@@ -196,7 +197,7 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->addProperty($field);
 
         if ($cache->has()) {
-            return new Carbon($cache->get()); 
+            return new Carbon($cache->get());
         }
         $entry = TransactionJournalMeta::where('transaction_journal_id', $journalId)
                                        ->where('name', $field)->first();

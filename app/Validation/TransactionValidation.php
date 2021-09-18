@@ -330,7 +330,7 @@ trait TransactionValidation
     /**
      * All types of splits must be equal.
      *
-     * @param Validator        $validator
+     * @param Validator $validator
      */
     public function validateTransactionTypesForUpdate(Validator $validator): void
     {

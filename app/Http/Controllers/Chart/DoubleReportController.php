@@ -249,7 +249,7 @@ class DoubleReportController extends Controller
     }
 
     /**
-* See reference nr. 51
+     * See reference nr. 51
      *
      * @param Collection  $accounts
      * @param int         $id
@@ -274,7 +274,7 @@ class DoubleReportController extends Controller
     }
 
     /**
-* See reference nr. 52
+     * See reference nr. 52
      *
      * @param Carbon $start
      * @param Carbon $end

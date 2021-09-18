@@ -88,7 +88,7 @@ trait ModifiesPiggyBanks
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $today = today(config('app.timezone'));
+        $today         = today(config('app.timezone'));
         $leftOnAccount = $this->leftOnAccount($piggyBank, $today);
         $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);

@@ -115,7 +115,7 @@ class WholePeriodChartGenerator
     }
 
     /**
-* See reference nr. 32
+     * See reference nr. 32
      *
      * @param Carbon $start
      * @param Carbon $end
@@ -128,13 +128,13 @@ class WholePeriodChartGenerator
         $step   = '1D';
         $months = $start->diffInMonths($end);
         if ($months > 3) {
-            $step = '1W'; 
+            $step = '1W';
         }
         if ($months > 24) {
-            $step = '1M'; 
+            $step = '1M';
         }
         if ($months > 100) {
-            $step = '1Y'; 
+            $step = '1Y';
         }
 
         return $step;

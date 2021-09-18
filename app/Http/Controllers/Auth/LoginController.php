@@ -28,15 +28,17 @@ use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Validation\ValidationException;
-use Illuminate\View\View;
 use Log;
 
 /**
@@ -194,7 +196,7 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\Routing\Redirector|RedirectResponse
+     * @return Factory|Application|View|Redirector|RedirectResponse
      * @throws FireflyException
      */
     public function showLoginForm(Request $request)

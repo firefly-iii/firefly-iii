@@ -30,6 +30,7 @@ use FireflyIII\Http\Requests\BillUpdateRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -68,7 +69,7 @@ class EditController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function edit(Request $request, Bill $bill)
     {
@@ -136,7 +137,7 @@ class EditController extends Controller
 
         // flash messages
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUri('bills.edit.uri'));
 

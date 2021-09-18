@@ -165,59 +165,6 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * Returns true if the rule has been triggered.
-     *
-     * @param Rule $rule
-     *
-     * @return bool
-     * @throws FireflyException
-     */
-    private function fireRule(Rule $rule): bool
-    {
-        Log::debug(sprintf('Now going to fire rule #%d', $rule->id));
-        if (false === $rule->active) {
-            Log::debug(sprintf('Rule #%d is not active!', $rule->id));
-
-            return false;
-        }
-        if (true === $rule->strict) {
-            Log::debug(sprintf('Rule #%d is a strict rule.', $rule->id));
-
-            return $this->fireStrictRule($rule);
-        }
-        Log::debug(sprintf('Rule #%d is not strict rule.', $rule->id));
-
-        return $this->fireNonStrictRule($rule);
-    }
-
-    /**
-     * Return true if the rule is fired (the collection is larger than zero).
-     *
-     * @param Rule $rule
-     *
-     * @return bool
-     * @throws FireflyException
-     */
-    private function fireStrictRule(Rule $rule): bool
-    {
-        Log::debug(sprintf('SearchRuleEngine::fireStrictRule(%d)!', $rule->id));
-        $collection = $this->findStrictRule($rule);
-
-        $this->processResults($rule, $collection);
-        Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
-
-        $result = $collection->count() > 0;
-        if (true === $result) {
-            Log::debug(sprintf('SearchRuleEngine:: rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
-
-            return true;
-        }
-        Log::debug(sprintf('SearchRuleEngine:: rule #%d was not triggered (on %d transaction(s)).', $rule->id, $collection->count()));
-
-        return false;
-    }
-
-    /**
      * Finds the transactions a strict rule will execute on.
      *
      * @param Rule $rule
@@ -340,6 +287,138 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
+     * @param Rule $rule
+     *
+     * @return Collection
+     */
+    private function findNonStrictRule(Rule $rule): Collection
+    {
+        // start a search query for individual each trigger:
+        $total = new Collection;
+        $count = 0;
+
+        /** @var Collection $triggers */
+        $triggers = $rule->ruleTriggers;
+
+        /** @var RuleTrigger $ruleTrigger */
+        foreach ($triggers as $ruleTrigger) {
+            if (false === $ruleTrigger->active) {
+                continue;
+            }
+            if ('user_action' === $ruleTrigger->trigger_type) {
+                Log::debug('Skip trigger type.');
+                continue;
+            }
+            $searchArray  = [];
+            $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
+            if (false === $needsContext) {
+                Log::debug(sprintf('SearchRuleEngine:: non strict, will search for: %s:true', $ruleTrigger->trigger_type));
+                $searchArray[$ruleTrigger->trigger_type] = 'true';
+            }
+            if (true === $needsContext) {
+                Log::debug(sprintf('SearchRuleEngine:: non strict, will search for: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
+                $searchArray[$ruleTrigger->trigger_type] = sprintf('"%s"', $ruleTrigger->trigger_value);
+            }
+
+            // then, add local operators as well:
+            foreach ($this->operators as $operator) {
+                Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
+                $searchArray[$operator['type']] = sprintf('"%s"', $operator['value']);
+            }
+
+            // build and run the search engine.
+            $searchEngine = app(SearchInterface::class);
+            $searchEngine->setUser($this->user);
+            $searchEngine->setPage(1);
+            $searchEngine->setLimit(31337);
+
+            foreach ($searchArray as $type => $value) {
+                $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
+            }
+
+            $result     = $searchEngine->searchTransactions();
+            $collection = $result->getCollection();
+            Log::debug(sprintf('Found in this run, %d transactions', $collection->count()));
+            $total = $total->merge($collection);
+            Log::debug(sprintf('Total collection is now %d transactions', $total->count()));
+            $count++;
+        }
+        Log::debug(sprintf('Total collection is now %d transactions', $total->count()));
+        Log::debug(sprintf('Done running %d trigger(s)', $count));
+
+        // make collection unique
+        $unique = $total->unique(
+            function (array $group) {
+                $str = '';
+                foreach ($group['transactions'] as $transaction) {
+                    $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);
+                }
+                $key = sprintf('%d%s', $group['id'], $str);
+                Log::debug(sprintf('Return key: %s ', $key));
+
+                return $key;
+            }
+        );
+
+        Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine.', $unique->count()));
+
+        return $unique;
+    }
+
+    /**
+     * Returns true if the rule has been triggered.
+     *
+     * @param Rule $rule
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    private function fireRule(Rule $rule): bool
+    {
+        Log::debug(sprintf('Now going to fire rule #%d', $rule->id));
+        if (false === $rule->active) {
+            Log::debug(sprintf('Rule #%d is not active!', $rule->id));
+
+            return false;
+        }
+        if (true === $rule->strict) {
+            Log::debug(sprintf('Rule #%d is a strict rule.', $rule->id));
+
+            return $this->fireStrictRule($rule);
+        }
+        Log::debug(sprintf('Rule #%d is not strict rule.', $rule->id));
+
+        return $this->fireNonStrictRule($rule);
+    }
+
+    /**
+     * Return true if the rule is fired (the collection is larger than zero).
+     *
+     * @param Rule $rule
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    private function fireStrictRule(Rule $rule): bool
+    {
+        Log::debug(sprintf('SearchRuleEngine::fireStrictRule(%d)!', $rule->id));
+        $collection = $this->findStrictRule($rule);
+
+        $this->processResults($rule, $collection);
+        Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
+
+        $result = $collection->count() > 0;
+        if (true === $result) {
+            Log::debug(sprintf('SearchRuleEngine:: rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+
+            return true;
+        }
+        Log::debug(sprintf('SearchRuleEngine:: rule #%d was not triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+
+        return false;
+    }
+
+    /**
      * @param Rule       $rule
      * @param Collection $collection
      *
@@ -442,85 +521,6 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug(sprintf('SearchRuleEngine:: done processing non-strict rule #%d', $rule->id));
 
         return $collection->count() > 0;
-    }
-
-    /**
-     * @param Rule $rule
-     *
-     * @return Collection
-     */
-    private function findNonStrictRule(Rule $rule): Collection
-    {
-        // start a search query for individual each trigger:
-        $total = new Collection;
-        $count = 0;
-
-        /** @var Collection $triggers */
-        $triggers = $rule->ruleTriggers;
-
-        /** @var RuleTrigger $ruleTrigger */
-        foreach ($triggers as $ruleTrigger) {
-            if (false === $ruleTrigger->active) {
-                continue;
-            }
-            if ('user_action' === $ruleTrigger->trigger_type) {
-                Log::debug('Skip trigger type.');
-                continue;
-            }
-            $searchArray  = [];
-            $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
-            if (false === $needsContext) {
-                Log::debug(sprintf('SearchRuleEngine:: non strict, will search for: %s:true', $ruleTrigger->trigger_type));
-                $searchArray[$ruleTrigger->trigger_type] = 'true';
-            }
-            if (true === $needsContext) {
-                Log::debug(sprintf('SearchRuleEngine:: non strict, will search for: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
-                $searchArray[$ruleTrigger->trigger_type] = sprintf('"%s"', $ruleTrigger->trigger_value);
-            }
-
-            // then, add local operators as well:
-            foreach ($this->operators as $operator) {
-                Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
-                $searchArray[$operator['type']] = sprintf('"%s"', $operator['value']);
-            }
-
-            // build and run the search engine.
-            $searchEngine = app(SearchInterface::class);
-            $searchEngine->setUser($this->user);
-            $searchEngine->setPage(1);
-            $searchEngine->setLimit(31337);
-
-            foreach ($searchArray as $type => $value) {
-                $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
-            }
-
-            $result     = $searchEngine->searchTransactions();
-            $collection = $result->getCollection();
-            Log::debug(sprintf('Found in this run, %d transactions', $collection->count()));
-            $total = $total->merge($collection);
-            Log::debug(sprintf('Total collection is now %d transactions', $total->count()));
-            $count++;
-        }
-        Log::debug(sprintf('Total collection is now %d transactions', $total->count()));
-        Log::debug(sprintf('Done running %d trigger(s)', $count));
-
-        // make collection unique
-        $unique = $total->unique(
-            function (array $group) {
-                $str = '';
-                foreach ($group['transactions'] as $transaction) {
-                    $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);
-                }
-                $key = sprintf('%d%s', $group['id'], $str);
-                Log::debug(sprintf('Return key: %s ', $key));
-
-                return $key;
-            }
-        );
-
-        Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine.', $unique->count()));
-
-        return $unique;
     }
 
     /**

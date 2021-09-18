@@ -32,19 +32,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\BudgetLimit
  *
- * @property int                             $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property int                             $budget_id
- * @property int|null                        $transaction_currency_id
- * @property Carbon      $start_date
- * @property Carbon|null $end_date
- * @property string                          $amount
- * @property string                          $spent
- * @property string|null                     $period
- * @property int                             $generated
- * @property-read Budget                     $budget
- * @property-read TransactionCurrency|null   $transactionCurrency
+ * @property int                           $id
+ * @property Carbon|null                   $created_at
+ * @property Carbon|null                   $updated_at
+ * @property int                           $budget_id
+ * @property int|null                      $transaction_currency_id
+ * @property Carbon                        $start_date
+ * @property Carbon|null                   $end_date
+ * @property string                        $amount
+ * @property string                        $spent
+ * @property string|null                   $period
+ * @property int                           $generated
+ * @property-read Budget                   $budget
+ * @property-read TransactionCurrency|null $transactionCurrency
  * @method static Builder|BudgetLimit newModelQuery()
  * @method static Builder|BudgetLimit newQuery()
  * @method static Builder|BudgetLimit query()

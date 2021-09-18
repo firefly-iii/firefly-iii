@@ -53,7 +53,7 @@ class ListController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
+                $user = auth()->user();
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
                 $this->repository->setUser($user);
 

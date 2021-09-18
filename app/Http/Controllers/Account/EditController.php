@@ -44,9 +44,9 @@ class EditController extends Controller
 {
     use ModelInformation;
 
-    private AttachmentHelperInterface $attachments;
+    private AttachmentHelperInterface   $attachments;
     private CurrencyRepositoryInterface $currencyRepos;
-    private AccountRepositoryInterface $repository;
+    private AccountRepositoryInterface  $repository;
 
     /**
      * EditController constructor.
@@ -82,7 +82,7 @@ class EditController extends Controller
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); 
+            return $this->redirectAccountToAccount($account);
         }
 
         $objectType     = config('firefly.shortNamesByFullName')[$account->accountType->type];
@@ -123,11 +123,11 @@ class EditController extends Controller
         $request->session()->forget('accounts.edit.fromUpdate');
 
         $openingBalanceAmount = app('steam')->positive((string)$repository->getOpeningBalanceAmount($account));
-        if('0' === $openingBalanceAmount) {
+        if ('0' === $openingBalanceAmount) {
             $openingBalanceAmount = '';
         }
-        $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
-        $currency             = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $openingBalanceDate = $repository->getOpeningBalanceDate($account);
+        $currency           = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
         // include this account in net-worth charts?
         $includeNetWorth = $repository->getMetaValue($account, 'include_net_worth');
@@ -144,7 +144,7 @@ class EditController extends Controller
             'opening_balance_date'    => $openingBalanceDate,
             'liability_type_id'       => $account->account_type_id,
             'opening_balance'         => $openingBalanceAmount,
-            'liability_direction' => $this->repository->getMetaValue($account, 'liability_direction'),
+            'liability_direction'     => $this->repository->getMetaValue($account, 'liability_direction'),
             'virtual_balance'         => $account->virtual_balance,
             'currency_id'             => $currency->id,
             'include_net_worth'       => $includeNetWorth,
@@ -185,7 +185,7 @@ class EditController extends Controller
     public function update(AccountFormRequest $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); 
+            return $this->redirectAccountToAccount($account);
         }
 
         $data = $request->getAccountData();
@@ -204,7 +204,7 @@ class EditController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
         // redirect

@@ -21,6 +21,7 @@
  */
 
 declare(strict_types=1);
+
 namespace FireflyIII\Rules;
 
 use FireflyIII\Models\TransactionJournal;

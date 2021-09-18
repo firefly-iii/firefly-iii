@@ -50,7 +50,6 @@ use Gdbots\QueryParser\Node\Phrase;
 use Gdbots\QueryParser\Node\Subquery;
 use Gdbots\QueryParser\Node\Url;
 use Gdbots\QueryParser\Node\Word;
-use Gdbots\QueryParser\ParsedQuery;
 use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -68,6 +67,7 @@ class OperatorQuerySearch implements SearchInterface
     private GroupCollectorInterface     $collector;
     private CurrencyRepositoryInterface $currencyRepository;
     private Carbon                      $date;
+    private array                       $invalidOperators;
     private int                         $limit;
     private Collection                  $operators;
     private int                         $page;
@@ -75,7 +75,6 @@ class OperatorQuerySearch implements SearchInterface
     private TagRepositoryInterface      $tagRepository;
     private array                       $validOperators;
     private array                       $words;
-    private array                       $invalidOperators;
 
     /**
      * OperatorQuerySearch constructor.
@@ -99,6 +98,14 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository     = app(BillRepositoryInterface::class);
         $this->tagRepository      = app(TagRepositoryInterface::class);
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvalidOperators(): array
+    {
+        return $this->invalidOperators;
     }
 
     /**
@@ -191,14 +198,6 @@ class OperatorQuerySearch implements SearchInterface
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
-    }
-
-    /**
-     * @return array
-     */
-    public function getInvalidOperators(): array
-    {
-        return $this->invalidOperators;
     }
 
     /**

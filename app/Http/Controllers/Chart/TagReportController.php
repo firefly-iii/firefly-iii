@@ -323,7 +323,7 @@ class TagReportController extends Controller
     }
 
     /**
-* See reference nr. 54
+     * See reference nr. 54
      *
      * @param Carbon $start
      * @param Carbon $end

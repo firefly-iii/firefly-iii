@@ -89,7 +89,7 @@ class ReportController extends Controller
     public function auditReport(Collection $accounts, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date')); 
+            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
 
@@ -125,7 +125,7 @@ class ReportController extends Controller
     public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date')); 
+            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
 
@@ -162,7 +162,7 @@ class ReportController extends Controller
     public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date')); 
+            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
 
@@ -400,7 +400,7 @@ class ReportController extends Controller
     public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date')); 
+            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
 

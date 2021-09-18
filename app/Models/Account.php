@@ -99,7 +99,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                          $location
  * @property string                          $liability_direction
  * @property string                          $current_debt
- * @property int|null $user_group_id
+ * @property int|null                        $user_group_id
  * @method static EloquentBuilder|Account whereUserGroupId($value)
  */
 class Account extends Model

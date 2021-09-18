@@ -47,6 +47,15 @@ interface CategoryRepositoryInterface
     public function destroyAll(): void;
 
     /**
+     * Find a category or return NULL
+     *
+     * @param int $categoryId
+     *
+     * @return Category|null
+     */
+    public function find(int $categoryId): ?Category;
+
+    /**
      * Find a category.
      *
      * @param string $name
@@ -62,15 +71,6 @@ interface CategoryRepositoryInterface
      * @return Category|null
      */
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category;
-
-    /**
-     * Find a category or return NULL
-     *
-     * @param int $categoryId
-     *
-     * @return Category|null
-     */
-    public function find(int $categoryId): ?Category;
 
     /**
      * @param Category $category

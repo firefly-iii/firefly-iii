@@ -32,6 +32,22 @@ use Log;
 trait TransferValidation
 {
     /**
+     * @param array $accountTypes
+     *
+     * @return bool
+     */
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    /**
+     * @param array  $validTypes
+     * @param int    $accountId
+     * @param string $accountName
+     *
+     * @return Account|null
+     */
+    abstract protected function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account;
+
+    /**
      * @param int|null $accountId
      * @param mixed    $accountName
      *
@@ -70,22 +86,6 @@ trait TransferValidation
 
         return true;
     }
-
-    /**
-     * @param array $accountTypes
-     *
-     * @return bool
-     */
-    abstract protected function canCreateTypes(array $accountTypes): bool;
-
-    /**
-     * @param array  $validTypes
-     * @param int    $accountId
-     * @param string $accountName
-     *
-     * @return Account|null
-     */
-    abstract protected function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account;
 
     /**
      * @param int|null    $accountId

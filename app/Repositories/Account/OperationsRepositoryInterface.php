@@ -79,21 +79,6 @@ interface OperationsRepositoryInterface
     ): array;
 
     /**
-     * Sum of withdrawal journals in period for a set of accounts, grouped per source / currency. Amounts are always negative.
-     *
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param Collection|null          $expense
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
-     */
-    public function sumExpensesBySource(
-        Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null
-    ): array;
-
-    /**
      * Sum of withdrawal journals in period for a set of accounts, grouped per destination / currency. Amounts are always negative.
      *
      * @param Carbon                   $start
@@ -105,6 +90,21 @@ interface OperationsRepositoryInterface
      * @return array
      */
     public function sumExpensesByDestination(
+        Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null
+    ): array;
+
+    /**
+     * Sum of withdrawal journals in period for a set of accounts, grouped per source / currency. Amounts are always negative.
+     *
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param Collection|null          $accounts
+     * @param Collection|null          $expense
+     * @param TransactionCurrency|null $currency
+     *
+     * @return array
+     */
+    public function sumExpensesBySource(
         Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null
     ): array;
 
@@ -133,7 +133,8 @@ interface OperationsRepositoryInterface
      *
      * @return array
      */
-    public function sumIncomeByDestination(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
+    public function sumIncomeByDestination(Carbon               $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null,
+                                           ?TransactionCurrency $currency = null
     ): array;
 
     /**
@@ -147,7 +148,8 @@ interface OperationsRepositoryInterface
      *
      * @return array
      */
-    public function sumIncomeBySource(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
+    public function sumIncomeBySource(Carbon               $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null,
+                                      ?TransactionCurrency $currency = null
     ): array;
 
     /**

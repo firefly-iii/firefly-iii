@@ -71,7 +71,7 @@ class UpdateRequest extends FormRequest
             'currency_id'             => ['currency_id', 'integer'],
             'currency_code'           => ['currency_code', 'string'],
             'liability_direction'     => ['liability_direction', 'string'],
-            'liability_amount'         => ['liability_amount', 'string'],
+            'liability_amount'        => ['liability_amount', 'string'],
             'liability_start_date'    => ['liability_start_date', 'date'],
         ];
         /** @var Account $account */

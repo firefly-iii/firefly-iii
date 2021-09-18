@@ -151,10 +151,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|User whereGuid($value)
  * @method static Builder|User whereTwoFactorRecoveryCodes($value)
  * @method static Builder|User whereTwoFactorSecret($value)
- * @property int|null $user_group_id
- * @property-read \Illuminate\Database\Eloquent\Collection|GroupMembership[] $groupMemberships
- * @property-read int|null $group_memberships_count
- * @property-read UserGroup|null $userGroup
+ * @property int|null                                                             $user_group_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|GroupMembership[]      $groupMemberships
+ * @property-read int|null                                                        $group_memberships_count
+ * @property-read UserGroup|null                                                  $userGroup
  * @method static Builder|User whereUserGroupId($value)
  */
 class User extends Authenticatable
@@ -222,16 +222,6 @@ class User extends Authenticatable
 
     /**
      * @codeCoverageIgnore
-     *
-     * @return HasMany
-     */
-    public function groupMemberships(): HasMany
-    {
-        return $this->hasMany(GroupMembership::class)->with(['userGroup','userRole']);
-    }
-
-    /**
-     * @codeCoverageIgnore
      * Link to attachments
      *
      * @return HasMany
@@ -239,28 +229,6 @@ class User extends Authenticatable
     public function attachments(): HasMany
     {
         return $this->hasMany(Attachment::class);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * Link to webhooks
-     *
-     * @return HasMany
-     */
-    public function webhooks(): HasMany
-    {
-        return $this->hasMany(Webhook::class);
-    }
-
-    /**
-     * @param string $role
-     *
-     * @return bool
-     */
-    public function hasRole(string $role): bool
-    {
-        return $this->roles()->where('name', $role)->count() === 1;
     }
 
     /**
@@ -298,17 +266,6 @@ class User extends Authenticatable
 
     /**
      * @codeCoverageIgnore
-     * Link to object groups.
-     *
-     * @return HasMany
-     */
-    public function objectGroups(): HasMany
-    {
-        return $this->hasMany(ObjectGroup::class);
-    }
-
-    /**
-     * @codeCoverageIgnore
      * Link to categories
      *
      * @return HasMany
@@ -318,14 +275,6 @@ class User extends Authenticatable
         return $this->hasMany(Category::class);
     }
 
-    /**
-     * @codeCoverageIgnore
-     * @return BelongsTo
-     */
-    public function userGroup(): BelongsTo
-    {
-        return $this->belongsTo(UserGroup::class,);
-    }
     /**
      * @codeCoverageIgnore
      * Link to currency exchange rates
@@ -349,6 +298,88 @@ class User extends Authenticatable
         $bytes = random_bytes(16);
 
         return bin2hex($bytes);
+    }
+
+    /**
+     * Get the models LDAP domain.
+     *
+     * @return string
+     */
+    public function getLdapDomain()
+    {
+        return $this->{$this->getLdapDomainColumn()};
+    }
+
+    /**
+     * Get the database column name of the domain.
+     *
+     * @return string
+     */
+    public function getLdapDomainColumn()
+    {
+        return 'domain';
+    }
+
+    /**
+     * Get the models LDAP GUID.
+     *
+     * @return string
+     */
+    public function getLdapGuid()
+    {
+        return $this->{$this->getLdapGuidColumn()};
+    }
+
+    /**
+     * Get the models LDAP GUID database column name.
+     *
+     * @return string
+     */
+    public function getLdapGuidColumn()
+    {
+        return 'objectguid';
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @return HasMany
+     */
+    public function groupMemberships(): HasMany
+    {
+        return $this->hasMany(GroupMembership::class)->with(['userGroup', 'userRole']);
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->count() === 1;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Link to roles.
+     *
+     * @return BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Link to object groups.
+     *
+     * @return HasMany
+     */
+    public function objectGroups(): HasMany
+    {
+        return $this->hasMany(ObjectGroup::class);
     }
 
     /**
@@ -386,17 +417,6 @@ class User extends Authenticatable
 
     /**
      * @codeCoverageIgnore
-     * Link to roles.
-     *
-     * @return BelongsToMany
-     */
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
-    /**
-     * @codeCoverageIgnore
      * Link to rule groups.
      *
      * @return HasMany
@@ -429,6 +449,32 @@ class User extends Authenticatable
 
         event(new RequestedNewPassword($this, $token, $ipAddress));
     }
+
+    /**
+     * Set the models LDAP domain.
+     *
+     * @param string $domain
+     *
+     * @return void
+     */
+    public function setLdapDomain($domain)
+    {
+        $this->{$this->getLdapDomainColumn()} = $domain;
+    }
+
+    /**
+     * Set the models LDAP GUID.
+     *
+     * @param string $guid
+     *
+     * @return void
+     */
+    public function setLdapGuid($guid)
+    {
+        $this->{$this->getLdapGuidColumn()} = $guid;
+    }
+
+    // start LDAP related code
 
     /**
      * @codeCoverageIgnore
@@ -474,70 +520,25 @@ class User extends Authenticatable
         return $this->hasManyThrough(Transaction::class, TransactionJournal::class);
     }
 
-    // start LDAP related code
-
     /**
-     * Get the database column name of the domain.
-     *
-     * @return string
+     * @codeCoverageIgnore
+     * @return BelongsTo
      */
-    public function getLdapDomainColumn()
+    public function userGroup(): BelongsTo
     {
-        return 'domain';
+        return $this->belongsTo(UserGroup::class,);
     }
 
     /**
-     * Get the models LDAP domain.
+     * @codeCoverageIgnore
      *
-     * @return string
+     * Link to webhooks
+     *
+     * @return HasMany
      */
-    public function getLdapDomain()
+    public function webhooks(): HasMany
     {
-        return $this->{$this->getLdapDomainColumn()};
-    }
-
-    /**
-     * Set the models LDAP domain.
-     *
-     * @param string $domain
-     *
-     * @return void
-     */
-    public function setLdapDomain($domain)
-    {
-        $this->{$this->getLdapDomainColumn()} = $domain;
-    }
-
-    /**
-     * Get the models LDAP GUID database column name.
-     *
-     * @return string
-     */
-    public function getLdapGuidColumn()
-    {
-        return 'objectguid';
-    }
-
-    /**
-     * Get the models LDAP GUID.
-     *
-     * @return string
-     */
-    public function getLdapGuid()
-    {
-        return $this->{$this->getLdapGuidColumn()};
-    }
-
-    /**
-     * Set the models LDAP GUID.
-     *
-     * @param string $guid
-     *
-     * @return void
-     */
-    public function setLdapGuid($guid)
-    {
-        $this->{$this->getLdapGuidColumn()} = $guid;
+        return $this->hasMany(Webhook::class);
     }
     // end LDAP related code
 }

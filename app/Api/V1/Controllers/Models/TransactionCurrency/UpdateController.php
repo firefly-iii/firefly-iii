@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\UpdateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -33,6 +34,7 @@ use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
+use JsonException;
 use League\Fractal\Resource\Item;
 
 /**
@@ -126,7 +128,7 @@ class UpdateController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function makeDefault(TransactionCurrency $currency): JsonResponse
@@ -157,8 +159,8 @@ class UpdateController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function update(UpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {

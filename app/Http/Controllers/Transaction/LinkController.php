@@ -40,7 +40,7 @@ use URL;
  */
 class LinkController extends Controller
 {
-    private JournalRepositoryInterface  $journalRepository;
+    private JournalRepositoryInterface $journalRepository;
     private LinkTypeRepositoryInterface $repository;
 
     /**

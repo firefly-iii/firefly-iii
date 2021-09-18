@@ -40,6 +40,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 use Storage;
 
@@ -116,6 +117,41 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param int $accountId
+     *
+     * @return Account|null
+     */
+    public function find(int $accountId): ?Account
+    {
+        return $this->user->accounts()->find($accountId);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByAccountNumber(string $number, array $types): ?Account
+    {
+        $dbQuery = $this->user
+            ->accounts()
+            ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+            ->where('accounts.active', true)
+            ->where(
+                function (EloquentBuilder $q1) use ($number) {
+                    $json = json_encode($number);
+                    $q1->where('account_meta.name', '=', 'account_number');
+                    $q1->where('account_meta.data', '=', $json);
+                }
+            );
+
+        if (!empty($types)) {
+            $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $dbQuery->whereIn('account_types.type', $types);
+        }
+
+        return $dbQuery->first(['accounts.*']);
+    }
+
+    /**
      * @param string $iban
      * @param array  $types
      *
@@ -160,16 +196,6 @@ class AccountRepository implements AccountRepositoryInterface
         Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
         return $account;
-    }
-
-    /**
-     * @param int $accountId
-     *
-     * @return Account|null
-     */
-    public function find(int $accountId): ?Account
-    {
-        return $this->user->accounts()->find($accountId);
     }
 
     /**
@@ -308,6 +334,23 @@ class AccountRepository implements AccountRepositoryInterface
         $factory->setUser($this->user);
 
         return $factory->findOrCreate('Cash account', $type->type);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCreditTransactionGroup(Account $account): ?TransactionGroup
+    {
+        $journal = TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::LIABILITY_CREDIT])
+            ->first(['transaction_journals.*']);
+        if (null === $journal) {
+            return null;
+        }
+
+        return $journal->transactionGroup;
     }
 
     /**
@@ -731,7 +774,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function update(Account $account, array $data): Account
     {
@@ -739,48 +782,6 @@ class AccountRepository implements AccountRepositoryInterface
         $service = app(AccountUpdateService::class);
 
         return $service->update($account, $data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCreditTransactionGroup(Account $account): ?TransactionGroup
-    {
-        $journal = TransactionJournal
-            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::LIABILITY_CREDIT])
-            ->first(['transaction_journals.*']);
-        if (null === $journal) {
-            return null;
-        }
-
-        return $journal->transactionGroup;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function findByAccountNumber(string $number, array $types): ?Account
-    {
-        $dbQuery = $this->user
-            ->accounts()
-            ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
-            ->where('accounts.active', true)
-            ->where(
-                function (EloquentBuilder $q1) use ($number) {
-                    $json = json_encode($number);
-                    $q1->where('account_meta.name', '=', 'account_number');
-                    $q1->where('account_meta.data', '=', $json);
-                }
-            );
-
-        if (!empty($types)) {
-            $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            $dbQuery->whereIn('account_types.type', $types);
-        }
-
-        return $dbQuery->first(['accounts.*']);
     }
 
 }

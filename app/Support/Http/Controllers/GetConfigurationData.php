@@ -22,7 +22,9 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
+
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use Log;
 
 /**
@@ -85,7 +87,7 @@ trait GetConfigurationData
      * Get config for date range.
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {

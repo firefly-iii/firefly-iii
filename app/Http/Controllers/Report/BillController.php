@@ -53,7 +53,7 @@ class BillController extends Controller
         $cache->addProperty('bill-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         /** @var ReportHelperInterface $helper */
         $helper = app(ReportHelperInterface::class);

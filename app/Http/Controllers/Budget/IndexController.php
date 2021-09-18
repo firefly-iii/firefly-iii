@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
@@ -90,7 +91,7 @@ class IndexController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {

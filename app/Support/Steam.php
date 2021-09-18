@@ -42,56 +42,6 @@ class Steam
 {
 
     /**
-     * Gets balance at the end of current month by default
-     *
-     * @param Account                  $account
-     * @param Carbon                   $date
-     * @param TransactionCurrency|null $currency
-     *
-     * @return string
-     * @throws JsonException
-     */
-    public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
-    {
-        // abuse chart properties:
-        $cache = new CacheProperties;
-        $cache->addProperty($account->id);
-        $cache->addProperty('balance');
-        $cache->addProperty($date);
-        $cache->addProperty($currency ? $currency->id : 0);
-        if ($cache->has()) {
-            return $cache->get(); 
-        }
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        if (null === $currency) {
-            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
-        }
-        // first part: get all balances in own currency:
-        $transactions  = $account->transactions()
-                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                 ->where('transactions.transaction_currency_id', $currency->id)
-                                 ->get(['transactions.amount'])->toArray();
-        $nativeBalance = $this->sumTransactions($transactions, 'amount');
-        // get all balances in foreign currency:
-        $transactions   = $account->transactions()
-                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                  ->where('transactions.foreign_currency_id', $currency->id)
-                                  ->where('transactions.transaction_currency_id', '!=', $currency->id)
-                                  ->get(['transactions.foreign_amount'])->toArray();
-        $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
-        $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
-        $balance        = bcadd($balance, $virtual);
-
-        $cache->store($balance);
-
-        return $balance;
-    }
-
-    /**
      * @param Account $account
      * @param Carbon  $date
      *
@@ -106,7 +56,7 @@ class Steam
         $cache->addProperty('balance-no-virtual');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -177,7 +127,7 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         $start->subDay();
@@ -208,11 +158,11 @@ class Steam
                        ->whereNull('transaction_journals.deleted_at')
                        ->get(
                            [  // @phpstan-ignore-line
-                               'transaction_journals.date',
-                               'transactions.transaction_currency_id',
-                               DB::raw('SUM(transactions.amount) AS modified'),
-                               'transactions.foreign_currency_id',
-                               DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
+                              'transaction_journals.date',
+                              'transactions.transaction_currency_id',
+                              DB::raw('SUM(transactions.amount) AS modified'),
+                              'transactions.foreign_currency_id',
+                              DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
                            ]
                        );
 
@@ -244,35 +194,53 @@ class Steam
     }
 
     /**
-     * @param Account $account
-     * @param Carbon  $date
+     * Gets balance at the end of current month by default
      *
-     * @return array
+     * @param Account                  $account
+     * @param Carbon                   $date
+     * @param TransactionCurrency|null $currency
+     *
+     * @return string
      * @throws JsonException
      */
-    public function balancePerCurrency(Account $account, Carbon $date): array
+    public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
-        $cache->addProperty('balance-per-currency');
+        $cache->addProperty('balance');
         $cache->addProperty($date);
+        $cache->addProperty($currency ? $currency->id : 0);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
-        $query    = $account->transactions()
-                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                            ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
-        $return   = [];
-        /** @var stdClass $entry */
-        foreach ($balances as $entry) {
-            $return[(int)$entry->transaction_currency_id] = $entry->sum_for_currency;
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        if (null === $currency) {
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
         }
-        $cache->store($return);
+        // first part: get all balances in own currency:
+        $transactions  = $account->transactions()
+                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                                 ->where('transactions.transaction_currency_id', $currency->id)
+                                 ->get(['transactions.amount'])->toArray();
+        $nativeBalance = $this->sumTransactions($transactions, 'amount');
+        // get all balances in foreign currency:
+        $transactions   = $account->transactions()
+                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                                  ->where('transactions.foreign_currency_id', $currency->id)
+                                  ->where('transactions.transaction_currency_id', '!=', $currency->id)
+                                  ->get(['transactions.foreign_amount'])->toArray();
+        $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
+        $balance        = bcadd($nativeBalance, $foreignBalance);
+        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $balance        = bcadd($balance, $virtual);
 
-        return $return;
+        $cache->store($balance);
+
+        return $balance;
     }
 
     /**
@@ -294,7 +262,7 @@ class Steam
         $cache->addProperty('balances');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         // need to do this per account.
@@ -327,7 +295,7 @@ class Steam
         $cache->addProperty('balances-per-currency');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         // need to do this per account.
@@ -340,6 +308,38 @@ class Steam
         $cache->store($result);
 
         return $result;
+    }
+
+    /**
+     * @param Account $account
+     * @param Carbon  $date
+     *
+     * @return array
+     * @throws JsonException
+     */
+    public function balancePerCurrency(Account $account, Carbon $date): array
+    {
+        // abuse chart properties:
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty('balance-per-currency');
+        $cache->addProperty($date);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $query    = $account->transactions()
+                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                            ->groupBy('transactions.transaction_currency_id');
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
+        $return   = [];
+        /** @var stdClass $entry */
+        foreach ($balances as $entry) {
+            $return[(int)$entry->transaction_currency_id] = $entry->sum_for_currency;
+        }
+        $cache->store($return);
+
+        return $return;
     }
 
     /**
@@ -363,6 +363,51 @@ class Steam
         }
 
         return $list;
+    }
+
+    /**
+     * Get user's locale.
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function getLocale(): string // get preference
+    {
+        $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
+        if ('equal' === $locale) {
+            $locale = $this->getLanguage();
+        }
+
+        // Check for Windows to replace the locale correctly.
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $locale = str_replace('_', '-', $locale);
+        }
+
+        return $locale;
+    }
+
+    /**
+     * Get user's language.
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function getLanguage(): string // get preference
+    {
+        return app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return array
+     */
+    public function getLocaleArray(string $locale): array
+    {
+        return [
+            sprintf('%s.utf8', $locale),
+            sprintf('%s.UTF-8', $locale),
+        ];
     }
 
     /**
@@ -444,51 +489,6 @@ class Steam
         }
 
         return $amount;
-    }
-
-    /**
-     * Get user's language.
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public function getLanguage(): string // get preference
-    {
-        return app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
-    }
-
-    /**
-     * Get user's locale.
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public function getLocale(): string // get preference
-    {
-        $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
-        if ('equal' === $locale) {
-            $locale = $this->getLanguage();
-        }
-
-        // Check for Windows to replace the locale correctly.
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $locale = str_replace('_', '-', $locale);
-        }
-
-        return $locale;
-    }
-
-    /**
-     * @param string $locale
-     *
-     * @return array
-     */
-    public function getLocaleArray(string $locale): array
-    {
-        return [
-            sprintf('%s.utf8', $locale),
-            sprintf('%s.UTF-8', $locale),
-        ];
     }
 
 }

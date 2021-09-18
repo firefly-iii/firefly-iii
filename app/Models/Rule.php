@@ -74,7 +74,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Rule withTrashed()
  * @method static Builder|Rule withoutTrashed()
  * @mixin Eloquent
- * @property int|null $user_group_id
+ * @property int|null                     $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserGroupId($value)
  */
 class Rule extends Model

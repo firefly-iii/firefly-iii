@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
+
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -31,21 +32,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class EitherConfigKey
 {
-    public static array $static = [
-        'firefly.version',
-        'firefly.api_version',
-        'firefly.default_location',
-        'firefly.account_to_transaction',
-        'firefly.allowed_opposing_types',
-        'firefly.accountRoles',
-        'firefly.valid_liabilities',
-        'firefly.interest_periods',
-        'firefly.bill_periods',
-        'firefly.enable_external_map',
-        'firefly.expected_source_types',
-        'firefly.credit_card_types',
-        'app.timezone',
-    ];
+    public static array $static
+        = [
+            'firefly.version',
+            'firefly.api_version',
+            'firefly.default_location',
+            'firefly.account_to_transaction',
+            'firefly.allowed_opposing_types',
+            'firefly.accountRoles',
+            'firefly.valid_liabilities',
+            'firefly.interest_periods',
+            'firefly.bill_periods',
+            'firefly.enable_external_map',
+            'firefly.expected_source_types',
+            'firefly.credit_card_types',
+            'app.timezone',
+        ];
+
     /**
      * @param string $value
      * @param Route  $route

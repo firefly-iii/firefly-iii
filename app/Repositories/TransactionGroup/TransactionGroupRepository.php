@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionGroup;
+
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -359,12 +360,12 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             return $factory->create($data);
         } catch (DuplicateTransactionException $e) {
             Log::warning('Group repository caught group factory with a duplicate exception!');
-            throw new DuplicateTransactionException($e->getMessage(),0, $e);
+            throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         } catch (FireflyException $e) {
             Log::warning('Group repository caught group factory with an exception!');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException($e->getMessage(),0, $e);
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
 
@@ -380,6 +381,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         /** @var GroupUpdateService $service */
         $service = app(GroupUpdateService::class);
+
         return $service->update($transactionGroup, $data);
     }
 

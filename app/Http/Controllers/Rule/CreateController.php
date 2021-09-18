@@ -265,12 +265,12 @@ class CreateController extends Controller
 
         // redirect to show bill.
         if ('true' === $request->get('return_to_bill') && (int)$request->get('bill_id') > 0) {
-            return redirect(route('bills.show', [(int)$request->get('bill_id')])); 
+            return redirect(route('bills.show', [(int)$request->get('bill_id')]));
         }
 
         // redirect to new bill creation.
         if ((int)$request->get('bill_id') > 0) {
-            return redirect($this->getPreviousUri('bills.create.uri')); 
+            return redirect($this->getPreviousUri('bills.create.uri'));
         }
 
         $redirect = redirect($this->getPreviousUri('rules.create.uri'));

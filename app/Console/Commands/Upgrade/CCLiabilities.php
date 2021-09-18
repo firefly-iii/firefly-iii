@@ -104,7 +104,7 @@ class CCLiabilities extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     /**

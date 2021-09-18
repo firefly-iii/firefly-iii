@@ -41,6 +41,7 @@ use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use JsonException;
 
 /**
  * Class BudgetController.
@@ -84,7 +85,7 @@ class BudgetController extends Controller
      * @param Budget $budget
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function budget(Budget $budget): JsonResponse
     {
@@ -153,7 +154,7 @@ class BudgetController extends Controller
      * @return JsonResponse
      *
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
@@ -171,7 +172,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $locale           = app('steam')->getLocale();
         $entries          = [];
@@ -204,7 +205,7 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -227,7 +228,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $collector->setRange($start, $end);
         $collector->setBudget($budget);
@@ -273,7 +274,7 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -295,7 +296,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $collector->setRange($start, $end);
         $collector->setBudget($budget)->withCategoryInformation();
@@ -338,7 +339,7 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -360,7 +361,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
@@ -402,7 +403,7 @@ class BudgetController extends Controller
      * Shows a budget list with spent/left/overspent.
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function frontpage(): JsonResponse
     {
@@ -415,7 +416,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
 
         $chartGenerator = app(FrontpageChartGenerator::class);
@@ -440,7 +441,7 @@ class BudgetController extends Controller
      * @param Carbon              $end
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function period(Budget $budget, TransactionCurrency $currency, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -453,7 +454,7 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
@@ -516,7 +517,7 @@ class BudgetController extends Controller
      * @param Carbon              $end
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function periodNoBudget(TransactionCurrency $currency, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -528,7 +529,7 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
 
         // the expenses:

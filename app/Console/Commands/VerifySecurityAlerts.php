@@ -25,14 +25,21 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
-use Storage;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Log;
+use Storage;
 
 /**
  * Class VerifySecurityAlerts
  */
 class VerifySecurityAlerts extends Command
 {
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Verify security alerts';
     /**
      * The name and signature of the console command.
      *
@@ -41,17 +48,10 @@ class VerifySecurityAlerts extends Command
     protected $signature = 'firefly-iii:verify-security-alerts';
 
     /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Verify security alerts';
-
-    /**
      * Execute the console command.
      *
      * @return int
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function handle(): int
     {
@@ -64,6 +64,7 @@ class VerifySecurityAlerts extends Command
         $disk    = Storage::disk('resources');
         if (!$disk->has('alerts.json')) {
             Log::debug('No alerts.json file present.');
+
             return 0;
         }
         $content = $disk->get('alerts.json');
@@ -81,6 +82,7 @@ class VerifySecurityAlerts extends Command
                 if ('info' === $array['level']) {
                     Log::debug('INFO level alert');
                     $this->info($array['message']);
+
                     return 0;
                 }
                 if ('warning' === $array['level']) {
@@ -88,6 +90,7 @@ class VerifySecurityAlerts extends Command
                     $this->warn('------------------------ :o');
                     $this->warn($array['message']);
                     $this->warn('------------------------ :o');
+
                     return 0;
                 }
                 if ('danger' === $array['level']) {
@@ -95,6 +98,7 @@ class VerifySecurityAlerts extends Command
                     $this->error('------------------------ :-(');
                     $this->error($array['message']);
                     $this->error('------------------------ :-(');
+
                     return 0;
                 }
 

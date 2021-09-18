@@ -31,12 +31,11 @@ use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
-use JsonException;
 use Log;
 
 /**
  * Class AccountUpdateService
-* See reference nr. 90
+ * See reference nr. 90
  */
 class AccountUpdateService
 {
@@ -46,8 +45,8 @@ class AccountUpdateService
     protected array                      $validAssetFields;
     protected array                      $validCCFields;
     protected array                      $validFields;
-    private array                        $canHaveVirtual;
     private array                        $canHaveOpeningBalance;
+    private array                        $canHaveVirtual;
     private User                         $user;
 
     /**

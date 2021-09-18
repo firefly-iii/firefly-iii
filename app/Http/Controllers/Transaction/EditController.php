@@ -67,15 +67,15 @@ class EditController extends Controller
         app('preferences')->mark();
 
         if (!$this->isEditableGroup($transactionGroup)) {
-            return $this->redirectGroupToAccount($transactionGroup); 
+            return $this->redirectGroupToAccount($transactionGroup);
         }
 
         /** @var AccountRepositoryInterface $repository */
-        $repository           = app(AccountRepositoryInterface::class);
+        $repository = app(AccountRepositoryInterface::class);
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
-        $accountToTypes       = config('firefly.account_to_transaction');
-        $expectedSourceTypes  = config('firefly.expected_source_types');
-        $allowedSourceDests   = config('firefly.source_dests');
+        $accountToTypes = config('firefly.account_to_transaction');
+        $expectedSourceTypes = config('firefly.expected_source_types');
+        $allowedSourceDests = config('firefly.source_dests');
         //
 
         $defaultCurrency = app('amount')->getDefaultCurrency();

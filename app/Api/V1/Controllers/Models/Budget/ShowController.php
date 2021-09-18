@@ -53,7 +53,7 @@ class ShowController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository   = app(BudgetRepositoryInterface::class);
+                $this->repository = app(BudgetRepositoryInterface::class);
                 $this->blRepository = app(BudgetLimitRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
                 $this->blRepository->setUser(auth()->user());

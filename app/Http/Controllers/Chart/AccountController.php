@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -38,6 +39,7 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -83,7 +85,7 @@ class AccountController extends Controller
      * This chart is (multi) currency aware.
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function expenseAccounts(): JsonResponse
     {
@@ -96,7 +98,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $start->subDay();
 
@@ -195,7 +197,7 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function expenseBudget(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -205,7 +207,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-budget');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -270,7 +272,7 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function expenseCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -280,7 +282,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-category');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -325,7 +327,7 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function frontpage(AccountRepositoryInterface $repository): JsonResponse
     {
@@ -368,7 +370,7 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function incomeCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -378,7 +380,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.income-category');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
 
         // grab all journals:
@@ -426,8 +428,8 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -438,7 +440,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $currencies = $this->accountRepository->getUsedCurrencies($account);
 
@@ -465,8 +467,8 @@ class AccountController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
     {
@@ -518,7 +520,7 @@ class AccountController extends Controller
     /**
      * Shows the balances for a given set of dates and accounts.
      *
-* See reference nr. 55
+     * See reference nr. 55
      *
      * @param Carbon     $start
      * @param Carbon     $end
@@ -537,7 +539,7 @@ class AccountController extends Controller
      * This chart is multi-currency aware.
      *
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function revenueAccounts(): JsonResponse
     {
@@ -550,7 +552,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $start->subDay();
 

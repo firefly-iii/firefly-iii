@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
@@ -76,7 +77,7 @@ class ShowController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
@@ -116,7 +117,7 @@ class ShowController extends Controller
      * @param Category $category
      *
      * @return Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function showAll(Request $request, Category $category)
     {

@@ -78,6 +78,18 @@ class StoredGroupEventHandler
     }
 
     /**
+     * @param StoredTransactionGroup $event
+     */
+    public function recalculateCredit(StoredTransactionGroup $event): void
+    {
+        $group = $event->transactionGroup;
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setGroup($group);
+        $object->recalculate();
+    }
+
+    /**
      * This method processes all webhooks that respond to the "stored transaction group" trigger (100)
      *
      * @param StoredTransactionGroup $storedGroupEvent
@@ -106,18 +118,6 @@ class StoredGroupEventHandler
 
         // trigger event to send them:
         event(new RequestedSendWebhookMessages);
-    }
-
-    /**
-     * @param StoredTransactionGroup $event
-     */
-    public function recalculateCredit(StoredTransactionGroup $event): void
-    {
-        $group = $event->transactionGroup;
-        /** @var CreditRecalculateService $object */
-        $object = app(CreditRecalculateService::class);
-        $object->setGroup($group);
-        $object->recalculate();
     }
 
 }

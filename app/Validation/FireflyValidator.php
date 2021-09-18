@@ -172,7 +172,7 @@ class FireflyValidator extends Validator
             "\u{3000}", // ideographic space
             "\u{FEFF}", // zero width no -break space
             '-',
-            '?'
+            '?',
         ];
         $replace = '';
         $value   = str_replace($search, $replace, $value);
@@ -198,6 +198,7 @@ class FireflyValidator extends Validator
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
             Log::error($message);
             Log::error($e->getTraceAsString());
+
             return false;
         }
 

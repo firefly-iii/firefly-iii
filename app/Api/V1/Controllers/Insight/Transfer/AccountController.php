@@ -71,6 +71,7 @@ class AccountController extends Controller
         $end           = $request->getEnd();
         $assetAccounts = $request->getAssetAccounts();
         $transfers     = $this->opsRepository->sumTransfers($start, $end, $assetAccounts);
+
         return response()->json($transfers);
     }
 }

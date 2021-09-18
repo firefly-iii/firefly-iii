@@ -34,7 +34,7 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
-* See reference nr. 19
+ * See reference nr. 19
  *
  * @codeCoverageIgnore
  */

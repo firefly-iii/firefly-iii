@@ -168,8 +168,8 @@ class MassController extends Controller
     {
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {
-// See reference nr. 48
-            throw new FireflyException('This is not an array.'); 
+            // See reference nr. 48
+            throw new FireflyException('This is not an array.');
         }
         $count = 0;
         /** @var string $journalId */
@@ -178,7 +178,7 @@ class MassController extends Controller
             try {
                 $this->updateJournal($integer, $request);
                 $count++;
-            } catch (FireflyException $e) {  
+            } catch (FireflyException $e) {
                 // @ignoreException
             }
         }
@@ -200,7 +200,7 @@ class MassController extends Controller
     {
         $journal = $this->repository->find($journalId);
         if (null === $journal) {
-            throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId)); 
+            throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
         }
         $service = app(JournalUpdateService::class);
         // for each field, call the update service.

@@ -94,7 +94,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Bill withTrashed()
  * @method static Builder|Bill withoutTrashed()
  * @mixin Eloquent
- * @property int|null $user_group_id
+ * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereUserGroupId($value)
  */
 class Bill extends Model

@@ -50,7 +50,7 @@ class AutomationHandler
         $sendReport = config('firefly.send_report_journals');
 
         if (false === $sendReport) {
-            return true; 
+            return true;
         }
 
         Log::debug('In reportJournals.');

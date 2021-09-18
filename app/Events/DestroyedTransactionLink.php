@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Events;
+
 use FireflyIII\Models\TransactionJournalLink;
 use Illuminate\Queue\SerializesModels;
 

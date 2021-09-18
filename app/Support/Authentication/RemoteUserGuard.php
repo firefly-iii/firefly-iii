@@ -31,6 +31,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Log;
+
 /**
  * Class RemoteUserGuard
  */
