@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\Models\Webhook\UpdateRequest;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 

@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\BudgetLimit\StoreRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Transformers\BudgetLimitTransformer;

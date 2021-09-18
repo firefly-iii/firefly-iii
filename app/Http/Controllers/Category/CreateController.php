@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
@@ -86,7 +87,7 @@ class CreateController extends Controller
      * @param CategoryFormRequest $request
      *
      * @return $this|RedirectResponse|Redirector
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function store(CategoryFormRequest $request)
     {

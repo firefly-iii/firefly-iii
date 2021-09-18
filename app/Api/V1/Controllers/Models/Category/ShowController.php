@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Category;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Transformers\CategoryTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -63,7 +63,7 @@ class ShowController extends Controller
      * Display a listing of the resource.
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse

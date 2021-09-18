@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\BillTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 

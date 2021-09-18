@@ -194,6 +194,7 @@ class EditController extends Controller
         $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
 
         // store new attachment(s):
+
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);

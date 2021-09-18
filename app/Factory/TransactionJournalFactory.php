@@ -46,6 +46,7 @@ use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -146,7 +147,7 @@ class TransactionJournalFactory
      * @return TransactionJournal|null
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
@@ -295,7 +296,7 @@ class TransactionJournalFactory
      * @param NullArrayObject $row
      *
      * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function hashArray(NullArrayObject $row): string
     {
@@ -321,7 +322,7 @@ class TransactionJournalFactory
      * @param string $hash
      *
      * @throws DuplicateTransactionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function errorIfDuplicate(string $hash): void
     {

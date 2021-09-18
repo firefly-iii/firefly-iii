@@ -31,6 +31,7 @@ use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
+use JsonException;
 use Log;
 
 /**
@@ -78,7 +79,7 @@ class AccountUpdateService
      *
      * @return Account
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function update(Account $account, array $data): Account
     {
@@ -215,7 +216,7 @@ class AccountUpdateService
         $newOrder = $data['order'];
         Log::debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
         $list = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
-        if (in_array($type, [AccountType::ASSET], true)) {
+        if ($type === AccountType::ASSET) {
             $list = $this->getTypeIds([AccountType::ASSET]);
         }
 

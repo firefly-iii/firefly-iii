@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -63,7 +63,7 @@ class ShowController extends Controller
      * List all of them.
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse

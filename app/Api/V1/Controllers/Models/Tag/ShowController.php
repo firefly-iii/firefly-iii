@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Transformers\TagTransformer;
@@ -66,7 +67,7 @@ class ShowController extends Controller
      * List all of them.
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse

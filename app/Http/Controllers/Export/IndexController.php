@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Export;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -32,6 +33,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\View\View;
 use League\Csv\CannotInsertRecord;
+use League\Csv\Exception;
 
 /**
  * Class IndexController
@@ -66,8 +68,8 @@ class IndexController extends Controller
     /**
      * @return LaravelResponse
      * @throws CannotInsertRecord
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \League\Csv\Exception
+     * @throws FireflyException
+     * @throws Exception
      */
     public function export(): LaravelResponse
     {

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLinkType;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -72,7 +73,7 @@ class ShowController extends Controller
      * List all of them.
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse

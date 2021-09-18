@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
@@ -299,7 +300,7 @@ class ReportController extends Controller
      *
      * @param string $reportType
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
      */
     public function options(string $reportType)

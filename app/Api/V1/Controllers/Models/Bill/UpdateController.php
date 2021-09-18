@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\Models\Bill\UpdateRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 

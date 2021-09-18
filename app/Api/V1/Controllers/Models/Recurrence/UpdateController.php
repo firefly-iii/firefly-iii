@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\Models\Recurrence\UpdateRequest;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 

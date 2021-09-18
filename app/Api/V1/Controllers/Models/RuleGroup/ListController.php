@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Transformers\RuleTransformer;
@@ -65,7 +66,7 @@ class ListController extends Controller
      * @param RuleGroup $group
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function rules(RuleGroup $group): JsonResponse

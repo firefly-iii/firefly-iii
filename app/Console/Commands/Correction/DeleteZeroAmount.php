@@ -27,7 +27,6 @@ use Exception;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 
 /**
  * Class DeleteZeroAmount

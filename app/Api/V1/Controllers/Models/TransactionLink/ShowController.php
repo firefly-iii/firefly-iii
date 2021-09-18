@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLink;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Transformers\TransactionLinkTransformer;
@@ -68,7 +69,7 @@ class ShowController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse

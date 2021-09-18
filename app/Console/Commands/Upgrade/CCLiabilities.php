@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Console\Command;
@@ -51,6 +52,7 @@ class CCLiabilities extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -79,7 +81,7 @@ class CCLiabilities extends Command
             $this->line(sprintf('Converted credit card liability account "%s" (#%d) to generic debt liability.', $account->name, $account->id));
         }
         if ($accounts->count() > 0) {
-            $this->info('Credit card liability types are no longer supported and have been converted to generic debts. See: http://bit.ly/FF3-credit-cards');
+            $this->info('Credit card liability types are no longer supported and have been converted to generic debts. See: https://bit.ly/FF3-credit-cards');
         }
         if (0 === $accounts->count()) {
             $this->info('No incorrectly stored credit card liabilities.');
@@ -93,7 +95,7 @@ class CCLiabilities extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {

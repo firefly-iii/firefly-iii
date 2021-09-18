@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Bill;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -71,7 +72,7 @@ class ListController extends Controller
      * @param Bill $bill
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function attachments(Bill $bill): JsonResponse
@@ -103,7 +104,7 @@ class ListController extends Controller
      * @param Bill $bill
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function rules(Bill $bill): JsonResponse
@@ -140,7 +141,7 @@ class ListController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, Bill $bill): JsonResponse

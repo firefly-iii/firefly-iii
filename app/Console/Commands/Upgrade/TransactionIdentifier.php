@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
@@ -67,6 +68,7 @@ class TransactionIdentifier extends Command
      * think. So each set gets a number (1,2,3) to keep them apart.
      *
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -120,7 +122,7 @@ class TransactionIdentifier extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {

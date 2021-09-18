@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\PiggyBank;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
@@ -62,7 +63,7 @@ class ListController extends Controller
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function attachments(PiggyBank $piggyBank): JsonResponse
@@ -94,7 +95,7 @@ class ListController extends Controller
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse

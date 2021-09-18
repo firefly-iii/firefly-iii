@@ -76,6 +76,7 @@ class CreateGroupMemberships extends Command
 
     /**
      * @return bool
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {

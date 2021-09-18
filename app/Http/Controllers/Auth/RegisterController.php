@@ -32,6 +32,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Log;
 
@@ -79,7 +80,7 @@ class RegisterController extends Controller
      *
      * @return Factory|RedirectResponse|Redirector|View
      * @throws FireflyException
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function register(Request $request)
     {

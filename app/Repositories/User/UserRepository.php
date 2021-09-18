@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\User;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -375,7 +376,7 @@ class UserRepository implements UserRepositoryInterface
      * @param string $newEmail
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @see changeEmail
      */
     public function updateEmail(User $user, string $newEmail): bool

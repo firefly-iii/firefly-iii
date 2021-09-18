@@ -82,7 +82,7 @@ class RemoteUserGuard implements Guard
 
         if (null !== $header) {
             $emailAddress = (string)(request()->server($header) ?? null);
-            $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email', null);
+            $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if (null !== $emailAddress && null === $preference && $emailAddress !== $userID) {
                 app('preferences')->setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Routing\Route;
 use Log;
@@ -39,7 +40,7 @@ class CLIToken implements BinderInterface
      * @param Route  $route
      *
      * @return mixed
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public static function routeBinder(string $value, Route $route)
     {

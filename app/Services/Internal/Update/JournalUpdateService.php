@@ -475,7 +475,7 @@ class JournalUpdateService
             $billId                            = (int)($this->data['bill_id'] ?? 0);
             $billName                          = (string)($this->data['bill_name'] ?? '');
             $bill                              = $this->billRepository->findBill($billId, $billName);
-            $this->transactionJournal->bill_id = null === $bill ? null : $bill->id;
+            $this->transactionJournal->bill_id = $bill?->id;
             Log::debug('Updated bill ID');
         }
     }

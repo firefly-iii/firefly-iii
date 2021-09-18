@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
@@ -228,7 +229,7 @@ class TagController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {

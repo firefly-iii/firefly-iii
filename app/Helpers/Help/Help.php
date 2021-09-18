@@ -25,6 +25,7 @@ namespace FireflyIII\Helpers\Help;
 use Cache;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use League\CommonMark\CommonMarkConverter;
 use Log;
 use Route;
@@ -71,7 +72,7 @@ class Help implements HelpInterface
      * @param string $language
      *
      * @return string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function getFromGitHub(string $route, string $language): string
     {

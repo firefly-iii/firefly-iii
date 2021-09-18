@@ -27,6 +27,8 @@ namespace FireflyIII\Http\Controllers\ObjectGroup;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -62,7 +64,7 @@ class DeleteController extends Controller
      *
      * @param ObjectGroup $objectGroup
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function delete(ObjectGroup $objectGroup)
     {

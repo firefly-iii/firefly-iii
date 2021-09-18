@@ -38,6 +38,7 @@ use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Google2FA;
 use Hash;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -48,6 +49,9 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Laravel\Passport\ClientRepository;
 use Log;
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Recovery\Recovery;
 
 /**
@@ -107,7 +111,7 @@ class ProfileController extends Controller
      * @param Request $request
      *
      * @return Application|RedirectResponse|Redirector
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws AuthenticationException
      */
     public function postLogoutOtherSessions(Request $request)
     {
@@ -183,9 +187,9 @@ class ProfileController extends Controller
      * @param Request $request
      *
      * @return Factory|View
-     * @throws \PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException
-     * @throws \PragmaRX\Google2FA\Exceptions\InvalidCharactersException
-     * @throws \PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws SecretKeyTooShortException
      */
     public function code(Request $request)
     {

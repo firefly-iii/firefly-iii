@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -43,7 +44,7 @@ class VersionCheckEventHandler
      *
      * @param RequestedVersionCheckStatus $event
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
@@ -88,7 +89,7 @@ class VersionCheckEventHandler
 
     /**
      * @param RequestedVersionCheckStatus $event
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {

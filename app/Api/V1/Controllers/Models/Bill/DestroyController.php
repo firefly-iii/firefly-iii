@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Bill;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**

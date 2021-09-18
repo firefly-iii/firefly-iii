@@ -45,6 +45,7 @@ use FireflyIII\Support\Repositories\Recurring\FiltersWeekends;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -290,7 +291,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param RecurrenceTransaction $transaction
      *
      * @return array
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getTags(RecurrenceTransaction $transaction): array
     {

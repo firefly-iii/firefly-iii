@@ -331,7 +331,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink
     {
         $journalLink->source_id      = $data['inward_id'] ?: $journalLink->source_id;
-        $journalLink->destination_id = $data['outward_id'] ? $data['outward_id'] : $journalLink->destination_id;
+        $journalLink->destination_id = $data['outward_id'] ?: $journalLink->destination_id;
         $journalLink->save();
         if (array_key_exists('link_type_name', $data)) {
             $linkType = LinkType::whereName($data['link_type_name'])->first();

@@ -71,10 +71,8 @@ class OperatorQuerySearch implements SearchInterface
     private int                         $limit;
     private Collection                  $operators;
     private int                         $page;
-    private ParsedQuery                 $query;
     private float                       $startTime;
     private TagRepositoryInterface      $tagRepository;
-    private User                        $user;
     private array                       $validOperators;
     private array                       $words;
     private array                       $invalidOperators;
@@ -146,11 +144,11 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query)
     {
         Log::debug(sprintf('Now in parseQuery(%s)', $query));
-        $parser      = new QueryParser();
-        $this->query = $parser->parse($query);
+        $parser = new QueryParser();
+        $query1 = $parser->parse($query);
 
-        Log::debug(sprintf('Found %d node(s)', count($this->query->getNodes())));
-        foreach ($this->query->getNodes() as $searchNode) {
+        Log::debug(sprintf('Found %d node(s)', count($query1->getNodes())));
+        foreach ($query1->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
         }
 
@@ -220,14 +218,13 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
         $this->accountRepository->setUser($user);
         $this->billRepository->setUser($user);
         $this->categoryRepository->setUser($user);
         $this->budgetRepository->setUser($user);
         $this->tagRepository->setUser($user);
         $this->collector = app(GroupCollectorInterface::class);
-        $this->collector->setUser($this->user);
+        $this->collector->setUser($user);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
         $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);

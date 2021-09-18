@@ -29,7 +29,6 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookMessageTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;

@@ -28,6 +28,11 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ObjectGroupFormRequest;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 
 /**
  * Class EditController
@@ -62,7 +67,7 @@ class EditController extends Controller
      *
      * @param ObjectGroup $objectGroup
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function edit(ObjectGroup $objectGroup)
     {
@@ -82,7 +87,8 @@ class EditController extends Controller
      *
      * @param ObjectGroupFormRequest $request
      * @param ObjectGroup            $objectGroup
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @return Application|RedirectResponse|Redirector
      */
     public function update(ObjectGroupFormRequest $request, ObjectGroup $objectGroup)
     {

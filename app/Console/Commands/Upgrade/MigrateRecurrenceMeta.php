@@ -24,9 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use Illuminate\Console\Command;
+use JsonException;
 
 /**
  * Class MigrateRecurrenceMeta
@@ -51,6 +53,8 @@ class MigrateRecurrenceMeta extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function handle(): int
     {
@@ -79,7 +83,7 @@ class MigrateRecurrenceMeta extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {
@@ -93,7 +97,7 @@ class MigrateRecurrenceMeta extends Command
 
     /**
      * @return int
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function migrateMetaData(): int
     {
@@ -112,7 +116,7 @@ class MigrateRecurrenceMeta extends Command
      * @param RecurrenceMeta $meta
      *
      * @return int
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function migrateEntry(RecurrenceMeta $meta): int
     {

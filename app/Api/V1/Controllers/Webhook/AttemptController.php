@@ -30,7 +30,6 @@ use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookAttemptTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;

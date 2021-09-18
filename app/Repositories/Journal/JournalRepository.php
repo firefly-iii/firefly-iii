@@ -228,9 +228,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
-        if (null !== $journal) {
-            $journal->transactions()->update(['reconciled' => true]);
-        }
+        $journal?->transactions()->update(['reconciled' => true]);
     }
 
     /**

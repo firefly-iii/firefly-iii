@@ -25,6 +25,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use DB;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -127,7 +128,7 @@ class MigrateToGroups extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isMigrated(): bool
     {

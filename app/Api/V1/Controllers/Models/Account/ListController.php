@@ -152,7 +152,7 @@ class ListController extends Controller
      * @param Account $account
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {

@@ -98,6 +98,7 @@ class PreferencesController extends Controller
      * @param PreferenceStoreRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(PreferenceStoreRequest $request): JsonResponse
     {

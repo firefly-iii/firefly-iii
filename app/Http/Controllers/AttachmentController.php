@@ -26,6 +26,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -216,7 +217,7 @@ class AttachmentController extends Controller
      *
      * @return LaravelResponse
      * @throws FireflyException
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function view(Request $request, Attachment $attachment): LaravelResponse
     {

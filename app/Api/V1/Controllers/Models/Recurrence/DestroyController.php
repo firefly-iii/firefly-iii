@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**

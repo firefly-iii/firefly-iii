@@ -138,7 +138,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         return [
             'user'                   => (string)$row['user_id'],
-            'transaction_journal_id' => (int)$row['transaction_journal_id'],
+            'transaction_journal_id' => (string)$row['transaction_journal_id'],
             'type'                   => strtolower($type),
             'date'                   => $row['date']->toAtomString(),
             'order'                  => $row['order'],

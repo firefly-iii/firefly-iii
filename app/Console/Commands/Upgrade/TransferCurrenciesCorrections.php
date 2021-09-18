@@ -132,6 +132,7 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {
@@ -169,7 +170,7 @@ class TransferCurrenciesCorrections extends Command
 
 
         if ($this->isSplitJournal($transfer)) {
-            $this->line(sprintf(sprintf('Transaction journal #%d is a split journal. Cannot continue.', $transfer->id)));
+            $this->line(sprintf('Transaction journal #%d is a split journal. Cannot continue.', $transfer->id));
 
             return;
         }
@@ -246,7 +247,7 @@ class TransferCurrenciesCorrections extends Command
     private function getSourceInformation(TransactionJournal $journal): void
     {
         $this->sourceTransaction = $this->getSourceTransaction($journal);
-        $this->sourceAccount     = null === $this->sourceTransaction ? null : $this->sourceTransaction->account;
+        $this->sourceAccount     = $this->sourceTransaction?->account;
         $this->sourceCurrency    = null === $this->sourceAccount ? null : $this->getCurrency($this->sourceAccount);
     }
 
@@ -298,7 +299,7 @@ class TransferCurrenciesCorrections extends Command
     private function getDestinationInformation(TransactionJournal $journal): void
     {
         $this->destinationTransaction = $this->getDestinationTransaction($journal);
-        $this->destinationAccount     = null === $this->destinationTransaction ? null : $this->destinationTransaction->account;
+        $this->destinationAccount     = $this->destinationTransaction?->account;
         $this->destinationCurrency    = null === $this->destinationAccount ? null : $this->getCurrency($this->destinationAccount);
     }
 

@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyIII\Events\RequestedReportOnJournals;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ReportNewJournalsMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
@@ -42,7 +43,7 @@ class AutomationHandler
      * @param RequestedReportOnJournals $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function reportJournals(RequestedReportOnJournals $event): bool
     {

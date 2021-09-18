@@ -74,31 +74,22 @@ class BelongsUser implements Rule
     {
         $attribute = $this->parseAttribute($attribute);
         if (!auth()->check()) {
-            return true; 
+            return true;
         }
         $attribute = (string)$attribute;
         Log::debug(sprintf('Going to validate %s', $attribute));
-        switch ($attribute) {
-            case 'piggy_bank_id':
-                return $this->validatePiggyBankId((int)$value);
-            case 'piggy_bank_name':
-                return $this->validatePiggyBankName($value);
-            case 'bill_id':
-                return $this->validateBillId((int)$value);
-            case 'bill_name':
-                return $this->validateBillName($value);
-            case 'budget_id':
-                return $this->validateBudgetId((int)$value);
-            case 'category_id':
-                return $this->validateCategoryId((int)$value);
-            case 'budget_name':
-                return $this->validateBudgetName($value);
-            case 'source_id':
-            case 'destination_id':
-                return $this->validateAccountId((int)$value);
-            default:
-                throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute)); 
-        }
+
+        return match ($attribute) {
+            'piggy_bank_id' => $this->validatePiggyBankId((int)$value),
+            'piggy_bank_name' => $this->validatePiggyBankName($value),
+            'bill_id' => $this->validateBillId((int)$value),
+            'bill_name' => $this->validateBillName($value),
+            'budget_id' => $this->validateBudgetId((int)$value),
+            'category_id' => $this->validateCategoryId((int)$value),
+            'budget_name' => $this->validateBudgetName($value),
+            'source_id', 'destination_id' => $this->validateAccountId((int)$value),
+            default => throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute)),
+        };
     }
 
     /**
@@ -116,7 +107,7 @@ class BelongsUser implements Rule
             return $parts[2];
         }
 
-        return $attribute; 
+        return $attribute;
     }
 
     /**

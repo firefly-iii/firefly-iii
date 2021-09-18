@@ -42,7 +42,7 @@ class TagTransformer extends AbstractTransformer
      */
     public function transform(Tag $tag): array
     {
-        $date = null === $tag->date ? null : $tag->date->toAtomString();
+        $date = $tag->date?->toAtomString();
         /** @var Location $location */
         $location  = $tag->locations()->first();
         $latitude  = null;

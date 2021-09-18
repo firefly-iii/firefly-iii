@@ -28,7 +28,10 @@ use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Log;
 
@@ -90,7 +93,7 @@ class BulkController extends Controller
      *
      * @param BulkEditJournalRequest $request
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return Application|RedirectResponse|Redirector
      */
     public function update(BulkEditJournalRequest $request)
     {

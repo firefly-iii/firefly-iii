@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -63,6 +64,7 @@ class AccountCurrencies extends Command
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
      *
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -106,7 +108,7 @@ class AccountCurrencies extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {
@@ -136,7 +138,7 @@ class AccountCurrencies extends Command
      * @param User   $user
      * @param string $systemCurrencyCode
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void
     {

@@ -100,10 +100,10 @@ class ConfigurationController extends Controller
         $singleUser  = app('fireflyconfig')->get('single_user_mode');
 
         return [
-            'is_demo_site'            => null === $isDemoSite ? null : $isDemoSite->data,
+            'is_demo_site'            => $isDemoSite?->data,
             'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
             'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
-            'single_user_mode'        => null === $singleUser ? null : $singleUser->data,
+            'single_user_mode'        => $singleUser?->data,
         ];
     }
 
@@ -132,14 +132,14 @@ class ConfigurationController extends Controller
         $data     = [];
         $dynamic  = $this->getDynamicConfiguration();
         $shortKey = str_replace('configuration.', '', $configKey);
-        if ('configuration.' === substr($configKey, 0, 14)) {
+        if (str_starts_with($configKey, 'configuration.')) {
             $data = [
                 'title'    => $configKey,
                 'value'    => $dynamic[$shortKey],
                 'editable' => true,
             ];
         }
-        if ('configuration.' !== substr($configKey, 0, 14)) {
+        if (!str_starts_with($configKey, 'configuration.')) {
             $data = [
                 'title'    => $configKey,
                 'value'    => config($configKey),
@@ -157,6 +157,7 @@ class ConfigurationController extends Controller
      * @param string        $name
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {

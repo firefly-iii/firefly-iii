@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLinkType;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
@@ -75,7 +76,7 @@ class ListController extends Controller
      * @param LinkType $linkType
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, LinkType $linkType): JsonResponse

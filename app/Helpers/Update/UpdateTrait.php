@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Update;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use Log;
 
@@ -38,7 +39,7 @@ trait UpdateTrait
      * 'level' => 'info' / 'success' / 'error'
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function getLatestRelease(): array
     {

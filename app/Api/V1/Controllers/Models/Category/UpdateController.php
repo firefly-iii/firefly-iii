@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\Models\Category\UpdateRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Transformers\CategoryTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 

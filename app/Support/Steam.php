@@ -24,11 +24,13 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
+use JsonException;
 use stdClass;
 
 /**
@@ -47,8 +49,8 @@ class Steam
      * @param TransactionCurrency|null $currency
      *
      * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {

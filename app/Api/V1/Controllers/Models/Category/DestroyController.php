@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Category;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**

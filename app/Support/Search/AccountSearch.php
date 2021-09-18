@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Search;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use JsonException;
 
 /**
  * Class AccountSearch
@@ -55,7 +56,7 @@ class AccountSearch implements GenericSearchInterface
 
     /**
      * @return Collection
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function search(): Collection
     {

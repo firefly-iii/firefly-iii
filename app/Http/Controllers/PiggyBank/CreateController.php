@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankStoreRequest;
@@ -88,7 +89,7 @@ class CreateController extends Controller
      * @param PiggyBankStoreRequest $request
      *
      * @return RedirectResponse|Redirector
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function store(PiggyBankStoreRequest $request)
     {

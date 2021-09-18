@@ -452,9 +452,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $journal = $this->getOpeningBalance($account);
         $group   = null;
-        if (null !== $journal) {
-            $group = $journal->transactionGroup;
-        }
+        $group   = $journal?->transactionGroup;
 
         return $group;
     }
@@ -598,9 +596,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $result  = null;
         $journal = $this->oldestJournal($account);
-        if (null !== $journal) {
-            $result = $journal->date;
-        }
+        $result  = $journal?->date;
 
         return $result;
     }

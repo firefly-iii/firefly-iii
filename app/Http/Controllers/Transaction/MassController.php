@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View as IlluminateView;
@@ -91,7 +92,7 @@ class MassController extends Controller
      *
      * @param MassDeleteJournalRequest $request
      *
-     * @return \Illuminate\Contracts\Foundation\Application|Redirector|RedirectResponse
+     * @return Application|Redirector|RedirectResponse
      *
      */
     public function destroy(MassDeleteJournalRequest $request)
@@ -229,14 +230,14 @@ class MassController extends Controller
     /**
      * @param MassEditJournalRequest $request
      * @param int                    $journalId
-     * @param string                 $string
+     * @param string                 $key
      *
      * @return Carbon|null
      * @codeCoverageIgnore
      */
-    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?Carbon
+    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
     {
-        $value = $request->get($string);
+        $value = $request->get($key);
         if (!is_array($value)) {
             return null;
         }

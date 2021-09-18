@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -93,7 +94,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
@@ -144,7 +145,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
@@ -180,7 +181,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function bills(TransactionCurrency $currency): JsonResponse
@@ -221,7 +222,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
@@ -253,7 +254,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
@@ -304,7 +305,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function rules(TransactionCurrency $currency): JsonResponse
@@ -356,7 +357,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse

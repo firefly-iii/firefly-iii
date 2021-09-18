@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\TransactionType;
@@ -52,6 +53,7 @@ class MigrateRecurrenceType extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -74,7 +76,7 @@ class MigrateRecurrenceType extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {

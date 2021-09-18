@@ -30,7 +30,6 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**

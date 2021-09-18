@@ -267,7 +267,7 @@ trait ModifiesPiggyBanks
         if ($newOrder > $oldOrder) {
             $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
                        ->where('piggy_banks.id', '!=', $piggyBank->id)
-                       ->decrement('piggy_banks.order', 1);
+                       ->decrement('piggy_banks.order');
             $piggyBank->order = $newOrder;
             Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
             $piggyBank->save();
@@ -277,7 +277,7 @@ trait ModifiesPiggyBanks
 
         $this->user->piggyBanks()->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
                    ->where('piggy_banks.id', '!=', $piggyBank->id)
-                   ->increment('piggy_banks.order', 1);
+                   ->increment('piggy_banks.order');
         $piggyBank->order = $newOrder;
         Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
         $piggyBank->save();

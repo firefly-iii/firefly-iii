@@ -67,7 +67,7 @@ class ParseDateString
         }
 
         // if + or -:
-        if (0 === strpos($date, '+') || 0 === strpos($date, '-')) {
+        if (str_starts_with($date, '+') || str_starts_with($date, '-')) {
 
             return $this->parseRelativeDate($date);
         }
@@ -81,7 +81,7 @@ class ParseDateString
         }
 
         // maybe a date range
-        if (10 === strlen($date) && (false !== strpos($date, 'xx') || false !== strpos($date, 'xxxx'))) {
+        if (10 === strlen($date) && (str_contains($date, 'xx') || str_contains($date, 'xxxx'))) {
             Log::debug(sprintf('[c]Detected a date range ("%s"), return a fake date.', $date));
             // very lazy way to parse the date without parsing it, because this specific function
             // cant handle date ranges.
@@ -112,7 +112,7 @@ class ParseDateString
             return false;
         }
         // no x'es
-        if (false === strpos($date, 'xx') && false === strpos($date, 'xxxx')) {
+        if (!str_contains($date, 'xx') && !str_contains($date, 'xxxx')) {
             return false;
         }
 
@@ -383,7 +383,7 @@ class ParseDateString
                 Log::error(sprintf('Part "%s" does not match regular expression. Will be skipped.', $part));
                 continue;
             }
-            $direction = 0 === strpos($part, '+') ? 1 : 0;
+            $direction = str_starts_with($part, '+') ? 1 : 0;
             $period    = $part[strlen($part) - 1];
             $number    = (int) substr($part, 1, -1);
             if (!array_key_exists($period, $functions[$direction])) {

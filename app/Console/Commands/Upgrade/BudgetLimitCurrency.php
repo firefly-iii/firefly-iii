@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-use FireflyIII\Models\Budget;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
 
@@ -50,6 +50,8 @@ class BudgetLimitCurrency extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
+     * @throws \JsonException
      */
     public function handle(): int
     {
@@ -95,7 +97,7 @@ class BudgetLimitCurrency extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {

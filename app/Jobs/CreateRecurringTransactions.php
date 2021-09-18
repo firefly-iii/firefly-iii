@@ -27,6 +27,8 @@ namespace FireflyIII\Jobs;
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Exceptions\DuplicateTransactionException;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
@@ -347,8 +349,8 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Carbon               $date
      *
      * @return TransactionGroup|null
-     * @throws \FireflyIII\Exceptions\DuplicateTransactionException
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     private function handleOccurrence(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): ?TransactionGroup
     {

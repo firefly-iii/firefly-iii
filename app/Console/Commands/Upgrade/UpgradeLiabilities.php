@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -57,6 +58,7 @@ class UpgradeLiabilities extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -78,7 +80,7 @@ class UpgradeLiabilities extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {
