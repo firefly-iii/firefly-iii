@@ -61,6 +61,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/updateAccount
+     *
      * Update account.
      *
      * @param UpdateRequest $request

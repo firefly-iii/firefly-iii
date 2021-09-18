@@ -66,6 +66,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/attachments/downloadAttachment
+     *
      * Download an attachment.
      *
      * @param Attachment $attachment
@@ -108,6 +111,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/attachments/listAttachment
+     *
      * Display a listing of the resource.
      *
      * @return JsonResponse
@@ -141,6 +147,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/attachments/getAttachment
+     *
      * Display the specified resource.
      *
      * @param Attachment $attachment

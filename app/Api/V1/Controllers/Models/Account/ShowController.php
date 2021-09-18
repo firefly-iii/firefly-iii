@@ -65,6 +65,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/listAccount
+     *
      * Display a listing of the resource.
      *
      * @param Request $request
@@ -108,6 +111,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/getAccount
+     *
      * Show single instance.
      *
      * @param Account $account

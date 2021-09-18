@@ -62,6 +62,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/attachments/updateAttachment
+     *
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request

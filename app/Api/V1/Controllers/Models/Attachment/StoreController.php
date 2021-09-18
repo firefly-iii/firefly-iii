@@ -66,6 +66,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/attachments/uploadAttachment
+     *
      * Store a newly created resource in storage.
      *
      * @param StoreRequest $request
