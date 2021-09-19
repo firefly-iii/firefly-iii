@@ -39,6 +39,9 @@ use League\Fractal\Resource\Item;
 class AboutController extends Controller
 {
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/about/getAbout
+     *
      * Returns system information.
      *
      * @return JsonResponse
@@ -63,6 +66,9 @@ class AboutController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/about/getCurrentUser
+     *
      * Returns information about the user.
      *
      * @return JsonResponse

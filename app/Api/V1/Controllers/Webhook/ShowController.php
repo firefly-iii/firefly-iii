@@ -59,6 +59,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/listWebhook
+     *
      * Display a listing of the webhooks of the user.
      *
      * @return JsonResponse
@@ -88,6 +91,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/getWebhook
+     *
      * Show single instance.
      *
      * @param Webhook $webhook

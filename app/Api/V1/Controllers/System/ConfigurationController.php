@@ -54,6 +54,9 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/configuration/getConfiguration
+     *
      * @return JsonResponse
      * @throws FireflyException
      */
@@ -122,6 +125,9 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/configuration/getSingleConfiguration
+     *
      * @param string $configKey
      *
      * @return JsonResponse
@@ -151,6 +157,9 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/configuration/setConfiguration
+     *
      * Update the configuration.
      *
      * @param UpdateRequest $request

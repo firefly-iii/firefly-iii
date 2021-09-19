@@ -37,6 +37,9 @@ class CronController extends Controller
     use CronRunner;
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/about/getCron
+     *
      * @param CronRequest $request
      * @param string      $token
      *

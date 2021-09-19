@@ -56,6 +56,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/deleteWebhook
+     *
      * Remove the specified resource from storage.
      *
      * @param Webhook $webhook
@@ -71,6 +74,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This webhook is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/deleteWebhookMessageAttempt
+     *
      * Remove the specified resource from storage.
      *
      * @param Webhook        $webhook
@@ -97,6 +103,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/deleteWebhookMessage
+     *
      * Remove the specified resource from storage.
      *
      * @param Webhook        $webhook

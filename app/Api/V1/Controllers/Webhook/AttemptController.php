@@ -61,6 +61,9 @@ class AttemptController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/getWebhookMessageAttempts
+     *
      * @param Webhook        $webhook
      * @param WebhookMessage $message
      *
@@ -94,6 +97,9 @@ class AttemptController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/getSingleWebhookMessageAttempt
+     *
      * Show single instance.
      *
      * @param Webhook        $webhook

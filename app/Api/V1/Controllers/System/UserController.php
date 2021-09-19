@@ -62,6 +62,9 @@ class UserController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/users/deleteUser
+     *
      * Remove the specified resource from storage.
      *
      * @param User $user
@@ -87,6 +90,9 @@ class UserController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/users/listUser
+     *
      * Display a listing of the resource.
      *
      * @return JsonResponse
@@ -120,6 +126,9 @@ class UserController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/users/getUser
+     *
      * Show a single user.
      *
      * @param User $user
@@ -142,6 +151,9 @@ class UserController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/users/storeUser
+     *
      * Store a new user.
      *
      * @param UserStoreRequest $request
@@ -166,6 +178,9 @@ class UserController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/users/updateUser
+     *
      * Update a user.
      *
      * @param UserUpdateRequest $request

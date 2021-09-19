@@ -57,6 +57,9 @@ class MessageController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/getWebhookMessages
+     *
      * @param Webhook $webhook
      *
      * @return JsonResponse
@@ -86,6 +89,9 @@ class MessageController extends Controller
     }
 
     /**
+     * This endpoint is documented:
+     * https://api-docs.firefly-iii.org/#/webhooks/getSingleWebhookMessage
+     *
      * Show single instance.
      *
      * @param Webhook        $webhook

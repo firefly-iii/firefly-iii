@@ -39,6 +39,9 @@ use League\Fractal\Resource\Collection;
 class TransactionController extends Controller
 {
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/search/searchTransactions
+     *
      * @param Request         $request
      * @param SearchInterface $searcher
      *
