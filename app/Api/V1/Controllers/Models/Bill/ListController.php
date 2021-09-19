@@ -67,6 +67,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/bills/listAttachmentByBill
+     *
      * Display a listing of the resource.
      *
      * @param Bill $bill
@@ -99,6 +102,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/bills/listRuleByBill
+     *
      * List all of them.
      *
      * @param Bill $bill
@@ -134,6 +140,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/bills/listTransactionByBill
+     *
      * Show all transactions.
      *
      * @param Request $request

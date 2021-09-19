@@ -60,6 +60,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/bills/listBill
+     *
      * Display a listing of the resource.
      *
      * @return JsonResponse
@@ -87,6 +90,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/bills/getBill
+     *
      * Show the specified bill.
      *
      * @param Bill $bill

@@ -57,6 +57,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/bills/updateBill
+     *
      * Update a bill.
      *
      * @param UpdateRequest $request

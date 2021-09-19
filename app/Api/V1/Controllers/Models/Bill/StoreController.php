@@ -60,6 +60,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/bills/storeBill
+     *
      * Store a bill.
      *
      * @param StoreRequest $request

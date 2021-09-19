@@ -102,6 +102,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/available_budgets/getAvailableBudget
+     *
      * Display the specified resource.
      *
      * @param AvailableBudget $availableBudget

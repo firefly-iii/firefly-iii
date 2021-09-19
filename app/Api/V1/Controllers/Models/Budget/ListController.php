@@ -71,6 +71,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/listAttachmentByBudget
+     *
      * @param Budget $budget
      *
      * @return JsonResponse
@@ -101,6 +104,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/listBudgetLimitByBudget
+     *
      * Display a listing of the resource.
      *
      * @param Budget $budget
@@ -130,6 +136,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/listTransactionByBudget
+     *
      * Show all transactions.
      *
      * @param Request $request

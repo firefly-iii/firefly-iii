@@ -57,6 +57,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/updateBudget
+     *
      * Update a budget.
      *
      * @param UpdateRequest $request

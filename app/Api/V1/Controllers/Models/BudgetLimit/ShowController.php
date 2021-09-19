@@ -70,7 +70,10 @@ class ShowController extends Controller
     }
 
     /**
-     * Display a listing of the budget limits for this budget..
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/listBudgetLimitByBudget
+     *
+     * Display a listing of the budget limits for this budget.
      *
      * @param Request $request
      * @param Budget  $budget
@@ -101,7 +104,10 @@ class ShowController extends Controller
     }
 
     /**
-     * Display a listing of the budget limits for this budget..
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/listBudgetLimit
+     *
+     * Display a listing of the budget limits for this budget.
      *
      * @param DateRequest $request
      *
@@ -131,6 +137,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/getBudgetLimit
+     *
      * @param Request     $request
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
