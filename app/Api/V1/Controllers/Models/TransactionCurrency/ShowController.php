@@ -65,6 +65,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/listCurrency
+     *
      * Display a listing of the resource.
      *
      * @return JsonResponse
@@ -95,6 +98,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/getCurrency
+     *
      * Show a currency.
      *
      * @param TransactionCurrency $currency
@@ -118,6 +124,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/getDefaultCurrency
+     *
      * Show a currency.
      *
      * @return JsonResponse

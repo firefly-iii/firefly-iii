@@ -67,6 +67,9 @@ class TriggerController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/rule_groups/testRuleGroup
+     *
      * @param TestRequest $request
      * @param RuleGroup   $group
      *
@@ -120,6 +123,9 @@ class TriggerController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/rule_groups/fireRuleGroup
+     *
      * Execute the given rule group on a set of existing transactions.
      *
      * @param TriggerRequest $request

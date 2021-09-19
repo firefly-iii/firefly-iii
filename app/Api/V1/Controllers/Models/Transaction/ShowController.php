@@ -46,6 +46,9 @@ class ShowController extends Controller
     use TransactionFilter;
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/transactions/listTransaction
+     *
      * Show all transactions.
      *
      * @param Request $request
@@ -96,6 +99,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/transactions/getTransactionByJournal
+     *
      * Show a single transaction, by transaction journal.
      *
      * @param TransactionJournal $transactionJournal
@@ -109,6 +115,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/transactions/getTransaction
+     *
      * Show a single transaction.
      *
      * @param TransactionGroup $transactionGroup

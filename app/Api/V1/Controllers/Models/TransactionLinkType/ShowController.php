@@ -70,7 +70,9 @@ class ShowController extends Controller
     }
 
     /**
-     * List all of them.
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/listLinkType
+     *
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -103,6 +105,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/getLinkType
+     *
      * List single resource.
      *
      * @param LinkType $linkType

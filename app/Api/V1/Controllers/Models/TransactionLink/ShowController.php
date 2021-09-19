@@ -64,7 +64,10 @@ class ShowController extends Controller
     }
 
     /**
-     * List all of the transaction links there are.
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/listTransactionLink
+     *
+     * List all transaction links there are.
      *
      * @param Request $request
      *
@@ -104,6 +107,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/getTransactionLink
+     *
      * List single resource.
      *
      * @param TransactionJournalLink $journalLink

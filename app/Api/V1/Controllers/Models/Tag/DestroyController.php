@@ -58,6 +58,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/tags/deleteTag
+     *
      * Delete the resource.
      *
      * @param Tag $tag

@@ -63,6 +63,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/rule_groups/listRuleByGroup
+     *
      * @param RuleGroup $group
      *
      * @return JsonResponse

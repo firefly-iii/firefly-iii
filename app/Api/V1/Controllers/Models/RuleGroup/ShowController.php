@@ -64,6 +64,8 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/rule_groups/listRuleGroup
      * List all of them.
      *
      * @return JsonResponse
@@ -96,6 +98,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/rule_groups/getRuleGroup
+     *
      * List single resource.
      *
      * @param RuleGroup $ruleGroup

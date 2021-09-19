@@ -60,6 +60,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/categories/listCategory
+     *
      * Display a listing of the resource.
      *
      * @return JsonResponse
@@ -92,6 +95,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/categories/getCategory
+     *
      * Show the category.
      *
      * @param Category $category

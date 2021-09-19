@@ -57,6 +57,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/categories/storeCategory
+     *
      * Store new category.
      *
      * @param StoreRequest $request

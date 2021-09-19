@@ -64,6 +64,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/listObjectGroups
+     *
      * Display a listing of the resource.
      *
      * @param Request $request
@@ -99,6 +102,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/getObjectGroup
+     *
      * Show single instance.
      *
      * @param ObjectGroup $objectGroup

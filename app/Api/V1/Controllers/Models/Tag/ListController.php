@@ -69,6 +69,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/tags/listAttachmentByTag
+     *
      * @param Tag $tag
      *
      * @return JsonResponse
@@ -99,6 +102,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/tags/listTransactionByTag
+     *
      * Show all transactions.
      *
      * @param Request $request

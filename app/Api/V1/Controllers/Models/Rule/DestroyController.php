@@ -58,6 +58,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/rules/deleteRule
+     *
      * Delete the resource.
      *
      * @param Rule $rule

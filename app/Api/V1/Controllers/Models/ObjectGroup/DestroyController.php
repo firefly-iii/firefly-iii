@@ -57,6 +57,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/deleteObjectGroup
+     *
      * Remove the specified resource from storage.
      *
      * @param ObjectGroup $objectGroup

@@ -65,6 +65,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/transactions/updateTransaction
+     *
      * Update a transaction.
      *
      * @param UpdateRequest    $request

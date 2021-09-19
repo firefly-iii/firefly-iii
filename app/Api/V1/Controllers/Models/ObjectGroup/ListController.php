@@ -63,7 +63,10 @@ class ListController extends Controller
     }
 
     /**
-     * List all bills
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/listBillByObjectGroup
+     *
+     * List all bills in this object group
      *
      * @param ObjectGroup $objectGroup
      *
@@ -96,6 +99,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/listPiggyBankByObjectGroup
+     *
      * List all piggies under the object group.
      *
      * @param ObjectGroup $objectGroup

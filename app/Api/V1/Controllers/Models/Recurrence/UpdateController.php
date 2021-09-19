@@ -57,6 +57,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/recurrences/updateRecurrence
+     *
      * Update single recurrence.
      *
      * @param UpdateRequest $request

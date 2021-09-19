@@ -70,7 +70,8 @@ class ListController extends Controller
     }
 
     /**
-     * Delete the resource.
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/listTransactionByLinkType
      *
      * @param Request  $request
      * @param LinkType $linkType

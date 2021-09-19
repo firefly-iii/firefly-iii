@@ -67,6 +67,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/disableCurrency
+     *
      * Disable a currency.
      *
      * @param TransactionCurrency $currency
@@ -97,6 +100,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/enableCurrency
+     *
      * Enable a currency.
      *
      * @param TransactionCurrency $currency
@@ -123,6 +129,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/defaultCurrency
+     *
      * Make the currency a default currency.
      *
      * @param TransactionCurrency $currency
@@ -153,6 +162,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/updateCurrency
+     *
      * Update a currency.
      *
      * @param UpdateRequest       $request

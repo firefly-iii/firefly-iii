@@ -66,6 +66,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/rule_groups/storeRuleGroup
+     *
      * Store new object.
      *
      * @param StoreRequest $request

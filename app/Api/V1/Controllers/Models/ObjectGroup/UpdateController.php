@@ -60,6 +60,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/updateObjectGroup
+     *
      * @param UpdateRequest $request
      * @param ObjectGroup   $objectGroup
      *

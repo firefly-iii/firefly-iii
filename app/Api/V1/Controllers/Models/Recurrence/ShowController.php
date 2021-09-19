@@ -60,6 +60,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/recurrences/listRecurrence
+     *
      * List all of them.
      *
      * @return JsonResponse
@@ -94,6 +97,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/recurrences/getRecurrence
+     *
      * List single resource.
      *
      * @param Recurrence $recurrence

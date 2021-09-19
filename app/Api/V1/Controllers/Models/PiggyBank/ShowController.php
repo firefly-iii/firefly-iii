@@ -60,6 +60,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/piggy_banks/listPiggyBank
+     *
      * List all of them.
      *
      * @return JsonResponse
@@ -93,6 +96,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/piggy_banks/getPiggyBank
+     *
      * List single resource.
      *
      * @param PiggyBank $piggyBank
