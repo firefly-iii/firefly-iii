@@ -66,7 +66,7 @@ class BudgetController extends Controller
 
     /**
      * This endpoint is documented at:
-     * http://10.0.0.15/FF3/api/api-docs/#/insight/insightExpenseBudget
+     * https://api-docs.firefly-iii.org/#/insight/insightExpenseBudget
      *
      * @param GenericRequest $request
      *
