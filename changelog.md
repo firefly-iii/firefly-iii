@@ -2,6 +2,33 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.1 - 2020-09-xx
+
+### Added
+- Initial release.
+
+### Changed
+- Initial release.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- Initial release.
+
+### Security
+- Initial release.
+
+### API
+- Deprecated the "currencies with code"-endpoint (see the [API documentation](https://api-docs.firefly-iii.org/#/autocomplete/getCurrenciesCodeAC)).
+- Add missing "order" field to budget.
+- Add missing "rule_group_title" to rules.
+- Attachment endpoint returns "upload_url" and "download_url" instead of "*_uri".
+
+
 ## 5.6.0 - 2021-09-17
 
 ⚠️ This release features new LDAP libraries. Your mileage may vary. Make sure you back up everything. Firefly III may accidentally create a new account for you instead of reusing the old one. There is no option for LDAP filters yet. 
