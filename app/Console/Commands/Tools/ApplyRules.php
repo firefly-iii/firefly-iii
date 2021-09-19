@@ -179,7 +179,7 @@ class ApplyRules extends Command
         // verify account.
         $result = $this->verifyInputAccounts();
         if (false === $result) {
-            return $result;
+            return false;
         }
 
         // verify rule groups.
