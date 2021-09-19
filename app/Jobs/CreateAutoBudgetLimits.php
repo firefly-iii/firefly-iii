@@ -178,7 +178,6 @@ class CreateAutoBudgetLimits implements ShouldQueue
                 $value  = $this->date->format($format);
 
                 return in_array($value, ['01-01', '07-01'], true);
-                break;
             case 'yearly':
                 $format = 'm-d';
                 $value  = $this->date->format($format);

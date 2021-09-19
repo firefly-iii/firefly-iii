@@ -81,23 +81,19 @@ class GracefulNotFoundHandler extends ExceptionHandler
             case 'attachments.view':
                 // redirect to original attachment holder.
                 return $this->handleAttachment($request, $e);
-                break;
             case 'bills.show':
                 $request->session()->reflash();
 
                 return redirect(route('bills.index'));
-                break;
             case 'currencies.show':
                 $request->session()->reflash();
 
                 return redirect(route('currencies.index'));
-                break;
             case 'budgets.show':
             case 'budgets.edit':
                 $request->session()->reflash();
 
                 return redirect(route('budgets.index'));
-                break;
             case 'piggy-banks.show':
                 $request->session()->reflash();
 
