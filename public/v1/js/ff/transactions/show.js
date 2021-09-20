@@ -23,6 +23,7 @@
 $(function () {
     "use strict";
     $('.link-modal').click(getLinkModal);
+    $('.clone-transaction').click(cloneTransaction);
     $('#linkJournalModal').on('shown.bs.modal', function () {
         makeAutoComplete();
     })
@@ -79,4 +80,20 @@ function selectedJournal(event, journal) {
     $('#journal-selection').show();
     $('#selected-journal').html('<a href="' + groupURI.replace('%GROUP%', journal.transaction_group_id) + '">' + journal.description + '</a>').show();
     $('input[name="opposing"]').val(journal.id);
+}
+
+function cloneTransaction(e) {
+    var button = $(e.currentTarget);
+    var groupId = parseInt(button.data('id'));
+
+    $.post(cloneGroupUrl, {
+        _token: token,
+        id: groupId
+    }).done(function (data) {
+        // lame but it works
+        location.href = data.redirect;
+    }).fail(function () {
+        console.error('I failed :(');
+    });
+    return false;
 }

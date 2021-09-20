@@ -28,17 +28,20 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class CreateController
  */
 class CreateController extends Controller
 {
+    private TransactionGroupRepositoryInterface $repository;
+
     /**
      * CreateController constructor.
      *
@@ -49,9 +52,10 @@ class CreateController extends Controller
         parent::__construct();
 
         $this->middleware(
-            static function ($request, $next) {
+            function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
+                $this->repository = app(TransactionGroupRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -59,28 +63,35 @@ class CreateController extends Controller
     }
 
     /**
-     * @param TransactionGroup $group
+     * @param Request $request
      *
-     * @return RedirectResponse|Redirector
+     * @return JsonResponse
      */
-    public function cloneGroup(TransactionGroup $group)
+    public function cloneGroup(Request $request): JsonResponse
     {
+        $groupId = (int)$request->get('id');
+        if (0 !== $groupId) {
+            $group = $this->repository->find($groupId);
+            if (null !== $group) {
+                /** @var GroupCloneService $service */
+                $service  = app(GroupCloneService::class);
+                $newGroup = $service->cloneGroup($group);
 
-        /** @var GroupCloneService $service */
-        $service  = app(GroupCloneService::class);
-        $newGroup = $service->cloneGroup($group);
+                // event!
+                event(new StoredTransactionGroup($newGroup));
 
-        // event!
-        event(new StoredTransactionGroup($newGroup));
+                app('preferences')->mark();
 
-        app('preferences')->mark();
+                $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
+                $link  = route('transactions.show', [$newGroup->id]);
+                session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
+                session()->flash('success_url', $link);
 
-        $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
-        $link  = route('transactions.show', [$newGroup->id]);
-        session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
-        session()->flash('success_url', $link);
+                return response()->json(['redirect' => route('transactions.show', [$newGroup->id])]);
+            }
+        }
 
-        return redirect(route('transactions.show', [$newGroup->id]));
+        return response()->json(['redirect' => route('transactions.show', [$groupId])]);
     }
 
     /**

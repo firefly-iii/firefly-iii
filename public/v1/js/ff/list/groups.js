@@ -23,6 +23,7 @@ var count = 0;
 $(document).ready(function () {
     updateListButtons();
     addSort();
+    $('.clone-transaction').click(cloneTransaction);
 });
 
 var fixHelper = function (e, tr) {
@@ -206,4 +207,19 @@ function updateActionButtons() {
     if (0 === count) {
         $('.action-menu').hide();
     }
+}
+function cloneTransaction(e) {
+    var button = $(e.currentTarget);
+    var groupId = parseInt(button.data('id'));
+
+    $.post(cloneGroupUrl, {
+        _token: token,
+        id: groupId
+    }).done(function (data) {
+        // lame but it works
+        location.href = data.redirect;
+    }).fail(function () {
+        console.error('I failed :(');
+    });
+    return false;
 }

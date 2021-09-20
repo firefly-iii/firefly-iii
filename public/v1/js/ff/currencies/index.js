@@ -25,6 +25,8 @@ $(function () {
     "use strict";
     $('.make_default').on('click', setDefaultCurrency);
 
+    $('.enable-currency').on('click', enableCurrency);
+    $('.disable-currency').on('click', disableCurrency);
 });
 
 function setDefaultCurrency(e) {
@@ -40,4 +42,37 @@ function setDefaultCurrency(e) {
     }).fail(function () {
         console.error('I failed :(');
     });
+    return false;
+}
+
+function enableCurrency(e) {
+    var button = $(e.currentTarget);
+    var currencyId = parseInt(button.data('id'));
+
+    $.post(enableCurrencyUrl, {
+        _token: token,
+        id: currencyId
+    }).done(function (data) {
+        // lame but it works
+        location.reload();
+    }).fail(function () {
+        console.error('I failed :(');
+    });
+    return false;
+}
+
+function disableCurrency(e) {
+    var button = $(e.currentTarget);
+    var currencyId = parseInt(button.data('id'));
+
+    $.post(disableCurrencyUrl, {
+        _token: token,
+        id: currencyId
+    }).done(function (data) {
+        // lame but it works
+        location.reload();
+    }).fail(function () {
+        console.error('I failed :(');
+    });
+    return false;
 }

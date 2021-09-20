@@ -69,14 +69,14 @@
                                                             class="fa fa-fw fa-star"></span> {{ 'make_default_currency'|_ }}</button>
                                             {% endif %}
                                             {% if currency.enabled %}
-                                                <a class="btn btn-default"
-                                                   href="{{ route('currencies.disable',currency.id) }}">
+                                                <a class="btn btn-default disable-currency" data-id="{{ currency.id }}"
+                                                   href="#">
                                                     <span class="fa fa-fw fa-square-o"></span>
                                                     {{ 'disable_currency'|_ }}</a>
                                             {% endif %}
                                             {% if not currency.enabled %}
-                                                <a class="btn btn-default"
-                                                   href="{{ route('currencies.enable',currency.id) }}">
+                                                <a class="btn btn-default enable-currency" data-id="{{ currency.id }}"
+                                                   href="#">
                                                     <span class="fa fa-fw fa-check-square-o"></span>
                                                     {{ 'enable_currency'|_ }}</a>
                                             {% endif %}
@@ -101,6 +101,8 @@
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var makeDefaultUrl = "{{ route('currencies.default') }}";
+        var disableCurrencyUrl = "{{ route('currencies.disable') }}";
+        var enableCurrencyUrl = "{{ route('currencies.enable') }}";
     </script>
     <script type="text/javascript" src="v1/js/ff/currencies/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
