@@ -108,20 +108,7 @@
     "spatie/data-transfer-object": "^3.1",
     "psr/log": "<2"
   },
-  "require-dev": {
-    "barryvdh/laravel-debugbar": "^3.3",
-    "barryvdh/laravel-ide-helper": "2.*",
-    "ergebnis/phpstan-rules": "^0.15.0",
-    "filp/whoops": "2.*",
-    "fakerphp/faker": "1.*",
-    "mockery/mockery": "1.*",
-    "nunomaduro/larastan": "^0.7.11",
-    "phpstan/phpstan": "^0.12.94",
-    "phpstan/phpstan-deprecation-rules": "^0.12.5",
-    "phpunit/phpunit": "^9.5",
-    "roave/security-advisories": "dev-master",
-    "thecodingmachine/phpstan-strict-rules": "^0.12.0"
-  },
+
   "suggest": {
     "directorytree/ldaprecord-laravel": "If you want to login using LDAP.",
     "ext-ldap": "Needed to support LDAP."
