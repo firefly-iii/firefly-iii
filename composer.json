@@ -108,7 +108,14 @@
     "spatie/data-transfer-object": "^3.1",
     "psr/log": "<2"
   },
-
+  "require-dev": {
+    "barryvdh/laravel-debugbar": "^3.3",
+    "barryvdh/laravel-ide-helper": "2.*",
+    "filp/whoops": "2.*",
+    "fakerphp/faker": "1.*",
+    "mockery/mockery": "1.*",
+    "phpunit/phpunit": "^9.5"
+  },
   "suggest": {
     "directorytree/ldaprecord-laravel": "If you want to login using LDAP.",
     "ext-ldap": "Needed to support LDAP."
