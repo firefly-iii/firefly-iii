@@ -70,6 +70,7 @@
         "daily_budgets": "\u6bcf\u65e5\u9884\u7b97",
         "weekly_budgets": "\u6bcf\u5468\u9884\u7b97",
         "monthly_budgets": "\u6bcf\u6708\u9884\u7b97",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "\u6bcf\u5b63\u5ea6\u9884\u7b97",
         "create_new_expense": "\u521b\u5efa\u65b0\u652f\u51fa\u8d26\u6237",
         "create_new_revenue": "\u521b\u5efa\u65b0\u6536\u5165\u8d26\u6237",

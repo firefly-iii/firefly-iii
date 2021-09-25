@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\TransactionGroup;
@@ -121,6 +122,7 @@ class GroupUpdateService
      * @param array            $transactions
      *
      * @return array
+     * @throws DuplicateTransactionException
      * @throws FireflyException
      */
     private function updateTransactions(TransactionGroup $transactionGroup, array $transactions): array
@@ -168,7 +170,7 @@ class GroupUpdateService
      * @param array            $data
      *
      * @throws FireflyException
-     * @throws \FireflyIII\Exceptions\DuplicateTransactionException
+     * @throws DuplicateTransactionException
      */
     private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): void
     {

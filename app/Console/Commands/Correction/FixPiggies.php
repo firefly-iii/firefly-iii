@@ -57,7 +57,7 @@ class FixPiggies extends Command
     {
         $count = 0;
         $start = microtime(true);
-        $set         = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
+        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
 
         /** @var PiggyBankEvent $event */
         foreach ($set as $event) {

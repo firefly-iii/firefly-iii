@@ -29,11 +29,10 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BillStoreRequest;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Log;
 
 /**
@@ -70,7 +69,7 @@ class CreateController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function create(Request $request)
     {
@@ -125,7 +124,7 @@ class CreateController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
         return redirect(route('rules.create-from-bill', [$bill->id]));

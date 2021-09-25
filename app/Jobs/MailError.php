@@ -40,9 +40,9 @@ class MailError extends Job implements ShouldQueue
     use InteractsWithQueue, SerializesModels;
 
     protected string $destination;
-    protected array $exception;
+    protected array  $exception;
     protected string $ipAddress;
-    protected array $userData;
+    protected array  $userData;
 
     /**
      * MailError constructor.

@@ -78,6 +78,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Attachment withTrashed()
  * @method static Builder|Attachment withoutTrashed()
  * @mixin Eloquent
+ * @property int|null            $user_group_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserGroupId($value)
  */
 class Attachment extends Model
 {

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
@@ -31,7 +30,9 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -50,7 +51,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Request   $request
      * @param Throwable $e
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response|Redirector|RedirectResponse|Response
+     * @return Application|JsonResponse|\Illuminate\Http\Response|Redirector|RedirectResponse|Response
      * @throws Throwable
      */
     public function render($request, Throwable $e)
@@ -80,23 +81,19 @@ class GracefulNotFoundHandler extends ExceptionHandler
             case 'attachments.view':
                 // redirect to original attachment holder.
                 return $this->handleAttachment($request, $e);
-                break;
             case 'bills.show':
                 $request->session()->reflash();
 
                 return redirect(route('bills.index'));
-                break;
             case 'currencies.show':
                 $request->session()->reflash();
 
                 return redirect(route('currencies.index'));
-                break;
             case 'budgets.show':
             case 'budgets.edit':
                 $request->session()->reflash();
 
                 return redirect(route('budgets.index'));
-                break;
             case 'piggy-banks.show':
                 $request->session()->reflash();
 
@@ -165,7 +162,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
     }
 
     /**
-     * @param Request $request
+     * @param Request   $request
      * @param Throwable $exception
      *
      * @return RedirectResponse|\Illuminate\Http\Response|Redirector|Response

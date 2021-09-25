@@ -101,9 +101,7 @@ class RecurrenceFactory
         if (array_key_exists('active', $data['recurrence'])) {
             $active = $data['recurrence']['active'];
         }
-        if (null !== $repeatUntil) {
-            $repeatUntilString = $repeatUntil->format('Y-m-d');
-        }
+        $repeatUntilString = $repeatUntil?->format('Y-m-d');
 
         $recurrence = new Recurrence(
             [
@@ -111,7 +109,7 @@ class RecurrenceFactory
                 'transaction_type_id' => $type->id,
                 'title'               => $title,
                 'description'         => $description,
-                'first_date'          => $firstDate ? $firstDate->format('Y-m-d') : null,
+                'first_date'          => $firstDate?->format('Y-m-d'),
                 'repeat_until'        => $repetitions > 0 ? null : $repeatUntilString,
                 'latest_date'         => null,
                 'repetitions'         => $repetitions,
@@ -144,19 +142,19 @@ class RecurrenceFactory
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @return MessageBag
      */
     public function getErrors(): MessageBag
     {
         return $this->errors;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
 

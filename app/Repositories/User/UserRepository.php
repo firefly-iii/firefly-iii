@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\User;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -169,16 +170,6 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param string $email
-     *
-     * @return User|null
-     */
-    public function findByEmail(string $email): ?User
-    {
-        return User::where('email', $email)->first();
-    }
-
-    /**
      * @param int $userId
      *
      * @return User|null
@@ -186,6 +177,16 @@ class UserRepository implements UserRepositoryInterface
     public function find(int $userId): ?User
     {
         return User::find($userId);
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return User::where('email', $email)->first();
     }
 
     /**
@@ -347,6 +348,7 @@ class UserRepository implements UserRepositoryInterface
      * @param array $data
      *
      * @return User
+     * @throws FireflyException
      */
     public function update(User $user, array $data): User
     {
@@ -375,7 +377,7 @@ class UserRepository implements UserRepositoryInterface
      * @param string $newEmail
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @see changeEmail
      */
     public function updateEmail(User $user, string $newEmail): bool

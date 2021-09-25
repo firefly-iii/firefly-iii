@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
+
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Form;
@@ -29,7 +30,7 @@ use Illuminate\Support\HtmlString;
 
 /**
  * Class RuleForm
-* See reference nr. 31
+ * See reference nr. 31
  */
 class RuleForm
 {

@@ -199,6 +199,16 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function findNothing(): GroupCollectorInterface
+    {
+        $this->query->where('transaction_groups.id', -1);
+
+        return $this;
+    }
+
+    /**
      * Return the transaction journals without group information. Is useful in some instances.
      *
      * @return array
@@ -766,15 +776,5 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         return $groups;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function findNothing(): GroupCollectorInterface
-    {
-        $this->query->where('transaction_groups.id', -1);
-
-        return $this;
     }
 }

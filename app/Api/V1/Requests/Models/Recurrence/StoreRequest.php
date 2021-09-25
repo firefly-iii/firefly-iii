@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 
-use Carbon\Carbon;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;

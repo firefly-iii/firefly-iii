@@ -36,7 +36,7 @@ use Illuminate\Http\JsonResponse;
  */
 class PiggyBankController extends Controller
 {
-    private AccountRepositoryInterface $accountRepository;
+    private AccountRepositoryInterface   $accountRepository;
     private PiggyBankRepositoryInterface $piggyRepository;
 
     /**
@@ -60,6 +60,9 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getPiggiesAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
@@ -80,6 +83,7 @@ class PiggyBankController extends Controller
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
         }
@@ -88,6 +92,9 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getPiggiesBalanceAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
@@ -112,6 +119,7 @@ class PiggyBankController extends Controller
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
         }

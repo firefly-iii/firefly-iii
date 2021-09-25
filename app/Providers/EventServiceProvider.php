@@ -126,15 +126,15 @@ class EventServiceProvider extends ServiceProvider
             ],
 
             // account related events:
-            StoredAccount::class => [
+            StoredAccount::class                => [
                 'FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit',
-                ],
-            UpdatedAccount::class => [
+            ],
+            UpdatedAccount::class               => [
                 'FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit',
             ],
 
             // LDAP related events:
-            Imported::class => [
+            Imported::class                     => [
                 'FireflyIII\Handlers\Events\LDAPEventHandler@importedUser',
             ],
         ];

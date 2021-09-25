@@ -71,6 +71,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/transactions/storeTransaction
+     *
      * Store a new transaction.
      *
      * @param StoreRequest $request
@@ -94,16 +97,16 @@ class StoreController extends Controller
             $validator = Validator::make(
                 ['transactions' => [['description' => $e->getMessage()]]], ['transactions.0.description' => new IsDuplicateTransaction]
             );
-            throw new ValidationException($validator,0, $e);
+            throw new ValidationException($validator, 0, $e);
         } catch (FireflyException $e) {
             Log::warning('Caught an exception. Return error message.');
             Log::error($e->getMessage());
             $message   = sprintf('Internal exception: %s', $e->getMessage());
             $validator = Validator::make(['transactions' => [['description' => $message]]], ['transactions.0.description' => new IsDuplicateTransaction]);
-            throw new ValidationException($validator,0, $e);
+            throw new ValidationException($validator, 0, $e);
         }
         app('preferences')->mark();
-        $applyRules = $data['apply_rules'] ?? true;
+        $applyRules   = $data['apply_rules'] ?? true;
         $fireWebhooks = $data['fire_webhooks'] ?? true;
         event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 

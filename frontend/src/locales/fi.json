@@ -70,6 +70,7 @@
         "daily_budgets": "Daily budgets",
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "Quarterly budgets",
         "create_new_expense": "Luo uusi maksutili",
         "create_new_revenue": "Luo uusi tuottotili",

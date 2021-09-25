@@ -35,9 +35,8 @@
 
                             {#  clone #}
                             {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
-                                <!-- since 5.1.0 -->
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('transactions.clone', [transactionGroup.id]) }}"><span class="fa fa-copy"></span> {{ 'clone'|_ }}</a></li>
+                                <li><a href="#" class="clone-transaction" data-id="{{ transactionGroup.id }}"><span class="fa fa-copy"></span> {{ 'clone'|_ }}</a></li>
                             {% endif %}
 
                         </ul>
@@ -208,9 +207,8 @@
 
                                 {#  clone #}
                                 {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
-                                    <!-- since 5.1.0 -->
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('transactions.clone', [transactionGroup.id]) }}"><span class="fa fa-copy"></span> {{ 'clone'|_ }}</a></li>
+                                    <li><a href="#" data-id="{{ transactionGroup.id }}" class="clone-transaction"><span class="fa fa-copy"></span> {{ 'clone'|_ }}</a></li>
                                 {% endif %}
 
                                 <li><a href="#" class="link-modal" data-journal="{{ journal.transaction_journal_id }}"><span class="fa fa-fw fa-link"></span>{{ 'link_transaction'|_ }}</a></li>
@@ -219,7 +217,6 @@
                                 <li><a href="{{ route('recurring.create-from-journal', [journal.transaction_journal_id]) }}"><span class="fa fa-fw fa-paint-brush"></span>{{ 'create_recurring_from_transaction'|_ }}</a></li>
                             </ul>
                         </div>
-
                     </div>
                     <div class="box-body no-padding">
                         <table class="table">
@@ -425,6 +422,7 @@
         var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURI = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
         var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
+        var cloneGroupUrl = '{{ route('transactions.clone') }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

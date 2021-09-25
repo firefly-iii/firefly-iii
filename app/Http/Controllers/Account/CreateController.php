@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
@@ -135,6 +136,7 @@ class CreateController extends Controller
      * @param AccountFormRequest $request
      *
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function store(AccountFormRequest $request)
     {

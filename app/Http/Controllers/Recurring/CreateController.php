@@ -46,9 +46,9 @@ use Illuminate\View\View;
 class CreateController extends Controller
 {
     private AttachmentHelperInterface    $attachments;
+    private BillRepositoryInterface      $billRepository;
     private BudgetRepositoryInterface    $budgetRepos;
     private RecurringRepositoryInterface $recurring;
-    private BillRepositoryInterface      $billRepository;
 
     /**
      * CreateController constructor.

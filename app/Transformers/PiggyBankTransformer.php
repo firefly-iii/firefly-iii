@@ -22,7 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-use FireflyIII\Models\Account;
+
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -49,6 +49,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $this->currencyRepos = app(CurrencyRepositoryInterface::class);
         $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
     }
+
     /**
      * Transform the piggy bank.
      *
@@ -89,8 +90,8 @@ class PiggyBankTransformer extends AbstractTransformer
 
         // left to save:
         $leftToSave = bcsub($piggyBank->targetamount, $currentAmountStr);
-        $startDate  = null === $piggyBank->startdate ? null : $piggyBank->startdate->toAtomString();
-        $targetDate = null === $piggyBank->targetdate ? null : $piggyBank->targetdate->toAtomString();
+        $startDate  = $piggyBank->startdate?->toAtomString();
+        $targetDate = $piggyBank->targetdate?->toAtomString();
 
         // target and percentage:
         $targetAmount = $piggyBank->targetamount;

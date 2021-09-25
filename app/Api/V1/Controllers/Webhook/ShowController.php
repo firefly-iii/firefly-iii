@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Webhook;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -59,19 +59,22 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/listWebhook
+     *
      * Display a listing of the webhooks of the user.
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse
     {
-        $manager    = $this->getManager();
+        $manager = $this->getManager();
         $collection = $this->repository->all();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $count      = $collection->count();
-        $webhooks   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $count = $collection->count();
+        $webhooks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
@@ -88,6 +91,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/getWebhook
+     *
      * Show single instance.
      *
      * @param Webhook $webhook

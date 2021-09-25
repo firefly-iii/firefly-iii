@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Authentication;
+
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -56,10 +57,10 @@ class RemoteUserProvider implements UserProvider
             Log::debug(sprintf('User with email "%s" not found. Will be created.', $identifier));
             $user = User::create(
                 [
-                    'blocked'      => false,
+                    'blocked' => false,
                     'blocked_code' => null,
-                    'email'        => $identifier,
-                    'password'     => bcrypt(Str::random(64)),
+                    'email' => $identifier,
+                    'password' => bcrypt(Str::random(64)),
                 ]
             );
         }

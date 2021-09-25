@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -132,6 +133,7 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * @return bool
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {
@@ -140,7 +142,7 @@ class TransferCurrenciesCorrections extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     /**
@@ -169,7 +171,7 @@ class TransferCurrenciesCorrections extends Command
 
 
         if ($this->isSplitJournal($transfer)) {
-            $this->line(sprintf(sprintf('Transaction journal #%d is a split journal. Cannot continue.', $transfer->id)));
+            $this->line(sprintf('Transaction journal #%d is a split journal. Cannot continue.', $transfer->id));
 
             return;
         }
@@ -246,7 +248,7 @@ class TransferCurrenciesCorrections extends Command
     private function getSourceInformation(TransactionJournal $journal): void
     {
         $this->sourceTransaction = $this->getSourceTransaction($journal);
-        $this->sourceAccount     = null === $this->sourceTransaction ? null : $this->sourceTransaction->account;
+        $this->sourceAccount     = $this->sourceTransaction?->account;
         $this->sourceCurrency    = null === $this->sourceAccount ? null : $this->getCurrency($this->sourceAccount);
     }
 
@@ -270,10 +272,10 @@ class TransferCurrenciesCorrections extends Command
     {
         $accountId = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
-            return null; 
+            return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
-            return $this->accountCurrencies[$accountId]; 
+            return $this->accountCurrencies[$accountId];
         }
         $currency = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
@@ -298,7 +300,7 @@ class TransferCurrenciesCorrections extends Command
     private function getDestinationInformation(TransactionJournal $journal): void
     {
         $this->destinationTransaction = $this->getDestinationTransaction($journal);
-        $this->destinationAccount     = null === $this->destinationTransaction ? null : $this->destinationTransaction->account;
+        $this->destinationAccount     = $this->destinationTransaction?->account;
         $this->destinationCurrency    = null === $this->destinationAccount ? null : $this->getCurrency($this->destinationAccount);
     }
 

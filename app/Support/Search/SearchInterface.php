@@ -33,6 +33,11 @@ use Illuminate\Support\Collection;
 interface SearchInterface
 {
     /**
+     * @return array
+     */
+    public function getInvalidOperators(): array;
+
+    /**
      * @return Collection
      */
     public function getModifiers(): Collection;
@@ -41,11 +46,6 @@ interface SearchInterface
      * @return Collection
      */
     public function getOperators(): Collection;
-
-    /**
-     * @return array
-     */
-    public function getInvalidOperators(): array;
 
     /**
      * @return string

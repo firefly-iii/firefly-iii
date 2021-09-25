@@ -56,6 +56,7 @@ class RuleController extends Controller
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
+
         return response()->json(['html' => $view]);
     }
 

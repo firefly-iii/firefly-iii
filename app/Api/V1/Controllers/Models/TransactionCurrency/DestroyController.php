@@ -50,7 +50,7 @@ class DestroyController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository     = app(CurrencyRepositoryInterface::class);
+                $this->repository = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
@@ -60,6 +60,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/deleteCurrency
+     *
      * Remove the specified resource from storage.
      *
      * @param TransactionCurrency $currency
@@ -75,13 +78,13 @@ class DestroyController extends Controller
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             // access denied:
-            throw new FireflyException('200005: You need the "owner" role to do this.'); 
+            throw new FireflyException('200005: You need the "owner" role to do this.');
         }
         if ($this->repository->currencyInUse($currency)) {
-            throw new FireflyException('200006: Currency in use.'); 
+            throw new FireflyException('200006: Currency in use.');
         }
         if ($this->repository->isFallbackCurrency($currency)) {
-            throw new FireflyException('200026: Currency is fallback.'); 
+            throw new FireflyException('200026: Currency is fallback.');
         }
 
         $this->repository->destroy($currency);

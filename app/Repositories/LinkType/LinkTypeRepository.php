@@ -81,6 +81,16 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
+     * @param int $linkTypeId
+     *
+     * @return LinkType|null
+     */
+    public function find(int $linkTypeId): ?LinkType
+    {
+        return LinkType::find($linkTypeId);
+    }
+
+    /**
      * @param string|null $name
      *
      * @return LinkType|null
@@ -109,16 +119,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $opposingCount = TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->count();
 
         return $count + $opposingCount > 0;
-    }
-
-    /**
-     * @param int $linkTypeId
-     *
-     * @return LinkType|null
-     */
-    public function find(int $linkTypeId): ?LinkType
-    {
-        return LinkType::find($linkTypeId);
     }
 
     /**
@@ -331,7 +331,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink
     {
         $journalLink->source_id      = $data['inward_id'] ?: $journalLink->source_id;
-        $journalLink->destination_id = $data['outward_id'] ? $data['outward_id'] : $journalLink->destination_id;
+        $journalLink->destination_id = $data['outward_id'] ?: $journalLink->destination_id;
         $journalLink->save();
         if (array_key_exists('link_type_name', $data)) {
             $linkType = LinkType::whereName($data['link_type_name'])->first();

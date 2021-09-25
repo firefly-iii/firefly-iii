@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -72,6 +73,7 @@ class IndexController extends Controller
      * @param string  $objectType
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function inactive(Request $request, string $objectType)
     {
@@ -159,13 +161,15 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-// See reference nr. 68
+                // See reference nr. 68
                 $account->lastActivityDate    = $this->isInArray($activities, $account->id);
                 $account->startBalance        = $this->isInArray($startBalances, $account->id);
                 $account->endBalance          = $this->isInArray($endBalances, $account->id);
                 $account->difference          = bcsub($account->endBalance, $account->startBalance);
                 $account->interest            = number_format((float)$this->repository->getMetaValue($account, 'interest'), 4, '.', '');
-                $account->interestPeriod      = (string)trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
+                $account->interestPeriod      = (string)trans(
+                    sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period'))
+                );
                 $account->accountTypeString   = (string)trans(sprintf('firefly.account_type_%s', $account->accountType->type));
                 $account->location            = $this->repository->getLocation($account);
                 $account->liability_direction = $this->repository->getMetaValue($account, 'liability_direction');

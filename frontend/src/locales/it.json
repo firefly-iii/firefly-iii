@@ -70,6 +70,7 @@
         "daily_budgets": "Budget giornalieri",
         "weekly_budgets": "Budget settimanali",
         "monthly_budgets": "Budget mensili",
+        "journals_in_period_for_account_js": "Tutte le transazioni per il conto {title} fra {start} e {end}",
         "quarterly_budgets": "Bilanci trimestrali",
         "create_new_expense": "Crea un nuovo conto di spesa",
         "create_new_revenue": "Crea un nuovo conto entrate",

@@ -57,6 +57,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/storeBudget
+     *
      * Store a budget.
      *
      * @param StoreRequest $request

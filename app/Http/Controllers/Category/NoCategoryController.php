@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionType;
@@ -74,6 +75,7 @@ class NoCategoryController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function show(Request $request, Carbon $start = null, Carbon $end = null)
     {
@@ -111,6 +113,7 @@ class NoCategoryController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function showAll(Request $request)
     {

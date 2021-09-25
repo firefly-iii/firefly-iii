@@ -59,6 +59,8 @@ class AccountController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/search/searchAccounts
      * @param Request $request
      *
      * @return JsonResponse|Response

@@ -33,8 +33,8 @@ use JsonException;
  */
 class IsValidBulkClause implements Rule
 {
-    private array  $rules;
     private string $error;
+    private array  $rules;
 
     /**
      * @param string $type
@@ -43,6 +43,14 @@ class IsValidBulkClause implements Rule
     {
         $this->rules = config(sprintf('bulk.%s', $type));
         $this->error = (string)trans('firefly.belongs_user');
+    }
+
+    /**
+     * @return string
+     */
+    public function message(): string
+    {
+        return $this->error;
     }
 
     /**
@@ -57,19 +65,14 @@ class IsValidBulkClause implements Rule
         if (false === $result) {
             return false;
         }
+
         return true;
     }
 
     /**
-     * @return string
-     */
-    public function message(): string
-    {
-        return $this->error;
-    }
-
-    /**
      * Does basic rule based validation.
+     *
+     * @param string $value
      *
      * @return bool
      */
@@ -104,7 +107,7 @@ class IsValidBulkClause implements Rule
                     'value' => $this->rules[$clause][$arrayKey],
                 ]);
                 if ($validator->fails()) {
-                    $this->error = sprintf('%s: %s: %s',$clause, $arrayKey, join(', ', ($validator->errors()->get('value'))));
+                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, join(', ', ($validator->errors()->get('value'))));
 
                     return false;
                 }

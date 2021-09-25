@@ -50,6 +50,7 @@ trait ValidatesAutoBudgetRequest
         // basic float check:
         if (!is_numeric($amount)) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
+
             return;
         }
 

@@ -26,14 +26,15 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\UpdateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use JsonException;
 use League\Fractal\Resource\Item;
 
 /**
@@ -66,6 +67,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/disableCurrency
+     *
      * Disable a currency.
      *
      * @param TransactionCurrency $currency
@@ -96,6 +100,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/enableCurrency
+     *
      * Enable a currency.
      *
      * @param TransactionCurrency $currency
@@ -122,11 +129,15 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/defaultCurrency
+     *
      * Make the currency a default currency.
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function makeDefault(TransactionCurrency $currency): JsonResponse
@@ -151,12 +162,17 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/updateCurrency
+     *
      * Update a currency.
      *
      * @param UpdateRequest       $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function update(UpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {

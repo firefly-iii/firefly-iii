@@ -48,7 +48,7 @@ return [
     'include_logs'            => 'Fehlerprotokolle einschließen (siehe oben).',
     'what_did_you_do'         => 'Teilen Sie uns mit, was Sie getan haben.',
     'offline_header'          => 'Sie sind wahrscheinlich offline',
-    'offline_unreachable'     => 'Firefly III ist nicht erreichbar. Ihr Gerät ist offline oder der Server funktioniert nicht.',
+    'offline_unreachable'     => 'Firefly III ist nicht erreichbar. Ihr Gerät ist offline oder der Server antwortet nicht.',
     'offline_github'          => 'Falls Sie sicher sind, dass sowohl Ihr Gerät als auch der Server online sind, öffnen Sie bitte ein Ticket auf <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

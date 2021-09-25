@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -69,9 +70,13 @@ class AccountController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/charts/getChartAccountOverview
+     *
      * @param DateRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function overview(DateRequest $request): JsonResponse
     {
@@ -100,9 +105,9 @@ class AccountController extends Controller
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
             if (null === $currency) {
-                $currency = $default; 
+                $currency = $default;
             }
-            $currentSet = [
+            $currentSet   = [
                 'label'                   => $account->name,
                 'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,

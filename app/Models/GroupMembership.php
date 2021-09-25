@@ -24,12 +24,37 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class GroupMembership
+ *
+ * @property int            $id
+ * @property Carbon|null    $created_at
+ * @property Carbon|null    $updated_at
+ * @property string|null    $deleted_at
+ * @property int            $user_id
+ * @property int            $user_group_id
+ * @property int            $user_role_id
+ * @property-read User      $user
+ * @property-read UserGroup $userGroup
+ * @property-read UserRole  $userRole
+ * @method static Builder|GroupMembership newModelQuery()
+ * @method static Builder|GroupMembership newQuery()
+ * @method static Builder|GroupMembership query()
+ * @method static Builder|GroupMembership whereCreatedAt($value)
+ * @method static Builder|GroupMembership whereDeletedAt($value)
+ * @method static Builder|GroupMembership whereId($value)
+ * @method static Builder|GroupMembership whereUpdatedAt($value)
+ * @method static Builder|GroupMembership whereUserGroupId($value)
+ * @method static Builder|GroupMembership whereUserId($value)
+ * @method static Builder|GroupMembership whereUserRoleId($value)
+ * @mixin Eloquent
  */
 class GroupMembership extends Model
 {

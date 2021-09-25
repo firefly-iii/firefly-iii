@@ -26,9 +26,9 @@ namespace FireflyIII\Api\V1\Controllers\Data\Export;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
-use League\Csv\CannotInsertRecord;
 
 /**
  * Class ExportController
@@ -54,10 +54,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportAccounts
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function accounts(ExportRequest $request): LaravelResponse
     {
@@ -71,15 +74,13 @@ class ExportController extends Controller
      * @param string $key
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \League\Csv\Exception
+     * @throws FireflyException
      */
     private function returnExport(string $key): LaravelResponse
     {
-        $date     = date('Y-m-d-H-i-s');
+        $date = date('Y-m-d-H-i-s');
         $fileName = sprintf('%s-export-%s.csv', $date, $key);
-        $data     = $this->exporter->export();
+        $data = $this->exporter->export();
 
         /** @var LaravelResponse $response */
         $response = response($data[$key]);
@@ -98,10 +99,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportBills
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function bills(ExportRequest $request): LaravelResponse
     {
@@ -111,10 +115,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportBudgets
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function budgets(ExportRequest $request): LaravelResponse
     {
@@ -124,10 +131,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportCategories
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function categories(ExportRequest $request): LaravelResponse
     {
@@ -137,10 +147,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportPiggies
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function piggyBanks(ExportRequest $request): LaravelResponse
     {
@@ -150,10 +163,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportRecurring
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function recurring(ExportRequest $request): LaravelResponse
     {
@@ -163,10 +179,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportRules
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function rules(ExportRequest $request): LaravelResponse
     {
@@ -176,10 +195,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportTags
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function tags(ExportRequest $request): LaravelResponse
     {
@@ -189,10 +211,13 @@ class ExportController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/data/exportTransactions
+     *
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function transactions(ExportRequest $request): LaravelResponse
     {

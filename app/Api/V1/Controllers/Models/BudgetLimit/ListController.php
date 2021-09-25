@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -66,6 +67,8 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/listTransactionByBudgetLimit
      * Show all transactions.
      *
      * @param Request     $request
@@ -73,7 +76,7 @@ class ListController extends Controller
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse

@@ -138,7 +138,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         return [
             'user'                   => (string)$row['user_id'],
-            'transaction_journal_id' => (int)$row['transaction_journal_id'],
+            'transaction_journal_id' => (string)$row['transaction_journal_id'],
             'type'                   => strtolower($type),
             'date'                   => $row['date']->toAtomString(),
             'order'                  => $row['order'],
@@ -351,7 +351,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $bill            = $this->getBill($journal->bill);
 
         if (null !== $foreignAmount && null !== $foreignCurrency) {
-            $foreignAmount = number_format((float)$foreignAmount, $foreignCurrency['decimal_places'], '.', '');
+            $foreignAmount = number_format((float)$foreignAmount, $foreignCurrency->decimal_places ?? 0, '.', '');
         }
 
         $longitude = null;

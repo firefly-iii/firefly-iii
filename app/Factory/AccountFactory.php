@@ -33,6 +33,7 @@ use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Services\Internal\Support\LocationServiceTrait;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
+use JsonException;
 use Log;
 
 /**
@@ -48,8 +49,8 @@ class AccountFactory
     protected array                      $validAssetFields;
     protected array                      $validCCFields;
     protected array                      $validFields;
-    private array                        $canHaveVirtual;
     private array                        $canHaveOpeningBalance;
+    private array                        $canHaveVirtual;
     private User                         $user;
 
     /**
@@ -107,6 +108,7 @@ class AccountFactory
      *
      * @return Account
      * @throws FireflyException
+     * @throws JsonException
      */
     public function create(array $data): Account
     {
@@ -180,7 +182,7 @@ class AccountFactory
      * @param array       $data
      *
      * @return Account
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function createAccount(AccountType $type, array $data): Account
     {
@@ -247,7 +249,6 @@ class AccountFactory
      * @param array   $data
      *
      * @return array
-     * @throws \JsonException
      */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
@@ -358,6 +359,9 @@ class AccountFactory
     /**
      * @param Account $account
      * @param array   $data
+     *
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function storeOrder(Account $account, array $data): void
     {

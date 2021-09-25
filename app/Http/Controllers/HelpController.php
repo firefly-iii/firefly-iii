@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -35,6 +36,7 @@ class HelpController extends Controller
      * @param string $route
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function show(string $route): JsonResponse
     {

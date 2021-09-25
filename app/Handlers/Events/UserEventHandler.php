@@ -109,12 +109,40 @@ class UserEventHandler
     }
 
     /**
+     * @param RegisteredUser $event
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    public function createGroupMembership(RegisteredUser $event): bool
+    {
+        $user = $event->user;
+        // create a new group.
+        $group = UserGroup::create(['title' => $user->email]);
+        $role  = UserRole::where('title', UserRole::OWNER)->first();
+        if (null === $role) {
+            throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
+        }
+        GroupMembership::create(
+            [
+                'user_id'       => $user->id,
+                'user_group_id' => $group->id,
+                'user_role_id'  => $role->id,
+            ]
+        );
+        $user->user_group_id = $group->id;
+        $user->save();
+
+        return true;
+    }
+
+    /**
      * Set the demo user back to English.
      *
      * @param Login $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function demoUserBackToEnglish(Login $event): bool
     {
@@ -136,7 +164,7 @@ class UserEventHandler
     /**
      * @param DetectedNewIPAddress $event
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
@@ -178,7 +206,7 @@ class UserEventHandler
      * @param UserChangedEmail $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function sendEmailChangeConfirmMail(UserChangedEmail $event): bool
     {
@@ -204,7 +232,7 @@ class UserEventHandler
      * @param UserChangedEmail $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function sendEmailChangeUndoMail(UserChangedEmail $event): bool
     {
@@ -252,41 +280,13 @@ class UserEventHandler
     }
 
     /**
-     * @param RegisteredUser $event
-     *
-     * @return bool
-     * @throws FireflyException
-     */
-    public function createGroupMembership(RegisteredUser $event): bool
-    {
-        $user = $event->user;
-        // create a new group.
-        $group = UserGroup::create(['title' => $user->email]);
-        $role  = UserRole::where('title', UserRole::OWNER)->first();
-        if (null === $role) {
-            throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
-        }
-        GroupMembership::create(
-            [
-                'user_id'       => $user->id,
-                'user_group_id' => $group->id,
-                'user_role_id'  => $role->id,
-            ]
-        );
-        $user->user_group_id = $group->id;
-        $user->save();
-
-        return true;
-    }
-
-    /**
      * This method will send the user a registration mail, welcoming him or her to Firefly III.
      * This message is only sent when the configuration of Firefly III says so.
      *
      * @param RegisteredUser $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function sendRegistrationMail(RegisteredUser $event): bool
     {
@@ -319,7 +319,7 @@ class UserEventHandler
     /**
      * @param Login $event
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function storeUserIPAddress(Login $event): void
     {

@@ -68,7 +68,7 @@ class IndexController extends Controller
     }
 
     /**
-* See reference nr. 70
+     * See reference nr. 70
      * Show all recurring transactions.
      *
      * @param Request $request
@@ -121,7 +121,7 @@ class IndexController extends Controller
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
         $paginator->setPath(route('recurring.index'));
-        $today      = today(config('app.timezone'));
+        $today = today(config('app.timezone'));
 
         $this->verifyRecurringCronJob();
 

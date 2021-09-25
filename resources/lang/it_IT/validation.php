@@ -23,13 +23,13 @@
 declare(strict_types=1);
 
 return [
-    'missing_where'                  => 'Array is missing "where"-clause',
-    'missing_update'                 => 'Array is missing "update"-clause',
-    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
-    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
-    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
-    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
-    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
+    'missing_where'                  => 'Clausola "where" assente nell\'array',
+    'missing_update'                 => 'Clausola "update" assente nell\'array',
+    'invalid_where_key'              => 'Il JSON contiene una chiave non valida per la clausola "where"',
+    'invalid_update_key'             => 'Il JSON contiene una chiave non valida per la clausola "update"',
+    'invalid_query_data'             => 'Data non valida nel campo %s:%s della query.',
+    'invalid_query_account_type'     => 'La tua interrogazione contiene account di diversi tipi, cosa che non è consentita.',
+    'invalid_query_currency'         => 'La tua interrogazione contiene conti con valute diverse, che non è consentito.',
     'iban'                           => 'Questo non è un IBAN valido.',
     'zero_or_more'                   => 'Il valore non può essere negativo.',
     'date_or_time'                   => 'Il valore deve essere un valore valido per una data o per un orario (ISO 8601).',

@@ -70,6 +70,7 @@
         "daily_budgets": "Denn\u00e9 rozpo\u010dty",
         "weekly_budgets": "T\u00fd\u017edenn\u00e9 rozpo\u010dty",
         "monthly_budgets": "Mesa\u010dn\u00e9 rozpo\u010dty",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "\u0160tvr\u0165ro\u010dn\u00e9 rozpo\u010dty",
         "create_new_expense": "Vytvori\u0165 v\u00fddavko\u00fd \u00fa\u010det",
         "create_new_revenue": "Vytvori\u0165 nov\u00fd pr\u00edjmov\u00fd \u00fa\u010det",
@@ -203,10 +204,10 @@
     },
     "config": {
         "html_language": "sk",
-        "week_in_year_fns": "'T\u00fd\u017ede\u0148' tt, rrrr",
+        "week_in_year_fns": "'T\u00fd\u017ede\u0148' w, yyyy",
         "month_and_day_fns": "MMMM d, y",
-        "quarter_fns": "'Q'Q, rrrr",
-        "half_year_fns": "'H{half}', rrrr"
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Suma v cudzej mene",

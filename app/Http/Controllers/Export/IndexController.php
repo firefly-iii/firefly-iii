@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Export;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -31,7 +32,6 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\View\View;
-use League\Csv\CannotInsertRecord;
 
 /**
  * Class IndexController
@@ -65,9 +65,7 @@ class IndexController extends Controller
 
     /**
      * @return LaravelResponse
-     * @throws CannotInsertRecord
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \League\Csv\Exception
+     * @throws FireflyException
      */
     public function export(): LaravelResponse
     {
@@ -87,7 +85,7 @@ class IndexController extends Controller
         $generator->setStart($firstDate);
         $result = $generator->export();
 
-        $name   = sprintf('%s_transaction_export.csv', date('Y_m_d'));
+        $name = sprintf('%s_transaction_export.csv', date('Y_m_d'));
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
         // headers for CSV file.
         /** @var LaravelResponse $response */

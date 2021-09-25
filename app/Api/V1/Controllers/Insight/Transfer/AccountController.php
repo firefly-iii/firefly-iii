@@ -58,6 +58,8 @@ class AccountController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightTransfers
      *
      * @param GenericRequest $request
      *
@@ -69,6 +71,7 @@ class AccountController extends Controller
         $end           = $request->getEnd();
         $assetAccounts = $request->getAssetAccounts();
         $transfers     = $this->opsRepository->sumTransfers($start, $end, $assetAccounts);
+
         return response()->json($transfers);
     }
 }

@@ -80,7 +80,7 @@ class DeleteController extends Controller
     /**
      * Destroy a category.
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Category $category
      *
      * @return RedirectResponse|Redirector

@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -78,6 +79,7 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
@@ -269,6 +271,7 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
@@ -347,6 +350,7 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function getNoBudgetPeriodOverview(Carbon $start, Carbon $end): array
     {
@@ -400,6 +404,7 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
@@ -480,6 +485,7 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
@@ -554,6 +560,7 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {

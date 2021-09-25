@@ -170,6 +170,21 @@ class JournalUpdateService
     /**
      * @return bool
      */
+    private function removeReconciliation(): bool
+    {
+        if (count($this->data) > 1) {
+            return true;
+        }
+        if (1 === count($this->data) && true === array_key_exists('transaction_journal_id', $this->data)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     private function hasValidAccounts(): bool
     {
         return $this->hasValidSourceAccount() && $this->hasValidDestinationAccount();
@@ -475,7 +490,7 @@ class JournalUpdateService
             $billId                            = (int)($this->data['bill_id'] ?? 0);
             $billName                          = (string)($this->data['bill_name'] ?? '');
             $bill                              = $this->billRepository->findBill($billId, $billName);
-            $this->transactionJournal->bill_id = null === $bill ? null : $bill->id;
+            $this->transactionJournal->bill_id = $bill?->id;
             Log::debug('Updated bill ID');
         }
     }
@@ -759,20 +774,5 @@ class JournalUpdateService
         // refresh transactions.
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
-    }
-
-    /**
-     * @return bool
-     */
-    private function removeReconciliation(): bool
-    {
-        if (count($this->data) > 1) {
-            return true;
-        }
-        if (1 === count($this->data) && true === array_key_exists('transaction_journal_id', $this->data)) {
-            return true;
-        }
-
-        return false;
     }
 }

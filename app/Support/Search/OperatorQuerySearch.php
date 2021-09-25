@@ -50,7 +50,6 @@ use Gdbots\QueryParser\Node\Phrase;
 use Gdbots\QueryParser\Node\Subquery;
 use Gdbots\QueryParser\Node\Url;
 use Gdbots\QueryParser\Node\Word;
-use Gdbots\QueryParser\ParsedQuery;
 use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -68,16 +67,14 @@ class OperatorQuerySearch implements SearchInterface
     private GroupCollectorInterface     $collector;
     private CurrencyRepositoryInterface $currencyRepository;
     private Carbon                      $date;
+    private array                       $invalidOperators;
     private int                         $limit;
     private Collection                  $operators;
     private int                         $page;
-    private ParsedQuery                 $query;
     private float                       $startTime;
     private TagRepositoryInterface      $tagRepository;
-    private User                        $user;
     private array                       $validOperators;
     private array                       $words;
-    private array                       $invalidOperators;
 
     /**
      * OperatorQuerySearch constructor.
@@ -101,6 +98,14 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository     = app(BillRepositoryInterface::class);
         $this->tagRepository      = app(TagRepositoryInterface::class);
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvalidOperators(): array
+    {
+        return $this->invalidOperators;
     }
 
     /**
@@ -146,11 +151,11 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query)
     {
         Log::debug(sprintf('Now in parseQuery(%s)', $query));
-        $parser      = new QueryParser();
-        $this->query = $parser->parse($query);
+        $parser = new QueryParser();
+        $query1 = $parser->parse($query);
 
-        Log::debug(sprintf('Found %d node(s)', count($this->query->getNodes())));
-        foreach ($this->query->getNodes() as $searchNode) {
+        Log::debug(sprintf('Found %d node(s)', count($query1->getNodes())));
+        foreach ($query1->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
         }
 
@@ -168,7 +173,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-     * @throws FireflyException
      */
     public function searchTransactions(): LengthAwarePaginator
     {
@@ -197,14 +201,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @return array
-     */
-    public function getInvalidOperators(): array
-    {
-        return $this->invalidOperators;
-    }
-
-    /**
      * @inheritDoc
      * @codeCoverageIgnore
      */
@@ -220,14 +216,13 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
         $this->accountRepository->setUser($user);
         $this->billRepository->setUser($user);
         $this->categoryRepository->setUser($user);
         $this->budgetRepository->setUser($user);
         $this->tagRepository->setUser($user);
         $this->collector = app(GroupCollectorInterface::class);
-        $this->collector->setUser($this->user);
+        $this->collector->setUser($user);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
         $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);

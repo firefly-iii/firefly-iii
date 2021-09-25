@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Support\System\GeneratesInstallationId;
-use FireflyIII\User;
 use Illuminate\Console\Command;
-use Illuminate\Database\QueryException;
 
 /**
  * Class UpgradeFireflyInstructions.

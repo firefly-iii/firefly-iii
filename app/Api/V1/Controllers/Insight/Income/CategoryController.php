@@ -66,6 +66,9 @@ class CategoryController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightIncomeCategory
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse
@@ -100,6 +103,9 @@ class CategoryController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightIncomeNoCategory
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse

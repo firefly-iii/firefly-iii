@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -87,13 +88,15 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/listAccountByCurrency
      * Display a list of accounts.
      *
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
@@ -139,12 +142,15 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/listAvailableBudgetByCurrency
+     *
      * Display a listing of the resource.
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
@@ -175,12 +181,15 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/listBillByCurrency
+     *
      * List all bills
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function bills(TransactionCurrency $currency): JsonResponse
@@ -216,12 +225,15 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/listBudgetLimitByCurrency
+     *
      * List all budget limits
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
@@ -248,12 +260,15 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/listRecurrenceByCurrency
+     *
      * List all recurring transactions.
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
@@ -299,12 +314,15 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/listRuleByCurrency
+     *
      * List all of them.
      *
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function rules(TransactionCurrency $currency): JsonResponse
@@ -349,6 +367,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/currencies/listTransactionByCurrency
+     *
      * Show all transactions.
      *
      * @param Request             $request
@@ -356,7 +377,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse

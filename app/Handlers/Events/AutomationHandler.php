@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyIII\Events\RequestedReportOnJournals;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ReportNewJournalsMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
@@ -42,14 +43,14 @@ class AutomationHandler
      * @param RequestedReportOnJournals $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function reportJournals(RequestedReportOnJournals $event): bool
     {
         $sendReport = config('firefly.send_report_journals');
 
         if (false === $sendReport) {
-            return true; 
+            return true;
         }
 
         Log::debug('In reportJournals.');

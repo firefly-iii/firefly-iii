@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Report\Category;
+
 use Carbon\Carbon;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;

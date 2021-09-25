@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Internal\Destroy;
 use DB;
 use Exception;
 use FireflyIII\Models\Category;
-use Log;
 
 /**
  * Class CategoryDestroyService

@@ -55,8 +55,8 @@ class SetSourceAccount implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $user             = User::find($journal['user_id']);
-        $type             = $journal['transaction_type_type'];
+        $user = User::find($journal['user_id']);
+        $type = $journal['transaction_type_type'];
         /** @var TransactionJournal|null $object */
         $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);

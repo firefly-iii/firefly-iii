@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Bill;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Attachment;
@@ -124,6 +123,7 @@ class ShowController extends Controller
      * @param Bill    $bill
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function show(Request $request, Bill $bill)
     {

@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 use Log;
 
 /**
@@ -31,7 +34,7 @@ use Log;
 class CronController
 {
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return Application|ResponseFactory|Response
      */
     public function cron()
     {

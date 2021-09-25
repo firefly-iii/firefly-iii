@@ -103,6 +103,15 @@ interface RuleGroupRepositoryInterface
     public function getActiveUpdateRules(RuleGroup $group): Collection;
 
     /**
+     * Also inactive groups.
+     *
+     * @param string|null $filter
+     *
+     * @return Collection
+     */
+    public function getAllRuleGroupsWithRules(?string $filter): Collection;
+
+    /**
      * @return int
      */
     public function getHighestOrderRuleGroup(): int;
@@ -113,15 +122,6 @@ interface RuleGroupRepositoryInterface
      * @return Collection
      */
     public function getRuleGroupsWithRules(?string $filter): Collection;
-
-    /**
-     * Also inactive groups.
-     *
-     * @param string|null $filter
-     *
-     * @return Collection
-     */
-    public function getAllRuleGroupsWithRules(?string $filter): Collection;
 
     /**
      * @param RuleGroup $group

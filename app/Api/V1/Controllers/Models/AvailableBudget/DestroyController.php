@@ -47,7 +47,7 @@ class DestroyController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user               = auth()->user();
+                $user = auth()->user();
                 $this->abRepository = app(AvailableBudgetRepositoryInterface::class);
                 $this->abRepository->setUser($user);
 
@@ -57,6 +57,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/available_budgets/listAvailableBudget
+     *
      * Remove the specified resource from storage.
      *
      * @param AvailableBudget $availableBudget

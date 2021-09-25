@@ -143,7 +143,7 @@ class EditController extends Controller
      */
     private function parseFromOperators(array $submittedOperators): array
     {
-// See reference nr. 65
+        // See reference nr. 65
         $operators       = config('firefly.search.operators');
         $renderedEntries = [];
         $triggers        = [];

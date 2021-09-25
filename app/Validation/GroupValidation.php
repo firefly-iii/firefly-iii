@@ -37,6 +37,13 @@ trait GroupValidation
 {
 
     /**
+     * @param Validator $validator
+     *
+     * @return array
+     */
+    abstract protected function getTransactionsArray(Validator $validator): array;
+
+    /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no
      * journal description.
      *
@@ -103,13 +110,6 @@ trait GroupValidation
             $this->validateJournalId($validator, $index, $transaction, $transactionGroup);
         }
     }
-
-    /**
-     * @param Validator $validator
-     *
-     * @return array
-     */
-    abstract protected function getTransactionsArray(Validator $validator): array;
 
     /**
      * Do the validation required by validateJournalIds.

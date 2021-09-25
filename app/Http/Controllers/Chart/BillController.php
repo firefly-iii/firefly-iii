@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
+use JsonException;
 
 /**
  * Class BillController.
@@ -57,6 +58,7 @@ class BillController extends Controller
      * @param BillRepositoryInterface $repository
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function frontpage(BillRepositoryInterface $repository): JsonResponse
     {
@@ -67,7 +69,7 @@ class BillController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.bill.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
@@ -102,6 +104,7 @@ class BillController extends Controller
      * @param Bill $bill
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function single(Bill $bill): JsonResponse
     {
@@ -109,7 +112,7 @@ class BillController extends Controller
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $locale = app('steam')->getLocale();
 

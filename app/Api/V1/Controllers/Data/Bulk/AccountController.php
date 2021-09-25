@@ -57,9 +57,12 @@ class AccountController extends Controller
     }
 
     /**
+     * This endpoint is deprecated and not documented.
+     *
      * @param MoveTransactionsRequest $request
      *
      * @return JsonResponse
+     * @deprecated
      */
     public function moveTransactions(MoveTransactionsRequest $request): JsonResponse
     {

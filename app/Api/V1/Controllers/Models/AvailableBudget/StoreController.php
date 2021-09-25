@@ -25,11 +25,13 @@ namespace FireflyIII\Api\V1\Controllers\Models\AvailableBudget;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\AvailableBudget\Request;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use JsonException;
 use League\Fractal\Resource\Item;
 
 /**
@@ -60,11 +62,16 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/available_budgets/storeAvailableBudget
+     *
      * Store a newly created resource in storage.
      *
      * @param Request $request
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function store(Request $request): JsonResponse
     {

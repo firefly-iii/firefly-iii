@@ -65,6 +65,9 @@ class BudgetController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightExpenseBudget
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse
@@ -99,6 +102,9 @@ class BudgetController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightExpenseNoBudget
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse

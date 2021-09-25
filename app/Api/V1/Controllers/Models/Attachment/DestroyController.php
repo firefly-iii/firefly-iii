@@ -49,7 +49,7 @@ class DestroyController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
+                $user = auth()->user();
                 $this->repository = app(AttachmentRepositoryInterface::class);
                 $this->repository->setUser($user);
 
@@ -59,6 +59,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/attachments/deleteAttachment
+     *
      * Remove the specified resource from storage.
      *
      * @codeCoverageIgnore

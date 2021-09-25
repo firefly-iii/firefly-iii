@@ -106,7 +106,7 @@ class DeleteOrphanedTransactions extends Command
     private function deleteFromOrphanedAccounts(): void
     {
         $set
-               = Transaction
+            = Transaction
             ::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
             ->whereNotNull('accounts.deleted_at')
             ->get(['transactions.*']);

@@ -78,6 +78,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         $budget = $this->route()->parameter('budget');
+
         return [
             'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active'                    => [new IsBoolean],

@@ -50,6 +50,7 @@ class GroupCloneService
         foreach ($group->transactionJournals as $journal) {
             $this->cloneJournal($journal, $newGroup, (int)$group->id);
         }
+
         return $newGroup;
     }
 

@@ -58,13 +58,6 @@ interface GroupCollectorInterface
     public function amountLess(string $amount): GroupCollectorInterface;
 
     /**
-     * Ensure the search will find nothing at all, zero results.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function findNothing(): GroupCollectorInterface;
-
-    /**
      * Get transactions where the amount is more than.
      *
      * @param string $amount
@@ -117,6 +110,13 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * Ensure the search will find nothing at all, zero results.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function findNothing(): GroupCollectorInterface;
 
     /**
      * Return the transaction journals without group information. Is useful in some instances.
@@ -479,6 +479,13 @@ interface GroupCollectorInterface
     public function withAttachmentInformation(): GroupCollectorInterface;
 
     /**
+     * Limit results to transactions without a bill..
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBill(): GroupCollectorInterface;
+
+    /**
      * Include bill name + ID.
      *
      * @return GroupCollectorInterface
@@ -526,13 +533,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function withTagInformation(): GroupCollectorInterface;
-
-    /**
-     * Limit results to transactions without a bill..
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withBill(): GroupCollectorInterface;
 
     /**
      * Limit results to a transactions without a bill.

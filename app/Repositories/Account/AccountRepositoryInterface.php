@@ -67,6 +67,13 @@ interface AccountRepositoryInterface
     public function expandWithDoubles(Collection $accounts): Collection;
 
     /**
+     * @param int $accountId
+     *
+     * @return Account|null
+     */
+    public function find(int $accountId): ?Account;
+
+    /**
      * @param string $number
      * @param array  $types
      *
@@ -89,13 +96,6 @@ interface AccountRepositoryInterface
      * @return Account|null
      */
     public function findByName(string $name, array $types): ?Account;
-
-    /**
-     * @param int $accountId
-     *
-     * @return Account|null
-     */
-    public function find(int $accountId): ?Account;
 
     /**
      * @param Account $account
@@ -146,6 +146,13 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function getCashAccount(): Account;
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionGroup|null
+     */
+    public function getCreditTransactionGroup(Account $account): ?TransactionGroup;
 
     /**
      * @param array $types
@@ -207,13 +214,6 @@ interface AccountRepositoryInterface
      * @return null|string
      */
     public function getOpeningBalanceDate(Account $account): ?string;
-
-    /**
-     * @param Account $account
-     *
-     * @return TransactionGroup|null
-     */
-    public function getCreditTransactionGroup(Account $account): ?TransactionGroup;
 
     /**
      * @param Account $account

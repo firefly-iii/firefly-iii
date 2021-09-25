@@ -79,6 +79,18 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * Find a category or return NULL
+     *
+     * @param int $categoryId
+     *
+     * @return Category|null
+     */
+    public function find(int $categoryId): ?Category
+    {
+        return $this->user->categories()->find($categoryId);
+    }
+
+    /**
      * Find a category.
      *
      * @param string $name
@@ -116,18 +128,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         Log::debug(sprintf('Found category result is null? %s', var_export(null === $result, true)));
 
         return $result;
-    }
-
-    /**
-     * Find a category or return NULL
-     *
-     * @param int $categoryId
-     *
-     * @return Category|null
-     */
-    public function find(int $categoryId): ?Category
-    {
-        return $this->user->categories()->find($categoryId);
     }
 
     /**
@@ -309,6 +309,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param array    $data
      *
      * @return Category
+     * @throws Exception
      */
     public function update(Category $category, array $data): Category
     {

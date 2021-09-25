@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\BillTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -61,6 +60,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/bills/storeBill
+     *
      * Store a bill.
      *
      * @param StoreRequest $request
@@ -70,8 +72,8 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data    = $request->getAll();
-        $bill    = $this->repository->store($data);
+        $data = $request->getAll();
+        $bill = $this->repository->store($data);
         $manager = $this->getManager();
 
         /** @var BillTransformer $transformer */

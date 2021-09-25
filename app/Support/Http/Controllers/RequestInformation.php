@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
@@ -113,25 +114,7 @@ trait RequestInformation
             return $content;
         }
 
-        return '<p>' . trans('firefly.route_has_no_help') . '</p>'; 
-    }
-
-    /**
-     * @return string
-     */
-    final protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', RouteFacade::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     *
-     * @return string
-     */
-    final protected function getSpecificPageName(): string // get request info
-    {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
+        return '<p>' . trans('firefly.route_has_no_help') . '</p>';
     }
 
     /**
@@ -162,6 +145,7 @@ trait RequestInformation
      * Returns if user has seen demo.
      *
      * @return bool
+     * @throws FireflyException
      */
     final protected function hasSeenDemo(): bool // get request info + get preference
     {
@@ -180,10 +164,28 @@ trait RequestInformation
             $shownDemo = app('preferences')->get($key, false)->data;
         }
         if (!is_bool($shownDemo)) {
-            $shownDemo = true; 
+            $shownDemo = true;
         }
 
         return $shownDemo;
+    }
+
+    /**
+     * @return string
+     */
+    final protected function getPageName(): string // get request info
+    {
+        return str_replace('.', '_', RouteFacade::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     *
+     * @return string
+     */
+    final protected function getSpecificPageName(): string // get request info
+    {
+        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
     }
 
     /**

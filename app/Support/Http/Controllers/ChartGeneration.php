@@ -24,12 +24,14 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -45,7 +47,8 @@ trait ChartGeneration
      * @param Carbon     $end
      *
      * @return array
-     *
+     * @throws FireflyException
+     * @throws JsonException
      */
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
@@ -57,7 +60,7 @@ trait ChartGeneration
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale = app('steam')->getLocale();
@@ -73,7 +76,7 @@ trait ChartGeneration
         $chartData = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
-// See reference nr. 33
+            // See reference nr. 33
             $currency = $repository->find((int)$accountRepos->getMetaValue($account, 'currency_id'));
             if (null === $currency) {
                 $currency = $default;

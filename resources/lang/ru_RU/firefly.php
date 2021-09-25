@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Все транзакции для счёта :name',
     'chart_all_journals_for_account'                      => 'Диаграмма всех транзакций для счёта :name',
     'journals_in_period_for_account'                      => 'Все транзакции для счёта :name между :start и :end',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Переведено',
     'all_withdrawal'                                      => 'Все расходы',
     'all_transactions'                                    => 'Все транзакции',

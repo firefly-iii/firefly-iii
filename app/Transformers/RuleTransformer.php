@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
+
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
@@ -63,6 +64,7 @@ class RuleTransformer extends AbstractTransformer
             'created_at'      => $rule->created_at->toAtomString(),
             'updated_at'      => $rule->updated_at->toAtomString(),
             'rule_group_id'   => (string)$rule->rule_group_id,
+            'rule_group_title'   => (string)$rule->ruleGroup->title,
             'title'           => $rule->title,
             'description'     => $rule->description,
             'order'           => (int)$rule->order,

@@ -35,9 +35,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * FireflyIII\Models\TransactionCurrency
  *
  * @property int                                  $id
- * @property Carbon|null      $created_at
- * @property Carbon|null      $updated_at
- * @property Carbon|null      $deleted_at
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
  * @property bool                                 $enabled
  * @property string                               $code
  * @property string                               $name

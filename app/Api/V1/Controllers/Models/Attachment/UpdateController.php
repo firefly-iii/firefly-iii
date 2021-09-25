@@ -52,7 +52,7 @@ class UpdateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
+                $user = auth()->user();
                 $this->repository = app(AttachmentRepositoryInterface::class);
                 $this->repository->setUser($user);
 
@@ -62,6 +62,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/attachments/updateAttachment
+     *
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request

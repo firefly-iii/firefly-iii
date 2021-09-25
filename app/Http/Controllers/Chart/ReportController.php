@@ -35,6 +35,7 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -68,6 +69,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function netWorth(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -78,7 +80,7 @@ class ReportController extends Controller
         $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $locale    = app('steam')->getLocale();
         $current   = clone $start;
@@ -102,7 +104,7 @@ class ReportController extends Controller
             }
         );
 
-// See reference nr. 56
+        // See reference nr. 56
 
         while ($current < $end) {
             // get balances by date, grouped by currency.
@@ -142,6 +144,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -152,7 +155,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format         = app('navigation')->preferredCarbonFormat($start, $end);

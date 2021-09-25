@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
+
 use FireflyIII\Models\LinkType;
 
 /**

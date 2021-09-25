@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
@@ -52,7 +53,7 @@ class ListController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
+                $user = auth()->user();
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
                 $this->repository->setUser($user);
 
@@ -62,12 +63,15 @@ class ListController extends Controller
     }
 
     /**
-     * List all bills
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/listBillByObjectGroup
+     *
+     * List all bills in this object group
      *
      * @param ObjectGroup $objectGroup
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function bills(ObjectGroup $objectGroup): JsonResponse
@@ -95,12 +99,15 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/listPiggyBankByObjectGroup
+     *
      * List all piggies under the object group.
      *
      * @param ObjectGroup $objectGroup
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function piggyBanks(ObjectGroup $objectGroup): JsonResponse

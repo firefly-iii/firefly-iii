@@ -53,16 +53,6 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function has(string $name): bool
-    {
-        return Configuration::where('name', $name)->count() === 1;
-    }
-
-    /**
      * @param string               $name
      * @param bool|string|int|null $default
      *
@@ -98,39 +88,6 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param mixed  $default
-     *
-     * @return Configuration|null
-     */
-    public function getFresh(string $name, $default = null): ?Configuration
-    {
-
-        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        if ($config) {
-
-            return $config;
-        }
-        // no preference found and default is null:
-        if (null === $default) {
-            return null;
-        }
-
-        return $this->set($name, $default);
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
-     *
-     * @return Configuration
-     */
-    public function put(string $name, $value): Configuration
-    {
-        return $this->set($name, $value);
-    }
-
-    /**
-     * @param string $name
      * @param mixed  $value
      *
      * @return Configuration
@@ -161,5 +118,48 @@ class FireflyConfig
         Cache::forget('ff-config-' . $name);
 
         return $config;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $default
+     *
+     * @return Configuration|null
+     */
+    public function getFresh(string $name, $default = null): ?Configuration
+    {
+
+        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
+        if ($config) {
+
+            return $config;
+        }
+        // no preference found and default is null:
+        if (null === $default) {
+            return null;
+        }
+
+        return $this->set($name, $default);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool
+    {
+        return Configuration::where('name', $name)->count() === 1;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return Configuration
+     */
+    public function put(string $name, $value): Configuration
+    {
+        return $this->set($name, $value);
     }
 }

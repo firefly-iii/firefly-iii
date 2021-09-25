@@ -25,7 +25,6 @@ namespace FireflyIII\Services\Internal\Destroy;
 
 use Exception;
 use FireflyIII\Models\Bill;
-use Log;
 
 /**
  * @codeCoverageIgnore

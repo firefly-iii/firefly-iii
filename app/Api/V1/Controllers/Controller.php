@@ -46,8 +46,8 @@ abstract class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected const CONTENT_TYPE = 'application/vnd.api+json';
-    protected ParameterBag $parameters;
     protected array        $allowedSort;
+    protected ParameterBag $parameters;
 
     /**
      * Controller constructor.
@@ -92,7 +92,7 @@ abstract class Controller extends BaseController
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse($date);
-                } catch (InvalidDateException|InvalidFormatException $e) {
+                } catch (InvalidDateException | InvalidFormatException $e) {
                     // don't care
                     Log::error(sprintf('Invalid date exception in API controller: %s', $e->getMessage()));
                 }

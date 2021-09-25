@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
+use JsonException;
 use Log;
 
 /**
@@ -51,6 +52,7 @@ class BoxController extends Controller
      * 2) if the user has no available amount set this period: spent per day
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function available(): JsonResponse
     {
@@ -72,7 +74,7 @@ class BoxController extends Controller
         $cache->addProperty($today);
         $cache->addProperty('box-available');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $leftPerDayAmount  = '0';
         $leftToSpendAmount = '0';
@@ -129,6 +131,7 @@ class BoxController extends Controller
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {
@@ -142,7 +145,7 @@ class BoxController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         // prep some arrays:
         $incomes  = [];

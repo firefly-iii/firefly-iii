@@ -77,7 +77,7 @@ class IndexController extends Controller
      */
     public function index(Request $request, string $objectType, Carbon $start = null, Carbon $end = null)
     {
-        if('transfers' === $objectType) {
+        if ('transfers' === $objectType) {
             $objectType = 'transfer';
         }
 

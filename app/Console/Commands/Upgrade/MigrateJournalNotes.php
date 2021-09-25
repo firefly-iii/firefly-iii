@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
@@ -52,6 +53,7 @@ class MigrateJournalNotes extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -64,7 +66,7 @@ class MigrateJournalNotes extends Command
         }
 
         $count = 0;
-        $set = TransactionJournalMeta::whereName('notes')->get();
+        $set   = TransactionJournalMeta::whereName('notes')->get();
         /** @var TransactionJournalMeta $meta */
         foreach ($set as $meta) {
             $journal = $meta->transactionJournal;
@@ -103,7 +105,7 @@ class MigrateJournalNotes extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {
@@ -112,7 +114,7 @@ class MigrateJournalNotes extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     /**

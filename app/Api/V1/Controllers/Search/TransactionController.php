@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Search;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Search\SearchInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Http\JsonResponse;
@@ -38,11 +39,14 @@ use League\Fractal\Resource\Collection;
 class TransactionController extends Controller
 {
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/search/searchTransactions
+     *
      * @param Request         $request
      * @param SearchInterface $searcher
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {

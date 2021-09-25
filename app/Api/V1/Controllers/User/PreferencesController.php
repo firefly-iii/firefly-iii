@@ -45,6 +45,9 @@ class PreferencesController extends Controller
     public const RESOURCE_KEY = 'preferences';
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/preferences/listPreference
+     *
      * List all of them.
      *
      * @return JsonResponse
@@ -75,6 +78,9 @@ class PreferencesController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/preferences/getPreference
+     *
      * Return a single preference by name.
      *
      * @param Preference $preference
@@ -95,9 +101,13 @@ class PreferencesController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/preferences/storePreference
+     *
      * @param PreferenceStoreRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(PreferenceStoreRequest $request): JsonResponse
     {
@@ -115,6 +125,9 @@ class PreferencesController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/preferences/updatePreference
+     *
      * @param PreferenceUpdateRequest $request
      * @param Preference              $preference
      *

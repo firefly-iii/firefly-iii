@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -70,6 +71,7 @@ class OtherCurrenciesCorrections extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -112,7 +114,7 @@ class OtherCurrenciesCorrections extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {
@@ -121,7 +123,7 @@ class OtherCurrenciesCorrections extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     /**
@@ -246,10 +248,10 @@ class OtherCurrenciesCorrections extends Command
     {
         $accountId = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
-            return null; 
+            return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
-            return $this->accountCurrencies[$accountId]; 
+            return $this->accountCurrencies[$accountId];
         }
         $currency = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {

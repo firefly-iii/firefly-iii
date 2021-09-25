@@ -33,11 +33,9 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Export\ExportDataGenerator;
-use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use League\Csv\CannotInsertRecord;
 use Log;
 
 /**
@@ -82,9 +80,7 @@ class ExportData extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws CannotInsertRecord
      * @throws FireflyException
-     * @throws \League\Csv\Exception
      */
     public function handle(): int
     {

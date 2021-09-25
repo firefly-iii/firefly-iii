@@ -47,7 +47,7 @@ class ShowController extends Controller
     use PeriodOverview, AugumentData;
 
     protected JournalRepositoryInterface $journalRepos;
-    private BudgetRepositoryInterface  $repository;
+    private BudgetRepositoryInterface    $repository;
 
     /**
      * ShowController constructor.
@@ -78,6 +78,7 @@ class ShowController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
     {
@@ -113,6 +114,7 @@ class ShowController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function noBudgetAll(Request $request)
     {
@@ -141,6 +143,7 @@ class ShowController extends Controller
      * @param Budget  $budget
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function show(Request $request, Budget $budget)
     {
@@ -180,7 +183,7 @@ class ShowController extends Controller
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {
         if ($budgetLimit->budget->id !== $budget->id) {
-            throw new FireflyException('This budget limit is not part of this budget.'); 
+            throw new FireflyException('This budget limit is not part of this budget.');
         }
 
         $page     = (int)$request->get('page');

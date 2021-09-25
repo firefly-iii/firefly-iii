@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -46,6 +47,7 @@ class JavascriptController extends Controller
      * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return Response
+     * @throws FireflyException
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
@@ -54,14 +56,14 @@ class JavascriptController extends Controller
         );
         $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
         /** @noinspection NullPointerExceptionInspection */
-        $default = $currencyRepository->findByCodeNull((string) $preference->data);
+        $default = $currencyRepository->findByCodeNull((string)$preference->data);
 
         $data = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $currency  = (int) $repository->getMetaValue($account, 'currency_id');
+            $currency  = (int)$repository->getMetaValue($account, 'currency_id');
             /** @noinspection NullPointerExceptionInspection */
             $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
@@ -97,6 +99,49 @@ class JavascriptController extends Controller
     }
 
     /**
+     * Show some common variables to be used in scripts.
+     *
+     * @param Request                     $request
+     * @param AccountRepositoryInterface  $repository
+     * @param CurrencyRepositoryInterface $currencyRepository
+     *
+     * @return Response
+     * @throws FireflyException
+     */
+    public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
+    {
+        $account  = $repository->find((int)$request->get('account'));
+        $currency = app('amount')->getDefaultCurrency();
+        if (null !== $account) {
+            $currency = $repository->getAccountCurrency($account) ?? $currency;
+        }
+        $locale                    = app('steam')->getLocale();
+        $accounting                = app('amount')->getJsConfig();
+        $accounting['frac_digits'] = $currency->decimal_places;
+        $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
+        /** @noinspection NullPointerExceptionInspection */
+        $lang      = $pref->data;
+        $dateRange = $this->getDateRangeConfig();
+        $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string)config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
+
+        $data = [
+            'currencyCode'         => $currency->code,
+            'currencySymbol'       => $currency->symbol,
+            'accountingLocaleInfo' => $accounting,
+            'language'             => $lang,
+            'dateRangeTitle'       => $dateRange['title'],
+            'locale'               => $locale,
+            'dateRangeConfig'      => $dateRange['configuration'],
+            'uid'                  => $uid,
+        ];
+        $request->session()->keep(['two-factor-secret']);
+
+        return response()
+            ->view('v1.javascript.variables', $data)
+            ->header('Content-Type', 'text/javascript');
+    }
+
+    /**
      * Bit of a hack but OK.
      *
      * @param Request $request
@@ -117,48 +162,6 @@ class JavascriptController extends Controller
 
         return response()
             ->view('v2.javascript.variables', $data)
-            ->header('Content-Type', 'text/javascript');
-    }
-
-    /**
-     * Show some common variables to be used in scripts.
-     *
-     * @param Request                     $request
-     * @param AccountRepositoryInterface  $repository
-     * @param CurrencyRepositoryInterface $currencyRepository
-     *
-     * @return Response
-     */
-    public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
-    {
-        $account    = $repository->find((int) $request->get('account'));
-        $currency = app('amount')->getDefaultCurrency();
-        if(null !== $account) {
-            $currency = $repository->getAccountCurrency($account) ?? $currency;
-        }
-        $locale                    = app('steam')->getLocale();
-        $accounting                = app('amount')->getJsConfig();
-        $accounting['frac_digits'] = $currency->decimal_places;
-        $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
-        /** @noinspection NullPointerExceptionInspection */
-        $lang      = $pref->data;
-        $dateRange = $this->getDateRangeConfig();
-        $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
-
-        $data = [
-            'currencyCode'         => $currency->code,
-            'currencySymbol'       => $currency->symbol,
-            'accountingLocaleInfo' => $accounting,
-            'language'             => $lang,
-            'dateRangeTitle'       => $dateRange['title'],
-            'locale'               => $locale,
-            'dateRangeConfig'      => $dateRange['configuration'],
-            'uid'                  => $uid,
-        ];
-        $request->session()->keep(['two-factor-secret']);
-
-        return response()
-            ->view('v1.javascript.variables', $data)
             ->header('Content-Type', 'text/javascript');
     }
 

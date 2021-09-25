@@ -65,6 +65,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/deleteLinkType
+     *
      * Delete the resource.
      *
      * @param LinkType $linkType

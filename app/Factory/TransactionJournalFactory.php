@@ -46,6 +46,7 @@ use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -94,8 +95,9 @@ class TransactionJournalFactory
      * @param array $data
      *
      * @return Collection
-     * @throws FireflyException
      * @throws DuplicateTransactionException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function create(array $data): Collection
     {
@@ -146,7 +148,7 @@ class TransactionJournalFactory
      * @return TransactionJournal|null
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
@@ -295,7 +297,7 @@ class TransactionJournalFactory
      * @param NullArrayObject $row
      *
      * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function hashArray(NullArrayObject $row): string
     {
@@ -321,7 +323,7 @@ class TransactionJournalFactory
      * @param string $hash
      *
      * @throws DuplicateTransactionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function errorIfDuplicate(string $hash): void
     {
@@ -333,7 +335,8 @@ class TransactionJournalFactory
         if ($this->errorOnHash) {
             Log::debug('Will verify duplicate!');
             /** @var TransactionJournalMeta $result */
-            $result = TransactionJournalMeta::where('data', json_encode($hash, JSON_THROW_ON_ERROR))
+            $result = TransactionJournalMeta::withTrashed()
+                                            ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
                                             ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
                                             ->first();
         }
@@ -386,15 +389,11 @@ class TransactionJournalFactory
     private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
     {
         Log::debug('Now ingetCurrencyByAccount()');
-        switch ($type) {
-            default:
-            case TransactionType::WITHDRAWAL:
-            case TransactionType::TRANSFER:
-                return $this->getCurrency($currency, $source);
-            case TransactionType::DEPOSIT:
-                return $this->getCurrency($currency, $destination);
 
-        }
+        return match ($type) {
+            default => $this->getCurrency($currency, $source),
+            TransactionType::DEPOSIT => $this->getCurrency($currency, $destination),
+        };
     }
 
     /**

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Category;
+
 use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Support\Collection;

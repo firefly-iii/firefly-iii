@@ -69,7 +69,7 @@ class AccountFormRequest extends FormRequest
         if (false === $this->boolean('include_net_worth')) {
             $data['include_net_worth'] = '0';
         }
-        if('0' === $data['opening_balance']) {
+        if ('0' === $data['opening_balance']) {
             $data['opening_balance'] = '';
         }
 

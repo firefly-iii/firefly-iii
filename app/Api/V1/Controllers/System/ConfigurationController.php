@@ -54,6 +54,9 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/configuration/getConfiguration
+     *
      * @return JsonResponse
      * @throws FireflyException
      */
@@ -100,10 +103,10 @@ class ConfigurationController extends Controller
         $singleUser  = app('fireflyconfig')->get('single_user_mode');
 
         return [
-            'is_demo_site'            => null === $isDemoSite ? null : $isDemoSite->data,
+            'is_demo_site'            => $isDemoSite?->data,
             'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
             'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
-            'single_user_mode'        => null === $singleUser ? null : $singleUser->data,
+            'single_user_mode'        => $singleUser?->data,
         ];
     }
 
@@ -122,6 +125,9 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/configuration/getSingleConfiguration
+     *
      * @param string $configKey
      *
      * @return JsonResponse
@@ -132,14 +138,14 @@ class ConfigurationController extends Controller
         $data     = [];
         $dynamic  = $this->getDynamicConfiguration();
         $shortKey = str_replace('configuration.', '', $configKey);
-        if ('configuration.' === substr($configKey, 0, 14)) {
+        if (str_starts_with($configKey, 'configuration.')) {
             $data = [
                 'title'    => $configKey,
                 'value'    => $dynamic[$shortKey],
                 'editable' => true,
             ];
         }
-        if ('configuration.' !== substr($configKey, 0, 14)) {
+        if (!str_starts_with($configKey, 'configuration.')) {
             $data = [
                 'title'    => $configKey,
                 'value'    => config($configKey),
@@ -151,17 +157,21 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/configuration/setConfiguration
+     *
      * Update the configuration.
      *
      * @param UpdateRequest $request
      * @param string        $name
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
-            throw new FireflyException('200005: You need the "owner" role to do this.'); 
+            throw new FireflyException('200005: You need the "owner" role to do this.');
         }
         $data      = $request->getAll();
         $shortName = str_replace('configuration.', '', $name);

@@ -28,6 +28,7 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 use Throwable;
 
@@ -42,7 +43,7 @@ class BillController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function overview(Collection $accounts, Carbon $start, Carbon $end)
     {   // chart properties for cache:
@@ -52,7 +53,7 @@ class BillController extends Controller
         $cache->addProperty('bill-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         /** @var ReportHelperInterface $helper */
         $helper = app(ReportHelperInterface::class);

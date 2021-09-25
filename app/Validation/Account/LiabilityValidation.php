@@ -36,31 +36,6 @@ trait LiabilityValidation
 {
 
     /**
-     * Source of an liability credit must be a liability.
-     *
-     * @param string|null $accountName
-     *
-     * @return bool
-     */
-    protected function validateLCSource(?string $accountName): bool
-    {
-        $result = true;
-        Log::debug(sprintf('Now in validateLCDestination("%s")', $accountName));
-        if ('' === $accountName || null === $accountName) {
-            $result = false;
-        }
-        if (true === $result) {
-            // set the source to be a (dummy) revenue account.
-            $account              = new Account;
-            $accountType          = AccountType::whereType(AccountType::LIABILITY_CREDIT)->first();
-            $account->accountType = $accountType;
-            $this->source         = $account;
-        }
-
-        return $result;
-    }
-
-    /**
      * @param int|null $accountId
      *
      * @return bool
@@ -94,6 +69,31 @@ trait LiabilityValidation
         }
 
         return $result ?? false;
+    }
+
+    /**
+     * Source of an liability credit must be a liability.
+     *
+     * @param string|null $accountName
+     *
+     * @return bool
+     */
+    protected function validateLCSource(?string $accountName): bool
+    {
+        $result = true;
+        Log::debug(sprintf('Now in validateLCDestination("%s")', $accountName));
+        if ('' === $accountName || null === $accountName) {
+            $result = false;
+        }
+        if (true === $result) {
+            // set the source to be a (dummy) revenue account.
+            $account              = new Account;
+            $accountType          = AccountType::whereType(AccountType::LIABILITY_CREDIT)->first();
+            $account->accountType = $accountType;
+            $this->source         = $account;
+        }
+
+        return $result;
     }
 
 }

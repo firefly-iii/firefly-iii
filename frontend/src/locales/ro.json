@@ -70,6 +70,7 @@
         "daily_budgets": "Bugete zilnice",
         "weekly_budgets": "Bugete s\u0103pt\u0103m\u00e2nale",
         "monthly_budgets": "Bugete lunare",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "Bugete trimestriale",
         "create_new_expense": "Crea\u021bi un nou cont de cheltuieli",
         "create_new_revenue": "Crea\u021bi un nou cont de venituri",

@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Alle transacties voor rekening :name',
     'chart_all_journals_for_account'                      => 'Grafiek van alle transacties voor rekening :name',
     'journals_in_period_for_account'                      => 'Alle transacties voor rekening :name tussen :start en :end',
+    'journals_in_period_for_account_js'                   => 'Alle transacties voor rekening {title} tussen {start} en {end}',
     'transferred'                                         => 'Overgeschreven',
     'all_withdrawal'                                      => 'Alle uitgaven',
     'all_transactions'                                    => 'Alle transacties',

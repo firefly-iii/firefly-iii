@@ -65,6 +65,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/transactions/updateTransaction
+     *
      * Update a transaction.
      *
      * @param UpdateRequest    $request
@@ -80,7 +83,7 @@ class UpdateController extends Controller
         $manager          = $this->getManager();
 
         app('preferences')->mark();
-        $applyRules = $data['apply_rules'] ?? true;
+        $applyRules   = $data['apply_rules'] ?? true;
         $fireWebhooks = $data['fire_webhooks'] ?? true;
         event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 
@@ -98,7 +101,7 @@ class UpdateController extends Controller
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw new NotFoundHttpException(); 
+            throw new NotFoundHttpException();
         }
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);

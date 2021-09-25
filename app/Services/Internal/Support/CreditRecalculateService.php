@@ -40,8 +40,8 @@ class CreditRecalculateService
 {
     private ?Account                   $account;
     private ?TransactionGroup          $group;
-    private array                      $work;
     private AccountRepositoryInterface $repository;
+    private array                      $work;
 
     /**
      * CreditRecalculateService constructor.
@@ -78,50 +78,6 @@ class CreditRecalculateService
         Log::debug('Will now do CreditRecalculationService');
         $this->processWork();
     }
-
-    /**
-     *
-     */
-    private function processWork(): void
-    {
-        $this->repository = app(AccountRepositoryInterface::class);
-        foreach ($this->work as $account) {
-            $this->processWorkAccount($account);
-        }
-        Log::debug(sprintf('Done with %s', __METHOD__));
-    }
-
-    /**
-     * @param Account $account
-     */
-    private function processWorkAccount(Account $account): void
-    {
-        Log::debug(sprintf('Now in %s(#%d)', __METHOD__, $account->id));
-
-        // get opening balance (if present)
-        $this->repository->setUser($account->user);
-        $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
-        $leftOfDebt  = app('steam')->positive($startOfDebt);
-
-        /** @var AccountMetaFactory $factory */
-        $factory = app(AccountMetaFactory::class);
-        $factory->crud($account, 'start_of_debt', $startOfDebt);
-
-        // get direction of liability:
-        $direction = (string)$this->repository->getMetaValue($account, 'liability_direction');
-
-        // now loop all transactions (except opening balance and credit thing)
-        $transactions = $account->transactions()->get();
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $leftOfDebt = $this->processTransaction($account, $direction, $transaction, $leftOfDebt);
-        }
-        $factory->crud($account, 'current_debt', $leftOfDebt);
-
-
-        Log::debug(sprintf('Done with %s(#%d)', __METHOD__, $account->id));
-    }
-
 
     /**
      *
@@ -221,19 +177,46 @@ class CreditRecalculateService
     }
 
     /**
-     * @param Account|null $account
+     *
      */
-    public function setAccount(?Account $account): void
+    private function processWork(): void
     {
-        $this->account = $account;
+        $this->repository = app(AccountRepositoryInterface::class);
+        foreach ($this->work as $account) {
+            $this->processWorkAccount($account);
+        }
+        Log::debug(sprintf('Done with %s', __METHOD__));
     }
 
     /**
-     * @param TransactionGroup $group
+     * @param Account $account
      */
-    public function setGroup(TransactionGroup $group): void
+    private function processWorkAccount(Account $account): void
     {
-        $this->group = $group;
+        Log::debug(sprintf('Now in %s(#%d)', __METHOD__, $account->id));
+
+        // get opening balance (if present)
+        $this->repository->setUser($account->user);
+        $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
+        $leftOfDebt  = app('steam')->positive($startOfDebt);
+
+        /** @var AccountMetaFactory $factory */
+        $factory = app(AccountMetaFactory::class);
+        $factory->crud($account, 'start_of_debt', $startOfDebt);
+
+        // get direction of liability:
+        $direction = (string)$this->repository->getMetaValue($account, 'liability_direction');
+
+        // now loop all transactions (except opening balance and credit thing)
+        $transactions = $account->transactions()->get();
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $leftOfDebt = $this->processTransaction($account, $direction, $transaction, $leftOfDebt);
+        }
+        $factory->crud($account, 'current_debt', $leftOfDebt);
+
+
+        Log::debug(sprintf('Done with %s(#%d)', __METHOD__, $account->id));
     }
 
     /**
@@ -262,7 +245,7 @@ class CreditRecalculateService
         // if it's a credit, we don't care, because sending more money
         // to a credit-liability doesn't increase the amount (yet)
         if (
-            in_array($type, [TransactionType::WITHDRAWAL])
+            $type === TransactionType::WITHDRAWAL
             && (int)$account->id === (int)$transaction->account_id
             && 1 === bccomp($transaction->amount, '0')
             && 'credit' === $direction
@@ -274,7 +257,7 @@ class CreditRecalculateService
 
         // likewise deposit into a credit debt does not change the amount
         if (
-            in_array($type, [TransactionType::DEPOSIT])
+            $type === TransactionType::DEPOSIT
             && (int)$account->id === (int)$transaction->account_id
             && -1 === bccomp($transaction->amount, '0')
             && 'credit' === $direction
@@ -290,6 +273,22 @@ class CreditRecalculateService
         Log::debug(sprintf('Amount is now %s', $amount));
 
         return $amount;
+    }
+
+    /**
+     * @param Account|null $account
+     */
+    public function setAccount(?Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @param TransactionGroup $group
+     */
+    public function setGroup(TransactionGroup $group): void
+    {
+        $this->group = $group;
     }
 
 

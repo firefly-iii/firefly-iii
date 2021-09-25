@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\Models\Webhook\UpdateRequest;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -56,6 +55,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/updateWebhook
+     *
      * @param Webhook       $webhook
      * @param UpdateRequest $request
      *

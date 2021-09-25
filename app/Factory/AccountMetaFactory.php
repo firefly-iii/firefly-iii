@@ -68,7 +68,7 @@ class AccountMetaFactory
             try {
                 $entry->delete();
             } catch (Exception $e) { // @phpstan-ignore-line
-                Log::debug(sprintf('Could not delete entry: %s', $e->getMessage())); 
+                Log::debug(sprintf('Could not delete entry: %s', $e->getMessage()));
             }
 
             return null;

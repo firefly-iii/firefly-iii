@@ -73,6 +73,9 @@ class AccountController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightIncomeAsset
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse
@@ -100,6 +103,9 @@ class AccountController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightIncomeRevenue
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse

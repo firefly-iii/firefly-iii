@@ -184,6 +184,7 @@ class FrontpageChartGenerator
 
         return $return;
     }
+
     /**
      * @param array $currencyData
      * @param array $monetaryData

@@ -56,6 +56,9 @@ class CurrencyController extends Controller
     }
 
     /**
+     * Documentation for this endpoint is at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getCurrenciesAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
@@ -81,9 +84,13 @@ class CurrencyController extends Controller
     }
 
     /**
+     * Documentation for this endpoint is at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getCurrenciesCodeAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
+     * @deprecated
      */
     public function currenciesWithCode(AutocompleteRequest $request): JsonResponse
     {

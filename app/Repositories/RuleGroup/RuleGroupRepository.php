@@ -191,25 +191,14 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @return int
-     */
-    public function getHighestOrderRuleGroup(): int
-    {
-        $entry = $this->user->ruleGroups()->max('order');
-
-        return (int)$entry;
-    }
-
-    /**
      * @param string|null $filter
      *
      * @return Collection
      */
-    public function getRuleGroupsWithRules(?string $filter): Collection
+    public function getAllRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user->ruleGroups()
                              ->orderBy('order', 'ASC')
-                             ->where('active', true)
                              ->with(
                                  [
                                      'rules'              => static function (HasMany $query) {
@@ -254,14 +243,25 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @return int
+     */
+    public function getHighestOrderRuleGroup(): int
+    {
+        $entry = $this->user->ruleGroups()->max('order');
+
+        return (int)$entry;
+    }
+
+    /**
      * @param string|null $filter
      *
      * @return Collection
      */
-    public function getAllRuleGroupsWithRules(?string $filter): Collection
+    public function getRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user->ruleGroups()
                              ->orderBy('order', 'ASC')
+                             ->where('active', true)
                              ->with(
                                  [
                                      'rules'              => static function (HasMany $query) {

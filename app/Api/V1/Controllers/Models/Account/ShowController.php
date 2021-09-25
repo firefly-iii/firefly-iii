@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -65,12 +66,15 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/listAccount
+     *
      * Display a listing of the resource.
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
@@ -80,7 +84,7 @@ class ShowController extends Controller
         $this->parameters->set('type', $type);
 
         // types to get, page size:
-        $types    = $this->mapAccountTypes($this->parameters->get('type'));
+        $types = $this->mapAccountTypes($this->parameters->get('type'));
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
@@ -91,7 +95,7 @@ class ShowController extends Controller
         // continue sort:
 
 
-        $accounts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $accounts = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
@@ -108,6 +112,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/getAccount
+     *
      * Show single instance.
      *
      * @param Account $account

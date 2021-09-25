@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
+
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 
@@ -34,7 +35,7 @@ class TagTransformer extends AbstractTransformer
     /**
      * Transform a tag.
      *
-* See reference nr. 21
+     * See reference nr. 21
      *
      * @param Tag $tag
      *
@@ -42,7 +43,7 @@ class TagTransformer extends AbstractTransformer
      */
     public function transform(Tag $tag): array
     {
-        $date = null === $tag->date ? null : $tag->date->toAtomString();
+        $date = $tag->date?->toAtomString();
         /** @var Location $location */
         $location  = $tag->locations()->first();
         $latitude  = null;

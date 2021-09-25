@@ -42,6 +42,9 @@ use Google2FA;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
 use Log;
+use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
+use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
+use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use ValueError;
 use function is_string;
 
@@ -55,9 +58,9 @@ class FireflyValidator extends Validator
      * @param mixed $value
      *
      * @return bool
-     * @throws \PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException
-     * @throws \PragmaRX\Google2FA\Exceptions\InvalidCharactersException
-     * @throws \PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException
+     * @throws IncompatibleWithGoogleAuthenticatorException
+     * @throws InvalidCharactersException
+     * @throws SecretKeyTooShortException
      */
     public function validate2faCode($attribute, $value): bool
     {
@@ -114,7 +117,6 @@ class FireflyValidator extends Validator
      * @param mixed $value
      *
      * @return bool
-     * @throws FireflyException
      */
     public function validateIban($attribute, $value): bool
     {
@@ -170,7 +172,7 @@ class FireflyValidator extends Validator
             "\u{3000}", // ideographic space
             "\u{FEFF}", // zero width no -break space
             '-',
-            '?'
+            '?',
         ];
         $replace = '';
         $value   = str_replace($search, $replace, $value);
@@ -196,6 +198,7 @@ class FireflyValidator extends Validator
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
             Log::error($message);
             Log::error($e->getTraceAsString());
+
             return false;
         }
 

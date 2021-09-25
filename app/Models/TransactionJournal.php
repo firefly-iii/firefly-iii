@@ -24,7 +24,6 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -41,15 +40,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property int                                                         $id
- * @property Carbon|null                                                 $created_at
- * @property Carbon|null                                                 $updated_at
- * @property Carbon|null                                                 $deleted_at
- * @property int                                                         $user_id
- * @property int                                                         $transaction_type_id
- * @property int|null                                                    $transaction_group_id
- * @property int|null                                                    $bill_id
- * @property int|null                                                    $transaction_currency_id
+ * @property int                                      $id
+ * @property Carbon|null                              $created_at
+ * @property Carbon|null                              $updated_at
+ * @property Carbon|null                              $deleted_at
+ * @property int                                      $user_id
+ * @property int                                      $transaction_type_id
+ * @property int|null                                 $transaction_group_id
+ * @property int|null                                 $bill_id
+ * @property int|null                                 $transaction_currency_id
  * @property string                                   $description
  * @property Carbon                                   $date
  * @property Carbon|null                              $interest_date
@@ -71,20 +70,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                            $dest_journal_links_count
  * @property-read Collection|Note[]                   $notes
  * @property-read int|null                            $notes_count
- * @property-read Collection|PiggyBankEvent[]                $piggyBankEvents
- * @property-read int|null                                   $piggy_bank_events_count
- * @property-read Collection|TransactionJournalLink[]        $sourceJournalLinks
- * @property-read int|null                                   $source_journal_links_count
- * @property-read Collection|Tag[]                           $tags
- * @property-read int|null                                   $tags_count
- * @property-read TransactionCurrency|null                   $transactionCurrency
- * @property-read TransactionGroup|null                      $transactionGroup
- * @property-read Collection|TransactionJournalMeta[]        $transactionJournalMeta
- * @property-read int|null                                 $transaction_journal_meta_count
- * @property-read TransactionType                          $transactionType
- * @property-read Collection|Transaction[]                       $transactions
- * @property-read int|null                                       $transactions_count
- * @property-read User                                                   $user
+ * @property-read Collection|PiggyBankEvent[]         $piggyBankEvents
+ * @property-read int|null                            $piggy_bank_events_count
+ * @property-read Collection|TransactionJournalLink[] $sourceJournalLinks
+ * @property-read int|null                            $source_journal_links_count
+ * @property-read Collection|Tag[]                    $tags
+ * @property-read int|null                            $tags_count
+ * @property-read TransactionCurrency|null            $transactionCurrency
+ * @property-read TransactionGroup|null               $transactionGroup
+ * @property-read Collection|TransactionJournalMeta[] $transactionJournalMeta
+ * @property-read int|null                            $transaction_journal_meta_count
+ * @property-read TransactionType                     $transactionType
+ * @property-read Collection|Transaction[]            $transactions
+ * @property-read int|null                            $transactions_count
+ * @property-read User                                $user
  * @method static EloquentBuilder|TransactionJournal after(Carbon $date)
  * @method static EloquentBuilder|TransactionJournal before(Carbon $date)
  * @method static EloquentBuilder|TransactionJournal newModelQuery()
@@ -113,9 +112,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
  * @mixin Eloquent
- * @property-read Collection|Location[] $locations
- * @property-read int|null                                            $locations_count
- * @property int                                                      $the_count
+ * @property-read Collection|Location[]               $locations
+ * @property-read int|null                            $locations_count
+ * @property int                                      $the_count
+ * @property int|null                                 $user_group_id
+ * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
  */
 class TransactionJournal extends Model
 {
@@ -154,7 +155,6 @@ class TransactionJournal extends Model
      * @param string $value
      *
      * @return TransactionJournal
-     * @throws FireflyException
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionJournal

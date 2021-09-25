@@ -79,12 +79,8 @@ class EditController extends Controller
         $startDate    = null;
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
-        if (null !== $piggyBank->targetdate) {
-            $targetDate = $piggyBank->targetdate->format('Y-m-d');
-        }
-        if (null !== $piggyBank->startdate) {
-            $startDate = $piggyBank->startdate->format('Y-m-d');
-        }
+        $targetDate = $piggyBank->targetdate?->format('Y-m-d');
+        $startDate  = $piggyBank->startdate?->format('Y-m-d');
 
         $preFilled = ['name'         => $piggyBank->name,
                       'account_id'   => $piggyBank->account_id,
@@ -132,7 +128,7 @@ class EditController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUri('piggy-banks.edit.uri'));
 

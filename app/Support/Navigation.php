@@ -160,6 +160,57 @@ class Navigation
     }
 
     /**
+     * @param Carbon $theDate
+     * @param string $repeatFreq
+     *
+     * @return Carbon
+     */
+    public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
+    {
+        $date = clone $theDate;
+
+        $functionMap = [
+            '1D'        => 'startOfDay',
+            'daily'     => 'startOfDay',
+            '1W'        => 'startOfWeek',
+            'week'      => 'startOfWeek',
+            'weekly'    => 'startOfWeek',
+            'month'     => 'startOfMonth',
+            '1M'        => 'startOfMonth',
+            'monthly'   => 'startOfMonth',
+            '3M'        => 'firstOfQuarter',
+            'quarter'   => 'firstOfQuarter',
+            'quarterly' => 'firstOfQuarter',
+            'year'      => 'startOfYear',
+            'yearly'    => 'startOfYear',
+            '1Y'        => 'startOfYear',
+        ];
+        if (array_key_exists($repeatFreq, $functionMap)) {
+            $function = $functionMap[$repeatFreq];
+            $date->$function();
+
+            return $date;
+        }
+        if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
+            $month = $date->month;
+            $date->startOfYear();
+            if ($month >= 7) {
+                $date->addMonths(6);
+            }
+
+            return $date;
+        }
+
+        if ('custom' === $repeatFreq) {
+            return $date; // the date is already at the start.
+        }
+        Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
+
+        return $theDate;
+
+    }
+
+    /**
      * @param Carbon $end
      * @param string $repeatFreq
      *
@@ -314,6 +365,29 @@ class Navigation
     }
 
     /**
+     * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
+     * method returns "Y-m". If the date difference is larger, method returns "Y".
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function preferredCarbonFormat(Carbon $start, Carbon $end): string
+    {
+        $format = 'Y-m-d';
+        if ($start->diffInMonths($end) > 1) {
+            $format = 'Y-m';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = 'Y';
+        }
+
+        return $format;
+    }
+
+    /**
      * @param Carbon $theDate
      * @param string $repeatFrequency
      *
@@ -352,29 +426,6 @@ class Navigation
 
         return $date->format('Y-m-d');
 
-    }
-
-    /**
-     * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
-     * method returns "Y-m". If the date difference is larger, method returns "Y".
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function preferredCarbonFormat(Carbon $start, Carbon $end): string
-    {
-        $format = 'Y-m-d';
-        if ($start->diffInMonths($end) > 1) {
-            $format = 'Y-m';
-        }
-
-        if ($start->diffInMonths($end) > 12) {
-            $format = 'Y';
-        }
-
-        return $format;
     }
 
     /**
@@ -468,57 +519,6 @@ class Navigation
         }
 
         return $format;
-    }
-
-    /**
-     * @param Carbon $theDate
-     * @param string $repeatFreq
-     *
-     * @return Carbon
-     */
-    public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
-    {
-        $date = clone $theDate;
-
-        $functionMap = [
-            '1D'        => 'startOfDay',
-            'daily'     => 'startOfDay',
-            '1W'        => 'startOfWeek',
-            'week'      => 'startOfWeek',
-            'weekly'    => 'startOfWeek',
-            'month'     => 'startOfMonth',
-            '1M'        => 'startOfMonth',
-            'monthly'   => 'startOfMonth',
-            '3M'        => 'firstOfQuarter',
-            'quarter'   => 'firstOfQuarter',
-            'quarterly' => 'firstOfQuarter',
-            'year'      => 'startOfYear',
-            'yearly'    => 'startOfYear',
-            '1Y'        => 'startOfYear',
-        ];
-        if (array_key_exists($repeatFreq, $functionMap)) {
-            $function = $functionMap[$repeatFreq];
-            $date->$function();
-
-            return $date;
-        }
-        if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
-            $month = $date->month;
-            $date->startOfYear();
-            if ($month >= 7) {
-                $date->addMonths(6);
-            }
-
-            return $date;
-        }
-
-        if ('custom' === $repeatFreq) {
-            return $date; // the date is already at the start.
-        }
-        Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
-
-        return $theDate;
-
     }
 
     /**

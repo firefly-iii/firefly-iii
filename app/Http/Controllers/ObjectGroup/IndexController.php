@@ -27,10 +27,10 @@ namespace FireflyIII\Http\Controllers\ObjectGroup;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Log;
 
 /**
@@ -62,7 +62,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @return Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -78,7 +78,7 @@ class IndexController extends Controller
      * @param Request     $request
      * @param ObjectGroup $objectGroup
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function setOrder(Request $request, ObjectGroup $objectGroup)
     {

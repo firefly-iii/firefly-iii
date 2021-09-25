@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class AbstractCronjob
@@ -34,15 +32,13 @@ use FireflyIII\Exceptions\FireflyException;
  */
 abstract class AbstractCronjob
 {
+    public bool $jobErrored;
+    public bool $jobFired;
+    public bool $jobSucceeded;
+    public ?string $message;
     public int       $timeBetweenRuns = 43200;
     protected Carbon $date;
     protected bool   $force;
-
-    public bool $jobFired;
-    public bool $jobSucceeded;
-    public bool $jobErrored;
-
-    public ?string $message;
 
     /**
      * AbstractCronjob constructor.
@@ -67,7 +63,7 @@ abstract class AbstractCronjob
      */
     final public function setDate(Carbon $date): void
     {
-        $newDate = clone $date;
+        $newDate    = clone $date;
         $this->date = $newDate;
     }
 

@@ -27,7 +27,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Webhook\CreateRequest;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -56,13 +55,16 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/storeWebhook
+     *
      * @param CreateRequest $request
      *
      * @return JsonResponse
      */
     public function store(CreateRequest $request): JsonResponse
     {
-        $data    = $request->getData();
+        $data = $request->getData();
         $webhook = $this->repository->store($data);
         $manager = $this->getManager();
         /** @var WebhookTransformer $transformer */

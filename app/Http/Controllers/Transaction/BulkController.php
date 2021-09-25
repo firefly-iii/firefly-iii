@@ -28,7 +28,10 @@ use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Log;
 
@@ -63,7 +66,7 @@ class BulkController extends Controller
     /**
      * Edit a set of journals in bulk.
      *
-* See reference nr. 47
+     * See reference nr. 47
      *
      * @param array $journals
      *
@@ -90,15 +93,15 @@ class BulkController extends Controller
      *
      * @param BulkEditJournalRequest $request
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return Application|RedirectResponse|Redirector
      */
     public function update(BulkEditJournalRequest $request)
     {
-        $journalIds     = $request->get('journals');
-        $journalIds     = is_array($journalIds) ? $journalIds : [];
+        $journalIds = $request->get('journals');
+        $journalIds = is_array($journalIds) ? $journalIds : [];
         $ignoreCategory = 1 === (int)$request->get('ignore_category');
-        $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
-        $tagsAction     = $request->get('tags_action');
+        $ignoreBudget = 1 === (int)$request->get('ignore_budget');
+        $tagsAction = $request->get('tags_action');
 
         $count = 0;
 

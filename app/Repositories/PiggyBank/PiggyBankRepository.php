@@ -55,6 +55,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @param int $piggyBankId
+     *
+     * @return PiggyBank|null
+     */
+    public function find(int $piggyBankId): ?PiggyBank
+    {
+        return $this->user->piggyBanks()->find($piggyBankId);
+    }
+
+    /**
      * Find by name or return NULL.
      *
      * @param string $name
@@ -64,16 +74,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function findByName(string $name): ?PiggyBank
     {
         return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first(['piggy_banks.*']);
-    }
-
-    /**
-     * @param int $piggyBankId
-     *
-     * @return PiggyBank|null
-     */
-    public function find(int $piggyBankId): ?PiggyBank
-    {
-        return $this->user->piggyBanks()->find($piggyBankId);
     }
 
     /**
@@ -302,6 +302,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';
             $piggy->name   = $piggy->name . ' (' . app('amount')->formatAnything($currency, $currentAmount, false) . ')';
         }
+
         return $set;
     }
 

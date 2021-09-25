@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Budget;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -52,7 +53,7 @@ class ShowController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository   = app(BudgetRepositoryInterface::class);
+                $this->repository = app(BudgetRepositoryInterface::class);
                 $this->blRepository = app(BudgetLimitRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
                 $this->blRepository->setUser(auth()->user());
@@ -63,10 +64,13 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/listBudget
+     *
      * Display a listing of the resource.
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse

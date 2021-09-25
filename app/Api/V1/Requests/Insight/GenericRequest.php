@@ -220,7 +220,7 @@ class GenericRequest extends FormRequest
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
-            if (in_array($type, [AccountType::EXPENSE])) {
+            if ($type === AccountType::EXPENSE) {
                 $return->push($account);
             }
         }
@@ -238,7 +238,7 @@ class GenericRequest extends FormRequest
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
-            if (in_array($type, [AccountType::REVENUE])) {
+            if ($type === AccountType::REVENUE) {
                 $return->push($account);
             }
         }

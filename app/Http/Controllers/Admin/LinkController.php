@@ -161,7 +161,7 @@ class LinkController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('link-types.edit.fromUpdate')) {
-            $this->rememberPreviousUri('link-types.edit.uri'); 
+            $this->rememberPreviousUri('link-types.edit.uri');
         }
         $request->session()->forget('link-types.edit.fromUpdate');
 

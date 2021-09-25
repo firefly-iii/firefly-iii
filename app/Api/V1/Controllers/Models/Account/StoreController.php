@@ -58,6 +58,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/storeAccount
+     *
      * Store a new instance.
      *
      * @param StoreRequest $request

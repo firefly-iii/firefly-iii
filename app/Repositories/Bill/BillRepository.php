@@ -41,6 +41,7 @@ use FireflyIII\User;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 use Storage;
 
@@ -623,6 +624,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
+     * @throws JsonException
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
@@ -651,6 +653,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
+     * @throws JsonException
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {

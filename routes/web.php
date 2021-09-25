@@ -338,8 +338,8 @@ Route::group(
         Route::get('edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'edit']);
         Route::get('delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
         Route::post('default', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'default']);
-        Route::get('enable/{currency}', ['uses' => 'CurrencyController@enableCurrency', 'as' => 'enable']);
-        Route::get('disable/{currency}', ['uses' => 'CurrencyController@disableCurrency', 'as' => 'disable']);
+        Route::post('enable', ['uses' => 'CurrencyController@enableCurrency', 'as' => 'enable']);
+        Route::post('disable', ['uses' => 'CurrencyController@disableCurrency', 'as' => 'disable']);
 
         Route::post('store', ['uses' => 'CurrencyController@store', 'as' => 'store']);
         Route::post('update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
@@ -1012,7 +1012,7 @@ Route::group(
         Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
 
         // clone group
-        Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CreateController@cloneGroup', 'as' => 'clone']);
+        Route::post('clone', ['uses' => 'Transaction\CreateController@cloneGroup', 'as' => 'clone']);
 
         // edit group
         Route::get('edit/{transactionGroup}', ['uses' => 'Transaction\EditController@edit', 'as' => 'edit']);

@@ -56,6 +56,9 @@ class BillController extends Controller
     }
 
     /**
+     * Documentation for this endpoint is at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getBillsAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse

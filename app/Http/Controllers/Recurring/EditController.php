@@ -47,9 +47,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class EditController extends Controller
 {
     private AttachmentHelperInterface    $attachments;
+    private BillRepositoryInterface      $billRepository;
     private BudgetRepositoryInterface    $budgetRepos;
     private RecurringRepositoryInterface $recurring;
-    private BillRepositoryInterface      $billRepository;
 
     /**
      * EditController constructor.

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -38,6 +39,7 @@ use Illuminate\View\View;
 class NewUserController extends Controller
 {
     use CreateStuff;
+
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
@@ -64,7 +66,7 @@ class NewUserController extends Controller
      */
     public function index()
     {
-        app('view')->share('title', (string) trans('firefly.welcome'));
+        app('view')->share('title', (string)trans('firefly.welcome'));
         app('view')->share('mainTitleIcon', 'fa-fire');
 
         $types = config('firefly.accountTypesByIdentifier.asset');
@@ -82,10 +84,11 @@ class NewUserController extends Controller
     /**
      * Store his new settings.
      *
-     * @param NewUserFormRequest          $request
+     * @param NewUserFormRequest $request
      * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository)
     {
@@ -98,7 +101,7 @@ class NewUserController extends Controller
         // set language preference:
         app('preferences')->set('language', $language);
         // Store currency preference from input:
-        $currency = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
+        $currency = $currencyRepository->find((int)$request->input('amount_currency_id_bank_balance'));
 
         // if is null, set to EUR:
         if (null === $currency) {
@@ -125,7 +128,7 @@ class NewUserController extends Controller
                           'invoice_date'  => false, 'internal_reference' => false, 'notes' => true, 'attachments' => true,];
         app('preferences')->set('transaction_journal_optional_fields', $visibleFields);
 
-        session()->flash('success', (string) trans('firefly.stored_new_accounts_new_user'));
+        session()->flash('success', (string)trans('firefly.stored_new_accounts_new_user'));
         app('preferences')->mark();
 
         return redirect(route('index'));

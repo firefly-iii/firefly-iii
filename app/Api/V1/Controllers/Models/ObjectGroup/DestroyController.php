@@ -47,7 +47,7 @@ class DestroyController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
+                $user = auth()->user();
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
                 $this->repository->setUser($user);
 
@@ -57,6 +57,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/deleteObjectGroup
+     *
      * Remove the specified resource from storage.
      *
      * @param ObjectGroup $objectGroup

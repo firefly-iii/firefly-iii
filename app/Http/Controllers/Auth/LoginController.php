@@ -25,16 +25,20 @@ namespace FireflyIII\Http\Controllers\Auth;
 use Adldap;
 use Cookie;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Validation\ValidationException;
-use Illuminate\View\View;
 use Log;
 
 /**
@@ -83,7 +87,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
-        Log::info(sprintf('User is trying to login.'));
+        Log::info('User is trying to login.');
 
         $guard = config('auth.defaults.guard');
 
@@ -134,7 +138,7 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function logout(Request $request)
     {
@@ -162,7 +166,7 @@ class LoginController extends Controller
         }
 
         return $request->wantsJson()
-            ? new \Illuminate\Http\Response('', 204)
+            ? new Response('', 204)
             : redirect('/');
     }
 
@@ -192,8 +196,8 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|\Illuminate\Http\Response|View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @return Factory|Application|View|Redirector|RedirectResponse
+     * @throws FireflyException
      */
     public function showLoginForm(Request $request)
     {

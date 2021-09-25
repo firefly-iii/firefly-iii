@@ -100,16 +100,6 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param string $tag
-     *
-     * @return Tag|null
-     */
-    public function findByTag(string $tag): ?Tag
-    {
-        return $this->user->tags()->where('tag', $tag)->first();
-    }
-
-    /**
      * @param int $tagId
      *
      * @return Tag|null
@@ -117,6 +107,16 @@ class TagRepository implements TagRepositoryInterface
     public function find(int $tagId): ?Tag
     {
         return $this->user->tags()->find($tagId);
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return Tag|null
+     */
+    public function findByTag(string $tag): ?Tag
+    {
+        return $this->user->tags()->where('tag', $tag)->first();
     }
 
     /**

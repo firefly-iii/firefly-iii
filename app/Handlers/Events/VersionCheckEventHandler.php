@@ -25,10 +25,10 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\User;
 use Log;
 
 /**
@@ -43,7 +43,7 @@ class VersionCheckEventHandler
      *
      * @param RequestedVersionCheckStatus $event
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
@@ -61,7 +61,7 @@ class VersionCheckEventHandler
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user = $event->user;
+        $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
 
@@ -88,13 +88,14 @@ class VersionCheckEventHandler
 
     /**
      * @param RequestedVersionCheckStatus $event
-     * @throws \FireflyIII\Exceptions\FireflyException
+     *
+     * @throws FireflyException
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user = $event->user;
+        $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
 

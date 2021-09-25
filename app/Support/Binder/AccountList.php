@@ -36,7 +36,7 @@ class AccountList implements BinderInterface
 
     /**
      * @param string $value
-     * @param Route $route
+     * @param Route  $route
      *
      * @return Collection
      * @throws NotFoundHttpException

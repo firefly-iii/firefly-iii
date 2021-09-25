@@ -41,7 +41,7 @@ use stdClass;
 class AccountDestroyService
 {
     /**
-     * @param Account      $account
+     * @param Account $account
      * @param Account|null $moveTo
      *
      * @return void

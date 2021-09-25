@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\Models\Category\UpdateRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Transformers\CategoryTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -58,6 +57,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/categories/updateCategory
+     *
      * Update the category.
      *
      * @param UpdateRequest $request
@@ -67,9 +69,9 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Category $category): JsonResponse
     {
-        $data     = $request->getAll();
+        $data = $request->getAll();
         $category = $this->repository->update($category, $data);
-        $manager  = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);

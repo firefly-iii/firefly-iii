@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use JsonException;
 
 /**
  * Trait AugumentData
@@ -190,6 +191,7 @@ trait AugumentData
      * @param Carbon $end
      *
      * @return Collection
+     * @throws JsonException
      */
     protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
     {
@@ -206,7 +208,7 @@ trait AugumentData
         $cache->addProperty('get-limits');
 
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         $set              = $blRepository->getBudgetLimits($budget, $start, $end);

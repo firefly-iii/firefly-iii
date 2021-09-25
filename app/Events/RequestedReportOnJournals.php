@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -45,6 +44,7 @@ class RequestedReportOnJournals
     public $groups;
     /** @var int The ID of the user. */
     public $userId;
+
     /**
      * Create a new event instance.
      *

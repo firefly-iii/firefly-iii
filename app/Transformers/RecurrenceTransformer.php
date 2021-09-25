@@ -42,11 +42,11 @@ use Log;
  */
 class RecurrenceTransformer extends AbstractTransformer
 {
+    private BillRepositoryInterface      $billRepos;
     private BudgetRepositoryInterface    $budgetRepos;
     private CategoryFactory              $factory;
     private PiggyBankRepositoryInterface $piggyRepos;
     private RecurringRepositoryInterface $repository;
-    private BillRepositoryInterface      $billRepos;
 
     /**
      * RecurrenceTransformer constructor.
@@ -94,8 +94,8 @@ class RecurrenceTransformer extends AbstractTransformer
             'title'             => $recurrence->title,
             'description'       => $recurrence->description,
             'first_date'        => $recurrence->first_date->toAtomString(),
-            'latest_date'       => null === $recurrence->latest_date ? null : $recurrence->latest_date->toAtomString(),
-            'repeat_until'      => null === $recurrence->repeat_until ? null : $recurrence->repeat_until->toAtomString(),
+            'latest_date'       => $recurrence->latest_date?->toAtomString(),
+            'repeat_until'      => $recurrence->repeat_until?->toAtomString(),
             'apply_rules'       => $recurrence->apply_rules,
             'active'            => $recurrence->active,
             'nr_of_repetitions' => $reps,

@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Request;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use Exception;
 use Log;
 
 /**
@@ -34,6 +33,30 @@ use Log;
 trait ConvertsDataTypes
 {
     /**
+     * Return integer value.
+     *
+     * @param string $field
+     *
+     * @return int
+     */
+    public function integer(string $field): int
+    {
+        return (int)$this->get($field);
+    }
+
+    /**
+     * Return string value.
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    public function string(string $field): string
+    {
+        return $this->clearString((string)($this->get($field) ?? ''), false);
+    }
+
+    /**
      * @param string|null $string
      * @param bool        $keepNewlines
      *
@@ -41,7 +64,7 @@ trait ConvertsDataTypes
      */
     public function clearString(?string $string, bool $keepNewlines = true): ?string
     {
-        if(null === $string) {
+        if (null === $string) {
             return null;
         }
         $search       = [
@@ -97,30 +120,6 @@ trait ConvertsDataTypes
         $string       = str_replace($secondSearch, '', $string);
 
         return trim($string);
-    }
-
-    /**
-     * Return integer value.
-     *
-     * @param string $field
-     *
-     * @return int
-     */
-    public function integer(string $field): int
-    {
-        return (int)$this->get($field);
-    }
-
-    /**
-     * Return string value.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function string(string $field): string
-    {
-        return $this->clearString((string)($this->get($field) ?? ''), false);
     }
 
     /**

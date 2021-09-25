@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View as IlluminateView;
@@ -91,7 +92,7 @@ class MassController extends Controller
      *
      * @param MassDeleteJournalRequest $request
      *
-     * @return \Illuminate\Contracts\Foundation\Application|Redirector|RedirectResponse
+     * @return Application|Redirector|RedirectResponse
      *
      */
     public function destroy(MassDeleteJournalRequest $request)
@@ -167,8 +168,8 @@ class MassController extends Controller
     {
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {
-// See reference nr. 48
-            throw new FireflyException('This is not an array.'); 
+            // See reference nr. 48
+            throw new FireflyException('This is not an array.');
         }
         $count = 0;
         /** @var string $journalId */
@@ -177,7 +178,7 @@ class MassController extends Controller
             try {
                 $this->updateJournal($integer, $request);
                 $count++;
-            } catch (FireflyException $e) {  
+            } catch (FireflyException $e) {
                 // @ignoreException
             }
         }
@@ -199,7 +200,7 @@ class MassController extends Controller
     {
         $journal = $this->repository->find($journalId);
         if (null === $journal) {
-            throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId)); 
+            throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
         }
         $service = app(JournalUpdateService::class);
         // for each field, call the update service.
@@ -229,14 +230,14 @@ class MassController extends Controller
     /**
      * @param MassEditJournalRequest $request
      * @param int                    $journalId
-     * @param string                 $string
+     * @param string                 $key
      *
      * @return Carbon|null
      * @codeCoverageIgnore
      */
-    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?Carbon
+    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
     {
-        $value = $request->get($string);
+        $value = $request->get($key);
         if (!is_array($value)) {
             return null;
         }

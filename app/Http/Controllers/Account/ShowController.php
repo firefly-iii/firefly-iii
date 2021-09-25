@@ -91,7 +91,7 @@ class ShowController extends Controller
         $objectType = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); 
+            return $this->redirectAccountToAccount($account);
         }
 
         /** @var Carbon $start */
@@ -100,7 +100,7 @@ class ShowController extends Controller
         $end = $end ?? session('end');
 
         if ($end < $start) {
-            [$start, $end] = [$end, $start]; 
+            [$start, $end] = [$end, $start];
         }
         $location         = $this->repository->getLocation($account);
         $attachments      = $this->repository->getAttachments($account);
@@ -115,6 +115,12 @@ class ShowController extends Controller
         $chartUri         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
+
+        // if layout = v2, overrule the page title.
+        if('v1'!==config('firefly.layout')) {
+            $subTitle         = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        }
+
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -164,7 +170,7 @@ class ShowController extends Controller
     public function showAll(Request $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); 
+            return $this->redirectAccountToAccount($account);
         }
         $location     = $this->repository->getLocation($account);
         $isLiability  = $this->repository->isLiability($account);

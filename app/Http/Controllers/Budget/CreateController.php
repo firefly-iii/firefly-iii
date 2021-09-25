@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetFormStoreRequest;
@@ -111,7 +112,7 @@ class CreateController extends Controller
      * @param BudgetFormStoreRequest $request
      *
      * @return RedirectResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function store(BudgetFormStoreRequest $request): RedirectResponse
     {
@@ -132,7 +133,7 @@ class CreateController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
         $redirect = redirect($this->getPreviousUri('budgets.create.uri'));

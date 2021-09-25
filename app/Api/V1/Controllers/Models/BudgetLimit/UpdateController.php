@@ -42,6 +42,9 @@ class UpdateController extends Controller
     private BudgetLimitRepositoryInterface $blRepository;
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/updateBudgetLimit
+     *
      * BudgetLimitController constructor.
      *
      * @codeCoverageIgnore

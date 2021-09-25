@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
+
 use Illuminate\Support\Collection;
 
 /**

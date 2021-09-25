@@ -151,7 +151,7 @@ trait RecurringTransactionTrait
                 [
                     'recurrence_id'           => $recurrence->id,
                     'transaction_currency_id' => $currency->id,
-                    'foreign_currency_id'     => null === $foreignCurrency ? null : $foreignCurrency->id,
+                    'foreign_currency_id'     => $foreignCurrency?->id,
                     'source_id'               => $source->id,
                     'destination_id'          => $destination->id,
                     'amount'                  => $array['amount'],

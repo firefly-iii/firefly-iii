@@ -34,6 +34,13 @@ use Log;
 trait OBValidation
 {
     /**
+     * @param array $accountTypes
+     *
+     * @return bool
+     */
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    /**
      * @param int|null $accountId
      * @param mixed    $accountName
      *
@@ -78,13 +85,6 @@ trait OBValidation
 
         return $result;
     }
-
-    /**
-     * @param array $accountTypes
-     *
-     * @return bool
-     */
-    abstract protected function canCreateTypes(array $accountTypes): bool;
 
     /**
      * Source of an opening balance can either be an asset account

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\ObjectGroup;
 
 use FireflyIII\Models\ObjectGroup;
-use FireflyIII\User;
 
 /**
  * Trait CreatesObjectGroups

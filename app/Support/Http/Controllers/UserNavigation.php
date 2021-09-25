@@ -60,7 +60,7 @@ trait UserNavigation
         Log::debug(sprintf('The URI is %s', $uri));
 
         if (str_contains($uri, 'jscript')) {
-            $uri = $this->redirectUri; 
+            $uri = $this->redirectUri;
             Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
         }
 

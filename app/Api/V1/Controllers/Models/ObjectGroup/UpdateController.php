@@ -50,7 +50,7 @@ class UpdateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
+                $user = auth()->user();
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
                 $this->repository->setUser($user);
 
@@ -60,6 +60,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/object_groups/updateObjectGroup
+     *
      * @param UpdateRequest $request
      * @param ObjectGroup   $objectGroup
      *

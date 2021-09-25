@@ -53,6 +53,7 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         Log::debug('get all data in TransactionStoreRequest');
+
         return [
             'group_title'             => $this->string('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
@@ -60,7 +61,7 @@ class StoreRequest extends FormRequest
             'fire_webhooks'           => $this->boolean('fire_webhooks', true),
             'transactions'            => $this->getTransactionData(),
         ];
-// See reference nr. 71
+        // See reference nr. 71
     }
 
     /**

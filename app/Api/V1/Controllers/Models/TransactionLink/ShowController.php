@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLink;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Transformers\TransactionLinkTransformer;
@@ -63,12 +64,15 @@ class ShowController extends Controller
     }
 
     /**
-     * List all of the transaction links there are.
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/listTransactionLink
+     *
+     * List all transaction links there are.
      *
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
@@ -83,8 +87,8 @@ class ShowController extends Controller
         $linkType = $this->repository->findByName($name);
 
         // get list of transaction links. Count it and split it.
-        $collection   = $this->repository->getJournalLinks($linkType);
-        $count        = $collection->count();
+        $collection = $this->repository->getJournalLinks($linkType);
+        $count = $collection->count();
         $journalLinks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
@@ -103,6 +107,9 @@ class ShowController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/getTransactionLink
+     *
      * List single resource.
      *
      * @param TransactionJournalLink $journalLink

@@ -57,6 +57,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/piggy_banks/updatePiggyBank
+     *
      * Update piggy bank.
      *
      * @param UpdateRequest $request
@@ -66,7 +69,7 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, PiggyBank $piggyBank): JsonResponse
     {
-        $data      = $request->getAll();
+        $data = $request->getAll();
         $piggyBank = $this->repository->update($piggyBank, $data);
 
         if (array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {

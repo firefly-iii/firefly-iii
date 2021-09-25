@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -69,11 +70,14 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/listAttachmentByAccount
+     *
      * @param Account $account
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
+     * @throws FireflyException
      */
     public function attachments(Account $account): JsonResponse
     {
@@ -99,12 +103,13 @@ class ListController extends Controller
     }
 
     /**
-     * List all piggies.
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/listPiggyBankByAccount
      *
      * @param Account $account
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function piggyBanks(Account $account): JsonResponse
@@ -136,6 +141,9 @@ class ListController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/accounts/listTransactionByAccount
+     *
      * Show all transaction groups related to the account.
      *
      * @codeCoverageIgnore
@@ -144,7 +152,7 @@ class ListController extends Controller
      * @param Account $account
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {

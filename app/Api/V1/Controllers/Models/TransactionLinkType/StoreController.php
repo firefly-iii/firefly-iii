@@ -67,6 +67,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/storeLinkType
+     *
      * Store new object.
      *
      * @param StoreRequest $request
@@ -80,7 +83,7 @@ class StoreController extends Controller
         $admin = auth()->user();
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
-            throw new FireflyException('200005: You need the "owner" role to do this.'); 
+            throw new FireflyException('200005: You need the "owner" role to do this.');
         }
         $data = $request->getAll();
         // if currency ID is 0, find the currency by the code:

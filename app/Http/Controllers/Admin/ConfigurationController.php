@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ConfigurationRequest;
@@ -59,11 +60,11 @@ class ConfigurationController extends Controller
      * Show configuration index.
      *
      * @return Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function index()
     {
-        $subTitle     = (string)trans('firefly.instance_configuration');
+        $subTitle = (string)trans('firefly.instance_configuration');
         $subTitleIcon = 'fa-wrench';
 
         Log::channel('audit')->info('User visits admin config index.');

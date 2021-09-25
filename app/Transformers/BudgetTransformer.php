@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
+
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -92,6 +93,7 @@ class BudgetTransformer extends AbstractTransformer
             'updated_at'                => $budget->updated_at->toAtomString(),
             'active'                    => $budget->active,
             'name'                      => $budget->name,
+            'order'                      => $budget->order,
             'auto_budget_type'          => $abType,
             'auto_budget_period'        => $abPeriod,
             'auto_budget_currency_id'   => $abCurrencyId,

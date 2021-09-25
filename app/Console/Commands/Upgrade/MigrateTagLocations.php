@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
@@ -52,6 +53,7 @@ class MigrateTagLocations extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -72,7 +74,7 @@ class MigrateTagLocations extends Command
 
     /**
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {
@@ -81,7 +83,7 @@ class MigrateTagLocations extends Command
             return (bool)$configVar->data;
         }
 
-        return false; 
+        return false;
     }
 
     private function migrateTagLocations(): void

@@ -68,6 +68,9 @@ class UpdateController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/links/updateLinkType
+     *
      * Update object.
      *
      * @param UpdateRequest $request
@@ -86,7 +89,7 @@ class UpdateController extends Controller
         $admin = auth()->user();
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
-            throw new FireflyException('200005: You need the "owner" role to do this.'); 
+            throw new FireflyException('200005: You need the "owner" role to do this.');
         }
 
         $data = $request->getAll();

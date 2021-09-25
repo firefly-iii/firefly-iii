@@ -84,10 +84,10 @@ class UniqueIban implements Rule
     public function passes($attribute, $value): bool
     {
         if (!auth()->check()) {
-            return true; 
+            return true;
         }
         if (null === $this->expectedType) {
-            return true; 
+            return true;
         }
         $maxCounts = $this->getMaxOccurrences();
 

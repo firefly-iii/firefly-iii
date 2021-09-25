@@ -27,6 +27,8 @@ namespace FireflyIII\Http\Controllers\ObjectGroup;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -62,11 +64,11 @@ class DeleteController extends Controller
      *
      * @param ObjectGroup $objectGroup
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function delete(ObjectGroup $objectGroup)
     {
-        $subTitle   = (string)trans('firefly.delete_object_group', ['title' => $objectGroup->title]);
+        $subTitle = (string)trans('firefly.delete_object_group', ['title' => $objectGroup->title]);
         $piggyBanks = $objectGroup->piggyBanks()->count();
 
         // put previous url in session
@@ -79,6 +81,7 @@ class DeleteController extends Controller
      * Destroy the piggy bank.
      *
      * @param ObjectGroup $objectGroup
+     *
      * @return RedirectResponse
      */
     public function destroy(ObjectGroup $objectGroup): RedirectResponse

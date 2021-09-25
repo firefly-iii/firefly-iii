@@ -36,6 +36,7 @@ use FireflyIII\Support\Report\Budget\BudgetReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use JsonException;
 use Log;
 use Throwable;
 
@@ -307,6 +308,7 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
+     * @throws JsonException
      */
     public function period(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -316,7 +318,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         $periods   = app('navigation')->listOfPeriods($start, $end);

@@ -33,6 +33,7 @@ use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use JsonException;
 
 /**
  * Separate controller because many helper functions are shared.
@@ -69,7 +70,7 @@ class ExpenseReportController extends Controller
     /**
      * Main chart that shows income and expense for a combination of expense/revenue accounts.
      *
-* See reference nr. 58
+     * See reference nr. 58
      *
      * @param Collection $accounts
      * @param Collection $expense
@@ -77,7 +78,7 @@ class ExpenseReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     *
+     * @throws JsonException
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {
@@ -88,7 +89,7 @@ class ExpenseReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -188,7 +189,7 @@ class ExpenseReportController extends Controller
             }
         }
         if (empty($newSet)) {
-            $newSet = $chartData; 
+            $newSet = $chartData;
         }
         $data = $this->generator->multiSet($newSet);
         $cache->store($data);

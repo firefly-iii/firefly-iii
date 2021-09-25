@@ -61,6 +61,9 @@ class TransactionController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getTransactionsAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
@@ -88,6 +91,9 @@ class TransactionController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getTransactionsIDAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse

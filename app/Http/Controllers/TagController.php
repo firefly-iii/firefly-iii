@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
@@ -228,7 +229,7 @@ class TagController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {
@@ -271,7 +272,7 @@ class TagController extends Controller
      * @param Tag     $tag
      *
      * @return Factory|View
-     *
+     * @throws FireflyException
      */
     public function showAll(Request $request, Tag $tag)
     {
@@ -326,7 +327,7 @@ class TagController extends Controller
         }
 
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUri('tags.create.uri'));
         if (1 === (int)$request->get('create_another')) {
@@ -367,7 +368,7 @@ class TagController extends Controller
         }
 
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments'));
         }
         $redirect = redirect($this->getPreviousUri('tags.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {

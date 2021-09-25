@@ -50,7 +50,7 @@ class TransactionJournalMetaFactory
             try {
                 $entry->delete();
             } catch (Exception $e) { // @phpstan-ignore-line
-                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); 
+                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage()));
             }
 
             return null;
@@ -68,7 +68,7 @@ class TransactionJournalMetaFactory
                 try {
                     $entry->delete();
                 } catch (Exception $e) { // @phpstan-ignore-line
-                    Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); 
+                    Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage()));
                 }
             }
 

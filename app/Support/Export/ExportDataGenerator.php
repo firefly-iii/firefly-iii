@@ -61,6 +61,8 @@ use League\Csv\Writer;
  */
 class ExportDataGenerator
 {
+    private const ADD_RECORD_ERR = 'Could not add record to set: %s';
+    private const EXPORT_ERR     = 'Could not export to string: %s';
     private Collection $accounts;
     private Carbon     $end;
     private bool       $exportAccounts;
@@ -74,9 +76,6 @@ class ExportDataGenerator
     private bool       $exportTransactions;
     private Carbon     $start;
     private User       $user;
-
-    private const ADD_RECORD_ERR = 'Could not add record to set: %s';
-    private const EXPORT_ERR     = 'Could not export to string: %s';
 
     public function __construct()
     {
@@ -160,7 +159,7 @@ class ExportDataGenerator
                 $account->iban,
                 $account->account_number,
                 $account->active,
-                $currency ? $currency->code : null,
+                $currency?->code,
                 $repository->getMetaValue($account, 'account_role'),
                 $repository->getMetaValue($account, 'cc_type'),
                 $repository->getMetaValue($account, 'cc_monthly_payment_date'),
@@ -391,11 +390,11 @@ class ExportDataGenerator
                 $piggy->account->name,
                 $piggy->account->accountType->type,
                 $piggy->name,
-                $currency ? $currency->code : null,
+                $currency?->code,
                 $piggy->targetamount,
-                $repetition ? $repetition->currentamount : null,
-                $piggy->startdate ? $piggy->startdate->format('Y-m-d') : null,
-                $piggy->targetdate ? $piggy->targetdate->format('Y-m-d') : null,
+                $repetition?->currentamount,
+                $piggy->startdate?->format('Y-m-d'),
+                $piggy->targetdate?->format('Y-m-d'),
                 $piggy->order,
                 $piggy->active,
             ];
@@ -457,9 +456,9 @@ class ExportDataGenerator
                 $recurrence->transactionType->type,
                 $recurrence->title,
                 $recurrence->description,
-                null !== $recurrence->first_date ? $recurrence->first_date->format('Y-m-d') : null,
-                $recurrence->repeat_until ? $recurrence->repeat_until->format('Y-m-d') : null,
-                $recurrence->latest_date ? $recurrence->latest_date->format('Y-m-d') : null,
+                $recurrence->first_date?->format('Y-m-d'),
+                $recurrence->repeat_until?->format('Y-m-d'),
+                $recurrence->latest_date?->format('Y-m-d'),
                 $recurrence->repetitions,
                 $recurrence->apply_rules,
                 $recurrence->active,
@@ -492,7 +491,7 @@ class ExportDataGenerator
                     null, null, null, null,
 
                     // transaction:
-                    $transaction->transactionCurrency->code, $transaction->foreignCurrency ? $transaction->foreignCurrency->code : null,
+                    $transaction->transactionCurrency->code, $transaction->foreignCurrency?->code,
                     $transaction->sourceAccount->name, $transaction->sourceAccount->accountType->type, $transaction->destinationAccount->name,
                     $transaction->destinationAccount->accountType->type, $transaction->amount, $transaction->foreign_amount,
                     $categoryName, $budgetId, $piggyBankId, implode(',', $tags),
@@ -608,7 +607,7 @@ class ExportDataGenerator
                 $tag->created_at->toAtomString(),
                 $tag->updated_at->toAtomString(),
                 $tag->tag,
-                $tag->date ? $tag->date->format('Y-m-d') : null,
+                $tag->date?->format('Y-m-d'),
                 $tag->description,
                 $tag->latitude,
                 $tag->longitude,
@@ -644,7 +643,7 @@ class ExportDataGenerator
      */
     private function exportTransactions(): string
     {
-// See reference nr. 41
+        // See reference nr. 41
         $header = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'amount', 'foreign_amount', 'currency_code',
                    'foreign_currency_code', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban',
                    'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes',

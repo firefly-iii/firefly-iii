@@ -97,7 +97,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
     private function getSpentInBudgets(): array
     {
         $allActive = $this->repository->getActiveBudgets();
-        $sums = $this->opsRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'), null, $allActive);
+        $sums      = $this->opsRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'), null, $allActive);
 
         return array_values($sums);
     }

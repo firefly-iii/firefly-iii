@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Semua transaksi untuk akun :name',
     'chart_all_journals_for_account'                      => 'Bagan semua transaksi untuk akun :name',
     'journals_in_period_for_account'                      => 'Semua transaksi untuk akun :name antara :start dan :end',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Ditransfer',
     'all_withdrawal'                                      => 'Semua biaya',
     'all_transactions'                                    => 'Semua Transaksi',

@@ -110,8 +110,8 @@ export default {
 
       let query =
           {
-            where: {source_account_id: this.accountId},
-            update: {destination_account_id: this.moveToAccount}
+            where: {account_id: this.accountId},
+            update: {account_id: this.moveToAccount}
           };
 
       axios.post('./api/v1/data/bulk/transactions', {query: JSON.stringify(query)}).then(response => {

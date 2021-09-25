@@ -173,6 +173,7 @@ class UpdateRequest extends FormRequest
      * For each field, add it to the array if a reference is present in the request:
      *
      * @param array $current
+     * @param array $transaction
      *
      * @return array
      */

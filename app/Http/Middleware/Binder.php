@@ -83,7 +83,7 @@ class Binder
      *
      * @param string $key
      * @param string $value
-     * @param Route $route
+     * @param Route  $route
      *
      * @return mixed
      */

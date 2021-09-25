@@ -72,7 +72,7 @@ class CurrencyForm
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled      = session('preFilled');
+        $preFilled = session('preFilled');
         if (!is_array($preFilled)) {
             $preFilled = [];
         }
@@ -105,7 +105,7 @@ class CurrencyForm
     }
 
     /**
-* See reference nr. 23
+     * See reference nr. 23
      *
      * @param string     $name
      * @param mixed      $value
@@ -119,7 +119,7 @@ class CurrencyForm
     }
 
     /**
-* See reference nr. 24
+     * See reference nr. 24
      *
      * @param string     $name
      * @param string     $view
@@ -174,7 +174,7 @@ class CurrencyForm
     }
 
     /**
-* See reference nr. 25
+     * See reference nr. 25
      *
      * @param string     $name
      * @param mixed      $value
@@ -199,7 +199,7 @@ class CurrencyForm
     }
 
     /**
-* See reference nr. 26
+     * See reference nr. 26
      *
      * @param string     $name
      * @param mixed      $value

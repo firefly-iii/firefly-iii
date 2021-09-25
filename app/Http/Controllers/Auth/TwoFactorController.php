@@ -24,6 +24,8 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -38,7 +40,7 @@ class TwoFactorController extends Controller
     /**
      * What to do if 2FA lost?
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return Factory|View
      */
     public function lostTwoFactor()
     {

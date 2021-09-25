@@ -24,6 +24,7 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\AdminTestMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
@@ -41,7 +42,7 @@ class AdminEventHandler
      * @param AdminRequestedTestMessage $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function sendTestMessage(AdminRequestedTestMessage $event): bool
     {

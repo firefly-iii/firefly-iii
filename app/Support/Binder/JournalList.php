@@ -63,13 +63,14 @@ class JournalList implements BinderInterface
 
     /**
      * @param string $value
+     *
      * @return array
      */
     protected static function parseList(string $value): array
     {
         $list = array_unique(array_map('\intval', explode(',', $value)));
         if (empty($list)) {
-            throw new NotFoundHttpException; 
+            throw new NotFoundHttpException;
         }
 
         return $list;

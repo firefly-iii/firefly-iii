@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
+use JsonException;
 use NumberFormatter;
 
 /**
@@ -109,13 +111,15 @@ class Amount
 
     /**
      * @return string
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function getCurrencyCode(): string
     {
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencyCode');
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
 
@@ -145,6 +149,8 @@ class Amount
      * @param User $user
      *
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
@@ -152,7 +158,7 @@ class Amount
         $cache->addProperty('getDefaultCurrency');
         $cache->addProperty($user->id);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
         $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';

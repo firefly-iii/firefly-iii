@@ -60,6 +60,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/rules/storeRule
+     *
      * Store new object.
      *
      * @param StoreRequest $request
@@ -68,7 +71,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $rule    = $this->ruleRepository->store($request->getAll());
+        $rule = $this->ruleRepository->store($request->getAll());
         $manager = $this->getManager();
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);

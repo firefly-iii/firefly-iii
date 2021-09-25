@@ -26,6 +26,8 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Log;
@@ -66,12 +68,12 @@ class DeleteController extends Controller
      *
      * @param TransactionGroup $group
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
+     * @return Factory|View|Redirector|RedirectResponse
      */
     public function delete(TransactionGroup $group)
     {
         if (!$this->isEditableGroup($group)) {
-            return $this->redirectGroupToAccount($group); 
+            return $this->redirectGroupToAccount($group);
         }
 
         Log::debug(sprintf('Start of delete view for group #%d', $group->id));
@@ -100,7 +102,7 @@ class DeleteController extends Controller
     public function destroy(TransactionGroup $group): RedirectResponse
     {
         if (!$this->isEditableGroup($group)) {
-            return $this->redirectGroupToAccount($group); 
+            return $this->redirectGroupToAccount($group);
         }
 
         $journal = $group->transactionJournals->first();

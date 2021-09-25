@@ -57,6 +57,7 @@ class CorrectOpeningBalanceCurrencies extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws JsonException
      */
     public function handle(): int
     {
@@ -96,7 +97,6 @@ class CorrectOpeningBalanceCurrencies extends Command
      * @param TransactionJournal $journal
      *
      * @return int
-     * @throws JsonException
      */
     private function correctJournal(TransactionJournal $journal): int
     {

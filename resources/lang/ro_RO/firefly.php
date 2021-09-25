@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Toate tranzacțiile pentru contul :name',
     'chart_all_journals_for_account'                      => 'Graficul tuturor tranzacțiilor pentru contul :name',
     'journals_in_period_for_account'                      => 'Toate tranzacțiile pentru contul :name între :start și :end',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Transferat',
     'all_withdrawal'                                      => 'Toate cheltuielile',
     'all_transactions'                                    => 'Toate tranzacțiile',

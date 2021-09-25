@@ -70,6 +70,7 @@
         "daily_budgets": "Bud\u017cety dzienne",
         "weekly_budgets": "Bud\u017cety tygodniowe",
         "monthly_budgets": "Bud\u017cety miesi\u0119czne",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "Bud\u017cety kwartalne",
         "create_new_expense": "Utw\u00f3rz nowe konto wydatk\u00f3w",
         "create_new_revenue": "Utw\u00f3rz nowe konto przychod\u00f3w",

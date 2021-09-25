@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use JsonException;
 
 /**
  * Class AccountTransformer
@@ -51,6 +53,8 @@ class AccountTransformer extends AbstractTransformer
      * @param Account $account
      *
      * @return array
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function transform(Account $account): array
     {
@@ -119,7 +123,7 @@ class AccountTransformer extends AbstractTransformer
             'liability_direction'     => $liabilityDirection,
             'interest'                => $interest,
             'interest_period'         => $interestPeriod,
-            'current_debt'            => $this->repository->getMetaValue($account,'current_debt'),
+            'current_debt'            => $this->repository->getMetaValue($account, 'current_debt'),
             'include_net_worth'       => $includeNetWorth,
             'longitude'               => $longitude,
             'latitude'                => $latitude,
@@ -212,7 +216,7 @@ class AccountTransformer extends AbstractTransformer
      *
      * @return array
      *
-* See reference nr. 20
+     * See reference nr. 20
      */
     private function getOpeningBalance(Account $account, string $accountType): array
     {

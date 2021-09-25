@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -55,6 +54,9 @@ class DestroyController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/recurrences/deleteRecurrence
+     *
      * Delete the resource.
      *
      * @param Recurrence $recurrence

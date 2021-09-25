@@ -102,6 +102,13 @@ interface PiggyBankRepositoryInterface
     public function destroyAll(): void;
 
     /**
+     * @param int $piggyBankId
+     *
+     * @return PiggyBank|null
+     */
+    public function find(int $piggyBankId): ?PiggyBank;
+
+    /**
      * Find by name or return NULL.
      *
      * @param string $name
@@ -109,13 +116,6 @@ interface PiggyBankRepositoryInterface
      * @return PiggyBank|null
      */
     public function findByName(string $name): ?PiggyBank;
-
-    /**
-     * @param int $piggyBankId
-     *
-     * @return PiggyBank|null
-     */
-    public function find(int $piggyBankId): ?PiggyBank;
 
     /**
      * @param int|null    $piggyBankId

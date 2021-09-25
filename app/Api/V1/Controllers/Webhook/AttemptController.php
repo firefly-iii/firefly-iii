@@ -30,7 +30,6 @@ use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookAttemptTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -62,6 +61,9 @@ class AttemptController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/getWebhookMessageAttempts
+     *
      * @param Webhook        $webhook
      * @param WebhookMessage $message
      *
@@ -95,6 +97,9 @@ class AttemptController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/getSingleWebhookMessageAttempt
+     *
      * Show single instance.
      *
      * @param Webhook        $webhook

@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\Models\Category\StoreRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Transformers\CategoryTransformer;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -58,6 +57,9 @@ class StoreController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/categories/storeCategory
+     *
      * Store new category.
      *
      * @param StoreRequest $request

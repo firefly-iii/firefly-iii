@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
@@ -88,7 +89,7 @@ class ReportController extends Controller
     public function auditReport(Collection $accounts, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date')); 
+            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
 
@@ -124,7 +125,7 @@ class ReportController extends Controller
     public function budgetReport(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date')); 
+            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
 
@@ -161,7 +162,7 @@ class ReportController extends Controller
     public function categoryReport(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date')); 
+            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
 
@@ -259,6 +260,7 @@ class ReportController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -299,28 +301,18 @@ class ReportController extends Controller
      *
      * @param string $reportType
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
      */
     public function options(string $reportType)
     {
-        switch ($reportType) {
-            default:
-                $result = $this->noReportOptions();
-                break;
-            case 'category':
-                $result = $this->categoryReportOptions();
-                break;
-            case 'budget':
-                $result = $this->budgetReportOptions();
-                break;
-            case 'tag':
-                $result = $this->tagReportOptions();
-                break;
-            case 'double':
-                $result = $this->doubleReportOptions();
-                break;
-        }
+        $result = match ($reportType) {
+            default => $this->noReportOptions(),
+            'category' => $this->categoryReportOptions(),
+            'budget' => $this->budgetReportOptions(),
+            'tag' => $this->tagReportOptions(),
+            'double' => $this->doubleReportOptions(),
+        };
 
         return response()->json(['html' => $result]);
     }
@@ -382,27 +374,14 @@ class ReportController extends Controller
             return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
 
-        switch ($reportType) {
-            default:
-            case 'default':
-                $uri = route('reports.report.default', [$accounts, $start, $end]);
-                break;
-            case 'category':
-                $uri = route('reports.report.category', [$accounts, $categories, $start, $end]);
-                break;
-            case 'audit':
-                $uri = route('reports.report.audit', [$accounts, $start, $end]);
-                break;
-            case 'budget':
-                $uri = route('reports.report.budget', [$accounts, $budgets, $start, $end]);
-                break;
-            case 'tag':
-                $uri = route('reports.report.tag', [$accounts, $tags, $start, $end]);
-                break;
-            case 'double':
-                $uri = route('reports.report.double', [$accounts, $double, $start, $end]);
-                break;
-        }
+        $uri = match ($reportType) {
+            default => route('reports.report.default', [$accounts, $start, $end]),
+            'category' => route('reports.report.category', [$accounts, $categories, $start, $end]),
+            'audit' => route('reports.report.audit', [$accounts, $start, $end]),
+            'budget' => route('reports.report.budget', [$accounts, $budgets, $start, $end]),
+            'tag' => route('reports.report.tag', [$accounts, $tags, $start, $end]),
+            'double' => route('reports.report.double', [$accounts, $double, $start, $end]),
+        };
 
         return redirect($uri);
     }
@@ -421,7 +400,7 @@ class ReportController extends Controller
     public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
         if ($end < $start) {
-            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date')); 
+            return prefixView('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
         $this->repository->cleanupBudgets();
 

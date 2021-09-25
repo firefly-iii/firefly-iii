@@ -27,7 +27,6 @@ use Exception;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 
 /**
  * Class DeleteZeroAmount
@@ -54,9 +53,9 @@ class DeleteZeroAmount extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
-        $set   = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-        $set   = array_unique($set);
+        $start    = microtime(true);
+        $set      = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $set      = array_unique($set);
         $journals = TransactionJournal::whereIn('id', $set)->get();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {

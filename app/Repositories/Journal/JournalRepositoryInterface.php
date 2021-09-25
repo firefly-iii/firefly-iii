@@ -51,13 +51,6 @@ interface JournalRepositoryInterface
     public function destroyJournal(TransactionJournal $journal): void;
 
     /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function findByType(array $types): Collection;
-
-    /**
      * See reference nr. 1
      * Find a specific journal.
      *
@@ -66,6 +59,13 @@ interface JournalRepositoryInterface
      * @return TransactionJournal|null
      */
     public function find(int $journalId): ?TransactionJournal;
+
+    /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function findByType(array $types): Collection;
 
     /**
      * Get users very first transaction journal.

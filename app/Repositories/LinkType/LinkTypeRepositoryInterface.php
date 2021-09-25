@@ -56,6 +56,13 @@ interface LinkTypeRepositoryInterface
     public function destroyLink(TransactionJournalLink $link): bool;
 
     /**
+     * @param int $linkTypeId
+     *
+     * @return LinkType|null
+     */
+    public function find(int $linkTypeId): ?LinkType;
+
+    /**
      * Find link type by name.
      *
      * @param string|null $name
@@ -73,13 +80,6 @@ interface LinkTypeRepositoryInterface
      * @return bool
      */
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool;
-
-    /**
-     * @param int $linkTypeId
-     *
-     * @return LinkType|null
-     */
-    public function find(int $linkTypeId): ?LinkType;
 
     /**
      * See if such a link already exists (and get it).

@@ -69,7 +69,7 @@ class IsDateOrTime implements Rule
                 Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
                 return false;
-            } catch(InvalidFormatException $e) {
+            } catch (InvalidFormatException $e) {
                 Log::error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
                 return false;
@@ -84,7 +84,7 @@ class IsDateOrTime implements Rule
             Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
             return false;
-        } catch(InvalidFormatException $e) {
+        } catch (InvalidFormatException $e) {
             Log::error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
             return false;

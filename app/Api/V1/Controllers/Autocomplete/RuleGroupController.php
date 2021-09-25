@@ -53,6 +53,9 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getRuleGroupsAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
