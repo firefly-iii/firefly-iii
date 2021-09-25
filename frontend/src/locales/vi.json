@@ -70,6 +70,7 @@
         "daily_budgets": "Daily budgets",
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "Quarterly budgets",
         "create_new_expense": "T\u1ea1o t\u00e0i kho\u1ea3n chi ph\u00ed m\u1edbi",
         "create_new_revenue": "T\u1ea1o t\u00e0i kho\u1ea3n doanh thu m\u1edbi",

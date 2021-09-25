@@ -70,6 +70,7 @@
         "daily_budgets": "Daily budgets",
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "Quarterly budgets",
         "create_new_expense": "\u5efa\u7acb\u65b0\u652f\u51fa\u5e33\u6236",
         "create_new_revenue": "\u5efa\u7acb\u65b0\u6536\u5165\u5e33\u6236",

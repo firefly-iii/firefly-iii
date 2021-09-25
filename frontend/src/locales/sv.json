@@ -70,6 +70,7 @@
         "daily_budgets": "Dagliga budgetar",
         "weekly_budgets": "Veckovis budgetar",
         "monthly_budgets": "M\u00e5natliga budgetar",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "Kvartalsbudgetar",
         "create_new_expense": "Skapa ett nytt utgiftskonto",
         "create_new_revenue": "Skapa ett nytt int\u00e4ktskonto",

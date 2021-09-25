@@ -70,6 +70,7 @@
         "daily_budgets": "Denn\u00ed rozpo\u010dty",
         "weekly_budgets": "T\u00fddenn\u00ed rozpo\u010dty",
         "monthly_budgets": "M\u011bs\u00ed\u010dn\u00ed rozpo\u010dty",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "\u010ctvrtletn\u00ed rozpo\u010dty",
         "create_new_expense": "Vytvo\u0159it v\u00fddajov\u00fd \u00fa\u010det",
         "create_new_revenue": "Vytvo\u0159it nov\u00fd p\u0159\u00edjmov\u00fd \u00fa\u010det",
@@ -203,7 +204,7 @@
     },
     "config": {
         "html_language": "cs",
-        "week_in_year_fns": "\"t\u00fdden\" w, yyyy",
+        "week_in_year_fns": "'t\u00fdden' w, yyyy",
         "month_and_day_fns": "d MMMM, y",
         "quarter_fns": "Q'Q, yyyy",
         "half_year_fns": "'H{half}', yyyy"

@@ -70,6 +70,7 @@
         "daily_budgets": "Or\u00e7amentos di\u00e1rios",
         "weekly_budgets": "Or\u00e7amentos semanais",
         "monthly_budgets": "Or\u00e7amentos mensais",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "Or\u00e7amentos trimestrais",
         "create_new_expense": "Criar nova conta de despesa",
         "create_new_revenue": "Criar nova conta de receita",

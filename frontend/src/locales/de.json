@@ -70,6 +70,7 @@
         "daily_budgets": "Tagesbudgets",
         "weekly_budgets": "Wochenbudgets",
         "monthly_budgets": "Monatsbudgets",
+        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
         "quarterly_budgets": "Quartalsbudgets",
         "create_new_expense": "Neues Ausgabenkonto erstellen",
         "create_new_revenue": "Neues Einnahmenkonto erstellen",
@@ -204,7 +205,7 @@
     "config": {
         "html_language": "de",
         "week_in_year_fns": "'Woche' ww\/yyyy",
-        "month_and_day_fns": "D. MMMM Y",
+        "month_and_day_fns": "d. MMMM Y",
         "quarter_fns": "'Q'QQQ, yyyy",
         "half_year_fns": "'H{half}', yyyy"
     },
