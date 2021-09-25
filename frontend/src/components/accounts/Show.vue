@@ -106,6 +106,7 @@ export default {
       perPage: 51,
       locale: 'en-US',
       api: null,
+      nameLoading:false
     }
   },
   created() {
@@ -117,11 +118,30 @@ export default {
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
     this.getTransactions();
+    this.updatePageTitle();
   },
   components: {TransactionListLarge},
   methods: {
+    updatePageTitle: function () {
+      if (this.showReady && !this.nameLoading) {
+        // update page title.
+        this.nameLoading = true;
+        configureAxios().then(async (api) => {
+          let url = './api/v1/accounts/' + this.accountId;
+          api.get(url)
+              .then(response => {
+                let start = new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(this.start);
+                let end = new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(this.end);
+                document.getElementById('page-subTitle').innerText = this.$t('firefly.journals_in_period_for_account_js', {start: start, end: end, title: response.data.data.attributes.name});
+              });
+        });
+
+      }
+    },
     getTransactions: function () {
       if (this.showReady && !this.loading) {
+
+
         this.loading = true;
         configureAxios().then(async (api) => {
           // console.log('Now getTransactions() x Start');
@@ -153,9 +173,11 @@ export default {
   watch: {
     start: function () {
       this.getTransactions();
+      this.updatePageTitle();
     },
     end: function () {
       this.getTransactions();
+      this.updatePageTitle();
     },
   }
 

@@ -116,6 +116,12 @@ class ShowController extends Controller
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
+        // if layout = v2, overrule the page title.
+        if('v1'!==config('firefly.layout')) {
+            $subTitle         = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        }
+
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector

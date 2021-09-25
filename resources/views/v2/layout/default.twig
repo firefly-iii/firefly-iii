@@ -51,7 +51,7 @@
                             {{ title }} <small class="text-muted">
                                 {% if subTitleIcon|default(false) %}<span
                                     class="fa fas {{ subTitleIcon }}"></span>{% endif %}
-                                {{ subTitle|default('') }}</small></h1>
+                                <span id="page-subTitle">{{ subTitle|default('') }}</span></small></h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         {% block breadcrumbs %}{% endblock %}
