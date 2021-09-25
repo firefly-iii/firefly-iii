@@ -89,7 +89,7 @@ abstract class Controller extends BaseController
         app('view')->share('FF_IS_BETA', $isBeta);
 
         $this->middleware(
-            function ($request, $next) {
+            function ($request, $next): mixed {
                 $locale = app('steam')->getLocale();
                 // translations for specific strings:
                 $this->monthFormat       = (string)trans('config.month', [], $locale);
