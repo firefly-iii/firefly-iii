@@ -92,17 +92,33 @@
                   </span>
               </template>
               <template #cell(start_date)="data">
-                {{ formatDate(new Date(data.item.date.substring(0, 10)), $t('config.month_and_day_fns')) }}
+                {{
+                  new Intl.DateTimeFormat(locale, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  }).format(new Date(data.item.date.substring(0, 10)))
+                }}
               </template>
               <template #cell(end_date)="data">
-                  <span v-if="null !== data.item.end_date">{{
-                      formatDate(new Date(data.item.end_date.substring(0, 10)), $t('config.month_and_day_fns'))
-                    }}</span>
+                <span v-if="null !== data.item.end_date">
+                  {{
+                    new Intl.DateTimeFormat(locale, {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    }).format(new Date(data.item.end_date.substring(0, 10)))
+                  }}
+                  </span>
                 <span v-if="null === data.item.end_date">{{ $t('firefly.forever') }}</span>
                 <span v-if="null !== data.item.extension_date"><br/>
                     <small>
                     {{
-                        $t('firefly.extension_date_is', {date: formatDate(new Date(data.item.extension_date.substring(0, 10)), $t('config.month_and_day_fns'))})
+                        $t('firefly.extension_date_is', {date: new Intl.DateTimeFormat(locale, {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          }).format(new Date(data.item.extension_date.substring(0, 10)))})
                       }}
                       </small>
                   </span>
@@ -179,6 +195,7 @@ import {mapGetters, mapMutations} from "vuex";
 import {configureAxios} from "../../shared/forageStore";
 import format from "date-fns/format";
 
+
 export default {
   name: "Index",
   data() {
@@ -189,6 +206,7 @@ export default {
       locale: 'en-US',
       sortedGroups: [],
       fields: [],
+      fnsLocale: null
     }
   },
   computed: {
@@ -196,13 +214,15 @@ export default {
   },
   created() {
     this.locale = localStorage.locale ?? 'en-US';
+    console.log(this.locale);
+
     this.updateFieldList();
     this.downloadBills(1);
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
     formatDate: function (date, frm) {
-      return format(date, frm);
+      return format(date, frm, {locale: {code: this.locale}});
     },
     updateFieldList: function () {
       this.fields = [];
