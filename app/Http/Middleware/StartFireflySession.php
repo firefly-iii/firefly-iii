@@ -45,7 +45,7 @@ class StartFireflySession extends StartSession
         $isScriptPage = strpos($uri, 'jscript');
         $isDeletePage = strpos($uri, 'delete');
         $isLoginPage  = strpos($uri, '/login');
-        $isJsonPage   = strpos($uri, '/json');
+        $isJsonPage   = strpos($uri, '/json') || strpos($uri, 'serviceworker');
         $isView       = strpos($uri, '/attachments/view');
 
         // also stop remembering "delete" URL's.
