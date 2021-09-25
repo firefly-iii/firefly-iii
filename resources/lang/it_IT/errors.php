@@ -47,8 +47,8 @@ return [
     'tell_more'               => 'Dicci di più di "dice Oops!"',
     'include_logs'            => 'Includi i log degli errori (vedi sopra).',
     'what_did_you_do'         => 'Dicci cosa stavi facendo.',
-    'offline_header'          => 'You are probably offline',
-    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
-    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'offline_header'          => 'Probabilmente sei offline',
+    'offline_unreachable'     => 'Firefly III non è raggiungibile. Il tuo dispositivo non è attualmente in rete o il server non funziona.',
+    'offline_github'          => 'Se sei sicuro che sia il tuo dispositivo che il server sono online, apri un ticket su <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];
