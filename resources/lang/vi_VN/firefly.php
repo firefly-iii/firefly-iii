@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Tất cả các giao dịch của tài khoản :name',
     'chart_all_journals_for_account'                      => 'Biểu đồ của tất cả các giao dịch cho tài khoản :name',
     'journals_in_period_for_account'                      => 'Tất cả các giao dịch cho tài khoản :name giữa :start và :end',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Chuyển nhượng',
     'all_withdrawal'                                      => 'Mọi chi phí',
     'all_transactions'                                    => 'Tất cả các giao dịch',

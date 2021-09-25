@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Všechny transakce pro účet :name',
     'chart_all_journals_for_account'                      => 'Graf veškerých transakcí pro účet „:name“',
     'journals_in_period_for_account'                      => 'Veškeré transakce pro účet „:name“ mezi :start a :end',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Přeneseno',
     'all_withdrawal'                                      => 'Všechny výdaje',
     'all_transactions'                                    => 'Všechny transakce',

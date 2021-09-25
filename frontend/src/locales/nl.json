@@ -70,7 +70,7 @@
         "daily_budgets": "Dagelijkse budgetten",
         "weekly_budgets": "Wekelijkse budgetten",
         "monthly_budgets": "Maandelijkse budgetten",
-        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
+        "journals_in_period_for_account_js": "Alle transacties voor rekening {title} tussen {start} en {end}",
         "quarterly_budgets": "Driemaandelijkse budgetten",
         "create_new_expense": "Nieuwe crediteur",
         "create_new_revenue": "Nieuwe debiteur",

@@ -2,32 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.6.1 - 2020-09-xx
-
-### Added
-- Initial release.
-
-### Changed
-- Initial release.
-
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
+## 5.6.1 - 2020-09-25
 
 ### Fixed
-- Initial release.
+- [Issue 4997](https://github.com/firefly-iii/firefly-iii/issues/4997) Deleted transactions would get reimported.
+- [Issue 5100](https://github.com/firefly-iii/firefly-iii/issues/5100) Broken UI in v2.0 due to translation issues.
+- [Issue 5101](https://github.com/firefly-iii/firefly-iii/issues/5101) Text duplication
+- [Issue 5104](https://github.com/firefly-iii/firefly-iii/issues/5104) Date range fixes
+- [Issue 5109](https://github.com/firefly-iii/firefly-iii/issues/5109) Fixed LDAP configuration issues.
+- [Issue 5110](https://github.com/firefly-iii/firefly-iii/issues/5110) Service worker JS would interfere with back button.
 
 ### Security
-- Initial release.
+- Fixed several low-key CSRF vulnerabilities.
 
 ### API
 - Deprecated the "currencies with code"-endpoint (see the [API documentation](https://api-docs.firefly-iii.org/#/autocomplete/getCurrenciesCodeAC)).
 - Add missing "order" field to budget.
 - Add missing "rule_group_title" to rules.
 - Attachment endpoint returns "upload_url" and "download_url" instead of "*_uri".
-
 
 ## 5.6.0 - 2021-09-17
 
@@ -62,7 +54,7 @@ Please refer to the [documentation](https://docs.firefly-iii.org/firefly-iii/) a
 - [Issue 4894](https://github.com/firefly-iii/firefly-iii/issues/4894) Bad number comparison
 - [Issue 4987](https://github.com/firefly-iii/firefly-iii/issues/4987) Budgeted amount includes inactive budgets
 - [Issue 4988](https://github.com/firefly-iii/firefly-iii/issues/4988) Can't select liability account from imported transactions
-- #5042 HTTP 500 when creating Personal Access Token or OAuth Client
+- [Issue 5042](https://github.com/firefly-iii/firefly-iii/issues/5042) HTTP 500 when creating Personal Access Token or OAuth Client
 - Various Sonarqube issues, thanks @hazma-fadil!
 - Correct menu display, thanks @vonsogt!
 - The IBAN validator will filter special characters.

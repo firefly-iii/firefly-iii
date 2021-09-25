@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Alle Buchungen für Konto „:name”',
     'chart_all_journals_for_account'                      => 'Diagramm für alle Buchungen des Kontos „:name”',
     'journals_in_period_for_account'                      => 'Alle Buchungen für Konto „:name” zwischen :start und :end',
+    'journals_in_period_for_account_js'                   => 'Alle Buchungen für Account {title} zwischen {start} und {end}',
     'transferred'                                         => 'Umgebucht',
     'all_withdrawal'                                      => 'Alle Ausgaben',
     'all_transactions'                                    => 'Alle Buchungen',

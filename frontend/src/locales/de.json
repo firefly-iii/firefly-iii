@@ -70,7 +70,7 @@
         "daily_budgets": "Tagesbudgets",
         "weekly_budgets": "Wochenbudgets",
         "monthly_budgets": "Monatsbudgets",
-        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
+        "journals_in_period_for_account_js": "Alle Buchungen f\u00fcr Account {title} zwischen {start} und {end}",
         "quarterly_budgets": "Quartalsbudgets",
         "create_new_expense": "Neues Ausgabenkonto erstellen",
         "create_new_revenue": "Neues Einnahmenkonto erstellen",

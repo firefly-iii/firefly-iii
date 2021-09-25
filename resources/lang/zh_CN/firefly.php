@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => '账户“:name”的所有交易',
     'chart_all_journals_for_account'                      => '账户“:name”的所有交易图表',
     'journals_in_period_for_account'                      => ':start – :end 账户“:name”的所有交易',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => '已转账',
     'all_withdrawal'                                      => '所有支出',
     'all_transactions'                                    => '所有交易',

@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Kaikki tapahtumat tilillä :name',
     'chart_all_journals_for_account'                      => 'Kuvaaja kaikista tapahtumista tilillä :name',
     'journals_in_period_for_account'                      => 'Kaikki tapahtumat tilillä :name välillä :start ja :end',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Siirretty',
     'all_withdrawal'                                      => 'Kaikki kustannukset',
     'all_transactions'                                    => 'Kaikki tapahtumat',

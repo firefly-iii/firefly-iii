@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Wszystkie transakcje dla konta :name',
     'chart_all_journals_for_account'                      => 'Wykres wszystkich transakcji dla konta :name',
     'journals_in_period_for_account'                      => 'Wszystkie transakcje dla konta :name od :start do :end',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Przesłano',
     'all_withdrawal'                                      => 'Wszystkie wydatki',
     'all_transactions'                                    => 'Wszystkie transakcje',

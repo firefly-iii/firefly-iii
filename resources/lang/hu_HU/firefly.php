@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => ':name bankszámla összes tranzakciója',
     'chart_all_journals_for_account'                      => 'Diagram :name bankszámla minden tranzakciójáról',
     'journals_in_period_for_account'                      => '":name" bankszámla összes tranzakciója :start és :end között',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Átvezetett',
     'all_withdrawal'                                      => 'Minden költség',
     'all_transactions'                                    => 'Minden tranzakció',

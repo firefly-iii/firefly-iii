@@ -168,6 +168,7 @@ return [
     'all_journals_for_account'                            => 'Όλες οι συναλλαγές του λογαριασμού :name',
     'chart_all_journals_for_account'                      => 'Διάγραμμα όλων των συναλλαγών του λογαριασμού :name',
     'journals_in_period_for_account'                      => 'Όλες οι συναλλαγές του λογαριασμού :name μεταξύ :start και :end',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Μεταφέρθηκαν',
     'all_withdrawal'                                      => 'Όλες οι δαπάνες',
     'all_transactions'                                    => 'Όλες οι συναλλαγές',

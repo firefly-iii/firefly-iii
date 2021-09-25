@@ -169,6 +169,7 @@ return [
     'all_journals_for_account'                            => ':name hesabındaki tüm işlemler',
     'chart_all_journals_for_account'                      => ':name hesabındaki tüm işlemlerin grafiği',
     'journals_in_period_for_account'                      => ':start ile :end tarihleri arasında :name hesabından yapılan tüm işlemler',
+    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
     'transferred'                                         => 'Transfer yapıldı',
     'all_withdrawal'                                      => 'Tüm giderler',
     'all_transactions'                                    => 'Tüm işlemler',
