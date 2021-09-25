@@ -199,9 +199,9 @@ function updateActionButtons() {
         $('.action-menu').show();
 
         // also update labels:
-        $('.mass-edit span').text(edit_selected_txt + ' (' + count + ')');
-        $('.bulk-edit span').text(edit_bulk_selected_txt + ' (' + count + ')');
-        $('.mass-delete span').text(delete_selected_txt + ' (' + count + ')');
+        $('.mass-edit span.txt').text(edit_selected_txt + ' (' + count + ')');
+        $('.bulk-edit span.txt').text(edit_bulk_selected_txt + ' (' + count + ')');
+        $('.mass-delete span.txt').text(delete_selected_txt + ' (' + count + ')');
 
     }
     if (0 === count) {
