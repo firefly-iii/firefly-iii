@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "85a7949576623326d884a1d9c516c271",
+    "content-hash": "b8212247250c1f5042e42daf8ed604ef",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4472,22 +4472,22 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.2.2",
+            "version": "4.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "445999c26a53aca1faa0b7b8f4f0d61fc9484c71"
+                "reference": "fc9bb7fb5388691fd7373cd44dcb4d63bbcf24df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/445999c26a53aca1faa0b7b8f4f0d61fc9484c71",
-                "reference": "445999c26a53aca1faa0b7b8f4f0d61fc9484c71",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/fc9bb7fb5388691fd7373cd44dcb4d63bbcf24df",
+                "reference": "fc9bb7fb5388691fd7373cd44dcb4d63bbcf24df",
                 "shasum": ""
             },
             "require": {
                 "brick/math": "^0.8 || ^0.9",
                 "ext-json": "*",
-                "php": "^7.2 || ~8.0.0 || ~8.1.0",
+                "php": "^7.2 || ^8.0",
                 "ramsey/collection": "^1.0",
                 "symfony/polyfill-ctype": "^1.8",
                 "symfony/polyfill-php80": "^1.14"
@@ -4554,7 +4554,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.2.2"
+                "source": "https://github.com/ramsey/uuid/tree/4.2.3"
             },
             "funding": [
                 {
@@ -4566,7 +4566,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-24T18:53:47+00:00"
+            "time": "2021-09-25T23:10:38+00:00"
         },
         {
             "name": "rcrowe/twigbridge",
