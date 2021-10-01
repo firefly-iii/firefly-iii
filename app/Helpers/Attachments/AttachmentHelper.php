@@ -171,6 +171,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $allowedMime = config('firefly.allowedMimes');
         if (!in_array($mime, $allowedMime, true)) {
             Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
+            fclose($resource);
 
             return false;
         }
