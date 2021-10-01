@@ -27,9 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Environment\Environment;
-use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -206,11 +204,13 @@ class General extends AbstractExtension
                'markdown',
             static function (string $text): string {
 
-
-                $environment = Environment::createCommonMarkEnvironment();
-                $environment->addExtension(new GithubFlavoredMarkdownExtension());
-
-                $converter = new CommonMarkConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 3, 'html_input' => 'escape'], $environment);
+                $converter = new GithubFlavoredMarkdownConverter(
+                    [
+                        'allow_unsafe_links' => false,
+                        'max_nesting_level'  => 3,
+                        'html_input'         => 'escape',
+                    ]
+                );
 
                 return (string)$converter->convertToHtml($text);
             }, ['is_safe' => ['html']]
