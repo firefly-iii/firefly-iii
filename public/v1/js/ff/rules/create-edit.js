@@ -119,8 +119,8 @@ function addNewAction() {
  */
 function removeTrigger(e) {
     "use strict";
-    var target = $(e.target);
-    if (target.prop("tagName") === "I") {
+    var target = $(e.currentTarget);
+    if (target.prop("tagName") === "SPAN") {
         target = target.parent();
     }
     // remove grand parent:
@@ -141,7 +141,7 @@ function removeTrigger(e) {
 function removeAction(e) {
     "use strict";
     var target = $(e.target);
-    if (target.prop("tagName") === "I") {
+    if (target.prop("tagName") === "SPAN") {
         target = target.parent();
     }
     // remove grand parent:
