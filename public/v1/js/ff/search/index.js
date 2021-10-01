@@ -48,4 +48,6 @@ function presentSearchResults(data) {
 
 
     updateListButtons();
+    // want to clone?
+    $('.clone-transaction').click(cloneTransaction);
 }
