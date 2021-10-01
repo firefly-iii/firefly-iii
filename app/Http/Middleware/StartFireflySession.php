@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Middleware;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
+use Log;
 
 /**
  * Class StartFireflySession.
@@ -41,21 +42,17 @@ class StartFireflySession extends StartSession
      */
     protected function storeCurrentUrl(Request $request, $session): void
     {
-        $uri          = $request->fullUrl();
-        $isScriptPage = strpos($uri, 'jscript');
-        $isDeletePage = strpos($uri, 'delete');
-        $isLoginPage  = strpos($uri, '/login');
-        $isJsonPage   = strpos($uri, '/json') || strpos($uri, 'serviceworker');
-        $isView       = strpos($uri, '/attachments/view');
+        $url          = $request->fullUrl();
+        $forbiddenWords = strpos($url, 'offline') || strpos($url, 'jscript') || strpos($url, 'delete') || strpos($url, '/login') || strpos($url, '/json') || strpos($url, 'serviceworker') || strpos($url, '/attachments/view');
 
         // also stop remembering "delete" URL's.
-        if (false === $isScriptPage && false === $isDeletePage
-            && false === $isLoginPage
-            && false === $isJsonPage
-            && false === $isView
+        if (false === $forbiddenWords
             && 'GET' === $request->method()
             && !$request->ajax()) {
-            $session->setPreviousUrl($uri);
+            Log::debug(sprintf('Redirect is now "%s".', $url));
+            $session->setPreviousUrl($url);
+            return;
         }
+        Log::debug(sprintf('Refuse to set "%s" as current URL.', $url));
     }
 }
