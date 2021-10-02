@@ -45,7 +45,6 @@ class StartFireflySession extends StartSession
         $url          = $request->fullUrl();
         $forbiddenWords = strpos($url, 'offline') || strpos($url, 'jscript') || strpos($url, 'delete') || strpos($url, '/login') || strpos($url, '/json') || strpos($url, 'serviceworker') || strpos($url, '/attachments/view');
 
-        // also stop remembering "delete" URL's.
         if (false === $forbiddenWords
             && 'GET' === $request->method()
             && !$request->ajax()) {

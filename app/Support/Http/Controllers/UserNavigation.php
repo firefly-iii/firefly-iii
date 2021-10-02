@@ -183,7 +183,7 @@ trait UserNavigation
         // get host of previous URL:
         $previous = parse_url($return, PHP_URL_HOST);
 
-        if ($default === $previous && (null === $errors || (0 === $errors->count())) && !Str::contains($return, $forbidden)) {
+        if (null !== $previous && $default === $previous && (null === $errors || (0 === $errors->count())) && !Str::contains($return, $forbidden)) {
             Log::debug(sprintf('Saving URL %s under key %s', $return, $identifier));
             session()->put($identifier, $return);
 
