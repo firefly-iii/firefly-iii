@@ -2,7 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.6.1 - 2020-09-25
+## 5.6.2 - 2021-10-xx
+
+### Added
+- `/health` will return `200 OK` if Firefly III is up and running, thanks @ajgon!
+
+### Deprecated
+- PHP 7.4 will probably not work on any page.
+
+### Fixed
+- [Issue 5133](https://github.com/firefly-iii/firefly-iii/issues/5133) LDAP filter (partial fix)
+- [Issue 5134](https://github.com/firefly-iii/firefly-iii/issues/5134) Use of clone function from search menu. 
+- [Issue 5143](https://github.com/firefly-iii/firefly-iii/issues/5143) v2 layout: account notes
+- [Issue 5144](https://github.com/firefly-iii/firefly-iii/issues/5144) Removal of rule triggers / actions broken
+- [Issue 5145](https://github.com/firefly-iii/firefly-iii/issues/5145) Crash due to null pointer
+- The markdown parser was broken.
+
+### Security
+- Fix [open direct](https://huntr.dev/bounties/549a1040-9b5e-420b-9b80-20700dd9d592/)
+- Fix [unrestricted upload](https://huntr.dev/bounties/5267ec1c-d204-40d2-bd4f-6c2dd495ee18/)
+
+## 5.6.1 - 2021-09-25
 
 ### Fixed
 - [Issue 4997](https://github.com/firefly-iii/firefly-iii/issues/4997) Deleted transactions would get reimported.
