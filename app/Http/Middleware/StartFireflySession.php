@@ -49,10 +49,10 @@ class StartFireflySession extends StartSession
         if (false === $forbiddenWords
             && 'GET' === $request->method()
             && !$request->ajax()) {
-            Log::debug(sprintf('Redirect is now "%s".', $url));
+            //Log::debug(sprintf('Redirect is now "%s".', $url));
             $session->setPreviousUrl($url);
             return;
         }
-        Log::debug(sprintf('Refuse to set "%s" as current URL.', $url));
+        //Log::debug(sprintf('Refuse to set "%s" as current URL.', $url));
     }
 }
