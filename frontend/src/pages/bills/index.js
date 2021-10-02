@@ -23,7 +23,7 @@ import Vue from "vue";
 import Index from "../../components/bills/Index";
 import store from "../../components/store";
 import {BPagination, BTable} from 'bootstrap-vue';
-//import Calendar from "../../components/dashboard/Calendar";
+import Calendar from "../../components/dashboard/Calendar";
 //import IndexOptions from "../../components/accounts/IndexOptions";
 
 // i18n
@@ -38,34 +38,34 @@ Vue.component('b-pagination', BPagination);
 //Vue.use(Vuex);
 
 const app = new Vue({
+                        i18n,
+                        store,
+                        el: "#bills",
+                        render: (createElement) => {
+                            return createElement(Index, {props: props});
+                        },
+                        beforeCreate() {
+                            // See reference nr. 10
+                            this.$store.commit('initialiseStore');
+                            this.$store.dispatch('updateCurrencyPreference');
+
+                            // init the new root store (dont care about results)
+                            this.$store.dispatch('root/initialiseStore');
+
+                            // also init the dashboard store.
+                            this.$store.dispatch('dashboard/index/initialiseStore');
+                        },
+                    });
+
+new Vue({
             i18n,
             store,
-            el: "#bills",
+            el: "#calendar",
             render: (createElement) => {
-                return createElement(Index, {props: props});
+                return createElement(Calendar, {props: props});
             },
-            beforeCreate() {
-                // See reference nr. 10
-                this.$store.commit('initialiseStore');
-                this.$store.dispatch('updateCurrencyPreference');
-
-                // init the new root store (dont care about results)
-                this.$store.dispatch('root/initialiseStore');
-
-                // also init the dashboard store.
-                //this.$store.dispatch('dashboard/index/initialiseStore');
-            },
+// See reference nr. 11
         });
-
-// new Vue({
-//             i18n,
-//             store,
-//             el: "#calendar",
-//             render: (createElement) => {
-//                 return createElement(Calendar, {props: props});
-//             },
-// // See reference nr. 11
-//         });
 
 // new Vue({
 //             i18n,
