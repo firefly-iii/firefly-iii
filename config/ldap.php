@@ -37,6 +37,8 @@ return [
 
     'default' => env('LDAP_CONNECTION', 'default'),
 
+    'group_filter' => env('LDAP_GROUP_FILTER'),
+
     /*
     |--------------------------------------------------------------------------
     | LDAP Connections

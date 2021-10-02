@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use FireflyIII\Ldap\AttributeHandler;
+use FireflyIII\Ldap\Rules\UserDefinedRule;
 
 return [
     /*
@@ -109,7 +110,9 @@ return [
             'driver'   => 'ldap',
             //'model'    => LdapRecord\Models\ActiveDirectory\User::class,
             'model'    => LdapRecord\Models\OpenLDAP\User::class,
-            'rules'    => [],
+            'rules'    => [
+                UserDefinedRule::class
+            ],
             'database' => [
                 'model'           => FireflyIII\User::class,
                 'sync_passwords'  => false,
