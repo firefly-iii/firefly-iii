@@ -1,7 +1,7 @@
 <?php
-/**
+/*
  * HealthcheckController.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2021 https://github.com/ajgon
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,8 +20,9 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Http\Controllers;
+namespace FireflyIII\Http\Controllers\System;
 
+use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 
 /**

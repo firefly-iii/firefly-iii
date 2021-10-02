@@ -38,9 +38,10 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => 'binders-only'],
+    ['middleware' => 'binders-only',  'namespace' => 'FireflyIII\Http\Controllers\System'],
     static function () {
         Route::get('offline', fn () => view('errors.offline'));
+        Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
     }
 );
 
@@ -69,8 +70,7 @@ Route::group(
         Route::get('profile/confirm-email-change/{token}', ['uses' => 'ProfileController@confirmEmailChange', 'as' => 'profile.confirm-email-change']);
         Route::get('profile/undo-email-change/{token}/{oldAddressHash}', ['uses' => 'ProfileController@undoEmailChange', 'as' => 'profile.undo-email-change']);
 
-        // Healthcheck route:
-        Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
+
     }
 );
 
