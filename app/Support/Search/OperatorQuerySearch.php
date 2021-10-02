@@ -54,6 +54,7 @@ use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
+use TypeError;
 
 /**
  * Class OperatorQuerySearch
@@ -152,7 +153,13 @@ class OperatorQuerySearch implements SearchInterface
     {
         Log::debug(sprintf('Now in parseQuery(%s)', $query));
         $parser = new QueryParser();
-        $query1 = $parser->parse($query);
+        try {
+            $query1 = $parser->parse($query);
+        } catch (TypeError $e) {
+            Log::error($e->getMessage());
+            Log::error(sprintf('Could not parse search: "%s".', $query));
+            throw new FireflyException('Invalid search value. See the logs.', 0, $e);
+        }
 
         Log::debug(sprintf('Found %d node(s)', count($query1->getNodes())));
         foreach ($query1->getNodes() as $searchNode) {
