@@ -121,7 +121,7 @@ return [
     'stop_processing'             => 'Zatrzymaj przetwarzanie',
     'start_date'                  => 'Początek zakresu',
     'end_date'                    => 'Koniec zakresu',
-    'enddate'                     => 'End date',
+    'enddate'                     => 'Data końcowa',
     'start'                       => 'Początek zakresu',
     'end'                         => 'Koniec zakresu',
     'delete_account'              => 'Usuń konto ":name"',

@@ -133,8 +133,8 @@ return [
     'interest_period'         => 'Período de juros',
     'liability_type'          => 'Tipo de responsabilidade',
     'liability_direction'     => 'Passivo entrada/fora',
-    'end_date'                => 'End date',
-    'payment_info'            => 'Payment information',
-    'expected_info'           => 'Next expected transaction',
-    'start_date'              => 'Start date',
+    'end_date'                => 'Data do término',
+    'payment_info'            => 'Informações de pagamento',
+    'expected_info'           => 'Próxima transação esperada',
+    'start_date'              => 'Data de inicio',
 ];

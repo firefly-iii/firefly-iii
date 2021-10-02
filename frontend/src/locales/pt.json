@@ -70,7 +70,7 @@
         "daily_budgets": "Or\u00e7amento di\u00e1rio",
         "weekly_budgets": "Or\u00e7amento semanal",
         "monthly_budgets": "Or\u00e7amento mensal",
-        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
+        "journals_in_period_for_account_js": "Todas as transa\u00e7\u00f5es para a conta {title} entre {start} e {end}",
         "quarterly_budgets": "Or\u00e7amento trimestral",
         "create_new_expense": "Criar nova conta de despesas",
         "create_new_revenue": "Criar nova conta de receitas",
@@ -161,8 +161,8 @@
         "subscriptions": "Subscri\u00e7\u00f5es",
         "bill_expected_date_js": "Esperado {date}",
         "inactive": "Inactivo",
-        "forever": "Forever",
-        "extension_date_is": "Extension date is {date}",
+        "forever": "Para sempre",
+        "extension_date_is": "A data de extens\u00e3o \u00e9 {date}",
         "create_new_bill": "Criar nova fatura",
         "store_new_bill": "Guardar nova fatura",
         "repeat_freq_yearly": "anualmente",
@@ -170,13 +170,13 @@
         "repeat_freq_quarterly": "trimestral",
         "repeat_freq_monthly": "mensalmente",
         "repeat_freq_weekly": "semanalmente",
-        "credit_card_type_monthlyFull": "Full payment every month",
+        "credit_card_type_monthlyFull": "Pagamento completo a cada m\u00eas",
         "update_liabilities_account": "Actualizar passivo",
         "update_expense_account": "Alterar conta de despesas",
         "update_revenue_account": "Alterar conta de receitas",
-        "update_undefined_account": "Update account",
+        "update_undefined_account": "Actualizar conta",
         "update_asset_account": "Actualizar conta de activos",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "updated_account_js": "Conta atualizada \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
     },
     "list": {
         "piggy_bank": "Mealheiro",
@@ -197,10 +197,10 @@
         "liability_direction": "Passivo entrada\/fora",
         "currentBalance": "Saldo actual",
         "next_expected_match": "Proxima correspondencia esperada",
-        "expected_info": "Next expected transaction",
-        "start_date": "Start date",
-        "end_date": "End date",
-        "payment_info": "Payment information"
+        "expected_info": "Pr\u00f3xima transa\u00e7\u00e3o esperada",
+        "start_date": "Data de inicio",
+        "end_date": "Data do t\u00e9rmino",
+        "payment_info": "Informa\u00e7\u00f5es de pagamento"
     },
     "config": {
         "html_language": "pt",
@@ -221,7 +221,7 @@
         "repeat_freq": "Repete",
         "skip": "Pular",
         "startdate": "Data de inicio",
-        "enddate": "End date",
+        "enddate": "Data do t\u00e9rmino",
         "object_group": "Grupo",
         "attachments": "Anexos",
         "active": "Activo",
@@ -252,6 +252,6 @@
         "amount_max": "Montante maximo",
         "start_date": "Inicio do intervalo",
         "end_date": "Fim do intervalo",
-        "extension_date": "Extension date"
+        "extension_date": "Data da extens\u00e3o"
     }
 }
