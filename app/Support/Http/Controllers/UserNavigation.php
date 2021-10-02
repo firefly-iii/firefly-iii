@@ -172,7 +172,7 @@ trait UserNavigation
      */
     final protected function rememberPreviousUri(string $identifier): ?string
     {
-        $return = app('url')->previous();
+        $return = session()->previousUrl();
         /** @var ViewErrorBag|null $errors */
         $errors    = session()->get('errors');
         $forbidden = ['json', 'debug'];
