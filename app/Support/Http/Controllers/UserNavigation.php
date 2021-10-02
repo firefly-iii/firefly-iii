@@ -176,10 +176,23 @@ trait UserNavigation
         /** @var ViewErrorBag|null $errors */
         $errors    = session()->get('errors');
         $forbidden = ['json', 'debug'];
-        if ((null === $errors || (0 === $errors->count())) && !Str::contains($return, $forbidden)) {
+
+        // get default host:
+        $default = parse_url(route('index'), PHP_URL_HOST);
+
+        // get host of previous URL:
+        $previous = parse_url($return, PHP_URL_HOST);
+
+        if ($default === $previous && (null === $errors || (0 === $errors->count())) && !Str::contains($return, $forbidden)) {
             Log::debug(sprintf('Saving URL %s under key %s', $return, $identifier));
             session()->put($identifier, $return);
+
+            return $return;
         }
+
+        // if no match, save default URL:
+        Log::info(sprintf('Refuse to set "%s" as redirect, set default route instead.', $return));
+        session()->put($identifier, route('index'));
 
         return $return;
     }
