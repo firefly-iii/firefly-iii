@@ -42,16 +42,20 @@ class StartFireflySession extends StartSession
      */
     protected function storeCurrentUrl(Request $request, $session): void
     {
-        $url          = $request->fullUrl();
-        $forbiddenWords = strpos($url, 'offline') || strpos($url, 'jscript') || strpos($url, 'delete') || strpos($url, '/login') || strpos($url, '/json') || strpos($url, 'serviceworker') || strpos($url, '/attachments/view');
+        $url     = $request->fullUrl();
+        $safeUrl = app('steam')->getSafeUrl($url, route('index'));
 
-        if (false === $forbiddenWords
-            && 'GET' === $request->method()
-            && !$request->ajax()) {
-            //Log::debug(sprintf('Redirect is now "%s".', $url));
-            $session->setPreviousUrl($url);
+        if ($url !== $safeUrl) {
+            //Log::debug(sprintf('storeCurrentUrl: converted "%s" to "%s", so will not use it.', $url, $safeUrl));
             return;
         }
-        //Log::debug(sprintf('Refuse to set "%s" as current URL.', $url));
+
+        if ('GET' === $request->method() && !$request->ajax()) {
+            //Log::debug(sprintf('storeCurrentUrl: Redirect is now "%s".', $safeUrl));
+            $session->setPreviousUrl($safeUrl);
+
+            return;
+        }
+        //Log::debug(sprintf('storeCurrentUrl: Refuse to set "%s" as current URL.', $safeUrl));
     }
 }
