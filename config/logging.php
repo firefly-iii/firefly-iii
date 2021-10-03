@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use FireflyIII\Support\Logging\AuditLogger;
+use Monolog\Handler\SyslogUdpHandler;
 
 return [
     /*
@@ -66,10 +67,13 @@ return [
             'via' => FireflyIII\Logging\CreateCustomLogger::class,
         ],
         'papertrail' => [
-            'driver' => 'papertrail',
-            'host' => env('PAPERTRAIL_HOST'),
-            'port' => env('PAPERTRAIL_PORT'),
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => SyslogUdpHandler::class,
+            'handler_with' => [
+                'host' => env('PAPERTRAIL_HOST'),
+                'port' => env('PAPERTRAIL_PORT'),
+            ],
         ],
 
         // single laravel log file:
