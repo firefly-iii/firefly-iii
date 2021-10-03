@@ -202,27 +202,12 @@ class Handler extends ExceptionHandler
     protected function invalid($request, LaravelValidationException $exception): Application|RedirectResponse|Redirector
     {
         // protect against open redirect when submitting invalid forms.
-        $previous = $this->getPreviousUrl();
+        $previous = app('steam')->getSafePreviousUrl();
         $redirect = $this->getRedirectUrl($exception);
 
         return redirect($redirect ?? $previous)
             ->withInput(Arr::except($request->input(), $this->dontFlash))
             ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag));
-    }
-
-    /**
-     * Only return the previousUrl() if it is a valid URL. Return default redirect otherwise.
-     *
-     * @return string
-     */
-    private function getPreviousUrl(): string
-    {
-        $safe         = route('index');
-        $previous     = url()->previous();
-        $previousHost = parse_url($previous, PHP_URL_HOST);
-        $safeHost     = parse_url($safe, PHP_URL_HOST);
-
-        return null !== $previousHost && $previousHost === $safeHost ? $previous : $safe;
     }
 
     /**
