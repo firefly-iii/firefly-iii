@@ -84,7 +84,7 @@ class DeleteController extends Controller
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle   = (string)trans('firefly.delete_' . $objectType, ['description' => $group->title ?? $journal->description]);
-        $previous   = URL::previous(route('index'));
+        $previous   = app('steam')->getSafePreviousUrl(route('index'));
         // put previous url in session
         Log::debug('Will try to remember previous URI');
         $this->rememberPreviousUri('transactions.delete.uri');

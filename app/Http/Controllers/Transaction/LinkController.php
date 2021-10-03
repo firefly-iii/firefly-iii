@@ -161,6 +161,6 @@ class LinkController extends Controller
     {
         $this->repository->switchLink($link);
 
-        return redirect(URL::previous());
+        return redirect(app('steam')->getSafePreviousUrl());
     }
 }
