@@ -66,6 +66,7 @@ return [
             'via' => FireflyIII\Logging\CreateCustomLogger::class,
         ],
         'papertrail' => [
+            'driver' => 'papertrail',
             'host' => env('PAPERTRAIL_HOST'),
             'port' => env('PAPERTRAIL_PORT'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
