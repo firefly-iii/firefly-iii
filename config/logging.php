@@ -68,6 +68,7 @@ return [
         'papertrail' => [
             'host' => env('PAPERTRAIL_HOST'),
             'port' => env('PAPERTRAIL_PORT'),
+            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
 
         // single laravel log file:
