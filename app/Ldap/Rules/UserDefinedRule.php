@@ -5,6 +5,7 @@ namespace FireflyIII\Ldap\Rules;
 
 use LdapRecord\Laravel\Auth\Rule;
 use LdapRecord\Models\ActiveDirectory\Group;
+use Log;
 
 /**
  * Class UserDefinedRule
@@ -20,11 +21,16 @@ class UserDefinedRule extends Rule
     {
         // LDAP_GROUP_FILTER
         $groupFilter = config('ldap.group_filter');
+        Log::debug(sprintf('UserDefinedRule with group filter "%s"', $groupFilter));
         if (null !== $groupFilter && '' !== (string)$groupFilter) {
-            $administrators = Group::find('cn=Administrators,dc=local,dc=com');
+            Log::debug('Group filter is not empty, will now apply it.');
+            $administrators = Group::find($groupFilter);
+            $result         = $this->user->groups()->recursive()->exists($administrators);
+            Log::debug(sprintf('Search result is %s.', var_export($result, true)));
 
-            return $this->user->groups()->recursive()->exists($administrators);
+            return $result;
         }
+        Log::debug('Group filter is empty or NULL, so will return true.');
 
         return true;
     }
