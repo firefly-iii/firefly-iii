@@ -519,8 +519,8 @@ export default {
         let button = $('#submitButton');
         button.removeAttr('disabled');
       } else {
-        // console.log('Will redirect to previous URL. (' + previousUri + ')');
-        window.location.href = window.previousUri + '?transaction_group_id=' + groupId + '&message=created';
+        //console.log('Will redirect to previous URL. (' + previousUrl + ')');
+        window.location.href = window.previousUrl + '?transaction_group_id=' + groupId + '&message=created';
       }
     },
 

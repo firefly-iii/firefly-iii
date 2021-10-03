@@ -718,9 +718,9 @@ export default {
         }
       } else {
         if (this.storeAsNew) {
-          window.location.href = window.previousUri + '?transaction_group_id=' + groupId + '&message=created';
+          window.location.href = window.previousUrl + '?transaction_group_id=' + groupId + '&message=created';
         } else {
-          window.location.href = window.previousUri + '?transaction_group_id=' + groupId + '&message=updated';
+          window.location.href = window.previousUrl + '?transaction_group_id=' + groupId + '&message=updated';
         }
       }
     },
