@@ -98,8 +98,8 @@ return [
 
     'providers' => [
         'users'                => [
-            'driver' => 'eloquent',
-            'model'  => FireflyIII\User::class,
+            'driver'   => 'eloquent',
+            'model'    => FireflyIII\User::class,
         ],
         'remote_user_provider' => [
             'driver' => 'remote_user_provider',
@@ -111,7 +111,7 @@ return [
             //'model'    => LdapRecord\Models\ActiveDirectory\User::class,
             'model'    => LdapRecord\Models\OpenLDAP\User::class,
             'rules'    => [
-                UserDefinedRule::class
+                UserDefinedRule::class,
             ],
             'database' => [
                 'model'           => FireflyIII\User::class,
@@ -141,6 +141,7 @@ return [
             'provider' => 'users',
             'table'    => 'password_resets',
             'expire'   => 60,
+            'throttle' => 300, // Allows a user to request 1 token per 300 seconds
         ],
     ],
     /*
