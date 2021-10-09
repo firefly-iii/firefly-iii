@@ -6,7 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - `/health` will return `200 OK` if Firefly III is up and running, thanks @ajgon!
-
+- [Issue 5133](https://github.com/firefly-iii/firefly-iii/issues/5133) First version of the LDAP filter is up.
+- Option to log via Papertrail
+- 
 ### Deprecated
 - PHP 7.4 will probably not work on any page.
 
@@ -34,6 +36,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Security
 - Fixed several low-key CSRF vulnerabilities.
+- Fixed an issue where you could spam the password reset form.
 
 ### API
 - Deprecated the "currencies with code"-endpoint (see the [API documentation](https://api-docs.firefly-iii.org/#/autocomplete/getCurrenciesCodeAC)).
