@@ -36,6 +36,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Log;
+use ValueError;
 
 /**
  *
@@ -244,7 +245,14 @@ class AvailableBudgetController extends Controller
 
             return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
         }
-        if (bccomp($amount, '0') <= 0) {
+        try {
+            if (bccomp($amount, '0') <= 0) {
+                session()->flash('error', trans('firefly.invalid_amount'));
+
+                return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
+            }
+        } catch (ValueError $e) {
+            Log::error(sprintf('Value "%s" is not a number: %s', $amount, $e->getMessage()));
             session()->flash('error', trans('firefly.invalid_amount'));
 
             return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));

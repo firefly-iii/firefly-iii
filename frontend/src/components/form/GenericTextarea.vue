@@ -74,6 +74,9 @@ name: "GenericTextarea",
     localValue: function (value) {
       this.$emit('set-field', {field: this.fieldName, value: value});
     },
+    value: function(value) {
+      this.localValue = value;
+    }
   }
 }
 </script>

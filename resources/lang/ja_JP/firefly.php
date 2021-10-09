@@ -168,7 +168,7 @@ return [
     'all_journals_for_account'                            => '":name"カテゴリのすべての取引',
     'chart_all_journals_for_account'                      => '":name"予算のすべての取引のチャート',
     'journals_in_period_for_account'                      => ':nameカテゴリの:startから:endまでのすべての取引',
-    'journals_in_period_for_account_js'                   => 'All transactions for account {title} between {start} and {end}',
+    'journals_in_period_for_account_js'                   => '{start} から {end} までの口座 {title} のすべての取引',
     'transferred'                                         => '送金済み',
     'all_withdrawal'                                      => ':startから:endまでのすべての支出',
     'all_transactions'                                    => 'すべての取引',

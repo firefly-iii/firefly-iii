@@ -31,8 +31,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Str;
-use Illuminate\Support\ViewErrorBag;
 use Log;
 
 /**
@@ -56,17 +54,10 @@ trait UserNavigation
     final protected function getPreviousUri(string $identifier): string
     {
         Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
-        $uri = (string)session($identifier);
-        Log::debug(sprintf('The URI is %s', $uri));
+        $url = (string)session($identifier);
+        Log::debug(sprintf('The URL is %s', $url));
 
-        if (str_contains($uri, 'jscript')) {
-            $uri = $this->redirectUri;
-            Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
-        }
-
-        Log::debug(sprintf('Return direct link %s', $uri));
-
-        return $uri;
+        return app('steam')->getSafeUrl($url, route('index'));
     }
 
     /**
@@ -172,14 +163,10 @@ trait UserNavigation
      */
     final protected function rememberPreviousUri(string $identifier): ?string
     {
-        $return = app('url')->previous();
-        /** @var ViewErrorBag|null $errors */
-        $errors    = session()->get('errors');
-        $forbidden = ['json', 'debug'];
-        if ((null === $errors || (0 === $errors->count())) && !Str::contains($return, $forbidden)) {
-            Log::debug(sprintf('Saving URL %s under key %s', $return, $identifier));
-            session()->put($identifier, $return);
-        }
+        $return = app('steam')->getSafePreviousUrl();
+        session()->put($identifier, $return);
+
+        Log::debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
 
         return $return;
     }

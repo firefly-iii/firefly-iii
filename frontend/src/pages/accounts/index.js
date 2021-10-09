@@ -38,41 +38,41 @@ Vue.component('b-pagination', BPagination);
 //Vue.use(Vuex);
 
 const app = new Vue({
-            i18n,
-            store,
-            el: "#accounts",
-            render: (createElement) => {
-                return createElement(Index, {props: props});
-            },
-            beforeCreate() {
+                        i18n,
+                        store,
+                        el: "#accounts",
+                        render: (createElement) => {
+                            return createElement(Index, {props: props});
+                        },
+                        beforeCreate() {
 // See reference nr. 10
-                this.$store.commit('initialiseStore');
-                this.$store.dispatch('updateCurrencyPreference');
+                            this.$store.commit('initialiseStore');
+                            this.$store.dispatch('updateCurrencyPreference');
 
-                // init the new root store (dont care about results)
-                this.$store.dispatch('root/initialiseStore');
+                            // init the new root store (dont care about results)
+                            this.$store.dispatch('root/initialiseStore');
 
-                // also init the dashboard store.
-                this.$store.dispatch('dashboard/index/initialiseStore');
-            },
-        });
+                            // also init the dashboard store.
+                            this.$store.dispatch('dashboard/index/initialiseStore');
+                        },
+                    });
 
 const calendar = new Vue({
-            i18n,
-            store,
-            el: "#calendar",
-            render: (createElement) => {
-                return createElement(Calendar, {props: props});
-            },
+                             i18n,
+                             store,
+                             el: "#calendar",
+                             render: (createElement) => {
+                                 return createElement(Calendar, {props: props});
+                             },
 // See reference nr. 11
-        });
+                         });
 
 const opt = new Vue({
-            i18n,
-            store,
-            el: "#indexOptions",
-            render: (createElement) => {
-                return createElement(IndexOptions, {props: props});
-            },
+                        i18n,
+                        store,
+                        el: "#indexOptions",
+                        render: (createElement) => {
+                            return createElement(IndexOptions, {props: props});
+                        },
 // See reference nr. 12
-        });
+                    });

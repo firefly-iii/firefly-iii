@@ -80,16 +80,16 @@ class EditController extends Controller
 
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $cash            = $repository->getCashAccount();
-        $previousUri     = $this->rememberPreviousUri('transactions.edit.uri');
-        $parts           = parse_url($previousUri);
+        $previousUrl     = $this->rememberPreviousUri('transactions.edit.uri');
+        $parts           = parse_url($previousUrl);
         $search          = sprintf('?%s', $parts['query'] ?? '');
-        $previousUri     = str_replace($search, '', $previousUri);
+        $previousUrl     = str_replace($search, '', $previousUrl);
 
         return prefixView(
             'transactions.edit',
             compact(
                 'cash', 'allowedSourceDests', 'expectedSourceTypes', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'defaultCurrency',
-                'previousUri'
+                'previousUrl'
             )
         );
     }

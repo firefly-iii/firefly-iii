@@ -31,7 +31,9 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use JsonException;
+use Log;
 use stdClass;
+use Str;
 
 /**
  * Class Steam.
@@ -40,6 +42,53 @@ use stdClass;
  */
 class Steam
 {
+
+    /**
+     * Returns the previous URL but refuses to send you to specific URLs.
+     *
+     * - outside domain
+     * - to JS files, API or JSON routes
+     *
+     * Uses the session's previousUrl() function as inspired by GitHub user @z1r0-
+     *
+     *  session()->previousUrl() uses getSafeUrl() so we can safely return it:
+     *
+     * @return string
+     */
+    public function getSafePreviousUrl(): string
+    {
+        //Log::debug(sprintf('getSafePreviousUrl: "%s"', session()->previousUrl()));
+        return session()->previousUrl() ?? route('index');
+    }
+
+    /**
+     * Make sure URL is safe.
+     *
+     * @param string $unknownUrl
+     * @param string $safeUrl
+     *
+     * @return string
+     */
+    public function getSafeUrl(string $unknownUrl, string $safeUrl): string
+    {
+        //Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
+        $returnUrl   = $safeUrl;
+        $unknownHost = parse_url($unknownUrl, PHP_URL_HOST);
+        $safeHost    = parse_url($safeUrl, PHP_URL_HOST);
+
+        if (null !== $unknownHost && $unknownHost === $safeHost) {
+            $returnUrl = $unknownUrl;
+        }
+
+        // URL must not lead to weird pages
+        $forbiddenWords = ['jscript', 'json', 'debug', 'serviceworker', 'offline', 'delete', '/login', '/attachments/view'];
+        if (Str::contains($returnUrl, $forbiddenWords)) {
+            $returnUrl = $safeUrl;
+        }
+
+        return $returnUrl;
+    }
+
 
     /**
      * @param Account $account

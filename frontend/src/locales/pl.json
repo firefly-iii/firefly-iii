@@ -70,7 +70,7 @@
         "daily_budgets": "Bud\u017cety dzienne",
         "weekly_budgets": "Bud\u017cety tygodniowe",
         "monthly_budgets": "Bud\u017cety miesi\u0119czne",
-        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
+        "journals_in_period_for_account_js": "Wszystkie transakcje dla konta {title} od {start} do {end}",
         "quarterly_budgets": "Bud\u017cety kwartalne",
         "create_new_expense": "Utw\u00f3rz nowe konto wydatk\u00f3w",
         "create_new_revenue": "Utw\u00f3rz nowe konto przychod\u00f3w",
@@ -174,9 +174,9 @@
         "update_liabilities_account": "Modyfikuj zobowi\u0105zanie",
         "update_expense_account": "Aktualizuj konto wydatk\u00f3w",
         "update_revenue_account": "Aktualizuj konto przychod\u00f3w",
-        "update_undefined_account": "Update account",
+        "update_undefined_account": "Zaktualizuj konto",
         "update_asset_account": "Aktualizuj konto aktyw\u00f3w",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "updated_account_js": "Zaktualizowano konto \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
     },
     "list": {
         "piggy_bank": "Skarbonka",
@@ -221,7 +221,7 @@
         "repeat_freq": "Powtarza si\u0119",
         "skip": "Pomi\u0144",
         "startdate": "Data rozpocz\u0119cia",
-        "enddate": "End date",
+        "enddate": "Data ko\u0144cowa",
         "object_group": "Grupa",
         "attachments": "Za\u0142\u0105czniki",
         "active": "Aktywny",

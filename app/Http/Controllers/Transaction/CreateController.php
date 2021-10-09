@@ -119,10 +119,10 @@ class CreateController extends Controller
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
         $accountToTypes       = config('firefly.account_to_transaction');
         $defaultCurrency      = app('amount')->getDefaultCurrency();
-        $previousUri          = $this->rememberPreviousUri('transactions.create.uri');
-        $parts                = parse_url($previousUri);
+        $previousUrl          = $this->rememberPreviousUri('transactions.create.uri');
+        $parts                = parse_url($previousUrl);
         $search               = sprintf('?%s', $parts['query'] ?? '');
-        $previousUri          = str_replace($search, '', $previousUri);
+        $previousUrl          = str_replace($search, '', $previousUrl);
 
         session()->put('preFilled', $preFilled);
 
@@ -134,7 +134,7 @@ class CreateController extends Controller
                 'objectType',
                 'subTitle',
                 'defaultCurrency',
-                'previousUri',
+                'previousUrl',
                 'optionalFields',
                 'preFilled',
                 'allowedOpposingTypes',

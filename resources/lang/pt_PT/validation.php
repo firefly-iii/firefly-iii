@@ -23,13 +23,13 @@
 declare(strict_types=1);
 
 return [
-    'missing_where'                  => 'Array is missing "where"-clause',
-    'missing_update'                 => 'Array is missing "update"-clause',
-    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
-    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
-    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
-    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
-    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
+    'missing_where'                  => 'A matriz tem em falha a cláusula-"onde"',
+    'missing_update'                 => 'A matriz tem em falha a cláusula-"atualizar"',
+    'invalid_where_key'              => 'JSON contém uma chave inválida para a cláusula "onde"',
+    'invalid_update_key'             => 'JSON contém uma chave inválida para a cláusula "atualizar"',
+    'invalid_query_data'             => 'Existem dados inválidos no campo %s:%s do seu inquérito.',
+    'invalid_query_account_type'     => 'O seu inquérito contem contas de tipos diferentes, o que não é permitido.',
+    'invalid_query_currency'         => 'O seu inquérito contem contas com configurações de moeda diferentes, o que não é permitido.',
     'iban'                           => 'Este IBAN não é valido.',
     'zero_or_more'                   => 'O valor não pode ser negativo.',
     'date_or_time'                   => 'O valor deve ser uma data válida ou hora (ISO 8601).',
@@ -207,7 +207,7 @@ return [
     'need_id_in_edit'           => 'Cada divisão deve ter transaction_journal_id (ID válido ou 0).',
 
     'ob_source_need_data' => 'É preciso ter um ID de uma conta de origem válida e/ou um nome de uma conta de origem válida para continuar.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
+    'lc_source_need_data' => 'É necessário obter um ID de uma conta de origem válida para continuar.',
     'ob_dest_need_data'   => 'É necessário ter um ID de conta de destino válido e/ou um nome de conta de destino válido para continuar.',
     'ob_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar pelo ID ":id" ou nome ":name".',
 

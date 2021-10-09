@@ -29,8 +29,11 @@ namespace FireflyIII\Exceptions;
 use ErrorException;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
@@ -186,5 +189,44 @@ class Handler extends ExceptionHandler
             }
             )
         );
+    }
+
+    /**
+     * Convert a validation exception into a response.
+     *
+     * @param Request                    $request
+     * @param LaravelValidationException $exception
+     *
+     * @return Application|RedirectResponse|Redirector
+     */
+    protected function invalid($request, LaravelValidationException $exception): Application|RedirectResponse|Redirector
+    {
+        // protect against open redirect when submitting invalid forms.
+        $previous = app('steam')->getSafePreviousUrl();
+        $redirect = $this->getRedirectUrl($exception);
+
+        return redirect($redirect ?? $previous)
+            ->withInput(Arr::except($request->input(), $this->dontFlash))
+            ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag));
+    }
+
+    /**
+     * Only return the redirectTo property from the exception if it is a valid URL. Return NULL otherwise.
+     *
+     * @param LaravelValidationException $exception
+     *
+     * @return string|null
+     */
+    private function getRedirectUrl(LaravelValidationException $exception): ?string
+    {
+        if (null === $exception->redirectTo) {
+            return null;
+        }
+        $safe         = route('index');
+        $previous     = $exception->redirectTo;
+        $previousHost = parse_url($previous, PHP_URL_HOST);
+        $safeHost     = parse_url($safe, PHP_URL_HOST);
+
+        return null !== $previousHost && $previousHost === $safeHost ? $previous : $safe;
     }
 }

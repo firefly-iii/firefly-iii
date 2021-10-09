@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use FireflyIII\Support\Logging\AuditLogger;
+use Monolog\Handler\SyslogUdpHandler;
 
 return [
     /*
@@ -52,6 +53,7 @@ return [
     */
 
     'channels' => [
+        // default channels for 'stack' and audit logs:
         'stack'      => [
             'driver'   => 'stack',
             'channels' => ['daily', 'stdout'],
@@ -60,27 +62,43 @@ return [
             'driver'   => 'stack',
             'channels' => ['audit_daily', 'audit_stdout'],
         ],
+        'scoped'      => [
+            'driver' => 'custom',
+            'via' => FireflyIII\Logging\CreateCustomLogger::class,
+        ],
+        'papertrail' => [
+            'driver' => 'monolog',
+            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'handler' => SyslogUdpHandler::class,
+            'handler_with' => [
+                'host' => env('PAPERTRAIL_HOST'),
+                'port' => env('PAPERTRAIL_PORT'),
+            ],
+        ],
+
+        // single laravel log file:
         'single'     => [
             'driver' => 'single',
             'path'   => storage_path('logs/laravel.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
+
+        // stdout, used in stack 'stack' by default:
         'stdout'     => [
             'driver' => 'single',
             'path'   => 'php://stdout',
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
-        'docker_out' => [
-            'driver' => 'single',
-            'path'   => 'php://stdout',
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
-        ],
+
+        // daily, used in stack 'stack' by default:
         'daily'      => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-' . PHP_SAPI . '.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],
+
+        // the audit log destinations:
         'audit_daily'      => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-audit.log'),
@@ -94,26 +112,14 @@ return [
             'tap'    => [AuditLogger::class],
             'level'  => envNonEmpty('AUDIT_LOG_LEVEL', 'info'),
         ],
-        'dailytest'  => [
-            'driver' => 'daily',
-            'path'   => storage_path('logs/test-ff3-' . PHP_SAPI . '.log'),
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
-            'days'   => 7,
-        ],
 
-        'slack' => [
-            'driver'   => 'slack',
-            'url'      => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => 'Firefly III Log Robot',
-            'emoji'    => ':boom:',
-            'level'    => 'error',
-        ],
-
+        // syslog destination
         'syslog' => [
             'driver' => 'syslog',
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
 
+        // errorlog destination
         'errorlog' => [
             'driver' => 'errorlog',
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),

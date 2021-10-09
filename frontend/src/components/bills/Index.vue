@@ -22,7 +22,8 @@
   <div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <a href="./subscriptions/create" class="btn btn-sm mb-2 float-right btn-success"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_bill')
+        <a href="./subscriptions/create" class="btn btn-sm mb-2 float-right btn-success"><span class="fas fa-plus"></span> {{
+            $t('firefly.create_new_bill')
           }}</a>
         <button @click="newCacheKey" class="btn btn-sm mb-2 mr-2 float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
@@ -49,7 +50,7 @@
                 <small v-if="true === data.item.active && 0 === data.item.skip">{{ $t('firefly.bill_repeats_' + data.item.repeat_freq) }}</small>
                 <small v-if="true === data.item.active && 1 === data.item.skip">{{ $t('firefly.bill_repeats_' + data.item.repeat_freq + '_other') }}</small>
                 <small v-if="true === data.item.active && data.item.skip > 1">{{
-                  $t('firefly.bill_repeats_' + data.item.repeat_freq + '_skip', {skip: data.item.skip + 1})
+                    $t('firefly.bill_repeats_' + data.item.repeat_freq + '_skip', {skip: data.item.skip + 1})
                   }}</small>
                 <small v-if="false === data.item.active">{{ $t('firefly.inactive') }}</small>
                 <!-- (rules, recurring) -->
@@ -114,11 +115,13 @@
                 <span v-if="null !== data.item.extension_date"><br/>
                     <small>
                     {{
-                        $t('firefly.extension_date_is', {date: new Intl.DateTimeFormat(locale, {
+                        $t('firefly.extension_date_is', {
+                          date: new Intl.DateTimeFormat(locale, {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
-                          }).format(new Date(data.item.extension_date.substring(0, 10)))})
+                          }).format(new Date(data.item.extension_date.substring(0, 10)))
+                        })
                       }}
                       </small>
                   </span>
@@ -126,8 +129,8 @@
               </template>
               <template #cell(amount)="data">
                 ~ <span class="text-info">{{
-                    Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format((data.item.amount_min + data.item.amount_max) / 2)
-                  }}
+                  Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format((data.item.amount_min + data.item.amount_max) / 2)
+                }}
                   </span>
               </template>
               <template #cell(payment_info)="data">
@@ -166,10 +169,10 @@
                     </button>
                     <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
                       <a class="dropdown-item" :href="'./subscriptions/edit/' + data.item.id"><span class="fa fas fa-pencil-alt"></span> {{
-                        $t('firefly.edit')
+                          $t('firefly.edit')
                         }}</a>
                       <a class="dropdown-item" :href="'./subscriptions/delete/' + data.item.id"><span class="fa far fa-trash"></span> {{
-                        $t('firefly.delete')
+                          $t('firefly.delete')
                         }}</a>
                     </div>
                   </div>
@@ -182,7 +185,8 @@
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <a href="./subscriptions/create" class="btn btn-sm mt-2 float-right btn-success"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_bill')
+        <a href="./subscriptions/create" class="btn btn-sm mt-2 float-right btn-success"><span class="fas fa-plus"></span> {{
+            $t('firefly.create_new_bill')
           }}</a>
         <button @click="newCacheKey" class="btn btn-sm mt-2 mr-2 float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
@@ -206,18 +210,29 @@ export default {
       locale: 'en-US',
       sortedGroups: [],
       fields: [],
-      fnsLocale: null
+      fnsLocale: null,
+      ready: false
     }
   },
+  watch: {
+    start: function () {
+      this.downloadBills(1);
+    },
+    end: function () {
+      this.downloadBills(1);
+    },
+  },
   computed: {
-    ...mapGetters('root', ['cacheKey']),
+    ...mapGetters('root', ['listPageSize', 'cacheKey']),
+    ...mapGetters('dashboard/index', ['start', 'end',]),
+    'indexReady': function () {
+      return null !== this.start && null !== this.end && null !== this.listPageSize && this.ready;
+    },
   },
   created() {
     this.locale = localStorage.locale ?? 'en-US';
-    console.log(this.locale);
-
     this.updateFieldList();
-    this.downloadBills(1);
+    this.ready = true;
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
@@ -254,25 +269,37 @@ export default {
           };
     },
     downloadBills: function (page) {
+      console.log('downloadBills');
+      console.log(this.indexReady);
+      console.log(this.loading);
+      console.log(this.downloaded);
       this.resetGroups();
-      configureAxios().then(async (api) => {
-        api.get('./api/v1/bills?page=' + page + '&key=' + this.cacheKey + '&start=2021-07-01&end=2021-07-31')
-            .then(response => {
-                    // pages
-                    let currentPage = parseInt(response.data.meta.pagination.current_page);
-                    let totalPage = parseInt(response.data.meta.pagination.total_pages);
-                    this.parseBills(response.data.data);
-                    if (currentPage < totalPage) {
-                      let nextPage = currentPage + 1;
-                      this.downloadBills(nextPage);
+      // console.log('getAccountList()');
+      if (this.indexReady && !this.loading && !this.downloaded) {
+        this.loading = true;
+        configureAxios().then(async (api) => {
+          // get date from session.
+          let startStr = format(this.start, 'y-MM-dd');
+          let endStr = format(this.end, 'y-MM-dd');
+
+          api.get('./api/v1/bills?page=' + page + '&key=' + this.cacheKey + '&start='+startStr+'&end=' + endStr)
+              .then(response => {
+                      // pages
+                      let currentPage = parseInt(response.data.meta.pagination.current_page);
+                      let totalPage = parseInt(response.data.meta.pagination.total_pages);
+                      this.parseBills(response.data.data);
+                      if (currentPage < totalPage) {
+                        let nextPage = currentPage + 1;
+                        this.downloadBills(nextPage);
+                      }
+                      if (currentPage >= totalPage) {
+                        this.downloaded = true;
+                      }
+                      this.sortGroups();
                     }
-                    if (currentPage >= totalPage) {
-                      this.downloaded = true;
-                    }
-                    this.sortGroups();
-                  }
-            );
-      });
+              );
+        });
+      }
     },
     sortGroups: function () {
       const sortable = Object.entries(this.groups);
@@ -282,6 +309,7 @@ export default {
         return a.order - b.order;
       });
       this.sortedGroups = sortable;
+      this.loading = false;
       //console.log(this.sortedGroups);
     },
     parseBills: function (data) {

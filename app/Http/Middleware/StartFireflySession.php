@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Middleware;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
+use Log;
 
 /**
  * Class StartFireflySession.
@@ -41,21 +42,20 @@ class StartFireflySession extends StartSession
      */
     protected function storeCurrentUrl(Request $request, $session): void
     {
-        $uri          = $request->fullUrl();
-        $isScriptPage = strpos($uri, 'jscript');
-        $isDeletePage = strpos($uri, 'delete');
-        $isLoginPage  = strpos($uri, '/login');
-        $isJsonPage   = strpos($uri, '/json') || strpos($uri, 'serviceworker');
-        $isView       = strpos($uri, '/attachments/view');
+        $url     = $request->fullUrl();
+        $safeUrl = app('steam')->getSafeUrl($url, route('index'));
 
-        // also stop remembering "delete" URL's.
-        if (false === $isScriptPage && false === $isDeletePage
-            && false === $isLoginPage
-            && false === $isJsonPage
-            && false === $isView
-            && 'GET' === $request->method()
-            && !$request->ajax()) {
-            $session->setPreviousUrl($uri);
+        if ($url !== $safeUrl) {
+            //Log::debug(sprintf('storeCurrentUrl: converted "%s" to "%s", so will not use it.', $url, $safeUrl));
+            return;
         }
+
+        if ('GET' === $request->method() && !$request->ajax()) {
+            //Log::debug(sprintf('storeCurrentUrl: Redirect is now "%s".', $safeUrl));
+            $session->setPreviousUrl($safeUrl);
+
+            return;
+        }
+        //Log::debug(sprintf('storeCurrentUrl: Refuse to set "%s" as current URL.', $safeUrl));
     }
 }
