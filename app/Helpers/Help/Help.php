@@ -88,7 +88,7 @@ class Help implements HelpInterface
             $content    = trim($res->getBody()->getContents());
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::info($e->getMessage());
-            Log::info($e->getTraceAsString());
+            //Log::info($e->getTraceAsString());
         }
 
         Log::debug(sprintf('Status code is %d', $statusCode));
