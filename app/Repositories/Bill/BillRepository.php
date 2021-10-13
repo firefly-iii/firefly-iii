@@ -251,7 +251,7 @@ class BillRepository implements BillRepositoryInterface
                 $journalIds = $set->pluck('id')->toArray();
                 $amount     = (string)Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
                 $sum        = bcadd($sum, $amount);
-                Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $amount, $sum));
+                //Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $amount, $sum));
             }
         }
 
@@ -281,7 +281,7 @@ class BillRepository implements BillRepositoryInterface
                 $amount              = (string)Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
                 $return[$currencyId] = $return[$currencyId] ?? '0';
                 $return[$currencyId] = bcadd($amount, $return[$currencyId]);
-                Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f (currency %d)', $amount, $return[$currencyId], $currencyId));
+                //Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f (currency %d)', $amount, $return[$currencyId], $currencyId));
             }
         }
 
@@ -302,18 +302,18 @@ class BillRepository implements BillRepositoryInterface
         $sum   = '0';
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            Log::debug(sprintf('Now at bill #%d (%s)', $bill->id, $bill->name));
+            //Log::debug(sprintf('Now at bill #%d (%s)', $bill->id, $bill->name));
             $dates = $this->getPayDatesInRange($bill, $start, $end);
             $count = $bill->transactionJournals()->after($start)->before($end)->count();
             $total = $dates->count() - $count;
 
-            Log::debug(sprintf('Dates = %d, journalCount = %d, total = %d', $dates->count(), $count, $total));
+            //Log::debug(sprintf('Dates = %d, journalCount = %d, total = %d', $dates->count(), $count, $total));
 
             if ($total > 0) {
                 $average = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $multi   = bcmul($average, (string)$total);
                 $sum     = bcadd($sum, $multi);
-                Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $multi, $sum));
+                //Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $multi, $sum));
             }
         }
 
@@ -334,20 +334,20 @@ class BillRepository implements BillRepositoryInterface
         $return = [];
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            Log::debug(sprintf('Now at bill #%d (%s)', $bill->id, $bill->name));
+            //Log::debug(sprintf('Now at bill #%d (%s)', $bill->id, $bill->name));
             $dates      = $this->getPayDatesInRange($bill, $start, $end);
             $count      = $bill->transactionJournals()->after($start)->before($end)->count();
             $total      = $dates->count() - $count;
             $currencyId = (int)$bill->transaction_currency_id;
 
-            Log::debug(sprintf('Dates = %d, journalCount = %d, total = %d', $dates->count(), $count, $total));
+            //Log::debug(sprintf('Dates = %d, journalCount = %d, total = %d', $dates->count(), $count, $total));
 
             if ($total > 0) {
                 $average             = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $multi               = bcmul($average, (string)$total);
                 $return[$currencyId] = $return[$currencyId] ?? '0';
                 $return[$currencyId] = bcadd($return[$currencyId], $multi);
-                Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f (for currency %d)', $multi, $return[$currencyId], $currencyId));
+                //Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f (for currency %d)', $multi, $return[$currencyId], $currencyId));
             }
         }
 
@@ -481,7 +481,7 @@ class BillRepository implements BillRepositoryInterface
         //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
         while ($currentStart <= $end) {
-            Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
+            //Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
             //Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
             if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue

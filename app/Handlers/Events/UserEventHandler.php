@@ -323,6 +323,7 @@ class UserEventHandler
      */
     public function storeUserIPAddress(Login $event): void
     {
+        Log::debug('Now in storeUserIPAddress');
         /** @var User $user */
         $user = $event->user;
         /** @var array $preference */
@@ -336,7 +337,7 @@ class UserEventHandler
         }
         $inArray = false;
         $ip      = request()->ip();
-        Log::debug(sprintf('User logging in from IP address %s', $ip));
+        Log::debug(sprintf('User logging in from IP address %s using guard "%s"', $ip, $event->guard));
 
         // update array if in array
         foreach ($preference as $index => $row) {
