@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
@@ -317,11 +318,9 @@ class UserEventHandler
     }
 
     /**
-     * @param Login $event
-     *
-     * @throws FireflyException
+     * @param ActuallyLoggedIn $event
      */
-    public function storeUserIPAddress(Login $event): void
+    public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {
         Log::debug('Now in storeUserIPAddress');
         /** @var User $user */
@@ -337,7 +336,7 @@ class UserEventHandler
         }
         $inArray = false;
         $ip      = request()->ip();
-        Log::debug(sprintf('User logging in from IP address %s using guard "%s"', $ip, $event->guard));
+        Log::debug(sprintf('User logging in from IP address %s', $ip));
 
         // update array if in array
         foreach ($preference as $index => $row) {

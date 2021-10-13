@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use Exception;
+use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
@@ -74,6 +75,8 @@ class EventServiceProvider extends ServiceProvider
             Login::class                        => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
+            ],
+            ActuallyLoggedIn::class => [
                 'FireflyIII\Handlers\Events\UserEventHandler@storeUserIPAddress',
             ],
             DetectedNewIPAddress::class         => [
