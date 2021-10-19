@@ -84,6 +84,7 @@
             {% if objectType != 'liabilities' %}
                 {% if account.lastActivityDate %}
                     <td class="hidden-sm hidden-xs hidden-md">
+                        <!-- {{ account.lastActivityDate }} -->
                         {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
                     </td>
                 {% else %}

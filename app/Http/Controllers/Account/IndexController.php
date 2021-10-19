@@ -101,7 +101,7 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-                $account->lastActivityDate  = $this->isInArray($activities, $account->id);
+                $account->lastActivityDate  = $this->isInArrayDate($activities, $account->id);
                 $account->startBalance      = $this->isInArray($startBalances, $account->id);
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
@@ -163,7 +163,7 @@ class IndexController extends Controller
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
                 // See reference nr. 68
-                $account->lastActivityDate    = $this->isInArray($activities, $account->id);
+                $account->lastActivityDate    = $this->isInArrayDate($activities, $account->id);
                 $account->startBalance        = $this->isInArray($startBalances, $account->id);
                 $account->endBalance          = $this->isInArray($endBalances, $account->id);
                 $account->difference          = bcsub($account->endBalance, $account->startBalance);
