@@ -68,10 +68,11 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(14));
 
-
-        \LdapRecord\Models\OpenLDAP\User::addGlobalScope(
-            new UserDefinedScope
-        );
+        if (class_exists(\LdapRecord\Models\OpenLDAP\User::class)) {
+            \LdapRecord\Models\OpenLDAP\User::addGlobalScope(
+                new UserDefinedScope
+            );
+        }
 
     }
 }
