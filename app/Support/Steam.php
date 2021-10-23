@@ -406,7 +406,7 @@ class Steam
                      ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]); // @phpstan-ignore-line
 
         foreach ($set as $entry) {
-            $date = new Carbon($entry->max_date, 'UTC');
+            $date = new Carbon($entry->max_date, config('app.timezone'));
             $date->setTimezone(config('app.timezone'));
             $list[(int)$entry->account_id] = $date;
         }
