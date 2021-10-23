@@ -108,8 +108,7 @@ return [
 
         'ldap' => [
             'driver'   => 'ldap',
-            //'model'    => LdapRecord\Models\ActiveDirectory\User::class,
-            'model'    => LdapRecord\Models\OpenLDAP\User::class,
+            'model'    => env('LDAP_DIALECT') === 'OpenLDAP' ? LdapRecord\Models\OpenLDAP\User::class : LdapRecord\Models\ActiveDirectory\User::class,
             'rules'    => [
                 UserDefinedRule::class,
             ],
