@@ -917,7 +917,7 @@ Route::group(
         Route::get('create-from-bill/{bill}', ['uses' => 'Rule\CreateController@createFromBill', 'as' => 'create-from-bill']);
         Route::get('create-from-journal/{tj}', ['uses' => 'Rule\CreateController@createFromJournal', 'as' => 'create-from-journal']);
         Route::post('store', ['uses' => 'Rule\CreateController@store', 'as' => 'store']);
-        Route::get('duplicate/{rule}', ['uses' => 'Rule\CreateController@duplicate', 'as' => 'duplicate']);
+        Route::post('duplicate', ['uses' => 'Rule\CreateController@duplicate', 'as' => 'duplicate']);
 
         // delete controller
         Route::get('delete/{rule}', ['uses' => 'Rule\DeleteController@delete', 'as' => 'delete']);
@@ -949,10 +949,11 @@ Route::group(
         Route::get('create', ['uses' => 'RuleGroup\CreateController@create', 'as' => 'create']);
         Route::get('edit/{ruleGroup}', ['uses' => 'RuleGroup\EditController@edit', 'as' => 'edit']);
         Route::get('delete/{ruleGroup}', ['uses' => 'RuleGroup\DeleteController@delete', 'as' => 'delete']);
-        Route::get('up/{ruleGroup}', ['uses' => 'RuleGroup\EditController@up', 'as' => 'up']);
-        Route::get('down/{ruleGroup}', ['uses' => 'RuleGroup\EditController@down', 'as' => 'down']);
-        Route::get('select/{ruleGroup}', ['uses' => 'RuleGroup\ExecutionController@selectTransactions', 'as' => 'select-transactions']);
 
+        // new route to move rule groups:
+        Route::post('move', ['uses' => 'RuleGroup\EditController@moveGroup', 'as' => 'move']);
+
+        Route::get('select/{ruleGroup}', ['uses' => 'RuleGroup\ExecutionController@selectTransactions', 'as' => 'select-transactions']);
         Route::post('store', ['uses' => 'RuleGroup\CreateController@store', 'as' => 'store']);
         Route::post('update/{ruleGroup}', ['uses' => 'RuleGroup\EditController@update', 'as' => 'update']);
         Route::post('destroy/{ruleGroup}', ['uses' => 'RuleGroup\DeleteController@destroy', 'as' => 'destroy']);

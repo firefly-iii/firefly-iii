@@ -45,11 +45,11 @@
                                                     class="fa fa-fw fa-power-off"></span> {{ trans('firefly.apply_rule_group_selection', {title: ruleGroup.title}) }}
                                         </a></li>
                                     {% if ruleGroup.order > 1 %}
-                                        <li><a href="{{ route('rule-groups.up',ruleGroup.id) }}"><span
+                                        <li><a href="#" class="move-group" data-direction="up" data-id="{{ ruleGroup.id }}"><span
                                                         class="fa fa-fw fa-arrow-up"></span> {{ 'move_rule_group_up'|_ }}</a></li>
                                     {% endif %}
                                     {% if ruleGroup.order < ruleGroups|length %}
-                                        <li><a href="{{ route('rule-groups.down',ruleGroup.id) }}"><span
+                                        <li><a href="#" class="move-group" data-direction="down" data-id="{{ ruleGroup.id }}"><span
                                                         class="fa fa-fw fa-arrow-down"></span> {{ 'move_rule_group_down'|_ }}
                                             </a></li>
                                     {% endif %}
@@ -105,7 +105,7 @@
                                                 {% endif %}
 
                                                 {# duplicate rule #}
-                                                <a href="{{ route('rules.duplicate',rule.id) }}" class="btn btn-default" title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}"><span class="fa fa-fw fa-copy"></span></a>
+                                                <a href="#" class="btn btn-default duplicate-rule" data-id="{{ rule.id }}" title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}"><span class="fa fa-fw fa-copy"></span></a>
                                             </div>
                                         </td>
                                         <td class="markdown">
@@ -195,6 +195,10 @@
 
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var moveRuleGroupUrl = '{{ route('rule-groups.move') }}';
+        var duplicateRuleUrl = '{{ route('rules.duplicate') }}';
+    </script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/rules/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

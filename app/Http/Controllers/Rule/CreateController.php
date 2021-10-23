@@ -34,6 +34,7 @@ use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -237,15 +238,17 @@ class CreateController extends Controller
     /**
      * @param Rule $rule
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function duplicate(Rule $rule): RedirectResponse
+    public function duplicate(Request $request): JsonResponse
     {
-        $newRule = $this->ruleRepos->duplicate($rule);
+        $ruleId = (int)$request->get('id');
+        $rule   = $this->ruleRepos->find($ruleId);
+        if (null !== $rule) {
+            $this->ruleRepos->duplicate($rule);
+        }
 
-        session()->flash('success', trans('firefly.duplicated_rule', ['title' => $rule->title, 'newTitle' => $newRule->title]));
-
-        return redirect(route('rules.index'));
+        return new JsonResponse(['OK']);
     }
 
     /**

@@ -329,10 +329,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function resetOrder(): bool
     {
-        $this->user->ruleGroups()->where('active', false)->update(['order' => 0]);
         $set   = $this->user
             ->ruleGroups()
-            ->where('active', true)
             ->whereNull('deleted_at')
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'DESC')
@@ -363,7 +361,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         $set   = $ruleGroup->rules()
                            ->orderBy('order', 'ASC')
-                           ->where('active', true)
                            ->orderBy('title', 'DESC')
                            ->orderBy('updated_at', 'DESC')
                            ->get(['rules.*']);
