@@ -49,6 +49,7 @@ class General extends AbstractExtension
             $this->mimeIcon(),
             $this->markdown(),
             $this->floatval(),
+            $this->phpHostName(),
         ];
     }
 
@@ -87,6 +88,24 @@ class General extends AbstractExtension
                 $date = session('end', Carbon::now()->endOfMonth());
 
                 return app('steam')->balance($account, $date);
+            }
+        );
+    }
+
+    /**
+     * Show URL host name
+     *
+     * @return TwigFilter
+     */
+    protected function phpHostName(): TwigFilter
+    {
+        return new TwigFilter(
+            'phphost',
+            static function (string $string): string {
+                $proto = (string)parse_url($string, PHP_URL_SCHEME);
+                $host  = (string)parse_url($string, PHP_URL_HOST);
+
+                return e(sprintf('%s://%s', $proto, $host));
             }
         );
     }

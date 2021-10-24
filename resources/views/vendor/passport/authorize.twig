@@ -56,10 +56,21 @@
                         {{ trans('firefly.authorization_request', {version: config('firefly.version')}) }}
                     </div>
                     <div class="panel-body">
-                        <!-- Introduction -->
+                        {% if client.user.id == user.id %}
                         <p>
                             {{ trans('firefly.authorization_request_intro', {client: client.name|escape})|raw }}
                         </p>
+                        <p>
+                            {{ trans('firefly.authorization_request_site', {url: client.redirect|phphost})|raw }}
+                        </p>
+                        {% endif %}
+
+                        {% if client.user.id != user.id %}
+                        <p class="text-danger">
+                            {{ 'authorization_request_invalid'|_ }}
+
+                        </p>
+                        {% endif %}
                         <!-- Scope List -->
                         {% if scopes|length > 0 %}
                             <div class="scopes">
@@ -75,6 +86,7 @@
 
                         <div class="buttons">
                             <!-- Authorize Button -->
+                            {% if client.user.id == user.id %}
                             <form method="post" action="{{ route('index') }}/oauth/authorize">
                                 {{ csrf_field() }}
 
@@ -82,6 +94,7 @@
                                 <input type="hidden" name="client_id" value="{{ client.id }}">
                                 <button type="submit" class="btn btn-success btn-approve">{{ 'button_authorize'|_ }}</button>
                             </form>
+                            {% endif %}
 
                             <!-- Cancel Button -->
                             <form method="post" action="{{ route('index') }}/oauth/authorize">
