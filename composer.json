@@ -109,7 +109,7 @@
     "psr/log": "<2"
   },
   "require-dev": {
-    "barryvdh/laravel-debugbar": "^3.3",
+    "barryvdh/laravel-debugbar": "^3.6",
     "barryvdh/laravel-ide-helper": "2.*",
     "filp/whoops": "2.*",
     "fakerphp/faker": "1.*",
