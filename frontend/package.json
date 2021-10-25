@@ -15,7 +15,7 @@
         "laravel-mix": "^6",
         "lodash": "^4.17.21",
         "lodash.clonedeep": "^4.5.0",
-        "postcss": "^8.1.14",
+        "postcss": "^8.3.11",
         "resolve-url-loader": "^4.0.0",
         "sass": "^1.43.2",
         "sass-loader": "^12.2.0",
