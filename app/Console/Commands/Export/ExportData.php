@@ -154,6 +154,7 @@ class ExportData extends Command
     /**
      * @return array
      * @throws FireflyException
+     * @throws Exception
      */
     private function parseOptions(): array
     {
@@ -201,12 +202,17 @@ class ExportData extends Command
                 $error = true;
             }
         }
+        if(null === $this->option($field)) {
+            Log::info(sprintf('No date given in field "%s"', $field));
+            $error = true;
+        }
 
         if (true === $error && 'start' === $field) {
             $journal = $this->journalRepository->firstNull();
             $date    = null === $journal ? Carbon::now()->subYear() : $journal->date;
             $date->startOfDay();
         }
+
         if (true === $error && 'end' === $field) {
             $date = today(config('app.timezone'));
             $date->endOfDay();
