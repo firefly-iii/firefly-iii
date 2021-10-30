@@ -210,10 +210,9 @@ class PopupReport implements PopupReportInterface
 
         // set report accounts + the request accounts:
         //$set = $attributes['accounts'] ?? new Collection;
-        $set = new Collection;
-        $set->push($account);
+        //$set->push($account);
 
-        $collector->setBothAccounts($set)
+        $collector->setDestinationAccounts(new Collection([$account]))
                   ->setRange($attributes['startDate'], $attributes['endDate'])
                   ->withAccountInformation()
                   ->withBudgetInformation()
@@ -223,7 +222,6 @@ class PopupReport implements PopupReportInterface
         if (null !== $currency) {
             $collector->setCurrency($currency);
         }
-
         return $collector->getExtractedJournals();
     }
 

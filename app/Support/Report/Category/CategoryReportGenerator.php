@@ -66,6 +66,11 @@ class CategoryReportGenerator
     {
         $earnedWith    = $this->opsRepository->listIncome($this->start, $this->end, $this->accounts);
         $spentWith     = $this->opsRepository->listExpenses($this->start, $this->end, $this->accounts);
+
+        // also transferred out and transferred into these accounts in this category:
+        $transferredIn     = $this->opsRepository->listTransferredIn($this->start, $this->end, $this->accounts);
+        $transferredOut     = $this->opsRepository->listTransferredOut($this->start, $this->end, $this->accounts);
+
         $earnedWithout = $this->noCatRepository->listIncome($this->start, $this->end, $this->accounts);
         $spentWithout  = $this->noCatRepository->listExpenses($this->start, $this->end, $this->accounts);
 
@@ -75,7 +80,7 @@ class CategoryReportGenerator
         ];
 
         // needs four for-each loops.
-        foreach ([$earnedWith, $spentWith, $earnedWithout, $spentWithout] as $data) {
+        foreach ([$earnedWith, $spentWith, $earnedWithout, $spentWithout, $transferredIn, $transferredOut] as $data) {
             $this->processOpsArray($data);
         }
     }

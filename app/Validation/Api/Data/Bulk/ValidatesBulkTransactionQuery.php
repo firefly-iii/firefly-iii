@@ -41,15 +41,13 @@ trait ValidatesBulkTransactionQuery
     protected function validateTransactionQuery(Validator $validator): void
     {
         $data = $validator->getData();
-        // assumption is all validation has already taken place
-        // and the query key exists.
+        // assumption is all validation has already taken place and the query key exists.
         $json = json_decode($data['query'], true, 8, JSON_THROW_ON_ERROR);
 
         if (array_key_exists('account_id', $json['where'])
             && array_key_exists('account_id', $json['update'])
         ) {
-            // find both accounts
-            // must be same type.
+            // find both accounts, must be same type.
             // already validated: belongs to this user.
             $repository = app(AccountRepositoryInterface::class);
             $source     = $repository->find((int)$json['where']['account_id']);

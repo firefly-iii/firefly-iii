@@ -249,7 +249,7 @@ class BudgetReportGenerator
             'budget_limits' => [],
         ];
 
-        $noBudget = $this->nbRepository->sumExpenses($this->start, $this->end);
+        $noBudget = $this->nbRepository->sumExpenses($this->start, $this->end, $this->accounts);
         foreach ($noBudget as $noBudgetEntry) {
 
             // currency information:
