@@ -209,7 +209,8 @@ class PopupReport implements PopupReportInterface
         $collector = app(GroupCollectorInterface::class);
 
         // set report accounts + the request accounts:
-        $set = $attributes['accounts'] ?? new Collection;
+        //$set = $attributes['accounts'] ?? new Collection;
+        $set = new Collection;
         $set->push($account);
 
         $collector->setBothAccounts($set)
