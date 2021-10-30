@@ -113,7 +113,7 @@ return [
             'driver'   => 'ldap',
             'model'    => env('LDAP_DIALECT') === 'OpenLDAP' ? $openLDAP : $activeDirectory,
             'rules'    => [
-                //UserDefinedRule::class,
+                UserDefinedRule::class,
             ],
             'database' => [
                 'model'           => FireflyIII\User::class,

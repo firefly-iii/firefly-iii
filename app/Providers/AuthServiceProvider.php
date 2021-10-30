@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Ldap\Scopes\UserDefinedScope;
 use FireflyIII\Support\Authentication\RemoteUserGuard;
 use FireflyIII\Support\Authentication\RemoteUserProvider;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -67,12 +66,5 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(14));
-
-        if (class_exists(\LdapRecord\Models\OpenLDAP\User::class)) {
-            \LdapRecord\Models\OpenLDAP\User::addGlobalScope(
-                new UserDefinedScope
-            );
-        }
-
     }
 }

@@ -23,21 +23,12 @@ class UserDefinedScope implements Scope
      */
     public function apply(Builder $query, Model $model)
     {
-
-        Log::debug('UserDefinedScope is disabled.');
-
-        // scope is disabled:
-
-
-
-        /*
-        $groupFilter = config('ldap.group_filter');
-        Log::debug(sprintf('UserDefinedScope with group filter "%s"', $groupFilter));
-        if (null !== $groupFilter && '' !== (string)$groupFilter) {
-            Log::debug('UserDefinedScope: Group filter is not empty, will now apply it.');
-            $query->in($groupFilter);
-        }
-        Log::debug('UserDefinedScope: done!');
-        */
+//        $groupFilter = config('ldap.group_filter');
+//        Log::debug(sprintf('UserDefinedScope with group filter "%s"', $groupFilter));
+//        if (null !== $groupFilter && '' !== (string)$groupFilter) {
+//            Log::debug('UserDefinedScope: Group filter is not empty, will now apply it.');
+//            $query->in($groupFilter);
+//        }
+//        Log::debug('UserDefinedScope: done!');
     }
 }
