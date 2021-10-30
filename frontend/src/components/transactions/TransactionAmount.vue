@@ -33,6 +33,7 @@
           autocomplete="off"
           name="amount[]"
           type="number"
+          ref="input"
           step="any"
       >
     </div>
@@ -71,7 +72,10 @@ export default {
   methods: {
     formatNumber(str) {
       return parseFloat(str).toFixed(this.fractionDigits);
-    }
+    },
+    giveFocus: function() {
+      this.$refs.input.focus();
+    },
   },
   data() {
     return {

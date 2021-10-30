@@ -31,6 +31,7 @@
             :count="transactions.length"
             :custom-fields="customFields"
             :date="date"
+            ref="splitForms"
             :destination-allowed-types="destinationAllowedTypes"
             :index="index"
             :source-allowed-types="sourceAllowedTypes"
@@ -433,6 +434,12 @@ export default {
       this.updateField({index: payload.index, field: payload.direction + '_account_currency_symbol', value: payload.currency_symbol});
 
       //this.calculateTransactionType(payload.index);
+      if('source' === payload.direction && true === payload.user_selected) {
+        this.$refs.splitForms[payload.index].$refs.destinationAccount.giveFocus();
+      }
+      if('destination' === payload.direction && true === payload.user_selected) {
+        this.$refs.splitForms[payload.index].$refs.amount.giveFocus();
+      }
     },
     storeField: function (payload) {
       this.updateField(payload);

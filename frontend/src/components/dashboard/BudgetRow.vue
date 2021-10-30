@@ -24,6 +24,7 @@
     <td style="width:25%;">
       <a :href="'./budgets/show/' + budget.id">{{ budget.name }}</a>
     </td>
+    <td>&nbsp;</td>
     <td class="align-middle text-right">
       <span class="text-danger">
         {{ Intl.NumberFormat(locale, {style: 'currency', currency: budget.currency_code}).format(parseFloat(budget.spent)) }}
