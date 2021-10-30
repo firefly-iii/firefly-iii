@@ -71,7 +71,7 @@
                     &nbsp;
                   </div>
                   <button type="button" class="btn btn-outline-primary btn-block" @click="addTransactionArray"><span class="far fa-clone"></span> {{
-                      $t('firefly.add_another_split')
+                    $t('firefly.add_another_split')
                     }}
                   </button>
                 </div>
@@ -334,7 +334,6 @@ export default {
         for (let i in this.transactions) {
           if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
             if (this.transactions.hasOwnProperty(i)) {
-              //this.
               // console.log('Reset attachment #' + i);
               this.updateField({index: i, field: 'transaction_journal_id', value: 0});
               this.updateField({index: i, field: 'errors', value: this.defaultErrors})
@@ -345,7 +344,8 @@ export default {
       // reset the form:
       if (this.resetFormAfter) {
         this.resetTransactions();
-        this.addTransaction();
+        setTimeout(this.addTransaction, 50);
+
       }
       return Promise.resolve({response: 'from finaliseSubmission'});
     },
@@ -434,10 +434,10 @@ export default {
       this.updateField({index: payload.index, field: payload.direction + '_account_currency_symbol', value: payload.currency_symbol});
 
       //this.calculateTransactionType(payload.index);
-      if('source' === payload.direction && true === payload.user_selected) {
+      if ('source' === payload.direction && true === payload.user_selected) {
         this.$refs.splitForms[payload.index].$refs.destinationAccount.giveFocus();
       }
-      if('destination' === payload.direction && true === payload.user_selected) {
+      if ('destination' === payload.direction && true === payload.user_selected) {
         this.$refs.splitForms[payload.index].$refs.amount.giveFocus();
       }
     },

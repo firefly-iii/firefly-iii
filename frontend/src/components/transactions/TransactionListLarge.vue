@@ -53,9 +53,9 @@
               </template>
               <template #cell(type)="data">
                 <span v-if="!data.item.dummy">
-                  <span class="fas fa-long-arrow-alt-right" v-if="'deposit' === data.item.type"></span>
-                  <span class="fas fa-long-arrow-alt-left" v-else-if="'withdrawal' === data.item.type"></span>
-                  <span class="fas fa-long-arrows-alt-h" v-else-if="'transfer' === data.item.type"></span>
+                  <span class="fas fa-long-arrow-alt-right" v-if="'deposit' === data.item.type.toLowerCase()"></span>
+                  <span class="fas fa-long-arrow-alt-left" v-if="'withdrawal' === data.item.type.toLowerCase()"></span>
+                  <span class="fas fa-arrows-alt-h" v-if="'transfer' === data.item.type.toLowerCase()"></span>
                 </span>
               </template>
               <template #cell(description)="data">
@@ -86,7 +86,7 @@
                 <span :class="'text-danger ' + (!data.item.collapsed ? 'font-weight-bold' : '')" v-if="'withdrawal' === data.item.type">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(-data.item.amount) }}
                 </span>
-                <span :class="'text-muted ' + (!data.item.collapsed ? 'font-weight-bold' : '')" v-if="'transfer' === data.item.type">
+                <span :class="'text-muted ' + (!data.item.collapsed ? 'font-weight-bold' : '')" v-if="'transfer' === data.item.type.toLowerCase()">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
                 </span>
                 <br />
