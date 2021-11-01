@@ -103,7 +103,7 @@
     "league/fractal": "0.*",
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^1.1",
-    "psr/log": "<2",
+    "psr/log": "<3",
     "ramsey/uuid": "^4.2",
     "rcrowe/twigbridge": "^0.12.1",
     "spatie/data-transfer-object": "^3.1"
