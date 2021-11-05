@@ -69,7 +69,7 @@ class BillStoreRequest extends FormRequest
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'date'                    => 'required|date',
             'repeat_freq'             => 'required|in:weekly,monthly,quarterly,half-year,yearly',
-            'skip'                    => 'required|between:0,31',
+            'skip'                    => 'required|integer|gte:0|lte:31',
             'active'                  => 'boolean',
         ];
     }
