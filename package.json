@@ -18,7 +18,7 @@
         "jquery": "^3",
         "laravel-mix": "^6.0",
         "postcss": "^8.3",
-        "uiv": "^1.3",
+        "uiv": "^1.4",
         "vue": "^2.6",
         "vue-i18n": "^8.25",
         "vue-loader": "^15",
