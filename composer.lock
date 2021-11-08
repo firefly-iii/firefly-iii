@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f3189537292423f33ec955d5e7cf92fc",
+    "content-hash": "ad634547c584ad16f2987e8689d47a71",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2152,16 +2152,16 @@
         },
         {
             "name": "laravel/ui",
-            "version": "v3.3.0",
+            "version": "v3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "07d725813350c695c779382cbd6dac0ab8665537"
+                "reference": "28f3d190fe270b6dcd6fdab4a77a392e693ceca5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/07d725813350c695c779382cbd6dac0ab8665537",
-                "reference": "07d725813350c695c779382cbd6dac0ab8665537",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/28f3d190fe270b6dcd6fdab4a77a392e693ceca5",
+                "reference": "28f3d190fe270b6dcd6fdab4a77a392e693ceca5",
                 "shasum": ""
             },
             "require": {
@@ -2204,9 +2204,9 @@
                 "ui"
             ],
             "support": {
-                "source": "https://github.com/laravel/ui/tree/v3.3.0"
+                "source": "https://github.com/laravel/ui/tree/v3.3.2"
             },
-            "time": "2021-05-25T16:45:33+00:00"
+            "time": "2021-11-05T08:25:44+00:00"
         },
         {
             "name": "laravelcollective/html",
