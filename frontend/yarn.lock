@@ -4198,9 +4198,9 @@ klona@^2.0.4:
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
 
 laravel-mix@^6:
-  version "6.0.37"
-  resolved "https://registry.yarnpkg.com/laravel-mix/-/laravel-mix-6.0.37.tgz#43e953399b66cb5205ed2b7c23cbb3fd0315f2f4"
-  integrity sha512-mue45XrV7nGGvueP7b5mPlTsT3PUDiaTov1B11OnIr+BzaJXMMmf/r3qLRB4dmbXb5WgoQdk/3tVxZ49b2prbQ==
+  version "6.0.38"
+  resolved "https://registry.yarnpkg.com/laravel-mix/-/laravel-mix-6.0.38.tgz#f7a98149ae8627f5103de7c0d03f6bdc762d13c0"
+  integrity sha512-jrOA5KAH/uC3FLHZWpH62mVFPNZz4G58BoTdOWvrGdKiL45Kyfs6yzX1hLDorZdNeXVALibX8D22EfMTazl1bg==
   dependencies:
     "@babel/core" "^7.15.8"
     "@babel/plugin-proposal-object-rest-spread" "^7.15.6"
