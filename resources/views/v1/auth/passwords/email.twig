@@ -27,7 +27,7 @@
         {% else %}
             <p class="login-box-msg">{{ 'reset_password'|_ }}</p>
 
-            <form role="form" method="POST" action="{{ URL.to('/password/email') }}">
+            <form role="form" method="POST" action="{{ route('password.email') }}">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
                 <div class="form-group has-feedback">
@@ -43,7 +43,7 @@
             </form>
 
         {% endif %}
-        <a href="{{ URL.to('/login') }}">{{ 'want_to_login'|_ }}</a><br>
+        <a href="{{ route('login') }}">{{ 'want_to_login'|_ }}</a><br>
         {% if allowRegistration %}
             <a href="{{ route('register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
         {% endif %}

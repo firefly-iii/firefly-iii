@@ -81,7 +81,7 @@ Route::group(
     ['middleware' => 'user-simple-auth', 'namespace' => 'FireflyIII\Http\Controllers'],
     static function () {
         Route::get('error', ['uses' => 'DebugController@displayError', 'as' => 'error']);
-        Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
+        Route::post('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
         Route::get('flush', ['uses' => 'DebugController@flush', 'as' => 'flush']);
         //Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
         Route::get('debug', 'DebugController@index')->name('debug');
