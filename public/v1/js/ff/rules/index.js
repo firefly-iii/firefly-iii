@@ -59,6 +59,32 @@ function readCookie(name) {
     return null;
 }
 
+function moveRuleGroup(e) {
+    let box = $(e.currentTarget);
+    var direction = box.data('direction');
+    var groupId = box.data('id');
+
+    $.post(moveRuleGroupUrl, {_token: token, direction: direction, id: groupId}).then(function () {
+        location.reload();
+    }).fail(function() {
+        alert('I failed :(');
+    });
+
+    return false;
+}
+
+function duplicateRule(e) {
+    let box = $(e.currentTarget);
+    var ruleId = box.data('id');
+    $.post(duplicateRuleUrl, {_token: token, id: ruleId}).then(function () {
+        location.reload();
+    }).fail(function() {
+        alert('I failed :(');
+    });
+
+    return false;
+}
+
 
 $(function () {
       "use strict";
@@ -70,6 +96,9 @@ $(function () {
               cursor: "move"
           }
       );
+
+      $('.move-group').click(moveRuleGroup);
+      $('.duplicate-rule').click(duplicateRule);
 
       $('.rules-box').each(function (i, v) {
           var box = $(v);

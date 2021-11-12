@@ -50,6 +50,9 @@
         </li>
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+            </form>
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <span class="far fa-user"></span>
             </a>
@@ -62,7 +65,7 @@
                     <span class="fas fa-fw fa-cogs mr-2"></span> {{ 'preferences'|_ }}
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="{{ route('logout') }}" class="dropdown-item">
+                <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     <span class="fas fa-sign-out-alt mr-2"></span> {{ 'logout'|_ }}
                 </a>
             </div>

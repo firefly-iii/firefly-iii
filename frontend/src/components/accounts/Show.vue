@@ -23,6 +23,7 @@
     <div class="row">
       <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
         <!-- Custom Tabs -->
+        <!--
         <div class="card">
           <div class="card-header d-flex p-0">
             <h3 class="card-title p-3">Tabs</h3>
@@ -31,36 +32,34 @@
               <li class="nav-item"><a class="nav-link" href="#budgets" data-toggle="tab">Budgets</a></li>
               <li class="nav-item"><a class="nav-link" href="#categories" data-toggle="tab">Categories</a></li>
             </ul>
-          </div><!-- /.card-header -->
+          </div>
           <div class="card-body">
             <div class="tab-content">
               <div class="tab-pane active" id="main_chart">
                 1: main chart
               </div>
-              <!-- /.tab-pane -->
               <div class="tab-pane" id="budgets">
                 2: tree map from/to budget
               </div>
-              <!-- /.tab-pane -->
               <div class="tab-pane" id="categories">
                 2: tree map from/to cat
               </div>
-              <!-- /.tab-pane -->
             </div>
-            <!-- /.tab-content -->
-          </div><!-- /.card-body -->
+          </div>
         </div>
-        <!-- ./card -->
+        -->
       </div>
     </div>
 
     <TransactionListLarge
         :entries="rawTransactions"
         :page="currentPage"
+        ref="list"
         :total="total"
         :per-page="perPage"
         :sort-desc="sortDesc"
         v-on:jump-page="jumpToPage($event)"
+        v-on:refreshed-cache-key="refreshedKey"
     />
     <div class="row">
       <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
@@ -106,7 +105,7 @@ export default {
       perPage: 51,
       locale: 'en-US',
       api: null,
-      nameLoading:false
+      nameLoading: false
     }
   },
   created() {
@@ -132,16 +131,23 @@ export default {
               .then(response => {
                 let start = new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(this.start);
                 let end = new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(this.end);
-                document.getElementById('page-subTitle').innerText = this.$t('firefly.journals_in_period_for_account_js', {start: start, end: end, title: response.data.data.attributes.name});
+                document.getElementById('page-subTitle').innerText = this.$t('firefly.journals_in_period_for_account_js', {
+                  start: start,
+                  end: end,
+                  title: response.data.data.attributes.name
+                });
               });
         });
 
       }
     },
+    refreshedKey: function () {
+      this.loading = false;
+      this.getTransactions();
+      this.updatePageTitle();
+    },
     getTransactions: function () {
       if (this.showReady && !this.loading) {
-
-
         this.loading = true;
         configureAxios().then(async (api) => {
           // console.log('Now getTransactions() x Start');
@@ -149,8 +155,7 @@ export default {
           let endStr = format(this.end, 'y-MM-dd');
           this.rawTransactions = [];
 
-          let url = './api/v1/accounts/' + this.accountId + '/transactions?page=1&limit=' + this.perPage + '&start=' + startStr + '&end=' + endStr;
-
+          let url = './api/v1/accounts/' + this.accountId + '/transactions?page=1&limit=' + this.perPage + '&start=' + startStr + '&end=' + endStr + '&cache=' + this.cacheKey;
 
           api.get(url)
               .then(response => {

@@ -87,6 +87,15 @@ interface RecurringRepositoryInterface
      *
      * @param RecurrenceTransaction $recTransaction
      *
+     * @return null|int
+     */
+    public function getBillId(RecurrenceTransaction $recTransaction): ?int;
+
+    /**
+     * Get the category from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recTransaction
+     *
      * @return null|string
      */
     public function getCategoryName(RecurrenceTransaction $recTransaction): ?string;

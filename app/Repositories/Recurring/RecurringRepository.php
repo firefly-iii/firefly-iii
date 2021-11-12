@@ -613,4 +613,20 @@ class RecurringRepository implements RecurringRepositoryInterface
 
         return $filtered;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillId(RecurrenceTransaction $recTransaction): ?int
+    {
+        $return = null;
+        /** @var RecurrenceTransactionMeta $meta */
+        foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
+            if ('bill_id' === $meta->name) {
+                $return = (int)$meta->value;
+            }
+        }
+
+        return $return;
+    }
 }

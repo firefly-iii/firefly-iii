@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use Carbon\Carbon;
+
 /**
  * Trait BasicDataSupport
  *
@@ -30,15 +32,28 @@ namespace FireflyIII\Support\Http\Controllers;
 trait BasicDataSupport
 {
     /**
-     * Find the ID in a given array. Return '0' of not there (amount).
+     * Find the ID in a given array. Return '0' if not there (amount).
      *
      * @param array $array
      * @param int   $entryId
      *
      * @return null|mixed
      */
-    protected function isInArray(array $array, int $entryId) // helper for data (math, calculations)
+    protected function isInArray(array $array, int $entryId)
     {
         return $array[$entryId] ?? '0';
+    }
+
+    /**
+     * Find the ID in a given array. Return null if not there (amount).
+     *
+     * @param array $array
+     * @param int   $entryId
+     *
+     * @return null|Carbon
+     */
+    protected function isInArrayDate(array $array, int $entryId): ?Carbon
+    {
+        return $array[$entryId] ?? null;
     }
 }

@@ -232,7 +232,9 @@ return [
 
     // API access
     'authorization_request'                               => 'Firefly III v:version engedély kérelem',
-    'authorization_request_intro'                         => '<strong>:client</strong> hozzáférést kért az Ön pénzügyi adminisztrációjához. Szeretne hozzáférést ezekhez adatokhoz <strong>:client</strong> részére?',
+    'authorization_request_intro'                         => 'Application "<strong>:client</strong>" is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'authorization_request_site'                          => 'You will be redirected to <code>:url</code> which will then be able to access your Firefly III data.',
+    'authorization_request_invalid'                       => 'This access request is invalid. Please never follow this link again.',
     'scopes_will_be_able'                                 => 'Ez az alkalmazás képes lesz arra, hogy:',
     'button_authorize'                                    => 'Engedélyezés',
     'none_in_select_list'                                 => '(nincs)',

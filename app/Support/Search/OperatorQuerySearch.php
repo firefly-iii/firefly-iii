@@ -156,7 +156,7 @@ class OperatorQuerySearch implements SearchInterface
         $parser = new QueryParser();
         try {
             $query1 = $parser->parse($query);
-        } catch (TypeError|LogicException $e) {
+        } catch (TypeError | LogicException $e) {
             Log::error($e->getMessage());
             Log::error(sprintf('Could not parse search: "%s".', $query));
             throw new FireflyException('Invalid search value. See the logs.', 0, $e);
@@ -245,6 +245,7 @@ class OperatorQuerySearch implements SearchInterface
     private function handleSearchNode(Node $searchNode): void
     {
         $class = get_class($searchNode);
+        Log::debug(sprintf('Now in handleSearchNode(%s)', $class));
         switch ($class) {
             default:
                 Log::error(sprintf('Cannot handle node %s', $class));
@@ -252,7 +253,7 @@ class OperatorQuerySearch implements SearchInterface
             case Subquery::class:
                 // loop all notes in subquery:
                 foreach ($searchNode->getNodes() as $subNode) { // @phpstan-ignore-line
-                    $this->handleSearchNode($subNode); // lets hope its not too recursive!
+                    $this->handleSearchNode($subNode); // let's hope it's not too recursive!
                 }
                 break;
             case Word::class:
@@ -282,13 +283,15 @@ class OperatorQuerySearch implements SearchInterface
                             'value' => (string)$value,
                         ]
                     );
-                } else {
+                    Log::debug(sprintf('Added operator type "%s"', $operator));
+                }
+                if (!in_array($operator, $this->validOperators, true)) {
+                    Log::debug(sprintf('Added INVALID operator type "%s"', $operator));
                     $this->invalidOperators[] = [
                         'type'  => $operator,
                         'value' => (string)$value,
                     ];
                 }
-                break;
         }
 
     }
@@ -302,7 +305,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function updateCollector(string $operator, string $value): bool
     {
-        Log::debug(sprintf('updateCollector("%s", "%s")', $operator, $value));
+        Log::debug(sprintf('Now in updateCollector("%s", "%s")', $operator, $value));
 
         // check if alias, replace if necessary:
         $operator = self::getRootOperator($operator);

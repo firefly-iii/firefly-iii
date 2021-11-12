@@ -29,7 +29,7 @@ return [
     'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
     'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
     'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
-    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
+    'invalid_query_currency'         => 'Váš dotaz obsahuje účty, které mají různá nastavení měny, což není povoleno.',
     'iban'                           => 'Toto není platný IBAN.',
     'zero_or_more'                   => 'Hodnota nemůže být záporná.',
     'date_or_time'                   => 'Je třeba, aby hodnota byla platné datum nebo čas (ve formátu dle normy ISO 8601).',

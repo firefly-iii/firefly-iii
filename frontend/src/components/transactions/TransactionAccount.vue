@@ -37,6 +37,7 @@
         :placeholder="$t('firefly.' + direction + '_account')"
         :serializer="item => item.name_with_balance"
         :showOnFocus=true
+        ref="inputThing"
         aria-autocomplete="none"
         autocomplete="off"
         @hit="userSelectedAccount"
@@ -118,6 +119,12 @@ export default {
   methods: {
     getACURL: function (types, query) {
       return './api/v1/autocomplete/accounts?types=' + types.join(',') + '&query=' + query;
+    },
+    giveFocus: function() {
+      console.log('I want focus! now OK: ' + this.direction + ' l: ' + this.accounts.length);
+      //console.log(this.$refs.inputThing.$refs.input.value);
+      this.$refs.inputThing.$refs.input.focus();
+      console.log(this.$refs.inputThing.isFocused);
     },
     userSelectedAccount: function (event) {
       // console.log('userSelectedAccount!');
@@ -205,10 +212,14 @@ export default {
                      currency_id: value.currency_id,
                      currency_code: value.currency_code,
                      currency_symbol: value.currency_symbol,
+                     user_selected: true,
                    }
+                   // jump to next field somehow.
+
         );
         //console.log('watch::selectedAccount() will now set accountName because selectedAccountTrigger = true');
         this.accountName = value.name;
+
       }
       if (false === this.selectedAccountTrigger) {
         //console.log('watch::selectedAccount() will NOT set accountName because selectedAccountTrigger = false');
@@ -238,6 +249,7 @@ export default {
                      currency_id: null,
                      currency_code: null,
                      currency_symbol: null,
+                     user_selected: false
                    }
         );
         // this.account = {name: value, type: null, id: null, currency_id: null, currency_code: null, currency_symbol: null};

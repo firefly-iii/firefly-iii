@@ -96,7 +96,13 @@
                     {% endif %}
                 </div>
                 <div class="box-footer">
-                    <p><a id="billButtons" href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a></p>
+                    <form action="{{ route('bills.rescan',object.data.id) }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                        <p>
+                            <input type="submit" name="submit" value="{{ 'rescan_old'|_ }}" class="btn btn-default" />
+                        </p>
+                    </form>
+
                     <p><small class="text-muted">
                             {{ 'running_again_loss'|_ }}
                         </small>

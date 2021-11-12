@@ -138,7 +138,7 @@ There are many ways to run Firefly III
 
 ## Contributing
 
-Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. You can use the community forum over at [reddit](https://www.reddit.com/r/FireflyIII/) or interact on [Twitter](https://twitter.com/Firefly_III).
+You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you may open an issue in the [main repository](https://github.com/firefly-iii/firefly-iii) or contact me through [gitter](https://gitter.im/firefly-iii/firefly-iii) and [Twitter](https://twitter.com/Firefly_III).
 
 Of course, there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out.
 

@@ -26,6 +26,7 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
@@ -164,7 +165,10 @@ class UserRepository implements UserRepositoryInterface
     public function destroy(User $user): bool
     {
         Log::debug(sprintf('Calling delete() on user %d', $user->id));
+
+        $user->groupMemberships()->delete();
         $user->delete();
+        $this->deleteEmptyGroups();
 
         return true;
     }
@@ -395,5 +399,21 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteEmptyGroups(): void
+    {
+        $groups = UserGroup::get();
+        /** @var UserGroup $group */
+        foreach ($groups as $group) {
+            $count = $group->groupMemberships()->count();
+            if (0 === $count) {
+                Log::info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
+                $group->delete();
+            }
+        }
     }
 }

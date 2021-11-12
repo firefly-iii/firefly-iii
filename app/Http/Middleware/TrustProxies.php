@@ -32,9 +32,6 @@ use Illuminate\Contracts\Config\Repository;
  */
 class TrustProxies extends Middleware
 {
-    /** @var int The headers to check. */
-    //protected $headers = Request::HEADER_X_FORWARDED_ALL;
-
     /**
      * TrustProxies constructor.
      *
@@ -42,11 +39,7 @@ class TrustProxies extends Middleware
      */
     public function __construct(Repository $config)
     {
-        $trustedProxies = (string)config('firefly.trusted_proxies');
-        $this->proxies  = explode(',', $trustedProxies);
-        if ('**' === $trustedProxies) {
-            $this->proxies = '**';
-        }
+        $this->proxies = (string)config('firefly.trusted_proxies');
         parent::__construct($config);
     }
 }

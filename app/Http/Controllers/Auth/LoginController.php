@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 use Adldap;
 use Cookie;
 use DB;
+use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
@@ -118,6 +119,10 @@ class LoginController extends Controller
             Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
 
             // if you just logged in, it can't be that you have a valid 2FA cookie.
+
+            // send a custom login event because laravel will also fire a login event if a "remember me"-cookie
+            // restores the event.
+            event(new ActuallyLoggedIn($this->guard()->user()));
 
             return $this->sendLoginResponse($request);
         }

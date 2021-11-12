@@ -232,7 +232,9 @@ return [
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Autorisierungsanfrage',
-    'authorization_request_intro'                         => '<strong>:client</strong> bittet um Erlaubnis, auf Ihre Finanzverwaltung zuzugreifen. Möchten Sie <strong>:client</strong> erlauben auf diese Datensätze zuzugreifen?',
+    'authorization_request_intro'                         => 'Anwendung "<strong>:client</strong>" bittet um Erlaubnis, auf Ihre Finanzverwaltung zuzugreifen. Möchten Sie <strong>:client</strong> erlauben, auf diese Datensätze zuzugreifen?',
+    'authorization_request_site'                          => 'Sie werden zu <code>:url</code> weitergeleitet, welche dann auf Ihre Daten in Firefly III zugreifen kann.',
+    'authorization_request_invalid'                       => 'Diese Zugriffsanfrage ist ungültig. Bitte folgen Sie nie wieder diesem Link.',
     'scopes_will_be_able'                                 => 'Diese Anwendung kann:',
     'button_authorize'                                    => 'Erlauben',
     'none_in_select_list'                                 => '(Keine)',

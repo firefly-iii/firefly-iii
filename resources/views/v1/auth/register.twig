@@ -15,7 +15,7 @@
     <div class="register-box-body">
         <p class="login-box-msg">{{ 'register_new_account'|_ }}</p>
 
-        <form id="register" method="POST" action="{{ URL.to('/register') }}">
+        <form id="register" method="POST" action="{{ route('register') }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="form-group has-feedback">
@@ -41,8 +41,8 @@
             </div>
         </form>
 
-        <a href="{{ URL.to('/login') }}">{{ 'want_to_login'|_ }}</a><br>
-        <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
+        <a href="{{ route('login') }}">{{ 'want_to_login'|_ }}</a><br>
+        <a href="{{ route('password.reset.request') }}">{{ 'forgot_my_password'|_ }}</a>
     </div>
 
     {% include 'v1.partials.password-modal' %}

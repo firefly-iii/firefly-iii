@@ -61,7 +61,7 @@
     <div class="login-box-body">
         <p class="login-box-msg">{{ 'sign_in_to_start'|_ }}</p>
 
-        <form action="{{ URL.to('/login') }}" method="post">
+        <form action="{{ route('login') }}" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
@@ -88,10 +88,10 @@
             </div>
         </form>
         {% if allowRegistration %}
-            <a href="{{ URL.to('/register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
+            <a href="{{ route('register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
         {% endif %}
         {% if allowReset %}
-            <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
+            <a href="{{ route('password.reset.request') }}">{{ 'forgot_my_password'|_ }}</a>
         {% endif %}
     </div>
 {% endblock %}

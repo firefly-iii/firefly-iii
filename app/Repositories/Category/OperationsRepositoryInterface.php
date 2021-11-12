@@ -48,6 +48,36 @@ interface OperationsRepositoryInterface
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
 
     /**
+     * This method returns a list of all the transfer transaction journals (as arrays) set in that period
+     * which have the specified category set to them, transferred INTO the listed accounts.
+     * It excludes any transfers between the listed accounts.
+     * It's grouped per currency, with as few details in the array as possible. Amounts are always negative.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection $accounts
+     * @param Collection|null $categories
+     *
+     * @return array
+     */
+    public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array;
+
+    /**
+     * This method returns a list of all the transfer transaction journals (as arrays) set in that period
+     * which have the specified category set to them, transferred FROM the listed accounts.
+     * It excludes any transfers between the listed accounts.
+     * It's grouped per currency, with as few details in the array as possible. Amounts are always negative.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection $accounts
+     * @param Collection|null $categories
+     *
+     * @return array
+     */
+    public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array;
+
+    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.

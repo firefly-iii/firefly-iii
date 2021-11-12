@@ -28,6 +28,7 @@ use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -62,23 +63,37 @@ class EditController extends Controller
     }
 
     /**
-     * Move a rule group down.
+     * Move a rule group in either direction.
      *
-     * @param RuleGroup $ruleGroup
+     * @param Request $request
      *
-     * @return RedirectResponse|Redirector
+     * @return JsonResponse
      */
-    public function down(RuleGroup $ruleGroup)
+    public function moveGroup(Request $request): JsonResponse
     {
-        $maxOrder = $this->repository->maxOrder();
-        $order    = (int)$ruleGroup->order;
-        if ($order < $maxOrder) {
-            $newOrder = $order + 1;
-            $this->repository->setOrder($ruleGroup, $newOrder);
+        $groupId = (int)$request->get('id');
+        $ruleGroup= $this->repository->find($groupId);
+        if(null !== $ruleGroup) {
+            $direction = $request->get('direction');
+            if('down' === $direction) {
+                $maxOrder = $this->repository->maxOrder();
+                $order    = (int)$ruleGroup->order;
+                if ($order < $maxOrder) {
+                    $newOrder = $order + 1;
+                    $this->repository->setOrder($ruleGroup, $newOrder);
+                }
+            }
+            if('up' === $direction) {
+                $order = (int)$ruleGroup->order;
+                if ($order > 1) {
+                    $newOrder = $order - 1;
+                    $this->repository->setOrder($ruleGroup, $newOrder);
+                }
+            }
         }
-
-        return redirect(route('rules.index'));
+        return new JsonResponse(['OK']);
     }
+
 
     /**
      * Edit a rule group.
@@ -104,25 +119,6 @@ class EditController extends Controller
         session()->flash('preFilled', $preFilled);
 
         return prefixView('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
-    }
-
-    /**
-     * Move the rule group up.
-     *
-     * @param RuleGroup $ruleGroup
-     *
-     * @return RedirectResponse|Redirector
-     *
-     */
-    public function up(RuleGroup $ruleGroup)
-    {
-        $order = (int)$ruleGroup->order;
-        if ($order > 1) {
-            $newOrder = $order - 1;
-            $this->repository->setOrder($ruleGroup, $newOrder);
-        }
-
-        return redirect(route('rules.index'));
     }
 
     /**

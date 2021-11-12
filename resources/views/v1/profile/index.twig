@@ -52,7 +52,12 @@
                                             <a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a>
                                         </li>
                                         {% endif %}
-                                        <li><a href="{{ route('logout') }}">{{ 'logout'|_ }}</a></li>
+
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                        </form>
+
+                                        <li><a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ 'logout'|_ }}</a></li>
 
                                         {% if true == isInternalAuth and true == isInternalIdentity %}
                                         <li>

@@ -648,10 +648,9 @@ class CategoryController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return mixed|string
-     * @throws JsonException
+     * @return string
      */
-    public function operations(Collection $accounts, Carbon $start, Carbon $end)
+    public function operations(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
         $cache = new CacheProperties;
@@ -673,7 +672,7 @@ class CategoryController extends Controller
 
 
         try {
-            $result = prefixView('reports.partials.categories', compact('report'))->render();
+            $result = (string)prefixView('reports.partials.categories', compact('report'))->render();
             $cache->store($result);
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));

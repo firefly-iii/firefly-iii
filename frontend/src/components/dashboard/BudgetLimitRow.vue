@@ -30,7 +30,6 @@
              aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-success" role="progressbar">
                       <span v-if="budgetLimit.pctGreen > 35">
                         {{ $t('firefly.spent_x_of_y', {amount: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent), total: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.amount)}) }}
-                        <!--  -->
                       </span>
 
 
@@ -45,7 +44,7 @@
 
         <div :aria-valuenow="budgetLimit.pctRed" :style="'width: '+ budgetLimit.pctRed + '%;'"
              aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-danger" role="progressbar">
-                      <span v-if="budgetLimit.pctOrange <= 50 && budgetLimit.pctRed > 35" class="text-muted">
+                      <span v-if="budgetLimit.pctOrange <= 50 && budgetLimit.pctRed > 35" class="text-white">
                         {{ $t('firefly.spent_x_of_y', {amount: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent), total: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.amount)}) }}
                       </span>
         </div>

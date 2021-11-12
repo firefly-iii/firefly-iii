@@ -232,7 +232,9 @@ return [
 
     // API access
     'authorization_request'                               => 'v: Solicitare de autorizare',
-    'authorization_request_intro'                         => '<strong> :client </ strong> solicită permisiunea de a accesa administrația financiară. Doriți să autorizați <strong> :client </ strong> pentru a accesa aceste înregistrări?',
+    'authorization_request_intro'                         => 'Application "<strong>:client</strong>" is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'authorization_request_site'                          => 'You will be redirected to <code>:url</code> which will then be able to access your Firefly III data.',
+    'authorization_request_invalid'                       => 'This access request is invalid. Please never follow this link again.',
     'scopes_will_be_able'                                 => 'Această aplicație va fi capabilă să to:',
     'button_authorize'                                    => 'Autorizează',
     'none_in_select_list'                                 => '(nici unul)',

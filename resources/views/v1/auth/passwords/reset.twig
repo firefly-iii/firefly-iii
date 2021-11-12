@@ -40,7 +40,7 @@
 
         </form>
 
-        <a href="{{ URL.to('/login') }}">{{ 'want_to_login'|_ }}</a><br>
+        <a href="{{ route('login') }}">{{ 'want_to_login'|_ }}</a><br>
         {% if allowRegistration %}
             <a href="{{ route('register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
         {% endif %}

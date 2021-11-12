@@ -35,8 +35,7 @@ use Illuminate\Support\Collection;
  */
 class OperationsRepository implements OperationsRepositoryInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
@@ -339,5 +338,137 @@ class OperationsRepository implements OperationsRepositoryInterface
     private function getCategories(): Collection
     {
         return $this->user->categories()->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
+                  ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts);
+        if (null !== $categories && $categories->count() > 0) {
+            $collector->setCategories($categories);
+        }
+        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+            $collector->setCategories($this->getCategories());
+        }
+        $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId   = (int)$journal['currency_id'];
+            $categoryId   = (int)$journal['category_id'];
+            $categoryName = (string)$journal['category_name'];
+
+            // catch "no category" entries.
+            if (0 === $categoryId) {
+                continue;
+            }
+
+            // info about the currency:
+            $array[$currencyId] = $array[$currencyId] ?? [
+                    'categories'              => [],
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+
+            // info about the categories:
+            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+                    'id'                   => $categoryId,
+                    'name'                 => $categoryName,
+                    'transaction_journals' => [],
+                ];
+
+            // add journal to array:
+            // only a subset of the fields.
+            $journalId                                                                         = (int)$journal['transaction_journal_id'];
+            $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
+                'amount'                   => app('steam')->positive($journal['amount']),
+                'date'                     => $journal['date'],
+                'source_account_id'        => $journal['source_account_id'],
+                'category_name'              => $journal['category_name'],
+                'source_account_name'      => $journal['source_account_name'],
+                'destination_account_id'   => $journal['destination_account_id'],
+                'destination_account_name' => $journal['destination_account_name'],
+                'description'              => $journal['description'],
+                'transaction_group_id'     => $journal['transaction_group_id'],
+            ];
+
+        }
+
+        return $array;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
+                  ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts);
+        if (null !== $categories && $categories->count() > 0) {
+            $collector->setCategories($categories);
+        }
+        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+            $collector->setCategories($this->getCategories());
+        }
+        $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId   = (int)$journal['currency_id'];
+            $categoryId   = (int)$journal['category_id'];
+            $categoryName = (string)$journal['category_name'];
+
+            // catch "no category" entries.
+            if (0 === $categoryId) {
+                continue;
+            }
+
+            // info about the currency:
+            $array[$currencyId] = $array[$currencyId] ?? [
+                    'categories'              => [],
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+
+            // info about the categories:
+            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+                    'id'                   => $categoryId,
+                    'name'                 => $categoryName,
+                    'transaction_journals' => [],
+                ];
+
+            // add journal to array:
+            // only a subset of the fields.
+            $journalId                                                                         = (int)$journal['transaction_journal_id'];
+            $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
+                'amount'                   => app('steam')->negative($journal['amount']),
+                'date'                     => $journal['date'],
+                'source_account_id'        => $journal['source_account_id'],
+                'category_name'              => $journal['category_name'],
+                'source_account_name'      => $journal['source_account_name'],
+                'destination_account_id'   => $journal['destination_account_id'],
+                'destination_account_name' => $journal['destination_account_name'],
+                'description'              => $journal['description'],
+                'transaction_group_id'     => $journal['transaction_group_id'],
+            ];
+
+        }
+
+        return $array;
     }
 }

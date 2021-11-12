@@ -58,6 +58,8 @@
                     :source-allowed-types="sourceAllowedTypes"
                     :transaction-type="transactionType"
                     direction="source"
+                    ref="sourceAccount"
+                    v-on:selected-account="triggerNextAccount($event)"
                 />
               </div>
               <!-- switcharoo! -->
@@ -79,6 +81,7 @@
                     :destination-allowed-types="destinationAllowedTypes"
                     :errors="transaction.errors.destination"
                     :index="index"
+                    ref="destinationAccount"
                     :transaction-type="transactionType"
                     :source-allowed-types="sourceAllowedTypes"
                     direction="destination"
@@ -93,6 +96,7 @@
                 <!-- AMOUNT -->
                 <TransactionAmount
                     v-on="$listeners"
+                    ref="amount"
                     :amount="transaction.amount"
                     :destination-currency-symbol="this.transaction.destination_account_currency_symbol"
                     :errors="transaction.errors.amount"
@@ -379,6 +383,13 @@ export default {
       // console.log('Will remove transaction ' + this.index);
       this.$emit('remove-transaction', {index: this.index});
     },
+    triggerNextAccount: function(e) {
+      //alert(e);
+      if('source' === e) {
+        console.log('Jump to destination!');
+        this.$refs.destinationAccount.giveFocus();
+      }
+    }
   },
   computed: {
     splitDate: function () {

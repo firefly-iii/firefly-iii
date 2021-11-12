@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
@@ -116,9 +117,24 @@ class UserEventHandler
      */
     public function createGroupMembership(RegisteredUser $event): bool
     {
-        $user = $event->user;
+        $user        = $event->user;
+        $groupExists = true;
+        $groupTitle  = $user->email;
+        $index       = 1;
+
         // create a new group.
-        $group = UserGroup::create(['title' => $user->email]);
+        while (true === $groupExists) {
+            $groupExists = UserGroup::where('title', $groupTitle)->count() > 0;
+            if(false === $groupExists) {
+                $group = UserGroup::create(['title' => $groupTitle]);
+                break;
+            }
+            $groupTitle = sprintf('%s-%d', $user->email, $index);
+            $index++;
+            if($index > 99) {
+                throw new FireflyException('Email address can no longer be used for registrations.');
+            }
+        }
         $role  = UserRole::where('title', UserRole::OWNER)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
@@ -317,12 +333,11 @@ class UserEventHandler
     }
 
     /**
-     * @param Login $event
-     *
-     * @throws FireflyException
+     * @param ActuallyLoggedIn $event
      */
-    public function storeUserIPAddress(Login $event): void
+    public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {
+        Log::debug('Now in storeUserIPAddress');
         /** @var User $user */
         $user = $event->user;
         /** @var array $preference */
