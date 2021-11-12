@@ -232,7 +232,9 @@ return [
 
     // API access
     'authorization_request'                               => 'Запрос авторизации Firefly III v:version',
-    'authorization_request_intro'                         => '<strong>:client</strong> запрашивает доступ к управлению вашими финансами. Вы хотите разрешить <strong>:client</strong> доступ к этой информации?',
+    'authorization_request_intro'                         => 'Application "<strong>:client</strong>" is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'authorization_request_site'                          => 'You will be redirected to <code>:url</code> which will then be able to access your Firefly III data.',
+    'authorization_request_invalid'                       => 'This access request is invalid. Please never follow this link again.',
     'scopes_will_be_able'                                 => 'Это приложение будет иметь возможность:',
     'button_authorize'                                    => 'Авторизация',
     'none_in_select_list'                                 => '(нет)',

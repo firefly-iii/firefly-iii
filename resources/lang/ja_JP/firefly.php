@@ -233,6 +233,8 @@ return [
     // API access
     'authorization_request'                               => 'Firefly III v:version 認証要求',
     'authorization_request_intro'                         => '<strong>:client</strong>はあなたの資産情報管理の権限を要求しています。<strong>:client</strong>に情報へのアクセスを許可しますか？',
+    'authorization_request_site'                          => '<code>:url</code> にリダイレクトされ、Firefly III データにアクセスできます。',
+    'authorization_request_invalid'                       => 'このアクセスリクエストは無効です。今後はこのリンクを利用しないでください。',
     'scopes_will_be_able'                                 => 'このアプリケーションは次のことができます：',
     'button_authorize'                                    => '許可する',
     'none_in_select_list'                                 => '(なし)',

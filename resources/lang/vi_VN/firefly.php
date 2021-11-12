@@ -232,7 +232,9 @@ return [
 
     // API access
     'authorization_request'                               => 'Firefly III v: phiên bản Yêu cầu ủy quyền',
-    'authorization_request_intro'                         => '<strong>:client</strong> đang yêu cầu sự cho phép truy cập quản trị tài chính của bạn. Bạn có muốn ủy quyền <strong>:client</strong> để truy cập những hồ sơ này?',
+    'authorization_request_intro'                         => 'Application "<strong>:client</strong>" is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'authorization_request_site'                          => 'You will be redirected to <code>:url</code> which will then be able to access your Firefly III data.',
+    'authorization_request_invalid'                       => 'This access request is invalid. Please never follow this link again.',
     'scopes_will_be_able'                                 => 'Ứng dụng này sẽ có thể:',
     'button_authorize'                                    => 'Ủy quyền',
     'none_in_select_list'                                 => '(Trống)',

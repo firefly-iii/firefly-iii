@@ -232,7 +232,9 @@ return [
 
     // API access
     'authorization_request'                               => 'Firefly III v:version demande d\'autorisation',
-    'authorization_request_intro'                         => '<strong>:client</strong> demande l\'autorisation d\'accéder à votre administration financière. Souhaitez-vous autoriser <strong>:client</strong> à accéder à ces enregistrements?',
+    'authorization_request_intro'                         => 'L\'application "<strong>:client</strong>" demande l\'autorisation d\'accéder à votre administration financière. Voulez-vous autoriser <strong>:client</strong> à accéder à ces enregistrements ?',
+    'authorization_request_site'                          => 'Vous allez être redirigé vers <code>:url</code> qui pourra ensuite accéder à vos données Firefly III.',
+    'authorization_request_invalid'                       => 'Cette demande d\'accès n\'est pas valide. Veuillez ne plus suivre ce lien.',
     'scopes_will_be_able'                                 => 'Cette application pourra :',
     'button_authorize'                                    => 'Autoriser',
     'none_in_select_list'                                 => '(aucun)',

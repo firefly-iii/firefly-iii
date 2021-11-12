@@ -67,7 +67,7 @@ trait TransferValidation
             return false;
         }
 
-        // otherwise try to find the account:
+        // or try to find the account:
         $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
         if (null === $search) {
             $this->destError = (string)trans('validation.transfer_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);

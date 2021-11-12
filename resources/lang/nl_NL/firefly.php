@@ -232,7 +232,9 @@ return [
 
     // API access
     'authorization_request'                               => 'Firefly III v:version autorisatieverzoek',
-    'authorization_request_intro'                         => '<strong>:client</strong> vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
+    'authorization_request_intro'                         => 'Applicatie "<strong>:client</strong>" vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
+    'authorization_request_site'                          => 'Je wordt doorgestuurd naar <code>:url</code>, die vervolgens toegang heeft tot je Firefly III-gegevens.',
+    'authorization_request_invalid'                       => 'Dit toegangsverzoek is ongeldig. Volg deze link niet meer.',
     'scopes_will_be_able'                                 => 'Deze applicatie krijgt toegang tot:',
     'button_authorize'                                    => 'Toestaan',
     'none_in_select_list'                                 => '(geen)',

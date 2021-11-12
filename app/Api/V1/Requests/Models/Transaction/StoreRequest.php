@@ -211,7 +211,7 @@ class StoreRequest extends FormRequest
             // budget, category, bill and piggy
             'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
             'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
+            'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser,'nullable'],
             'transactions.*.category_name'         => 'between:1,255|nullable',
             'transactions.*.bill_id'               => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
             'transactions.*.bill_name'             => ['between:1,255', 'nullable', new BelongsUser],

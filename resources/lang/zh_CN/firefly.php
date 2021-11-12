@@ -232,7 +232,9 @@ return [
 
     // API access
     'authorization_request'                               => 'Firefly III :version 版授权请求',
-    'authorization_request_intro'                         => '<strong>:client</strong> 正在要求通行您的财务管理后台的许可，您是否愿意授权 <strong>:client</strong> 通行这些纪录？',
+    'authorization_request_intro'                         => 'Application "<strong>:client</strong>" is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
+    'authorization_request_site'                          => 'You will be redirected to <code>:url</code> which will then be able to access your Firefly III data.',
+    'authorization_request_invalid'                       => 'This access request is invalid. Please never follow this link again.',
     'scopes_will_be_able'                                 => '此应用可以：',
     'button_authorize'                                    => '授权',
     'none_in_select_list'                                 => '(空)',
