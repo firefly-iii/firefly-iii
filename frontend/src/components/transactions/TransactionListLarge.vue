@@ -220,21 +220,26 @@ export default {
       this.$emit('jump-page', {page: value});
     },
     entries: function (value) {
+      console.log('detected new transactions!');
       this.parseTransactions();
     },
+    value: function(value) {
+      console.log('Watch value!');
+    }
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
     parseTransactions: function () {
+      this.transactions = [];
       // console.log('Start of parseTransactions. Count of entries is ' + this.entries.length + ' and page is ' + this.page);
       // console.log('Reported total is ' + this.total);
       if (0 === this.entries.length) {
-        // console.log('Will not render now');
+        console.log('Will not render now');
         return;
       }
-      // console.log('Now have ' + this.transactions.length + ' transactions');
+      console.log('Now have ' + this.transactions.length + ' transactions');
       for (let i = 0; i < this.total; i++) {
-        this.transactions.push({dummy: true});
+        this.transactions.push({dummy: true,type: 'x'});
         // console.log('Push dummy to index ' + i);
         // console.log('Now have ' + this.transactions.length + ' transactions');
       }
@@ -259,8 +264,9 @@ export default {
       this.loading = false;
     },
     newCacheKey: function () {
-      alert('TODO');
       this.refreshCacheKey();
+      console.log('Cache key is now ' + this.cacheKey);
+      this.$emit('refreshed-cache-key');
     },
     updateFieldList: function () {
       this.fields = [
@@ -314,6 +320,7 @@ export default {
           let info = transaction.attributes.transactions[i];
           let split = {};
           row.amount = row.amount + parseFloat(info.amount);
+          split.type = info.type;
           split.description = info.description;
           split.amount = info.amount;
           split.currency_code = info.currency_code;

@@ -70,7 +70,7 @@
         "daily_budgets": "Dagliga budgetar",
         "weekly_budgets": "Veckovis budgetar",
         "monthly_budgets": "M\u00e5natliga budgetar",
-        "journals_in_period_for_account_js": "All transactions for account {title} between {start} and {end}",
+        "journals_in_period_for_account_js": "Alla transaktioner f\u00f6r konto {title} mellan {start} och {end}",
         "quarterly_budgets": "Kvartalsbudgetar",
         "create_new_expense": "Skapa ett nytt utgiftskonto",
         "create_new_revenue": "Skapa ett nytt int\u00e4ktskonto",
@@ -174,9 +174,9 @@
         "update_liabilities_account": "Uppdatera skuld",
         "update_expense_account": "Uppdatera utgiftskonto",
         "update_revenue_account": "Uppdatera int\u00e4ktskonto",
-        "update_undefined_account": "Update account",
+        "update_undefined_account": "Uppdatera konto",
         "update_asset_account": "Uppdatera tillg\u00e5ngskonto",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "updated_account_js": "Uppdaterade kontot \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
     },
     "list": {
         "piggy_bank": "Spargris",

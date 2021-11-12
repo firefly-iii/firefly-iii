@@ -20,6 +20,7 @@
 
 <template>
   <div>
+    <!--
     <div class="row">
       <div class="col">
         <div class="card">
@@ -36,6 +37,7 @@
         </div>
       </div>
     </div>
+    -->
     <!-- page is ignored for the time being -->
     <TransactionListLarge
         :entries="rawTransactions"
@@ -44,7 +46,9 @@
         :per-page="perPage"
         :sort-desc="sortDesc"
         v-on:jump-page="jumpToPage($event)"
+        v-on:refreshed-cache-key="refreshedKey"
     />
+    <!--
     <div class="row">
       <div class="col-xl-2 col-lg-4 col-sm-6 col-xs-12" v-for="range in ranges">
         <div class="card">
@@ -56,7 +60,9 @@
           </div>
         </div>
       </div>
+
     </div>
+    -->
   </div>
 </template>
 
@@ -141,13 +147,12 @@ export default {
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
-    newCacheKey: function () {
-      this.refreshCacheKey();
+    refreshedKey: function () {
       this.downloaded = false;
-      this.accounts = [];
+      this.rawTransactions = [];
       this.getTransactionList();
     },
-    jumpToPage: function(event) {
+    jumpToPage: function (event) {
       // console.log('noticed a change!');
       this.currentPage = event.page;
       this.downloadTransactionList(event.page);

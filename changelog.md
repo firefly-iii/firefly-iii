@@ -2,7 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.6.2 - 2021-10-xx
+## 5.6.3 - 2021-11-12
+
+### Changed
+- [Issue 5133](https://github.com/firefly-iii/firefly-iii/issues/5133) Several possible fixes for LDAP filter.
+
+### Fixed
+- [Issue 5116](https://github.com/firefly-iii/firefly-iii/issues/5116) Fix missing icon
+- [Issue 5173](https://github.com/firefly-iii/firefly-iii/issues/5173) Firefly III would email too often about logins
+- [Issue 5178](https://github.com/firefly-iii/firefly-iii/issues/5178) Fix export parameter
+- [Issue 5179](https://github.com/firefly-iii/firefly-iii/issues/5179) Possible fix for issue with empty date strings
+- [Issue 5196](https://github.com/firefly-iii/firefly-iii/issues/5196) Fix issue with foreign amount formatting
+- [Issue 5200](https://github.com/firefly-iii/firefly-iii/issues/5200) Link bill to recurring transaction
+- [Issue 5218](https://github.com/firefly-iii/firefly-iii/issues/5218) Error in search
+- [Issue 5226](https://github.com/firefly-iii/firefly-iii/issues/5226) Could submit negative "skip" values
+- [Issue 5229](https://github.com/firefly-iii/firefly-iii/issues/5229) Fix serviceworker registration
+
+### Security
+- Logout is now POST and other minor CSRF issues.
+
+## 5.6.2 - 2021-10-09
 
 ### Added
 - `/health` will return `200 OK` if Firefly III is up and running, thanks @ajgon!
