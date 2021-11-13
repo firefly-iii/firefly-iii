@@ -25,6 +25,12 @@ $(function () {
 
     configAccounting(currencySymbol);
 
+    // on submit of logout button:
+    $('.logout-link').click(function(e) {
+        e.preventDefault();
+        document.getElementById('logout-form').submit();
+    });
+
     // on submit of form, disable any button in form:
     $('form.form-horizontal:not(.nodisablebutton)').on('submit', function () {
         $('button[type="submit"]').prop('disabled', true);

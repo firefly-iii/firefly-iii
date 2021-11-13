@@ -53,11 +53,7 @@
                                         </li>
                                         {% endif %}
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                                        </form>
-
-                                        <li><a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ 'logout'|_ }}</a></li>
+                                        <li><a href="{{ route('logout') }}" class="logout-link">{{ 'logout'|_ }}</a></li>
 
                                         {% if true == isInternalAuth and true == isInternalIdentity %}
                                         <li>
