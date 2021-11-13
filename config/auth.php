@@ -24,8 +24,21 @@ declare(strict_types=1);
 use FireflyIII\Ldap\AttributeHandler;
 use FireflyIII\Ldap\Rules\UserDefinedRule;
 
-$openLDAP = class_exists(LdapRecord\Models\OpenLDAP\User::class) ? LdapRecord\Models\OpenLDAP\User::class : '';
-$activeDirectory = class_exists(LdapRecord\Models\ActiveDirectory\User::class) ? LdapRecord\Models\ActiveDirectory\User::class : '';
+# select ldap model based on configuration option
+switch(env('LDAP_DIALECT')) {
+    case 'OpenLDAP':
+        $ldapModel = class_exists(LdapRecord\Models\OpenLDAP\User::class) ? LdapRecord\Models\OpenLDAP\User::class : '';
+        break;
+    case 'ActiveDirectory':
+        $ldapModel = class_exists(LdapRecord\Models\ActiveDirectory\User::class) ? LdapRecord\Models\ActiveDirectory\User::class : '';
+        break;
+    case 'FreeIPA':
+        $ldapModel = class_exists(LdapRecord\Models\FreeIPA\User::class) ? LdapRecord\Models\FreeIPA\User::class : '';
+        break;
+    default:
+        # default to openLDAP
+        $ldapModel = class_exists(LdapRecord\Models\OpenLDAP\User::class) ? LdapRecord\Models\OpenLDAP\User::class : ''; 
+}
 
 return [
     /*
@@ -111,7 +124,7 @@ return [
 
         'ldap' => [
             'driver'   => 'ldap',
-            'model'    => env('LDAP_DIALECT') === 'OpenLDAP' ? $openLDAP : $activeDirectory,
+            'model'    => $ldapModel,
             'rules'    => [
                 UserDefinedRule::class,
             ],
