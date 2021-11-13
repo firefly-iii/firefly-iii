@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.4 - 2021-11-13
+
+### Fixed
+- #5276 Sloppy release, this fixes an issue with logging out.
+
 ## 5.6.3 - 2021-11-12
 
 ### Changed
