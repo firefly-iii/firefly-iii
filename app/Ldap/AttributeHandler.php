@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Ldap;
 
 use FireflyIII\User as DatabaseUser;
-use LdapRecord\Models\OpenLDAP\User as LdapUser;
+use LdapRecord\Models\Entry;
 
 /**
  * Class AttributeHandler
@@ -33,12 +33,12 @@ use LdapRecord\Models\OpenLDAP\User as LdapUser;
 class AttributeHandler
 {
     /**
-     * @param LdapUser     $ldap
+     * @param Entry        $ldapUser
      * @param DatabaseUser $database
      */
-    public function handle(LdapUser $ldap, DatabaseUser $database)
+    public function handle(Entry $ldapUser, DatabaseUser $database)
     {
-        $database->email = $ldap->getFirstAttribute('mail');
+        $database->email = $ldapUser->getFirstAttribute('mail');
         $database->save();
     }
 }
