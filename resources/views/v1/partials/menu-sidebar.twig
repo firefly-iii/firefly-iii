@@ -224,11 +224,8 @@
 
 
     {% if 'remote_user_guard' != authGuard or '' != logoutUri %}
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-        </form>
         <li>
-            <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+            <a href="{{ route('logout') }}" class="logout-link">
                 <span class="fa fa-sign-out fa-fw"></span>
                 <span>{{ 'logout'|_ }}</span>
             </a>
