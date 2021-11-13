@@ -35,9 +35,6 @@ switch(env('LDAP_DIALECT')) {
     case 'FreeIPA':
         $ldapModel = class_exists(LdapRecord\Models\FreeIPA\User::class) ? LdapRecord\Models\FreeIPA\User::class : '';
         break;
-    default:
-        # default to openLDAP
-        $ldapModel = class_exists(LdapRecord\Models\OpenLDAP\User::class) ? LdapRecord\Models\OpenLDAP\User::class : ''; 
 }
 
 return [
