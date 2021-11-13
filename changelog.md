@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 5.6.4 - 2021-11-13
 
 ### Fixed
-- #5276 Sloppy release, this fixes an issue with logging out.
+- [Issue 5276](https://github.com/firefly-iii/firefly-iii/issues/5276) Sloppy release, this fixes an issue with logging out.
 
 ## 5.6.3 - 2021-11-12
 
