@@ -29,6 +29,7 @@ $(function () {
     $('.logout-link').click(function(e) {
         e.preventDefault();
         document.getElementById('logout-form').submit();
+        return false;
     });
 
     // on submit of form, disable any button in form:
