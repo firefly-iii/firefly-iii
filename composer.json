@@ -99,7 +99,7 @@
     "laravel/ui": "^3.3",
     "laravelcollective/html": "6.*",
     "league/commonmark": "2.*",
-    "league/csv": "^9.6",
+    "league/csv": "^9.7",
     "league/fractal": "0.*",
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^1.1",
