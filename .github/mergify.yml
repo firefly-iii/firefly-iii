@@ -1,0 +1,7 @@
+pull_request_rules:
+  - name: Security update by dependabot
+    conditions:
+      - author~=^dependabot(|-preview)\[bot\]$
+    actions:
+      merge:
+        method: merge
