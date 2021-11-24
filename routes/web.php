@@ -1079,8 +1079,7 @@ Route::group(
 // See reference nr. 6
         Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
         Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);
-        Route::post('switch/{journalLink}', ['uses' => 'LinkController@switchLink', 'as' => 'switch']);
-
+        Route::post('switch', ['uses' => 'LinkController@switchLink', 'as' => 'switch']);
         Route::post('destroy/{journalLink}', ['uses' => 'LinkController@destroy', 'as' => 'destroy']);
     }
 );

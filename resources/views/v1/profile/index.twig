@@ -126,13 +126,11 @@
                                     <input class="btn btn-default" style="margin-top:20px;" type="submit" name="submit" value="{{ 'pref_two_factor_new_backup_codes'|_ }}" />
                                 </form>
                             {% else %}
-                                <p>
                                 <form action="{{ route('profile.enable2FA') }}" method="post">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                                     <button type="submit" class="btn btn-info"><span
                                                 class="fa fa-lock"></span> {{ 'pref_enable_two_factor_auth'|_ }}</button>
                                 </form>
-                                </p>
                             {% endif %}
                         </div>
                     </div>

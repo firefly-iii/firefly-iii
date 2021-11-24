@@ -357,7 +357,7 @@
                                     <tr>
                                         <td style="width:120px;">
                                             <div class="btn-group btn-group-xs">
-                                                <a href="{{ route('transactions.link.switch', [link.id]) }}" class="btn btn-default"><span
+                                                <a href="#" class="btn btn-default switch-link" data-id="{{ link.id }}"><span
                                                             class="fa fa-fw fa-arrows-h"></span></a>
                                                 <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><span class="fa fa-trash"></span></a>
                                             </div>
@@ -423,6 +423,25 @@
         var acURI = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
         var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
+
+        $('.switch-link').on('click', switchLink);
+        var switchLinkUrl = '{{ route('transactions.link.switch') }}';
+        function switchLink(e) {
+            e.preventDefault();
+            var obj = $(e.currentTarget);
+            $.post(switchLinkUrl, {
+                _token: token,
+                id: obj.data('id')
+            }).done(function () {
+                location.reload();
+            }).fail(function () {
+                console.error('I failed :(');
+            });
+
+            //alert(obj.data('id'));
+
+            return false
+        }
     </script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
