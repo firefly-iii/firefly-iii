@@ -213,7 +213,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'subscriptions', 'as' => 'subscriptions.'],
     static function () {
         Route::get('', ['uses' => 'Bill\IndexController@index', 'as' => 'index']);
-        Route::post('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
+        Route::get('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
         Route::get('create', ['uses' => 'Bill\CreateController@create', 'as' => 'create']);
         Route::get('edit/{bill}', ['uses' => 'Bill\EditController@edit', 'as' => 'edit']);
         Route::get('delete/{bill}', ['uses' => 'Bill\DeleteController@delete', 'as' => 'delete']);
@@ -649,7 +649,7 @@ Route::group(
         Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
         // intro things:
-        Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
+        Route::any('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
         Route::post('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
         Route::get('intro/{route}/{specificPage?}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
     }
@@ -726,15 +726,14 @@ Route::group(
         Route::post('enable2FA', ['uses' => 'ProfileController@enable2FA', 'as' => 'enable2FA']);
         Route::get('2fa/code', ['uses' => 'ProfileController@code', 'as' => 'code']);
         Route::post('2fa/code', ['uses' => 'ProfileController@postCode', 'as' => 'code.store']);
-        Route::post('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
-        Route::post('2fa/new-codes', ['uses' => 'ProfileController@newBackupCodes', 'as' => 'new-backup-codes']);
+        Route::get('/delete-code', ['uses' => 'ProfileController@deleteCode', 'as' => 'delete-code']);
+        Route::get('2fa/new-codes', ['uses' => 'ProfileController@newBackupCodes', 'as' => 'new-backup-codes']);
 
     }
 );
 
 /**
  * Recurring Transactions Controller.
- * 
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'recurring', 'as' => 'recurring.'],
@@ -1079,7 +1078,7 @@ Route::group(
 // See reference nr. 6
         Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
         Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);
-        Route::post('switch/{journalLink}', ['uses' => 'LinkController@switchLink', 'as' => 'switch']);
+        Route::get('switch/{journalLink}', ['uses' => 'LinkController@switchLink', 'as' => 'switch']);
 
         Route::post('destroy/{journalLink}', ['uses' => 'LinkController@destroy', 'as' => 'destroy']);
     }
