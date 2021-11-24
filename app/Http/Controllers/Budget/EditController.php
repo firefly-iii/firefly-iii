@@ -102,7 +102,8 @@ class EditController extends Controller
             'auto_budget_currency_id' => $hasOldInput ? (int)$request->old('auto_budget_currency_id') : $currency->id,
         ];
         if ($autoBudget) {
-            $preFilled['auto_budget_amount'] = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
+            $amount                          = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
+            $preFilled['auto_budget_amount'] = number_format((float)$amount, $autoBudget->transactionCurrency->decimal_places);
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
