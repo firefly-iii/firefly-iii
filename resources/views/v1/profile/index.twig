@@ -107,7 +107,7 @@
                     <div class="box box-default">
                         <div class="box-body">
                             <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
-                            {% if enabled2FA == false %}
+                            {% if enabled2FA == true %}
                                 <p class="text-info">
                                     {{ trans_choice('firefly.pref_two_factor_backup_code_count', mfaBackupCount) }}
                                 </p>
@@ -116,10 +116,11 @@
                                     <a class="btn btn-info" href="{{ route('profile.code') }}">
                                         <span class="fa fa-recycle"></span>
                                         {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
-                                    <a class="btn btn-danger" href="{{ route('profile.delete-code') }}">
-                                        <span class="fa fa-trash"></span>
-                                        {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
                                 </div>
+                                <form method="post" action="{{ route('profile.delete-code') }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                    <input class="btn btn-danger" style="margin-top:20px;" type="submit" name="submit" value="{{ 'pref_two_factor_auth_disable_2fa'|_ }}" />
+                                </form>
                                 <form method="post" action="{{ route('profile.new-backup-codes') }}">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                     <input class="btn btn-default" style="margin-top:20px;" type="submit" name="submit" value="{{ 'pref_two_factor_new_backup_codes'|_ }}" />
