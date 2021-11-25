@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.5 - 2021-11-25
+
+### Fixed
+- [Issue 5231](https://github.com/firefly-iii/firefly-iii/issues/5231) Various LDAP related fixes which I hope will allow you to use LDAP again.
+- [Issue 5288](https://github.com/firefly-iii/firefly-iii/issues/5288) Would generate new keys when not necessary.
+- [Issue 5245](https://github.com/firefly-iii/firefly-iii/issues/5245) Fix various weirdly formatted amounts.
+- [Issue 5240](https://github.com/firefly-iii/firefly-iii/issues/5240) Redirect issue when setting budget amounts.
+
+### Security
+- Various minor CSRF
+
 ## 5.6.4 - 2021-11-13
 
 ### Fixed

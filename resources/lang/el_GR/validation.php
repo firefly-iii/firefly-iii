@@ -23,13 +23,13 @@
 declare(strict_types=1);
 
 return [
-    'missing_where'                  => 'Array is missing "where"-clause',
-    'missing_update'                 => 'Array is missing "update"-clause',
-    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
-    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
-    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
-    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
-    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
+    'missing_where'                  => 'Από τον πίνακα λείπει η ρήτρα "where"',
+    'missing_update'                 => 'Από τον πίνακα λείπει η ρήτρα "update"',
+    'invalid_where_key'              => 'Το JSON περιέχει ένα μη έγκυρο κλειδί για την ρήτρα "where"',
+    'invalid_update_key'             => 'Το JSON περιέχει ένα μη έγκυρο κλειδί για την ρήτρα "update"',
+    'invalid_query_data'             => 'Υπάρχουν μη έγκυρα δεδομένα στο πεδίο %s:%s του ερωτήματός σας.',
+    'invalid_query_account_type'     => 'Το ερώτημά σας περιέχει λογαριασμούς διαφορετικών τύπων, κάτι που δεν επιτρέπεται.',
+    'invalid_query_currency'         => 'Το ερώτημά σας περιέχει λογαριασμούς που έχουν διαφορετικές ρυθμίσεις νομίσματος, το οποίο δεν επιτρέπεται.',
     'iban'                           => 'Αυτό δεν είναι έγκυρο IBAN.',
     'zero_or_more'                   => 'Αυτή η τιμή δεν μπορεί να είναι αρνητική.',
     'date_or_time'                   => 'Αυτή η τιμή πρέπει να είναι έγκυρη ημερομηνία ή τιμή ώρας (ISO 8601).',
