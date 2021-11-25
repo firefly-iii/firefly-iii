@@ -181,7 +181,7 @@ class BudgetLimitController extends Controller
             return response()->json($array);
         }
 
-        return response()->json([]);
+        return redirect(route('budgets.index'));
     }
 
     /**
