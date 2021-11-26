@@ -389,4 +389,18 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
 
         return TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->first();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function switchLinkById(int $linkId): bool
+    {
+        /** @var TransactionJournalLink $link */
+        $link = TransactionJournalLink::find($linkId);
+        if (null !== $link && $link->source->user->id === $this->user->id) {
+            $this->switchLink($link);
+        }
+
+        return true;
+    }
 }

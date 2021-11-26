@@ -38,9 +38,16 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
 
     /**
      * @inheritDoc
+     * @throws FireflyException
      */
     public function generate(WebhookMessage $message): string
     {
+        // webhook is deleted
+        if (null === $message->webhook) {
+            throw new FireflyException('Part of a deleted webhook.');
+        }
+
+
         try {
             $json = json_encode($message->message, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
@@ -48,7 +55,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
             Log::error(sprintf('JSON value: %s', $message->message));
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException('Could not generate JSON for SHA3 hash.', $e);
+            throw new FireflyException('Could not generate JSON for SHA3 hash.', 0, $e);
         }
 
         // signature v1 is generated using the following structure:

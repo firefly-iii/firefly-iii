@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Log;
@@ -157,9 +158,10 @@ class LinkController extends Controller
      *
      * @return RedirectResponse|Redirector
      */
-    public function switchLink(TransactionJournalLink $link)
+    public function switchLink(Request $request)
     {
-        $this->repository->switchLink($link);
+        $linkId = (int)$request->get('id');
+        $this->repository->switchLinkById($linkId);
 
         return redirect(app('steam')->getSafePreviousUrl());
     }

@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "axios": "^0.21",
-        "date-fns": "^2.21.1",
+        "date-fns": "^2.26.0",
         "laravel-mix": "^6",
         "lodash": "^4.17.21",
         "lodash.clonedeep": "^4.5.0",
@@ -23,7 +23,7 @@
         "vue-loader": "^15",
         "vue-template-compiler": "^2.6.12",
         "vuex": "^3.6.2",
-        "webpack": "^5.62.1"
+        "webpack": "^5.64.2"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",

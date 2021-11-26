@@ -155,6 +155,13 @@ interface LinkTypeRepositoryInterface
     public function switchLink(TransactionJournalLink $link): bool;
 
     /**
+     * @param int $linkId
+     *
+     * @return bool
+     */
+    public function switchLinkById(int $linkId): bool;
+
+    /**
      * @param LinkType $linkType
      * @param array    $data
      *

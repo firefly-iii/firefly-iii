@@ -28,6 +28,7 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankUpdateRequest;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -41,6 +42,7 @@ class EditController extends Controller
 {
     private AttachmentHelperInterface    $attachments;
     private PiggyBankRepositoryInterface $piggyRepos;
+    private AccountRepositoryInterface   $accountRepository;
 
     /**
      * PiggyBankController constructor.
@@ -58,7 +60,7 @@ class EditController extends Controller
 
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
-
+                $this->accountRepository = app(AccountRepositoryInterface::class);
                 return $next($request);
             }
         );
@@ -81,10 +83,11 @@ class EditController extends Controller
         // Flash some data to fill the form.
         $targetDate = $piggyBank->targetdate?->format('Y-m-d');
         $startDate  = $piggyBank->startdate?->format('Y-m-d');
+        $currency = $this->accountRepository->getAccountCurrency($piggyBank->account);
 
         $preFilled = ['name'         => $piggyBank->name,
                       'account_id'   => $piggyBank->account_id,
-                      'targetamount' => $piggyBank->targetamount,
+                      'targetamount' => number_format((float)$piggyBank->targetamount, $currency->decimal_places),
                       'targetdate'   => $targetDate,
                       'startdate'    => $startDate,
                       'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',

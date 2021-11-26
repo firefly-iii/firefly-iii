@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Webhook;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
@@ -55,7 +56,24 @@ class StandardWebhookSender implements WebhookSenderInterface
         // have the signature generator generate a signature. If it fails, the error thrown will
         // end up in send() to be caught.
         $signatureGenerator = app(SignatureGeneratorInterface::class);
-        $signature          = $signatureGenerator->generate($this->message);
+
+        try {
+            $signature = $signatureGenerator->generate($this->message);
+        } catch(FireflyException $e) {
+            Log::error('Did not send message because of a Firefly III Exception.');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $attempt = new WebhookAttempt;
+            $attempt->webhookMessage()->associate($this->message);
+            $attempt->status_code = 0;
+            $attempt->logs        = sprintf('Exception: %s', $e->getMessage());
+            $attempt->save();
+            $this->message->errored = true;
+            $this->message->sent    = false;
+            $this->message->save();
+
+            return;
+        }
 
         Log::debug(sprintf('Trying to send webhook message #%d', $this->message->id));
 

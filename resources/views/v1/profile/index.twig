@@ -116,21 +116,21 @@
                                     <a class="btn btn-info" href="{{ route('profile.code') }}">
                                         <span class="fa fa-recycle"></span>
                                         {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
-                                    <a class="btn btn-default" href="{{ route('profile.new-backup-codes') }}">
-                                        <span class="fa fa-star"></span>
-                                        {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
-                                    <a class="btn btn-danger" href="{{ route('profile.delete-code') }}">
-                                        <span class="fa fa-trash"></span>
-                                        {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
                                 </div>
+                                <form method="post" action="{{ route('profile.delete-code') }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                    <input class="btn btn-danger" style="margin-top:20px;" type="submit" name="submit" value="{{ 'pref_two_factor_auth_disable_2fa'|_ }}" />
+                                </form>
+                                <form method="post" action="{{ route('profile.new-backup-codes') }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                                    <input class="btn btn-default" style="margin-top:20px;" type="submit" name="submit" value="{{ 'pref_two_factor_new_backup_codes'|_ }}" />
+                                </form>
                             {% else %}
-                                <p>
                                 <form action="{{ route('profile.enable2FA') }}" method="post">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                                     <button type="submit" class="btn btn-info"><span
                                                 class="fa fa-lock"></span> {{ 'pref_enable_two_factor_auth'|_ }}</button>
                                 </form>
-                                </p>
                             {% endif %}
                         </div>
                     </div>
