@@ -292,7 +292,6 @@ class AccountUpdateService
      */
     private function updateOpeningBalance(Account $account, array $data): void
     {
-
         // has valid initial balance (IB) data?
         $type = $account->accountType;
         if (in_array($type->type, $this->canHaveOpeningBalance, true)) {

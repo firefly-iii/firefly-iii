@@ -530,6 +530,7 @@ trait AccountServiceTrait
         if (null === $obGroup) {
             return $this->createOBGroupV2($account, $openingBalance, $openingBalanceDate);
         }
+        Log::debug('Update OB group');
 
         // if exists, update:
         $currency = $this->accountRepository->getAccountCurrency($account);
@@ -547,6 +548,7 @@ trait AccountServiceTrait
 
         // if amount is negative:
         if (1 === bccomp('0', $openingBalance)) {
+            Log::debug('Amount is negative.');
             // account transaction loses money:
             $accountTransaction->amount                  = app('steam')->negative($openingBalance);
             $accountTransaction->transaction_currency_id = $currency->id;
@@ -556,6 +558,7 @@ trait AccountServiceTrait
             $obTransaction->transaction_currency_id = $currency->id;
         }
         if (-1 === bccomp('0', $openingBalance)) {
+            Log::debug('Amount is positive.');
             // account gains money:
             $accountTransaction->amount                  = app('steam')->positive($openingBalance);
             $accountTransaction->transaction_currency_id = $currency->id;

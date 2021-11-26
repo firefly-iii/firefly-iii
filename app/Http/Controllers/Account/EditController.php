@@ -122,7 +122,7 @@ class EditController extends Controller
         }
         $request->session()->forget('accounts.edit.fromUpdate');
 
-        $openingBalanceAmount = app('steam')->positive((string)$repository->getOpeningBalanceAmount($account));
+        $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
         if ('0' === $openingBalanceAmount) {
             $openingBalanceAmount = '';
         }
