@@ -143,11 +143,6 @@ class UpgradeDatabase extends Command
         $result = Artisan::output();
         echo $result;
 
-//        $this->line('Now installing OAuth2 keys...');
-//        Artisan::call('passport:install');
-//        $result = Artisan::output();
-//        echo $result;
-
         $this->line('Done!');
     }
 }
