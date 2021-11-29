@@ -23,7 +23,7 @@
         "vue-loader": "^15",
         "vue-template-compiler": "^2.6.12",
         "vuex": "^3.6.2",
-        "webpack": "^5.64.2"
+        "webpack": "^5.64.4"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",
