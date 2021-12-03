@@ -57,7 +57,7 @@ const app = new Vue({
                         },
                     });
 
-new Vue({
+const calendar = new Vue({
             i18n,
             store,
             el: "#calendar",
