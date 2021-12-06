@@ -94,7 +94,7 @@
     "guzzlehttp/guzzle": "^7.4",
     "jc5/google2fa-laravel": "2.0.6",
     "jc5/recovery": "^2",
-    "laravel/framework": "^8.69",
+    "laravel/framework": "^8.74",
     "laravel/passport": "10.*",
     "laravel/ui": "^3.3",
     "laravelcollective/html": "6.*",
