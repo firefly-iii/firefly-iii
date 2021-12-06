@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "axios": "^0.21",
-        "date-fns": "^2.26.0",
+        "date-fns": "^2.27.0",
         "laravel-mix": "^6",
         "lodash": "^4.17.21",
         "lodash.clonedeep": "^4.5.0",
