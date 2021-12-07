@@ -87,7 +87,7 @@ class EditController extends Controller
 
         $preFilled = ['name'         => $piggyBank->name,
                       'account_id'   => $piggyBank->account_id,
-                      'targetamount' => number_format((float)$piggyBank->targetamount, $currency->decimal_places),
+                      'targetamount' => number_format((float)$piggyBank->targetamount, $currency->decimal_places,'.',''),
                       'targetdate'   => $targetDate,
                       'startdate'    => $startDate,
                       'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
