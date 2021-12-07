@@ -1981,10 +1981,10 @@ chart.js@^2.9.4:
     chartjs-color "^2.1.0"
     moment "^2.10.2"
 
-chart.js@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.6.0.tgz#a87fce8431d4e7c5523d721f487f53aada1e42fe"
-  integrity sha512-iOzzDKePL+bj+ccIsVAgWQehCXv8xOKGbaU2fO/myivH736zcx535PGJzQGanvcSGVOqX6yuLZsN3ygcQ35UgQ==
+chart.js@^3.6.2:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.6.2.tgz#47342c551f688ffdda2cd53b534cb7e461ecec33"
+  integrity sha512-Xz7f/fgtVltfQYWq0zL1Xbv7N2inpG+B54p3D5FSvpCdy3sM+oZhbqa42eNuYXltaVvajgX5UpKCU2GeeJIgxg==
 
 chartjs-color-string@^0.6.0:
   version "0.6.0"
@@ -2712,10 +2712,10 @@ date-fns-tz@^1.1.4:
   resolved "https://registry.yarnpkg.com/date-fns-tz/-/date-fns-tz-1.1.6.tgz#93cbf354e2aeb2cd312ffa32e462c1943cf20a8e"
   integrity sha512-nyy+URfFI3KUY7udEJozcoftju+KduaqkVfwyTIE0traBiVye09QnyWKLZK7drRr5h9B7sPJITmQnS3U6YOdQg==
 
-date-fns@^2.22.1, date-fns@^2.26.0:
-  version "2.26.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.26.0.tgz#fa45305543c392c4f914e50775fd2a4461e60fbd"
-  integrity sha512-VQI812dRi3cusdY/fhoBKvc6l2W8BPWU1FNVnFH9Nttjx4AFBRzfSVb/Eyc7jBT6e9sg1XtAGsYpBQ6c/jygbg==
+date-fns@^2.22.1, date-fns@^2.27.0:
+  version "2.27.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.27.0.tgz#e1ff3c3ddbbab8a2eaadbb6106be2929a5a2d92b"
+  integrity sha512-sj+J0Mo2p2X1e306MHq282WS4/A8Pz/95GIFcsPNMPMZVI3EUrAdSv90al1k+p74WGLCruMXk23bfEDZa71X9Q==
 
 daterangepicker@^3.1.0:
   version "3.1.0"
@@ -3812,6 +3812,11 @@ immediate@~3.0.5:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
   integrity sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=
+
+immutable@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.0.0.tgz#b86f78de6adef3608395efb269a91462797e2c23"
+  integrity sha512-zIE9hX70qew5qTUjSS7wi1iwj/l7+m54KWU247nhM3v806UdGj1yDndXj+IOYxxtW9zyLI+xqFNZjTuDaLUqFw==
 
 import-cwd@^3.0.0:
   version "3.0.0"
@@ -5695,12 +5700,13 @@ sass-loader@^12.2.0:
     klona "^2.0.4"
     neo-async "^2.6.2"
 
-sass@^1.43.3:
-  version "1.43.5"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.43.5.tgz#25a9d91dd098793ef7229d7b04dd3daae2fc4a65"
-  integrity sha512-WuNm+eAryMgQluL7Mbq9M4EruyGGMyal7Lu58FfnRMVWxgUzIvI7aSn60iNt3kn5yZBMR7G84fAGDcwqOF5JOg==
+sass@^1.44.0:
+  version "1.44.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.44.0.tgz#619aa0a2275c097f9af5e6b8fe8a95e3056430fb"
+  integrity sha512-0hLREbHFXGQqls/K8X+koeP+ogFRPF4ZqetVB19b7Cst9Er8cOR0rc6RU7MaI4W1JmUShd1BPgPoeqmmgMMYFw==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
+    immutable "^4.0.0"
 
 sax@^1.2.1:
   version "1.2.4"
