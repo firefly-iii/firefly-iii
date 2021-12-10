@@ -29,6 +29,8 @@
         :serializer="item => item.description"
         :showOnFocus=true
         autofocus
+        tabindex="1"
+        ref="autoComplete"
         inputName="description[]"
         @input="lookupDescription"
     >
@@ -65,6 +67,11 @@ export default {
         .then(response => {
           this.descriptions = response.data;
           this.initialSet = response.data;
+
+          if(0===this.index) {
+            this.$refs.autoComplete.$refs.input.tabIndex = 1;
+          }
+
         });
   },
 
