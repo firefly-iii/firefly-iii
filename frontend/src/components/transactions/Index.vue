@@ -153,7 +153,7 @@ export default {
       this.getTransactionList();
     },
     jumpToPage: function (event) {
-      // console.log('noticed a change!');
+      console.log('noticed a change in transactions/index.vue!');
       this.currentPage = event.page;
       this.downloadTransactionList(event.page);
     },
