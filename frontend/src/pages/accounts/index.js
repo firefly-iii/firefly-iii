@@ -30,8 +30,8 @@ import IndexOptions from "../../components/accounts/IndexOptions";
 let i18n = require('../../i18n');
 let props = {};
 
-// See reference nr. 8
-// See reference nr. 9
+// TODO: long lists are slow to load. Fix this.
+// TODO add interest for liabilities
 
 Vue.component('b-table', BTable);
 Vue.component('b-pagination', BPagination);
@@ -45,7 +45,7 @@ const app = new Vue({
                             return createElement(Index, {props: props});
                         },
                         beforeCreate() {
-// See reference nr. 10
+// init the old root store (TODO remove me)
                             this.$store.commit('initialiseStore');
                             this.$store.dispatch('updateCurrencyPreference');
 
@@ -64,7 +64,7 @@ const calendar = new Vue({
                              render: (createElement) => {
                                  return createElement(Calendar, {props: props});
                              },
-// See reference nr. 11
+// TODO init store as well?
                          });
 
 const opt = new Vue({
@@ -74,5 +74,5 @@ const opt = new Vue({
                         render: (createElement) => {
                             return createElement(IndexOptions, {props: props});
                         },
-// See reference nr. 12
+// TODO init store as well?
                     });
