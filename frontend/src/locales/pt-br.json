@@ -224,6 +224,7 @@
         "enddate": "End date",
         "object_group": "Grupo",
         "attachments": "Anexos",
+        "deletePermanently": "Apagar permanentemente",
         "active": "Ativar",
         "include_net_worth": "Incluir no patrimonio liquido",
         "cc_type": "Plano de pagamento do Cart\u00e3o de Cr\u00e9dito",

@@ -224,6 +224,7 @@
         "enddate": "End date",
         "object_group": "Ryhm\u00e4",
         "attachments": "Liitteet",
+        "deletePermanently": "Poista pysyv\u00e4sti",
         "active": "Aktiivinen",
         "include_net_worth": "Sis\u00e4llyt\u00e4 varallisuuteen",
         "cc_type": "Luottokortin maksusuunnitelma",

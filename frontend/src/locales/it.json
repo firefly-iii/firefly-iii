@@ -224,6 +224,7 @@
         "enddate": "Data di scadenza",
         "object_group": "Gruppo",
         "attachments": "Allegati",
+        "deletePermanently": "Elimina definitivamente",
         "active": "Attivo",
         "include_net_worth": "Includi nel patrimonio",
         "cc_type": "Piano di pagamento della carta di credito",

@@ -224,6 +224,7 @@
         "enddate": "End date",
         "object_group": "Skupina",
         "attachments": "Pr\u00edlohy",
+        "deletePermanently": "Permanentne odstr\u00e1ni\u0165",
         "active": "Akt\u00edvne",
         "include_net_worth": "Zahrn\u00fa\u0165 do \u010dist\u00e9ho majetku",
         "cc_type": "Z\u00fa\u010dtovacie obdobie kreditnej karty",

@@ -224,6 +224,7 @@
         "enddate": "\u7d42\u4e86\u65e5",
         "object_group": "\u30b0\u30eb\u30fc\u30d7",
         "attachments": "\u6dfb\u4ed8\u30d5\u30a1\u30a4\u30eb",
+        "deletePermanently": "\u6c38\u4e45\u306b\u524a\u9664",
         "active": "\u6709\u52b9",
         "include_net_worth": "\u7d14\u8cc7\u7523\u306b\u542b\u3081\u308b",
         "cc_type": "\u30af\u30ec\u30b8\u30c3\u30c8\u30ab\u30fc\u30c9\u306e\u6c7a\u6e08\u65b9\u6cd5",

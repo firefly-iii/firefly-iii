@@ -47,8 +47,8 @@ return [
     'tell_more'               => 'Beri tahu kami selain "kata Whoops!"',
     'include_logs'            => 'Sertakan log kesalahan (lihat di atas).',
     'what_did_you_do'         => 'Beritahu kami apa yang anda lakukan.',
-    'offline_header'          => 'You are probably offline',
-    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
-    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'offline_header'          => 'Anda sedang luring',
+    'offline_unreachable'     => 'Firefly III tidak dapat dijangkau. Perangkat anda kemungkinan luring atau server sedang tidak bekerja.',
+    'offline_github'          => 'Jika anda yakin perangkat anda dan server dalam keadaan daring, mohon buat tiket isu di <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

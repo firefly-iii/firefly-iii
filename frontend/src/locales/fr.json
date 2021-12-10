@@ -224,6 +224,7 @@
         "enddate": "Date de fin",
         "object_group": "Groupe",
         "attachments": "Documents joints",
+        "deletePermanently": "Supprimer d\u00e9finitivement",
         "active": "Actif",
         "include_net_worth": "Inclure dans l'avoir net",
         "cc_type": "Plan de paiement de carte de cr\u00e9dit",

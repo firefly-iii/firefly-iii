@@ -224,6 +224,7 @@
         "enddate": "Slutdatum",
         "object_group": "Grupp",
         "attachments": "Bilagor",
+        "deletePermanently": "Ta bort permanent",
         "active": "Aktiv",
         "include_net_worth": "Inkludera i nettov\u00e4rde",
         "cc_type": "Kreditkort betalning plan",
