@@ -212,6 +212,8 @@ class TransactionGroupTransformer extends AbstractTransformer
             'longitude'     => $longitude,
             'latitude'      => $latitude,
             'zoom_level'    => $zoomLevel,
+
+            'has_attachments' => $this->hasAttachments((int)$row['transaction_journal_id']),
         ];
     }
 
@@ -246,6 +248,16 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function getLocationById(int $journalId): ?Location
     {
         return $this->groupRepos->getLocation($journalId);
+    }
+
+    /**
+     * @param int $journalId
+     *
+     * @return bool
+     */
+    private function hasAttachments(int $journalId): bool
+    {
+        return $this->groupRepos->countAttachments($journalId) > 0;
     }
 
     /**

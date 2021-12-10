@@ -35,6 +35,7 @@
         inputName="category[]"
         @hit="selectedCategory = $event"
         @input="lookupCategory"
+        ref="input"
     >
       <template slot="append">
         <div class="input-group-append">
@@ -64,7 +65,11 @@ export default {
       category: this.value
     }
   },
-
+  mounted: function () {
+    this.$nextTick(function () {
+      this.$refs.input.$refs.input.tabIndex = 10;
+    })
+  },
   created() {
     //console.log('Created category(' + this.index + ') "' + this.value + '"');
     // initial list of accounts:

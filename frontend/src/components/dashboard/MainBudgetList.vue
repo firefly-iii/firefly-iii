@@ -214,26 +214,31 @@ export default {
               let pctGreen = 0;
               let pctOrange = 0;
               let pctRed = 0;
-              console.log('Collected "' + period + '" budget limit #' + currentId + ' (part of budget #' + budgetId + ')');
-              console.log('Spent ' + spentFloatPos + ' of ' + amount);
+              //console.log('Collected "' + period + '" budget limit #' + currentId + ' (part of budget #' + budgetId + ')');
+              // console.log('Spent ' + spentFloatPos + ' of ' + amount);
 
               // remove budget info from rawBudgets if it's there:
               this.filterBudgets(budgetId, currencyId);
-
+              let name = this.budgets[current.attributes.budget_id].name;
               // spent within budget:
               if (0.0 !== spentFloat && spentFloatPos < amount) {
+                // console.log('Spent ' + name + ' in budget');
                 pctGreen = (spentFloatPos / amount) * 100;
+                // console.log('pctGreen is ' + pctGreen);
               }
 
               // spent over budget
               if (0.0 !== spentFloatPos && spentFloatPos > amount) {
-                pctOrange = (spentFloatPos / amount) * 100;
+                //console.log('Spent ' + name + ' OVER budget');
+                pctOrange = (amount / spentFloatPos) * 100;
                 pctRed = 100 - pctOrange;
+                //console.log('orange is ' + pctOrange);
+                //console.log('red is    ' + pctRed);
               }
               // spent exactly on budget
               if (0.0 !== spentFloatPos && spentFloatPos === amount) {
-                pctOrange = 0;
-                pctRed = 100;
+                pctOrange = 100;
+                pctRed = 0;
               }
 
               let obj = {

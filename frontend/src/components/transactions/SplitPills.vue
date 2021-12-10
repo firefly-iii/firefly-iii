@@ -19,17 +19,22 @@
   -->
 
 <template>
-  <div v-if="transactions.length > 1" class="row">
-    <div class="col">
-      <!-- tabs -->
-      <ul class="nav nav-pills ml-auto p-2" id="transactionTabs">
-        <li v-for="(transaction, index) in this.transactions" class="nav-item"><a :class="'nav-link' + (0 === index ? ' active' : '')"
-                                                                                  :href="'#split_' + index"
-                                                                                  data-toggle="pill">
-          <span v-if="'' !== transaction.description">{{ transaction.description }}</span>
-          <span v-if="'' === transaction.description">Split {{ index + 1 }}</span>
-        </a></li>
-      </ul>
+  <div>
+    <span>Length: {{ this.transactions.length }}</span>
+
+    <div v-if="transactions.length > 1" class="row">
+      <div class="col">
+        <!-- tabs -->
+        <ul class="nav nav-pills ml-auto p-2" id="transactionTabs">
+          <li v-for="(transaction, index) in this.transactions" class="nav-item"><a :class="'nav-link' + (0 === index ? ' active' : '')"
+                                                                                    :href="'#split_' + index"
+                                                                                    :id="'tab_split_' + index"
+                                                                                    data-toggle="pill">
+            <span v-if="'' !== transaction.description">{{ transaction.description }}</span>
+            <span v-if="'' === transaction.description">Split {{ index + 1 }}</span>
+          </a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -41,7 +46,7 @@ export default {
     transactions: {
       type: Array,
       required: true,
-      default: function() {
+      default: function () {
         return [];
       }
     },

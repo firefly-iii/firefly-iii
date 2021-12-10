@@ -61,6 +61,7 @@
               <template #cell(description)="data">
                 <span class="fa fa-spinner fa-spin" v-if="data.item.dummy"></span>
                 <span v-if="!data.item.split">
+                <span v-if="data.item.hasAttachments" class="fas fa-paperclip"></span>
                   <a :href="'./transactions/show/' + data.item.id" :title="data.value">
                   {{ data.item.description }}
                   </a>
@@ -68,12 +69,13 @@
                 <span v-if="data.item.split">
                   <!-- title first -->
                   <span class="fas fa-angle-right" @click="toggleCollapse(data.item.id)" style="cursor: pointer;"></span>
+                  <span v-if="data.item.hasAttachments" class="fas fa-paperclip"></span>
                   <a :href="'./transactions/show/' + data.item.id" :title="data.value">
                   {{ data.item.description }}
-                  </a><br />
+                  </a><br/>
                   <span v-if="!data.item.collapsed">
                     <span v-for="(split, index) in data.item.splits" v-bind:key="index">
-                      &nbsp; &nbsp; {{ split.description }}<br />
+                      &nbsp; &nbsp; {{ split.description }}<br/>
                     </span>
                   </span>
                 </span>
@@ -89,11 +91,11 @@
                 <span :class="'text-muted ' + (!data.item.collapsed ? 'font-weight-bold' : '')" v-if="'transfer' === data.item.type.toLowerCase()">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
                 </span>
-                <br />
+                <br/>
                 <!-- splits -->
                 <span v-if="!data.item.collapsed">
                   <span v-for="(split, index) in data.item.splits" v-bind:key="index">
-                    {{ Intl.NumberFormat(locale, {style: 'currency', currency: split.currency_code}).format(split.amount) }}<br />
+                    {{ Intl.NumberFormat(locale, {style: 'currency', currency: split.currency_code}).format(split.amount) }}<br/>
                   </span>
                 </span>
               </template>
@@ -103,29 +105,31 @@
               <template #cell(source_account)="data">
                 <!-- extra break for splits -->
                 <span v-if="true===data.item.split && !data.item.collapsed">
-                  <br />
+                  <br/>
                 </span>
                 <em v-if="true===data.item.split && data.item.collapsed">
                   ...
                 </em>
 
                 <!-- loop all accounts, hidden if split -->
-                <span v-for="(split, index) in data.item.splits" v-bind:key="index" v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
-                  <a :href="'./accounts/show/' + split.source_id" :title="split.source_name">{{ split.source_name }}</a><br />
+                <span v-for="(split, index) in data.item.splits" v-bind:key="index"
+                      v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
+                  <a :href="'./accounts/show/' + split.source_id" :title="split.source_name">{{ split.source_name }}</a><br/>
                 </span>
               </template>
               <template #cell(destination_account)="data">
                 <!-- extra break for splits -->
                 <span v-if="true===data.item.split && !data.item.collapsed">
-                  <br />
+                  <br/>
                 </span>
                 <em v-if="true===data.item.split && data.item.collapsed">
                   ...
                 </em>
 
                 <!-- loop all accounts, hidden if split -->
-                <span v-for="(split, index) in data.item.splits" v-bind:key="index" v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
-                  <a :href="'./accounts/show/' + split.destination_id" :title="split.destination_name">{{ split.destination_name }}</a><br />
+                <span v-for="(split, index) in data.item.splits" v-bind:key="index"
+                      v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
+                  <a :href="'./accounts/show/' + split.destination_id" :title="split.destination_name">{{ split.destination_name }}</a><br/>
                 </span>
               </template>
               <template #cell(menu)="data">
@@ -149,15 +153,16 @@
               <template #cell(category_name)="data">
                 <!-- extra break for splits -->
                 <span v-if="true===data.item.split && !data.item.collapsed">
-                  <br />
+                  <br/>
                 </span>
                 <em v-if="true===data.item.split && data.item.collapsed">
                   ...
                 </em>
 
                 <!-- loop all categories, hidden if split -->
-                <span v-for="(split, index) in data.item.splits" v-bind:key="index" v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
-                  <a :href="'./categories/show/' + split.category_id" :title="split.category_name">{{ split.category_name }}</a><br />
+                <span v-for="(split, index) in data.item.splits" v-bind:key="index"
+                      v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
+                  <a :href="'./categories/show/' + split.category_id" :title="split.category_name">{{ split.category_name }}</a><br/>
                 </span>
               </template>
             </BTable>
@@ -220,12 +225,12 @@ export default {
       this.$emit('jump-page', {page: value});
     },
     entries: function (value) {
-      console.log('detected new transactions!');
+      // console.log('detected new transactions! (' + value.length + ')');
       this.parseTransactions();
     },
-    value: function(value) {
-      console.log('Watch value!');
-    }
+    // value: function (value) {
+    //   // console.log('Watch value!');
+    // }
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
@@ -234,12 +239,12 @@ export default {
       // console.log('Start of parseTransactions. Count of entries is ' + this.entries.length + ' and page is ' + this.page);
       // console.log('Reported total is ' + this.total);
       if (0 === this.entries.length) {
-        console.log('Will not render now');
+        // console.log('Will not render now because length is 0.');
         return;
       }
-      console.log('Now have ' + this.transactions.length + ' transactions');
+      // console.log('Now have ' + this.transactions.length + ' transactions');
       for (let i = 0; i < this.total; i++) {
-        this.transactions.push({dummy: true,type: 'x'});
+        this.transactions.push({dummy: true, type: 'x'});
         // console.log('Push dummy to index ' + i);
         // console.log('Now have ' + this.transactions.length + ' transactions');
       }
@@ -265,7 +270,7 @@ export default {
     },
     newCacheKey: function () {
       this.refreshCacheKey();
-      console.log('Cache key is now ' + this.cacheKey);
+      // console.log('Cache key is now ' + this.cacheKey);
       this.$emit('refreshed-cache-key');
     },
     updateFieldList: function () {
@@ -292,6 +297,7 @@ export default {
       row.key = transaction.id;
       row.id = transaction.id
       row.dummy = false;
+      row.hasAttachments = false;
 
       // pick this up from the first transaction
       let first = transaction.attributes.transactions[0];
@@ -331,6 +337,9 @@ export default {
           split.category_id = info.category_id;
           split.category_name = info.category_name;
           split.split_index = i;
+          if(true === info.has_attachments) {
+            row.hasAttachments = true;
+          }
           row.splits.push(split);
         }
       }

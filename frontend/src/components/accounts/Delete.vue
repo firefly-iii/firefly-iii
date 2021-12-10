@@ -63,7 +63,7 @@
         </div>
         <div class="card-footer">
           <button @click="deleteAccount" class="btn btn-danger float-right" v-if="!loading && !deleting && !deleted"> {{
-              $t('firefly.delete_account')
+              $t('form.deletePermanently')
             }}
           </button>
         </div>

@@ -31,8 +31,6 @@
                       <span v-if="budgetLimit.pctGreen > 35">
                         {{ $t('firefly.spent_x_of_y', {amount: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent), total: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.amount)}) }}
                       </span>
-
-
         </div>
 
         <div :aria-valuenow="budgetLimit.pctOrange" :style="'width: '+ budgetLimit.pctOrange + '%;'"

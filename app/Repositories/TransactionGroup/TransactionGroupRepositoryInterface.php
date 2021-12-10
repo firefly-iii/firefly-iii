@@ -87,6 +87,13 @@ interface TransactionGroupRepositoryInterface
     public function getLocation(int $journalId): ?Location;
 
     /**
+     * @param int $journalId
+     *
+     * @return int
+     */
+    public function countAttachments(int $journalId): int;
+
+    /**
      * Return object with all found meta field things as Carbon objects.
      *
      * @param int   $journalId

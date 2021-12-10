@@ -20,7 +20,7 @@
 
 const lodashClonedeep = require('lodash.clonedeep');
 
-import {getDefaultTransaction, getDefaultErrors} from '../../../../shared/transactions';
+import {getDefaultErrors, getDefaultTransaction} from '../../../../shared/transactions';
 
 // initial state
 const state = () => ({
@@ -100,6 +100,7 @@ const mutations = {
         state.transactions[payload.index].errors = lodashClonedeep(state.defaultErrors);
     },
     resetTransactions(state) {
+        // console.log('Store: Record call to resetTransactions :(');
         state.transactions = [];
     },
     setGroupTitle(state, payload) {
@@ -109,12 +110,13 @@ const mutations = {
         state.customDateFields = payload;
     },
     deleteTransaction(state, payload) {
+        // console.log('Record call to deleteTransaction!');
         state.transactions.splice(payload.index, 1);
         // console.log('Deleted transaction ' + payload.index);
         // console.log(state.transactions);
-        if (0 === state.transactions.length) {
+        // if (0 === state.transactions.length) {
             // console.log('array is empty!');
-        }
+        // }
     },
     setTransactionType(state, transactionType) {
         state.transactionType = transactionType;

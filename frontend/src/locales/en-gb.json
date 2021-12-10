@@ -224,6 +224,7 @@
         "enddate": "End date",
         "object_group": "Group",
         "attachments": "Attachments",
+        "deletePermanently": "Delete permanently",
         "active": "Active",
         "include_net_worth": "Include in net worth",
         "cc_type": "Credit card payment plan",

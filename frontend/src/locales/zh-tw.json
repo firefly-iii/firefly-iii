@@ -224,6 +224,7 @@
         "enddate": "End date",
         "object_group": "Group",
         "attachments": "\u9644\u52a0\u6a94\u6848",
+        "deletePermanently": "\u6c38\u4e45\u522a\u9664",
         "active": "\u555f\u7528",
         "include_net_worth": "\u5305\u62ec\u6de8\u503c",
         "cc_type": "\u4fe1\u7528\u5361\u4ed8\u6b3e\u8a08\u5283",

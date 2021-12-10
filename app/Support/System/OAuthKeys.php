@@ -26,7 +26,11 @@ namespace FireflyIII\Support\System;
 
 use Artisan;
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
 use Laravel\Passport\Console\KeysCommand;
+use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class OAuthKeys
@@ -62,7 +66,23 @@ class OAuthKeys
      */
     public static function keysInDatabase(): bool
     {
-        return app('fireflyconfig')->has(self::PRIVATE_KEY) && app('fireflyconfig')->has(self::PUBLIC_KEY);
+        $privateKey = '';
+        $publicKey  = '';
+        // better check if keys are in the database:
+        if (app('fireflyconfig')->has(self::PRIVATE_KEY) && app('fireflyconfig')->has(self::PUBLIC_KEY)) {
+            try {
+                $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
+                $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+            } catch (ContainerExceptionInterface | NotFoundExceptionInterface | FireflyException $e) {
+                Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
+                Log::error($e->getTraceAsString());
+            }
+        }
+        if ('' !== $privateKey && '' !== $publicKey) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -101,8 +121,10 @@ class OAuthKeys
      */
     public static function restoreKeysFromDB(): void
     {
-        $privateContent = Crypt::decrypt(app('fireflyconfig')->get(self::PRIVATE_KEY)->data);
-        $publicContent  = Crypt::decrypt(app('fireflyconfig')->get(self::PUBLIC_KEY)->data);
+        $privateKey     = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
+        $publicKey      = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+        $privateContent = Crypt::decrypt($privateKey);
+        $publicContent  = Crypt::decrypt($publicKey);
         $private        = storage_path('oauth-private.key');
         $public         = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);

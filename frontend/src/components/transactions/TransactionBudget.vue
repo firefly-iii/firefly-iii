@@ -52,6 +52,11 @@ export default {
       emitEvent: true
     }
   },
+  mounted: function () {
+    this.$nextTick(function () {
+      this.$refs.budget.tabIndex = 8;
+    })
+  },
   created() {
     this.collectData();
   },

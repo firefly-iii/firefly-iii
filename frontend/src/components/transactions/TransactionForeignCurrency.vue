@@ -23,7 +23,7 @@
   <div v-if="isVisible" class="form-group">
     <div class="text-xs">&nbsp;</div>
     <div class="input-group">
-      <select v-model="selectedCurrency" class="form-control" name="foreign_currency_id[]">
+      <select v-model="selectedCurrency" class="form-control" ref="input" name="foreign_currency_id[]">
         <option v-for="currency in selectableCurrencies" :label="currency.name" :value="currency.id">{{ currency.name }}</option>
       </select>
     </div>
@@ -76,6 +76,11 @@ export default {
   created: function () {
     // console.log('Created TransactionForeignCurrency');
     this.getAllCurrencies();
+  },
+  mounted: function () {
+    this.$nextTick(function () {
+      this.$refs.input.tabIndex = 4;
+    })
   },
   methods: {
     lockCurrency: function () {

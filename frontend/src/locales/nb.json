@@ -224,6 +224,7 @@
         "enddate": "End date",
         "object_group": "Group",
         "attachments": "Vedlegg",
+        "deletePermanently": "Slett permanent",
         "active": "Aktiv",
         "include_net_worth": "Inkluder i formue",
         "cc_type": "Credit card payment plan",

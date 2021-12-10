@@ -224,6 +224,7 @@
         "enddate": "Einddatum",
         "object_group": "Groep",
         "attachments": "Bijlagen",
+        "deletePermanently": "Verwijderen",
         "active": "Actief",
         "include_net_worth": "Meetellen in kapitaal",
         "cc_type": "Betaalplan",

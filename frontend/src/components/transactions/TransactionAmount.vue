@@ -69,11 +69,18 @@ export default {
       this.transactionAmount = this.formatNumber(this.amount);
     }
   },
+  mounted: function () {
+    this.$nextTick(function () {
+      if (0 === this.index) {
+        this.$refs.input.tabIndex = 3;
+      }
+    })
+  },
   methods: {
     formatNumber(str) {
       return parseFloat(str).toFixed(this.fractionDigits);
     },
-    giveFocus: function() {
+    giveFocus: function () {
       this.$refs.input.focus();
     },
   },

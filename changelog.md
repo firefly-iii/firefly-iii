@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.6 - 2021-12-10
+
+### Fixed
+- Cache is flushed after API action to delete a transaction.
+- Stricter validation of OAuth key existence.
+- [Issue 5371](https://github.com/firefly-iii/firefly-iii/issues/5371), thanks to @weimdall fixes budget issue.
+- Various v2 layout issues fixed: [issue 5375](https://github.com/firefly-iii/firefly-iii/issues/5375) [issue 5279](https://github.com/firefly-iii/firefly-iii/issues/5279) [issue 5108](https://github.com/firefly-iii/firefly-iii/issues/5108) [issue 5352](https://github.com/firefly-iii/firefly-iii/issues/5352) [issue 5335](https://github.com/firefly-iii/firefly-iii/issues/5335) [issue 5327](https://github.com/firefly-iii/firefly-iii/issues/5327) [issue 5296](https://github.com/firefly-iii/firefly-iii/issues/5296), thanks for reporting!
+
+### API
+- Add field `has_attachments` to transaction splits
+
+### Security
+- CSRF issue found by the good people of huntr.dev (@418sec)
+
 ## 5.6.5 - 2021-11-25
 
 ### Fixed

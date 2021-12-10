@@ -67,7 +67,14 @@ export default {
     let parts = this.date.split('T');
     this.dateStr = parts[0];
     this.timeStr = parts[1];
-
+  },
+  mounted: function () {
+    if (0 === this.index) {
+      this.$nextTick(function () {
+        this.$refs.date.tabIndex = 6;
+        this.$refs.time.tabIndex = 7;
+      });
+    }
   },
   data() {
     return {

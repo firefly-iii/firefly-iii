@@ -484,4 +484,16 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 
         return $return;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function countAttachments(int $journalId): int
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->attachments()->count();
+
+    }
 }

@@ -80,8 +80,8 @@
 
 <script>
 import TransactionListLarge from "../transactions/TransactionListLarge";
-import format from "date-fns/format";
 import {mapGetters} from "vuex";
+import format from "date-fns/format";
 import {configureAxios} from "../../shared/forageStore";
 
 export default {
@@ -147,32 +147,36 @@ export default {
       this.updatePageTitle();
     },
     getTransactions: function () {
+      // console.log('getTransactions()');
       if (this.showReady && !this.loading) {
+        // console.log('Show ready, not loading, go for download');
         this.loading = true;
+        this.rawTransactions = [];
         configureAxios().then(async (api) => {
           // console.log('Now getTransactions() x Start');
           let startStr = format(this.start, 'y-MM-dd');
           let endStr = format(this.end, 'y-MM-dd');
-          this.rawTransactions = [];
-
-          let url = './api/v1/accounts/' + this.accountId + '/transactions?page=1&limit=' + this.perPage + '&start=' + startStr + '&end=' + endStr + '&cache=' + this.cacheKey;
+          let url = './api/v1/accounts/' + this.accountId + '/transactions?page=' + this.currentPage + '&limit=' + this.perPage + '&start=' + startStr + '&end=' + endStr + '&cache=' + this.cacheKey;
 
           api.get(url)
               .then(response => {
                       // console.log('Now getTransactions() DONE!');
                       this.total = parseInt(response.data.meta.pagination.total);
+                      let transactions = response.data.data;
+                      // console.log('Have downloaded ' + transactions.length + ' transactions');
+                      // console.log(response.data);
                       this.rawTransactions = response.data.data;
                       this.loading = false;
                     }
               );
         });
-
       }
+
     },
     jumpToPage: function (event) {
-      // console.log('noticed a change!');
+      // console.log('noticed a change in account/show!');
       this.currentPage = event.page;
-      this.downloadTransactionList(event.page);
+      this.getTransactions();
     },
   },
   watch: {

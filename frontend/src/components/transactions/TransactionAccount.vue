@@ -116,15 +116,22 @@ export default {
     // console.log('TransactionAccount::created() direction=' + this.direction + ', type=' + this.transactionType + ' , name="' + this.accountName + '"');
     this.selectedAccountTrigger = true;
   },
+  mounted: function () {
+    this.$nextTick(function () {
+      if (0 === this.index) {
+        this.$refs.inputThing.$refs.input.tabIndex = 2;
+      }
+    })
+  },
   methods: {
     getACURL: function (types, query) {
       return './api/v1/autocomplete/accounts?types=' + types.join(',') + '&query=' + query;
     },
-    giveFocus: function() {
-      console.log('I want focus! now OK: ' + this.direction + ' l: ' + this.accounts.length);
+    giveFocus: function () {
+      //console.log('I want focus! now OK: ' + this.direction + ' l: ' + this.accounts.length);
       //console.log(this.$refs.inputThing.$refs.input.value);
       this.$refs.inputThing.$refs.input.focus();
-      console.log(this.$refs.inputThing.isFocused);
+      //console.log(this.$refs.inputThing.isFocused);
     },
     userSelectedAccount: function (event) {
       // console.log('userSelectedAccount!');
