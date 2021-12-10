@@ -61,6 +61,7 @@
               <template #cell(description)="data">
                 <span class="fa fa-spinner fa-spin" v-if="data.item.dummy"></span>
                 <span v-if="!data.item.split">
+                <span v-if="data.item.hasAttachments" class="fas fa-paperclip"></span>
                   <a :href="'./transactions/show/' + data.item.id" :title="data.value">
                   {{ data.item.description }}
                   </a>
@@ -68,6 +69,7 @@
                 <span v-if="data.item.split">
                   <!-- title first -->
                   <span class="fas fa-angle-right" @click="toggleCollapse(data.item.id)" style="cursor: pointer;"></span>
+                  <span v-if="data.item.hasAttachments" class="fas fa-paperclip"></span>
                   <a :href="'./transactions/show/' + data.item.id" :title="data.value">
                   {{ data.item.description }}
                   </a><br/>
@@ -295,6 +297,7 @@ export default {
       row.key = transaction.id;
       row.id = transaction.id
       row.dummy = false;
+      row.hasAttachments = false;
 
       // pick this up from the first transaction
       let first = transaction.attributes.transactions[0];
@@ -334,6 +337,9 @@ export default {
           split.category_id = info.category_id;
           split.category_name = info.category_name;
           split.split_index = i;
+          if(true === info.has_attachments) {
+            row.hasAttachments = true;
+          }
           row.splits.push(split);
         }
       }
