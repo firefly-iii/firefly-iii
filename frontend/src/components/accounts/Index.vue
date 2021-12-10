@@ -177,12 +177,8 @@
 import {mapGetters, mapMutations} from "vuex";
 import Sortable from "sortablejs";
 import format from "date-fns/format";
-// import {setup} from 'axios-cache-adapter';
-// import {cacheAdapterEnhancer} from 'axios-extensions';
 import {configureAxios} from "../../shared/forageStore";
 
-
-// get all and cache, dont keep the table busy.
 
 export default {
   name: "Index",

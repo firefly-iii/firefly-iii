@@ -52,6 +52,11 @@ export default {
       bill: this.value,
     }
   },
+  mounted: function () {
+    this.$nextTick(function () {
+      this.$refs.bill.tabIndex = 9;
+    })
+  },
   created() {
     this.collectData();
   },

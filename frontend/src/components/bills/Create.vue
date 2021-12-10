@@ -23,92 +23,130 @@
     <Alert :message="errorMessage" type="danger"/>
     <Alert :message="successMessage" type="success"/>
     <form @submit="submitForm" autocomplete="off">
-      <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">
-                {{ $t('firefly.mandatoryFields') }}
-              </h3>
-            </div>
-            <div class="card-body">
-              <GenericTextInput :disabled="submitting" v-model="name" field-name="name" :errors="errors.name" :title="$t('form.name')"
-                                v-on:set-field="storeField($event)"/>
-              <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency_id" v-on:set-field="storeField($event)"/>
-
-              <GenericTextInput :disabled="submitting" field-type="number" field-step="any" v-model="amount_min"
-                                field-name="amount_min" :errors="errors.amount_min" :title="$t('form.amount_min')" v-on:set-field="storeField($event)"/>
-
-              <GenericTextInput :disabled="submitting" field-type="number" field-step="any" v-model="amount_max"
-                                field-name="amount_max" :errors="errors.amount_max" :title="$t('form.amount_max')" v-on:set-field="storeField($event)"/>
-
-              <GenericTextInput :disabled="submitting" field-type="date" v-model="date" field-name="date"
-                                :errors="errors.date" :title="$t('form.startdate')" v-on:set-field="storeField($event)"/>
-              <GenericTextInput :disabled="submitting" field-type="date" v-model="end_date" field-name="end_date"
-                                :errors="errors.end_date" :title="$t('form.end_date')" v-on:set-field="storeField($event)"/>
-              <GenericTextInput :disabled="submitting" field-type="date" v-model="extension_date" field-name="extension_date"
-                                :errors="errors.extension_date" :title="$t('form.extension_date')" v-on:set-field="storeField($event)"/>
-
-              <RepeatFrequencyPeriod :disabled="submitting" v-model="repeat_freq" :errors="errors.repeat_freq"
-                                     v-on:set-field="storeField($event)"/>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">
-                {{ $t('firefly.optionalFields') }}
-              </h3>
-            </div>
-            <div class="card-body">
-              <GenericTextarea :disabled="submitting" field-name="notes" :title="$t('form.notes')" v-model="notes" :errors="errors.notes"
-                               v-on:set-field="storeField($event)"/>
-
-              <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"
-                                  v-on:selected-attachments="selectedAttachments($event)"
-                                  v-on:selected-no-attachments="selectedNoAttachments($event)"
-                                  v-on:uploaded-attachments="uploadedAttachments($event)"
-                                  :upload-trigger="uploadTrigger"
-                                  :upload-object-type="uploadObjectType"
-                                  :upload-object-id="uploadObjectId"
-              />
-
-              <GenericTextInput :disabled="submitting" v-model="skip" field-name="skip" :errors="errors.skip" :title="$t('form.skip')"
-                                v-on:set-field="storeField($event)"/>
-
-              <GenericGroup :disabled="submitting" v-model="group_title" field-name="group_title" :errors="errors.group_title" :title="$t('form.object_group')"
-                            v-on:set-field="storeField($event)"/>
-            </div>
-          </div>
-        </div>
+      <div class="col">
+        <!-- tabs -->
+        <ul class="nav nav-tabs ml-auto p-2" id="subscriptionTabs">
+          <li>
+          <li class="nav-item"><a class="nav-link active" href="#subscription" data-toggle="pill">
+            Subscription
+          </a>
+          </li>
+          <li>
+          <li class="nav-item"><a class="nav-link" href="#rule" data-toggle="pill">
+            Rule
+          </a>
+          </li>
+        </ul>
       </div>
-      <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 offset-xl-6 offset-lg-6">
-          <div class="card">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-lg-6 offset-lg-6">
-                  <button :disabled=submitting type="button" @click="submitForm" class="btn btn-success btn-block">{{
-                      $t('firefly.store_new_bill')
-                    }}
-                  </button>
-                  <div class="form-check">
-                    <input id="createAnother" v-model="createAnother" class="form-check-input" type="checkbox">
-                    <label class="form-check-label" for="createAnother">
-                      <span class="small">{{ $t('firefly.create_another') }}</span>
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input id="resetFormAfter" v-model="resetFormAfter" :disabled="!createAnother" class="form-check-input" type="checkbox">
-                    <label class="form-check-label" for="resetFormAfter">
-                      <span class="small">{{ $t('firefly.reset_after') }}</span>
-                    </label>
+      <div class="tab-content" id="subscriptionTabContent">
+        <div class="tab-pane show active" id="subscription" role="tabpanel" aria-labelledby="subscription-tab">
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    {{ $t('firefly.mandatoryFields') }}
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <GenericTextInput :disabled="submitting" v-model="name" field-name="name" :errors="errors.name" :title="$t('form.name')"
+                                    v-on:set-field="storeField($event)"/>
+                  <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency_id" v-on:set-field="storeField($event)"/>
+
+                  <GenericTextInput :disabled="submitting" field-type="number" field-step="any" v-model="amount_min"
+                                    field-name="amount_min" :errors="errors.amount_min" :title="$t('form.amount_min')" v-on:set-field="storeField($event)"/>
+
+                  <GenericTextInput :disabled="submitting" field-type="number" field-step="any" v-model="amount_max"
+                                    field-name="amount_max" :errors="errors.amount_max" :title="$t('form.amount_max')" v-on:set-field="storeField($event)"/>
+
+                  <GenericTextInput :disabled="submitting" field-type="date" v-model="date" field-name="date"
+                                    :errors="errors.date" :title="$t('form.startdate')" v-on:set-field="storeField($event)"/>
+                  <GenericTextInput :disabled="submitting" field-type="date" v-model="end_date" field-name="end_date"
+                                    :errors="errors.end_date" :title="$t('form.end_date')" v-on:set-field="storeField($event)"/>
+                  <GenericTextInput :disabled="submitting" field-type="date" v-model="extension_date" field-name="extension_date"
+                                    :errors="errors.extension_date" :title="$t('form.extension_date')" v-on:set-field="storeField($event)"/>
+
+                  <RepeatFrequencyPeriod :disabled="submitting" v-model="repeat_freq" :errors="errors.repeat_freq"
+                                         v-on:set-field="storeField($event)"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    {{ $t('firefly.optionalFields') }}
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <GenericTextarea :disabled="submitting" field-name="notes" :title="$t('form.notes')" v-model="notes" :errors="errors.notes"
+                                   v-on:set-field="storeField($event)"/>
+
+                  <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"
+                                      v-on:selected-attachments="selectedAttachments($event)"
+                                      v-on:selected-no-attachments="selectedNoAttachments($event)"
+                                      v-on:uploaded-attachments="uploadedAttachments($event)"
+                                      :upload-trigger="uploadTrigger"
+                                      :upload-object-type="uploadObjectType"
+                                      :upload-object-id="uploadObjectId"
+                  />
+
+                  <GenericTextInput :disabled="submitting" v-model="skip" field-name="skip" :errors="errors.skip" :title="$t('form.skip')"
+                                    v-on:set-field="storeField($event)"/>
+
+                  <GenericGroup :disabled="submitting" v-model="group_title" field-name="group_title" :errors="errors.group_title"
+                                :title="$t('form.object_group')"
+                                v-on:set-field="storeField($event)"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 offset-xl-6 offset-lg-6">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-6 offset-lg-6">
+                      <button :disabled=submitting type="button" @click="submitForm" class="btn btn-success btn-block">{{
+                          $t('firefly.store_new_bill')
+                        }}
+                      </button>
+                      <div class="form-check">
+                        <input id="createAnother" v-model="createAnother" class="form-check-input" type="checkbox">
+                        <label class="form-check-label" for="createAnother">
+                          <span class="small">{{ $t('firefly.create_another') }}</span>
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input id="resetFormAfter" v-model="resetFormAfter" :disabled="!createAnother" class="form-check-input" type="checkbox">
+                        <label class="form-check-label" for="resetFormAfter">
+                          <span class="small">{{ $t('firefly.reset_after') }}</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="tab-pane show" id="rule" role="tabpanel" aria-labelledby="rule-tab">
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    Title
+                  </h3>
+                </div>
+                <div class="card-body">
+                  <p>
+                    In the future here you can set rule info for the new subscription.
+                  </p>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </div>
     </form>
@@ -226,7 +264,7 @@ export default {
               this.uploadObjectId = this.returnedId;
               this.uploadTrigger = true;
             }
-            if(!this.hasAttachments) {
+            if (!this.hasAttachments) {
               this.finishSubmission();
             }
           })
@@ -236,10 +274,10 @@ export default {
             // display errors!
           });
     },
-    uploadedAttachments: function(e) {
+    uploadedAttachments: function (e) {
       this.finishSubmission();
     },
-    finishSubmission: function() {
+    finishSubmission: function () {
       this.successMessage = this.$t('firefly.stored_new_bill_js', {ID: this.returnedId, name: this.returnedTitle});
       // stay here is false?
       if (false === this.createAnother) {

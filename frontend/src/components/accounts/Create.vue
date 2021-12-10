@@ -275,8 +275,8 @@ export default {
       this.hasAttachments = false;
     },
     uploadedAttachments: function (e) {
-      console.log('Response to event uploaded-attachments');
-      console.log(e);
+      // console.log('Response to event uploaded-attachments');
+      // console.log(e);
       this.finishSubmission();
     },
     submitForm: function (e) {

@@ -29,6 +29,7 @@
           :add-only-from-autocomplete="false"
           :autocomplete-items="autocompleteItems"
           :tags="tags"
+          ref="input"
           :title="$t('firefly.tags')"
           v-bind:placeholder="$t('firefly.tags')"
           @tags-changed="newTags => this.tags = newTags"

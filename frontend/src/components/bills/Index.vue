@@ -269,10 +269,10 @@ export default {
           };
     },
     downloadBills: function (page) {
-      console.log('downloadBills');
-      console.log(this.indexReady);
-      console.log(this.loading);
-      console.log(this.downloaded);
+      // console.log('downloadBills');
+      // console.log(this.indexReady);
+      // console.log(this.loading);
+      // console.log(this.downloaded);
       this.resetGroups();
       // console.log('getAccountList()');
       if (this.indexReady && !this.loading && !this.downloaded) {

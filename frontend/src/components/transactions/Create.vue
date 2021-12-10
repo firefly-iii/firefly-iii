@@ -221,7 +221,7 @@ export default {
                     ]
     ),
     addTransactionArray: function (event) {
-      console.log('Record call to addTransactionArray');
+      // console.log('Record call to addTransactionArray');
       event.preventDefault();
       this.addTransaction();
     },
@@ -229,8 +229,8 @@ export default {
      * Removes a split from the array.
      */
     removeTransaction: function (payload) {
-      console.log('Record call to removeTransaction');
-      console.log('Triggered to remove transaction ' + payload.index);
+      // console.log('Record call to removeTransaction');
+      // console.log('Triggered to remove transaction ' + payload.index);
       window.$('#tab_split_' + (payload.index - 1)).click();
       this.$store.commit('transactions/create/deleteTransaction', payload);
     },

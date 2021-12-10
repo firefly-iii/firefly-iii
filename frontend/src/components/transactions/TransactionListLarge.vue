@@ -225,12 +225,12 @@ export default {
       this.$emit('jump-page', {page: value});
     },
     entries: function (value) {
-      console.log('detected new transactions! (' + value.length + ')');
+      // console.log('detected new transactions! (' + value.length + ')');
       this.parseTransactions();
     },
-    value: function (value) {
-      console.log('Watch value!');
-    }
+    // value: function (value) {
+    //   // console.log('Watch value!');
+    // }
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
@@ -239,10 +239,10 @@ export default {
       // console.log('Start of parseTransactions. Count of entries is ' + this.entries.length + ' and page is ' + this.page);
       // console.log('Reported total is ' + this.total);
       if (0 === this.entries.length) {
-        console.log('Will not render now because length is 0.');
+        // console.log('Will not render now because length is 0.');
         return;
       }
-      console.log('Now have ' + this.transactions.length + ' transactions');
+      // console.log('Now have ' + this.transactions.length + ' transactions');
       for (let i = 0; i < this.total; i++) {
         this.transactions.push({dummy: true, type: 'x'});
         // console.log('Push dummy to index ' + i);
@@ -270,7 +270,7 @@ export default {
     },
     newCacheKey: function () {
       this.refreshCacheKey();
-      console.log('Cache key is now ' + this.cacheKey);
+      // console.log('Cache key is now ' + this.cacheKey);
       this.$emit('refreshed-cache-key');
     },
     updateFieldList: function () {

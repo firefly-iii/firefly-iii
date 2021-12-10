@@ -209,6 +209,7 @@
                 <TransactionTags
                     v-model="transaction.tags"
                     v-on="$listeners"
+                    ref="tags"
                     :errors="transaction.errors.tags"
                     :index="index"
                 />
@@ -381,12 +382,13 @@ export default {
   methods: {
     removeTransaction: function () {
       // console.log('Will remove transaction ' + this.index);
+
       this.$emit('remove-transaction', {index: this.index});
     },
     triggerNextAccount: function(e) {
       //alert(e);
       if('source' === e) {
-        console.log('Jump to destination!');
+        // console.log('Jump to destination!');
         this.$refs.destinationAccount.giveFocus();
       }
     }

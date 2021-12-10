@@ -31,6 +31,7 @@
           autocomplete="off"
           name="foreign_amount[]"
           type="number"
+          ref="input"
       >
     </div>
     <span v-if="errors.length > 0">
@@ -65,6 +66,11 @@ export default {
       this.emitEvent = false;
       this.amount = this.formatNumber(this.amount);
     }
+  },
+  mounted: function () {
+    this.$nextTick(function () {
+      this.$refs.input.tabIndex = 5;
+    })
   },
   methods: {
     formatNumber(str) {
