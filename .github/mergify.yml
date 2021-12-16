@@ -5,3 +5,9 @@ pull_request_rules:
     actions:
       merge:
         method: merge
+  - name: Close all on main
+    conditions:
+      - base=main
+    actions:
+      close:
+        message: Do not open PR's on the main branch.
