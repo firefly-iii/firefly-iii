@@ -606,48 +606,15 @@ class OperatorQuerySearch implements SearchInterface
             //
             case 'date_is':
                 $range = $this->parseDateRange($value);
-                Log::debug(
-                    sprintf(
-                        'Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'),
-                        $range['end']->format('Y-m-d')
-                    )
-                );
-                $this->collector->setRange($range['start'], $range['end']);
-
-                // add to operators manually:
-                $this->operators->push(['type' => 'date_before', 'value' => $range['start']->format('Y-m-d'),]);
-                $this->operators->push(['type' => 'date_after', 'value' => $range['end']->format('Y-m-d'),]);
-
+                $this->setExactDateParams($range);
                 return false;
             case 'date_before':
-                Log::debug(sprintf('Value for date_before is "%s"', $value));
                 $range = $this->parseDateRange($value);
-                Log::debug(
-                    sprintf(
-                        'Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'),
-                        $range['end']->format('Y-m-d')
-                    )
-                );
-
-                // add to operators manually:
-                $this->operators->push(['type' => 'date_before', 'value' => $range['start']->format('Y-m-d'),]);
-                $this->collector->setBefore($range['start']);
-
+                $this->setDateBeforeParams($range);
                 return false;
             case 'date_after':
-                Log::debug(sprintf('Value for date_after is "%s"', $value));
                 $range = $this->parseDateRange($value);
-                Log::debug(
-                    sprintf(
-                        'Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'),
-                        $range['end']->format('Y-m-d')
-                    )
-                );
-
-                // add to operators manually:
-                $this->operators->push(['type' => 'date_after', 'value' => $range['end']->format('Y-m-d'),]);
-                $this->collector->setAfter($range['end']);
-
+                $this->setDateAfterParams($range);
                 return false;
             case 'created_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
@@ -867,13 +834,12 @@ class OperatorQuerySearch implements SearchInterface
     {
         $parser = new ParseDateString;
         if ($parser->isDateRange($value)) {
-            return $parser->parseRange($value, $this->date);
+            return $parser->parseRange($value);
         }
         $parsedDate = $parser->parseDate($value);
 
         return [
-            'start' => $parsedDate,
-            'end'   => $parsedDate,
+            'exact' => $parsedDate,
         ];
     }
 
@@ -883,5 +849,120 @@ class OperatorQuerySearch implements SearchInterface
     public function getWords(): array
     {
         return $this->words;
+    }
+
+    /**
+     * @param array $range
+     *
+     * @throws FireflyException
+     */
+    private function setExactDateParams(array $range): void
+    {
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setExactParameters()', $key));
+                case 'exact':
+                    Log::debug(sprintf('Set date_is_exact value "%s"', $value->format('Y-m-d')));
+                    $this->collector->setRange($value, $value);
+                    $this->operators->push(['type' => 'date_is', 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set date_is_exact YEAR value "%s"', $value));
+                    $this->collector->yearIs($value);
+                    $this->operators->push(['type' => 'date_is_year', 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set date_is_exact MONTH value "%s"', $value));
+                    $this->collector->monthIs($value);
+                    $this->operators->push(['type' => 'date_is_month', 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set date_is_exact DAY value "%s"', $value));
+                    $this->collector->dayIs($value);
+                    $this->operators->push(['type' => 'date_is_day', 'value' => $value,]);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param array $range
+     *
+     * @throws FireflyException
+     */
+    private function setDateBeforeParams(array $range): void
+    {
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setDateBeforeParams()', $key));
+                case 'exact':
+                    $this->collector->setBefore($value);
+                    $this->operators->push(['type' => 'date_before', 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set date_is_before YEAR value "%s"', $value));
+                    $this->collector->yearBefore($value);
+                    $this->operators->push(['type' => 'date_before_year', 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set date_is_before MONTH value "%s"', $value));
+                    $this->collector->monthBefore($value);
+                    $this->operators->push(['type' => 'date_before_month', 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set date_is_before DAY value "%s"', $value));
+                    $this->collector->dayBefore($value);
+                    $this->operators->push(['type' => 'date_before_day', 'value' => $value,]);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param array $range
+     *
+     * @throws FireflyException
+     */
+    private function setDateAfterParams(array $range)
+    {
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setDateAfterParams()', $key));
+                case 'exact':
+                    $this->collector->setAfter($value);
+                    $this->operators->push(['type' => 'date_after', 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set date_is_after YEAR value "%s"', $value));
+                    $this->collector->yearAfter($value);
+                    $this->operators->push(['type' => 'date_after_year', 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set date_is_after MONTH value "%s"', $value));
+                    $this->collector->monthAfter($value);
+                    $this->operators->push(['type' => 'date_after_month', 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set date_is_after DAY value "%s"', $value));
+                    $this->collector->dayAfter($value);
+                    $this->operators->push(['type' => 'date_after_day', 'value' => $value,]);
+                    break;
+            }
+        }
     }
 }

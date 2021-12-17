@@ -565,4 +565,15 @@ interface GroupCollectorInterface
      */
     public function withoutTags(): GroupCollectorInterface;
 
+
+    public function yearIs(string $year): GroupCollectorInterface;
+    public function monthIs(string $month): GroupCollectorInterface;
+    public function dayIs(string $day): GroupCollectorInterface;
+    public function yearBefore(string $year): GroupCollectorInterface;
+    public function monthBefore(string $month): GroupCollectorInterface;
+    public function dayBefore(string $day): GroupCollectorInterface;
+    public function yearAfter(string $year): GroupCollectorInterface;
+    public function monthAfter(string $month): GroupCollectorInterface;
+    public function dayAfter(string $day): GroupCollectorInterface;
+
 }
