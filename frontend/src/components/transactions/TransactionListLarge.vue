@@ -169,10 +169,8 @@
 
           </div>
           <div class="card-footer"> (button)
-            <!--
-            <a :href="'./transactions/create/' + type" class="btn btn-success"
+            <a :href="'./transactions/create/TODO'" class="btn btn-success"
                :title="$t('firefly.create_new_transaction')">{{ $t('firefly.create_new_transaction') }}</a>
-               -->
           </div>
         </div>
       </div>

@@ -219,7 +219,7 @@ export default {
 
               // remove budget info from rawBudgets if it's there:
               this.filterBudgets(budgetId, currencyId);
-              let name = this.budgets[current.attributes.budget_id].name;
+              // let name = this.budgets[current.attributes.budget_id].name;
               // spent within budget:
               if (0.0 !== spentFloat && spentFloatPos < amount) {
                 // console.log('Spent ' + name + ' in budget');

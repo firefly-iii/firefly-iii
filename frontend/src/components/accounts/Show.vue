@@ -22,32 +22,7 @@
   <div>
     <div class="row">
       <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
-        <!-- Custom Tabs -->
-        <!--
-        <div class="card">
-          <div class="card-header d-flex p-0">
-            <h3 class="card-title p-3">Tabs</h3>
-            <ul class="nav nav-pills ml-auto p-2">
-              <li class="nav-item"><a class="nav-link active" href="#main_chart" data-toggle="tab">Chart</a></li>
-              <li class="nav-item"><a class="nav-link" href="#budgets" data-toggle="tab">Budgets</a></li>
-              <li class="nav-item"><a class="nav-link" href="#categories" data-toggle="tab">Categories</a></li>
-            </ul>
-          </div>
-          <div class="card-body">
-            <div class="tab-content">
-              <div class="tab-pane active" id="main_chart">
-                1: main chart
-              </div>
-              <div class="tab-pane" id="budgets">
-                2: tree map from/to budget
-              </div>
-              <div class="tab-pane" id="categories">
-                2: tree map from/to cat
-              </div>
-            </div>
-          </div>
-        </div>
-        -->
+        <!-- Custom Tabs will be put here (see file history). -->
       </div>
     </div>
 
@@ -162,7 +137,7 @@ export default {
               .then(response => {
                       // console.log('Now getTransactions() DONE!');
                       this.total = parseInt(response.data.meta.pagination.total);
-                      let transactions = response.data.data;
+                      // let transactions = response.data.data;
                       // console.log('Have downloaded ' + transactions.length + ' transactions');
                       // console.log(response.data);
                       this.rawTransactions = response.data.data;

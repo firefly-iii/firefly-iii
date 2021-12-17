@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
@@ -109,9 +108,9 @@ class CreateController extends Controller
         $sourceId      = (int)request()->get('source');
         $destinationId = (int)request()->get('destination');
 
-        /** @var AccountRepositoryInterface $repository */
-        $repository           = app(AccountRepositoryInterface::class);
-        $cash                 = $repository->getCashAccount();
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository    = app(AccountRepositoryInterface::class);
+        $cash                 = $accountRepository->getCashAccount();
         $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle             = (string)trans(sprintf('breadcrumbs.create_%s', strtolower((string)$objectType)));
         $subTitleIcon         = 'fa-plus';

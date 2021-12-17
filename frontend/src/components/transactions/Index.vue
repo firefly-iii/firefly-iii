@@ -20,24 +20,7 @@
 
 <template>
   <div>
-    <!--
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            Treemap categories
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            Treemap accounts
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
+    <!-- charts here (see file history) -->
     <!-- page is ignored for the time being -->
     <TransactionListLarge
         :entries="rawTransactions"
@@ -48,21 +31,6 @@
         v-on:jump-page="jumpToPage($event)"
         v-on:refreshed-cache-key="refreshedKey"
     />
-    <!--
-    <div class="row">
-      <div class="col-xl-2 col-lg-4 col-sm-6 col-xs-12" v-for="range in ranges">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">{{ formatDate(range.start, 'yyyy-LL') }}</h3>
-          </div>
-          <div class="card-body">
-            <a :href="'./transactions/' + type + '/' + formatDate(range.start,'yyyy-LL-dd') + '/' + formatDate(range.end, 'yyyy-LL-dd')">Transactions</a>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    -->
   </div>
 </template>
 
