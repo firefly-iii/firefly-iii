@@ -36,14 +36,15 @@ trait LiabilityValidation
 {
 
     /**
-     * @param int|null $accountId
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateLCDestination(?int $accountId): bool
+    protected function validateLCDestination(array $array): bool
     {
-        Log::debug(sprintf('Now in validateLCDestination(%d)', $accountId));
+        Log::debug('Now in validateLCDestination', $array);
         $result     = null;
+        $accountId  = array_key_exists('id', $array) ? $array['id'] : null;
         $validTypes = config('firefly.valid_liabilities');
 
         if (null === $accountId) {
@@ -74,14 +75,15 @@ trait LiabilityValidation
     /**
      * Source of an liability credit must be a liability.
      *
-     * @param string|null $accountName
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateLCSource(?string $accountName): bool
+    protected function validateLCSource(array $array): bool
     {
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
         $result = true;
-        Log::debug(sprintf('Now in validateLCDestination("%s")', $accountName));
+        Log::debug('Now in validateLCDestination', $array);
         if ('' === $accountName || null === $accountName) {
             $result = false;
         }

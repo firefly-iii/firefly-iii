@@ -40,22 +40,22 @@ trait TransferValidation
 
     /**
      * @param array  $validTypes
-     * @param int    $accountId
-     * @param string $accountName
+     * @param array $data
      *
      * @return Account|null
      */
-    abstract protected function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account;
+    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     /**
-     * @param int|null $accountId
-     * @param mixed    $accountName
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateTransferDestination(?int $accountId, $accountName): bool
+    protected function validateTransferDestination(array $array): bool
     {
-        Log::debug(sprintf('Now in validateTransferDestination(%d, "%s")', $accountId, $accountName));
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        Log::debug('Now in validateTransferDestination', $array);
         // source can be any of the following types.
         $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
@@ -68,7 +68,7 @@ trait TransferValidation
         }
 
         // or try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
+        $search = $this->findExistingAccount($validTypes,$array);
         if (null === $search) {
             $this->destError = (string)trans('validation.transfer_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
 
@@ -88,14 +88,15 @@ trait TransferValidation
     }
 
     /**
-     * @param int|null    $accountId
-     * @param string|null $accountName
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateTransferSource(?int $accountId, ?string $accountName): bool
+    protected function validateTransferSource(array $array): bool
     {
-        Log::debug(sprintf('Now in validateTransferSource(%d, "%s")', $accountId, $accountName));
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        Log::debug('Now in validateTransferSource', $array);
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
@@ -108,7 +109,7 @@ trait TransferValidation
         }
 
         // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
+        $search = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string)trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source, cant find it.', $validTypes);

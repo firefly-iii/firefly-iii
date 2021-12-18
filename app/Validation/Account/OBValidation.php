@@ -41,15 +41,16 @@ trait OBValidation
     abstract protected function canCreateTypes(array $accountTypes): bool;
 
     /**
-     * @param int|null $accountId
-     * @param mixed    $accountName
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateOBDestination(?int $accountId, $accountName): bool
+    protected function validateOBDestination(array $array): bool
     {
-        $result = null;
-        Log::debug(sprintf('Now in validateOBDestination(%d, "%s")', $accountId, $accountName));
+        $result      = null;
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        Log::debug('Now in validateOBDestination', $array);
 
         // source can be any of the following types.
         $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
@@ -68,7 +69,7 @@ trait OBValidation
 
         if (null === $result) {
             // otherwise try to find the account:
-            $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
+            $search = $this->findExistingAccount($validTypes, $array);
             if (null === $search) {
                 Log::debug('findExistingAccount() returned NULL, so the result is false.', $validTypes);
                 $this->destError = (string)trans('validation.ob_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
@@ -90,15 +91,15 @@ trait OBValidation
      * Source of an opening balance can either be an asset account
      * or an "initial balance account". The latter can be created.
      *
-     * @param int|null    $accountId
-     * @param string|null $accountName
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateOBSource(?int $accountId, ?string $accountName): bool
+    protected function validateOBSource(array $array): bool
     {
-        Log::debug(sprintf('Now in validateOBSource(%d, "%s")', $accountId, $accountName));
-        Log::debug(sprintf('The account name is null: %s', var_export(null === $accountName, true)));
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        Log::debug('Now in validateOBSource', $array);
         $result = null;
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);

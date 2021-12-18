@@ -295,7 +295,7 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function validateAccountInformation(Validator $validator): void
     {
-        Log::debug('Now in validateAccountInformation()');
+        Log::debug('Now in validateAccountInformation (RecurrenceFormRequest)()');
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
         $data             = $validator->getData();
@@ -326,7 +326,7 @@ class RecurrenceFormRequest extends FormRequest
                 break;
         }
         // validate source account.
-        $validSource = $accountValidator->validateSource($sourceId, null, null);
+        $validSource = $accountValidator->validateSource(['id' => $sourceId,]);
 
         // do something with result:
         if (false === $validSource) {
@@ -338,7 +338,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // validate destination account
-        $validDestination = $accountValidator->validateDestination($destinationId, null, null);
+        $validDestination = $accountValidator->validateDestination(['id' => $destinationId,]);
         // do something with result:
         if (false === $validDestination) {
             $message = (string)trans('validation.generic_invalid_destination');

@@ -77,9 +77,9 @@ trait JournalServiceTrait
         Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType] ?? ['UNKNOWN']), $direction));
 
         $result = $this->findAccountById($data, $expectedTypes[$transactionType]);
-        $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
+        $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
         $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
 
         return $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);

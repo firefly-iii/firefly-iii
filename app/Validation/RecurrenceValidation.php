@@ -105,7 +105,7 @@ trait RecurrenceValidation
             // validate destination account
             $destinationId    = array_key_exists('destination_id', $transaction) ? (int)$transaction['destination_id'] : null;
             $destinationName  = $transaction['destination_name'] ?? null;
-            $validDestination = $accountValidator->validateDestination($destinationId, $destinationName, null);
+            $validDestination = $accountValidator->validateDestination(['id' => $destinationId, 'name' => $destinationName,]);
             // do something with result:
             if (false === $validDestination) {
                 $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
