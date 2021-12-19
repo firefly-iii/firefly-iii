@@ -23,6 +23,6 @@
 declare(strict_types=1);
 
 return [
-    'failed'   => '認証データが登録情報と一致しません。',
-    'throttle' => 'ログインの失敗が既定回数に達しました。:seconds 秒以上空けて、再度お試しください。',
+    'failed'   => '資格情報が一致しません。',
+    'throttle' => 'ログインの試行回数が多すぎます。:seconds 秒後にお試しください。',
 ];
