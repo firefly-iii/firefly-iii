@@ -190,7 +190,7 @@ trait TransactionValidation
             Log::debug('Will try to validate source account information.');
             $sourceId    = (int)($transaction['source_id'] ?? 0);
             $sourceName  = $transaction['source_name'] ?? null;
-            $validSource = $accountValidator->validateSource($sourceId, $sourceName, null);
+            $validSource = $accountValidator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
 
             // do something with result:
             if (false === $validSource) {

@@ -46,16 +46,11 @@ class StartFireflySession extends StartSession
         $safeUrl = app('steam')->getSafeUrl($url, route('index'));
 
         if ($url !== $safeUrl) {
-            //Log::debug(sprintf('storeCurrentUrl: converted "%s" to "%s", so will not use it.', $url, $safeUrl));
             return;
         }
 
         if ('GET' === $request->method() && !$request->ajax()) {
-            //Log::debug(sprintf('storeCurrentUrl: Redirect is now "%s".', $safeUrl));
             $session->setPreviousUrl($safeUrl);
-
-            // return;
         }
-        //Log::debug(sprintf('storeCurrentUrl: Refuse to set "%s" as current URL.', $safeUrl));
     }
 }

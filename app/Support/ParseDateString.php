@@ -217,26 +217,33 @@ class ParseDateString
     public function parseRange(string $date): array
     {
         // several types of range can be submitted
+        $result = [
+            'exact' => new Carbon('1984-09-17'),
+        ];
         switch (true) {
             default:
                 break;
             case $this->isDayRange($date):
-                return $this->parseDayRange($date);
+                $result = $this->parseDayRange($date);
+                break;
             case $this->isMonthRange($date):
-                return $this->parseMonthRange($date);
+                $result = $this->parseMonthRange($date);
+                break;
             case $this->isYearRange($date):
-                return $this->parseYearRange($date);
+                $result = $this->parseYearRange($date);
+                break;
             case $this->isMonthDayRange($date):
-                return $this->parseMonthDayRange($date);
+                $result = $this->parseMonthDayRange($date);
+                break;
             case $this->isDayYearRange($date):
-                return $this->parseDayYearRange($date);
+                $result = $this->parseDayYearRange($date);
+                break;
             case $this->isMonthYearRange($date):
-                return $this->parseMonthYearRange($date);
+                $result = $this->parseMonthYearRange($date);
+                break;
         }
 
-        return [
-            'exact' => new Carbon('1984-09-17'),
-        ];
+        return $result;
     }
 
     /**
