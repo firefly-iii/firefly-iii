@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.8 - 2021-12-19
+
+### Fixed
+- Account validation was broken in some edge cases, making it impossible to edit transactions.
+
 ## 5.6.7 - 2021-12-19
 
 ### Changed
