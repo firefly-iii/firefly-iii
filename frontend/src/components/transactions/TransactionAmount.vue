@@ -71,9 +71,7 @@ export default {
   },
   mounted: function () {
     this.$nextTick(function () {
-      if (0 === this.index) {
         this.$refs.input.tabIndex = 3;
-      }
     })
   },
   methods: {

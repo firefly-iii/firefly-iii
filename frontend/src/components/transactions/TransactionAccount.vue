@@ -118,9 +118,7 @@ export default {
   },
   mounted: function () {
     this.$nextTick(function () {
-      if (0 === this.index) {
         this.$refs.inputThing.$refs.input.tabIndex = 2;
-      }
     })
   },
   methods: {
@@ -128,7 +126,7 @@ export default {
       return './api/v1/autocomplete/accounts?types=' + types.join(',') + '&query=' + query;
     },
     giveFocus: function () {
-      //console.log('I want focus! now OK: ' + this.direction + ' l: ' + this.accounts.length);
+      // console.log('I want focus! now OK: ' + this.direction + ' l: ' + this.accounts.length);
       //console.log(this.$refs.inputThing.$refs.input.value);
       this.$refs.inputThing.$refs.input.focus();
       //console.log(this.$refs.inputThing.isFocused);

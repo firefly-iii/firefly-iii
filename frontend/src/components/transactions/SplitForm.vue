@@ -385,13 +385,13 @@ export default {
 
       this.$emit('remove-transaction', {index: this.index});
     },
-    triggerNextAccount: function(e) {
+    triggerNextAccount: function (e) {
       //alert(e);
-      if('source' === e) {
+      if ('source' === e) {
         // console.log('Jump to destination!');
         this.$refs.destinationAccount.giveFocus();
       }
-    }
+    },
   },
   computed: {
     splitDate: function () {

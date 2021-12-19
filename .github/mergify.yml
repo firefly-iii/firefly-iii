@@ -5,3 +5,9 @@ pull_request_rules:
     actions:
       merge:
         method: merge
+  - name: Close all on main
+    conditions:
+      - base=main
+    actions:
+      close:
+        message: Please do not open PR's on the `main` branch, but on the `develop` branch only. Thank you!

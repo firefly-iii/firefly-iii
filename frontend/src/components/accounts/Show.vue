@@ -28,6 +28,7 @@
 
     <TransactionListLarge
         :entries="rawTransactions"
+        :isEmpty="isEmpty"
         :page="currentPage"
         ref="list"
         :total="total"
@@ -80,7 +81,8 @@ export default {
       perPage: 51,
       locale: 'en-US',
       api: null,
-      nameLoading: false
+      nameLoading: false,
+      isEmpty: false
     }
   },
   created() {
@@ -137,6 +139,9 @@ export default {
               .then(response => {
                       // console.log('Now getTransactions() DONE!');
                       this.total = parseInt(response.data.meta.pagination.total);
+                      if (0 === this.total) {
+                        this.isEmpty = true;
+                      }
                       // let transactions = response.data.data;
                       // console.log('Have downloaded ' + transactions.length + ' transactions');
                       // console.log(response.data);

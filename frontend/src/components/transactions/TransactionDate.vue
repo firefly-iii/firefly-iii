@@ -69,12 +69,10 @@ export default {
     this.timeStr = parts[1];
   },
   mounted: function () {
-    if (0 === this.index) {
-      this.$nextTick(function () {
-        this.$refs.date.tabIndex = 6;
-        this.$refs.time.tabIndex = 7;
-      });
-    }
+    this.$nextTick(function () {
+      this.$refs.date.tabIndex = 6;
+      this.$refs.time.tabIndex = 7;
+    });
   },
   data() {
     return {

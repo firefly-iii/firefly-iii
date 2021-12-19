@@ -67,10 +67,7 @@ export default {
         .then(response => {
           this.descriptions = response.data;
           this.initialSet = response.data;
-
-          if(0===this.index) {
-            this.$refs.autoComplete.$refs.input.tabIndex = 1;
-          }
+          this.$refs.autoComplete.$refs.input.tabIndex = 1;
 
         });
   },
