@@ -20,8 +20,6 @@
 
 <template>
   <div>
-    <span>Length: {{ this.transactions.length }}</span>
-
     <div v-if="transactions.length > 1" class="row">
       <div class="col">
         <!-- tabs -->

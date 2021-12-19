@@ -10,4 +10,4 @@ pull_request_rules:
       - base=main
     actions:
       close:
-        message: Do not open PR's on the main branch.
+        message: Please do not open PR's on the `main` branch, but on the `develop` branch only. Thank you!

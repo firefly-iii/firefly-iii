@@ -136,11 +136,12 @@ trait RecurringTransactionTrait
             $validator = app(AccountValidator::class);
             $validator->setUser($recurrence->user);
             $validator->setTransactionType($recurrence->transactionType->type);
-            if (!$validator->validateSource($source->id, null, null)) {
+
+            if (!$validator->validateSource(['id' => $source->id])) {
                 throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError));
             }
 
-            if (!$validator->validateDestination($destination->id, null, null)) {
+            if (!$validator->validateDestination(['id' => $destination->id])) {
                 throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError));
             }
             if (array_key_exists('foreign_amount', $array) && '' === (string)$array['foreign_amount']) {

@@ -54,7 +54,7 @@ class StartFireflySession extends StartSession
             //Log::debug(sprintf('storeCurrentUrl: Redirect is now "%s".', $safeUrl));
             $session->setPreviousUrl($safeUrl);
 
-            return;
+            // return;
         }
         //Log::debug(sprintf('storeCurrentUrl: Refuse to set "%s" as current URL.', $safeUrl));
     }

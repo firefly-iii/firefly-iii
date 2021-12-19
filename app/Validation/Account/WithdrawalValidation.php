@@ -41,22 +41,22 @@ trait WithdrawalValidation
 
     /**
      * @param array  $validTypes
-     * @param int    $accountId
-     * @param string $accountName
+     * @param array $data
      *
      * @return Account|null
      */
-    abstract protected function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account;
+    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     /**
-     * @param int|null    $accountId
-     * @param string|null $accountName
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateGenericSource(?int $accountId, ?string $accountName): bool
+    protected function validateGenericSource(array $array): bool
     {
-        Log::debug(sprintf('Now in validateGenericSource(%d, "%s")', $accountId, $accountName));
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        Log::debug('Now in validateGenericSource', $array);
         // source can be any of the following types.
         $validTypes = [AccountType::ASSET, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
@@ -69,7 +69,7 @@ trait WithdrawalValidation
         }
 
         // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
+        $search = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string)trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source. Cant find it.', $validTypes);
@@ -83,14 +83,15 @@ trait WithdrawalValidation
     }
 
     /**
-     * @param int|null    $accountId
-     * @param string|null $accountName
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateWithdrawalDestination(?int $accountId, ?string $accountName): bool
+    protected function validateWithdrawalDestination(array $array): bool
     {
-        Log::debug(sprintf('Now in validateWithdrawalDestination(%d, "%s")', $accountId, $accountName));
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        Log::debug('Now in validateWithdrawalDestination()', $array);
         // source can be any of the following types.
         $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
@@ -120,14 +121,16 @@ trait WithdrawalValidation
     }
 
     /**
-     * @param int|null    $accountId
-     * @param string|null $accountName
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateWithdrawalSource(?int $accountId, ?string $accountName): bool
+    protected function validateWithdrawalSource(array $array): bool
     {
-        Log::debug(sprintf('Now in validateWithdrawalSource(%d, "%s")', $accountId, $accountName));
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+
+        Log::debug('Now in validateWithdrawalSource', $array);
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
@@ -140,7 +143,7 @@ trait WithdrawalValidation
         }
 
         // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
+        $search = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string)trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source. Cant find it.', $validTypes);

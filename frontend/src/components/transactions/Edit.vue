@@ -239,7 +239,7 @@ export default {
     submittedAttachments: function () {
       this.finaliseSubmission();
     },
-    transactionType: function() {
+    transactionType: function () {
       this.getExpectedSourceTypes();
     }
   },
@@ -320,9 +320,11 @@ export default {
       result.source_account_name = array.source_name;
       result.source_account_type = array.source_type;
 
-      result.destination_account_id = array.destination_id;
-      result.destination_account_name = array.destination_name;
-      result.destination_account_type = array.destination_type;
+      if (array.destination_type !== 'Cash account') {
+        result.destination_account_id = array.destination_id;
+        result.destination_account_name = array.destination_name;
+        result.destination_account_type = array.destination_type;
+      }
 
       // amount:
       result.amount = array.amount;

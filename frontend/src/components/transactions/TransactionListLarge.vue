@@ -169,10 +169,8 @@
 
           </div>
           <div class="card-footer"> (button)
-            <!--
-            <a :href="'./transactions/create/' + type" class="btn btn-success"
+            <a :href="'./transactions/create/TODO'" class="btn btn-success"
                :title="$t('firefly.create_new_transaction')">{{ $t('firefly.create_new_transaction') }}</a>
-               -->
           </div>
         </div>
       </div>
@@ -227,6 +225,9 @@ export default {
     entries: function (value) {
       // console.log('detected new transactions! (' + value.length + ')');
       this.parseTransactions();
+      if(this.isEmpty) {
+        this.loading=false;
+      }
     },
     // value: function (value) {
     //   // console.log('Watch value!');
@@ -407,6 +408,10 @@ export default {
     sortDesc: {
       type: Boolean,
       default: true
+    },
+    isEmpty: {
+      type: Boolean,
+      default: false
     },
     total: {
       type: Number,

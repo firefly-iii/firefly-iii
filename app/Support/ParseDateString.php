@@ -98,17 +98,17 @@ class ParseDateString
             return $this->parseRelativeDate($date);
         }
         if ('xxxx-xx-xx' === strtolower($date)) {
-            throw new FireflyException(sprintf('[a]Not a recognised date format: "%s"', $date));
+            throw new FireflyException(sprintf('[a] Not a recognised date format: "%s"', $date));
         }
         // can't do a partial year:
         $substrCount = substr_count(substr($date, 0, 4), 'x', 0);
         if (10 === strlen($date) && $substrCount > 0 && $substrCount < 4) {
-            throw new FireflyException(sprintf('[b]Not a recognised date format: "%s"', $date));
+            throw new FireflyException(sprintf('[b] Not a recognised date format: "%s"', $date));
         }
 
         // maybe a date range
         if (10 === strlen($date) && (str_contains($date, 'xx') || str_contains($date, 'xxxx'))) {
-            Log::debug(sprintf('[c]Detected a date range ("%s"), return a fake date.', $date));
+            Log::debug(sprintf('[c] Detected a date range ("%s"), return a fake date.', $date));
             // very lazy way to parse the date without parsing it, because this specific function
             // cant handle date ranges.
             return new Carbon('1984-09-17');
@@ -211,33 +211,31 @@ class ParseDateString
 
     /**
      * @param string $date
-     * @param Carbon $journalDate
      *
      * @return array
      */
-    public function parseRange(string $date, Carbon $journalDate): array
+    public function parseRange(string $date): array
     {
         // several types of range can be submitted
         switch (true) {
             default:
                 break;
             case $this->isDayRange($date):
-                return $this->parseDayRange($date, $journalDate);
+                return $this->parseDayRange($date);
             case $this->isMonthRange($date):
-                return $this->parseMonthRange($date, $journalDate);
+                return $this->parseMonthRange($date);
             case $this->isYearRange($date):
-                return $this->parseYearRange($date, $journalDate);
+                return $this->parseYearRange($date);
             case $this->isMonthDayRange($date):
-                return $this->parseMonthDayRange($date, $journalDate);
+                return $this->parseMonthDayRange($date);
             case $this->isDayYearRange($date):
-                return $this->parseDayYearRange($date, $journalDate);
+                return $this->parseDayYearRange($date);
             case $this->isMonthYearRange($date):
-                return $this->parseMonthYearRange($date, $journalDate);
+                return $this->parseMonthYearRange($date);
         }
 
         return [
-            'start' => new Carbon('1984-09-17'),
-            'end'   => new Carbon('1984-09-17'),
+            'exact' => new Carbon('1984-09-17'),
         ];
     }
 
@@ -261,23 +259,18 @@ class ParseDateString
     }
 
     /**
+     * format of string is xxxx-xx-DD
+     *
      * @param string $date
-     * @param Carbon $journalDate
      *
      * @return array
      */
-    protected function parseDayRange(string $date, Carbon $journalDate): array
+    protected function parseDayRange(string $date): array
     {
-        // format of string is xxxx-xx-DD
-        $validDate = str_replace(['xxxx'], [$journalDate->year], $date);
-        $validDate = str_replace(['xx'], [$journalDate->format('m')], $validDate);
-        Log::debug(sprintf('parseDayRange: Parsed "%s" into "%s"', $date, $validDate));
-        $start = Carbon::createFromFormat('Y-m-d', $validDate)->startOfDay();
-        $end   = Carbon::createFromFormat('Y-m-d', $validDate)->endOfDay();
+        $parts = explode('-', $date);
 
         return [
-            'start' => $start,
-            'end'   => $end,
+            'day' => $parts[2],
         ];
     }
 
@@ -301,29 +294,19 @@ class ParseDateString
     }
 
     /**
+     * format of string is xxxx-MM-xx
+     *
      * @param string $date
-     * @param Carbon $journalDate
      *
      * @return array
      */
-    protected function parseMonthRange(string $date, Carbon $journalDate): array
+    protected function parseMonthRange(string $date): array
     {
-        // because 31 would turn February into March unexpectedly and the exact day is irrelevant here.
-        $day = $journalDate->format('d');
-        if ((int)$day > 28) {
-            $day = '28';
-        }
-
-        // format of string is xxxx-MM-xx
-        $validDate = str_replace(['xxxx'], [$journalDate->year], $date);
-        $validDate = str_replace(['xx'], [$day], $validDate);
-        Log::debug(sprintf('parseMonthRange: Parsed "%s" into "%s"', $date, $validDate));
-        $start = Carbon::createFromFormat('Y-m-d', $validDate)->startOfMonth();
-        $end   = Carbon::createFromFormat('Y-m-d', $validDate)->endOfMonth();
+        Log::debug(sprintf('parseMonthRange: Parsed "%s".', $date));
+        $parts = explode('-', $date);
 
         return [
-            'start' => $start,
-            'end'   => $end,
+            'month' => $parts[1],
         ];
     }
 
@@ -347,24 +330,19 @@ class ParseDateString
     }
 
     /**
+     * format of string is YYYY-xx-xx
+     *
      * @param string $date
-     * @param Carbon $journalDate
      *
      * @return array
      */
-    protected function parseYearRange(string $date, Carbon $journalDate): array
+    protected function parseYearRange(string $date): array
     {
-        // format of string is YYYY-xx-xx
-        // kind of a convulted way of replacing variables but I'm lazy.
-        $validDate = str_replace(['xx-xx'], [sprintf('%s-xx', $journalDate->format('m'))], $date);
-        $validDate = str_replace(['xx'], [$journalDate->format('d')], $validDate);
-        Log::debug(sprintf('parseYearRange: Parsed "%s" into "%s"', $date, $validDate));
-        $start = Carbon::createFromFormat('Y-m-d', $validDate)->startOfYear();
-        $end   = Carbon::createFromFormat('Y-m-d', $validDate)->endOfYear();
+        Log::debug(sprintf('parseYearRange: Parsed "%s"', $date));
+        $parts = explode('-', $date);
 
         return [
-            'start' => $start,
-            'end'   => $end,
+            'year' => $parts[0],
         ];
     }
 
@@ -388,23 +366,20 @@ class ParseDateString
     }
 
     /**
+     * format of string is xxxx-MM-DD
+     *
      * @param string $date
-     * @param Carbon $journalDate
      *
      * @return array
      */
-    private function parseMonthDayRange(string $date, Carbon $journalDate): array
+    private function parseMonthDayRange(string $date): array
     {
-        // Any year.
-        // format of string is xxxx-MM-DD
-        $validDate = str_replace(['xxxx'], [$journalDate->year], $date);
-        Log::debug(sprintf('parseMonthDayRange: Parsed "%s" into "%s"', $date, $validDate));
-        $start = Carbon::createFromFormat('Y-m-d', $validDate)->startOfDay();
-        $end   = Carbon::createFromFormat('Y-m-d', $validDate)->endOfDay();
+        Log::debug(sprintf('parseMonthDayRange: Parsed "%s".', $date));
+        $parts = explode('-', $date);
 
         return [
-            'start' => $start,
-            'end'   => $end,
+            'month' => $parts[1],
+            'day'   => $parts[2],
         ];
     }
 
@@ -428,23 +403,20 @@ class ParseDateString
     }
 
     /**
+     * format of string is YYYY-xx-DD
+     *
      * @param string $date
-     * @param Carbon $journalDate
      *
      * @return array
      */
-    private function parseDayYearRange(string $date, Carbon $journalDate): array
+    private function parseDayYearRange(string $date): array
     {
-        // Any year.
-        // format of string is YYYY-xx-DD
-        $validDate = str_replace(['xx'], [$journalDate->format('m')], $date);
-        Log::debug(sprintf('parseDayYearRange: Parsed "%s" into "%s"', $date, $validDate));
-        $start = Carbon::createFromFormat('Y-m-d', $validDate)->startOfDay();
-        $end   = Carbon::createFromFormat('Y-m-d', $validDate)->endOfDay();
+        Log::debug(sprintf('parseDayYearRange: Parsed "%s".', $date));
+        $parts = explode('-', $date);
 
         return [
-            'start' => $start,
-            'end'   => $end,
+            'year' => $parts[0],
+            'day'  => $parts[2],
         ];
     }
 
@@ -468,28 +440,20 @@ class ParseDateString
     }
 
     /**
+     * format of string is YYYY-MM-xx
+     *
      * @param string $date
-     * @param Carbon $journalDate
      *
      * @return array
      */
-    protected function parseMonthYearRange(string $date, Carbon $journalDate): array
+    protected function parseMonthYearRange(string $date): array
     {
-        // because 31 would turn February into March unexpectedly and the exact day is irrelevant here.
-        $day = $journalDate->format('d');
-        if ((int)$day > 28) {
-            $day = '28';
-        }
-
-        // format of string is YYYY-MM-xx
-        $validDate = str_replace(['xx'], [$day], $date);
-        Log::debug(sprintf('parseMonthYearRange: Parsed "%s" into "%s"', $date, $validDate));
-        $start = Carbon::createFromFormat('Y-m-d', $validDate)->startOfMonth();
-        $end   = Carbon::createFromFormat('Y-m-d', $validDate)->endOfMonth();
+        Log::debug(sprintf('parseMonthYearRange: Parsed "%s".', $date));
+        $parts = explode('-', $date);
 
         return [
-            'start' => $start,
-            'end'   => $end,
+            'year'  => $parts[0],
+            'month' => $parts[1],
         ];
     }
 

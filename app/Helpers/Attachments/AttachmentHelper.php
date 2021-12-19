@@ -176,7 +176,9 @@ class AttachmentHelper implements AttachmentHelperInterface
             return false;
         }
         // is allowed? Save the file, without encryption.
-        $this->uploadDisk->put($attachment->fileName(), $content);
+        $parts = explode('/', $attachment->fileName());
+        $file  = $parts[count($parts) - 1];
+        $this->uploadDisk->put($file, $content);
 
         // update attachment.
         $attachment->md5      = md5_file($path);

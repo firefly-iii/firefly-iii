@@ -239,6 +239,9 @@ class GroupCollector implements GroupCollectorInterface
     {
         $result = $this->query->get($this->fields);
 
+        //Log::debug('Query in full');
+        //$this->dumpQueryInLogs();
+
         // now to parse this into an array.
         $collection  = $this->parseArray($result);
         $this->total = $collection->count();
@@ -557,6 +560,15 @@ class GroupCollector implements GroupCollectorInterface
         echo '<pre>';
         print_r($this->query->getBindings());
         echo '</pre>';
+    }
+
+    /**
+     *
+     */
+    public function dumpQueryInLogs(): void
+    {
+        Log::debug($this->query->select($this->fields)->toSql()) ;
+        Log::debug('Bindings',$this->query->getBindings());
     }
 
     /**

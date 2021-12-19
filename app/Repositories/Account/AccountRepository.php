@@ -494,10 +494,8 @@ class AccountRepository implements AccountRepositoryInterface
     public function getOpeningBalanceGroup(Account $account): ?TransactionGroup
     {
         $journal = $this->getOpeningBalance($account);
-        $group   = null;
-        $group   = $journal?->transactionGroup;
 
-        return $group;
+        return $journal?->transactionGroup;
     }
 
     /**
@@ -637,11 +635,9 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function oldestJournalDate(Account $account): ?Carbon
     {
-        $result  = null;
         $journal = $this->oldestJournal($account);
-        $result  = $journal?->date;
 
-        return $result;
+        return $journal?->date;
     }
 
     /**

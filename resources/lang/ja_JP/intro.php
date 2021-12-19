@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => 'Firefly IIIのインデックスページへようこそ。Firefly IIIの動作を理解するために、この導入にお付き合い下さい。',
-    'index_accounts-chart'                            => 'このチャートはあなたの支出元アカウントの残高を表示しています。アカウントの設定でここに表示するかどうか選択できます。',
+    'index_intro'                                     => 'Firefly IIIのインデックスページへようこそ。このイントロダクションでは、Firefly IIIがどのように機能するのかをご紹介します。',
+    'index_accounts-chart'                            => 'このチャートは、お客様の資産口座の現在の残高を表示しています。お客様のご希望でここに表示するかどうか選択できます。',
     'index_box_out_holder'                            => 'この小さな吹き出しとこの横にある吹き出しは収支状況の概要を表示しています。',
     'index_help'                                      => 'ページや入力欄について助けが必要なら、このボタンを押して下さい。',
     'index_outro'                                     => 'Firefly IIIの多くのページはこのような小さなツアーから始まります。もし質問やコメントがある場合は、私に連絡して下さい。楽しんで！',
@@ -46,7 +46,7 @@ return [
 
     // budgets index
     'budgets_index_intro'                             => '予算はあなたの財源を管理するために使用され、Firefly IIIの一つの主要機能を構成します。',
-    'budgets_index_set_budget'                        => 'FIrefly IIIがあなたが割り当て可能なすべての金額を予算計上したかどうか伝えられるように。あなたの毎期間の合計予算を設定してください。',
+    'budgets_index_set_budget'                        => 'Firefly IIIがあなたが割り当て可能なすべての金額を予算計上したかどうか伝えられるように。あなたの毎期間の合計予算を設定してください。',
     'budgets_index_see_expenses_bar'                  => '消費した金額が少しずつこのバーを埋めます。',
     'budgets_index_navigate_periods'                  => '期間を操作することで、予算を事前に簡単に設定できます。',
     'budgets_index_new_budget'                        => 'あなたが妥当だと考える新しい予算を設定してください。',
@@ -56,8 +56,8 @@ return [
     // reports (index)
     'reports_index_intro'                             => 'あなたの財務状況の詳細を見るにはこれらのレポートを使用してください。',
     'reports_index_inputReportType'                   => 'レポートの種類を選択してください。それぞれのレポートが何を表示するかを見るにはヘルプページを確認してください。',
-    'reports_index_inputAccountsSelect'               => 'あなたが適切だと思うように経費勘定を除外したり追加してください。',
-    'reports_index_inputDateRange'                    => '日付範囲の設定はすべてあなた次第です:1日から10年まで。',
+    'reports_index_inputAccountsSelect'               => '経費勘定の除外や追加は自由に行えます。',
+    'reports_index_inputDateRange'                    => '選択した日付の範囲は、1日から10年まで自由に設定できます。',
     'reports_index_extra-options-box'                 => 'あなたが選んだレポートに応じて、追加のフィルターやオプションを選択できます。',
 
     // reports (reports)

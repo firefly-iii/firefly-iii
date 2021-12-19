@@ -26,8 +26,8 @@ return [
     'home'                   => 'ホーム',
     'edit_currency'          => '通貨 ":name" を編集する',
     'delete_currency'        => '通貨 ":name" を削除する',
-    'newPiggyBank'           => '新しい貯金箱を作成する',
-    'edit_piggyBank'         => '貯金箱 ":name" を編集する',
+    'newPiggyBank'           => '貯金箱の新規作成',
+    'edit_piggyBank'         => '貯金箱「:name」を編集',
     'preferences'            => '設定',
     'profile'                => 'プロフィール',
     'accounts'               => '口座',
@@ -60,5 +60,5 @@ return [
     'delete_journal_link'    => '取引間のリンクを削除する',
     'edit_object_group'      => 'グループ「:title」を編集',
     'delete_object_group'    => 'グループ「:title」を削除',
-    'logout_others'          => '他のセッションをログアウトさせる'
+    'logout_others'          => '他のセッションからログアウトする'
 ];

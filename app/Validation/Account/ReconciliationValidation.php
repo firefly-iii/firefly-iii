@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Log;
 
@@ -32,15 +33,17 @@ use Log;
  */
 trait ReconciliationValidation
 {
-
+    public ?Account                    $destination;
+    public ?Account                    $source;
     /**
-     * @param int|null $accountId
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateReconciliationDestination(?int $accountId): bool
+    protected function validateReconciliationDestination(array $array): bool
     {
-        Log::debug('Now in validateReconciliationDestination');
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        Log::debug('Now in validateReconciliationDestination', $array);
         if (null === $accountId) {
             Log::debug('Return FALSE');
 
@@ -80,13 +83,14 @@ trait ReconciliationValidation
     }
 
     /**
-     * @param int|null $accountId
+     * @param array $array
      *
      * @return bool
      */
-    protected function validateReconciliationSource(?int $accountId): bool
+    protected function validateReconciliationSource(array $array): bool
     {
-        Log::debug('In validateReconciliationSource');
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        Log::debug('In validateReconciliationSource', $array);
         if (null === $accountId) {
             Log::debug('Return FALSE');
 

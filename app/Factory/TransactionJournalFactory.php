@@ -365,19 +365,29 @@ class TransactionJournalFactory
         $this->accountValidator->setTransactionType($transactionType);
 
         // validate source account.
-        $sourceId    = $data['source_id'] ? (int)$data['source_id'] : null;
-        $sourceName  = $data['source_name'] ? (string)$data['source_name'] : null;
-        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
+        $array       = [
+            'id'     => $data['source_id'] ? (int)$data['source_id'] : null,
+            'name'   => $data['source_name'] ? (string)$data['source_name'] : null,
+            'iban'   => $data['source_iban'] ? (string)$data['source_iban'] : null,
+            'number' => $data['source_number'] ? (string)$data['source_number'] : null,
+        ];
+        $validSource = $this->accountValidator->validateSource($array);
 
         // do something with result:
         if (false === $validSource) {
             throw new FireflyException(sprintf('Source: %s', $this->accountValidator->sourceError));
         }
         Log::debug('Source seems valid.');
+
         // validate destination account
-        $destinationId    = $data['destination_id'] ? (int)$data['destination_id'] : null;
-        $destinationName  = $data['destination_name'] ? (string)$data['destination_name'] : null;
-        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
+        $array = [
+            'id'     => $data['destination_id'] ? (int)$data['destination_id'] : null,
+            'name'   => $data['destination_name'] ? (string)$data['destination_name'] : null,
+            'iban'   => $data['destination_iban'] ? (string)$data['destination_iban'] : null,
+            'number' => $data['destination_number'] ? (string)$data['destination_number'] : null,
+        ];
+
+        $validDestination = $this->accountValidator->validateDestination($array);
         // do something with result:
         if (false === $validDestination) {
             throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError));
