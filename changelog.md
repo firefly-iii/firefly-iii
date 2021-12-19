@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.7 - 2021-12-19
+
+### Changed
+- Rewrote part of the transaction engine to improve account search.
+
+### Fixed
+- Rule engine could not deal with dates in some edge cases, thanks @daften for the inspiration!
+- Several annoying layout v2 issues fixed.
+
 ## 5.6.6 - 2021-12-10
 
 ### Fixed

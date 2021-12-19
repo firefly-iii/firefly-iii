@@ -91,10 +91,10 @@
         "interest_date": "\u5229\u606f",
         "book_date": "\u4e88\u7d04\u65e5",
         "process_date": "\u51e6\u7406\u65e5",
-        "due_date": "\u65e5\u4ed8\u7bc4\u56f2",
+        "due_date": "\u3000\u671f\u65e5",
         "foreign_amount": "\u5916\u8ca8\u91cf",
-        "payment_date": "\u30af\u30ec\u30b8\u30c3\u30c8\u30ab\u30fc\u30c9\u306e\u5f15\u304d\u843d\u3068\u3057\u65e5",
-        "invoice_date": "\u65e5\u4ed8\u3092\u9078\u629e...",
+        "payment_date": "\u5f15\u304d\u843d\u3068\u3057\u65e5",
+        "invoice_date": "\u9818\u53ce\u66f8\u767a\u884c\u65e5",
         "internal_reference": "\u5185\u90e8\u53c2\u7167"
     },
     "config": {
