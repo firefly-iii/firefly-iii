@@ -74,8 +74,16 @@ class RestoreOAuthKeys extends Command
         }
         if ($this->keysInDatabase() && !$this->keysOnDrive()) {
             Log::debug('Keys are in DB and keys are not on the drive. Restore.');
-            $this->restoreKeysFromDB();
-            $this->line('Restored OAuth keys from database.');
+            $result = $this->restoreKeysFromDB();
+            if(true === $result) {
+                $this->line('Restored OAuth keys from database.');
+
+                return;
+            }
+            Log::warning('Could not restore keys. Will create new ones.');
+            $this->generateKeys();
+            $this->storeKeysInDB();
+            $this->line('Generated and stored new keys.');
 
             return;
         }
@@ -124,8 +132,8 @@ class RestoreOAuthKeys extends Command
     /**
      *
      */
-    private function restoreKeysFromDB(): void
+    private function restoreKeysFromDB(): bool
     {
-        OAuthKeys::restoreKeysFromDB();
+        return OAuthKeys::restoreKeysFromDB();
     }
 }

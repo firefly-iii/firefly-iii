@@ -27,6 +27,7 @@ namespace FireflyIII\Support\System;
 use Artisan;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Laravel\Passport\Console\KeysCommand;
 use Log;
 use Psr\Container\ContainerExceptionInterface;
@@ -117,18 +118,30 @@ class OAuthKeys
     }
 
     /**
-     *
+     * @return bool
      */
-    public static function restoreKeysFromDB(): void
+    public static function restoreKeysFromDB(): bool
     {
         $privateKey     = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
         $publicKey      = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
-        $privateContent = Crypt::decrypt($privateKey);
-        $publicContent  = Crypt::decrypt($publicKey);
+        try {
+            $privateContent = Crypt::decrypt($privateKey);
+            $publicContent  = Crypt::decrypt($publicKey);
+        } catch(DecryptException $e) {
+            Log::error('Could not decrypt pub/private keypair.');
+            Log::error($e->getMessage());
+
+            // delete config vars from DB:
+            app('fireflyconfig')->delete(self::PRIVATE_KEY);
+            app('fireflyconfig')->delete(self::PUBLIC_KEY);
+
+            return false;
+        }
         $private        = storage_path('oauth-private.key');
         $public         = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
+        return true;
     }
 
 }
