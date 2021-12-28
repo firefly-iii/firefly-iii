@@ -16,7 +16,7 @@ body:
       options:
         - label: ... [the documentation](https://docs.firefly-iii.org/) does not mention anything about my problem
         - label: ... there are no open or closed issues that are related to my problem
-        - label: ... it's [definitely you, not me](https://github.com/firefly-iii/firefly-iii/blob/main/.github/its_you_not_me.md)
+        - label: ... it's [definitely me, not you](https://github.com/firefly-iii/firefly-iii/blob/main/.github/its_you_not_me.md)
 
   - type: textarea
     attributes:
