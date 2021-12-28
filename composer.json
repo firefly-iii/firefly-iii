@@ -96,6 +96,7 @@
     "jc5/recovery": "^2",
     "laravel/framework": "^8.77",
     "laravel/passport": "10.*",
+    "laravel/sanctum": "^2.13",
     "laravel/ui": "^3.4",
     "laravelcollective/html": "6.*",
     "league/commonmark": "2.*",
@@ -105,7 +106,7 @@
     "predis/predis": "^1.1",
     "psr/log": "<3",
     "ramsey/uuid": "^4.2",
-    "rcrowe/twigbridge": "^0.13.0",
+    "rcrowe/twigbridge": "0.12.3",
     "spatie/data-transfer-object": "^3.1"
   },
   "require-dev": {
