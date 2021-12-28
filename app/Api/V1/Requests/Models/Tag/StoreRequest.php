@@ -47,7 +47,7 @@ class StoreRequest extends FormRequest
     {
         $data = [
             'tag'          => $this->string('tag'),
-            'date'         => $this->date('date'),
+            'date'         => $this->getCarbonDate('date'),
             'description'  => $this->string('description'),
             'has_location' => true,
         ];

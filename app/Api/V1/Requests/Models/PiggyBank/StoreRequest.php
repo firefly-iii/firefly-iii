@@ -51,8 +51,8 @@ class StoreRequest extends FormRequest
         $data['account_id']         = $this->integer('account_id');
         $data['targetamount']       = $this->string('target_amount');
         $data['current_amount']     = $this->string('current_amount');
-        $data['startdate']          = $this->date('start_date');
-        $data['targetdate']         = $this->date('target_date');
+        $data['startdate']          = $this->getCarbonDate('start_date');
+        $data['targetdate']         = $this->getCarbonDate('target_date');
         $data['notes']              = $this->stringWithNewlines('notes');
         $data['object_group_id']    = $this->integer('object_group_id');
         $data['object_group_title'] = $this->string('object_group_title');

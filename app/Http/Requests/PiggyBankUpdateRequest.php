@@ -43,10 +43,10 @@ class PiggyBankUpdateRequest extends FormRequest
     {
         return [
             'name'               => $this->string('name'),
-            'startdate'          => $this->date('startdate'),
+            'startdate'          => $this->getCarbonDate('startdate'),
             'account_id'         => $this->integer('account_id'),
             'targetamount'       => $this->string('targetamount'),
-            'targetdate'         => $this->date('targetdate'),
+            'targetdate'         => $this->getCarbonDate('targetdate'),
             'notes'              => $this->stringWithNewlines('notes'),
             'object_group_title' => $this->string('object_group'),
         ];

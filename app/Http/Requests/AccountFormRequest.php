@@ -55,7 +55,7 @@ class AccountFormRequest extends FormRequest
             'account_number'          => $this->string('account_number'),
             'account_role'            => $this->string('account_role'),
             'opening_balance'         => $this->string('opening_balance'),
-            'opening_balance_date'    => $this->date('opening_balance_date'),
+            'opening_balance_date'    => $this->getCarbonDate('opening_balance_date'),
             'cc_type'                 => $this->string('cc_type'),
             'cc_monthly_payment_date' => $this->string('cc_monthly_payment_date'),
             'notes'                   => $this->stringWithNewlines('notes'),

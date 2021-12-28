@@ -62,7 +62,7 @@ class CronRequest extends FormRequest
             $data['force'] = $this->boolean('force');
         }
         if ($this->has('date')) {
-            $data['date'] = $this->date('date');
+            $data['date'] = $this->getCarbonDate('date');
         }
 
         return $data;
