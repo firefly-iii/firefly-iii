@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -210,10 +211,9 @@ class CurrencyController extends Controller
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
-    public function disableCurrency(Request $request)
+    public function disableCurrency(Request $request): JsonResponse
     {
         $currencyId = (int)$request->get('id');
         if ($currencyId > 0) {
@@ -228,8 +228,7 @@ class CurrencyController extends Controller
 
                     $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
                     Log::channel('audit')->info(sprintf('Tried to disable currency %s but is not site owner.', $currency->code));
-
-                    return redirect(route('currencies.index'));
+                    return response()->json([]);
 
                 }
 
@@ -240,8 +239,7 @@ class CurrencyController extends Controller
 
                     $request->session()->flash('error', $message);
                     Log::channel('audit')->info(sprintf('Tried to disable currency %s but is in use.', $currency->code));
-
-                    return redirect(route('currencies.index'));
+                    return response()->json([]);
                 }
 
                 $this->repository->disable($currency);
@@ -267,7 +265,7 @@ class CurrencyController extends Controller
             }
         }
 
-        return redirect(route('currencies.index'));
+        return response()->json([]);
     }
 
     /**
