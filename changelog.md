@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 5464](https://github.com/firefly-iii/firefly-iii/issues/5464) Backwards incompatible change in minor upgrade of Twigbridge broke breadcrumbs.
 - Overlapping `date()` function would crash Firefly III
 - [Issue 5458](https://github.com/firefly-iii/firefly-iii/issues/5458) Firefly III would create an opposing account of the wrong type.
+- [Issue 5467](https://github.com/firefly-iii/firefly-iii/issues/5467) Disabling currencies did not report properly.
 
 ### Security
 - Initial release.
