@@ -17,13 +17,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 5458](https://github.com/firefly-iii/firefly-iii/issues/5458) Firefly III would create an opposing account of the wrong type.
 - [Issue 5467](https://github.com/firefly-iii/firefly-iii/issues/5467) Disabling currencies did not report properly.
 
-### Security
-- Initial release.
-
-### API
-- Initial release
-
-
 ## 5.6.8 - 2021-12-19
 
 ### Fixed
