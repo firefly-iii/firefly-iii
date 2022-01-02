@@ -58,8 +58,8 @@ class GenericRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'start' => $this->date('start'),
-            'end'   => $this->date('end'),
+            'start' => $this->getCarbonDate('start'),
+            'end'   => $this->getCarbonDate('end'),
         ];
     }
 
@@ -204,7 +204,7 @@ class GenericRequest extends FormRequest
      */
     public function getEnd(): Carbon
     {
-        $date = $this->date('end');
+        $date = $this->getCarbonDate('end');
         $date->endOfDay();
 
         return $date;
@@ -251,7 +251,7 @@ class GenericRequest extends FormRequest
      */
     public function getStart(): Carbon
     {
-        $date = $this->date('start');
+        $date = $this->getCarbonDate('start');
         $date->startOfDay();
 
         return $date;

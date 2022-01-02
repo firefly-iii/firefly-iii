@@ -46,7 +46,7 @@ class BillStoreRequest extends FormRequest
             'currency_id'        => $this->integer('transaction_currency_id'),
             'currency_code'      => '',
             'amount_max'         => $this->string('amount_max'),
-            'date'               => $this->date('date'),
+            'date'               => $this->getCarbonDate('date'),
             'repeat_freq'        => $this->string('repeat_freq'),
             'skip'               => $this->integer('skip'),
             'notes'              => $this->stringWithNewlines('notes'),

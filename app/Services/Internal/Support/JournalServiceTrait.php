@@ -63,9 +63,6 @@ trait JournalServiceTrait
         // some debug logging:
         Log::debug(sprintf('Now in getAccount(%s)', $direction), $data);
 
-        // final result:
-        $result = null;
-
         // expected type of source account, in order of preference
         /** @var array $array */
         $array         = config('firefly.expected_source_types');
@@ -76,12 +73,17 @@ trait JournalServiceTrait
         $message = 'Based on the fact that the transaction is a %s, the %s account should be in: %s. Direction is %s.';
         Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType] ?? ['UNKNOWN']), $direction));
 
+        Log::debug('Now searching by ID');
         $result = $this->findAccountById($data, $expectedTypes[$transactionType]);
+        Log::debug('If nothing is found, searching by IBAN');
         $result = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
+        Log::debug('If nothing is found, searching by number');
         $result = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
+        Log::debug('If nothing is found, searching by name');
         $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
+        Log::debug('If nothing is found, create it.');
         $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
-
+        Log::debug('If cant be created, return cash account.');
         return $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
     }
 
@@ -118,7 +120,6 @@ trait JournalServiceTrait
     {
         // second attempt, find by name.
         if (null === $account && null !== $data['name']) {
-            Log::debug('Found nothing by account ID.');
             // find by preferred type.
             $source = $this->accountRepository->findByName($data['name'], [$types[0]]);
             // or any expected type.
@@ -204,7 +205,7 @@ trait JournalServiceTrait
         if (null !== $account) {
             Log::debug(
                 sprintf(
-                    'Was also given %s account #%d ("%s") so will simply return that.',
+                    'Was given %s account #%d ("%s") so will simply return that.',
                     $account->accountType->type, $account->id, $account->name
 
                 )

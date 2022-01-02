@@ -54,7 +54,7 @@ class AutocompleteRequest extends FormRequest
         return [
             'types' => $array,
             'query' => $this->string('query'),
-            'date'  => $this->date('date'),
+            'date'  => $this->getCarbonDate('date'),
             'limit' => $limit,
         ];
     }

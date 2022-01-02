@@ -70,7 +70,7 @@ class StoreRequest extends FormRequest
             'account_number'          => $this->string('account_number'),
             'account_role'            => $this->string('account_role'),
             'opening_balance'         => $this->string('opening_balance'),
-            'opening_balance_date'    => $this->date('opening_balance_date'),
+            'opening_balance_date'    => $this->getCarbonDate('opening_balance_date'),
             'cc_type'                 => $this->string('credit_card_type'),
             'cc_monthly_payment_date' => $this->string('monthly_payment_date'),
             'notes'                   => $this->stringWithNewlines('notes'),
@@ -82,7 +82,7 @@ class StoreRequest extends FormRequest
 
         if ('liability' === $data['account_type_name'] || 'liabilities' === $data['account_type_name']) {
             $data['opening_balance']      = app('steam')->negative($this->string('liability_amount'));
-            $data['opening_balance_date'] = $this->date('liability_start_date');
+            $data['opening_balance_date'] = $this->getCarbonDate('liability_start_date');
             $data['account_type_name']    = $this->string('liability_type');
             $data['liability_direction']  = $this->string('liability_direction');
             $data['account_type_id']      = null;

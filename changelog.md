@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.9 - 2022-01-02
+
+### Added
+- Debug form has the build number and date, if available.
+
+### Deprecated
+- The "v2" layout comes with a warning.
+
+### Fixed
+- Public/private key pair restore had some edge cases.
+- [Issue 5464](https://github.com/firefly-iii/firefly-iii/issues/5464) Backwards incompatible change in minor upgrade of Twigbridge broke breadcrumbs.
+- Overlapping `date()` function would crash Firefly III
+- [Issue 5458](https://github.com/firefly-iii/firefly-iii/issues/5458) Firefly III would create an opposing account of the wrong type.
+- [Issue 5467](https://github.com/firefly-iii/firefly-iii/issues/5467) Disabling currencies did not report properly.
+
+### Security
+- Initial release.
+
+### API
+- Initial release
+
+
 ## 5.6.8 - 2021-12-19
 
 ### Fixed

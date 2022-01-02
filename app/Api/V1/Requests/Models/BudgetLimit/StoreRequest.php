@@ -44,8 +44,8 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'start'         => $this->date('start'),
-            'end'           => $this->date('end'),
+            'start'         => $this->getCarbonDate('start'),
+            'end'           => $this->getCarbonDate('end'),
             'amount'        => $this->string('amount'),
             'currency_id'   => $this->integer('currency_id'),
             'currency_code' => $this->string('currency_code'),

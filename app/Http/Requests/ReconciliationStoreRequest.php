@@ -48,8 +48,8 @@ class ReconciliationStoreRequest extends FormRequest
             $transactions = [];
         }
         $data = [
-            'start'         => $this->date('start'),
-            'end'           => $this->date('end'),
+            'start'         => $this->getCarbonDate('start'),
+            'end'           => $this->getCarbonDate('end'),
             'start_balance' => $this->string('startBalance'),
             'end_balance'   => $this->string('endBalance'),
             'difference'    => $this->string('difference'),

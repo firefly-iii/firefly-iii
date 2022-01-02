@@ -45,8 +45,8 @@ class DateRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'start' => $this->date('start'),
-            'end'   => $this->date('end'),
+            'start' => $this->getCarbonDate('start'),
+            'end'   => $this->getCarbonDate('end'),
         ];
     }
 

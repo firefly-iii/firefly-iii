@@ -1,7 +1,10 @@
 <?php
+declare(strict_types=1);
+
+
 /*
  * twigbridge.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,8 +22,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 /**
  * This file is part of the TwigBridge package.
  *
@@ -29,83 +30,54 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use FireflyIII\Support\Twig\AmountFormat;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\TransactionGroupTwig;
 use FireflyIII\Support\Twig\Translation;
+use Illuminate\Contracts\Support\Htmlable;
+use TwigBridge\Extension\Laravel\Auth;
+use TwigBridge\Extension\Laravel\Config;
 use TwigBridge\Extension\Laravel\Dump;
+use TwigBridge\Extension\Laravel\Event;
 use TwigBridge\Extension\Laravel\Input;
 use TwigBridge\Extension\Laravel\Model;
+use TwigBridge\Extension\Laravel\Session;
 use TwigBridge\Extension\Laravel\Str;
 use TwigBridge\Extension\Laravel\Translator;
 use TwigBridge\Extension\Laravel\Url;
 use TwigBridge\Extension\Loader\Facades;
 use TwigBridge\Extension\Loader\Filters;
 use TwigBridge\Extension\Loader\Functions;
+use TwigBridge\Extension\Loader\Globals;
 
 /**
  * Configuration options for Twig.
  */
 return [
+
     'twig' => [
-        /*
-        |--------------------------------------------------------------------------
-        | Extension
-        |--------------------------------------------------------------------------
-        |
-        | File extension for Twig view files.
-        |
-        */
-        'extension'   => 'twig',
-
-        /*
-        |--------------------------------------------------------------------------
-        | Accepts all Twig environment configuration options
-        |--------------------------------------------------------------------------
-        |
-        | http://twig.sensiolabs.org/doc/api.html#environment-options
-        |
-        */
+        'extension' => 'twig',
         'environment' => [
-
-            // When set to true, the generated templates have a __toString() method
-            // that you can use to display the generated nodes.
-            // default: false
-            'debug'               => env('APP_DEBUG', false),
-
-            // The charset used by the templates.
-            // default: utf-8
-            'charset'             => 'utf-8',
-
-            // The base template class to use for generated templates.
-            // default: TwigBridge\Twig\Template
-            'base_template_class' => 'TwigBridge\Twig\Template',
-
-            // An absolute path where to store the compiled templates, or false to disable caching. If null
-            // then the cache file path is used.
-            // default: cache file storage path
-            'cache'               => null,
-
-            // When developing with Twig, it's useful to recompile the template
-            // whenever the source code changes. If you don't provide a value
-            // for the auto_reload option, it will be determined automatically based on the debug value.
-            'auto_reload'         => true,
-
-            // If set to false, Twig will silently ignore invalid variables
-            // (variables and or attributes/methods that do not exist) and
-            // replace them with a null value. When set to true, Twig throws an exception instead.
-            // default: false
-            'strict_variables'    => false,
-
-            // If set to true, auto-escaping will be enabled by default for all templates.
-            // default: 'html'
-            'autoescape'          => 'html',
-
-            // A flag that indicates which optimizations to apply
-            // (default to -1 -- all optimizations are enabled; set it to 0 to disable)
-            'optimizations'       => -1,
+            'debug' => env('APP_DEBUG', false),
+            'charset' => 'utf-8',
+            'cache' => null,
+            'auto_reload' => true,
+            'strict_variables' => false,
+            'autoescape' => 'html',
+            'optimizations' => -1,
+        ],
+        /*
+        |--------------------------------------------------------------------------
+        | Safe Classes
+        |--------------------------------------------------------------------------
+        |
+        | When set, the output of the `__string` method of the following classes will not be escaped.
+        | default: Laravel's Htmlable, which the HtmlString class implements.
+        |
+        */
+        'safe_classes' => [
+            Htmlable::class => ['html'],
         ],
 
         /*
@@ -117,7 +89,7 @@ return [
         | NOTE: these will be overwritten if you pass data into the view with the same key.
         |
         */
-        'globals'     => [],
+        'globals' => [],
     ],
 
     'extensions' => [
@@ -132,31 +104,27 @@ return [
         | `Twig\Extension\DebugExtension` is enabled automatically if twig.debug is TRUE.
         |
         */
-        'enabled'   => [
+        'enabled' => [
             Facades::class,
             Filters::class,
             Functions::class,
-            \TwigBridge\Extension\Laravel\Auth::class,
-            \TwigBridge\Extension\Laravel\Config::class,
+            Event::class,
+            Globals::class,
+            Auth::class,
+            Config::class,
             Dump::class,
             Input::class,
-            \TwigBridge\Extension\Laravel\Session::class,
+            Session::class,
             Str::class,
             Translator::class,
             Url::class,
             Model::class,
-            // 'TwigBridge\Extension\Laravel\Gate',
-
-            // 'TwigBridge\Extension\Laravel\Form',
-            // 'TwigBridge\Extension\Laravel\Html',
-            // 'TwigBridge\Extension\Laravel\Legacy\Facades',
-
+            // Firefly III
             AmountFormat::class,
             General::class,
             Rule::class,
             TransactionGroupTwig::class,
             Translation::class,
-
         ],
 
         /*
@@ -186,7 +154,7 @@ return [
         | in order to be marked as safe.
         |
         */
-        'facades'   => [
+        'facades' => [
             'Breadcrumbs'   => [
                 'is_safe' => [
                     'render',
@@ -294,7 +262,7 @@ return [
         | </code>
         |
         */
-        'filters'   => [
+        'filters' => [
             'get' => 'data_get',
         ],
     ],
