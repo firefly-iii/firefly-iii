@@ -102,6 +102,9 @@ class HomeController extends Controller
      */
     public function index(AccountRepositoryInterface $repository): mixed
     {
+        if ('v3' === config('firefly.layout')) {
+            return view('pwa');
+        }
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
         Log::channel('audit')->info('User visits homepage.');

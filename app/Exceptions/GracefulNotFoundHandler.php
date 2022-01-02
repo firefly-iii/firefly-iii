@@ -91,6 +91,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 return redirect(route('currencies.index'));
             case 'budgets.show':
             case 'budgets.edit':
+            case 'budgets.show.limit':
                 $request->session()->reflash();
 
                 return redirect(route('budgets.index'));

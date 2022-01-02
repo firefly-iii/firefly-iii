@@ -23,7 +23,7 @@
  */
 
 /*!
- * Chart.js v3.6.2
+ * Chart.js v3.7.0
  * https://www.chartjs.org
  * (c) 2021 Chart.js Contributors
  * Released under the MIT License
@@ -90,7 +90,7 @@
  */
 
 /*!
- * vue-i18n v8.26.7 
+ * vue-i18n v8.26.8 
  * (c) 2021 kazuya kawaguchi
  * Released under the MIT License.
  */
