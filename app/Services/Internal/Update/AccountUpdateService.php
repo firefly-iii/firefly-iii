@@ -135,7 +135,7 @@ class AccountUpdateService
             $account->active = $data['active'];
         }
         if (array_key_exists('iban', $data)) {
-            $account->iban = $data['iban'];
+            $account->iban = app('steam')->filterSpaces((string)$data['iban']);
         }
 
         // set liability, but account must already be a liability.

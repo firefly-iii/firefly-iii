@@ -98,6 +98,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:unify-group-accounts',
             'firefly-iii:fix-transaction-types',
             'firefly-iii:fix-frontpage-accounts',
+            'firefly-iii:fix-ibans',
 
             // two report commands
             'firefly-iii:report-empty-objects',

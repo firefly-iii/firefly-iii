@@ -69,7 +69,8 @@ trait AccountServiceTrait
             return null;
         }
 
-        return $iban;
+
+        return app('steam')->filterSpaces($iban);
     }
 
     /**

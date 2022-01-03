@@ -193,6 +193,7 @@
       "@php artisan firefly-iii:unify-group-accounts",
       "@php artisan firefly-iii:fix-transaction-types",
       "@php artisan firefly-iii:fix-frontpage-accounts",
+      "@php artisan firefly-iii:fix-ibans",
       "@php artisan firefly-iii:report-empty-objects",
       "@php artisan firefly-iii:report-sum",
       "@php artisan firefly-iii:restore-oauth-keys",
