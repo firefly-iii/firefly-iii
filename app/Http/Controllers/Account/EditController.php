@@ -153,6 +153,9 @@ class EditController extends Controller
             'notes'                   => $this->repository->getNoteText($account),
             'active'                  => $hasOldInput ? (bool)$request->old('active') : $account->active,
         ];
+        if('' === $openingBalanceAmount) {
+            $preFilled['opening_balance'] = '';
+        }
 
         $request->session()->flash('preFilled', $preFilled);
 
