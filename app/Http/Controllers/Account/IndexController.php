@@ -109,6 +109,7 @@ class IndexController extends Controller
                 $account->interestPeriod    = (string)trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
                 $account->accountTypeString = (string)trans(sprintf('firefly.account_type_%s', $account->accountType->type));
                 $account->current_debt      = '0';
+                $account->iban              = implode(' ', str_split((string)$account->iban, 4));
             }
         );
 
@@ -175,6 +176,7 @@ class IndexController extends Controller
                 $account->location            = $this->repository->getLocation($account);
                 $account->liability_direction = $this->repository->getMetaValue($account, 'liability_direction');
                 $account->current_debt        = $this->repository->getMetaValue($account, 'current_debt') ?? '-';
+                $account->iban              = implode(' ', str_split((string)$account->iban, 4));
             }
         );
         // make paginator:
