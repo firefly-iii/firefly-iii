@@ -72,9 +72,7 @@ class CorrectOpeningBalanceCurrencies extends Command
         $count = 0;
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
-            Log::debug(sprintf('Going to fix journal #%d', $journal->id));
             $count += $this->correctJournal($journal);
-            Log::debug(sprintf('Done, count is now %d', $count));
         }
 
         if ($count > 0) {
@@ -100,7 +98,6 @@ class CorrectOpeningBalanceCurrencies extends Command
      */
     private function correctJournal(TransactionJournal $journal): int
     {
-        Log::debug(sprintf('Going to correct journal #%d', $journal->id));
         // get the asset account for this opening balance:
         $account = $this->getAccount($journal);
         if (null === $account) {
@@ -110,9 +107,7 @@ class CorrectOpeningBalanceCurrencies extends Command
 
             return 0;
         }
-        Log::debug(sprintf('Found "%s" #%d "%s".', $account->accountType->type, $account->id, $account->name));
         $currency = $this->getCurrency($account);
-        Log::debug(sprintf('Found currency #%d (%s)', $currency->id, $currency->code));
 
         // update journal and all transactions:
         return $this->setCurrency($journal, $currency);
@@ -126,20 +121,14 @@ class CorrectOpeningBalanceCurrencies extends Command
     private function getAccount(TransactionJournal $journal): ?Account
     {
         $transactions = $journal->transactions()->get();
-        Log::debug(sprintf('Found %d transactions for journal #%d.', $transactions->count(), $journal->id));
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            Log::debug(sprintf('Testing transaction #%d', $transaction->id));
             /** @var Account $account */
             $account = $transaction->account()->first();
             if (null !== $account && AccountType::INITIAL_BALANCE !== $account->accountType()->first()->type) {
-                Log::debug(sprintf('Account of transaction #%d is opposite of IB account (%s).', $transaction->id, $account->accountType()->first()->type));
-
                 return $account;
             }
         }
-        Log::debug('Found no IB account in transactions of journal.');
-
         return null;
     }
 
@@ -165,10 +154,8 @@ class CorrectOpeningBalanceCurrencies extends Command
      */
     private function setCurrency(TransactionJournal $journal, TransactionCurrency $currency): int
     {
-        Log::debug('Now in setCurrency');
         $count = 0;
         if ((int)$journal->transaction_currency_id !== (int)$currency->id) {
-            Log::debug(sprintf('Currency ID of journal #%d was #%d, now set to #%d', $journal->id, $journal->transaction_currency_id, $currency->id));
             $journal->transaction_currency_id = $currency->id;
             $journal->save();
             $count = 1;
@@ -177,15 +164,11 @@ class CorrectOpeningBalanceCurrencies extends Command
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
             if ((int)$transaction->transaction_currency_id !== (int)$currency->id) {
-                Log::debug(
-                    sprintf('Currency ID of transaction #%d was #%d, now set to #%d', $transaction->id, $transaction->transaction_currency_id, $currency->id)
-                );
                 $transaction->transaction_currency_id = $currency->id;
                 $transaction->save();
                 $count = 1;
             }
         }
-        Log::debug(sprintf('Return %d', $count));
 
         return $count;
     }

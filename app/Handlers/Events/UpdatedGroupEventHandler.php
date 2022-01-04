@@ -123,7 +123,6 @@ class UpdatedGroupEventHandler
         if (1 === $group->transactionJournals->count()) {
             return;
         }
-        Log::debug(sprintf('Validating inconsistent accounts in group #%d', $group->id));
         // first journal:
         /** @var TransactionJournal $first */
         $first = $group->transactionJournals()
