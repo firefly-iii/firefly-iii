@@ -148,10 +148,10 @@ class DebugController extends Controller
         $buildDate            = '(unknown)';
 
         if (file_exists('/var/www/counter-main.txt')) {
-            $buildNr = file_get_contents('/var/www/counter-main.txt');
+            $buildNr = trim(file_get_contents('/var/www/counter-main.txt'));
         }
         if (file_exists('/var/www/build-date-main.txt')) {
-            $buildDate = file_get_contents('/var/www/build-date-main.txt');
+            $buildDate = trim(file_get_contents('/var/www/build-date-main.txt'));
         }
 
         // expected + found DB version:

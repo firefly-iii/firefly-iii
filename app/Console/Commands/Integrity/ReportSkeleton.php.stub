@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 
 /**
  * Class ReportSkeleton
+ * TODO DONT FORGET TO ADD THIS TO THE DOCKER BUILD
  */
 class ReportSkeleton extends Command
 {

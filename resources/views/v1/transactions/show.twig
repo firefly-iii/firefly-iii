@@ -362,7 +362,13 @@
                                                 <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger"><span class="fa fa-trash"></span></a>
                                             </div>
                                         </td>
-                                        <td>{{ trans('firefly.'~link.link) }} "<a href="{{ route('transactions.show', link.group) }}"
+                                        <td>
+                                            {% if link.editable %}
+                                            {{ link.link }}
+                                            {% else %}
+                                                {{ trans('firefly.'~link.link) }}
+                                                {% endif %}
+                                            "<a href="{{ route('transactions.show', link.group) }}"
                                                                 title="{{ link.description }}">{{ link.description }}</a>"
 
                                             ({{ link.amount|raw }})

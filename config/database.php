@@ -109,7 +109,7 @@ return [
             'password'    => env('DB_PASSWORD', $password),
             'charset'     => 'utf8',
             'prefix'      => '',
-            'schema'      => 'public',
+            'schema'      => envNonEmpty('PGSQL_SCHEMA', 'public'),
             'sslmode'     => envNonEmpty('PGSQL_SSL_MODE', 'prefer'),
             'sslcert'     => envNonEmpty('PGSQL_SSL_CERT'),
             'sslkey'      => envNonEmpty('PGSQL_SSL_KEY'),

@@ -221,7 +221,7 @@ class AccountValidator
         }
 
         // find by iban
-        if (null !== $accountIban && '' !== $accountIban) {
+        if (null !== $accountIban && '' !== (string) $accountIban) {
             $first = $this->accountRepository->findByIbanNull($accountIban, $validTypes);
             if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
                 return $first;
@@ -229,7 +229,7 @@ class AccountValidator
         }
 
         // find by number
-        if (null !== $accountNumber && '' !== $accountNumber) {
+        if (null !== $accountNumber && '' !== (string) $accountNumber) {
             $first = $this->accountRepository->findByAccountNumber($accountNumber, $validTypes);
             if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
                 return $first;
@@ -237,7 +237,7 @@ class AccountValidator
         }
 
         // find by name:
-        if ('' !== $accountName) {
+        if ('' !== (string) $accountName) {
             return $this->accountRepository->findByName($accountName, $validTypes);
         }
 

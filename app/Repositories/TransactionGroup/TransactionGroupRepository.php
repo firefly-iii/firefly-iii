@@ -141,7 +141,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             )
             ->with(['source', 'destination', 'source.transactions'])
             ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
-            ->get(['journal_links.*', 'link_types.inward', 'link_types.outward']);
+            ->get(['journal_links.*', 'link_types.inward', 'link_types.outward', 'link_types.editable']);
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {
             $journalId          = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
@@ -155,6 +155,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->outward,
                     'group'          => $entry->destination->transaction_group_id,
                     'description'    => $entry->destination->description,
+                    'editable'       => 1===$entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
@@ -167,6 +168,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->inward,
                     'group'          => $entry->source->transaction_group_id,
                     'description'    => $entry->source->description,
+                    'editable'       => 1===$entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
