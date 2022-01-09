@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.10 - 2022-01-10
+
+### Added
+- Add currency MXN
+- [Issue 5503](https://github.com/firefly-iii/firefly-iii/issues/5503) option to set PostgreSQL schema.
+
+### Changed
+- All IBANs will get their spaces stripped, but displayed with spaces.
+
+### Removed
+- Remove confirmation popup from rule selection.
+- Remove some debug logging
+
+### Fixed
+- Empty opening balance won't show as "0.00"
+- Display of build and date had a newline.
+- Nullpointer in account validator
+- [Issue 5510](https://github.com/firefly-iii/firefly-iii/issues/5510) Fix bad translation
+
 ## 5.6.9 - 2022-01-02
 
 ### Added
