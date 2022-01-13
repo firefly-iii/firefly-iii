@@ -8,6 +8,7 @@ pull_request_rules:
   - name: Close all on main
     conditions:
       - base=main
+      - -author~=^dependabot(|-preview)\[bot\]$
     actions:
       close:
         message: Please do not open PR's on the `main` branch, but on the `develop` branch only. Thank you!
