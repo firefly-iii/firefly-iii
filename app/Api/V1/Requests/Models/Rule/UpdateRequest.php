@@ -53,6 +53,7 @@ class UpdateRequest extends FormRequest
             'strict'          => ['strict', 'boolean'],
             'stop_processing' => ['stop_processing', 'boolean'],
             'active'          => ['active', 'boolean'],
+            'order'           => ['order', 'integer'],
         ];
 
         $return   = $this->getAllData($fields);
@@ -150,6 +151,7 @@ class UpdateRequest extends FormRequest
             'strict'                     => [new IsBoolean],
             'stop_processing'            => [new IsBoolean],
             'active'                     => [new IsBoolean],
+            'order'                      => 'numeric|between:1,1337',
         ];
     }
 
