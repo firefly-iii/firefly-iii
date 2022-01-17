@@ -107,7 +107,7 @@
     "psr/log": "<3",
     "ramsey/uuid": "^4.2",
     "rcrowe/twigbridge": "^0.13",
-    "spatie/data-transfer-object": "^3.1"
+    "spatie/data-transfer-object": "^3.7"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.6",
