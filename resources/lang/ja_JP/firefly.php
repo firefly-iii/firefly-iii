@@ -195,7 +195,7 @@ return [
     'sign_in_to_start'                                    => 'サインインしてセッションを開始',
     'sign_in'                                             => 'サインイン',
     'register_new_account'                                => '新しい支出先',
-    'forgot_my_password'                                  => '２要素認証端末を忘れてしまいました。',
+    'forgot_my_password'                                  => 'パスワードを忘れました',
     'problems_with_input'                                 => '入力に問題が発生しました。',
     'reset_password'                                      => 'パスワードがリセットされました！',
     'button_reset_password'                               => 'パスワードリセットトークンが正しくありません。',

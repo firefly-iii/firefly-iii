@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Főoldal',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => '":name" pénznem szerkesztése',
     'delete_currency'        => '":name" pénznem törlése',
     'newPiggyBank'           => 'Új malacpersely létrehozása',
@@ -60,5 +69,5 @@ return [
     'delete_journal_link'    => 'Tranzakciók közötti kapcsolat törlése',
     'edit_object_group'      => '":title" csoport szerkesztése',
     'delete_object_group'    => '":title" csoport törlése',
-    'logout_others'          => 'Minden más munkamenet kijelentkeztetése'
+    'logout_others'          => 'Minden más munkamenet kijelentkeztetése',
 ];

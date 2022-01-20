@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Domů',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Upravit měnu „:name“',
     'delete_currency'        => 'Odstranit měnu „:name“',
     'newPiggyBank'           => 'Vytvořit novou pokladničku',
@@ -60,5 +69,5 @@ return [
     'delete_journal_link'    => 'Odstranit vazbu mezi transakcemi',
     'edit_object_group'      => 'Upravit skupinu „:title“',
     'delete_object_group'    => 'Odstranit skupinu „:title“',
-    'logout_others'          => 'Odhlásit ostatní relace'
+    'logout_others'          => 'Odhlásit ostatní relace',
 ];

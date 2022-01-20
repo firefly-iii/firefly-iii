@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Pagina principale',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Modifica valuta ":name"',
     'delete_currency'        => 'Elimina valuta ":name"',
     'newPiggyBank'           => 'Crea un nuovo salvadanaio',
@@ -60,5 +69,5 @@ return [
     'delete_journal_link'    => 'Elimina il collegamento tra le transazioni',
     'edit_object_group'      => 'Modifica gruppo ":title"',
     'delete_object_group'    => 'Elimina gruppo ":title"',
-    'logout_others'          => 'Esci dalle altre sessioni'
+    'logout_others'          => 'Esci dalle altre sessioni',
 ];

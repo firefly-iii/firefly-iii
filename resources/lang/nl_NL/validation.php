@@ -215,7 +215,7 @@ return [
     'generic_invalid_destination' => 'Je kan deze rekening niet gebruiken als doelrekening.',
 
     'gte.numeric' => ':attribute moet groter of gelijk zijn aan :value.',
-    'gt.numeric'  => 'De :attribute moet groter zijn dan :value.',
+    'gt.numeric'  => ':attribute moet groter zijn dan :value.',
     'gte.file'    => ':attribute moet groter of gelijk zijn aan :value kilobytes.',
     'gte.string'  => ':attribute moet :value karakters of meer bevatten.',
     'gte.array'   => ':attribute moet :value items of meer bevatten.',

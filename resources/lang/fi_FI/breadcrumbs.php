@@ -24,13 +24,22 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Etusivu',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Muokkaa valuuttaa ":name"',
     'delete_currency'        => 'Poista valuutta ":name"',
     'newPiggyBank'           => 'Luo uusi säästöpossu',
     'edit_piggyBank'         => 'Muokkaa säästöpossua ":name"',
     'preferences'            => 'Asetukset',
     'profile'                => 'Käyttäjäprofiili',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Tilit',
     'changePassword'         => 'Vaihda salasanasi',
     'change_email'           => 'Muuta sähköpostiosoitetta',
     'bills'                  => 'Laskut',
@@ -60,5 +69,5 @@ return [
     'delete_journal_link'    => 'Poista linkki tapahtumien väliltä',
     'edit_object_group'      => 'Muokkaa ryhmää ":title"',
     'delete_object_group'    => 'Poista ryhmä ":title"',
-    'logout_others'          => 'Kirjaudu ulos muista istunnoista'
+    'logout_others'          => 'Kirjaudu ulos muista istunnoista',
 ];

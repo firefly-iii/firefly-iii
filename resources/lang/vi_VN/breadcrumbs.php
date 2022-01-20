@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Trang chủ',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Sửa tiền tệ ":name"',
     'delete_currency'        => 'Xóa tiền tệ ":name"',
     'newPiggyBank'           => 'Tạo mới heo đất',
@@ -60,5 +69,5 @@ return [
     'delete_journal_link'    => 'Xóa liên kết giữa các giao dịch',
     'edit_object_group'      => 'Chỉnh sửa nhóm ":title"',
     'delete_object_group'    => 'Xóa nhóm ":title"',
-    'logout_others'          => 'Đăng xuất tất cả phiên đăng nhập'
+    'logout_others'          => 'Đăng xuất tất cả phiên đăng nhập',
 ];
