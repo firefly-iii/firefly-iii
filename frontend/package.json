@@ -17,13 +17,13 @@
         "lodash.clonedeep": "^4.5.0",
         "postcss": "^8.4.5",
         "resolve-url-loader": "^4.0.0",
-        "sass": "^1.47.0",
+        "sass": "^1.48.0",
         "sass-loader": "^12.2.0",
         "vue-i18n": "^8.26.7",
         "vue-loader": "^15",
         "vue-template-compiler": "^2.6.12",
         "vuex": "^3.6.2",
-        "webpack": "^5.64.4"
+        "webpack": "^5.66.0"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",

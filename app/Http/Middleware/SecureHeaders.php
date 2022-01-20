@@ -50,14 +50,15 @@ class SecureHeaders
 
         $response          = $next($request);
         $trackingScriptSrc = $this->getTrackingScriptSource();
+        $newRelicSrc       = $this->getNewRelicSource();
         $csp               = [
             "default-src 'none'",
             "object-src 'none'",
-            sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'self' 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
+            sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'self' 'unsafe-inline' 'nonce-%1s' %2s %3s", $nonce, $trackingScriptSrc, $newRelicSrc),
             "style-src 'unsafe-inline' 'self'",
             "base-uri 'self'",
             "font-src 'self' data:",
-            "connect-src 'self'",
+            sprintf("connect-src 'self' %s %s", $trackingScriptSrc, $newRelicSrc),
             sprintf("img-src data: 'strict-dynamic' 'self' *.tile.openstreetmap.org %s", $trackingScriptSrc),
             "manifest-src 'self'",
         ];
@@ -102,7 +103,19 @@ class SecureHeaders
     }
 
     /**
-     * Return part of a CSP header allowing scripts from Google.
+     * Returns the domain name of New Relic (used on the demo site)
+     * The check for this value is an undocumented .env variable
+     */
+    private function getNewRelicSource(): string
+    {
+        if(true === env('ENABLE_NEW_RELIC', false)) {
+            return 'bam.eu01.nr-data.net';
+        }
+        return '';
+    }
+
+    /**
+     * Return part of a CSP header allowing scripts from Matomo.
      *
      * @return string
      */
