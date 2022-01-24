@@ -434,7 +434,8 @@ export default {
             payment_date: row.custom_fields.payment_date,
             invoice_date: row.custom_fields.invoice_date,
             internal_reference: row.custom_fields.internal_reference,
-            notes: row.custom_fields.notes
+            notes: row.custom_fields.notes,
+            external_url: row.custom_fields.external_url
           };
 
       if (tagList.length > 0) {
