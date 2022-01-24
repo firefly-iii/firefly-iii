@@ -34,7 +34,7 @@
         "bootstrap-vue": "^2.21.2",
         "chart.js": "^3.7.0",
         "icheck-bootstrap": "^3.0.1",
-        "jquery-ui": "^1.12.1",
+        "jquery-ui": "^1.13.1",
         "leaflet": "^1.7.1",
         "localforage": "^1.9.0",
         "localforage-memoryStorageDriver": "^0.9.2",

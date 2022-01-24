@@ -4073,10 +4073,10 @@ jquery-ui-dist@^1.12.1:
   dependencies:
     jquery ">=1.8.0 <4.0.0"
 
-jquery-ui@^1.12.1:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.13.0.tgz#ab5ac65f37ca093c51b3478c4097f55bbc008f36"
-  integrity sha512-Osf7ECXNTYHtKBkn9xzbIf9kifNrBhfywFEKxOeB/OVctVmLlouV9mfc2qXCp6uyO4Pn72PXKOnj09qXetopCw==
+jquery-ui@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.13.1.tgz#d0b7a42e73a04c31bb5706adf86f6f8942f64eaa"
+  integrity sha512-2VlU59N5P4HaumDK1Z3XEVjSvegFbEOQRgpHUBaB2Ak98Axl3hFhJ6RFcNQNuk9SfL6WxIbuLst8dW/U56NSiA==
   dependencies:
     jquery ">=1.8.0 <4.0.0"
 
