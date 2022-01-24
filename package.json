@@ -20,7 +20,7 @@
         "postcss": "^8.4",
         "uiv": "^1.4",
         "vue": "^2.6",
-        "vue-i18n": "^8.26",
+        "vue-i18n": "^8.27",
         "vue-loader": "^15",
         "vue-template-compiler": "^2.6"
     }
