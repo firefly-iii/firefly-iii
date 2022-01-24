@@ -79,7 +79,17 @@ class GroupUpdateService
 
         $existing = $transactionGroup->transactionJournals->pluck('id')->toArray();
         $updated  = $this->updateTransactions($transactionGroup, $transactions);
-        $result   = array_diff($existing, $updated);
+        Log::debug('Array of updated IDs: ', $updated);
+
+        if(0 === count($updated)) {
+            Log::error('There were no transactions updated or created. Will not delete anything.');
+            $transactionGroup->refresh();
+            app('preferences')->mark();
+            return $transactionGroup;
+        }
+
+        $result = array_diff($existing, $updated);
+        Log::debug('Result of DIFF: ', $result);
         if (count($result) > 0) {
             /** @var string $deletedId */
             foreach ($result as $deletedId) {
@@ -127,6 +137,7 @@ class GroupUpdateService
      */
     private function updateTransactions(TransactionGroup $transactionGroup, array $transactions): array
     {
+        // updated or created transaction journals:
         $updated = [];
         /**
          * @var int   $index
@@ -151,8 +162,14 @@ class GroupUpdateService
                     }
                 }
                 Log::debug('Call createTransactionJournal');
-                $this->createTransactionJournal($transactionGroup, $transaction);
+                $newJournal = $this->createTransactionJournal($transactionGroup, $transaction);
                 Log::debug('Done calling createTransactionJournal');
+                if (null !== $newJournal) {
+                    $updated[] = $newJournal->id;
+                }
+                if (null === $newJournal) {
+                    Log::error('createTransactionJournal returned NULL, indicating something went wrong.');
+                }
             }
             if (null !== $journal) {
                 Log::debug('Call updateTransactionJournal');
@@ -169,12 +186,13 @@ class GroupUpdateService
      * @param TransactionGroup $transactionGroup
      * @param array            $data
      *
+     * @return TransactionJournal|null
+     *
      * @throws FireflyException
      * @throws DuplicateTransactionException
      */
-    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): void
+    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
     {
-
         $submission = [
             'transactions' => [
                 $data,
@@ -195,6 +213,11 @@ class GroupUpdateService
                 $transactionGroup->transactionJournals()->save($journal);
             }
         );
+        if (0 === $collection->count()) {
+            return null;
+        }
+
+        return $collection->first();
     }
 
 }

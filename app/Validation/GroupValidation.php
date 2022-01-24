@@ -83,6 +83,9 @@ trait GroupValidation
         }
     }
 
+    /**
+     * @param Validator $validator
+     */
     protected function preventNoAccountInfo(Validator $validator): void
     {
         $transactions   = $this->getTransactionsArray($validator);
@@ -92,7 +95,7 @@ trait GroupValidation
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
             foreach($keys as $key) {
-                if(array_key_exists($key, $transaction) && '' !== $transaction[$key]) {
+                if(array_key_exists($key, $transaction) && '' !== (string) $transaction[$key]) {
                     $hasAccountInfo = true;
                 }
             }
