@@ -58,7 +58,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->metaFields     = [
             'sepa_cc', 'sepa_ct_op', 'sepa_ct_id', 'sepa_db', 'sepa_country', 'sepa_ep',
             'sepa_ci', 'sepa_batch_id', 'internal_reference', 'bunq_payment_id', 'import_hash_v2',
-            'recurrence_id', 'external_id', 'original_source', 'external_uri',
+            'recurrence_id', 'external_id', 'original_source', 'external_url',
             'recurrence_count', 'recurrence_total',
         ];
         $this->metaDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
@@ -189,7 +189,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'recurrence_total'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_total'),
             'recurrence_count'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_count'),
             'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
-            'external_uri'       => $metaFieldData['external_uri'],
+            'external_url'       => $metaFieldData['external_url'],
             'import_hash_v2'     => $metaFieldData['import_hash_v2'],
 
             'sepa_cc'       => $metaFieldData['sepa_cc'],

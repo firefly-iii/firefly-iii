@@ -137,7 +137,7 @@ class StoreRequest extends FormRequest
                 'original_source'       => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
                 'recurrence_id'         => $this->integerFromValue($object['recurrence_id']),
                 'bunq_payment_id'       => $this->clearString((string)$object['bunq_payment_id'], false),
-                'external_uri'          => $this->clearString((string)$object['external_uri'], false),
+                'external_url'          => $this->clearString((string)$object['external_url'], false),
 
                 'sepa_cc'       => $this->clearString((string)$object['sepa_cc'], false),
                 'sepa_ct_op'    => $this->clearString((string)$object['sepa_ct_op'], false),
@@ -228,7 +228,7 @@ class StoreRequest extends FormRequest
             'transactions.*.external_id'           => 'min:1,max:255|nullable',
             'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
             'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
-            'transactions.*.external_uri'          => 'min:1,max:255|nullable|url',
+            'transactions.*.external_url'          => 'min:1,max:255|nullable|url',
 
             // SEPA fields:
             'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',

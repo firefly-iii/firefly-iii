@@ -711,14 +711,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Internal reference',
     'pref_optional_tj_notes'                    => 'Notes',
     'pref_optional_tj_attachments'              => 'Attachments',
-    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Location',
     'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Dates',
     'optional_field_meta_business'              => 'Business',
     'optional_field_attachments'                => 'Attachments',
     'optional_field_meta_data'                  => 'Optional meta data',
-    'external_uri'                              => 'External URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',

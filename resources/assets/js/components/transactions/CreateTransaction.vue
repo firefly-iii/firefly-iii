@@ -673,7 +673,7 @@ export default {
               internal_reference: [],
               notes: [],
               attachments: [],
-              external_uri: [],
+              external_url: [],
             },
           };
         }
@@ -776,7 +776,7 @@ export default {
             internal_reference: [],
             notes: [],
             attachments: [],
-            external_uri: [],
+            external_url: [],
           },
         },
         budget: 0,
@@ -792,7 +792,7 @@ export default {
           "internal_reference": "",
           "notes": "",
           "attachments": [],
-          "external_uri": "",
+          "external_url": "",
         },
         foreign_amount: {
           amount: "",

@@ -437,7 +437,7 @@ export default {
             internal_reference: [],
             notes: [],
             attachments: [],
-            external_uri: [],
+            external_url: [],
           },
         },
         budget: transaction.budget_id,
@@ -452,7 +452,7 @@ export default {
           invoice_date: transaction.invoice_date,
           internal_reference: transaction.internal_reference,
           notes: transaction.notes,
-          external_uri: transaction.external_uri
+          external_url: transaction.external_url
         },
         foreign_amount: {
           amount: this.roundNumber(this.positiveAmount(transaction.foreign_amount), transaction.foreign_currency_decimal_places),
@@ -640,7 +640,7 @@ export default {
             payment_date: row.custom_fields.payment_date,
             invoice_date: row.custom_fields.invoice_date,
             internal_reference: row.custom_fields.internal_reference,
-            external_uri: row.custom_fields.external_uri,
+            external_url: row.custom_fields.external_url,
             notes: row.custom_fields.notes,
             tags: tagList
           };
@@ -877,7 +877,7 @@ export default {
             internal_reference: [],
             notes: [],
             attachments: [],
-            external_uri: [],
+            external_url: [],
           },
         },
         budget: 0,
@@ -893,7 +893,7 @@ export default {
           "internal_reference": "",
           "notes": "",
           "attachments": [],
-          "external_uri": "",
+          "external_url": "",
         },
         foreign_amount: {
           amount: "",
@@ -965,7 +965,7 @@ export default {
               case 'tags':
                 this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
                 break;
-              case 'external_uri':
+              case 'external_url':
                 //console.log('Found ext error in field "' + fieldName + '": ' + errors.errors[key]);
                 this.transactions[transactionIndex].errors.custom_errors[fieldName] = errors.errors[key];
                 break;
@@ -1021,7 +1021,7 @@ export default {
               internal_reference: [],
               notes: [],
               attachments: [],
-              external_uri: [],
+              external_url: [],
             },
           };
         }

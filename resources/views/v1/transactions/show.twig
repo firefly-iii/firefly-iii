@@ -289,12 +289,12 @@
                                     </tr>
                                 {% endif %}
                             {% endfor %}
-                            {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci','external_uri'] %}
+                            {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci','external_url'] %}
                                 {% if journalHasMeta(journal.transaction_journal_id, metaField) %}
                                     <tr>
                                         <td>{{ trans('list.'~metaField) }}</td>
                                         <td>
-                                            {% if 'external_uri' == metaField  %}
+                                            {% if 'external_url' == metaField  %}
                                                 {% set uri = journalGetMetaField(journal.transaction_journal_id, metaField) %}
                                                 <a href="{{ uri }}" rel="noopener noreferrer nofollow" target="_blank">
                                                     {% if uri|length > 60 %}
@@ -304,7 +304,7 @@
                                                     {% endif %}
                                                 </a>
                                             {% endif %}
-                                            {% if 'external_uri' != metaField  %}
+                                            {% if 'external_url' != metaField  %}
                                                 {{ journalGetMetaField(journal.transaction_journal_id, metaField) }}
                                             {% endif %}
                                         </td>
