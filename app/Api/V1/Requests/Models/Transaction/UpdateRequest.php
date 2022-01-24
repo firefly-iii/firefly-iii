@@ -292,6 +292,10 @@ class UpdateRequest extends FormRequest
             'transactions.*.date'                  => [new IsDateOrTime],
             'transactions.*.order'                 => 'numeric|min:0',
 
+            // group id:
+            'transactions.*.transaction_journal_id'           => ['numeric','exists:transaction_journals,id', new BelongsUser],
+
+
             // currency info
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
@@ -374,6 +378,9 @@ class UpdateRequest extends FormRequest
 
                 // validate source/destination is equal, depending on the transaction journal type.
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
+
+                // a catch when users submit splits with no source or destination info at all.
+                $this->preventNoAccountInfo($validator,);
 
                 // validate that the currency fits the source and/or destination account.
                 // validate all account info

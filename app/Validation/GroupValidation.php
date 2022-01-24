@@ -83,6 +83,30 @@ trait GroupValidation
         }
     }
 
+    protected function preventNoAccountInfo(Validator $validator): void
+    {
+        $transactions   = $this->getTransactionsArray($validator);
+        $hasAccountInfo = false;
+        $keys           = ['source_id', 'destination_id', 'source_name', 'destination_name', 'source_iban', 'destination_iban', 'source_number',
+                           'destination_number'];
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            foreach($keys as $key) {
+                if(array_key_exists($key, $transaction) && '' !== $transaction[$key]) {
+                    $hasAccountInfo = true;
+                }
+            }
+        }
+        if(false === $hasAccountInfo) {
+            $validator->errors()->add(
+                'transactions.0.source_id', (string)trans('validation.generic_no_source')
+            );
+            $validator->errors()->add(
+                'transactions.0.destination_id', (string)trans('validation.generic_no_destination')
+            );
+        }
+    }
+
     /**
      * This method validates if the user has submitted transaction journal ID's for each array they submit, if they've submitted more than 1 transaction
      * journal. This check is necessary because Firefly III isn't able to distinguish between journals without the ID.
