@@ -16,7 +16,7 @@
         "lodash": "^4.17.21",
         "lodash.clonedeep": "^4.5.0",
         "postcss": "^8.4.5",
-        "resolve-url-loader": "^4.0.0",
+        "resolve-url-loader": "^5.0.0",
         "sass": "^1.48.0",
         "sass-loader": "^12.2.0",
         "vue-i18n": "^8.26.7",
