@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',
     'search_modifier_updated_on'                          => 'Transaction was last updated on ":value"',
     'search_modifier_external_id'                         => 'External ID is ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Internal reference is ":value"',
     'search_modifier_description_starts'                  => 'Description is ":value"',
     'search_modifier_description_ends'                    => 'Description ends with ":value"',
