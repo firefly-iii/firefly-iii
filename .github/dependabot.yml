@@ -19,11 +19,3 @@ updates:
     schedule:
       interval: "weekly"
 
-  # yarn / JS updates for new frontend
-  - package-ecosystem: "npm"
-    directory: "/frontend"
-    target-branch: develop
-    versioning-strategy: increase
-    labels: ["bug"]
-    schedule:
-      interval: "weekly"
