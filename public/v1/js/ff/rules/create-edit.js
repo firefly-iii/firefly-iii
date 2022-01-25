@@ -348,6 +348,8 @@ function updateTriggerInput(selectList) {
         case 'source_is_cash':
         case 'destination_is_cash':
         case 'account_is_cash':
+        case 'no_external_url':
+        case 'any_external_url':
             console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.prop('disabled', true);
             inputResult.typeahead('destroy');

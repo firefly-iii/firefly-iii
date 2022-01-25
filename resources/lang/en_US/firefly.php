@@ -562,6 +562,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction (!)',
