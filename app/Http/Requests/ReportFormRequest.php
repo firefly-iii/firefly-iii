@@ -147,18 +147,24 @@ class ReportFormRequest extends FormRequest
         $range = $this->get('daterange');
         $parts = explode(' - ', (string)$range);
         if (2 === count($parts)) {
-            try {
-                $date = new Carbon($parts[1]);
-
-            } catch (Exception $e) {
-                $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
-                Log::error($error);
-                throw new FireflyException($error, 0, $e);
-
+            $string = $parts[1];
+            // validate as date
+            // if regex for YYYY-MM-DD:
+            $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
+            if (preg_match($pattern, $string)) {
+                try {
+                    $date = new Carbon($parts[1]);
+                } catch (Exception $e) {
+                    $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
+                    Log::error($error);
+                    throw new FireflyException($error, 0, $e);
+                }
+                return $date;
             }
-
+            $error = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
+            Log::error($error);
+            throw new FireflyException($error, 0);
         }
-
         return $date;
     }
 
@@ -175,15 +181,23 @@ class ReportFormRequest extends FormRequest
         $range = $this->get('daterange');
         $parts = explode(' - ', (string)$range);
         if (2 === count($parts)) {
-            try {
-                $date = new Carbon($parts[0]);
-
-            } catch (Exception $e) {
-                $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
-                Log::error($error);
-                throw new FireflyException($error, 0, $e);
-
+            $string = $parts[0];
+            // validate as date
+            // if regex for YYYY-MM-DD:
+            $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
+            if (preg_match($pattern, $string)) {
+                try {
+                    $date = new Carbon($parts[1]);
+                } catch (Exception $e) {
+                    $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
+                    Log::error($error);
+                    throw new FireflyException($error, 0, $e);
+                }
+                return $date;
             }
+            $error = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
+            Log::error($error);
+            throw new FireflyException($error, 0);
         }
 
         return $date;
