@@ -306,6 +306,20 @@ interface GroupCollectorInterface
     public function setExternalId(string $externalId): GroupCollectorInterface;
 
     /**
+     * Transactions without an external URL
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutExternalUrl(): GroupCollectorInterface;
+
+    /**
+     * Transactions with an external URL
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withExternalUrl(): GroupCollectorInterface;
+
+    /**
      * Limit results to a specific foreign currency.
      *
      * @param TransactionCurrency $currency

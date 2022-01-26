@@ -215,6 +215,40 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
+    public function withoutExternalUrl(): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+        $this->query->where(function(Builder $q1) {
+            $q1->where(function(Builder $q2) {
+                $q2->where('journal_meta.name', '=', 'external_url');
+                $q2->whereNull('journal_meta.data');
+            })->orWhereNull('journal_meta.name');
+        });
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withExternalUrl(): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+        $this->query->where('journal_meta.name', '=', 'external_url');
+        $this->query->whereNotNull('journal_meta.data');
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setInternalReference(string $internalReference): GroupCollectorInterface
     {
         if (false === $this->hasJoinedMetaTables) {
