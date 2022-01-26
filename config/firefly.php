@@ -518,6 +518,8 @@ return [
             'notes_are'                       => ['alias' => false, 'needs_context' => true,],
             'no_notes'                        => ['alias' => false, 'needs_context' => false,],
             'any_notes'                       => ['alias' => false, 'needs_context' => false,],
+            'no_external_url'                 => ['alias' => false, 'needs_context' => false,],
+            'any_external_url'                => ['alias' => false, 'needs_context' => false,],
 
             // one exact (or array of) journals:
             'id'                              => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],

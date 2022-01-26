@@ -627,6 +627,15 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->setUpdatedAt($updatedAt);
                 break;
             //
+            // external URL
+            //
+            case 'no_external_url':
+                $this->collector->withoutExternalUrl();
+                break;
+            case 'any_external_url':
+                $this->collector->withExternalUrl();
+                break;
+            //
             // other fields
             //
             case 'external_id':
