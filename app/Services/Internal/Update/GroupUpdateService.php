@@ -81,7 +81,7 @@ class GroupUpdateService
         $updated  = $this->updateTransactions($transactionGroup, $transactions);
         Log::debug('Array of updated IDs: ', $updated);
 
-        if(0 === count($updated)) {
+        if (0 === count($updated)) {
             Log::error('There were no transactions updated or created. Will not delete anything.');
             $transactionGroup->refresh();
             app('preferences')->mark();
@@ -94,7 +94,7 @@ class GroupUpdateService
             /** @var string $deletedId */
             foreach ($result as $deletedId) {
                 /** @var TransactionJournal $journal */
-                $journal = $transactionGroup->transactionJournals()->find((int)$deletedId);
+                $journal = $transactionGroup->transactionJournals()->find((int) $deletedId);
                 /** @var JournalDestroyService $service */
                 $service = app(JournalDestroyService::class);
                 $service->destroy($journal);
@@ -117,6 +117,9 @@ class GroupUpdateService
     private function updateTransactionJournal(TransactionGroup $transactionGroup, TransactionJournal $journal, array $data): void
     {
         if (empty($data)) {
+            return;
+        }
+        if (1 === count($data) && array_key_exists('transaction_journal_id', $data)) {
             return;
         }
         /** @var JournalUpdateService $updateService */
@@ -145,7 +148,7 @@ class GroupUpdateService
          */
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now at #%d of %d', ($index + 1), count($transactions)), $transaction);
-            $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
+            $journalId = (int) ($transaction['transaction_journal_id'] ?? 0);
             /** @var TransactionJournal|null $journal */
             $journal = $transactionGroup->transactionJournals()->find($journalId);
             if (null === $journal) {

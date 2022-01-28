@@ -55,7 +55,7 @@ trait GroupValidation
         $transactions      = $this->getTransactionsArray($validator);
         $validDescriptions = 0;
         foreach ($transactions as $transaction) {
-            if ('' !== (string)($transaction['description'] ?? null)) {
+            if ('' !== (string) ($transaction['description'] ?? null)) {
                 $validDescriptions++;
             }
         }
@@ -63,7 +63,7 @@ trait GroupValidation
         // no valid descriptions?
         if (0 === $validDescriptions) {
             $validator->errors()->add(
-                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+                'transactions.0.description', (string) trans('validation.filled', ['attribute' => (string) trans('validation.attributes.description')])
             );
         }
     }
@@ -79,7 +79,7 @@ trait GroupValidation
 
         $groupTitle = $data['group_title'] ?? '';
         if ('' === $groupTitle && count($transactions) > 1) {
-            $validator->errors()->add('group_title', (string)trans('validation.group_title_mandatory'));
+            $validator->errors()->add('group_title', (string) trans('validation.group_title_mandatory'));
         }
     }
 
@@ -88,26 +88,29 @@ trait GroupValidation
      */
     protected function preventNoAccountInfo(Validator $validator): void
     {
-        $transactions   = $this->getTransactionsArray($validator);
-        $hasAccountInfo = false;
-        $keys           = ['source_id', 'destination_id', 'source_name', 'destination_name', 'source_iban', 'destination_iban', 'source_number',
-                           'destination_number'];
+        $transactions = $this->getTransactionsArray($validator);
+        $keys         = ['source_id', 'destination_id', 'source_name', 'destination_name', 'source_iban', 'destination_iban', 'source_number', 'destination_number'];
         /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            foreach($keys as $key) {
-                if(array_key_exists($key, $transaction) && '' !== (string) $transaction[$key]) {
+        foreach ($transactions as $index => $transaction) {
+            $hasAccountInfo = false;
+            $hasJournalId   = array_key_exists('transaction_journal_id', $transaction);
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $transaction) && '' !== (string) $transaction[$key]) {
                     $hasAccountInfo = true;
                 }
             }
+            // set errors:
+            if (false === $hasAccountInfo && !$hasJournalId) {
+                $validator->errors()->add(
+                    sprintf('transactions.%d.source_id', $index), (string) trans('validation.generic_no_source')
+                );
+                $validator->errors()->add(
+                    sprintf('transactions.%d.destination_id', $index), (string) trans('validation.generic_no_destination')
+                );
+            }
         }
-        if(false === $hasAccountInfo) {
-            $validator->errors()->add(
-                'transactions.0.source_id', (string)trans('validation.generic_no_source')
-            );
-            $validator->errors()->add(
-                'transactions.0.destination_id', (string)trans('validation.generic_no_destination')
-            );
-        }
+
+        // only an issue if there is no transaction_journal_id
     }
 
     /**
@@ -164,7 +167,7 @@ trait GroupValidation
         if (null === $journalId || 0 === $count) {
             Log::warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
             Log::warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
-            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
+            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string) trans('validation.need_id_in_edit'));
         }
     }
 }
