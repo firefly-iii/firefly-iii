@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Tranzakció létrehozva: :value',
     'search_modifier_updated_on'                          => 'Tranzakció utoljára módosítva: :value',
     'search_modifier_external_id'                         => 'Külső ID pontosan ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Belső hivatkozás: :value',
     'search_modifier_description_starts'                  => 'Leírás: ":value"',
     'search_modifier_description_ends'                    => 'Leírás vége: ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'Tranzakció TÖRLÉSE (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Belső hivatkozás',
     'pref_optional_tj_notes'                    => 'Megjegyzések',
     'pref_optional_tj_attachments'              => 'Mellékletek',
-    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Location',
     'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Dátumok',
     'optional_field_meta_business'              => 'Üzleti',
     'optional_field_attachments'                => 'Mellékletek',
     'optional_field_meta_data'                  => 'Opcionális metaadat',
-    'external_uri'                              => 'External URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Adatok törlése',

@@ -46,7 +46,7 @@ return [
     'account_type'            => '帳戶類型',
     'created_at'              => '建立於',
     'account'                 => '帳戶',
-    'external_uri'            => 'External URI',
+    'external_url'            => 'External URL',
     'matchingAmount'          => '金額',
     'destination'             => '目標',
     'source'                  => '來源',

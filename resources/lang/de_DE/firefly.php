@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Buchung wurde am „:value” erstellt',
     'search_modifier_updated_on'                          => 'Buchung wurde zuletzt am „:value” aktualisiert',
     'search_modifier_external_id'                         => 'Externe ID lautet „::value”',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Interne Referenz lautet „:value”',
     'search_modifier_description_starts'                  => 'Beschreibung ist „:value”',
     'search_modifier_description_ends'                    => 'Beschreibung endet mit „:value”',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Interne Referenz ist „:trigger_value”',
     'rule_trigger_journal_id_choice'                      => 'Transaktions-Journal-ID ist..',
     'rule_trigger_journal_id'                             => 'Transaktions-Journal-ID ist „:trigger_value”',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'Buchung löschen (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interner Verweis',
     'pref_optional_tj_notes'                    => 'Notizen',
     'pref_optional_tj_attachments'              => 'Anhänge',
-    'pref_optional_tj_external_uri'             => 'Externe URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Herkunft',
     'pref_optional_tj_links'                    => 'Buchungsverknüpfungen',
     'optional_field_meta_dates'                 => 'Daten',
     'optional_field_meta_business'              => 'Geschäftlich',
     'optional_field_attachments'                => 'Anhänge',
     'optional_field_meta_data'                  => 'Optionale Metadaten',
-    'external_uri'                              => 'Externe URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Daten löschen',

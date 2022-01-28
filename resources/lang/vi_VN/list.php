@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Loại tài khoản',
     'created_at'              => 'Được tạo tại',
     'account'                 => 'Tài khoản',
-    'external_uri'            => 'URL bên ngoài',
+    'external_url'            => 'External URL',
     'matchingAmount'          => 'Số tiền',
     'destination'             => 'Nơi đến',
     'source'                  => 'Nơi gửi',

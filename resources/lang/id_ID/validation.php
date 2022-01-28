@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Anda tidak dapat menggunakan akun ini sebagai akun sumber.',
     'generic_invalid_destination' => 'Anda tidak dapat menggunakan akun ini sebagai akun tujuan.',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => ':attribute harus lebih besar dari atau sama dengan :value.',
     'gt.numeric'  => ':attribute harus lebih besar dari :value.',
     'gte.file'    => ':attribute harus lebih besar dari atau sama dengan :value kilobytes.',

@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Tento účet nie je možné použiť ako zdrojový účet.',
     'generic_invalid_destination' => 'Tento účet nie je možné použiť ako cieľový účet.',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => 'Hodnota :attribute musí byť väčšia alebo rovná :value.',
     'gt.numeric'  => 'Hodnota :attribute musí byť väčšia ako :value.',
     'gte.file'    => 'Hodnota :attribute musí byť väčšia alebo rovná :value kilobajtov.',

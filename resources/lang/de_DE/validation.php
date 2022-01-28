@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Sie können dieses Konto nicht als Quellkonto verwenden.',
     'generic_invalid_destination' => 'Sie können dieses Konto nicht als Zielkonto verwenden.',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => ':attribute muss größer oder gleich :value sein.',
     'gt.numeric'  => ':attribute muss größer als :value sein.',
     'gte.file'    => ':attribute muss größer oder gleich :value Kilobytes sein.',

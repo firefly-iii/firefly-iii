@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Tipo de conta',
     'created_at'              => 'Criado em',
     'account'                 => 'Conta',
-    'external_uri'            => 'URI externo',
+    'external_url'            => 'External URL',
     'matchingAmount'          => 'Total',
     'destination'             => 'Destino',
     'source'                  => 'Fonte',

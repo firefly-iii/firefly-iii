@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Η συναλλαγή δημιουργήθηκε στις ":value"',
     'search_modifier_updated_on'                          => 'Η συναλλαγή ενημερώθηκε στις ":value"',
     'search_modifier_external_id'                         => 'Το εξωτερικό ID είναι ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Η εσωτερική αναφορά είναι ":value"',
     'search_modifier_description_starts'                  => 'Η περιγραφή είναι ":value"',
     'search_modifier_description_ends'                    => 'Η περιγραφή τελειώνει με ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Η εσωτερική αναφορά είναι "::trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Το ημερολογιακό ID της συναλλαγής είναι..',
     'rule_trigger_journal_id'                             => 'Το ημερολογιακό ID της συναλλαγής είναι ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'ΔΙΑΓΡΑΦΗ συναλλαγής (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Εσωτερική αναφορά',
     'pref_optional_tj_notes'                    => 'Σημειώσεις',
     'pref_optional_tj_attachments'              => 'Συνημμένα',
-    'pref_optional_tj_external_uri'             => 'Εξωτερικό URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Τοποθεσία',
     'pref_optional_tj_links'                    => 'Συνδέσεις συναλλαγής',
     'optional_field_meta_dates'                 => 'Ημερομηνίες',
     'optional_field_meta_business'              => 'Επιχείρηση',
     'optional_field_attachments'                => 'Συνημμένα',
     'optional_field_meta_data'                  => 'Προαιρετικά μετα-δεδομένα',
-    'external_uri'                              => 'Εξωτερικό URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Διαγραφή δεδομένων',

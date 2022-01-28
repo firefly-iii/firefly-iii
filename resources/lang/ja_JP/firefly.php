@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => '取引が「:value」に作成',
     'search_modifier_updated_on'                          => '取引の最終更新が「:value」',
     'search_modifier_external_id'                         => '外部 ID が「:value」',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => '内部参照が「:value」',
     'search_modifier_description_starts'                  => '説明が「:value」',
     'search_modifier_description_ends'                    => '説明が「:value」で終わる',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => '内部ID「:trigger_value」と一致する',
     'rule_trigger_journal_id_choice'                      => '取引IDが次と一致する',
     'rule_trigger_journal_id'                             => '取引IDが「:trigger_value」と一致する',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => '取引を削除 (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => '内部参照',
     'pref_optional_tj_notes'                    => '備考',
     'pref_optional_tj_attachments'              => '添付ファイル',
-    'pref_optional_tj_external_uri'             => '外部 URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => '場所',
     'pref_optional_tj_links'                    => '取引リンク',
     'optional_field_meta_dates'                 => '日付',
     'optional_field_meta_business'              => 'ビジネス',
     'optional_field_attachments'                => '添付ファイル',
     'optional_field_meta_data'                  => '取引データ',
-    'external_uri'                              => '外部 URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'データを削除',

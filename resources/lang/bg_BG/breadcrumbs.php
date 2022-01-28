@@ -24,15 +24,6 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Начало',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
-    'title_withdrawal'       => 'Expenses',
-    'title_revenue'          => 'Revenue / income',
-    'title_deposit'          => 'Revenue / income',
-    'title_transfer'         => 'Transfers',
-    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Редактирай валута ":name"',
     'delete_currency'        => 'Изтрий валута ":name"',
     'newPiggyBank'           => 'Създай нова касичка',
@@ -69,5 +60,5 @@ return [
     'delete_journal_link'    => 'Изтрий връзката между трансакциите',
     'edit_object_group'      => 'Редактирай група ":title"',
     'delete_object_group'    => 'Изтрии група ":title"',
-    'logout_others'          => 'Изход от другите сесии',
+    'logout_others'          => 'Изход от другите сесии'
 ];

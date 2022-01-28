@@ -50,15 +50,14 @@ class SecureHeaders
 
         $response          = $next($request);
         $trackingScriptSrc = $this->getTrackingScriptSource();
-        $newRelicSrc       = $this->getNewRelicSource();
         $csp               = [
             "default-src 'none'",
             "object-src 'none'",
-            sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'self' 'unsafe-inline' 'nonce-%1s' %2s %3s", $nonce, $trackingScriptSrc, $newRelicSrc),
+            sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'self' 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
             "style-src 'unsafe-inline' 'self'",
             "base-uri 'self'",
             "font-src 'self' data:",
-            sprintf("connect-src 'self' %s %s", $trackingScriptSrc, $newRelicSrc),
+            sprintf("connect-src 'self' %s", $trackingScriptSrc),
             sprintf("img-src data: 'strict-dynamic' 'self' *.tile.openstreetmap.org %s", $trackingScriptSrc),
             "manifest-src 'self'",
         ];
@@ -100,18 +99,6 @@ class SecureHeaders
         $response->header('Feature-Policy', implode('; ', $featurePolicies));
 
         return $response;
-    }
-
-    /**
-     * Returns the domain name of New Relic (used on the demo site)
-     * The check for this value is an undocumented .env variable
-     */
-    private function getNewRelicSource(): string
-    {
-        if(true === env('ENABLE_NEW_RELIC', false)) {
-            return 'bam.eu01.nr-data.net';
-        }
-        return '';
     }
 
     /**

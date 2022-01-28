@@ -24,15 +24,6 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Acasă',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
-    'title_withdrawal'       => 'Expenses',
-    'title_revenue'          => 'Revenue / income',
-    'title_deposit'          => 'Revenue / income',
-    'title_transfer'         => 'Transfers',
-    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Editează moneda ":name"',
     'delete_currency'        => 'Șterge moneda ":name"',
     'newPiggyBank'           => 'Crează o nouă pușculiță',
@@ -69,5 +60,5 @@ return [
     'delete_journal_link'    => 'Şterge legătura dintre tranzacţii',
     'edit_object_group'      => 'Editați grupul de reguli ":title"',
     'delete_object_group'    => 'Șterge grupul de reguli ":title"',
-    'logout_others'          => 'Deconectare celelalte sesiuni',
+    'logout_others'          => 'Deconectare celelalte sesiuni'
 ];

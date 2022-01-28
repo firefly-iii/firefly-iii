@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Giao dịch được tạo vào ":value"',
     'search_modifier_updated_on'                          => 'Giao dịch được cập nhật lần cuối vào ":value"',
     'search_modifier_external_id'                         => 'ID bên ngoài là ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Tham chiếu nội bộ là ":value"',
     'search_modifier_description_starts'                  => 'Mô tả là ":value"',
     'search_modifier_description_ends'                    => 'Mô tả kết thúc bằng ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'XÓA giao dịch (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Tài liệu tham khảo nội bộ',
     'pref_optional_tj_notes'                    => 'Ghi chú',
     'pref_optional_tj_attachments'              => 'Tài liệu đính kèm',
-    'pref_optional_tj_external_uri'             => 'URL bên ngoài',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Vị trí',
     'pref_optional_tj_links'                    => 'Liên kết giao dịch',
     'optional_field_meta_dates'                 => 'Ngày',
     'optional_field_meta_business'              => 'Kinh doanh',
     'optional_field_attachments'                => 'Tài liệu đính kèm',
     'optional_field_meta_data'                  => 'Dữ liệu meta tùy chọn',
-    'external_uri'                              => 'URL bên ngoài',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Xóa dữ liệu',

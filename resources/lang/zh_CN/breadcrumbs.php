@@ -24,15 +24,6 @@ declare(strict_types=1);
 
 return [
     'home'                   => '首页',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
-    'title_withdrawal'       => 'Expenses',
-    'title_revenue'          => 'Revenue / income',
-    'title_deposit'          => 'Revenue / income',
-    'title_transfer'         => 'Transfers',
-    'title_transfers'        => 'Transfers',
     'edit_currency'          => '编辑货币“:name”',
     'delete_currency'        => '删除货币“:name”',
     'newPiggyBank'           => '创建新存钱罐',
@@ -69,5 +60,5 @@ return [
     'delete_journal_link'    => '删除交易之间的关联',
     'edit_object_group'      => '编辑组“:title”',
     'delete_object_group'    => '删除组“:title”',
-    'logout_others'          => '退出其他已登录设备',
+    'logout_others'          => '退出其他已登录设备'
 ];

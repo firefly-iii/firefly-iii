@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'L\'opération a été créée le ":value"',
     'search_modifier_updated_on'                          => 'L\'opération a été mise à jour pour la dernière fois le ":value"',
     'search_modifier_external_id'                         => 'L\'ID externe est ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'La référence interne est ":value"',
     'search_modifier_description_starts'                  => 'La description est ":value"',
     'search_modifier_description_ends'                    => 'La description se termine par ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'La référence interne est ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'L\'ID du journal d\'opérations est..',
     'rule_trigger_journal_id'                             => 'L\'ID du journal d\'opérations est ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'SUPPRIMER l\'opération (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Référence interne',
     'pref_optional_tj_notes'                    => 'Notes',
     'pref_optional_tj_attachments'              => 'Pièces jointes',
-    'pref_optional_tj_external_uri'             => 'URL externe',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Emplacement',
     'pref_optional_tj_links'                    => 'Liens d\'opération',
     'optional_field_meta_dates'                 => 'Dates',
     'optional_field_meta_business'              => 'Commerce',
     'optional_field_attachments'                => 'Pièces jointes',
     'optional_field_meta_data'                  => 'Métadonnées facultatives',
-    'external_uri'                              => 'URL externe',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Suppression de données',

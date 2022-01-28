@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Et voi käyttää tätä tiliä lähdetilinä.',
     'generic_invalid_destination' => 'Et voi käyttää tätä tiliä kohdetilinä.',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => 'Määritteen :attribute arvon täytyy olla vähintään :value.',
     'gt.numeric'  => ':attribute tulee olla suurempi kuin :value.',
     'gte.file'    => 'Määritteen :attribute koon täytyy olla vähintään :value kilotavua.',

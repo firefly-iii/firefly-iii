@@ -24,15 +24,6 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Hem',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
-    'title_withdrawal'       => 'Expenses',
-    'title_revenue'          => 'Revenue / income',
-    'title_deposit'          => 'Revenue / income',
-    'title_transfer'         => 'Transfers',
-    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Redigera valuta ":name"',
     'delete_currency'        => 'Ta bort valuta ":name"',
     'newPiggyBank'           => 'Skapa en ny spargris',
@@ -69,5 +60,5 @@ return [
     'delete_journal_link'    => 'Ta bort länken mellan transaktioner',
     'edit_object_group'      => 'Redigera grupp ":title"',
     'delete_object_group'    => 'Ta bort grupp ":title"',
-    'logout_others'          => 'Logga ut andra sessioner',
+    'logout_others'          => 'Logga ut andra sessioner'
 ];

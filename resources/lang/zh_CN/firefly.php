@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => '交易创建于“:value”',
     'search_modifier_updated_on'                          => '交易上次更新于“:value”',
     'search_modifier_external_id'                         => '外部 ID 为“:value”',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => '内部引用为“:value”',
     'search_modifier_description_starts'                  => '描述为“:value”',
     'search_modifier_description_ends'                    => '描述结尾为“:value”',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => '内部引用为“:trigger_value”',
     'rule_trigger_journal_id_choice'                      => '交易日志 ID 为...',
     'rule_trigger_journal_id'                             => '交易日志 ID 为“:trigger_value”',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => '删除交易 (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => '内部引用',
     'pref_optional_tj_notes'                    => '备注',
     'pref_optional_tj_attachments'              => '附件',
-    'pref_optional_tj_external_uri'             => '外部链接',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => '位置',
     'pref_optional_tj_links'                    => '交易关联',
     'optional_field_meta_dates'                 => '日期',
     'optional_field_meta_business'              => '商务',
     'optional_field_attachments'                => '附件',
     'optional_field_meta_data'                  => '可选后设资料',
-    'external_uri'                              => '外部链接',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => '删除数据',

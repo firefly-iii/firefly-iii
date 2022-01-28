@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Вы не можете использовать этот счёт в качестве счёта-источника.',
     'generic_invalid_destination' => 'Вы не можете использовать этот счёт в качестве счёта назначения.',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => 'Значение :attribute должно быть больше или равно :value.',
     'gt.numeric'  => 'Значение :attribute должно быть больше :value.',
     'gte.file'    => 'Размер файла в поле :attribute должен быть больше или равен :value Килобайт(а).',

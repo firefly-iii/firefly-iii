@@ -46,7 +46,7 @@ return [
     'account_type'            => '口座の種類',
     'created_at'              => '作成日時',
     'account'                 => '口座',
-    'external_uri'            => '外部URI',
+    'external_url'            => 'External URL',
     'matchingAmount'          => '金額',
     'destination'             => '資産勘定（支出先）',
     'source'                  => '収入アカウント（収入源）',

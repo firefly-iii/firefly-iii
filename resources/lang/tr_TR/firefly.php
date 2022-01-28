@@ -292,6 +292,8 @@ return [
     'search_modifier_created_on'                          => 'Bu işlem ":value" tarihinde oluşturuldu',
     'search_modifier_updated_on'                          => 'Bu işlem ":value" tarihinde güncellendi',
     'search_modifier_external_id'                         => 'Harici kimlik ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Dahili referans ":value"',
     'search_modifier_description_starts'                  => 'Açıklama ":value:"',
     'search_modifier_description_ends'                    => 'Açıklama ":value" ile biter',
@@ -563,6 +565,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'Transferi Sil (!)',
@@ -712,14 +716,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Dahili referans',
     'pref_optional_tj_notes'                    => 'Notlar',
     'pref_optional_tj_attachments'              => 'Ekler',
-    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Location',
     'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Tarih',
     'optional_field_meta_business'              => 'İş',
     'optional_field_attachments'                => 'Ekler',
     'optional_field_meta_data'                  => 'İsteğe bağlı meta veriler',
-    'external_uri'                              => 'External URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',

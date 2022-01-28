@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',
     'search_modifier_updated_on'                          => 'Transaction was last updated on ":value"',
     'search_modifier_external_id'                         => 'External ID is ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Internal reference is ":value"',
     'search_modifier_description_starts'                  => 'Description is ":value"',
     'search_modifier_description_ends'                    => 'Description ends with ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => '內部參照',
     'pref_optional_tj_notes'                    => '備註',
     'pref_optional_tj_attachments'              => '附加檔案',
-    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Location',
     'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => '日期',
     'optional_field_meta_business'              => '商務',
     'optional_field_attachments'                => '附加檔案',
     'optional_field_meta_data'                  => '可選中繼資料',
-    'external_uri'                              => 'External URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',

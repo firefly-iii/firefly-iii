@@ -24,15 +24,6 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Inicio',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
-    'title_withdrawal'       => 'Expenses',
-    'title_revenue'          => 'Revenue / income',
-    'title_deposit'          => 'Revenue / income',
-    'title_transfer'         => 'Transfers',
-    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Editar moneda ":name"',
     'delete_currency'        => 'Eliminar moneda ":name"',
     'newPiggyBank'           => 'Crear nueva hucha',
@@ -69,5 +60,5 @@ return [
     'delete_journal_link'    => 'Eliminar enlace entre transacciones',
     'edit_object_group'      => 'Editar grupo ":title"',
     'delete_object_group'    => 'Eliminar grupo ":title"',
-    'logout_others'          => 'Desconectar otras sesiones',
+    'logout_others'          => 'Desconectar otras sesiones'
 ];

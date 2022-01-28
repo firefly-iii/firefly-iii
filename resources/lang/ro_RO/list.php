@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Tip de cont',
     'created_at'              => 'Creat la',
     'account'                 => 'Cont',
-    'external_uri'            => 'URI extern',
+    'external_url'            => 'External URL',
     'matchingAmount'          => 'Sumă',
     'destination'             => 'Destinație',
     'source'                  => 'Sursă',

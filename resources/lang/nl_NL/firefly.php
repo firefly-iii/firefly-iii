@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Transactie werd gemaakt op ":value"',
     'search_modifier_updated_on'                          => 'Transactie werd laatst gewijzigd op ":value"',
     'search_modifier_external_id'                         => 'Extern ID is ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Interne referentie is ":value"',
     'search_modifier_description_starts'                  => 'Omschrijving is ":value"',
     'search_modifier_description_ends'                    => 'Omschrijving eindigt op ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Interne verwijzing is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transactiejournaal ID is..',
     'rule_trigger_journal_id'                             => 'Transactiejournaal ID is ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'VERWIJDER transactie (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interne verwijzing',
     'pref_optional_tj_notes'                    => 'Notities',
     'pref_optional_tj_attachments'              => 'Bijlagen',
-    'pref_optional_tj_external_uri'             => 'Externe URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Locatie',
     'pref_optional_tj_links'                    => 'Transactiekoppelingen',
     'optional_field_meta_dates'                 => 'Data',
     'optional_field_meta_business'              => 'Zakelijk',
     'optional_field_attachments'                => 'Bijlagen',
     'optional_field_meta_data'                  => 'Optionele meta-gegevens',
-    'external_uri'                              => 'Externe URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Verwijder gegevens',

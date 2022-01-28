@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => '您不能使用此账户作为来源账户',
     'generic_invalid_destination' => '您不能使用此账户作为目标账户',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => ':attribute 必须大于或等于 :value',
     'gt.numeric'  => ':attribute 必须大于 :value',
     'gte.file'    => ':attribute 必须大于或等于 :value kB',

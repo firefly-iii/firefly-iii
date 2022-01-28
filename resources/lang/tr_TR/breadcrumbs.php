@@ -24,15 +24,6 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Ana Sayfa',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
-    'title_withdrawal'       => 'Expenses',
-    'title_revenue'          => 'Revenue / income',
-    'title_deposit'          => 'Revenue / income',
-    'title_transfer'         => 'Transfers',
-    'title_transfers'        => 'Transfers',
     'edit_currency'          => '":name" para birimini düzenle',
     'delete_currency'        => '":name" para birimini sil',
     'newPiggyBank'           => 'Yeni bir kumbara oluştur',
@@ -69,5 +60,5 @@ return [
     'delete_journal_link'    => 'Hesap hareketleri arasındaki bağlantıyı sil',
     'edit_object_group'      => '":title" grubunu düzenle',
     'delete_object_group'    => '":title" grubunu sil',
-    'logout_others'          => 'Diğer tüm oturumlardan çıkış yap',
+    'logout_others'          => 'Diğer tüm oturumlardan çıkış yap'
 ];

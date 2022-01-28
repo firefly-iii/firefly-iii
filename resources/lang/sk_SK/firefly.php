@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Transakcia bola vytvorená ":value"',
     'search_modifier_updated_on'                          => 'Transakcia bola naposledy upravená ":value"',
     'search_modifier_external_id'                         => 'Externé ID je ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Interná referencia je ":value"',
     'search_modifier_description_starts'                  => 'Popis je ":value"',
     'search_modifier_description_ends'                    => 'Popis končí ":value“',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Interná referencia je ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'ID denníka transakcií je..',
     'rule_trigger_journal_id'                             => 'ID denníka transakcií je ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'ODSTRÁNIŤ transakciu (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interná referencia',
     'pref_optional_tj_notes'                    => 'Poznámky',
     'pref_optional_tj_attachments'              => 'Prílohy',
-    'pref_optional_tj_external_uri'             => 'Externá URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Poloha',
     'pref_optional_tj_links'                    => 'Prepojenia transakcie',
     'optional_field_meta_dates'                 => 'Dátumy',
     'optional_field_meta_business'              => 'Spoločnosť',
     'optional_field_attachments'                => 'Prílohy',
     'optional_field_meta_data'                  => 'Voliteľné metadata',
-    'external_uri'                              => 'Externá URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Odstrániť údaje',

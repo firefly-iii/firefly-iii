@@ -24,15 +24,6 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'ホーム',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
-    'title_withdrawal'       => 'Expenses',
-    'title_revenue'          => 'Revenue / income',
-    'title_deposit'          => 'Revenue / income',
-    'title_transfer'         => 'Transfers',
-    'title_transfers'        => 'Transfers',
     'edit_currency'          => '通貨 ":name" を編集する',
     'delete_currency'        => '通貨 ":name" を削除する',
     'newPiggyBank'           => '貯金箱の新規作成',
@@ -69,5 +60,5 @@ return [
     'delete_journal_link'    => '取引間のリンクを削除する',
     'edit_object_group'      => 'グループ「:title」を編集',
     'delete_object_group'    => 'グループ「:title」を削除',
-    'logout_others'          => '他のセッションからログアウトする',
+    'logout_others'          => '他のセッションからログアウトする'
 ];
