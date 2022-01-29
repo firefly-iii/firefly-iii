@@ -81,7 +81,7 @@
                         <a href="{{ route('transactions.create', [objectType]) }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ 'create_new_transaction'|_ }}</a>
                     </div>
                     {# actual list #}
-                    {% include 'v1.list.groups' %}
+                    {% include 'list.groups' %}
                 </div>
                 <div class="box-footer">
                     {# links for other views #}
@@ -103,7 +103,7 @@
         {# boxes with info #}
         {% if periods|length > 0 %}
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                {% include 'v1.list.periods' %}
+                {% include 'list.periods' %}
             </div>
         {% endif %}
 

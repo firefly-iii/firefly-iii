@@ -261,7 +261,7 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var deleteAPIRoute = '{{ route('api.v1.data.destroy') }}';
+        var deleteAPIRoute = '{{ route('api.data.destroy') }}';
         var confirmText = '{{ trans('firefly.are_you_sure')|escape('js') }}';
         $(document).ready(function () {
             $('.confirm').on('click', function (e) {
