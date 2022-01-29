@@ -47,7 +47,7 @@ return [
     'account_type'            => 'Hesap Türü',
     'created_at'              => 'Tarihinde oluşturuldu',
     'account'                 => 'Hesap',
-    'external_uri'            => 'Harici Kimlik',
+    'external_url'            => 'External URL',
     'matchingAmount'          => 'Miktar',
     'destination'             => 'Hedef',
     'source'                  => 'Kaynak',

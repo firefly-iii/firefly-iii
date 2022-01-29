@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Транзакция была создана ":value"',
     'search_modifier_updated_on'                          => 'Транзакция была последний раз обновлена ":value"',
     'search_modifier_external_id'                         => 'Внешний ID - ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Внутренняя ссылка - ":value"',
     'search_modifier_description_starts'                  => 'Описание ":value"',
     'search_modifier_description_ends'                    => 'Описание заканчивается на ":value"',
@@ -347,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Transaction is on day of month ":value"',
     'search_modifier_date_before_year'                    => 'Transaction is before or in year ":value"',
     'search_modifier_date_before_month'                   => 'Transaction is before or in month ":value"',
-    'search_modifier_date_before_day'                     => 'Transaction before or on day of month ":value"',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'Transaction is in or after year ":value"',
     'search_modifier_date_after_month'                    => 'Transaction is in or after month ":value"',
     'search_modifier_date_after_day'                      => 'Transaction is after or on day of month ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Внутренняя ссылка - ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'ID журнала транзакций..',
     'rule_trigger_journal_id'                             => 'ID журнала транзакций ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'УДАЛИТЬ транзакцию (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Внутренняя ссылка',
     'pref_optional_tj_notes'                    => 'Заметки',
     'pref_optional_tj_attachments'              => 'Вложения',
-    'pref_optional_tj_external_uri'             => 'Внешний URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Расположение',
     'pref_optional_tj_links'                    => 'Связи транзакции',
     'optional_field_meta_dates'                 => 'Даты',
     'optional_field_meta_business'              => 'Бизнес',
     'optional_field_attachments'                => 'Вложения',
     'optional_field_meta_data'                  => 'Расширенные данные',
-    'external_uri'                              => 'Внешний URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Удалить данные',

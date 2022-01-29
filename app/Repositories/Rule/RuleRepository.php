@@ -466,6 +466,15 @@ class RuleRepository implements RuleRepositoryInterface
             }
         }
         $rule->save();
+        $rule->refresh();
+        $group = $rule->ruleGroup;
+        // update the order:
+        $this->resetRuleOrder($group);
+        if (array_key_exists('order', $data)) {
+            $this->moveRule($rule, $group, (int)$data['order']);
+        }
+
+
         // update the triggers:
         if (array_key_exists('trigger', $data) && 'update-journal' === $data['trigger']) {
             $this->setRuleTrigger('update-journal', $rule);

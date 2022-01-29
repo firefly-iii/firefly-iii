@@ -325,7 +325,7 @@ class AccountUpdateService
             if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
-                if ('credit' === $data['liability_direction']) {
+                if ('credit' === $direction) {
                     $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
                 }
             }

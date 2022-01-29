@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Nu puteți utiliza acest cont ca și cont sursă.',
     'generic_invalid_destination' => 'Nu puteți utiliza acest cont ca și cont de destinație.',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => ':attribute trebuie să fie mai mare sau egal cu :value.',
     'gt.numeric'  => ':attribute trebuie să fie mai mare decât :value.',
     'gte.file'    => ':attribute trebuie să fie mai mare sau egal cu :value kilobytes.',

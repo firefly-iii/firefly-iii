@@ -214,7 +214,7 @@ class PreferencesController extends Controller
             'internal_reference' => array_key_exists('internal_reference', $setOptions),
             'notes'              => array_key_exists('notes', $setOptions),
             'attachments'        => array_key_exists('attachments', $setOptions),
-            'external_uri'       => array_key_exists('external_uri', $setOptions),
+            'external_url'       => array_key_exists('external_url', $setOptions),
             'location'           => array_key_exists('location', $setOptions),
             'links'              => array_key_exists('links', $setOptions),
         ];

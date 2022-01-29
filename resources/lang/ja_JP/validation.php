@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'この口座を引き出し元口座として使用することはできません。',
     'generic_invalid_destination' => 'この口座を預け入れ先口座として使用することはできません。',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => ':attribute は :value 以上でなければなりません。',
     'gt.numeric'  => ':attribute は :value より大きな値でなければいけません。',
     'gte.file'    => ':attribute は :value キロバイト以上でなければなりません。',

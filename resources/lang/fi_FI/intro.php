@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'Tässä ovat tähän mennessä luodut tilit. Käteistilillä voit seurata käteiskuluja, mutta se ei tietenkään ole pakollista.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => 'Anna tapahtuman perustiedot. Lähde, kohde, päivämäärä ja kuvaus.',
+    'transactions_create_amount_info'                 => 'Syötä tapahtuman summa. Tarvittaessa kentät päivittyvät automaattisesti ulkomaisen valuutan tietoihin.',
+    'transactions_create_optional_info'               => 'Kaikki nämä kentät ovat vapaaehtoisia. Metatietojen lisääminen tässä tekee tapahtumista paremmin organisoituja.',
+    'transactions_create_split'                       => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää osia tällä painikkeella',
 
     // create account:
     'accounts_create_iban'                            => 'Anna tilillesi kelvollinen IBAN-tunnus. Tämä voi tehdä tietojen automaattisesta tuonnista jatkossa tosi helppoa.',

@@ -201,7 +201,12 @@ function getTransactionsForRange() {
     var index = indexUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
     window.history.pushState('object or string', "Reconcile account", index);
 
-    $.getJSON(uri).done(placeTransactions);
+    $.getJSON(uri).done(placeTransactions).catch(exceptionHandling)
+}
+function exceptionHandling() {
+    $('#transactions_holder').empty().append($('<p>').addClass('text-center lead').html(selectRangeAndBalance));
+    $('.start_reconcile').show();
+    $('.initial_instructions').show();
 }
 
 // /**

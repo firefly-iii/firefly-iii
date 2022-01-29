@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Transakce byla vytvořena dne ":value"',
     'search_modifier_updated_on'                          => 'Transakce byla naposledy aktualizována dne ":value"',
     'search_modifier_external_id'                         => 'Externí ID je ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Internal reference is ":value"',
     'search_modifier_description_starts'                  => 'Description is ":value"',
     'search_modifier_description_ends'                    => 'Description ends with ":value"',
@@ -347,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Transaction is on day of month ":value"',
     'search_modifier_date_before_year'                    => 'Transaction is before or in year ":value"',
     'search_modifier_date_before_month'                   => 'Transaction is before or in month ":value"',
-    'search_modifier_date_before_day'                     => 'Transaction before or on day of month ":value"',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'Transaction is in or after year ":value"',
     'search_modifier_date_after_month'                    => 'Transaction is in or after month ":value"',
     'search_modifier_date_after_day'                      => 'Transaction is after or on day of month ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interní reference',
     'pref_optional_tj_notes'                    => 'Poznámky',
     'pref_optional_tj_attachments'              => 'Přílohy',
-    'pref_optional_tj_external_uri'             => 'Externí URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Poloha',
     'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Datumy',
     'optional_field_meta_business'              => 'Business',
     'optional_field_attachments'                => 'Přílohy',
     'optional_field_meta_data'                  => 'Volitelná metadata',
-    'external_uri'                              => 'Externí URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Odstranit data',

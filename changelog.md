@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.11 - 2022-01-28
+
+### Added
+- Added various debug log entries to diagnose issues
+- Add various validation rules to the report page
+- Created a new search option and rule trigger for the `external_url`-field, thanks @GeorgeHahn!
+- Extra support for the `DB_SOCKET` configuration value in various places
+
+### Fixed
+- [Issue 5422](https://github.com/firefly-iii/firefly-iii/issues/5422) Updating a liability account fails when passing in opening balance and opening balance date via API
+- [Issue 5540](https://github.com/firefly-iii/firefly-iii/issues/5540) Move rules using the API
+- [Issue 5575](https://github.com/firefly-iii/firefly-iii/issues/5575) Reconciling with a non-real date makes the reconciliation screen fail to load
+- [Issue 5610](https://github.com/firefly-iii/firefly-iii/issues/5610) Updating transaction with invalid splits fixed
+
+### API
+- [Issue 5540](https://github.com/firefly-iii/firefly-iii/issues/5540) Move rules using the API
+- [Issue 5610](https://github.com/firefly-iii/firefly-iii/issues/5610) Updating transaction with invalid splits fixed
+- Add missing field, external_url
+- Various fixes in transaction PUT endpoint.
+
 ## 5.6.10 - 2022-01-10
 
 ### Added

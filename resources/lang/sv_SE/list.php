@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Kontotyp',
     'created_at'              => 'Skapad den',
     'account'                 => 'Konto',
-    'external_uri'            => 'Extern URI',
+    'external_url'            => 'External URL',
     'matchingAmount'          => 'Belopp',
     'destination'             => 'Destination',
     'source'                  => 'Källa',

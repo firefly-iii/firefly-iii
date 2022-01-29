@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Muokkaa säästöpossua ":name"',
     'preferences'            => 'Asetukset',
     'profile'                => 'Käyttäjäprofiili',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Tilit',
     'changePassword'         => 'Vaihda salasanasi',
     'change_email'           => 'Muuta sähköpostiosoitetta',
     'bills'                  => 'Laskut',

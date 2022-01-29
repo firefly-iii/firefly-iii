@@ -79,12 +79,22 @@ class GroupUpdateService
 
         $existing = $transactionGroup->transactionJournals->pluck('id')->toArray();
         $updated  = $this->updateTransactions($transactionGroup, $transactions);
-        $result   = array_diff($existing, $updated);
+        Log::debug('Array of updated IDs: ', $updated);
+
+        if (0 === count($updated)) {
+            Log::error('There were no transactions updated or created. Will not delete anything.');
+            $transactionGroup->refresh();
+            app('preferences')->mark();
+            return $transactionGroup;
+        }
+
+        $result = array_diff($existing, $updated);
+        Log::debug('Result of DIFF: ', $result);
         if (count($result) > 0) {
             /** @var string $deletedId */
             foreach ($result as $deletedId) {
                 /** @var TransactionJournal $journal */
-                $journal = $transactionGroup->transactionJournals()->find((int)$deletedId);
+                $journal = $transactionGroup->transactionJournals()->find((int) $deletedId);
                 /** @var JournalDestroyService $service */
                 $service = app(JournalDestroyService::class);
                 $service->destroy($journal);
@@ -109,6 +119,9 @@ class GroupUpdateService
         if (empty($data)) {
             return;
         }
+        if (1 === count($data) && array_key_exists('transaction_journal_id', $data)) {
+            return;
+        }
         /** @var JournalUpdateService $updateService */
         $updateService = app(JournalUpdateService::class);
         $updateService->setTransactionGroup($transactionGroup);
@@ -127,6 +140,7 @@ class GroupUpdateService
      */
     private function updateTransactions(TransactionGroup $transactionGroup, array $transactions): array
     {
+        // updated or created transaction journals:
         $updated = [];
         /**
          * @var int   $index
@@ -134,7 +148,7 @@ class GroupUpdateService
          */
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now at #%d of %d', ($index + 1), count($transactions)), $transaction);
-            $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
+            $journalId = (int) ($transaction['transaction_journal_id'] ?? 0);
             /** @var TransactionJournal|null $journal */
             $journal = $transactionGroup->transactionJournals()->find($journalId);
             if (null === $journal) {
@@ -151,8 +165,14 @@ class GroupUpdateService
                     }
                 }
                 Log::debug('Call createTransactionJournal');
-                $this->createTransactionJournal($transactionGroup, $transaction);
+                $newJournal = $this->createTransactionJournal($transactionGroup, $transaction);
                 Log::debug('Done calling createTransactionJournal');
+                if (null !== $newJournal) {
+                    $updated[] = $newJournal->id;
+                }
+                if (null === $newJournal) {
+                    Log::error('createTransactionJournal returned NULL, indicating something went wrong.');
+                }
             }
             if (null !== $journal) {
                 Log::debug('Call updateTransactionJournal');
@@ -169,12 +189,13 @@ class GroupUpdateService
      * @param TransactionGroup $transactionGroup
      * @param array            $data
      *
+     * @return TransactionJournal|null
+     *
      * @throws FireflyException
      * @throws DuplicateTransactionException
      */
-    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): void
+    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
     {
-
         $submission = [
             'transactions' => [
                 $data,
@@ -195,6 +216,11 @@ class GroupUpdateService
                 $transactionGroup->transactionJournals()->save($journal);
             }
         );
+        if (0 === $collection->count()) {
+            return null;
+        }
+
+        return $collection->first();
     }
 
 }

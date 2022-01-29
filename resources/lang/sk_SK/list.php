@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Typ účtu',
     'created_at'              => 'Vytvorené',
     'account'                 => 'Účet',
-    'external_uri'            => 'Externá URL',
+    'external_url'            => 'External URL',
     'matchingAmount'          => 'Suma',
     'destination'             => 'Cieľ',
     'source'                  => 'Zdroj',

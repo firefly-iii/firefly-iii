@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Bạn không thể sử dụng tài khoản này làm tài khoản nguồn.',
     'generic_invalid_destination' => 'Bạn không thể sử dụng tài khoản này làm tài khoản đích.',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => ':attribute phải lớn hơn hoặc bằng :value.',
     'gt.numeric'  => ':attribute phải lớn hơn :value.',
     'gte.file'    => ':attribute phải lớn hơn hoặc bằng :value kilobyte.',

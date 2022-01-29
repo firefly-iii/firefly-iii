@@ -101,7 +101,7 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '5.6.10',
+    'version'                      => '5.6.11',
     'api_version'                  => '1.5.5',
     'db_version'                   => 18,
 
@@ -518,6 +518,8 @@ return [
             'notes_are'                       => ['alias' => false, 'needs_context' => true,],
             'no_notes'                        => ['alias' => false, 'needs_context' => false,],
             'any_notes'                       => ['alias' => false, 'needs_context' => false,],
+            'no_external_url'                 => ['alias' => false, 'needs_context' => false,],
+            'any_external_url'                => ['alias' => false, 'needs_context' => false,],
 
             // one exact (or array of) journals:
             'id'                              => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],
@@ -864,7 +866,7 @@ return [
         // sepa
         'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
         'sepa_db', 'sepa_country', 'sepa_ep',
-        'sepa_ci', 'sepa_batch_id', 'external_uri',
+        'sepa_ci', 'sepa_batch_id', 'external_url',
 
         // dates
         'interest_date', 'book_date', 'process_date',

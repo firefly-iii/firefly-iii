@@ -63,7 +63,7 @@ trait WithdrawalValidation
             // if both values are NULL we return TRUE
             // because we assume the user doesnt want to submit / change anything.
             $this->sourceError = (string)trans('validation.withdrawal_source_need_data');
-            Log::warning('Not a valid source. Need more data.');
+            Log::warning('[a] Not a valid source. Need more data.');
 
             return false;
         }
@@ -137,7 +137,7 @@ trait WithdrawalValidation
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
             $this->sourceError = (string)trans('validation.withdrawal_source_need_data');
-            Log::warning('Not a valid source. Need more data.');
+            Log::warning('[b] Not a valid source. Need more data.');
 
             return false;
         }

@@ -17,13 +17,13 @@
         "lodash.clonedeep": "^4.5.0",
         "postcss": "^8.4.5",
         "resolve-url-loader": "^4.0.0",
-        "sass": "^1.45.1",
+        "sass": "^1.49.0",
         "sass-loader": "^12.2.0",
-        "vue-i18n": "^8.26.7",
+        "vue-i18n": "^8.27.0",
         "vue-loader": "^15",
         "vue-template-compiler": "^2.6.12",
         "vuex": "^3.6.2",
-        "webpack": "^5.64.4"
+        "webpack": "^5.67.0"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",
@@ -34,7 +34,7 @@
         "bootstrap-vue": "^2.21.2",
         "chart.js": "^3.7.0",
         "icheck-bootstrap": "^3.0.1",
-        "jquery-ui": "^1.12.1",
+        "jquery-ui": "^1.13.1",
         "leaflet": "^1.7.1",
         "localforage": "^1.9.0",
         "localforage-memoryStorageDriver": "^0.9.2",

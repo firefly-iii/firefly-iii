@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Tranzacția a fost creată pe ":value"',
     'search_modifier_updated_on'                          => 'Tranzacția a fost actualizată ultima dată la ":value"',
     'search_modifier_external_id'                         => 'ID extern este ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Referința internă este ":value"',
     'search_modifier_description_starts'                  => 'Descrierea este ":value"',
     'search_modifier_description_ends'                    => 'Descrierea se termină cu ":value"',
@@ -347,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Transaction is on day of month ":value"',
     'search_modifier_date_before_year'                    => 'Transaction is before or in year ":value"',
     'search_modifier_date_before_month'                   => 'Transaction is before or in month ":value"',
-    'search_modifier_date_before_day'                     => 'Transaction before or on day of month ":value"',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'Transaction is in or after year ":value"',
     'search_modifier_date_after_month'                    => 'Transaction is in or after month ":value"',
     'search_modifier_date_after_day'                      => 'Transaction is after or on day of month ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Referința internă este ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'ID-ul jurnalului de tranzacție este..',
     'rule_trigger_journal_id'                             => 'ID-ul jurnalului de tranzacții este ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'Șterge tranzacția (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Referință internă',
     'pref_optional_tj_notes'                    => 'Notițe',
     'pref_optional_tj_attachments'              => 'Ataşamente',
-    'pref_optional_tj_external_uri'             => 'URL extern',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Locaţie',
     'pref_optional_tj_links'                    => 'Link-uri de tranzacție',
     'optional_field_meta_dates'                 => 'Date',
     'optional_field_meta_business'              => 'Afaceri',
     'optional_field_attachments'                => 'Ataşamente',
     'optional_field_meta_data'                  => 'Meta date opționale',
-    'external_uri'                              => 'URL extern',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Ștergeți datele',

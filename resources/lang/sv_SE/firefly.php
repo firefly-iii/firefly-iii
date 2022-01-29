@@ -291,6 +291,8 @@ return [
     'search_modifier_created_on'                          => 'Transaktionen skapades ":value"',
     'search_modifier_updated_on'                          => 'Transaktionen uppdaterades senaste ":value"',
     'search_modifier_external_id'                         => 'Externt ID är ":value"',
+    'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
     'search_modifier_internal_reference'                  => 'Intern referens är ":value"',
     'search_modifier_description_starts'                  => 'Beskrivningen är ":value"',
     'search_modifier_description_ends'                    => 'Beskrivningen slutar med ":value"',
@@ -347,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Transaction is on day of month ":value"',
     'search_modifier_date_before_year'                    => 'Transaction is before or in year ":value"',
     'search_modifier_date_before_month'                   => 'Transaction is before or in month ":value"',
-    'search_modifier_date_before_day'                     => 'Transaction before or on day of month ":value"',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'Transaction is in or after year ":value"',
     'search_modifier_date_after_month'                    => 'Transaction is in or after month ":value"',
     'search_modifier_date_after_day'                      => 'Transaction is after or on day of month ":value"',
@@ -562,6 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Intern referens är ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaktionsjournal-ID är..',
     'rule_trigger_journal_id'                             => 'Transaktionsjournal-ID är ":trigger_value"',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'TA BORT transaktion (!)',
@@ -711,14 +715,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Intern referens',
     'pref_optional_tj_notes'                    => 'Anteckningar',
     'pref_optional_tj_attachments'              => 'Bilagor',
-    'pref_optional_tj_external_uri'             => 'Extern URL',
+    'pref_optional_tj_external_url'             => 'External URL',
     'pref_optional_tj_location'                 => 'Plats',
     'pref_optional_tj_links'                    => 'Transaktionslänkar',
     'optional_field_meta_dates'                 => 'Datum',
     'optional_field_meta_business'              => 'Affärsverksamhet',
     'optional_field_attachments'                => 'Bilagor',
     'optional_field_meta_data'                  => 'Valfri metadata',
-    'external_uri'                              => 'Extern URL',
+    'external_url'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Ta bort data',

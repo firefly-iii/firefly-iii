@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Kontotype',
     'created_at'              => 'Opprettet',
     'account'                 => 'Konto',
-    'external_uri'            => 'External URI',
+    'external_url'            => 'External URL',
     'matchingAmount'          => 'Beløp',
     'destination'             => 'Mål',
     'source'                  => 'Kilde',

@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Δεν μπορείτε να χρησιμοποιήσετε αυτό το λογαριασμό ως λογαριασμό προέλευσης.',
     'generic_invalid_destination' => 'Δεν μπορείτε να χρησιμοποιήσετε αυτό το λογαριασμό ως λογαριασμό προορισμού.',
 
+    'generic_no_source'      => 'You must submit source account information.',
+    'generic_no_destination' => 'You must submit destination account information.',
+
     'gte.numeric' => 'Το :attribute πρέπει να είναι μεγαλύτερο ή ίσο με :value.',
     'gt.numeric'  => 'Το :attribute πρέπει να είναι μεγαλύτερο από :value.',
     'gte.file'    => 'Το :attribute πρέπει να είναι μεγαλύτερο ή ίσο με :value kilobytes.',

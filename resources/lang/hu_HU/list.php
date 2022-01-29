@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Bankszámla típusa',
     'created_at'              => 'Létrehozva',
     'account'                 => 'Bankszámla',
-    'external_uri'            => 'Külső hivatkozás',
+    'external_url'            => 'External URL',
     'matchingAmount'          => 'Összeg',
     'destination'             => 'Cél',
     'source'                  => 'Forrás',

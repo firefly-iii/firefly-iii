@@ -214,6 +214,9 @@ return [
     'generic_invalid_source'      => 'Non puoi utilizzare questo conto come conto di origine.',
     'generic_invalid_destination' => 'Non puoi utilizzare questo conto come conto di destinazione.',
 
+    'generic_no_source'      => 'È necessario inviare le informazioni sul conto di origine.',
+    'generic_no_destination' => 'È necessario inviare le informazioni sul conto di destinazione.',
+
     'gte.numeric' => 'Il campo :attribute deve essere maggiore o uguale a :value.',
     'gt.numeric'  => 'Il campo :attribute deve essere maggiore di :value.',
     'gte.file'    => 'Il campo :attribute deve essere maggiore o uguale a :value kilobyte.',

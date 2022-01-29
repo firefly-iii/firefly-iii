@@ -709,7 +709,7 @@ class ExportDataGenerator
                 $metaData['sepa_ep'],
                 $metaData['sepa_ci'],
                 $metaData['sepa_batch_id'],
-                $metaData['external_uri'],
+                $metaData['external_url'],
 
                 // dates
                 $metaData['interest_date'],

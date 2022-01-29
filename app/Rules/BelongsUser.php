@@ -30,6 +30,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\Rule;
 use Log;
 
@@ -83,6 +84,7 @@ class BelongsUser implements Rule
             'piggy_bank_id' => $this->validatePiggyBankId((int)$value),
             'piggy_bank_name' => $this->validatePiggyBankName($value),
             'bill_id' => $this->validateBillId((int)$value),
+            'transaction_journal_id' => $this->validateJournalId((int)$value),
             'bill_name' => $this->validateBillName($value),
             'budget_id' => $this->validateBudgetId((int)$value),
             'category_id' => $this->validateCategoryId((int)$value),
@@ -181,6 +183,21 @@ class BelongsUser implements Rule
             return true;
         }
         $count = Bill::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
+
+        return 1 === $count;
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateJournalId(int $value): bool
+    {
+        if (0 === $value) {
+            return true;
+        }
+        $count = TransactionJournal::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
 
         return 1 === $count;
     }

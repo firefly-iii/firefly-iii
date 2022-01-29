@@ -63,6 +63,12 @@ class CreateDatabase extends Command
         $exists  = false;
         $checked = false; // checked for existence of DB?
         $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
+
+        if ('' !== env('DB_SOCKET', '')) {
+            $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', env('DB_SOCKET', ''));
+        }
+        $this->info(sprintf('DSN is %s', $dsn));
+
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
