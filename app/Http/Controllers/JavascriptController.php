@@ -71,7 +71,7 @@ class JavascriptController extends Controller
         }
 
         return response()
-            ->view('v1.javascript.accounts', $data)
+            ->view('javascript.accounts', $data)
             ->header('Content-Type', 'text/javascript');
     }
 
@@ -94,7 +94,7 @@ class JavascriptController extends Controller
         }
 
         return response()
-            ->view('v1.javascript.currencies', $data)
+            ->view('javascript.currencies', $data)
             ->header('Content-Type', 'text/javascript');
     }
 
@@ -137,7 +137,7 @@ class JavascriptController extends Controller
         $request->session()->keep(['two-factor-secret']);
 
         return response()
-            ->view('v1.javascript.variables', $data)
+            ->view('javascript.variables', $data)
             ->header('Content-Type', 'text/javascript');
     }
 
