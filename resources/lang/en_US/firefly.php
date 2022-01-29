@@ -349,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Transaction is on day of month ":value"',
     'search_modifier_date_before_year'                    => 'Transaction is before or in year ":value"',
     'search_modifier_date_before_month'                   => 'Transaction is before or in month ":value"',
-    'search_modifier_date_before_day'                     => 'Transaction before or on day of month ":value"',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'Transaction is in or after year ":value"',
     'search_modifier_date_after_month'                    => 'Transaction is in or after month ":value"',
     'search_modifier_date_after_day'                      => 'Transaction is after or on day of month ":value"',
