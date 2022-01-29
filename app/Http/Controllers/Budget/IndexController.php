@@ -136,7 +136,7 @@ class IndexController extends Controller
         // get all inactive budgets, and simply list them:
         $inactive = $this->repository->getInactiveBudgets();
 
-        return prefixView(
+        return view(
             'budgets.index', compact(
                                'availableBudgets', 'budgeted', 'spent', 'prevLoop', 'nextLoop', 'budgets', 'currencies', 'enableAddButton', 'periodTitle',
                                'defaultCurrency', 'activeDaysPassed', 'activeDaysLeft', 'inactive', 'budgets', 'start', 'end', 'sums'

@@ -91,7 +91,7 @@ class SearchController extends Controller
         $invalidOperators = $searcher->getInvalidOperators();
         $subTitle         = (string)trans('breadcrumbs.search_result', ['query' => $fullQuery]);
 
-        return prefixView('search.index', compact('query', 'operators', 'page', 'rule', 'fullQuery', 'subTitle', 'ruleId', 'ruleChanged', 'invalidOperators'));
+        return view('search.index', compact('query', 'operators', 'page', 'rule', 'fullQuery', 'subTitle', 'ruleId', 'ruleChanged', 'invalidOperators'));
     }
 
     /**
@@ -118,7 +118,7 @@ class SearchController extends Controller
         $groups->setPath($url);
 
         try {
-            $html = prefixView('search.search', compact('groups', 'hasPages', 'searchTime'))->render();
+            $html = view('search.search', compact('groups', 'hasPages', 'searchTime'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));

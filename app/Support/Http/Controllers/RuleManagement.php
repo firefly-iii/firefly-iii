@@ -50,7 +50,7 @@ trait RuleManagement
         if (is_array($oldInput)) {
             foreach ($oldInput as $oldAction) {
                 try {
-                    $triggers[] = prefixView(
+                    $triggers[] = view(
                         'rules.partials.action',
                         [
                             'oldAction'  => $oldAction['type'],
@@ -95,7 +95,7 @@ trait RuleManagement
         if (is_array($oldInput)) {
             foreach ($oldInput as $oldTrigger) {
                 try {
-                    $renderedEntries[] = prefixView(
+                    $renderedEntries[] = view(
                         'rules.partials.trigger',
                         [
                             'oldTrigger' => OperatorQuerySearch::getRootOperator($oldTrigger['type']),
@@ -138,7 +138,7 @@ trait RuleManagement
         $index = 0;
         foreach ($submittedOperators as $operator) {
             try {
-                $renderedEntries[] = prefixView(
+                $renderedEntries[] = view(
                     'rules.partials.trigger',
                     [
                         'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),

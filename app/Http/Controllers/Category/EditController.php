@@ -86,7 +86,7 @@ class EditController extends Controller
             'notes' => $request->old('notes') ?? $this->repository->getNoteText($category),
         ];
 
-        return prefixView('categories.edit', compact('category', 'subTitle', 'preFilled'));
+        return view('categories.edit', compact('category', 'subTitle', 'preFilled'));
     }
 
     /**

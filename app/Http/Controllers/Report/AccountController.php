@@ -63,7 +63,7 @@ class AccountController extends Controller
         $accountTasker = app(AccountTaskerInterface::class);
         $accountReport = $accountTasker->getAccountReport($accounts, $start, $end);
         try {
-            $result = prefixView('reports.partials.accounts', compact('accountReport'))->render();
+            $result = view('reports.partials.accounts', compact('accountReport'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));

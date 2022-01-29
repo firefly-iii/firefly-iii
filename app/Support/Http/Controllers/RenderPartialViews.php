@@ -67,7 +67,7 @@ trait RenderPartialViews
         $journals = $popupHelper->balanceForBudget($budget, $account, $attributes);
 
         try {
-            $view = prefixView('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
+            $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
@@ -88,7 +88,7 @@ trait RenderPartialViews
         $budgets    = $repository->getBudgets();
 
         try {
-            $result = prefixView('reports.options.budget', compact('budgets'))->render();
+            $result = view('reports.options.budget', compact('budgets'))->render();
         } catch (Throwable $e) {// @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -119,7 +119,7 @@ trait RenderPartialViews
         $journals = $popupHelper->byBudget($budget, $attributes);
 
         try {
-            $view = prefixView('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
+            $view = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
@@ -146,7 +146,7 @@ trait RenderPartialViews
         $journals           = $popupHelper->byCategory($category, $attributes);
 
         try {
-            $view = prefixView('popup.report.category-entry', compact('journals', 'category'))->render();
+            $view = view('popup.report.category-entry', compact('journals', 'category'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
@@ -167,7 +167,7 @@ trait RenderPartialViews
         $categories = $repository->getCategories();
 
         try {
-            $result = prefixView('reports.options.category', compact('categories'))->render();
+            $result = view('reports.options.category', compact('categories'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.options.category: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -208,7 +208,7 @@ trait RenderPartialViews
 
 
         try {
-            $result = prefixView('reports.options.double', compact('set'))->render();
+            $result = view('reports.options.double', compact('set'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -241,7 +241,7 @@ trait RenderPartialViews
         $journals = $popupHelper->byExpenses($account, $attributes);
 
         try {
-            $view = prefixView('popup.report.expense-entry', compact('journals', 'account'))->render();
+            $view = view('popup.report.expense-entry', compact('journals', 'account'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
@@ -267,7 +267,7 @@ trait RenderPartialViews
         foreach ($currentActions as $entry) {
             $count = ($index + 1);
             try {
-                $actions[] = prefixView(
+                $actions[] = view(
                     'rules.partials.action',
                     [
                         'oldAction'  => $entry->action_type,
@@ -317,7 +317,7 @@ trait RenderPartialViews
             if ('user_action' !== $entry->trigger_type) {
                 $count = ($index + 1);
                 try {
-                    $renderedEntries[] = prefixView(
+                    $renderedEntries[] = view(
                         'rules.partials.trigger',
                         [
                             'oldTrigger' => OperatorQuerySearch::getRootOperator($entry->trigger_type),
@@ -363,7 +363,7 @@ trait RenderPartialViews
         $journals = $popupHelper->byIncome($account, $attributes);
 
         try {
-            $view = prefixView('popup.report.income-entry', compact('journals', 'account'))->render();
+            $view = view('popup.report.income-entry', compact('journals', 'account'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
@@ -381,7 +381,7 @@ trait RenderPartialViews
     {
 
         try {
-            $result = prefixView('reports.options.no-options')->render();
+            $result = view('reports.options.no-options')->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.options.no-options: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -403,7 +403,7 @@ trait RenderPartialViews
 
 
         try {
-            $result = prefixView('reports.options.tag', compact('tags'))->render();
+            $result = view('reports.options.tag', compact('tags'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';

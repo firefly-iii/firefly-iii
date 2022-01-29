@@ -120,7 +120,7 @@ class IndexController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return prefixView('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'periods', 'start', 'end'));
+        return view('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'periods', 'start', 'end'));
     }
 
     /**
@@ -159,6 +159,6 @@ class IndexController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return prefixView('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'start', 'end'));
+        return view('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'start', 'end'));
     }
 }

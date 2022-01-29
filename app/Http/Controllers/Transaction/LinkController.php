@@ -79,7 +79,7 @@ class LinkController extends Controller
         $subTitle     = (string)trans('breadcrumbs.delete_journal_link');
         $this->rememberPreviousUri('journal_links.delete.uri');
 
-        return prefixView('transactions.links.delete', compact('link', 'subTitle', 'subTitleIcon'));
+        return view('transactions.links.delete', compact('link', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -108,7 +108,7 @@ class LinkController extends Controller
     {
         $linkTypes = $this->repository->get();
 
-        return prefixView('transactions.links.modal', compact('journal', 'linkTypes'));
+        return view('transactions.links.modal', compact('journal', 'linkTypes'));
     }
 
     /**

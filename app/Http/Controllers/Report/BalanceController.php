@@ -136,7 +136,7 @@ class BalanceController extends Controller
             // get transactions in budget
         }
         try {
-            $result = prefixView('reports.partials.balance', compact('report'))->render();
+            $result = view('reports.partials.balance', compact('report'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));

@@ -81,7 +81,7 @@ class AmountController extends Controller
         $maxAmount     = min($leftOnAccount, $leftToSave);
         $currency      = $this->accountRepos->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrency();
 
-        return prefixView('piggy-banks.add', compact('piggyBank', 'maxAmount', 'currency'));
+        return view('piggy-banks.add', compact('piggyBank', 'maxAmount', 'currency'));
     }
 
     /**
@@ -101,7 +101,7 @@ class AmountController extends Controller
         $maxAmount     = min($leftOnAccount, $leftToSave);
         $currency      = $this->accountRepos->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrency();
 
-        return prefixView('piggy-banks.add-mobile', compact('piggyBank', 'maxAmount', 'currency'));
+        return view('piggy-banks.add-mobile', compact('piggyBank', 'maxAmount', 'currency'));
     }
 
     /**
@@ -201,7 +201,7 @@ class AmountController extends Controller
         $repetition = $this->piggyRepos->getRepetition($piggyBank);
         $currency   = $this->accountRepos->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrency();
 
-        return prefixView('piggy-banks.remove', compact('piggyBank', 'repetition', 'currency'));
+        return view('piggy-banks.remove', compact('piggyBank', 'repetition', 'currency'));
     }
 
     /**
@@ -216,6 +216,6 @@ class AmountController extends Controller
         $repetition = $this->piggyRepos->getRepetition($piggyBank);
         $currency   = $this->accountRepos->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrency();
 
-        return prefixView('piggy-banks.remove-mobile', compact('piggyBank', 'repetition', 'currency'));
+        return view('piggy-banks.remove-mobile', compact('piggyBank', 'repetition', 'currency'));
     }
 }

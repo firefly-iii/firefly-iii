@@ -48,7 +48,7 @@ trait ModelInformation
     protected function getActionsForBill(Bill $bill): array // get info and augument
     {
         try {
-            $result = prefixView(
+            $result = view(
                 'rules.partials.action',
                 [
                     'oldAction'  => 'link_to_bill',
@@ -136,7 +136,7 @@ trait ModelInformation
         ];
         foreach ($billTriggers as $index => $trigger) {
             try {
-                $string = prefixView(
+                $string = view(
                     'rules.partials.trigger',
                     [
                         'oldTrigger' => $trigger,
@@ -252,7 +252,7 @@ trait ModelInformation
 
         foreach ($journalTriggers as $index => $trigger) {
             try {
-                $string = prefixView(
+                $string = view(
                     'rules.partials.trigger',
                     [
                         'oldTrigger' => $trigger,

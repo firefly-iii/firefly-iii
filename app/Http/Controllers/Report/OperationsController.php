@@ -83,7 +83,7 @@ class OperationsController extends Controller
         $report = $this->tasker->getExpenseReport($start, $end, $accounts);
         $type   = 'expense-entry';
         try {
-            $result = prefixView('reports.partials.income-expenses', compact('report', 'type'))->render();
+            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
@@ -119,7 +119,7 @@ class OperationsController extends Controller
         $report = $this->tasker->getIncomeReport($start, $end, $accounts);
         $type   = 'income-entry';
         try {
-            $result = prefixView('reports.partials.income-expenses', compact('report', 'type'))->render();
+            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
@@ -175,7 +175,7 @@ class OperationsController extends Controller
         }
 
         try {
-            $result = prefixView('reports.partials.operations', compact('sums'))->render();
+            $result = view('reports.partials.operations', compact('sums'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             $result = 'Could not render view.';

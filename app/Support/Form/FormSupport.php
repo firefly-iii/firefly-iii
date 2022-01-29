@@ -53,7 +53,7 @@ trait FormSupport
         $selected = $this->fillFieldValue($name, $selected);
         unset($options['autocomplete'], $options['placeholder']);
         try {
-            $html = prefixView('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+            $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';

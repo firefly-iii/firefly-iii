@@ -125,7 +125,7 @@ class CreateController extends Controller
 
         session()->put('preFilled', $preFilled);
 
-        return prefixView(
+        return view(
             'transactions.create',
             compact(
                 'subTitleIcon',

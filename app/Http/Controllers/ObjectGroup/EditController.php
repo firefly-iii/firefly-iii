@@ -79,7 +79,7 @@ class EditController extends Controller
         }
         session()->forget('object-groups.edit.fromUpdate');
 
-        return prefixView('object-groups.edit', compact('subTitle', 'subTitleIcon', 'objectGroup'));
+        return view('object-groups.edit', compact('subTitle', 'subTitleIcon', 'objectGroup'));
     }
 
     /**

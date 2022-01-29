@@ -126,7 +126,7 @@ class CreateController extends Controller
         }
         session()->forget('rules.create.fromStore');
 
-        return prefixView(
+        return view(
             'rules.rule.create',
             compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
         );
@@ -179,7 +179,7 @@ class CreateController extends Controller
         }
         session()->forget('rules.create.fromStore');
 
-        return prefixView(
+        return view(
             'rules.rule.create',
             compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'subTitle')
         );
@@ -229,7 +229,7 @@ class CreateController extends Controller
         }
         session()->forget('rules.create.fromStore');
 
-        return prefixView(
+        return view(
             'rules.rule.create',
             compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'subTitle')
         );

@@ -103,7 +103,7 @@ class CreateController extends Controller
         $request->session()->forget('budgets.create.fromStore');
         $subTitle = (string)trans('firefly.create_new_budget');
 
-        return prefixView('budgets.create', compact('subTitle', 'autoBudgetTypes', 'autoBudgetPeriods'));
+        return view('budgets.create', compact('subTitle', 'autoBudgetTypes', 'autoBudgetPeriods'));
     }
 
     /**

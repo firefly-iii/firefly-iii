@@ -110,7 +110,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return prefixView('export.index');
+        return view('export.index');
     }
 
 }

@@ -148,7 +148,7 @@ class EditController extends Controller
         $array['repeat_until']            = substr((string)$array['repeat_until'], 0, 10);
         $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags'] ?? []);
 
-        return prefixView(
+        return view(
             'recurring.edit',
             compact(
                 'recurrence', 'array', 'bills',

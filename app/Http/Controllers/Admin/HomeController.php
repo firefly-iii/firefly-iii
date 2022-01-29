@@ -68,7 +68,7 @@ class HomeController extends Controller
         }
         Log::debug('Email is ', [$email]);
 
-        return prefixView('admin.index', compact('title', 'mainTitleIcon', 'email'));
+        return view('admin.index', compact('title', 'mainTitleIcon', 'email'));
     }
 
     /**

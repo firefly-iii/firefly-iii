@@ -155,7 +155,7 @@ class TagController extends Controller
             }
         }
 
-        return prefixView('reports.tag.partials.account-per-tag', compact('report', 'tags'));
+        return view('reports.tag.partials.account-per-tag', compact('report', 'tags'));
     }
 
     /**
@@ -259,7 +259,7 @@ class TagController extends Controller
             }
         }
 
-        return prefixView('reports.tag.partials.accounts', compact('sums', 'report'));
+        return view('reports.tag.partials.accounts', compact('sums', 'report'));
     }
 
     /**
@@ -304,7 +304,7 @@ class TagController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = prefixView('reports.tag.partials.avg-expenses', compact('result'))->render();
+            $result = view('reports.tag.partials.avg-expenses', compact('result'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -356,7 +356,7 @@ class TagController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = prefixView('reports.tag.partials.avg-income', compact('result'))->render();
+            $result = view('reports.tag.partials.avg-income', compact('result'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -471,7 +471,7 @@ class TagController extends Controller
             }
         }
 
-        return prefixView('reports.tag.partials.tags', compact('sums', 'report'));
+        return view('reports.tag.partials.tags', compact('sums', 'report'));
     }
 
     /**
@@ -514,7 +514,7 @@ class TagController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = prefixView('reports.tag.partials.top-expenses', compact('result'))->render();
+            $result = view('reports.tag.partials.top-expenses', compact('result'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -564,7 +564,7 @@ class TagController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = prefixView('reports.tag.partials.top-income', compact('result'))->render();
+            $result = view('reports.tag.partials.top-income', compact('result'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));

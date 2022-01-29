@@ -71,7 +71,7 @@ class IndexController extends Controller
         $subTitle     = (string)trans('firefly.object_groups_index');
         $objectGroups = $this->repository->get();
 
-        return prefixView('object-groups.index', compact('subTitle', 'objectGroups'));
+        return view('object-groups.index', compact('subTitle', 'objectGroups'));
     }
 
     /**

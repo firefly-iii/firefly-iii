@@ -141,6 +141,6 @@ class HomeController extends Controller
         $user = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
-        return prefixView('index', compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today'));
+        return view('index', compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today'));
     }
 }
