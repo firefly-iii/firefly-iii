@@ -349,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Η συναλλαγή είναι την ημέρα του μήνα ":value"',
     'search_modifier_date_before_year'                    => 'Η συναλλαγή είναι πριν ή μέσα στο έτος ":value"',
     'search_modifier_date_before_month'                   => 'Η συναλλαγή είναι πριν ή μέσα στο μήνα ":value"',
-    'search_modifier_date_before_day'                     => 'Συναλλαγή πριν ή την ημέρα του μήνα ":value"',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'Η συναλλαγή είναι μέσα ή μετά το έτος ":value"',
     'search_modifier_date_after_month'                    => 'Η συναλλαγή είναι μέσα ή μετά το μήνα ":value"',
     'search_modifier_date_after_day'                      => 'Η συναλλαγή είναι μετά ή την ημέρα του μήνα ":value"',

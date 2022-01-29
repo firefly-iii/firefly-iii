@@ -349,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Tapahtuman kuukauden päivä on ":value"',
     'search_modifier_date_before_year'                    => 'Tapahtuman vuosi on joko ":value" tai sitä ennen',
     'search_modifier_date_before_month'                   => 'Tapahtuman kuukausi on joko ":value" tai sitä ennen',
-    'search_modifier_date_before_day'                     => 'Tapahtuman kuukauden päivä on joko ":value" tai sitä ennen',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'Tapahtuman vuosi on joko ":value" tai sen jälkeen',
     'search_modifier_date_after_month'                    => 'Tapahtuman kuukausi on joko ":value" tai sen jälkeen',
     'search_modifier_date_after_day'                      => 'Tapahtuman kuukauden päivä on joko ":value" tai sen jälkeen',

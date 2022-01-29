@@ -349,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'El día de la transacción es ":value"',
     'search_modifier_date_before_year'                    => 'El año de la transacción es anterior o igual a ":value"',
     'search_modifier_date_before_month'                   => 'El mes de la transacción es anterior o igual a ":value"',
-    'search_modifier_date_before_day'                     => 'El día de la transacción es anterior o igual a ":value"',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'El año de la transacción es posterior o igual a ":value"',
     'search_modifier_date_after_month'                    => 'El mes de la transacción es posterior o igual a ":value"',
     'search_modifier_date_after_day'                      => 'El día de la transacción es posterior o igual a ":value"',

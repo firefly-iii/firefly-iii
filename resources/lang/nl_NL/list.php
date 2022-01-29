@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Accounttype',
     'created_at'              => 'Gemaakt op',
     'account'                 => 'Rekening',
-    'external_url'            => 'External URL',
+    'external_url'            => 'Externe URL',
     'matchingAmount'          => 'Bedrag',
     'destination'             => 'Doel',
     'source'                  => 'Bron',

@@ -349,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => ':value月内日の取引',
     'search_modifier_date_before_year'                    => ':value年以前または年内の取引',
     'search_modifier_date_before_month'                   => ':value月以前または月内の取引',
-    'search_modifier_date_before_day'                     => '「:value」中またはそれ以前の取引',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => '「:value」中またはそれ以降の取引',
     'search_modifier_date_after_month'                    => '「:value」中またはそれ以降の取引',
     'search_modifier_date_after_day'                      => '「:value」日以降の取引',

@@ -349,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Транзацията е на ":value" число от месеца',
     'search_modifier_date_before_year'                    => 'Транзацията е преди или през ":value" година',
     'search_modifier_date_before_month'                   => 'Транзацията е преди или през ":value" месец',
-    'search_modifier_date_before_day'                     => 'Транзацията е преди или на ":value" число от месеца',
+    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
     'search_modifier_date_after_year'                     => 'Транзацията е през ":value" година или след нея',
     'search_modifier_date_after_month'                    => 'Транзацията е през ":value" месец или след него',
     'search_modifier_date_after_day'                      => 'Транзацията е на ":value" число от месеца или след него',
