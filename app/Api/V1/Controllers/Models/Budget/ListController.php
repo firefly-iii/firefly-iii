@@ -201,4 +201,70 @@ class ListController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/budgets/listTransactionWithoutBudget
+     *
+     * Show all transactions.
+     *
+     * @param Request $request
+     *
+     * @param Budget  $budget
+     *
+     * @return JsonResponse
+     * @throws FireflyException
+     * @codeCoverageIgnore
+     */
+    public function withoutBudget(Request $request): JsonResponse
+    {
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+
+        // user can overrule page size with limit parameter.
+        $limit = $this->parameters->get('limit');
+        if (null !== $limit && $limit > 0) {
+            $pageSize = $limit;
+        }
+
+        $type = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = $this->getManager();
+
+        /** @var User $admin */
+        $admin = auth()->user();
+
+        // use new group collector:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setUser($admin)
+            // filter on budget.
+            ->withoutBudget()
+            // all info needed for the API:
+            ->withAPIInformation()
+            // set page size:
+            ->setLimit($pageSize)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes($types);
+
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+
+        $paginator = $collector->getPaginatedGroups();
+        $paginator->setPath(route('api.v1.budgets.without-budget') . $this->buildParams());
+        $transactions = $paginator->getCollection();
+
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
 }
