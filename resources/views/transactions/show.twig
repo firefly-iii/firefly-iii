@@ -426,7 +426,7 @@
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
-        var acURI = '{{ route('api.autocomplete.transactions-with-id') }}';
+        var acURI = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
         var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
 
