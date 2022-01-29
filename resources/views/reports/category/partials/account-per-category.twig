@@ -1,0 +1,31 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        {% for category in categories %}
+            <th data-defaultsign="_19" style="text-align: right;">{{ category.name }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for account in report %}
+        {% for currency in account.currencies %}
+            <tr>
+                <td data-value="{{ account.name }} ({{ currency.currency_name }})">
+                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
+                </td>
+                {% for category in categories %}
+                    <td style="text-align: right;">
+                        {% if currency.categories[category.id] %}
+                            <span title="{{ 'earned'|_ }}: {{ formatAmountBySymbol(currency.categories[category.id].earned, currency.currency_symbol, currency.currency_decimal_places, false) }}, {{ 'spent'|_ }}: {{ formatAmountBySymbol(currency.categories[category.id].spent, currency.currency_symbol, currency.currency_decimal_places, false) }}"
+                            {{ formatAmountBySymbol(currency.categories[category.id].sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                        {% else %}
+                            &mdash;
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>

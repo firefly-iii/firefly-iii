@@ -1,0 +1,36 @@
+{% extends './v1/layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'export_data_main_title'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ 'export_data_expl'|_ }}
+                    </p>
+                    <form action="{{ route('export.export') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                        <button type="submit"><span class="fa fa-fw fa-download"></span> {{ 'export_data_all_transactions'|_ }}</button>
+                    </form>
+                    <p>
+                        {{ 'export_data_advanced_expl'|_ }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

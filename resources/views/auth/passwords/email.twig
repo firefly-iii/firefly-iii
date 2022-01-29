@@ -1,0 +1,53 @@
+{% extends "./v1/layout/guest" %}
+
+{% block content %}
+
+
+    {% if session.status %}
+        <div class="alert alert-success">
+            {{ session.status }}
+        </div>
+    {% endif %}
+
+    {% if errors|length > 0 %}
+        <div class="alert alert-danger">
+            <strong>{{ 'flash_error'|_ }}</strong> {{ 'problems_with_input'|_ }}<br><br>
+            <ul>
+                {% for error in errors.all %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <div class="login-box-body">
+        {% if session('status') %}
+            <p class="login-box-msg text-success">
+                {{ session('status') }}
+            </p>
+        {% else %}
+            <p class="login-box-msg">{{ 'reset_password'|_ }}</p>
+
+            <form role="form" method="POST" action="{{ route('password.email') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+                <div class="form-group has-feedback">
+                    <input type="email" class="form-control" name="email" placeholder="{{ trans('form.email') }}"/>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-primary btn-flat pull-right">{{ 'reset_button'|_ }}</button>
+                    </div>
+                </div>
+
+            </form>
+
+        {% endif %}
+        <a href="{{ route('login') }}">{{ 'want_to_login'|_ }}</a><br>
+        {% if allowRegistration %}
+            <a href="{{ route('register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

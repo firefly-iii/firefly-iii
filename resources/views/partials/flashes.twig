@@ -1,0 +1,108 @@
+{# LOCALE ERROR MESSAGE #}
+{% if invalidMonetaryLocale %}
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
+        <strong>{{ 'invalid_server_configuration'|_ }}:</strong> <span class="fa fa-money"></span> {{ 'invalid_locale_settings'|_ }}
+    </div>
+{% endif %}
+
+{# MANDATORY UPDATE MESSAGE #}
+{% if upgrade_security_message and upgrade_security_level %}
+    <div class="alert alert-{{ upgrade_security_level }} alert-dismissible" role="alert">
+        <strong>{{ ('flash_'~upgrade_security_level)|_ }}</strong> <span class="fa fa-exclamation-triangle"></span> {{ upgrade_security_message }}
+    </div>
+{% endif %}
+
+{# SUCCESS MESSAGE (ALWAYS SINGULAR) #}
+{% if session_has('success') %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
+        <strong>{{ 'flash_success'|_ }}</strong>
+        {% if session_has('success_url') %}
+            <a href="{{ session('success_url') }}">
+        {% endif %}
+                {{ session('success') }}
+        {% if session_has('success_url') %}
+            </a>
+        {% endif %}
+
+    </div>
+{% endif %}
+
+{# INFO MESSAGE (CAN BE MULTIPLE) #}
+{% if session_has('info') %}
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
+
+        {# MULTIPLE INFO MESSAGE #}
+        {% if session('info') is iterable and session('info')|length > 1 %}
+            <strong>
+                {{ Lang.choice('firefly.flash_info_multiple', session('info')|length, {count: session('info')|length}) }}:</strong>
+            <ul class="list-unstyled">
+                {% for inf in session('info') %}
+                    <li>{{ inf|raw }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {# SET OF MULTIPLE INFO MESSAGES, BUT THERE IS JUST ONE #}
+        {% if session('info') is iterable and session('info')|length == 1 %}
+            <strong>{{ 'flash_info'|_ }}:</strong> {{ session('info')[0]|raw }}
+        {% endif %}
+        {# SINGLE INFO MESSAGE #}
+        {% if session('info') is not iterable %}
+            <strong>{{ 'flash_info'|_ }}:</strong> {{ session('info')|raw }}
+        {% endif %}
+
+    </div>
+
+{% endif %}
+
+{# WARNING MESSAGE (ALWAYS SINGULAR) #}
+{% if session_has('warning') %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
+        <strong>{{ 'flash_warning'|_ }}</strong> {{ session('warning') }}
+    </div>
+{% endif %}
+
+{# ERROR MESSAGE (CAN BE MULTIPLE) #}
+{% if session_has('error') %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert">
+            <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+        </button>
+
+        {# MULTIPLE ERRORS (BAD) #}
+        {% if session('error') is iterable and session('error')|length > 1 %}
+            <strong>
+                {{ Lang.choice('firefly.flash_error_multiple', session('error')|length, {count: session('error')|length}) }}:
+            </strong>
+            <ul class="list-unstyled">
+                {% for err in session('error') %}
+                    <li>{{ err }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {# SET OF MULTIPLE ERRORS, BUT THERE IS JUST ONE #}
+        {% if session('error') is iterable and session('error')|length == 1 %}
+            <strong>{{ 'flash_error'|_ }}</strong>
+            {{ session('error')[0]|raw }}
+        {% endif %}
+
+        {# SINGLE ERROR #}
+        {% if session('error') is not iterable %}
+            <strong>{{ 'flash_error'|_ }}</strong> {{ session('error')|raw }}
+        {% endif %}
+
+    </div>
+{% endif %}
+

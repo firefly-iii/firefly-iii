@@ -1,0 +1,24 @@
+<div class="input-group">
+    <div class="input-group-btn">
+        <button type="button"
+                class="btn btn-default dropdown-toggle currency-dropdown" id="currency_dropdown_{{ name }}" data-toggle="dropdown"
+                aria-expanded="false">
+            <span id="currency_select_symbol_{{ name }}">{{ defaultCurrency.symbol|raw }}</span> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu currency-dropdown-menu" role="menu">
+            {% for currency in currencies %}
+                <li>
+                    <a href="#"
+                       class="currency-option"
+                       data-id="{{ currency.id }}"
+                       data-name="{{ name }}"
+                       data-currency="{{ currency.code }}"
+                       data-symbol="{{ currency.symbol|raw }}">{{ currency.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {{ Form.input('number', name, value, options) }}
+
+
+</div>
+<input type="hidden" name="amount_currency_id_{{ name }}" value="{{ defaultCurrency.id }}"/>

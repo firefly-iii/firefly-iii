@@ -1,0 +1,66 @@
+// date ranges
+var ranges = {};
+{% for title, range in dateRangeConfig.ranges %}
+    ranges["{{ title }}"] = [moment("{{ range[0].format('Y-m-d') }}"), moment("{{ range[1].format('Y-m-d') }}")];
+{% endfor %}
+
+// date range meta configuration
+var dateRangeMeta = {
+title: "{{ dateRangeTitle }}",
+uri: "{{ route('daterange') }}",
+labels: {
+apply: "{{ 'apply'|_ }}",
+cancel: "{{ 'cancel'|_ }}",
+from: "{{ 'from'|_ }}",
+to: "{{ 'to'|_ }}",
+customRange: "{{ 'customRange'|_ }}"
+}
+};
+
+// date range actual configuration:
+var dateRangeConfig = {
+startDate: moment("{{ dateRangeConfig.start }}"),
+endDate: moment("{{ dateRangeConfig.end }}"),
+ranges: ranges
+
+};
+
+var uid = "{{ uid }}";
+var language = "{{ language|escape }}";
+var locale = "{{ locale|escape }}";
+var currencyCode = '{{ currencyCode|escape('js') }}';
+var currencySymbol = '{{ currencySymbol|escape('js') }}';
+var mon_decimal_point = "{{ accountingLocaleInfo.mon_decimal_point|escape('js') }}";
+var mon_thousands_sep = "{{ accountingLocaleInfo.mon_thousands_sep|escape('js') }}";
+var frac_digits = {{ accountingLocaleInfo.frac_digits|default('0') }};
+var noDataForChart = '{{ trans('firefly.no_data_for_chart')|escape('js') }}';
+var showFullList = '{{ trans('firefly.show_full_list')|escape('js') }}';
+var showOnlyTop = '{{ trans('firefly.show_only_top',{number:listLength})|escape('js') }}';
+var accountingConfig = {{ accountingLocaleInfo.format|json_encode|raw }};
+var token = '{{ csrf_token() }}';
+var sessionStart = '{{ session('start').format('Y-m-d') }}';
+var sessionEnd = '{{ session('end').format('Y-m-d') }}';
+var todayText = ' {{ trans('firefly.today')|escape('js') }}';
+
+// some formatting stuff:
+var month_and_day_js = "{{ trans('config.month_and_day_js') }}";
+var acc_config_new = {format: accountingConfig};
+
+// strings and translations used often:
+var helpPageTitle = "{{ trans('firefly.help_for_this_page')|escape('js') }}";
+var noHelpForPage = "{{ trans('firefly.no_help_could_be_found')|escape('js') }}";
+var noHelpForPageTitle = "{{ trans('firefly.no_help_title')|escape('js') }}";
+
+var edit_selected_txt = "{{ trans('firefly.mass_edit')|escape('js') }}";
+var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
+var delete_selected_txt = "{{ trans('firefly.mass_delete')|escape('js') }}";
+
+var mass_edit_url   = '{{ route('transactions.mass.edit', ['']) }}';
+var bulk_edit_url   = '{{ route('transactions.bulk.edit', ['']) }}';
+var mass_delete_url = '{{ route('transactions.mass.delete', ['']) }}';
+
+// for demo:
+var nextLabel = "{{ trans('firefly.intro_next_label')|escape('js') }}";
+var prevLabel = "{{ trans('firefly.intro_prev_label')|escape('js') }}";
+var skipLabel = "{{ trans('firefly.intro_skip_label')|escape('js') }}";
+var doneLabel = "{{ trans('firefly.intro_done_label')|escape('js') }}";

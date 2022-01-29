@@ -1,0 +1,46 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az" colspan="2">{{ 'budget'|_ }}</th>
+        {% for period in periods %}
+            <th data-defaultsign="_19" style="text-align: right;">{{ period }}</th>
+        {% endfor %}
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'average'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for key, info in report %}
+        <tr>
+            <td data-value="{{ info.name }}">
+                {% if info.id != 0 %}
+                    <a class="btn btn-default btn-xs" href="{{ route('budgets.show', [info.id]) }}"><span class="fa fa-external-link"></span></a>
+                {% else %}
+                    <a class="btn btn-default btn-xs" href="{{ route('budgets.no-budget') }}"><span class="fa fa-external-link"></span></a>
+                {% endif %}
+            </td>
+            <td data-value="{{ info.name }}">
+                <a title="{{ info.name }}" href="#" data-budget="{{ info.id }}" data-currency="{{ info.currency_id }}" class="budget-chart-activate">{{ info.name }}</a>
+            </td>
+            {% for key, period in periods %}
+                {% if(info.entries[key]) %}
+                    <td data-value="{{ info.entries[key] }}" style="text-align: right;">
+                        {{ formatAmountBySymbol(info.entries[key], info.currency_symbol, info.currency_decimal_places) }}
+                    </td>
+                {% else %}
+                    <td data-value="0" style="text-align: right;">
+                        {{ formatAmountBySymbol(0, info.currency_symbol, info.currency_decimal_places) }}
+                    </td>
+                {% endif %}
+
+            {% endfor %}
+            <td data-value="{{ info.avg }}" style="text-align: right;">
+                {{ formatAmountBySymbol(info.avg, info.currency_symbol, info.currency_decimal_places) }}
+            </td>
+            <td data-value="{{ info.sum }}" style="text-align: right;">
+                {{ formatAmountBySymbol(info.sum, info.currency_symbol, info.currency_decimal_places) }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

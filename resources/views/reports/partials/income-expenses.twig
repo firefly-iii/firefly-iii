@@ -1,0 +1,61 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'total'|_ }}</th>
+        <th data-defaultsign="_19" class="hidden-xs" style="text-align: right;">{{ 'average'|_ }}</th>
+        <th data-defaultsort="disabled"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for account in report.accounts %}
+        {% if loop.index > listLength %}
+            <tr class="overListLength">
+        {% else %}
+            <tr>
+        {% endif %}
+        <td data-value="{{ account.name }}">
+            <a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a>
+            {% if account.count > 1 %}
+                <br/>
+                <small>
+                    {{ account.count }} {{ 'transactions'|_|lower }}
+                </small>
+            {% endif %}
+        </td>
+        <td data-value="{{ account.sum }}" style="text-align: right;">
+            {{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
+        </td>
+        <td class="hidden-xs" data-value="{{ account.average }}" style="text-align: right;">
+            {% if account.count > 1 %}
+                {{ formatAmountBySymbol(account.average, account.currency_symbol, account.currency_decimal_places) }}
+            {% else %}
+                &mdash;
+            {% endif %}
+        </td>
+        <td>
+            <span class="fa fa-fw text-muted fa-info-circle firefly-info-button" data-location="{{ type }}"
+               data-account-id="{{ account.id }}" data-currency-id="{{ account.currency_id }}"></span>
+        </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+    <tfoot>
+    {% if report.accounts|length > listLength %}
+        <tr>
+            <td colspan="4" class="active">
+                <a href="#" class="listLengthTrigger">{{ trans('firefly.show_full_list',{number:incomeTopLength}) }}</a>
+            </td>
+        </tr>
+    {% endif %}
+    {% for sum in report.sums %}
+        <tr>
+            <td><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    {% endfor %}
+</table>

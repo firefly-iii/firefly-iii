@@ -1,0 +1,31 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'account'|_ }}</th>
+        <th data-defaultsign="az">{{ 'description'|_ }}</th>
+        <th data-defaultsign="month">{{ 'date'|_ }}</th>
+        <th style="width:25%;" class="hidden-xs" data-defaultsign="_19">{{ 'amount'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for transaction in sorted %}
+        <tr>
+            <td data-value="{{ transaction.destination_account_name }}">
+                <a href="{{ route('accounts.show',transaction.destination_account_id) }}">{{ transaction.destination_account_name }}</a>
+            </td>
+            <td data-value="{{ transaction.description }}">{{ transaction.description }}</td>
+            <td data-value="{{ transaction.date.format('Y-m-d') }}">
+                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+            </td><!-- See reference nr. 3 -->
+            <td style="text-align: right;" data-value="{{ transaction.amount}}"><span
+                        style="margin-right:5px;">
+
+                    {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                    {% if null != transaction.foreign_amount %}
+                        ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                    {% endif %}
+                </span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

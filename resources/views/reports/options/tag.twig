@@ -1,0 +1,10 @@
+<div class="form-group">
+    <label for="inputTags" class="col-sm-3 control-label">{{ 'select_tag'|_ }}</label>
+    <div class="col-sm-9">
+        <select id="inputTags" name="tag[]" multiple="multiple" class="form-control">
+            {% for tag in tags %}
+                <option value="{{ tag.id }}" label="{{ tag.tag|e('html') }}">{{ tag.tag|e('html') }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>

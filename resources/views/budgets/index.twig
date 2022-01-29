@@ -1,0 +1,482 @@
+{% extends './v1/layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
+    <!-- date selector -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'budget_period_navigator'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row" id="periodNavigator">
+                        <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
+                            <select class="form-control selectPeriod" name="previous">
+                                <option label="{{ 'select_date'|_ }}" value="x">{{ 'select_date'|_ }}</option>
+                                {% for array in prevLoop %}
+                                    <option label="{{ array.title }}" value="{{ array.label }}" data-start="{{ array.start.format('Y-m-d') }}"
+                                            data-end="{{ array.end.format('Y-m-d') }}">{{ array.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-lg-8 col-md-4 col-sm-12 col-xs-12 text-center">
+                            <div class="btn btn-group btn-group-lg" style="padding-top:0;">
+                                <a href="{{ route('budgets.index', [prevLoop[0].start.format('Y-m-d'), prevLoop[0].end.format('Y-m-d')]) }}"
+                                   class="btn btn-default" title="{{ prevLoop[0].title }}">&larr;</a>
+                                <a title="{{ start.formatLocalized(monthAndDayFormat) }} - {{ end.formatLocalized(monthAndDayFormat) }}"
+                                   href="{{ route('budgets.index', [start.format('Y-m-d'), end.format('Y-m-d')]) }}"
+                                   class="btn btn-default">{{ periodTitle }}</a>
+                                <a href="{{ route('budgets.index', [nextLoop[0].start.format('Y-m-d'), nextLoop[0].end.format('Y-m-d')]) }}"
+                                   class="btn btn-default" title="{{ nextLoop[0].title }}">&rarr;</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12 text-right">
+                            <select class="form-control selectPeriod" name="next">
+                                <option label="{{ 'select_date'|_ }}" value="x">{{ 'select_date'|_ }}</option>
+                                {% for array in nextLoop %}
+                                    <option label="{{ array.title }}" value="{{ array.label }}" data-start="{{ array.start.format('Y-m-d') }}"
+                                            data-end="{{ array.end.format('Y-m-d') }}">{{ array.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- available budget configurator. -->
+    {% if availableBudgets|length == 0 %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {{ trans('firefly.total_available_budget_in_currency', {currency: defaultCurrency.name}) }}
+                            <br>
+                            <small>{{ trans('firefly.between_dates_breadcrumb', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}</small>
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            {# info about the amount budgeted #}
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <small>{{ 'budgeted'|_ }} ({{ 'see_below'|_ }}):
+                                    <span class="budgeted_amount" data-value="{{ budgeted }}" data-id="0" data-currency="{{ defaultCurrency.id }}">
+                                        {{ formatAmountBySymbol(budgeted, defaultCurrency.symbol, defaultCurrency.decimal_places) }}
+                                    </span>
+                                </small>
+                            </div>
+                            {# info about the amount spent #}
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
+                                <small class="available_bar"
+                                       data-id="0">{{ trans('firefly.available_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
+                                    :
+                                    <span class="available_amount" data-id="0" data-value="0" data-currency="{{ defaultCurrency.id }}"
+                                          data-value="0">{{ formatAmountBySymbol(0, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }}</span>
+                                    <a href="#" data-id="0" class="update_ab btn btn-default btn-xs"><span class="fa fa-pencil"></span></a>
+                                </small>
+                            </div>
+                        </div>
+                        {# info text to show how much is spent (in currency). #}
+                        <div class="row spentInfo" data-id="0" data-value="{{ spent }}">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <small>{{ trans('firefly.spent_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+                                    : {{ formatAmountBySymbol(spent, defaultCurrency.symbol, defaultCurrency.decimal_places) }} </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if enableAddButton %}
+                    <div class="col-lg-12">
+                        <p class="pull-right">
+                            <a href="#" class="btn btn-light btn-xs create_ab_alt">
+                                <span class="fa fa-plus-circle"></span>
+                                {{ 'alt_currency_ab_create'|_ }}</a>
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% set boxSize = 12 %}
+    {% if availableBudgets|length > 1 %}
+        {% set boxSize = 6 %}
+    {% endif %}
+    {% if availableBudgets|length > 0 %}
+        <div class="row">
+            {% for budget in availableBudgets %}
+                <div class="col-lg-{{ boxSize }} col-md-12 col-sm-12 col-xs-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                {{ trans('firefly.total_available_budget_in_currency', {currency: budget.transaction_currency.name}) }}
+                                <br>
+                                <small>{{ trans('firefly.between_dates_breadcrumb', {start: budget.start_date.formatLocalized(monthAndDayFormat), end: budget.end_date.formatLocalized(monthAndDayFormat)}) }}</small>
+                            </h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                {# info about the amount budgeted #}
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <small>{{ 'budgeted'|_ }}:
+                                        <span class="text-success budgeted_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}">
+                                        {{ formatAmountBySymbol(budget.budgeted, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, false) }}
+                                    </span>
+                                    </small>
+                                </div>
+                                {# info about the amount spent #}
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
+                                    <small class="available_bar"
+                                           data-id="{{ budget.id }}">{{ trans('firefly.available_between', {start: budget.start_date.formatLocalized(monthAndDayFormat), end: budget.end_date.formatLocalized(monthAndDayFormat) }) }}
+                                        :
+                                        <span class="available_amount" data-id="{{ budget.id }}"
+                                              data-value="{{ budget.amount }}">{{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}</span>
+                                        <a href="#" data-id="{{ budget.id }}" class="update_ab btn btn-default btn-xs"><span class="fa fa-pencil"></span></a>
+                                        <a href="#" data-id="{{ budget.id }}" class="delete_ab btn btn-danger btn-xs"><span class="fa fa-trash"></span></a>
+                                    </small>
+                                </div>
+                            </div>
+                            {# progresss bar to visualise available vs budgeted. #}
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="progress budgeted_bar" data-id="{{ budget.id }}" data-budgeted="{{ budget.budgeted }}"
+                                         data-available="{{ budget.amount }}" data-currency="{{ budget.transaction_currency.id }}">
+                                        {# red: the exact amount of the available budget, if more has budgeted. #}
+                                        <div class="progress-bar progress-bar-danger" data-id="{{ budget.id }}" role="progressbar" aria-valuenow="10"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100" style="width: 0;"></div>
+
+                                        {# orange: overbudgeted amount #}
+                                        <div class="progress-bar progress-bar-warning" data-id="{{ budget.id }}" role="progressbar" aria-valuenow="0"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100" style="width: 0;"></div>
+
+                                        {# budgeted amount if enough or les #}
+                                        <div class="progress-bar progress-bar-info" data-id="{{ budget.id }}" role="progressbar" aria-valuenow="0"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100" style="width: 0;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {# info text to show how much is spent (in currency). #}
+                            <div class="row spentInfo" data-id="{{ budget.id }}">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <small>{{ trans('firefly.spent_between', {start: budget.start_date.formatLocalized(monthAndDayFormat), end: budget.end_date.formatLocalized(monthAndDayFormat)}) }}
+                                        : {{ formatAmountBySymbol(budget.spent, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places) }} </small>
+                                </div>
+                            </div>
+
+                            {# bar to visualise spending in budget .#}
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="progress spent_bar" data-id="{{ budget.id }}" data-budgeted="{{ budget.budgeted }}"
+                                         data-spent="{{ budget.spent }}">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                             aria-valuemax="100"
+                                             style="width: 0;"></div>
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                             style="width: 0;"></div>
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                             style="width: 0;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if enableAddButton %}
+                <div class="col-lg-12">
+                    <p class="pull-right">
+                        <a href="#" class="btn btn-light btn-xs create_ab_alt">
+                            <span class="fa fa-plus-circle"></span>
+                            {{ 'alt_currency_ab_create'|_ }}</a>
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if budgets|length == 0 and inactive.count() == 0 %}
+        {% include 'partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
+        {# make FF ignore demo for now. #}
+        {% set shownDemo = true %}
+    {% else %}
+    
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'budgets'|_ }}</h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <div style="padding:8px;">
+                            <a href="{{ route('budgets.create') }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ 'createBudget'|_ }}</a>
+                        </div>
+                        <table class="table table-bordered sortable-table table-striped sortable" id="budgetList">
+                            <thead>
+                            <tr>
+                                <th class="hidden-sm hidden-xs" style="width:10%;">&nbsp;</th>
+                                <th>{{ 'budget'|_ }}</th>
+                                <th style="width:25%;">{{ 'budgeted'|_ }}</th>
+                                <th class="hidden-sm hidden-xs">{{ 'spent'|_ }} ({{ 'per_day'|_|lower }})</th>
+                                <th>{{ 'left'|_ }} ({{ 'per_day'|_|lower }})</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for budget in budgets %}
+                                <tr data-id="{{ budget.id }}">
+                                    <td class="hidden-sm hidden-xs">
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="#" class="handle object-handle btn btn-default"><span class="fa fa-fw fa-bars"></span></a>
+                                            <a href="{{ route('budgets.edit', budget.id) }}" class="btn btn-xs btn-default"><span class="fa fa-fw fa-pencil"></span></a>
+                                            <a href="{{ route('budgets.delete', budget.id) }}" class="btn btn-xs btn-danger"><span class="fa fa-fw fa-trash-o"></span></a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if 0 == budget.budgeted|length %}
+                                            <a href="{{ route('budgets.show', budget.id) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                        {% endif %}
+                                        {% if 1 == budget.budgeted|length %}
+                                            {% for budgetLimit in budget.budgeted %}
+                                                <a href="{{ route('budgets.show.limit', [budget.id, budgetLimit.id]) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                                {% endfor %}
+                                        {% endif %}
+
+                                        {% if budget.budgeted|length > 1 %}
+                                            {% for budgetLimit in budget.budgeted %}
+                                                <a href="{{ route('budgets.show.limit', [budget.id, budgetLimit.id]) }}" data-id="{{ budget.id }}">{{ budget.name }} ({{ budgetLimit.currency_name }})</a><br>
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        {% if budget.auto_budget %}
+                                        {% if 1 == budget.auto_budget.auto_budget_type %}
+                                            <span class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></span>
+                                        {% endif %}
+                                        {% if 2 == budget.auto_budget.auto_budget_type %}
+                                            <span class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></span>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% if budget.attachments.count() > 0 %}
+                                            <span class="fa fa-paperclip"></span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if 0==budget.budgeted|length %}
+                                            <div class="input-group">
+                                                <div class="input-group-addon">{{ defaultCurrency.symbol }}</div>
+                                                <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
+                                                <input class="form-control budget_amount" data-original="0" data-id="{{ budget.id }}"
+                                                    data-currency="{{ defaultCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
+                                                    type="number">
+                                            </div>
+                                            <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
+                                                style="display:none;"></span>
+                                        {% endif %}
+                                        {% if budget.budgeted|length > 0 %}
+                                            {% for budgetLimit in budget.budgeted %}
+                                                {% if not budgetLimit.in_range %}
+                                                    <small class="text-muted">
+                                                        {{ trans('firefly.budget_limit_not_in_range', {start: budgetLimit.start_date, end: budgetLimit.end_date}) }}
+                                                    </small><br>
+                                                {% endif %}
+                                                <div class="input-group bl_entry" data-budget-limit-id="{{ budgetLimit.id }}">
+                                                    <div class="input-group-addon">{{ budgetLimit.currency_symbol }}</div>
+                                                    <input class="form-control budget_amount" data-original="{{ budgetLimit.amount }}"
+                                                        data-id="{{ budget.id }}" data-limit="{{ budgetLimit.id }}" value="{{ budgetLimit.amount }}"
+                                                        autocomplete="off"
+                                                        min="0" name="amount" type="number">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false"><span class="caret"></span></button>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <a class="delete_bl" href="#" data-budget-limit-id="{{ budgetLimit.id }}">{{ trans('firefly.remove_budgeted_amount', {currency: budgetLimit.currency_name }) }}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
+                                                    style="display:none;"></span>
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% if budget.budgeted|length < currencies.count() %}
+                                            <a href="#" class="btn btn-light btn-xs create_bl" data-id="{{ budget.id }}">
+                                                <span class="fa fa-plus-circle"></span>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" style="text-align:right;">
+                                        {% for spentInfo in budget.spent %}
+                                            {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                            ({{ formatAmountBySymbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                            <br/>
+                                        {% endfor %}
+                                        {% for budgetLimit in budget.budgeted %}
+                                            {% if null == budget.spent[budgetLimit.currency_id] %}
+                                                {{ formatAmountBySymbol(0, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}<br/>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="left" data-id="{{ budget.id }}" style="text-align: right;">
+                                        {% for spentInfo in budget.spent %}
+                                            {% set countLimit = 0 %}
+                                            {% for budgetLimit in budget.budgeted %}
+                                                {% if spentInfo.currency_id == budgetLimit.currency_id and budgetLimit.in_range %}
+                                                    {% set countLimit = countLimit + 1 %}
+                                                    <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
+                                                        data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                                        {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                                        {% if spentInfo.spent + budgetLimit.amount > 0 %}
+                                                            ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                        {% else %}
+                                                            ({{ formatAmountBySymbol(0, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                        {% endif %}
+                                                    </span>
+                                                    <br/>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if countLimit == 0 %}
+                                                <span class="left_span" data-id="{{ budget.id }}" data-currency="{{ spentInfo.currency_id }}" data-limit="0"
+                                                    class="amount_left" data-value="{{ spentInfo.spent }}">
+                                                    {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                                </span>
+                                                <br/>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% for budgetLimit in budget.budgeted %}
+                                            {% if null == budget.spent[budgetLimit.currency_id] %}
+                                            <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
+                                                data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                                {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
+                                                {% if budgetLimit.in_range %}
+                                                    ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                                                {% endif %}
+                                            </span>
+                                            <br/>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td><em>{{ 'sum'|_ }}</em></td>
+                                <td class="hidden-sm hidden-xs" style="text-align:right;">
+                                    {% for arr in sums.budgeted %}
+                                        {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}<br/>
+                                    {% endfor %}
+                                </td>
+                                <td class="hidden-sm hidden-xs" style="text-align:right;">
+                                    {% for arr in sums.spent %}
+                                        {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}
+                                        ({{ formatAmountBySymbol(arr.amount / activeDaysPassed, arr.currency_symbol, arr.currency_decimal_places) }})
+                                        <br/>
+                                    {% endfor %}
+                                </td>
+                                <td style="text-align: right;">
+                                    {% for arr in sums.left %}
+                                        {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}
+                                        ({{ formatAmountBySymbol(arr.amount / activeDaysLeft, arr.currency_symbol, arr.currency_decimal_places) }})
+                                        <br/>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <a href="{{ route('budgets.create') }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ 'createBudget'|_ }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'transactionsWithoutBudget'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            <a href="{{ route('budgets.no-budget', [start.format('Y-m-d'), end.format('Y-m-d')]) }}">
+                                {{ trans('firefly.transactions_no_budget', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% if paginator.count() > 0 and inactive.count() > 0 %}
+                <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                    <div class="box" id="createBudgetBox">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if inactive|length > 0 %}
+                <div class="col-lg-3 col-sm-4 col-md-6">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'inactiveBudgets'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            {% for budget in inactive %}
+                                {% if loop.index == inactive.count() %}
+                                    <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>
+                                {% else %}
+                                    <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block styles %}
+    <link href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
+{% endblock %}
+
+{% block scripts %}
+    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+
+        // index route.
+        var budgetIndexUri = "{{ route('budgets.index',['START','END']) }}";
+
+        // create available budgets / edit
+        var createAvailableBudgetUri = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var createAltAvailableBudgetUri = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var editAvailableBudgetUri = "{{ route('available-budgets.edit', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var deleteABUrl = "{{ route('available-budgets.delete') }}";
+
+        // budget limit create form.
+        var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var storeBudgetLimitUri = "{{ route('budget-limits.store') }}";
+        var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
+        var deleteBudgetLimitUrl = "{{ route('budget-limits.delete', ['REPLACEME']) }}";
+        var totalBudgetedUri = "{{ route('json.budget.total-budgeted', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+
+        // period thing:
+        var periodStart = "{{ start.format('Y-m-d') }}";
+        var periodEnd = "{{ end.format('Y-m-d') }}";
+    </script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/budgets/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+{% endblock %}

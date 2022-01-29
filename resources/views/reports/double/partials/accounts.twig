@@ -1,0 +1,55 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'earned'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'sum'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for account in report %}
+        <tr>
+            <td>
+                {% if account.source_name == account.dest_name %}
+                    {{ account.source_name }}
+                {% else %}
+                    {{ account.source_name }} / {{ account.dest_name }}
+                {% endif %}
+                {% if account.source_iban != '' and account.dest_iban != '' %}
+                    {% if account.source_iban == account.dest_iban %}
+                        ({{ account.source_iban }})
+                    {% else %}
+                        ({{ account.source_iban }} / ({{ account.dest_iban }}))
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(account.spent, account.currency_symbol, account.currency_decimal_places) }}
+            </td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(account.earned, account.currency_symbol, account.currency_decimal_places) }}
+            </td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(account.sum, account.currency_symbol, account.currency_decimal_places) }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    {% for sum in sums %}
+        <tr>
+            <td>{{ 'sum'|_ }} ({{ sum.currency_name }})</td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.earned, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+            <td style="text-align: right;">
+                {{ formatAmountBySymbol(sum.sum, sum.currency_symbol, sum.currency_decimal_places) }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tfoot>
+</table>

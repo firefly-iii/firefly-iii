@@ -1,0 +1,128 @@
+{% extends './v1/layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute().getName(), account) }}
+{% endblock %}
+
+{% block content %}
+    <!-- set location data high up -->
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var locations = {{ locations|json_encode|raw }};
+        var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
+    </script>
+
+    {{ Form.model(account, {
+        'class': 'form-horizontal',
+        'id': 'update',
+        'url': route('accounts.update',account.id),
+        'enctype': 'multipart/form-data'
+    } ) }}
+    <input type="hidden" name="id" value="{{ account.id }}"/>
+    <input type="hidden" name="objectType" value="{{ objectType }}"/>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('name') }}
+                    {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities' %}
+                        {{ CurrencyForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
+
+                    {% endif %}
+
+                    {% if objectType == 'liabilities' %}
+                        {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
+                        {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
+                        {{ ExpandedForm.select('liability_direction', liabilityDirections) }}
+                        {{ ExpandedForm.date('opening_balance_date', null, {label:'debt_start_date'|_}) }}
+                        {{ ExpandedForm.percentage('interest') }}
+                        {{ ExpandedForm.select('interest_period', interestPeriods) }}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('iban') }}
+                    {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
+                    {% if preFilled.account_role == 'ccAsset' %}
+                        {{ ExpandedForm.text('account_number', null , {label:trans('form.creditCardNumber')}) }}
+                    {% else %}
+                        {{ ExpandedForm.text('account_number') }}
+                    {% endif %}
+
+                    {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
+
+                        {# get opening balance entry for this thing! #}
+                        {{ ExpandedForm.amountNoCurrency('opening_balance',null) }}
+                        {{ ExpandedForm.date('opening_balance_date') }}
+                        {{ ExpandedForm.select('account_role', roles) }}
+                        {{ ExpandedForm.amountNoCurrency('virtual_balance',null) }}
+
+                    {% endif %}
+                    {{ ExpandedForm.checkbox('include_net_worth', 1) }}
+                    {{ ExpandedForm.textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
+                    {# only correct way to do active checkbox #}
+                    {{ ExpandedForm.checkbox('active', 1) }}
+                    {# only correct way to do active checkbox #}
+
+                    {{ ExpandedForm.location('location', null, {locations: locations}) }}
+                    {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
+
+                </div>
+            </div>
+
+            {# panel for credit card options #}
+            {% if preFilled.account_role == 'ccAsset' %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'credit_card_options'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.select('cc_type',Config.get('firefly.ccTypes')) }}
+                        {{ ExpandedForm.date('cc_monthly_payment_date',null,{'helpText' : trans('firefly.cc_monthly_payment_date_help')}) }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            {# panel for options  #}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('update','account') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn pull-right btn-success">
+                        {{ ('update_' ~ objectType ~ '_account')|_ }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/accounts/edit.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all" nonce="{{ JS_NONCE }}">
+    <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"  nonce="{{ JS_NONCE }}">
+{% endblock %}

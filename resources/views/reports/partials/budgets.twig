@@ -1,0 +1,100 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'budget'|_ }}</th>
+        <th data-defaultsign="month" class="hidden-xs">{{ 'date'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;" class="hidden-xs">{{ 'budgeted'|_ }}</th>
+        <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'spent'|_ }}</th>
+        <th data-defaultsign="_19" class="hidden-xs">{{ trans('list.percentage') }}</th>
+        <th data-defaultsort="disabled" class="hidden-xs">&nbsp;</th>
+        <th data-defaultsign="_19" style="text-align: right;" class="hidden-xs">{{ 'left'|_ }}</th>
+        <th data-defaultsign="_19" style="text-align: right;">{{ 'overspent'|_ }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for budget in report.budgets %}
+        {% for budget_limit in budget.budget_limits %}
+            <tr>
+                {% if budget.no_budget %}
+                    <td data-value="zzz">
+                        <em>{{ 'no_budget'|_ }} ({{ budget_limit.currency_name }})</em>
+                    </td>
+                {% else %}
+                    <td data-value="{{ budget.budget_name }}">
+                        <a href="{{ route('budgets.show', [budget.budget_id]) }}">{{ budget.budget_name }}</a>
+                    </td>
+                {% endif %}
+                <!-- date, hidden on mobile  -->
+                <td class="hidden-xs" data-value="{{ budget_limit.start_date.format('Y-m-d')|default('0000-00-00') }}">
+                    {% if null != budget_limit.budget_limit_id %}
+                        <a href="{{ route('budgets.show.limit', [budget.budget_id, budget_limit.budget_limit_id]) }}">
+                            {{ budget_limit.start_date.formatLocalized(monthAndDayFormat) }}
+                            &mdash;
+                            {{ budget_limit.end_date.formatLocalized(monthAndDayFormat) }}
+                        </a>
+                    {% endif %}
+                </td>
+
+                <!-- budgeted, hidden on mobile -->
+                <td data-value="{{ budget_limit.budgeted|default(0) }}" style="text-align: right;" class="hidden-xs">
+                    {% if null != budget_limit.budgeted %}
+                        {{ formatAmountBySymbol(budget_limit.budgeted, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
+                    {% endif %}
+                </td>
+                <!-- percentage, hidden -->
+                <td data-value="{{ budget_limit.budgeted_pct|default(0) }}" class="hidden-xs">
+                    {{ budget_limit.budgeted_pct }}%
+                </td>
+
+
+                <!-- spent, visible on mobile -->
+                <td data-value="{{ budget_limit.spent|default(0) }}" style="text-align: right;">
+                    {{ formatAmountBySymbol(budget_limit.spent, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
+                </td>
+                <!-- percentage, hidden -->
+                <td data-value="{{ budget_limit.spent_pct|default(0) }}" class="hidden-xs">
+                    {{ budget_limit.spent_pct }}%
+                </td>
+
+                <!-- info button, not visible on mobile -->
+                <td class="hidden-xs">
+                    {% if budget_limit.spent != 0 %}
+                        <span class="fa fa-fw text-muted fa-info-circle firefly-info-button"
+                           data-location="budget-spent-amount" data-currency-id="{{ budget_limit.currency_id }}" data-budget-id="{{ budget.budget_id }}"></span>
+                    {% endif %}
+                </td>
+
+
+                <!-- left, hidden on mobile  -->
+                <td data-value="{{ budget_limit.left|default(0) }}" style="text-align: right;" class="hidden-xs">
+                    {% if null != budget_limit.left %}
+                        {{ formatAmountBySymbol(budget_limit.left, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
+                    {% endif %}
+                </td>
+                <!-- overspent, visible. -->
+                <td data-value="{{ budget_limit.overspent|default(0) }}" style="text-align: right;">
+                    {% if null != budget_limit.overspent %}
+                        {{ formatAmountBySymbol(budget_limit.overspent, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    {% for sum in report.sums %}
+        <tr>
+            <td colspan="2"><em>{{ 'sum'|_ }} ({{ sum.currency_name }})</em></td>
+            <td style="text-align: right;">{{ formatAmountBySymbol(sum.budgeted, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td>&nbsp;</td>
+            <td style="text-align: right;">{{ formatAmountBySymbol(sum.spent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td style="text-align: right;">{{ formatAmountBySymbol(sum.left, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+            <td style="text-align: right;">{{ formatAmountBySymbol(sum.overspent, sum.currency_symbol, sum.currency_decimal_places) }}</td>
+
+        </tr>
+        {% endfor %}
+    </tfoot>
+</table>

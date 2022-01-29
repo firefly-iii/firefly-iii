@@ -1,0 +1,30 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form style="display: inline;" id="remove" action="{{ route('piggy-banks.remove', piggyBank.id) }}" method="POST">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+                </button>
+                <h4 class="modal-title">{{ trans('firefly.remove_money_from_piggy_title', {name: piggyBank.name}) }}</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    {{ 'max_amount_remove'|_ }}: {{ formatAmountByCurrency(currency, repetition.currentamount) }}.
+                </p>
+
+                <div class="input-group">
+                    <div class="input-group-addon">{{ currency.symbol|raw }}</div>
+                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ repetition.currentamount }}"
+                           type="number">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'remove'|_ }}</button>
+            </div>
+        </form>
+    </div>
+
+</div>

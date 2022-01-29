@@ -1,0 +1,34 @@
+{% if type == 'create' %}
+    <div class="form-group">
+        <label for="{{ name }}_return_to_form" class="col-sm-4 control-label">
+            {{ trans('form.returnHere') }}
+        </label>
+
+        <div class="col-sm-8">
+            <div class="checkbox">
+                <label>
+                    {{ Form.checkbox('create_another', '1', false, {'id': name ~ '_return_to_form'}) }}
+                    {{ trans('form.returnHereExplanation') }}
+
+                </label>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if type == 'update' %}
+    <div class="form-group">
+        <label for="{{ name }}_return_to_edit" class="col-sm-4 control-label">
+            {{ trans('form.returnHere') }}
+        </label>
+
+        <div class="col-sm-8">
+            <div class="checkbox"><label>
+                    {{ Form.checkbox('return_to_edit', '1', null, {'id': name ~ '_return_to_edit'}) }}
+                    {{ trans('form.returnHereUpdateExplanation') }}
+                </label>
+            </div>
+        </div>
+    </div>
+{% endif %}
+

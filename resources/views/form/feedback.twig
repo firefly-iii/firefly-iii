@@ -1,0 +1,4 @@
+{% if errors.has(name) %}
+    <span class="form-control-feedback"><span class="fa fa-fw fa-remove"></span></span>
+    <p class="text-danger">{{ errors.first(name) }}</p>
+{% endif %}

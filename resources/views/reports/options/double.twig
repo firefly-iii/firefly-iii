@@ -1,0 +1,10 @@
+<div class="form-group">
+    <label for="inputDoubleAccounts" class="col-sm-3 control-label">{{ 'select_expense_revenue'|_ }}</label>
+    <div class="col-sm-9">
+        <select id="inputDoubleAccounts" name="double[]" multiple="multiple" class="form-control">
+            {% for account in set %}
+                <option value="{{ account.id }}" label="{{ account.name }}{% if account.iban !='' %} ({{ account.iban }}){% endif %}">{{ account.name }}{% if account.iban !='' %} ({{ account.iban }}){% endif %}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>

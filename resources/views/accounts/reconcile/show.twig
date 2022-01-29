@@ -1,0 +1,109 @@
+{% extends './v1/layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, account, journal) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'transaction_journal_information'|_ }}</h3>
+
+                    <div class="box-tools pull-right">
+                        <div class="btn-group">
+                            <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('transactions.edit',journal.id) }}"><span class="fa fa-pencil fa-fw"></span> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('transactions.delete',journal.id) }}"><span class="fa fa-trash fa-fw"></span> {{ 'delete'|_ }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="box-body no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <td>{{ trans('list.type') }}</td>
+                            <td>{{ journal.transactiontype.type|_ }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ trans('list.description') }}</td>
+                            <td>{{ journal.description }}</td>
+                        </tr>
+                        {# total amount #}
+                        <tr>
+                            <td>{{ 'total_amount'|_ }}</td>
+                            <td>
+                                {{ formatAmountByAccount(transaction.account, transaction.amount) }}
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:30%;">{{ trans('list.date') }}</td>
+                            <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><span class="fa fa-pencil fa-fw"></span> {{ 'edit'|_ }}</a>
+                            <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><span class="fa fa-trash fa-fw"></span> {{ 'delete'|_ }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'transaction_journal_meta'|_ }}</h3>
+                </div>
+                <div class="box-body no-padding">
+                    <table class="table table-responsive table-hover">
+                        <tbody>
+                        {#
+                        <tr>
+                            <td>{{ 'categories'|_ }}</td>
+                            <td>{{ journalCategories(journal)|raw }}</td>
+                        </tr>
+                        #}
+                        {% if journal.tags|length > 0 %}
+                            <tr>
+                                <td>{{ 'tags'|_ }}</td>
+                                <td>
+                                    {% for tag in journal.tags %}
+
+                                        <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show',tag) }}">
+                                                {% if tag.tagMode == 'nothing' %}
+                                                    <span class="fa fa-fw fa-tag"></span>
+                                                {% endif %}
+                                                {% if tag.tagMode == 'balancingAct' %}
+                                                    <span class="fa fa-fw fa-refresh"></span>
+                                                {% endif %}
+                                                {% if tag.tagMode == 'advancePayment' %}
+                                                    <span class="fa fa-fw fa-sort-numeric-desc"></span>
+                                                {% endif %}
+                                                {{ tag.tag }}</a>
+                                        </h4>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+{% endblock %}

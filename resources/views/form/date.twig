@@ -1,0 +1,14 @@
+<div class="{{ classes }}" id="{{ name }}_holder">
+    <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
+
+    <div class="col-sm-8">
+        <div class="input-group">
+            <div class="input-group-addon">
+                <span class="fa fa-calendar"></span>
+            </div>
+            {{ Form.input('date', name, value, options) }}
+        </div>
+        {% include 'form.help' %}
+        {% include 'form.feedback' %}
+    </div>
+</div>

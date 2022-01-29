@@ -1,0 +1,40 @@
+<table class="table table-hover sortable">
+    <thead>
+    <tr>
+        <th data-defaultsign="az">{{ 'name'|_ }}</th>
+        {% for tag in tags %}
+            <th data-defaultsign="_19" style="text-align: right;">{{ tag.tag }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for account in report %}
+        {% for currency in account.currencies %}
+            <tr>
+                <td data-value="{{ account.name }} ({{ currency.currency_name }})">
+                    <a href="{{ route('accounts.show', account.id) }}" title="{{ account.iban }}">{{ account.name }} ({{ currency.currency_name }})</a>
+                </td>
+                {% for tag in tags %}
+                    <td style="text-align: right;">
+                        {% if currency.tags[tag.id] %}
+                            <span title="{{ 'earned'|_ }}: {{ formatAmountBySymbol(currency.tags[tag.id].earned, currency.currency_symbol, currency.currency_decimal_places, false) }}, {{ 'spent'|_ }}: {{ formatAmountBySymbol(currency.tags[tag.id].spent, currency.currency_symbol, currency.currency_decimal_places, false) }}"
+                            {{ formatAmountBySymbol(currency.tags[tag.id].sum, currency.currency_symbol, currency.currency_decimal_places) }}
+                        {% else %}
+                            &mdash;
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="{{ 1 + tags|length }}">
+            <p class="text-info">
+                <em>{{ 'tag_report_expenses_listed_once'|_ }}</em>
+            </p>
+        </td>
+    </tr>
+    </tfoot>
+</table>
