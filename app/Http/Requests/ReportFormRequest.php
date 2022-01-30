@@ -187,7 +187,7 @@ class ReportFormRequest extends FormRequest
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
             if (preg_match($pattern, $string)) {
                 try {
-                    $date = new Carbon($parts[1]);
+                    $date = new Carbon($parts[0]);
                 } catch (Exception $e) {
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     Log::error($error);
