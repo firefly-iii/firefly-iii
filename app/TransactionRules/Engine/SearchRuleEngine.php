@@ -457,8 +457,12 @@ class SearchRuleEngine implements RuleEngineInterface
     private function processTransactionJournal(Rule $rule, array $transaction): void
     {
         Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
+        $actions = $rule->ruleActions()->get();
         /** @var RuleAction $ruleAction */
-        foreach ($rule->ruleActions()->where('active', true)->get() as $ruleAction) {
+        foreach ($actions as $ruleAction) {
+            if(false === $ruleAction->active) {
+                continue;
+            }
             $break = $this->processRuleAction($ruleAction, $transaction);
             if (true === $break) {
                 break;

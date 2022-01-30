@@ -46,6 +46,7 @@ class EitherConfigKey
             'firefly.enable_external_map',
             'firefly.expected_source_types',
             'firefly.credit_card_types',
+            'firefly.languages',
             'app.timezone',
         ];
 
