@@ -214,8 +214,8 @@ return [
     'generic_invalid_source'      => 'No puedes usar esta cuenta como cuenta de origen.',
     'generic_invalid_destination' => 'No puede usar esta cuenta como cuenta de destino.',
 
-    'generic_no_source'      => 'You must submit source account information.',
-    'generic_no_destination' => 'You must submit destination account information.',
+    'generic_no_source'      => 'Debes enviar la información de la cuenta de origen.',
+    'generic_no_destination' => 'Debes enviar la información de la cuenta de destino.',
 
     'gte.numeric' => ':attribute debe ser mayor o igual que :value.',
     'gt.numeric'  => 'El :attribute debe ser mayor que :value.',

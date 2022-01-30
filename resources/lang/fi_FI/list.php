@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Tilin tyyppi',
     'created_at'              => 'Luotu',
     'account'                 => 'Tili',
-    'external_url'            => 'External URL',
+    'external_url'            => 'Ulkoinen URL',
     'matchingAmount'          => 'Summa',
     'destination'             => 'Kohde',
     'source'                  => 'Lähde',
