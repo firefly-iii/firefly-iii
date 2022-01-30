@@ -73,7 +73,7 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('rules.delete.uri');
 
-        return prefixView('rules.rule.delete', compact('rule', 'subTitle'));
+        return view('rules.rule.delete', compact('rule', 'subTitle'));
     }
 
     /**

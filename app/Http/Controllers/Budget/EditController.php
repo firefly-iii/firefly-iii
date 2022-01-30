@@ -113,7 +113,7 @@ class EditController extends Controller
         $request->session()->forget('budgets.edit.fromUpdate');
         $request->session()->flash('preFilled', $preFilled);
 
-        return prefixView('budgets.edit', compact('budget', 'subTitle', 'autoBudgetTypes', 'autoBudgetPeriods', 'autoBudget'));
+        return view('budgets.edit', compact('budget', 'subTitle', 'autoBudgetTypes', 'autoBudgetPeriods', 'autoBudget'));
     }
 
     /**

@@ -1,0 +1,44 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, piggyBank) }}
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="{{ route('piggy-banks.add', piggyBank.id) }}" accept-charset="UTF-8" class="form-horizontal" id="store">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('firefly.add_money_to_piggy', {name: piggyBank.name}) }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {% if maxAmount > 0 %}
+                            <p>
+                                {{ 'max_amount_add'|_ }}: {{ formatAmountByCurrency(currency,maxAmount) }}.
+                            </p>
+
+                            <div class="input-group">
+                                <div class="input-group-addon">{{ currency.symbol|raw }}</div>
+                                <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ maxAmount|round(2) }}"
+                                       type="number"/>
+                            </div>
+                            <p>
+                                &nbsp;
+                            </p>
+                            <button type="submit" class="btn btn-success pull-right">
+                                {{ 'add'|_ }}
+                            </button>
+                        {% else %}
+                            <p class="text-danger">{{ 'no_money_for_piggy'|_ }}</p>
+                        {% endif %}
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+{% endblock %}

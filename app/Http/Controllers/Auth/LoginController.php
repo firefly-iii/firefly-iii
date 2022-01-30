@@ -251,7 +251,7 @@ class LoginController extends Controller
         }
         $usernameField = $this->username();
 
-        return prefixView('auth.login', compact('allowRegistration', 'email', 'remember', 'ldapWarning', 'allowReset', 'title', 'usernameField'));
+        return view('auth.login', compact('allowRegistration', 'email', 'remember', 'ldapWarning', 'allowReset', 'title', 'usernameField'));
     }
 
     /**

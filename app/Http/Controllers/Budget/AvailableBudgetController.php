@@ -98,7 +98,7 @@ class AvailableBudgetController extends Controller
         }
         $page = (int)($request->get('page') ?? 1);
 
-        return prefixView('budgets.available-budgets.create', compact('start', 'end', 'page', 'currency'));
+        return view('budgets.available-budgets.create', compact('start', 'end', 'page', 'currency'));
     }
 
     /**
@@ -130,7 +130,7 @@ class AvailableBudgetController extends Controller
         );
         $page       = (int)($request->get('page') ?? 1);
 
-        return prefixView('budgets.available-budgets.create-alternative', compact('start', 'end', 'page', 'currencies'));
+        return view('budgets.available-budgets.create-alternative', compact('start', 'end', 'page', 'currencies'));
     }
 
     /**
@@ -164,7 +164,7 @@ class AvailableBudgetController extends Controller
     {
         $availableBudget->amount = number_format((float)$availableBudget->amount, $availableBudget->transactionCurrency->decimal_places, '.', '');
 
-        return prefixView('budgets.available-budgets.edit', compact('availableBudget', 'start', 'end'));
+        return view('budgets.available-budgets.edit', compact('availableBudget', 'start', 'end'));
     }
 
     /**

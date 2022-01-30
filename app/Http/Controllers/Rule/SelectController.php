@@ -121,7 +121,7 @@ class SelectController extends Controller
         $today    = Carbon::now()->format('Y-m-d');
         $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return prefixView('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
+        return view('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
     }
 
     /**
@@ -175,7 +175,7 @@ class SelectController extends Controller
         // Return json response
         $view = 'ERROR, see logs.';
         try {
-            $view = prefixView('list.journals-array-tiny', ['groups' => $collection])->render();
+            $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
 
         } catch (Throwable $exception) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
@@ -218,7 +218,7 @@ class SelectController extends Controller
         // Return json response
         $view = 'ERROR, see logs.';
         try {
-            $view = prefixView('list.journals-array-tiny', ['groups' => $collection])->render();
+            $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
 
         } catch (Throwable $exception) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));

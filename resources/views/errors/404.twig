@@ -1,44 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="{{ route('index') }}/">
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
+    <title>Firefly III 404 :(</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Firefly III | 404</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <base href="{{ route('index') }}/">
 
-    <link rel="stylesheet" href="v2/plugins/local-fonts/gf-source.css" nonce="{{ JS_NONCE }}">
-    <link rel="stylesheet" href="v2/css/app.css" nonce="{{ JS_NONCE }}">
+    {# CSS things #}
+
+    {# libraries #}
+    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/daterangepicker.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+
+    {# the theme #}
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+
+    {# Firefly III customisations #}
+    <link href="v1/css/error.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+
+    {# favicons #}
+    {% include('partials.favicons') %}
 
 </head>
-<body>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="error-page">
-                <h2 class="headline text-info">404</h2>
-
-                <div class="error-content">
-                    <h3><span class="fas fa-question-circle text-info"></span> 404 - Page not found</h3>
-                    <p>
-                        {{ trans('errors.404_header') }}
-                    </p>
-                    <p>
-                        {{ trans('errors.404_page_does_not_exist') }}
-                    </p>
-                    <p>
-                        {{ trans('errors.404_send_error') }}
-                    </p>
-                    <p>
-                        {{ trans('errors.404_github_link')|raw }}
-                    </p>
-                </div>
-            </div>
-        </div>
+<body class="container">
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h1><s><b>Firefly</b>III</s> 404 Not Found :(</h1>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h3 class="text-info">404 &mdash; {{ trans('errors.404_header') }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            {{ trans('errors.404_page_does_not_exist') }}
+        </p>
+        <p>
+            {{ trans('errors.404_send_error') }}
+        </p>
+        <p>
+            {{ trans('errors.404_github_link')|raw }}
+        </p>
+    </div>
+</div>
+
+
 </body>
 </html>
-

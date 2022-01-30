@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="{{ route('index') }}/">
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
+    <title>Firefly III Maintenance Mode</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Firefly III | Maintenance Mode</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <base href="{{ route('index') }}/">
 
-    <link rel="stylesheet" href="v2/plugins/local-fonts/gf-source.css" nonce="{{ JS_NONCE }}">
-    <link rel="stylesheet" href="v2/css/app.css" nonce="{{ JS_NONCE }}">
+    {# libraries #}
+    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+
+    {# the theme #}
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+
+    {# Firefly III customisations #}
+    <link href="v1/css/error.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+
+    {# favicons #}
+    {% include('partials.favicons') %}
 
 </head>
-<body>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="error-page">
-                <h2 class="headline text-info">503</h2>
-
-                <div class="error-content">
-                    <h3><span class="fas fa-wrench text-info"></span> {{ trans('errors.maintenance_mode') }}</h3>
-                    <p>
-                        {{ trans('errors.check_back') }}
-                    </p>
-                    {% if 'demo.firefly-iii.org' == Request.getHost() %}
-                        <p>
-                            <span class="fas fa-recycle"></span> The Firefly III demo website resets every <strong>four hours</strong>.
-                            Please wait for this process to finish. It should take less than a minute.
-                        </p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+<body class="container">
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h1><a href="{{ route('index') }}"><b>Firefly</b>III</a></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <h3 class="text-info">{{ trans('errors.maintenance_mode') }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            {{ trans('errors.be_right_back') }}
+        </p>
+        <p class="text-danger">
+            {{ trans('errors.check_back') }}
+        </p>
     </div>
 </div>
 </body>
 </html>
-

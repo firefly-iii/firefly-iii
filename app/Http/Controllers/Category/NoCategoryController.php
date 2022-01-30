@@ -104,7 +104,7 @@ class NoCategoryController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category'));
 
-        return prefixView('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }
 
     /**
@@ -139,6 +139,6 @@ class NoCategoryController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));
 
-        return prefixView('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }
 }

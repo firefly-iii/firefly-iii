@@ -54,7 +54,7 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
         $reportType = 'default';
 
         try {
-            return prefixView(
+            return view(
                 'reports.default.multi-year',
                 compact('accountIds', 'reportType')
             )->with('start', $this->start)->with('end', $this->end)->render();

@@ -253,6 +253,7 @@ Route::group(
     static function () {
         Route::get('', ['uses' => 'Budget\ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'Budget\StoreController@store', 'as' => 'store']);
+        Route::get('transactions-without-budget', ['uses' => 'Budget\ListController@withoutBudget', 'as' => 'without-budget']);
         Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
         Route::put('{budget}', ['uses' => 'Budget\UpdateController@update', 'as' => 'update']);
         Route::delete('{budget}', ['uses' => 'Budget\DestroyController@destroy', 'as' => 'delete']);

@@ -136,7 +136,7 @@ class IndexController extends Controller
 
         ksort($piggyBanks);
 
-        return prefixView('piggy-banks.index', compact('piggyBanks', 'accounts'));
+        return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
     }
 
     /**

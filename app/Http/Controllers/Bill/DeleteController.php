@@ -75,7 +75,7 @@ class DeleteController extends Controller
         $this->rememberPreviousUri('bills.delete.uri');
         $subTitle = (string)trans('firefly.delete_bill', ['name' => $bill->name]);
 
-        return prefixView('bills.delete', compact('bill', 'subTitle'));
+        return view('bills.delete', compact('bill', 'subTitle'));
     }
 
     /**

@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.12 - 2022-01-29
+
+### Fixed
+- Fixed a few broken template references.
+
 ## 5.6.11 - 2022-01-28
 
 ### Added

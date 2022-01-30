@@ -85,7 +85,7 @@ class EditController extends Controller
         $search          = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl     = str_replace($search, '', $previousUrl);
 
-        return prefixView(
+        return view(
             'transactions.edit',
             compact(
                 'cash', 'allowedSourceDests', 'expectedSourceTypes', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'defaultCurrency',

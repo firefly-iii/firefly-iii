@@ -124,7 +124,7 @@ class CreateController extends Controller
         $request->session()->forget('accounts.create.fromStore');
         Log::channel('audit')->info('Creating new account.');
 
-        return prefixView(
+        return view(
             'accounts.create',
             compact('subTitleIcon', 'liabilityDirections', 'locations', 'objectType', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes')
         );

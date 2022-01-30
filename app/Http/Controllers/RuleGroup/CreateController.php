@@ -76,7 +76,7 @@ class CreateController extends Controller
         }
         session()->forget('rule-groups.create.fromStore');
 
-        return prefixView('rules.rule-group.create', compact('subTitleIcon', 'subTitle'));
+        return view('rules.rule-group.create', compact('subTitleIcon', 'subTitle'));
     }
 
     /**

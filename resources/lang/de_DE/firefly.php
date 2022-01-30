@@ -292,7 +292,7 @@ return [
     'search_modifier_updated_on'                          => 'Buchung wurde zuletzt am „:value” aktualisiert',
     'search_modifier_external_id'                         => 'Externe ID lautet „::value”',
     'search_modifier_no_external_url'                     => 'Die Buchung besitzt keine externe URL',
-    'search_modifier_any_external_url'                    => 'Die Transaktion muss eine (beliebige) externe URL haben',
+    'search_modifier_any_external_url'                    => 'Die Buchung muss eine (beliebige) externe URL aufweisen',
     'search_modifier_internal_reference'                  => 'Interne Referenz lautet „:value”',
     'search_modifier_description_starts'                  => 'Beschreibung ist „:value”',
     'search_modifier_description_ends'                    => 'Beschreibung endet mit „:value”',
@@ -349,7 +349,7 @@ return [
     'search_modifier_date_is_day'                         => 'Buchung ist am ":value" Tag des Monats',
     'search_modifier_date_before_year'                    => 'Buchung ist vor dem oder im Jahr ":value"',
     'search_modifier_date_before_month'                   => 'Buchung ist vor oder im Monat ":value"',
-    'search_modifier_date_before_day'                     => 'Transaction is before or on day of month ":value"',
+    'search_modifier_date_before_day'                     => 'Buchung vor oder am ":value" Tag des Monats',
     'search_modifier_date_after_year'                     => 'Buchung ist in oder nach dem Jahr ":value"',
     'search_modifier_date_after_month'                    => 'Buchung ist in oder nach dem Monat ":value"',
     'search_modifier_date_after_day'                      => 'Buchung ist nach oder am ":value" Tag des Monats',
@@ -564,8 +564,8 @@ return [
     'rule_trigger_internal_reference'                     => 'Interne Referenz ist „:trigger_value”',
     'rule_trigger_journal_id_choice'                      => 'Transaktions-Journal-ID ist..',
     'rule_trigger_journal_id'                             => 'Transaktions-Journal-ID ist „:trigger_value”',
-    'rule_trigger_no_external_url'                        => 'Transaktion hat keine externe URL',
-    'rule_trigger_any_external_url'                       => 'Transaktion hat eine externe URL',
+    'rule_trigger_no_external_url'                        => 'Buchung hat keine externe URL',
+    'rule_trigger_any_external_url'                       => 'Buchung hat eine externe URL',
 
     // actions
     'rule_action_delete_transaction_choice'               => 'Buchung löschen (!)',

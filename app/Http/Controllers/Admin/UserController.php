@@ -79,7 +79,7 @@ class UserController extends Controller
 
         $subTitle = (string)trans('firefly.delete_user', ['email' => $user->email]);
 
-        return prefixView('admin.users.delete', compact('user', 'subTitle'));
+        return view('admin.users.delete', compact('user', 'subTitle'));
     }
 
     /**
@@ -132,7 +132,7 @@ class UserController extends Controller
             'email_changed' => (string)trans('firefly.block_code_email_changed'),
         ];
 
-        return prefixView('admin.users.edit', compact('user', 'canEditDetails', 'subTitle', 'subTitleIcon', 'codes', 'currentUser', 'isAdmin'));
+        return view('admin.users.edit', compact('user', 'canEditDetails', 'subTitle', 'subTitleIcon', 'codes', 'currentUser', 'isAdmin'));
     }
 
     /**
@@ -154,7 +154,7 @@ class UserController extends Controller
             }
         );
 
-        return prefixView('admin.users.index', compact('subTitle', 'subTitleIcon', 'users'));
+        return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users'));
     }
 
     /**
@@ -172,7 +172,7 @@ class UserController extends Controller
         $subTitleIcon  = 'fa-user';
         $information   = $this->repository->getUserData($user);
 
-        return prefixView(
+        return view(
             'admin.users.show',
             compact(
                 'title',

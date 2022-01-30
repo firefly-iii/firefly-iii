@@ -77,7 +77,7 @@ class DeleteController extends Controller
 
         $journalsCreated = $this->recurring->getTransactions($recurrence)->count();
 
-        return prefixView('recurring.delete', compact('recurrence', 'subTitle', 'journalsCreated'));
+        return view('recurring.delete', compact('recurrence', 'subTitle', 'journalsCreated'));
     }
 
     /**

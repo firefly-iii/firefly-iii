@@ -132,7 +132,7 @@ class InstallController extends Controller
         // set new DB version.
         app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
 
-        return prefixView('install.index');
+        return view('install.index');
     }
 
     /**

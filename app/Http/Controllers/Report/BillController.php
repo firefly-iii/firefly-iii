@@ -59,7 +59,7 @@ class BillController extends Controller
         $helper = app(ReportHelperInterface::class);
         $report = $helper->getBillReport($accounts, $start, $end);
         try {
-            $result = prefixView('reports.partials.bills', compact('report'))->render();
+            $result = view('reports.partials.bills', compact('report'))->render();
 
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));

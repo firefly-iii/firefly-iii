@@ -79,7 +79,7 @@ class AttachmentController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('attachments.delete.uri');
 
-        return prefixView('attachments.delete', compact('attachment', 'subTitle'));
+        return view('attachments.delete', compact('attachment', 'subTitle'));
     }
 
     /**
@@ -158,7 +158,7 @@ class AttachmentController extends Controller
         ];
         $request->session()->flash('preFilled', $preFilled);
 
-        return prefixView('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
+        return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
     }
 
     /**
@@ -177,7 +177,7 @@ class AttachmentController extends Controller
             }
         );
 
-        return prefixView('attachments.index', compact('set'));
+        return view('attachments.index', compact('set'));
     }
 
     /**

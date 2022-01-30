@@ -136,7 +136,7 @@ class AccountForm
 
         unset($options['class']);
         try {
-            $html = prefixView('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
+            $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';

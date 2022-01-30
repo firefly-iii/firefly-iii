@@ -1,0 +1,20 @@
+{% set VUE_SCRIPT_NAME = 'create_transaction' %}
+{% extends './layout/default' %}
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
+{% endblock %}
+
+{% block content %}
+    <div id="create_transaction"></div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
+        var accountToTypes = {{ accountToTypes|json_encode|raw }};
+        var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};
+        var cashAccountId = {{ cash.id }};
+        var previousUrl = '{{ previousUrl }}';
+        window.sourceId = {{ sourceId }};
+        window.destinationId = {{ destinationId }};
+    </script>
+{% endblock %}

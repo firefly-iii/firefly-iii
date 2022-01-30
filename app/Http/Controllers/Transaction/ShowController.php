@@ -110,7 +110,7 @@ class ShowController extends Controller
         $attachments = $this->repository->getAttachments($transactionGroup);
         $links       = $this->repository->getLinks($transactionGroup);
 
-        return prefixView(
+        return view(
             'transactions.show',
             compact(
                 'transactionGroup',

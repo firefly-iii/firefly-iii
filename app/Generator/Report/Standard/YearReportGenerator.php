@@ -54,7 +54,7 @@ class YearReportGenerator implements ReportGeneratorInterface
         $reportType = 'default';
 
         try {
-            $result = prefixView(
+            $result = view(
                 'reports.default.year',
                 compact('accountIds', 'reportType')
             )->with('start', $this->start)->with('end', $this->end)->render();

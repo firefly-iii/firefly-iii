@@ -113,7 +113,7 @@ class ProfileController extends Controller
         $subTitle     = (string)trans('firefly.change_your_email');
         $subTitleIcon = 'fa-envelope';
 
-        return prefixView('profile.change-email', compact('title', 'subTitle', 'subTitleIcon', 'email'));
+        return view('profile.change-email', compact('title', 'subTitle', 'subTitleIcon', 'email'));
     }
 
     /**
@@ -135,7 +135,7 @@ class ProfileController extends Controller
         $subTitle     = (string)trans('firefly.change_your_password');
         $subTitleIcon = 'fa-key';
 
-        return prefixView('profile.change-password', compact('title', 'subTitle', 'subTitleIcon'));
+        return view('profile.change-password', compact('title', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -192,7 +192,7 @@ class ProfileController extends Controller
 
         $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
-        return prefixView('profile.code', compact('image', 'secret', 'codes'));
+        return view('profile.code', compact('image', 'secret', 'codes'));
     }
 
     /**
@@ -252,7 +252,7 @@ class ProfileController extends Controller
         $subTitle     = (string)trans('firefly.delete_account');
         $subTitleIcon = 'fa-trash';
 
-        return prefixView('profile.delete-account', compact('title', 'subTitle', 'subTitleIcon'));
+        return view('profile.delete-account', compact('title', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -340,7 +340,7 @@ class ProfileController extends Controller
             $accessToken = app('preferences')->set('access_token', $token);
         }
 
-        return prefixView(
+        return view(
             'profile.index', compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'isInternalAuth', 'isInternalIdentity')
         );
     }
@@ -356,7 +356,7 @@ class ProfileController extends Controller
             return redirect(route('profile.index'));
         }
 
-        return prefixView('profile.logout-other-sessions');
+        return view('profile.logout-other-sessions');
     }
 
     /**
@@ -385,7 +385,7 @@ class ProfileController extends Controller
         app('preferences')->set('mfa_recovery', $recoveryCodes);
         app('preferences')->mark();
 
-        return prefixView('profile.new-backup-codes', compact('codes'));
+        return view('profile.new-backup-codes', compact('codes'));
     }
 
     /**

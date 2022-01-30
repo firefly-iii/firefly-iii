@@ -47,7 +47,7 @@ return [
     |
     */
 
-    'view' => sprintf('%s/partials/layout/breadcrumbs', env('FIREFLY_III_LAYOUT', 'v1')),
+    'view' => 'partials/layout/breadcrumbs',
 
     /*
     |--------------------------------------------------------------------------

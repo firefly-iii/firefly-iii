@@ -148,12 +148,12 @@ class RegisterController extends Controller
         if (false === $allowRegistration) {
             $message = 'Registration is currently not available.';
 
-            return prefixView('error', compact('message'));
+            return view('error', compact('message'));
         }
 
         $email = $request->old('email');
 
-        return prefixView('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
+        return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
     }
 
 }
