@@ -28,12 +28,14 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use JsonException;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 
 /**
  * Class AccountTransformer
  */
 class AccountTransformer extends AbstractTransformer
 {
+    use PeriodOverview;
     protected AccountRepositoryInterface $repository;
 
     /**
@@ -94,7 +96,11 @@ class AccountTransformer extends AbstractTransformer
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'])) {
             $order = null;
         }
-
+        $startDate = clone $date;
+        $startDate->startOfMonth();
+        $endDate = clone $date;
+        $endDate->endOfMonth();
+        $periods          = $this->getAccountPeriodOverview($account, $startDate, $endDate);
         return [
             'id'                      => (string)$account->id,
             'created_at'              => $account->created_at->toAtomString(),
@@ -128,6 +134,7 @@ class AccountTransformer extends AbstractTransformer
             'longitude'               => $longitude,
             'latitude'                => $latitude,
             'zoom_level'              => $zoomLevel,
+            'periods'                 => $periods,
             'links'                   => [
                 [
                     'rel' => 'self',
