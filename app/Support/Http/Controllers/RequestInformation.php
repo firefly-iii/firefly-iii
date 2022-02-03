@@ -58,66 +58,6 @@ trait RequestInformation
     }
 
     /**
-     * Gets the help text.
-     *
-     * @param string $route
-     * @param string $language
-     *
-     * @return string
-     *
-     */
-    final protected function getHelpText(string $route, string $language): string // get from internet.
-    {
-        $help = app(HelpInterface::class);
-        // get language and default variables.
-        $content = '<p>' . trans('firefly.route_has_no_help') . '</p>';
-
-        // if no such route, log error and return default text.
-        if (!$help->hasRoute($route)) {
-            Log::error('No such route: ' . $route);
-
-            return $content;
-        }
-
-        // help content may be cached:
-        if ($help->inCache($route, $language)) {
-            $content = $help->getFromCache($route, $language);
-            Log::debug(sprintf('Help text %s was in cache.', $language));
-
-            return $content;
-        }
-
-        // get help content from Github:
-        $content          = $help->getFromGitHub($route, $language);
-        $originalLanguage = $language;
-        // content will have 0 length when Github failed. Try en_US when it does:
-        if ('' === $content) {
-            $language = 'en_US';
-
-            // also check cache first:
-            if ($help->inCache($route, $language)) {
-                Log::debug(sprintf('Help text %s was in cache.', $language));
-
-                return $help->getFromCache($route, $language);
-            }
-            $baseHref   = route('index');
-            $helpString = sprintf(
-                '<p><em><img alt="" src="%s/v1/images/flags/%s.png" /> %s</em></p>', $baseHref, $originalLanguage, (string)trans('firefly.help_translating')
-            );
-            $content    = $helpString . $help->getFromGitHub($route, $language);
-        }
-
-        // help still empty?
-        if ('' !== $content) {
-            $help->putInCache($route, $language, $content);
-
-            return $content;
-        }
-
-        return '<p>' . trans('firefly.route_has_no_help') . '</p>';
-    }
-
-    /**
      * Get a list of triggers.
      *
      * @param TestRuleFormRequest $request

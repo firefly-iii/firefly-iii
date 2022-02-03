@@ -590,16 +590,6 @@ Route::group(
 );
 
 /**
- * Help Controller.
- */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'help', 'as' => 'help.'],
-    static function () {
-        Route::get('{route}', ['uses' => 'HelpController@show', 'as' => 'show']);
-    }
-);
-
-/**
  * JScript Controller.
  */
 Route::group(
