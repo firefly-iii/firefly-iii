@@ -145,11 +145,11 @@ class TriggerController extends Controller
             // add a range:
             $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
         }
-        if (array_key_exists('accounts', $parameters) && '' !== $parameters['accounts']) {
+        if (array_key_exists('accounts', $parameters) && is_array($parameters['accounts']) && count($parameters['accounts']) > 0) {
             $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
 
-        // file the rule(s)
+        // fire the rule(s)
         $ruleEngine->fire();
 
         return response()->json([], 204);
