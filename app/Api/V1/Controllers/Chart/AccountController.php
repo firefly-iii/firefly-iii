@@ -30,8 +30,10 @@ use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -134,5 +136,107 @@ class AccountController extends Controller
         }
 
         return response()->json($chartData);
+    }
+
+     /**
+     * Shows overview of account during a single period.
+     *
+     * @param Account $account
+     *
+     * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    public function period(Account $account): JsonResponse
+    {
+        $dateParam = $this->parameters->get('date');
+        $date = $dateParam ? new Carbon($dateParam) : Carbon::now();
+        $start = clone $date;
+        $end   = clone $date;
+        $start->startOfMonth();
+        $end->endOfMonth();
+        $chartData = [];
+        $cache     = new CacheProperties;
+        $cache->addProperty('chart.account.period');
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($account->id);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        $currencies = $this->repository->getUsedCurrencies($account);
+
+        // if the account is not expense or revenue, just use the account's default currency.
+        if (!in_array($account->accountType->type, [AccountType::REVENUE, AccountType::EXPENSE], true)) {
+            $currencies = [$this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency()];
+        }
+
+        /** @var TransactionCurrency $currency */
+        foreach ($currencies as $currency) {
+            $chartData[] = $this->periodByCurrency($start, $end, $account, $currency);
+        }
+
+        $data = $this->generator->multiSet($chartData);
+        $cache->store($data);
+
+        return response()->json($data);
+    }
+
+
+    /**
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param Account             $account
+     * @param TransactionCurrency $currency
+     *
+     * @return array
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
+    {
+        $locale  = app('steam')->getLocale();
+        $step    = $this->calculateStep($start, $end);
+        $result  = [
+            'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
+            'currency_symbol' => $currency->symbol,
+            'currency_code'   => $currency->code,
+            'entries'         => [],
+        ];
+        $entries = [];
+        $current = clone $start;
+        switch ($step) {
+            default:
+                break;
+            case '1D':
+                // per day the entire period, balance for every day.
+                $format   = (string)trans('config.month_and_day', [], $locale);
+                $range    = app('steam')->balanceInRange($account, $start, $end, $currency);
+                $previous = array_values($range)[0];
+                while ($end >= $current) {
+                    $theDate         = $current->format('Y-m-d');
+                    $balance         = $range[$theDate] ?? $previous;
+                    $label           = $current->formatLocalized($format);
+                    $entries[$label] = (float)$balance;
+                    $previous        = $balance;
+                    $current->addDay();
+                }
+                break;
+
+            case '1W':
+            case '1M':
+            case '1Y':
+                while ($end >= $current) {
+                    $balance         = (float)app('steam')->balance($account, $current, $currency);
+                    $label           = app('navigation')->periodShow($current, $step);
+                    $entries[$label] = $balance;
+                    $current         = app('navigation')->addPeriod($current, $step, 0);
+                }
+                break;
+
+        }
+        $result['entries'] = $entries;
+
+        return $result;
     }
 }

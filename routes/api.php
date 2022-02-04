@@ -59,6 +59,7 @@ Route::group(
      'as'        => 'api.v1.chart.account.',],
     static function () {
         Route::get('overview', ['uses' => 'AccountController@overview', 'as' => 'overview']);
+        Route::get('{account}', ['uses' => 'AccountController@period', 'as' => 'period']);
     }
 );
 
