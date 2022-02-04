@@ -97,9 +97,9 @@ class AccountTransformer extends AbstractTransformer
             $order = null;
         }
         $startDate = clone $date;
-        $startDate->startOfMonth();
+        $startDate->startOfYear();
         $endDate = clone $date;
-        $endDate->endOfMonth();
+        $endDate->endOfYear();
         $periods          = $this->getAccountPeriodOverview($account, $startDate, $endDate);
         return [
             'id'                      => (string)$account->id,

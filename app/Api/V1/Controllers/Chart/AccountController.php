@@ -27,14 +27,17 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Http\Controllers\AugumentData;
+use FireflyIII\Support\Http\Controllers\ChartGeneration;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -43,7 +46,10 @@ use Illuminate\Http\JsonResponse;
  */
 class AccountController extends Controller
 {
-    use ApiSupport;
+    use DateCalculation, AugumentData, ChartGeneration;
+
+    /** @var GeneratorInterface Chart generation methods. */
+    protected $generator;
 
     private CurrencyRepositoryInterface $currencyRepository;
     private AccountRepositoryInterface  $repository;
@@ -62,6 +68,7 @@ class AccountController extends Controller
                 $user             = auth()->user();
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
+                $this->generator          = app(GeneratorInterface::class);
 
                 $this->currencyRepository = app(CurrencyRepositoryInterface::class);
                 $this->currencyRepository->setUser($user);
