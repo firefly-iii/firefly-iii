@@ -7,12 +7,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Can now add daily bills
 
-### Changed
-- Initial release.
-
-### Deprecated
-- Initial release.
-
 ### Removed
 - Code related to the dynamic help text on GitHub
 
@@ -23,14 +17,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Install template was not working, thanks Softaculous!
 - Empty string in reports URL could lead to parse issues.
 
-### Security
-- Initial release.
-
 ### API
 - [Issue 5661](https://github.com/firefly-iii/firefly-iii/issues/5661) Various fields could not be set to NULL
 - [Issue 5670](https://github.com/firefly-iii/firefly-iii/issues/5670) Better date validation for rules
 - Various YAML updates to better reflect the API.
-
 
 ## 5.6.13 - 2022-01-29
 
