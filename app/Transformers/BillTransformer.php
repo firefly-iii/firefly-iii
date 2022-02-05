@@ -267,6 +267,9 @@ class BillTransformer extends AbstractTransformer
             $nextExpectedMatch->addDay();
             $currentStart = clone $nextExpectedMatch;
             $loop++;
+            if($loop > 4) {
+                break;
+            }
         }
         $simple = $set->map(
             static function (Carbon $date) {

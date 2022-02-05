@@ -2,6 +2,36 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.14 - 2022-02-06
+
+### Added
+- Can now add daily bills
+
+### Changed
+- Initial release.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Code related to the dynamic help text on GitHub
+
+### Fixed
+- [Issue 5664](https://github.com/firefly-iii/firefly-iii/issues/5664) Bad report dates
+- [Issue 5666](https://github.com/firefly-iii/firefly-iii/issues/5666) Unexpected parse issue.
+- [Issue 5695](https://github.com/firefly-iii/firefly-iii/issues/5695) Search would miss the 26th account in a wildcard search.
+- Install template was not working, thanks Softaculous!
+- Empty string in reports URL could lead to parse issues.
+
+### Security
+- Initial release.
+
+### API
+- [Issue 5661](https://github.com/firefly-iii/firefly-iii/issues/5661) Various fields could not be set to NULL
+- [Issue 5670](https://github.com/firefly-iii/firefly-iii/issues/5670) Better date validation for rules
+- Various YAML updates to better reflect the API.
+
+
 ## 5.6.13 - 2022-01-29
 
 ### Fixed

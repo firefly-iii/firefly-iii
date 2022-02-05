@@ -214,8 +214,8 @@ return [
     'generic_invalid_source'      => 'Nie możesz użyć tego konta jako konta źródłowego.',
     'generic_invalid_destination' => 'Nie możesz użyć tego konta jako konta docelowego.',
 
-    'generic_no_source'      => 'You must submit source account information.',
-    'generic_no_destination' => 'You must submit destination account information.',
+    'generic_no_source'      => 'Musisz przesłać dane konta źródłowego.',
+    'generic_no_destination' => 'Musisz przesłać dane konta docelowego.',
 
     'gte.numeric' => ':attribute musi być większy lub równy :value.',
     'gt.numeric'  => ':attribute musi być większy niż :value.',

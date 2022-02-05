@@ -481,7 +481,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->withCategory();
                 break;
             case 'category_is':
-                $result = $this->categoryRepository->searchCategory($value, 25);
+                $result = $this->categoryRepository->searchCategory($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
                 }
@@ -499,7 +499,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->withBudget();
                 break;
             case 'budget_is':
-                $result = $this->budgetRepository->searchBudget($value, 25);
+                $result = $this->budgetRepository->searchBudget($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBudgets($result);
                 }
@@ -517,7 +517,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->withBill();
                 break;
             case 'bill_is':
-                $result = $this->billRepository->searchBill($value, 25);
+                $result = $this->billRepository->searchBill($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
                 }
@@ -708,7 +708,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // get accounts:
-        $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 25);
+        $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 1337);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for non existing account, NO results will be returned.');
             $this->collector->findNothing();
@@ -769,7 +769,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // search for accounts:
-        $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 25);
+        $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 1337);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for invalid account.');
             $this->collector->findNothing();

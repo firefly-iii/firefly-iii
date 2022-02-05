@@ -55,7 +55,7 @@ class TriggerRequest extends FormRequest
      */
     private function getDate(string $field): ?Carbon
     {
-        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
+        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr($this->query($field),0,10));
     }
 
     /**
@@ -63,7 +63,7 @@ class TriggerRequest extends FormRequest
      */
     private function getAccounts(): array
     {
-        return $this->get('accounts');
+        return $this->get('accounts') ?? [];
     }
 
     /**

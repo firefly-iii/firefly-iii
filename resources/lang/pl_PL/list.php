@@ -46,7 +46,7 @@ return [
     'account_type'            => 'Typ konta',
     'created_at'              => 'Utworzono',
     'account'                 => 'Konto',
-    'external_url'            => 'External URL',
+    'external_url'            => 'Zewnętrzny adres URL',
     'matchingAmount'          => 'Kwota',
     'destination'             => 'Cel',
     'source'                  => 'Źródło',

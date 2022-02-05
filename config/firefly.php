@@ -101,7 +101,7 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '5.6.13',
+    'version'                      => '5.6.14',
     'api_version'                  => '1.5.5',
     'db_version'                   => 18,
 
@@ -289,7 +289,7 @@ return [
     'credit_card_types'            => ['monthlyFull'],
 
     // "period must be in this list" values
-    'bill_periods'                 => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'bill_periods'                 => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'interest_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
 
     // settings to translate X to Y

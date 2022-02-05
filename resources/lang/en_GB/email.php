@@ -37,7 +37,7 @@ return [
     'login_from_new_ip'                => 'New login on Firefly III',
     'new_ip_body'                      => 'Firefly III detected a new login on your account from an unknown IP address. If you never logged in from the IP address below, or it has been more than six months ago, Firefly III will warn you.',
     'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
-    'ip_address'                       => 'IP address',
+    'ip_address'                       => 'IP Address',
     'host_name'                        => 'Host',
     'date_time'                        => 'Date + time',
 
@@ -73,7 +73,7 @@ return [
 
     // OAuth token created
     'oauth_created_subject'            => 'A new OAuth client has been created',
-    'oauth_created_body'               => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL <span style="font-family: monospace;">:url</span>.',
+    'oauth_created_body'               => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labelled ":name" and has callback URL <span style="font-family: monospace;">:url</span>.',
     'oauth_created_explanation'        => 'With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.',
     'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
 
