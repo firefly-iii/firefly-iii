@@ -28,7 +28,7 @@ return [
     'month'                   => '%B %Y',
     'month_and_day'           => '%e %B %Y',
     'month_and_day_moment_js' => 'Do MMMM YYYY',
-    'month_and_day_fns'       => 'MMMM d, y',
+    'month_and_day_fns'       => 'd MMMM y',
     'month_and_date_day'      => '%A %B %e, %Y',
     'month_and_day_no_year'   => '%B %e',
     'date_time'               => '%e %B, %Y, @ %T',

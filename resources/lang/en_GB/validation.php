@@ -34,7 +34,7 @@ return [
     'zero_or_more'                   => 'The value cannot be negative.',
     'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
     'source_equals_destination'      => 'The source account equals the destination account.',
-    'unique_account_number_for_user' => 'It looks like this account number is already in use.',
+    'unique_account_number_for_user' => 'This account number seems to be already in use.',
     'unique_iban_for_user'           => 'It looks like this IBAN is already in use.',
     'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
