@@ -371,6 +371,8 @@ return [
     'repeat_freq_quarterly'                               => 'quarterly',
     'repeat_freq_monthly'                                 => 'monthly',
     'repeat_freq_weekly'                                  => 'weekly',
+    'repeat_freq_daily'                                   => 'daily',
+    'daily'                                               => 'daily',
     'weekly'                                              => 'weekly',
     'quarterly'                                           => 'quarterly',
     'half-year'                                           => 'every half year',
