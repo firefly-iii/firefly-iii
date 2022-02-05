@@ -72,7 +72,7 @@ class BillUpdateRequest extends FormRequest
             'amount_max'              => 'required|numeric|gt:0|max:1000000000',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'date'                    => 'required|date',
-            'repeat_freq'             => 'required|in:weekly,monthly,quarterly,half-year,yearly',
+            'repeat_freq'             => sprintf('required|in:%s', join(',', config('firefly.bill_periods'))),
             'skip'                    => 'required|integer|gte:0|lte:31',
             'active'                  => 'boolean',
         ];
