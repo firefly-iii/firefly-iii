@@ -48,6 +48,7 @@ class EitherConfigKey
             'firefly.credit_card_types',
             'firefly.languages',
             'app.timezone',
+            'firefly.valid_view_ranges',
         ];
 
     /**
