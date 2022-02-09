@@ -77,7 +77,7 @@ class ShowController extends Controller
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
-        $collection = $this->repository->getAll();
+        $collection = $this->repository->get();
         $count      = $collection->count();
         $piggyBanks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
