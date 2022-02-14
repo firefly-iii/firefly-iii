@@ -4753,27 +4753,27 @@
         },
         {
             "name": "rcrowe/twigbridge",
-            "version": "v0.13.0",
+            "version": "v0.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rcrowe/TwigBridge.git",
-                "reference": "a8a9386dcc572f4fbe146f0ae0fe4d27515d94db"
+                "reference": "ea5b2e18caca6c341fb8ceff2ce8e4fddb77d0df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/a8a9386dcc572f4fbe146f0ae0fe4d27515d94db",
-                "reference": "a8a9386dcc572f4fbe146f0ae0fe4d27515d94db",
+                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/ea5b2e18caca6c341fb8ceff2ce8e4fddb77d0df",
+                "reference": "ea5b2e18caca6c341fb8ceff2ce8e4fddb77d0df",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "^5.5 || ^6.0 || ^7.0 || ^8.0",
-                "illuminate/view": "^5.5 || ^6.0 || ^7.0 || ^8.0",
+                "illuminate/support": "^6|^7|^8|^9",
+                "illuminate/view": "^6|^7|^8|^9",
                 "php": "^7.2.5 || ^8.0",
                 "twig/twig": "~3.0"
             },
             "require-dev": {
                 "ext-json": "*",
-                "laravel/framework": "^5.5 || ^6.0 || ^7.0 || ^8.0",
+                "laravel/framework": "^6|^7|^8|^9",
                 "mockery/mockery": "^1.3.1",
                 "phpunit/phpunit": "^6.5.14 || ^7.5.20 || ^8.5.8 || ^9.3.7",
                 "squizlabs/php_codesniffer": "^3.6"
@@ -4823,9 +4823,9 @@
             ],
             "support": {
                 "issues": "https://github.com/rcrowe/TwigBridge/issues",
-                "source": "https://github.com/rcrowe/TwigBridge/tree/v0.13.0"
+                "source": "https://github.com/rcrowe/TwigBridge/tree/v0.13.1"
             },
-            "time": "2021-12-23T12:06:45+00:00"
+            "time": "2022-02-10T13:51:53+00:00"
         },
         {
             "name": "spatie/data-transfer-object",
