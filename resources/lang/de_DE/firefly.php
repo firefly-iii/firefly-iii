@@ -123,7 +123,7 @@ return [
     'expenses_by_budget'                                  => 'Ausgaben nach Budget',
     'income_by_category'                                  => 'Einnahmen nach Kategorie',
     'expenses_by_asset_account'                           => 'Ausgaben nach Bestandskonto',
-    'expenses_by_expense_account'                         => 'Ausgaben nach Ausgabenkontno',
+    'expenses_by_expense_account'                         => 'Ausgaben nach Ausgabenkonto',
     'cannot_redirect_to_account'                          => 'Entschuldigen Sie bitte. Firefly III kann Sie nicht zur richtigen Seite weiterleiten.',
     'sum_of_expenses'                                     => 'Summe von Ausgaben',
     'sum_of_income'                                       => 'Summe von Einnahmen',
