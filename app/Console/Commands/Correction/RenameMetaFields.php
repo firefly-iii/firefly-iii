@@ -68,6 +68,7 @@ class RenameMetaFields extends Command
             'sepa-ep'         => 'sepa_ep',
             'sepa-ci'         => 'sepa_ci',
             'sepa-batch-id'   => 'sepa_batch_id',
+            'external_uri'    => 'external_url',
         ];
         foreach ($changes as $original => $update) {
             $this->rename($original, $update);
