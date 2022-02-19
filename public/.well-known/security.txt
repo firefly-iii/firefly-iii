@@ -1,7 +1,10 @@
-# For this (sub)domain, report Firefly III security issues ONLY
-# Other reports will be IGNORED
+# Please report security issues related to Firefly III
+# to me ASAP via the email address below.
+#
+# Do not contact me for random vulnerabilities on other people's websites.
+# Firefly III and releated tools only please.
 
 Contact: mailto:james@firefly-iii.org
-Encryption: https://keybase.io/jc5/pgp_keys.asc?fingerprint=5d22ce912243bea5185ab2289d53bf7bdccbf49e
+Encryption: https://keybase.io/jc5/pgp_keys.asc?fingerprint=02f4046c4b236e0609571612b49a324b7ead6d80
 Acknowledgements: https://github.com/firefly-iii/firefly-iii
 Signature: https://firefly-iii.org/.well-known/security.txt.sig
