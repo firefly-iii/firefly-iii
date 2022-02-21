@@ -131,7 +131,7 @@ class ShowController extends Controller
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
                   ->withoutBudget()->withAccountInformation()->withCategoryInformation();
         $groups = $collector->getPaginatedGroups();
-        $groups->setPath(route('budgets.no-budget'));
+        $groups->setPath(route('budgets.no-budget-all'));
 
         return view('budgets.no-budget', compact('groups', 'subTitle', 'start', 'end'));
     }
