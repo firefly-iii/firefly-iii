@@ -4077,11 +4077,6 @@ pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-portal-vue@^2.1.7:
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
-  integrity sha512-+yCno2oB3xA7irTt0EU5Ezw22L2J51uKAacE/6hMPMoO/mx3h4rXFkkBkT4GFsMDv/vEe8TNKC3ujJJ0PTwb6g==
-
 portfinder@^1.0.28:
   version "1.0.28"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.28.tgz#67c4622852bd5374dd1dd900f779f53462fac778"
@@ -5099,13 +5094,10 @@ type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-uiv@^1.4:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.4.1.tgz#793d90aa9fcba61f389626664ba54a4e86fdb848"
-  integrity sha512-3Tfg49lmSN0H75E+rKiZNN4yZfPeAP/GfTgkRweJNd59dCiY8fPRHwlCuFS3h81w87dvP6g+XFcfgig9DjjYQQ==
-  dependencies:
-    portal-vue "^2.1.7"
-    vue-functional-data-merge "^3.0.0"
+uiv@^2.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/uiv/-/uiv-2.0.0.tgz#ef2710b3e1830a8b524b8188d973e98604ec534b"
+  integrity sha512-czyvmB7iDvYUxx0Gc5H9uC3f3xM+FJDMnhZkYKPuzbTJafCbHj2umsrkdkxLni7RrJLGBsRmT04gGp7YD8krZw==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
   version "2.0.0"
@@ -5193,11 +5185,6 @@ vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
-
-vue-functional-data-merge@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"
-  integrity sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA==
 
 vue-i18n@^8.27:
   version "8.27.0"
