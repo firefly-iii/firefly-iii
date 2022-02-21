@@ -177,7 +177,7 @@ trait RecurringTransactionTrait
                 $this->updatePiggyBank($transaction, (int)$array['piggy_bank_id']);
             }
 
-            if (array_key_exists('tags', $array)) {
+            if (array_key_exists('tags', $array) && is_array($array['tags'])) {
                 $this->updateTags($transaction, $array['tags']);
             }
 
