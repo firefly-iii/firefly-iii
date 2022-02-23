@@ -222,8 +222,8 @@ trait MetaCollection
             $this->hasJoinedMetaTables = true;
             $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
         }
-        $this->query->where(function(Builder $q1) {
-            $q1->where(function(Builder $q2) {
+        $this->query->where(function (Builder $q1) {
+            $q1->where(function (Builder $q2) {
                 $q2->where('journal_meta.name', '=', 'external_url');
                 $q2->whereNull('journal_meta.data');
             })->orWhereNull('journal_meta.name');
@@ -488,7 +488,10 @@ trait MetaCollection
     public function withoutNotes(): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->whereNull('notes.text');
+        $this->query->where(function (Builder $q) {
+            $q->whereNull('notes.text');
+            $q->orWhere('notes.text', '');
+        });
 
         return $this;
     }
