@@ -143,10 +143,12 @@ class StoreRequest extends FormRequest
             'active'                               => [new IsBoolean],
             'repeat_until'                         => 'nullable|date',
             'nr_of_repetitions'                    => 'nullable|numeric|between:1,31',
+
             'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'                 => 'between:0,10',
             'repetitions.*.skip'                   => 'nullable|numeric|between:0,31',
             'repetitions.*.weekend'                => 'numeric|min:1|max:4',
+
             'transactions.*.description'           => 'required|between:1,255',
             'transactions.*.amount'                => 'required|numeric|gt:0',
             'transactions.*.foreign_amount'        => 'nullable|numeric|gt:0',

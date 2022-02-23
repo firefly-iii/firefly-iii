@@ -93,7 +93,7 @@ trait RecurrenceValidation
             // validate source account.
             $sourceId    = array_key_exists('source_id', $transaction) ? (int)$transaction['source_id'] : null;
             $sourceName  = $transaction['source_name'] ?? null;
-            $validSource = $accountValidator->validateSource($sourceId, $sourceName, null);
+            $validSource = $accountValidator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
 
             // do something with result:
             if (false === $validSource) {
