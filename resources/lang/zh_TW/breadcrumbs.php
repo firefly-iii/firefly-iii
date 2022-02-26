@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => '刪除交易記錄之間的連結',
     'edit_object_group'      => '編輯群組 ":title"',
     'delete_object_group'    => '刪除群組 ":title"',
-    'logout_others'          => '登出其他 sessions'
+    'logout_others'          => '登出其他 sessions',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

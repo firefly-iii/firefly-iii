@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Verwijder koppeling tussen transacties',
     'edit_object_group'      => 'Wijzig groep ":title"',
     'delete_object_group'    => 'Verwijder groep ":title"',
-    'logout_others'          => 'Andere sessies afmelden'
+    'logout_others'          => 'Andere sessies afmelden',
+    'asset_accounts'         => 'Betaalrekeningen',
+    'expense_accounts'       => 'Crediteuren',
+    'revenue_accounts'       => 'Debiteuren',
+    'liabilities_accounts'   => 'Passiva',
+    'placeholder'            => '[Placeholder]',
 ];

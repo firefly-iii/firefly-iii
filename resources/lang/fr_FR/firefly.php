@@ -88,7 +88,7 @@ return [
     'flash_error_multiple'                                => 'Il y a une erreur|Il y a :count erreurs',
     'net_worth'                                           => 'Avoir net',
     'help_for_this_page'                                  => 'Aide pour cette page',
-    'help_for_this_page_body'                             => 'You can find more information about this page <a href="https://docs.firefly-iii.org/">in the documentation</a>.',
+    'help_for_this_page_body'                             => 'Vous pouvez trouver plus d\'informations sur cette page <a href="https://docs.firefly-iii.org/">dans la documentation</a>.',
     'two_factor_welcome'                                  => 'Bonjour !',
     'two_factor_enter_code'                               => 'Pour continuer, veuillez entrer votre code d’authentification à deux facteurs. Votre application peut la générer pour vous.',
     'two_factor_code_here'                                => 'Entrez votre code ici',
@@ -371,8 +371,8 @@ return [
     'repeat_freq_quarterly'                               => 'trimestriel',
     'repeat_freq_monthly'                                 => 'mensuel',
     'repeat_freq_weekly'                                  => 'hebdomadaire',
-    'repeat_freq_daily'                                   => 'daily',
-    'daily'                                               => 'daily',
+    'repeat_freq_daily'                                   => 'quotidien',
+    'daily'                                               => 'quotidien',
     'weekly'                                              => 'hebdomadaire',
     'quarterly'                                           => 'trimestriel',
     'half-year'                                           => 'semestriel',
@@ -566,6 +566,11 @@ return [
     'rule_trigger_journal_id'                             => 'L\'ID du journal d\'opérations est ":trigger_value"',
     'rule_trigger_no_external_url'                        => 'L\'opération n\'a pas d\'URL externe',
     'rule_trigger_any_external_url'                       => 'L\'opération a une URL externe',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
+    'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
+    'rule_trigger_id_choice'                              => 'Transaction ID is..',
+    'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
+
 
     // actions
     'rule_action_delete_transaction_choice'               => 'SUPPRIMER l\'opération (!)',
@@ -1429,7 +1434,7 @@ return [
     'report_category'                           => 'Rapport de catégorie entre :start et :end',
     'report_double'                             => 'Rapport de compte de dépenses / recettes entre le :start et le :end',
     'report_budget'                             => 'Rapport du budget entre le :start et le :end',
-    'report_tag'                                => 'Marquer le rapport entre le :start et le :end',
+    'report_tag'                                => 'Rapport de tag entre le :start et le :end',
     'quick_link_reports'                        => 'Liens rapides',
     'quick_link_examples'                       => 'Voici quelques exemples de liens pour vous aider à démarrer. Consultez les pages d\'aide en cliquant le bouton (?) pour plus d\'informations sur les rapports et les mots magiques que vous pouvez utiliser.',
     'quick_link_default_report'                 => 'Rapport financier par défaut',
@@ -1897,7 +1902,7 @@ return [
     'deleted_object_group'            => 'Groupe ":title" supprimé avec succès',
     'object_group'                    => 'Groupe',
 
-
-    //
+    // other stuff
+    'placeholder'                     => '[Placeholder]',
 
 ];

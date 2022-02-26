@@ -80,8 +80,8 @@ return [
     'verification'                => 'Vahvistus',
     'api_key'                     => 'API-avain',
     'remember_me'                 => 'Muista minut',
-    'liability_type_id'           => 'Velan tyyppi',
-    'liability_type'              => 'Velan tyyppi',
+    'liability_type_id'           => 'Lainan tyyppi',
+    'liability_type'              => 'Lainan tyyppi',
     'interest'                    => 'Korko',
     'interest_period'             => 'Korkojakso',
     'extension_date'              => 'Laajennuksen päivämäärä',
@@ -171,7 +171,7 @@ return [
     'recurring_keep_transactions' => 'Ainoa tämän toistuvan tapahtuman luoma tapahtuma säästetään.|Kaikki :count tämän toistuvan tapahtuman luomaa tapahtumaa säästetään.',
     'tag_keep_transactions'       => 'Ainoa tähän tägiin linkitetty tapahtuma säästetään.|Kaikki :count tähän tägiin yhdistetyt tapahtumat säästetään.',
     'check_for_updates'           => 'Tarkista päivitykset',
-    'liability_direction'         => 'Velka sisään/ulos',
+    'liability_direction'         => 'Laina sisään/ulos',
     'delete_object_group'         => 'Poista ryhmä ":title"',
     'email'                       => 'Sähköpostiosoite',
     'password'                    => 'Salasana',
@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Eston syy',
     'login_name'                  => 'Käyttäjätunnus',
     'is_owner'                    => 'On ylläpitäjä?',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Aja säännöt',

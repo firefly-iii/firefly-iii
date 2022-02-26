@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Årsak til sperring',
     'login_name'                  => 'Logg inn',
     'is_owner'                    => 'Is admin?',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Bruk regler',

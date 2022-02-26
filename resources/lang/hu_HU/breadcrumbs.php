@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Tranzakciók közötti kapcsolat törlése',
     'edit_object_group'      => '":title" csoport szerkesztése',
     'delete_object_group'    => '":title" csoport törlése',
-    'logout_others'          => 'Minden más munkamenet kijelentkeztetése'
+    'logout_others'          => 'Minden más munkamenet kijelentkeztetése',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

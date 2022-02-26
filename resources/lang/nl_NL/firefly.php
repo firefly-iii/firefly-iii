@@ -88,7 +88,7 @@ return [
     'flash_error_multiple'                                => 'Er is één fout|Er zijn :count fouten',
     'net_worth'                                           => 'Kapitaal',
     'help_for_this_page'                                  => 'Hulp bij deze pagina',
-    'help_for_this_page_body'                             => 'You can find more information about this page <a href="https://docs.firefly-iii.org/">in the documentation</a>.',
+    'help_for_this_page_body'                             => 'Meer informatie over deze pagina <a href="https://docs.firefly-iii.org/">vind je in de documentatie</a>.',
     'two_factor_welcome'                                  => 'Hallo!',
     'two_factor_enter_code'                               => 'Vul je authenticatiecode in. Je authenticatieapplicatie kan deze voor je genereren.',
     'two_factor_code_here'                                => 'Code',
@@ -371,8 +371,8 @@ return [
     'repeat_freq_quarterly'                               => 'elk kwartaal',
     'repeat_freq_monthly'                                 => 'maandelijks',
     'repeat_freq_weekly'                                  => 'wekelijks',
-    'repeat_freq_daily'                                   => 'daily',
-    'daily'                                               => 'daily',
+    'repeat_freq_daily'                                   => 'dagelijks',
+    'daily'                                               => 'dagelijks',
     'weekly'                                              => 'wekelijks',
     'quarterly'                                           => 'elk kwartaal',
     'half-year'                                           => 'elk half jaar',
@@ -566,6 +566,11 @@ return [
     'rule_trigger_journal_id'                             => 'Transactiejournaal ID is ":trigger_value"',
     'rule_trigger_no_external_url'                        => 'De transactie heeft geen externe URL',
     'rule_trigger_any_external_url'                       => 'De transactie heeft een externe URL',
+    'rule_trigger_any_external_url_choice'                => 'De transactie heeft een externe URL',
+    'rule_trigger_no_external_url_choice'                 => 'De transactie heeft geen externe URL',
+    'rule_trigger_id_choice'                              => 'Transactie-ID is..',
+    'rule_trigger_id'                                     => 'Transactie-ID is ":trigger_value"',
+
 
     // actions
     'rule_action_delete_transaction_choice'               => 'VERWIJDER transactie (!)',
@@ -1897,7 +1902,7 @@ return [
     'deleted_object_group'            => 'Groep ":title" verwijderd',
     'object_group'                    => 'Groep',
 
-
-    //
+    // other stuff
+    'placeholder'                     => '[Placeholder]',
 
 ];

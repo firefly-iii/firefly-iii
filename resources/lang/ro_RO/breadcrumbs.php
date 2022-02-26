@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Şterge legătura dintre tranzacţii',
     'edit_object_group'      => 'Editați grupul de reguli ":title"',
     'delete_object_group'    => 'Șterge grupul de reguli ":title"',
-    'logout_others'          => 'Deconectare celelalte sesiuni'
+    'logout_others'          => 'Deconectare celelalte sesiuni',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

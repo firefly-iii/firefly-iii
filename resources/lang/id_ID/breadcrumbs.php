@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Hapus tautan antar transaksi',
     'edit_object_group'      => 'Ubah grup ":title"',
     'delete_object_group'    => 'Hapus grup ":title"',
-    'logout_others'          => 'Keluar dari semua sesi'
+    'logout_others'          => 'Keluar dari semua sesi',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

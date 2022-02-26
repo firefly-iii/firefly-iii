@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Ta bort länken mellan transaktioner',
     'edit_object_group'      => 'Redigera grupp ":title"',
     'delete_object_group'    => 'Ta bort grupp ":title"',
-    'logout_others'          => 'Logga ut andra sessioner'
+    'logout_others'          => 'Logga ut andra sessioner',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

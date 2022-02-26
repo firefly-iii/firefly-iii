@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Xóa liên kết giữa các giao dịch',
     'edit_object_group'      => 'Chỉnh sửa nhóm ":title"',
     'delete_object_group'    => 'Xóa nhóm ":title"',
-    'logout_others'          => 'Đăng xuất tất cả phiên đăng nhập'
+    'logout_others'          => 'Đăng xuất tất cả phiên đăng nhập',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

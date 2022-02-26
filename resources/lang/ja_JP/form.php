@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'ブロック',
     'login_name'                  => 'ログイン',
     'is_owner'                    => '管理者は？',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => '適用',

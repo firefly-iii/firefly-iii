@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Διαγραφή συνδέσμου μεταξύ των συναλλαγών',
     'edit_object_group'      => 'Επεξεργασία ομάδας ":title"',
     'delete_object_group'    => 'Διαγραφή ομάδας ":title"',
-    'logout_others'          => 'Αποσυνδέσετε τις άλλες συνεδρίες'
+    'logout_others'          => 'Αποσυνδέσετε τις άλλες συνεδρίες',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

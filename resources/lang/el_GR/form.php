@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Αιτία αποκλεισμού',
     'login_name'                  => 'Είσοδος',
     'is_owner'                    => 'Είναι διαχειριστής;',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Εφαρμογή κανόνων',

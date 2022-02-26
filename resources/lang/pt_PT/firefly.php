@@ -88,7 +88,7 @@ return [
     'flash_error_multiple'                                => 'Tens 1 erro|Tens :count erros',
     'net_worth'                                           => 'Património liquido',
     'help_for_this_page'                                  => 'Ajuda para esta pagina',
-    'help_for_this_page_body'                             => 'You can find more information about this page <a href="https://docs.firefly-iii.org/">in the documentation</a>.',
+    'help_for_this_page_body'                             => 'Pode encontrar mais informações sobre esta página <a href="https://docs.firefly-iii.org/">na documentação</a>.',
     'two_factor_welcome'                                  => 'Olá!',
     'two_factor_enter_code'                               => 'Para continuar, por favor introduza o código da sua autenticação de 2 passos. A sua aplicação pode gera-lo para si.',
     'two_factor_code_here'                                => 'Introduza o código aqui',
@@ -371,8 +371,8 @@ return [
     'repeat_freq_quarterly'                               => 'trimestral',
     'repeat_freq_monthly'                                 => 'mensalmente',
     'repeat_freq_weekly'                                  => 'semanalmente',
-    'repeat_freq_daily'                                   => 'daily',
-    'daily'                                               => 'daily',
+    'repeat_freq_daily'                                   => 'diariamente',
+    'daily'                                               => 'diariamente',
     'weekly'                                              => 'semanalmente',
     'quarterly'                                           => 'trimestral',
     'half-year'                                           => 'todo meio ano',
@@ -566,6 +566,11 @@ return [
     'rule_trigger_journal_id'                             => 'O ID do diário de transações é ":trigger_value"',
     'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
     'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
+    'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
+    'rule_trigger_id_choice'                              => 'Transaction ID is..',
+    'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
+
 
     // actions
     'rule_action_delete_transaction_choice'               => 'APAGAR transacção (!)',
@@ -1897,7 +1902,7 @@ return [
     'deleted_object_group'            => 'Grupo ":title" eliminado com sucesso',
     'object_group'                    => 'Grupo',
 
-
-    //
+    // other stuff
+    'placeholder'                     => '[Placeholder]',
 
 ];
