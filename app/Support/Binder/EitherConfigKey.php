@@ -49,6 +49,11 @@ class EitherConfigKey
             'firefly.languages',
             'app.timezone',
             'firefly.valid_view_ranges',
+
+            // triggers and actions:
+            'firefly.rule-actions',
+            'firefly.context-rule-actions',
+            'firefly.search.operators'
         ];
 
     /**
