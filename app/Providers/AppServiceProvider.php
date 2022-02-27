@@ -26,6 +26,7 @@ use Adldap\Laravel\Middleware\WindowsAuthenticate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
+use Laravel\Sanctum\Sanctum;
 use URL;
 
 /**
@@ -48,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         if (config('ldap_auth.identifiers.windows.enabled', false)) {
             $this->app['router']->pushMiddlewareToGroup('web', WindowsAuthenticate::class);
         }
+        Sanctum::ignoreMigrations();
     }
 
     /**
