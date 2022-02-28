@@ -416,6 +416,7 @@ trait MetaCollection
                 static function (JoinClause $join) {
                     $join->on('notes.noteable_id', '=', 'transaction_journals.id');
                     $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
+                    $join->whereNull('notes.deleted_at');
                 }
             );
             // add fields
