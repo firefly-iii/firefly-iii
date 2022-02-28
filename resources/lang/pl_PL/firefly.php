@@ -566,10 +566,10 @@ return [
     'rule_trigger_journal_id'                             => 'ID dziennika transakcji to ":trigger_value"',
     'rule_trigger_no_external_url'                        => 'Transakcja nie ma zewnętrznego adresu URL',
     'rule_trigger_any_external_url'                       => 'Transakcja ma zewnętrzny adres URL',
-    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
-    'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
-    'rule_trigger_id_choice'                              => 'Transaction ID is..',
-    'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
+    'rule_trigger_any_external_url_choice'                => 'Transakcja ma zewnętrzny adres URL',
+    'rule_trigger_no_external_url_choice'                 => 'Transakcja nie ma zewnętrznego adresu URL',
+    'rule_trigger_id_choice'                              => 'Identyfikator transakcji to..',
+    'rule_trigger_id'                                     => 'Identyfikator transakcji to ":trigger_value"',
 
 
     // actions
@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Utwórz nowe konto przychodów',
     'make_new_liabilities_account'              => 'Utwórz nowe zobowiązanie',
     'asset_accounts'                            => 'Konta aktywów',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Konta aktywów (nieaktywne)',
     'expense_accounts'                          => 'Konta wydatków',
     'expense_accounts_inactive'                 => 'Konto wydatków (nieaktywne)',

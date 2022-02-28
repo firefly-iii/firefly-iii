@@ -1697,9 +1697,9 @@ boolbase@^1.0.0:
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
 bootstrap-sass@^3:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/bootstrap-sass/-/bootstrap-sass-3.4.2.tgz#c223aa5e0b3806e78f7d6c11993a94e950539cd7"
-  integrity sha512-GLOIoUuV1hAoO4/wUKC8xFboAGFsdIBhMKMjGCslRAA3CurJZx7q+1y5AKc2UTWZgcTc81KtoV0S6adzJ+AAVQ==
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/bootstrap-sass/-/bootstrap-sass-3.4.3.tgz#742cc8f4286303ae9fe8e4c95237321eae73766c"
+  integrity sha512-vPgFnGMp1jWZZupOND65WS6mkR8rxhJxndT/AcMbqcq1hHMdkcH4sMPhznLzzoHOHkSCrd6J9F8pWBriPCKP2Q==
 
 brace-expansion@^1.1.7:
   version "1.1.11"

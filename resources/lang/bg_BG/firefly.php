@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Създай нова сметка за приходи',
     'make_new_liabilities_account'              => 'Създай ново задължение',
     'asset_accounts'                            => 'Сметки за активи',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Сметки за активи (деактивирани)',
     'expense_accounts'                          => 'Сметки за разходи',
     'expense_accounts_inactive'                 => 'Сметки за разходи (деактивирани)',

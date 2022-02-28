@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => '首页',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => '编辑货币“:name”',
     'delete_currency'        => '删除货币“:name”',
     'newPiggyBank'           => '创建新存钱罐',

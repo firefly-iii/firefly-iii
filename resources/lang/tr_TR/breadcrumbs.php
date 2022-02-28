@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Ana Sayfa',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => '":name" para birimini düzenle',
     'delete_currency'        => '":name" para birimini sil',
     'newPiggyBank'           => 'Yeni bir kumbara oluştur',

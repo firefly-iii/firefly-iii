@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Beranda',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Edit mata uang ":name"',
     'delete_currency'        => 'Hapus mata uang ":name"',
     'newPiggyBank'           => 'Buat celengan baru',

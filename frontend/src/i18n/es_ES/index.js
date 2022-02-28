@@ -27,10 +27,10 @@ export default {
         "title_deposit": "Revenue \/ income",
         "title_transfer": "Transfers",
         "title_transfers": "Transfers",
-        "asset_accounts": "Asset accounts",
-        "expense_accounts": "Expense accounts",
-        "revenue_accounts": "Revenue accounts",
-        "liabilities_accounts": "Liabilities"
+        "asset_accounts": "Cuentas de activos",
+        "expense_accounts": "Cuentas de gastos",
+        "revenue_accounts": "Cuentas de ingresos",
+        "liabilities_accounts": "Pasivos"
     },
     "firefly": {
         "rule_trigger_source_account_starts_choice": "El nombre de la cuenta de origen comienza con..",
@@ -92,9 +92,9 @@ export default {
         "rule_trigger_external_id_choice": "El ID externo es..",
         "rule_trigger_internal_reference_choice": "La referencia interna es..",
         "rule_trigger_journal_id_choice": "El ID del diario de transacciones es..",
-        "rule_trigger_any_external_url_choice": "Transaction has an external URL",
-        "rule_trigger_no_external_url_choice": "Transaction has no external URL",
-        "rule_trigger_id_choice": "Transaction ID is..",
+        "rule_trigger_any_external_url_choice": "La transacci\u00f3n tiene una URL externa",
+        "rule_trigger_no_external_url_choice": "La transacci\u00f3n no tiene URL externa",
+        "rule_trigger_id_choice": "La ID de la transacci\u00f3n es..",
         "rule_action_delete_transaction_choice": "ELIMINAR transacci\u00f3n (!)",
         "rule_action_set_category_choice": "Establecer categor\u00eda para..",
         "rule_action_clear_category_choice": "Eliminar cualquier categor\u00eda",

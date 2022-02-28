@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Skapa ett nytt intäktskonto',
     'make_new_liabilities_account'              => 'Skapa en ny skuld',
     'asset_accounts'                            => 'Tillgångskonton',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Tillgångskonton (inaktiva)',
     'expense_accounts'                          => 'Kostnadskonto',
     'expense_accounts_inactive'                 => 'Utgiftskonton (inaktiva)',

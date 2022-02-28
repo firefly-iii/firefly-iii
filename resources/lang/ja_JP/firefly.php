@@ -1114,6 +1114,7 @@ return [
     'make_new_revenue_account'                  => '新しい収入源',
     'make_new_liabilities_account'              => '新しい借金',
     'asset_accounts'                            => '資産勘定',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => '支出元',
     'expense_accounts'                          => '支出先を見る',
     'expense_accounts_inactive'                 => '支出先を見る',
