@@ -140,4 +140,12 @@ class RemoteUserGuard implements Guard
     {
         throw new FireflyException('Did not implement RemoteUserGuard::validate()');
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasUser()
+    {
+        // TODO: Implement hasUser() method.
+    }
 }

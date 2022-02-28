@@ -49,7 +49,7 @@
   "support": {
     "email": "james@firefly-iii.org",
     "issues": "https://github.com/firefly-iii/firefly-iii/issues",
-    "forum": "https://reddit.com/r/FireflyIII",
+    "forum": "https://gitter.im/firefly-iii/firefly-iii",
     "wiki": "https://github.com/firefly-iii/help/wiki",
     "source": "https://github.com/firefly-iii/firefly-iii",
     "docs": "https://docs.firefly-iii.org/"
@@ -62,10 +62,6 @@
     {
       "type": "github",
       "url": "https://github.com/sponsors/JC5"
-    },
-    {
-      "type": "paypal",
-      "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L62W7DVD5ETPC&source=url"
     }
   ],
   "require": {
@@ -89,12 +85,11 @@
     "bacon/bacon-qr-code": "2.*",
     "diglactic/laravel-breadcrumbs": "^7.1",
     "doctrine/dbal": "3.*",
-    "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
     "guzzlehttp/guzzle": "^7.4",
     "jc5/google2fa-laravel": "2.0.6",
     "jc5/recovery": "^2",
-    "laravel/framework": "^8.83",
+    "laravel/framework": "^9",
     "laravel/passport": "10.*",
     "laravel/sanctum": "^2.14",
     "laravel/ui": "^3.4",
@@ -107,7 +102,8 @@
     "psr/log": "<3",
     "ramsey/uuid": "^4.2",
     "rcrowe/twigbridge": "^0.13",
-    "spatie/data-transfer-object": "^3.7"
+    "spatie/data-transfer-object": "^3.7",
+    "nunomaduro/collision": "^6.1"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.6",
