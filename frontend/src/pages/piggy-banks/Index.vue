@@ -65,7 +65,7 @@
 
 <script>
 import {mapGetters, useStore} from "vuex";
-import Destroy from "../../api/piggy-banks/destroy";
+import Destroy from "../../api/generic/destroy";
 import List from "../../api/piggy-banks/list";
 
 export default {
@@ -131,8 +131,7 @@ export default {
       });
     },
     destroyPiggyBank: function (id) {
-      let destr = new Destroy;
-      destr.destroy(id).then(() => {
+      (new Destroy('piggy_banks')).destroy(id).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });

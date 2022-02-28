@@ -65,7 +65,7 @@
 
 <script>
 import {mapGetters, useStore} from "vuex";
-import Destroy from "../../api/recurring/destroy";
+import Destroy from "../../api/generic/destroy";
 import List from "../../api/recurring/list";
 
 export default {
@@ -132,8 +132,7 @@ export default {
       });
     },
     destroyRecurring: function (id) {
-      let destr = new Destroy;
-      destr.destroy(id).then(() => {
+      (new Destroy('recurrences')).destroy(id).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });

@@ -1,5 +1,5 @@
 /*
- * post.js
+ * destroy.js
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,11 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "boot/axios";
+import Api from "src/api/root/api";
 
-export default class Destroy {
-  destroy(identifier) {
-    let url = '/api/v1/rules/' + identifier;
-    return api.delete(url);
+export default class Destroy extends Api {
+  constructor(path) {
+    super(path);
   }
 }

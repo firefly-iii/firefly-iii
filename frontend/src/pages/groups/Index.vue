@@ -52,7 +52,7 @@
 
 <script>
 import {mapGetters, useStore} from "vuex";
-import Destroy from "../../api/groups/destroy";
+import Destroy from "../../api/generic/destroy";
 import List from "../../api/groups/list";
 
 export default {
@@ -119,9 +119,8 @@ export default {
         // TODO needs error catch.
       });
     },
-    destroyGroup: function (code) {
-      let destr = new Destroy;
-      destr.destroy(code).then(() => {
+    destroyGroup: function (identifier) {
+      (new Destroy('object_groups')).destroy(identifier).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });

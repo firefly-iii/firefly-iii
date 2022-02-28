@@ -19,10 +19,27 @@
  */
 
 import {api} from "boot/axios";
+import Api from "src/api/root/api";
 
-export default class List {
+export default class List extends Api{
+  constructor() {
+    super('accounts');
+  }
+
   list(type, page, cacheKey) {
     let url = '/api/v1/accounts';
     return api.get(url, {params: {page: page, cache: cacheKey, type: type}});
+    // console.log('list');
+    //
+    //
+    // let params = {
+    //   type: type,
+    //   page: page
+    // }
+    // this.apiList(page, params).then((response) => {
+    //   console.log('response OK');
+    // }).catch((err) => {
+    //   console.error('api list failed');
+    // });
   }
 }
