@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => '首頁',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => '編輯貨幣 ":name"',
     'delete_currency'        => '刪除貨幣 ":name"',
     'newPiggyBank'           => '創建一個新的小豬撲滿',

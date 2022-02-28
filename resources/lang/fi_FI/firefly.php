@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Luo uusi tuottotili',
     'make_new_liabilities_account'              => 'Luo uusi laina',
     'asset_accounts'                            => 'Käyttötilit',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Käyttötilit (ei käytössä)',
     'expense_accounts'                          => 'Kulutustilit',
     'expense_accounts_inactive'                 => 'Kulutustilit (ei käytössä)',

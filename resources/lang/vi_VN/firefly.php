@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Tạo một tài khoản doanh thu mới',
     'make_new_liabilities_account'              => 'Tạo một nợ mới',
     'asset_accounts'                            => 'tài khoản',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'tài khoản (không hoạt động)',
     'expense_accounts'                          => 'Tài khoản chi phí',
     'expense_accounts_inactive'                 => 'Tài khoản chi tiêu (không hoạt động)',

@@ -27,10 +27,10 @@ export default {
         "title_deposit": "Revenue \/ income",
         "title_transfer": "Transfers",
         "title_transfers": "Transfers",
-        "asset_accounts": "Asset accounts",
-        "expense_accounts": "Expense accounts",
-        "revenue_accounts": "Revenue accounts",
-        "liabilities_accounts": "Liabilities"
+        "asset_accounts": "Comptes d\u2019actif",
+        "expense_accounts": "Comptes de d\u00e9penses",
+        "revenue_accounts": "Comptes de recettes",
+        "liabilities_accounts": "Passifs"
     },
     "firefly": {
         "rule_trigger_source_account_starts_choice": "Le nom du compte source commence par..",

@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Criar conta de receitas',
     'make_new_liabilities_account'              => 'Criar um novo passivo',
     'asset_accounts'                            => 'Conta de activos',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Contas de activos (inactivas)',
     'expense_accounts'                          => 'Conta de despesas',
     'expense_accounts_inactive'                 => 'Contas de despesas (desactivadas)',

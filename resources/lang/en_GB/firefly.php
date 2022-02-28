@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Create a new revenue account',
     'make_new_liabilities_account'              => 'Create a new liability',
     'asset_accounts'                            => 'Asset accounts',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => 'Expense accounts',
     'expense_accounts_inactive'                 => 'Expense accounts (inactive)',

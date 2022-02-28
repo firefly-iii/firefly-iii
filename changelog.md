@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.16 - 2022-03-01
+
+### Fixed
+- Broken migration would clash during startup.
+
 ## 5.6.15 - 2022-03-01
 
 ### Changed

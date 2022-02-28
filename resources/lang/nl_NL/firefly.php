@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Nieuwe debiteur',
     'make_new_liabilities_account'              => 'Maak nieuwe passiva',
     'asset_accounts'                            => 'Betaalrekeningen',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Betaalrekeningen (inactief)',
     'expense_accounts'                          => 'Crediteuren',
     'expense_accounts_inactive'                 => 'Crediteuren (inactief)',

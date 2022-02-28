@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => '建立新收入帳戶',
     'make_new_liabilities_account'              => '建立新債務',
     'asset_accounts'                            => '資產帳戶',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => '支出帳戶',
     'expense_accounts_inactive'                 => 'Expense accounts (inactive)',

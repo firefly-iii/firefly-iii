@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Creați un nou cont de venituri',
     'make_new_liabilities_account'              => 'Creați un nou provizion',
     'asset_accounts'                            => 'Conturile de active',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Conturi de active (inactive)',
     'expense_accounts'                          => 'Conturi de cheltuieli',
     'expense_accounts_inactive'                 => 'Conturi de cheltuieli (inactive)',

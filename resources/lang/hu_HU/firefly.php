@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Új jövedelemszámla létrehozása',
     'make_new_liabilities_account'              => 'Új kötelezettség létrehozása',
     'asset_accounts'                            => 'Eszközszámlák',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Eszközszámlák (inaktív)',
     'expense_accounts'                          => 'Költségszámlák',
     'expense_accounts_inactive'                 => 'Költségszámlák (inaktív)',

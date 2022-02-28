@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'ホーム',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => '通貨 ":name" を編集する',
     'delete_currency'        => '通貨 ":name" を削除する',
     'newPiggyBank'           => '新規貯金箱の作成',

@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Início',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Editar moeda ":name"',
     'delete_currency'        => 'Excluir moeda ":name"',
     'newPiggyBank'           => 'Criar um novo cofrinho',

@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Создать новый счёт дохода',
     'make_new_liabilities_account'              => 'Создать новый долговой счёт',
     'asset_accounts'                            => 'Основные счета',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Основной счёт (неактивный)',
     'expense_accounts'                          => 'Счета расходов',
     'expense_accounts_inactive'                 => 'Счёт расходов (неактивный)',

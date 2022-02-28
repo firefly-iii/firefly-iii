@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Vytvořit nový příjmový účet',
     'make_new_liabilities_account'              => 'Vytvořit nový závazek',
     'asset_accounts'                            => 'Účty aktiv',
+    'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
     'expense_accounts'                          => 'Výdajové účty',
     'expense_accounts_inactive'                 => 'Výdajové účty (neaktivní)',
