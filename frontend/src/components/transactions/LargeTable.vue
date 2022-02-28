@@ -127,7 +127,7 @@
 
 <script>
 import format from "date-fns/format";
-import Destroy from "../../api/transactions/destroy";
+import Destroy from "../../api/generic/destroy";
 
 export default {
   name: "LargeTable",
@@ -209,8 +209,8 @@ export default {
       });
     },
     destroyTransaction: function (id) {
-      let destr = new Destroy;
-      destr.destroy(id).then(() => {
+
+      (new Destroy('transactions')).destroy(id).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         //this.triggerUpdate();
       });
