@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.15 - 2022-03-01
+
+### Changed
+- Meta field `external_uri` will be renamed properly.
+- Migrations are more robust.
+
+### Fixed
+- [Issue 5493](https://github.com/firefly-iii/firefly-iii/issues/5493) CSP is too strict in some cases
+- [Issue 5694](https://github.com/firefly-iii/firefly-iii/issues/5694) Adding attachment on some expenses causes them to disappear from transactions list
+- [Issue 5724](https://github.com/firefly-iii/firefly-iii/issues/5724) Filter `no_external_url` fixed.
+- [Issue 5806](https://github.com/firefly-iii/firefly-iii/issues/5806) Pagination on "all transactions without budget" was broken
+- [Issue 5810](https://github.com/firefly-iii/firefly-iii/issues/5810) Search query with `no_notes:true` breaks after editing transaction
+
+### API
+- Expanded the number of config fields you can pick up.
+- Rules also validate the number of active triggers or actions.
+
 ## 5.6.14 - 2022-02-06
 
 ### Added

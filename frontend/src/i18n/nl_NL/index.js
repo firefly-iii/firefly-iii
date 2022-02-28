@@ -27,10 +27,10 @@ export default {
         "title_deposit": "Revenue \/ income",
         "title_transfer": "Transfers",
         "title_transfers": "Transfers",
-        "asset_accounts": "Asset accounts",
-        "expense_accounts": "Expense accounts",
-        "revenue_accounts": "Revenue accounts",
-        "liabilities_accounts": "Liabilities"
+        "asset_accounts": "Betaalrekeningen",
+        "expense_accounts": "Crediteuren",
+        "revenue_accounts": "Debiteuren",
+        "liabilities_accounts": "Passiva"
     },
     "firefly": {
         "rule_trigger_source_account_starts_choice": "Bronrekeningnaam begint met..",
@@ -92,9 +92,9 @@ export default {
         "rule_trigger_external_id_choice": "Extern ID is..",
         "rule_trigger_internal_reference_choice": "Interne verwijzing is..",
         "rule_trigger_journal_id_choice": "Transactiejournaal ID is..",
-        "rule_trigger_any_external_url_choice": "Transaction has an external URL",
-        "rule_trigger_no_external_url_choice": "Transaction has no external URL",
-        "rule_trigger_id_choice": "Transaction ID is..",
+        "rule_trigger_any_external_url_choice": "De transactie heeft een externe URL",
+        "rule_trigger_no_external_url_choice": "De transactie heeft geen externe URL",
+        "rule_trigger_id_choice": "Transactie-ID is..",
         "rule_action_delete_transaction_choice": "VERWIJDER transactie (!)",
         "rule_action_set_category_choice": "Geef categorie..",
         "rule_action_clear_category_choice": "Geef geen categorie",

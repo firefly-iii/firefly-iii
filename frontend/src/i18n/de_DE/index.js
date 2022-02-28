@@ -27,10 +27,10 @@ export default {
         "title_deposit": "Revenue \/ income",
         "title_transfer": "Transfers",
         "title_transfers": "Transfers",
-        "asset_accounts": "Asset accounts",
-        "expense_accounts": "Expense accounts",
-        "revenue_accounts": "Revenue accounts",
-        "liabilities_accounts": "Liabilities"
+        "asset_accounts": "Bestandskonten",
+        "expense_accounts": "Ausgabekonten",
+        "revenue_accounts": "Einnahmenkonten",
+        "liabilities_accounts": "Verbindlichkeiten"
     },
     "firefly": {
         "rule_trigger_source_account_starts_choice": "Name des Quellkontos beginnt mit..",
@@ -94,7 +94,7 @@ export default {
         "rule_trigger_journal_id_choice": "Transaktions-Journal-ID ist..",
         "rule_trigger_any_external_url_choice": "Transaction has an external URL",
         "rule_trigger_no_external_url_choice": "Transaction has no external URL",
-        "rule_trigger_id_choice": "Transaction ID is..",
+        "rule_trigger_id_choice": "Buchungskennung lautet \u2026",
         "rule_action_delete_transaction_choice": "Buchung l\u00f6schen (!)",
         "rule_action_set_category_choice": "Kategorie festlegen..",
         "rule_action_clear_category_choice": "Bereinige jede Kategorie",

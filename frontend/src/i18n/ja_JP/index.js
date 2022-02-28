@@ -174,8 +174,8 @@ export default {
         "pref_last90": "\u904e\u53bb 90 \u65e5\u9593",
         "pref_last30": "\u904e\u53bb 30 \u65e5\u9593",
         "pref_last7": "\u904e\u53bb 7 \u65e5\u9593",
-        "pref_YTD": "Year to date",
-        "pref_QTD": "Quarter to date",
-        "pref_MTD": "Month to date"
+        "pref_YTD": "\u5e74\u59cb\u304b\u3089\u4eca\u65e5\u307e\u3067",
+        "pref_QTD": "\u4eca\u56db\u534a\u671f",
+        "pref_MTD": "\u4eca\u6708"
     }
 }

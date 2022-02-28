@@ -136,7 +136,7 @@ export default {
         "single_split": "Jako",
         "asset_accounts": "K\u00e4ytt\u00f6tilit",
         "expense_accounts": "Kulutustilit",
-        "liabilities_accounts": "Velat",
+        "liabilities_accounts": "Lainat",
         "undefined_accounts": "Accounts",
         "name": "Nimi",
         "revenue_accounts": "Tuottotilit",
