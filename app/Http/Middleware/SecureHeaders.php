@@ -62,9 +62,16 @@ class SecureHeaders
             "manifest-src 'self'",
         ];
 
-        $route = $request->route();
+        $route     = $request->route();
+        $customUrl = '';
+        $authGuard = (string)config('firefly.authentication_guard');
+        $logoutUrl = (string)config('firefly.custom_logout_url');
+        if ('remote_user_guard' === $authGuard && '' !== $logoutUrl) {
+            $customUrl = $logoutUrl;
+        }
+
         if (null !== $route && 'oauth/authorize' !== $route->uri) {
-            $csp[] = "form-action 'self'";
+            $csp[] = sprintf("form-action 'self' %s", $customUrl);
         }
 
         $featurePolicies = [

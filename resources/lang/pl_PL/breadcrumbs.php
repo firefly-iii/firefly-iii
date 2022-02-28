@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Usuń powiązanie między transakcjami',
     'edit_object_group'      => 'Modyfikuj grupę ":title"',
     'delete_object_group'    => 'Usuń grupę ":title"',
-    'logout_others'          => 'Wyloguj z pozostałych sesji'
+    'logout_others'          => 'Wyloguj z pozostałych sesji',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

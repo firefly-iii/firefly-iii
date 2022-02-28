@@ -180,6 +180,7 @@ return [
     'blocked_code'                => '封禁原因',
     'login_name'                  => '登录',
     'is_owner'                    => '是管理员？',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => '应用规则',

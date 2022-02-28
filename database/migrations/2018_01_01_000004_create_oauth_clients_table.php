@@ -38,7 +38,7 @@ class CreateOauthClientsTable extends Migration
      */
     public function down(): void
     {
-        Schema::drop('oauth_clients');
+        Schema::dropIfExists('oauth_clients');
     }
 
     /**

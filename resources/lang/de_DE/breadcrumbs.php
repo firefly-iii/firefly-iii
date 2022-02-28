@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Transaktionsverknüpfung löschen',
     'edit_object_group'      => 'Gruppe „:title” bearbeiten',
     'delete_object_group'    => 'Gruppe „:title” löschen',
-    'logout_others'          => 'Alle anderen Sitzungen abmelden'
+    'logout_others'          => 'Alle anderen Sitzungen abmelden',
+    'asset_accounts'         => 'Bestandskonten',
+    'expense_accounts'       => 'Ausgabekonten',
+    'revenue_accounts'       => 'Einnahmenkonten',
+    'liabilities_accounts'   => 'Verbindlichkeiten',
+    'placeholder'            => '[Placeholder]',
 ];

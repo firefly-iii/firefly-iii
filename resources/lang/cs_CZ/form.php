@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Důvod blokování',
     'login_name'                  => 'Přihlašovací jméno',
     'is_owner'                    => 'Je správce?',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Uplatnit pravidla',

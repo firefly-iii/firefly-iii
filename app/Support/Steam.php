@@ -111,7 +111,7 @@ class Steam
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        $currencyId    = (int)$repository->getMetaValue($account, 'currency_id');
+        $currencyId    = (int) $repository->getMetaValue($account, 'currency_id');
         $transactions  = $account->transactions()
                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
@@ -191,7 +191,7 @@ class Steam
             $repository->setUser($account->user);
             $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
         }
-        $currencyId = (int)$currency->id;
+        $currencyId = (int) $currency->id;
 
         $start->addDay();
 
@@ -219,14 +219,14 @@ class Steam
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal amount and foreign amount
-            $modified        = null === $entry->modified ? '0' : (string)$entry->modified;
-            $foreignModified = null === $entry->modified_foreign ? '0' : (string)$entry->modified_foreign;
+            $modified        = null === $entry->modified ? '0' : (string) $entry->modified;
+            $foreignModified = null === $entry->modified_foreign ? '0' : (string) $entry->modified_foreign;
             $amount          = '0';
-            if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
+            if ($currencyId === (int) $entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
                 $amount = $modified;
             }
-            if ($currencyId === (int)$entry->foreign_currency_id) {
+            if ($currencyId === (int) $entry->foreign_currency_id) {
                 // use foreign amount:
                 $amount = $foreignModified;
             }
@@ -284,7 +284,7 @@ class Steam
                                   ->get(['transactions.foreign_amount'])->toArray();
         $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
         $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $virtual        = null === $account->virtual_balance ? '0' : (string) $account->virtual_balance;
         $balance        = bcadd($balance, $virtual);
 
         $cache->store($balance);
@@ -384,7 +384,7 @@ class Steam
         $return   = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
-            $return[(int)$entry->transaction_currency_id] = $entry->sum_for_currency;
+            $return[(int) $entry->transaction_currency_id] = $entry->sum_for_currency;
         }
         $cache->store($return);
 
@@ -408,7 +408,7 @@ class Steam
         foreach ($set as $entry) {
             $date = new Carbon($entry->max_date, config('app.timezone'));
             $date->setTimezone(config('app.timezone'));
-            $list[(int)$entry->account_id] = $date;
+            $list[(int) $entry->account_id] = $date;
         }
 
         return $list;
@@ -443,7 +443,11 @@ class Steam
      */
     public function getLanguage(): string // get preference
     {
-        return app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+        $preference = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+        if (!is_string($preference)) {
+            throw new FireflyException(sprintf('Preference "language" must be a string, but is unexpectedly a "%s".', gettype($preference)));
+        }
+        return $preference;
     }
 
     /**
@@ -503,24 +507,24 @@ class Steam
             // has a K in it, remove the K and multiply by 1024.
             $bytes = bcmul(rtrim($string, 'k'), '1024');
 
-            return (int)$bytes;
+            return (int) $bytes;
         }
 
         if (false !== stripos($string, 'm')) {
             // has a M in it, remove the M and multiply by 1048576.
             $bytes = bcmul(rtrim($string, 'm'), '1048576');
 
-            return (int)$bytes;
+            return (int) $bytes;
         }
 
         if (false !== stripos($string, 'g')) {
             // has a G in it, remove the G and multiply by (1024)^3.
             $bytes = bcmul(rtrim($string, 'g'), '1073741824');
 
-            return (int)$bytes;
+            return (int) $bytes;
         }
 
-        return (int)$string;
+        return (int) $string;
     }
 
     /**

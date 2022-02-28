@@ -481,6 +481,7 @@ class GroupCollector implements GroupCollectorInterface
     public function withAttachmentInformation(): GroupCollectorInterface
     {
         $this->fields[] = 'attachments.id as attachment_id';
+        $this->fields[] = 'attachments.uploaded as attachment_uploaded';
         $this->joinAttachmentTables();
 
         return $this;
@@ -498,7 +499,7 @@ class GroupCollector implements GroupCollectorInterface
                         ->where(
                             static function (EloquentBuilder $q1) {
                                 $q1->where('attachments.attachable_type', TransactionJournal::class);
-                                $q1->where('attachments.uploaded', true);
+                                //$q1->where('attachments.uploaded', true);
                                 $q1->orWhereNull('attachments.attachable_type');
                             }
                         );
@@ -564,8 +565,8 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function dumpQueryInLogs(): void
     {
-        Log::debug($this->query->select($this->fields)->toSql()) ;
-        Log::debug('Bindings',$this->query->getBindings());
+        Log::debug($this->query->select($this->fields)->toSql());
+        Log::debug('Bindings', $this->query->getBindings());
     }
 
     /**
@@ -578,7 +579,7 @@ class GroupCollector implements GroupCollectorInterface
     private function convertToInteger(array $array): array
     {
         foreach ($this->integerFields as $field) {
-            $array[$field] = array_key_exists($field, $array) ? (int)$array[$field] : null;
+            $array[$field] = array_key_exists($field, $array) ? (int) $array[$field] : null;
         }
 
         return $array;
@@ -594,7 +595,8 @@ class GroupCollector implements GroupCollectorInterface
     {
         $newArray = $newJournal->toArray();
         if (array_key_exists('attachment_id', $newArray)) {
-            $attachmentId                                  = (int)$newJournal['tag_id'];
+            $attachmentId = (int) $newJournal['attachment_id'];
+
             $existingJournal['attachments'][$attachmentId] = [
                 'id' => $attachmentId,
             ];
@@ -613,7 +615,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         $newArray = $newJournal->toArray();
         if (array_key_exists('tag_id', $newArray)) { // assume the other fields are present as well.
-            $tagId = (int)$newJournal['tag_id'];
+            $tagId = (int) $newJournal['tag_id'];
 
             $tagDate = null;
             try {
@@ -623,7 +625,7 @@ class GroupCollector implements GroupCollectorInterface
             }
 
             $existingJournal['tags'][$tagId] = [
-                'id'          => (int)$newArray['tag_id'],
+                'id'          => (int) $newArray['tag_id'],
                 'name'        => $newArray['tag_name'],
                 'date'        => $tagDate,
                 'description' => $newArray['tag_description'],
@@ -649,21 +651,21 @@ class GroupCollector implements GroupCollectorInterface
                 // make new array
                 $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
                 $groupArray                             = [
-                    'id'               => (int)$augumentedJournal->transaction_group_id,
-                    'user_id'          => (int)$augumentedJournal->user_id,
+                    'id'               => (int) $augumentedJournal->transaction_group_id,
+                    'user_id'          => (int) $augumentedJournal->user_id,
                     'title'            => $augumentedJournal->transaction_group_title,
                     'transaction_type' => $parsedGroup['transaction_type_type'],
                     'count'            => 1,
                     'sums'             => [],
                     'transactions'     => [],
                 ];
-                $journalId                              = (int)$augumentedJournal->transaction_journal_id;
+                $journalId                              = (int) $augumentedJournal->transaction_journal_id;
                 $groupArray['transactions'][$journalId] = $parsedGroup;
                 $groups[$groupId]                       = $groupArray;
                 continue;
             }
             // or parse the rest.
-            $journalId = (int)$augumentedJournal->transaction_journal_id;
+            $journalId = (int) $augumentedJournal->transaction_journal_id;
             if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
                 // append data to existing group + journal (for multiple tags or multiple attachments)
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
@@ -708,9 +710,9 @@ class GroupCollector implements GroupCollectorInterface
         // convert values to integers:
         $result = $this->convertToInteger($result);
 
-        $result['reconciled'] = 1 === (int)$result['reconciled'];
+        $result['reconciled'] = 1 === (int) $result['reconciled'];
         if (array_key_exists('tag_id', $result) && null !== $result['tag_id']) { // assume the other fields are present as well.
-            $tagId   = (int)$augumentedJournal['tag_id'];
+            $tagId   = (int) $augumentedJournal['tag_id'];
             $tagDate = null;
             try {
                 $tagDate = Carbon::parse($augumentedJournal['tag_date']);
@@ -719,7 +721,7 @@ class GroupCollector implements GroupCollectorInterface
             }
 
             $result['tags'][$tagId] = [
-                'id'          => (int)$result['tag_id'],
+                'id'          => (int) $result['tag_id'],
                 'name'        => $result['tag_name'],
                 'date'        => $tagDate,
                 'description' => $result['tag_description'],
@@ -728,8 +730,9 @@ class GroupCollector implements GroupCollectorInterface
 
         // also merge attachments:
         if (array_key_exists('attachment_id', $result)) {
-            $attachmentId = (int)$augumentedJournal['attachment_id'];
-            if (0 !== $attachmentId) {
+            $uploaded = 1 === (int)$result['attachment_uploaded'];
+            $attachmentId = (int) $augumentedJournal['attachment_id'];
+            if (0 !== $attachmentId && $uploaded) {
                 $result['attachments'][$attachmentId] = [
                     'id' => $attachmentId,
                 ];
@@ -753,7 +756,7 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($groups as $groudId => $group) {
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
-                $currencyId = (int)$transaction['currency_id'];
+                $currencyId = (int) $transaction['currency_id'];
 
                 // set default:
                 if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
@@ -766,7 +769,7 @@ class GroupCollector implements GroupCollectorInterface
                 $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount'] ?? '0');
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId = (int)$transaction['foreign_currency_id'];
+                    $currencyId = (int) $transaction['foreign_currency_id'];
 
                     // set default:
                     if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {

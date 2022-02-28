@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Motiv pentru blocare',
     'login_name'                  => 'Logare',
     'is_owner'                    => 'Este administrator?',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Aplică reguli',

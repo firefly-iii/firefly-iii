@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Delete link between transactions',
     'edit_object_group'      => 'Edit group ":title"',
     'delete_object_group'    => 'Delete group ":title"',
-    'logout_others'          => 'Logout other sessions'
+    'logout_others'          => 'Logout other sessions',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

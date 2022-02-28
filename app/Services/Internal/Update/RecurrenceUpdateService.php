@@ -303,7 +303,7 @@ class RecurrenceUpdateService
                     $this->setCategory($match, (int)$current['category_id']);
                 }
 
-                if (array_key_exists('tags', $current)) {
+                if (array_key_exists('tags', $current) && is_array($current['tags'])) {
                     $this->updateTags($match, $current['tags']);
                 }
                 if (array_key_exists('piggy_bank_id', $current)) {

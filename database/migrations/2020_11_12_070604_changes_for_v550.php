@@ -39,7 +39,7 @@ class ChangesForV550 extends Migration
     public function down()
     {
         // recreate jobs table.
-        Schema::drop('jobs');
+        Schema::dropIfExists('jobs');
         Schema::create(
             'jobs',
             static function (Blueprint $table) {
@@ -88,7 +88,7 @@ class ChangesForV550 extends Migration
     public function up()
     {
         // drop and recreate jobs table.
-        Schema::drop('jobs');
+        Schema::dropIfExists('jobs');
         // this is the NEW table
         Schema::create(
             'jobs', function (Blueprint $table) {

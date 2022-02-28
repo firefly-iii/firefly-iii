@@ -49,48 +49,25 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the application.
      */
-    public function map(): void
+    public function boot(): void
     {
-        $this->mapApiRoutes();
-        $this->mapCronApiRoutes();
-        $this->mapWebRoutes();
+        $this->routes(function () {
+            Route::prefix('api/v1')
+                 ->middleware('api')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/api.php'));
+
+            Route::prefix('api/v1/cron')
+                 ->middleware('apiY')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/api-noauth.php'));
+
+            Route::middleware('web')
+                 ->namespace($this->namespace)
+                 ->group(base_path('routes/web.php'));
+
+        });
     }
 
-    /**
-     * Define the "api" routes for the application.
-     *
-     * These routes are typically stateless.
-     */
-    protected function mapApiRoutes(): void
-    {
-        Route::prefix('api/v1')
-             ->middleware('apiX')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
-    }
 
-    /**
-     * Define the "api" routes for the application.
-     *
-     * These routes are typically stateless.
-     */
-    protected function mapCronApiRoutes(): void
-    {
-        Route::prefix('api/v1/cron')
-             ->middleware('apiY')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api-noauth.php'));
-    }
-
-    /**
-     * Define the "web" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     */
-    protected function mapWebRoutes(): void
-    {
-        Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
-    }
 }

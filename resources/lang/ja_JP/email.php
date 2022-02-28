@@ -48,7 +48,7 @@ return [
     'access_token_created_revoke'      => 'これがあなたではない場合は、できるだけ早く :url からこのトークンを無効にしてください。',
 
     // registered
-    'registered_subject'               => 'Firefly-iiiへようこそ！',
+    'registered_subject'               => 'Firefly III へようこそ！',
     'registered_welcome'               => '<a style="color:#337ab7" href=":address">Firefly III</a>へようこそ。登録がこのメールで確認できました。やった！',
     'registered_pw'                    => 'パスワードを忘れた場合は、 <a style="color:#337ab7" href=":address/password/reset">パスワードリセットツール</a> を使用してリセットしてください。',
     'registered_help'                  => '各ページの右上にヘルプアイコンがあります。ヘルプが必要な場合は、クリックしてください。',

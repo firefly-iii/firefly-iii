@@ -103,7 +103,7 @@ class HomeController extends Controller
     public function index(AccountRepositoryInterface $repository): mixed
     {
         if ('v3' === config('firefly.layout')) {
-            die('Please set your layout to "v1".');
+            return view('pwa');
         }
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);

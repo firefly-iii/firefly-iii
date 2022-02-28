@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Hesap hareketleri arasındaki bağlantıyı sil',
     'edit_object_group'      => '":title" grubunu düzenle',
     'delete_object_group'    => '":title" grubunu sil',
-    'logout_others'          => 'Diğer tüm oturumlardan çıkış yap'
+    'logout_others'          => 'Diğer tüm oturumlardan çıkış yap',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

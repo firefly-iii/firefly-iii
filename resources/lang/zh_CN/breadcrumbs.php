@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => '删除交易之间的关联',
     'edit_object_group'      => '编辑组“:title”',
     'delete_object_group'    => '删除组“:title”',
-    'logout_others'          => '退出其他已登录设备'
+    'logout_others'          => '退出其他已登录设备',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

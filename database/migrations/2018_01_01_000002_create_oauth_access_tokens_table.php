@@ -38,7 +38,7 @@ class CreateOauthAccessTokensTable extends Migration
      */
     public function down(): void
     {
-        Schema::drop('oauth_access_tokens');
+        Schema::dropIfExists('oauth_access_tokens');
     }
 
     /**

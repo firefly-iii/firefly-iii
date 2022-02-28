@@ -98,10 +98,10 @@ return [
     'feature_flags'                => [
         'export'       => true,
         'telemetry'    => false,
-        'webhooks'     => true,
+        'webhooks'     => false,
         'handle_debts' => true,
     ],
-    'version'                      => '5.6.14',
+    'version'                      => '5.6.15',
     'api_version'                  => '1.5.5',
     'db_version'                   => 18,
 
@@ -222,6 +222,7 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
+    'valid_view_ranges' => ['1D', '1W', '1M', '3M', '6M', '1Y',],
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',

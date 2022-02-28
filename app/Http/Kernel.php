@@ -47,6 +47,7 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 
 /**
@@ -177,9 +178,9 @@ class Kernel extends HttpKernel
                 CreateFreshApiToken::class,
             ],
 
-            'apiX' => [
-                'auth:api',
-                //'throttle:60,1',
+            'api'  => [
+                EnsureFrontendRequestsAreStateful::class,
+                'auth:api,sanctum',
                 'bindings',
             ],
             'apiY' => [

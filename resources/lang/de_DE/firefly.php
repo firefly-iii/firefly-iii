@@ -88,7 +88,7 @@ return [
     'flash_error_multiple'                                => 'Es gibt einen Fehler|Es gibt :count Fehler',
     'net_worth'                                           => 'Eigenkapital',
     'help_for_this_page'                                  => 'Hilfe zu dieser Seite',
-    'help_for_this_page_body'                             => 'You can find more information about this page <a href="https://docs.firefly-iii.org/">in the documentation</a>.',
+    'help_for_this_page_body'                             => 'Weitere Informationen über diese Seite <a href="https://docs.firefly-iii.org/">finden Sie in unserer Dokumentation (engl.)</a>.',
     'two_factor_welcome'                                  => 'Hallo!',
     'two_factor_enter_code'                               => 'Um fortzufahren geben Sie bitte ihren Zwei-Faktor-Authentifizierungscode ein. Ihre Anwendung kann diesen für Sie generieren.',
     'two_factor_code_here'                                => 'Code hier eingeben',
@@ -123,7 +123,7 @@ return [
     'expenses_by_budget'                                  => 'Ausgaben nach Budget',
     'income_by_category'                                  => 'Einnahmen nach Kategorie',
     'expenses_by_asset_account'                           => 'Ausgaben nach Bestandskonto',
-    'expenses_by_expense_account'                         => 'Ausgaben nach Ausgabenkontno',
+    'expenses_by_expense_account'                         => 'Ausgaben nach Ausgabenkonto',
     'cannot_redirect_to_account'                          => 'Entschuldigen Sie bitte. Firefly III kann Sie nicht zur richtigen Seite weiterleiten.',
     'sum_of_expenses'                                     => 'Summe von Ausgaben',
     'sum_of_income'                                       => 'Summe von Einnahmen',
@@ -371,8 +371,8 @@ return [
     'repeat_freq_quarterly'                               => 'vierteljährlich',
     'repeat_freq_monthly'                                 => 'monatlich',
     'repeat_freq_weekly'                                  => 'wöchentlich',
-    'repeat_freq_daily'                                   => 'daily',
-    'daily'                                               => 'daily',
+    'repeat_freq_daily'                                   => 'täglich',
+    'daily'                                               => 'täglich',
     'weekly'                                              => 'wöchentlich',
     'quarterly'                                           => 'vierteljährlich',
     'half-year'                                           => 'halbjährlich',
@@ -566,6 +566,11 @@ return [
     'rule_trigger_journal_id'                             => 'Transaktions-Journal-ID ist „:trigger_value”',
     'rule_trigger_no_external_url'                        => 'Buchung hat keine externe URL',
     'rule_trigger_any_external_url'                       => 'Buchung hat eine externe URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
+    'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
+    'rule_trigger_id_choice'                              => 'Buchungskennung lautet …',
+    'rule_trigger_id'                                     => 'Buchungskennung lautet „:trigger_value”',
+
 
     // actions
     'rule_action_delete_transaction_choice'               => 'Buchung löschen (!)',
@@ -1897,7 +1902,7 @@ return [
     'deleted_object_group'            => 'Gruppe „:title” erfolgreich entfernt',
     'object_group'                    => 'Gruppe',
 
-
-    //
+    // other stuff
+    'placeholder'                     => '[Placeholder]',
 
 ];

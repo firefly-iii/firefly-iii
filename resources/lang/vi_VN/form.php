@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Lý do chặn',
     'login_name'                  => 'Đăng nhập',
     'is_owner'                    => 'Là quản trị viên?',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Áp dụng quy tắc',

@@ -35,16 +35,16 @@ class CreateSupportTables extends Migration
      */
     public function down(): void
     {
-        Schema::drop('account_types');
-        Schema::drop('transaction_currencies');
-        Schema::drop('transaction_types');
-        Schema::drop('jobs');
-        Schema::drop('password_resets');
-        Schema::drop('permission_role');
-        Schema::drop('permissions');
-        Schema::drop('roles');
-        Schema::drop('sessions');
-        Schema::drop('configuration');
+        Schema::dropIfExists('account_types');
+        Schema::dropIfExists('transaction_currencies');
+        Schema::dropIfExists('transaction_types');
+        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('password_resets');
+        Schema::dropIfExists('permission_role');
+        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('roles');
+        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('configuration');
     }
 
     /**

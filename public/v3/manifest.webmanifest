@@ -1,0 +1,88 @@
+{
+    "name": "Firefly III",
+    "short_name": "Firefly III",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/maskable72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/maskable76.png",
+            "sizes": "76x76",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/maskable96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/maskable120.png",
+            "sizes": "120x120",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/maskable128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/maskable144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/maskable152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/maskable180.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "scope": "any"
+        },
+        {
+            "src": "/maskable192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/maskable384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "scope": "maskable"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "scope": "any"
+        },
+        {
+            "src": "/maskable512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "scope": "maskable"
+        }
+    ],
+    "theme_color": "#1e6581",
+    "background_color": "#1e6581",
+    "display": "standalone"
+}

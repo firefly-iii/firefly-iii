@@ -35,34 +35,34 @@ class CreateMainTables extends Migration
      */
     public function down(): void
     {
-        Schema::drop('account_meta');
-        Schema::drop('piggy_bank_repetitions');
-        Schema::drop('attachments');
-        Schema::drop('limit_repetitions');
-        Schema::drop('budget_limits');
-        Schema::drop('export_jobs');
-        Schema::drop('import_jobs');
-        Schema::drop('preferences');
-        Schema::drop('role_user');
-        Schema::drop('rule_actions');
-        Schema::drop('rule_triggers');
-        Schema::drop('rules');
-        Schema::drop('rule_groups');
-        Schema::drop('category_transaction');
-        Schema::drop('budget_transaction');
-        Schema::drop('transactions');
-        Schema::drop('piggy_bank_events');
-        Schema::drop('piggy_banks');
-        Schema::drop('accounts');
-        Schema::drop('category_transaction_journal');
-        Schema::drop('budget_transaction_journal');
-        Schema::drop('categories');
-        Schema::drop('budgets');
-        Schema::drop('tag_transaction_journal');
-        Schema::drop('tags');
-        Schema::drop('journal_meta');
-        Schema::drop('transaction_journals');
-        Schema::drop('bills');
+        Schema::dropIfExists('account_meta');
+        Schema::dropIfExists('piggy_bank_repetitions');
+        Schema::dropIfExists('attachments');
+        Schema::dropIfExists('limit_repetitions');
+        Schema::dropIfExists('budget_limits');
+        Schema::dropIfExists('export_jobs');
+        Schema::dropIfExists('import_jobs');
+        Schema::dropIfExists('preferences');
+        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('rule_actions');
+        Schema::dropIfExists('rule_triggers');
+        Schema::dropIfExists('rules');
+        Schema::dropIfExists('rule_groups');
+        Schema::dropIfExists('category_transaction');
+        Schema::dropIfExists('budget_transaction');
+        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('piggy_bank_events');
+        Schema::dropIfExists('piggy_banks');
+        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('category_transaction_journal');
+        Schema::dropIfExists('budget_transaction_journal');
+        Schema::dropIfExists('categories');
+        Schema::dropIfExists('budgets');
+        Schema::dropIfExists('tag_transaction_journal');
+        Schema::dropIfExists('tags');
+        Schema::dropIfExists('journal_meta');
+        Schema::dropIfExists('transaction_journals');
+        Schema::dropIfExists('bills');
     }
 
     /**

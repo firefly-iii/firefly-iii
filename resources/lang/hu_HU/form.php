@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Letiltás oka',
     'login_name'                  => 'Bejelentkezés',
     'is_owner'                    => 'Adminisztrátor',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Szabályok alkalmazása',

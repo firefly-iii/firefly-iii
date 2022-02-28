@@ -525,7 +525,7 @@ Route::group(
 );
 // Users API routes:
 Route::group(
-    ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'users',
+    ['middleware' => ['auth:api,sanctum', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'users',
      'as'         => 'api.v1.users.',],
     static function () {
 

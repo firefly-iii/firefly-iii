@@ -1,0 +1,205 @@
+<template>
+  <q-page>
+    <div class="row q-mx-md">
+      <div class="col-12">
+        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+          {{ errorMessage }}
+          <template v-slot:action>
+            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+          </template>
+        </q-banner>
+      </div>
+    </div>
+    <div class="row q-mx-md q-mt-md">
+      <div class="col-12">
+        <q-card bordered>
+          <q-card-section>
+            <div class="text-h6">Edit currency</div>
+          </q-card-section>
+          <q-card-section>
+            <div class="row">
+              <div class="col-12 q-mb-xs">
+                <q-input
+                  :error-message="submissionErrors.name"
+                  :error="hasSubmissionErrors.name"
+                  bottom-slots :disable="disabledInput" type="text" clearable v-model="name" :label="$t('form.name')"
+                  outlined/>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 q-mb-xs">
+                <q-input
+                  :error-message="submissionErrors.code"
+                  :error="hasSubmissionErrors.code"
+                  bottom-slots :disable="disabledInput" type="text" clearable v-model="code" :label="$t('form.code')"
+                  outlined/>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 q-mb-xs">
+                <q-input
+                  :error-message="submissionErrors.symbol"
+                  :error="hasSubmissionErrors.symbol"
+                  bottom-slots :disable="disabledInput" type="text" clearable v-model="symbol" :label="$t('form.symbol')"
+                  outlined/>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+    <div class="row q-mx-md">
+      <div class="col-12">
+        <q-card class="q-mt-xs">
+          <q-card-section>
+            <div class="row">
+              <div class="col-12 text-right">
+                <q-btn :disable="disabledInput" color="primary" label="Update" @click="submitCurrency"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 text-right">
+                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label label="Return here"/>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+  </q-page>
+</template>
+
+<script>
+import Get from "../../api/currencies/get";
+import Put from "../../api/currencies/put";
+
+export default {
+  name: "Edit",
+  data() {
+    return {
+      submissionErrors: {},
+      hasSubmissionErrors: {},
+      submitting: false,
+      doReturnHere: false,
+      doResetForm: false,
+      errorMessage: '',
+      type: '',
+      // currency fields:
+      code: '',
+      name: '',
+      symbol: '',
+    }
+  },
+  computed: {
+    disabledInput: function () {
+      return this.submitting;
+    }
+  },
+  created() {
+    this.code = this.$route.params.code;
+    this.collectCurrency();
+  },
+  methods: {
+    collectCurrency: function() {
+      let get = new Get;
+      get.get(this.code).then((response) => this.parseCurrency(response));
+    },
+    parseCurrency: function(response) {
+      this.name = response.data.data.attributes.name;
+      this.symbol = response.data.data.attributes.symbol;
+    },
+    resetErrors: function () {
+      this.submissionErrors =
+        {
+          name: '',
+          code: '',
+          symbol: '',
+        };
+      this.hasSubmissionErrors = {
+        name: false,
+        code: false,
+        symbol: false,
+      };
+    },
+    submitCurrency: function () {
+      this.submitting = true;
+      this.errorMessage = '';
+
+      // reset errors:
+      this.resetErrors();
+
+      // build account array
+      const submission = this.buildCurrency();
+
+      let currencies = new Put();
+      currencies
+        .post(this.code, submission)
+        .catch(this.processErrors)
+        .then(this.processSuccess);
+    },
+    buildCurrency: function () {
+      return {
+        name: this.name,
+        code: this.code,
+        symbol: this.symbol
+      };
+    },
+    dismissBanner: function () {
+      this.errorMessage = '';
+    },
+    processSuccess: function (response) {
+      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      if (!response) {
+        return;
+      }
+      this.submitting = false;
+      let message = {
+        level: 'success',
+        text: 'Currency is updated',
+        show: true,
+        action: {
+          show: true,
+          text: 'Go to currency',
+          link: {name: 'currencies.show', params: {code: response.data.data.code}}
+        }
+      };
+      // store flash
+      this.$q.localStorage.set('flash', message);
+      if (this.doReturnHere) {
+        window.dispatchEvent(new CustomEvent('flash', {
+          detail: {
+            flash: this.$q.localStorage.getItem('flash')
+          }
+        }));
+      }
+      if (!this.doReturnHere) {
+        // return to previous page.
+        this.$router.go(-1);
+      }
+
+    },
+    processErrors: function (error) {
+      if (error.response) {
+        let errors = error.response.data; // => the response payload
+        this.errorMessage = errors.message;
+        console.log(errors);
+        for (let i in errors.errors) {
+          if (errors.errors.hasOwnProperty(i)) {
+            this.submissionErrors[i] = errors.errors[i][0];
+            this.hasSubmissionErrors[i] = true;
+          }
+        }
+      }
+      this.submitting = false;
+    },
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

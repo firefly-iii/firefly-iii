@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Poista linkki tapahtumien väliltä',
     'edit_object_group'      => 'Muokkaa ryhmää ":title"',
     'delete_object_group'    => 'Poista ryhmä ":title"',
-    'logout_others'          => 'Kirjaudu ulos muista istunnoista'
+    'logout_others'          => 'Kirjaudu ulos muista istunnoista',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

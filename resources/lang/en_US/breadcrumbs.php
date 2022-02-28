@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Home',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Edit currency ":name"',
     'delete_currency'        => 'Delete currency ":name"',
     'newPiggyBank'           => 'Create a new piggy bank',
@@ -60,5 +69,10 @@ return [
     'delete_journal_link'    => 'Delete link between transactions',
     'edit_object_group'      => 'Edit group ":title"',
     'delete_object_group'    => 'Delete group ":title"',
-    'logout_others'          => 'Logout other sessions'
+    'logout_others'          => 'Logout other sessions',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

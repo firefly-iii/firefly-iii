@@ -60,5 +60,10 @@ return [
     'delete_journal_link'    => 'Odstranit vazbu mezi transakcemi',
     'edit_object_group'      => 'Upravit skupinu „:title“',
     'delete_object_group'    => 'Odstranit skupinu „:title“',
-    'logout_others'          => 'Odhlásit ostatní relace'
+    'logout_others'          => 'Odhlásit ostatní relace',
+    'asset_accounts'         => 'Asset accounts',
+    'expense_accounts'       => 'Expense accounts',
+    'revenue_accounts'       => 'Revenue accounts',
+    'liabilities_accounts'   => 'Liabilities',
+    'placeholder'            => '[Placeholder]',
 ];

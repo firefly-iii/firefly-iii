@@ -36,7 +36,7 @@ class ChangesForV440 extends Migration
     public function down(): void
     {
         if (Schema::hasTable('currency_exchange_rates')) {
-            Schema::drop('currency_exchange_rates');
+            Schema::dropIfExists('currency_exchange_rates');
         }
 
         Schema::table(

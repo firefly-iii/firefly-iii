@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Motivo del blocco',
     'login_name'                  => 'Login',
     'is_owner'                    => 'È amministratore?',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Applica regole',

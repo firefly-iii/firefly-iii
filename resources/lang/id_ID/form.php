@@ -180,6 +180,7 @@ return [
     'blocked_code'                => 'Alasan untuk blok',
     'login_name'                  => 'Masuk',
     'is_owner'                    => 'Apakah admin?',
+    'url'                         => 'URL',
 
     // import
     'apply_rules'                 => 'Terapkan aturan',

@@ -566,6 +566,11 @@ return [
     'rule_trigger_journal_id'                             => 'ID dziennika transakcji to ":trigger_value"',
     'rule_trigger_no_external_url'                        => 'Transakcja nie ma zewnętrznego adresu URL',
     'rule_trigger_any_external_url'                       => 'Transakcja ma zewnętrzny adres URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
+    'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
+    'rule_trigger_id_choice'                              => 'Transaction ID is..',
+    'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
+
 
     // actions
     'rule_action_delete_transaction_choice'               => 'USUŃ transakcję (!)',
@@ -1897,7 +1902,7 @@ return [
     'deleted_object_group'            => 'Pomyślnie usunięto grupę ":title"',
     'object_group'                    => 'Grupa',
 
-
-    //
+    // other stuff
+    'placeholder'                     => '[Placeholder]',
 
 ];
