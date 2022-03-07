@@ -21,7 +21,7 @@
         "uiv": "^1.4",
         "vue": "^2.6",
         "vue-i18n": "^8",
-        "vue-loader": "^15",
+        "vue-loader": "^17",
         "vue-template-compiler": "^2.6"
     }
 }
