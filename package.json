@@ -19,7 +19,7 @@
         "laravel-mix": "^6.0",
         "postcss": "^8.4",
         "uiv": "^1.4",
-        "vue": "^2.6",
+        "vue": "^3.2",
         "vue-i18n": "^8",
         "vue-loader": "^15",
         "vue-template-compiler": "^2.6"
