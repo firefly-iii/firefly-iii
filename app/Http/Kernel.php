@@ -179,7 +179,7 @@ class Kernel extends HttpKernel
             ],
 
             'api'  => [
-                EnsureFrontendRequestsAreStateful::class,
+                //EnsureFrontendRequestsAreStateful::class,
                 'auth:api,sanctum',
                 'bindings',
             ],
