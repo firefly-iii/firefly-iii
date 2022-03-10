@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Αν προτιμάτε, μπορείτε επίσης να ανοίξετε ένα νέο ζήτημα στο <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Αν προτιμάτε, μπορείτε επίσης να ανοίξετε ένα νέο ζήτημα στο https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'Το πλήρες stacktrace είναι παρακάτω:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Το Firefly III έχει δημιουργήσει μια νέα συναλλαγή|Το Firefly III έχει δημιουργήσει :count νέες συναλλαγές',

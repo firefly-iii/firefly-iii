@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Akun aset sumber "@source_name" hanya menerima transaksi di @source_currency. Akun aset tujuan "@dest_name" hanya menerima transaksi di @dest_currency. Anda harus memberikan jumlah yang ditransfer dengan benar pada kedua mata uang tersebut.',
     'transaction_data'                                    => 'Data transaksi',
     'invalid_server_configuration'                        => 'Konfigurasi server tidak valid',
-    'invalid_locale_settings'                             => 'Firefly III tidak dapat memformat jumlah uang karena server Anda kehilangan paket yang dibutuhkan. Ada <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructions bagaimana melakukan ini</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Quickswitch',
     'sign_in_to_start'                                    => 'Masuk untuk memulai sesi',
     'sign_in'                                             => 'Masuk',

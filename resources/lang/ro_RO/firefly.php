@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Sursa contului de active "@source_name" acceptă numai tranzacțiile în @source_currency. Destinația contului de active "@dest_name" acceptă numai tranzacțiile în @dest_currency. Trebuie să furnizați corect suma transferată în ambele valute.',
     'transaction_data'                                    => 'Datele tranzacției',
     'invalid_server_configuration'                        => 'Configurația serverului este nevalidă',
-    'invalid_locale_settings'                             => 'Nu se pot formata sumele deoarece serverului dvs îi lipesc pachete esențiale. Există <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages"> instrucțiuni despre cum să faceți acest lucru </a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Schimbare rapida',
     'sign_in_to_start'                                    => 'Logați-vă pentru a începe sesiunea',
     'sign_in'                                             => 'Logare',

@@ -26,60 +26,60 @@ return [
     // common items
     'greeting'                         => 'Selam,',
     'closing'                          => 'Bip bop,',
-    'signature'                        => 'The Firefly III Mail Robot',
-    'footer_ps'                        => 'PS: This message was sent because a request from IP :ipAddress triggered it.',
+    'signature'                        => 'Firefly III Posta Robotu',
+    'footer_ps'                        => 'Not: Bu ileti, IP:ıpaddress\'den gelen bir istek tetiklediği için gönderildi.',
 
     // admin test
-    'admin_test_subject'               => 'A test message from your Firefly III installation',
-    'admin_test_body'                  => 'This is a test message from your Firefly III instance. It was sent to :email.',
+    'admin_test_subject'               => 'Firefly III kurulumunuzdan bir test mesajı',
+    'admin_test_body'                  => 'Bu, Firefly III örneğinizden gelen bir test mesajıdır. Şu adrese gönderildi: e-posta.',
 
     // new IP
-    'login_from_new_ip'                => 'New login on Firefly III',
-    'new_ip_body'                      => 'Firefly III detected a new login on your account from an unknown IP address. If you never logged in from the IP address below, or it has been more than six months ago, Firefly III will warn you.',
-    'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
-    'ip_address'                       => 'IP address',
+    'login_from_new_ip'                => 'Firefly III yeni giriş',
+    'new_ip_body'                      => 'Firefly III, hesabınızda bilinmeyen bir IP adresinden yeni bir giriş tespit etti. Aşağıdaki IP adresinden hiç giriş yapmadıysanız veya altı aydan daha uzun bir süre önce yapıldıysa, Firefly III sizi uyaracaktır.',
+    'new_ip_warning'                   => 'Bu IP adresini veya oturum açmayı tanıyorsanız, bu iletiyi yoksayabilirsiniz. Eğer giriş eğer konuyla ilgili hiçbir fikriniz varsa, şifre güvenliğinizi doğrulamak, ve çıkış tüm oturumlar bu değişiklik olmadıysa. Bunu yapmak için profil sayfanıza gidin. Tabii ki zaten 2FA etkin, değil mi? Güvende kalın!',
+    'ip_address'                       => 'IP adresi',
     'host_name'                        => 'Host',
-    'date_time'                        => 'Date + time',
+    'date_time'                        => 'Tarih + saat',
 
     // access token created
-    'access_token_created_subject'     => 'A new access token was created',
+    'access_token_created_subject'     => 'Yeni bir erişim belirteci oluşturuldu',
     'access_token_created_body'        => 'Birisi (umarız sensindir) hesabın için yeni bir Firefly III API Erişim Anahtarı oluşturdu.',
-    'access_token_created_explanation' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
+    'access_token_created_explanation' => 'Bu belirteçle, mali kayıtlarınıza s <strong>all</strong> Firefly III API aracılığıyla erişebilirler.',
+    'access_token_created_revoke'      => 'Bu siz olmadıysanız, lütfen bu belirteci mümkün olan en kısa sürede şu adresten iptal edin :url.',
 
     // registered
     'registered_subject'               => 'Firefly III\'e hoşgeldiniz!',
-    'registered_welcome'               => 'Welcome to <a style="color:#337ab7" href=":address">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                    => 'If you have forgotten your password already, please reset it using <a style="color:#337ab7" href=":address/password/reset">the password reset tool</a>.',
-    'registered_help'                  => 'There is a help-icon in the top right corner of each page. If you need help, click it!',
-    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
-    'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
+    'registered_welcome'               => 'Hoş geldiniz <a style="color:#337ab7" href=":address">Firefly III</a>. Kaydınız yapıldı ve bu e-posta onaylamak için burada. Yay!',
+    'registered_pw'                    => 'Parolanızı zaten unuttuysanız, lütfen parolanızı kullanarak sıfırlayın <a style="color:#337ab7" href=":address/password/reset">the password reset tool</a>.',
+    'registered_help'                  => 'Her sayfanın sağ üst köşesinde bir yardım simgesi bulunur. Yardıma ihtiyacınız olursa, tıklayın!',
+    'registered_doc_html'              => 'Henüz yapmadıysanız, lütfen okuyun <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
+    'registered_doc_text'              => 'Henüz yapmadıysanız, lütfen ilk kullanım kılavuzunu ve açıklamanın tamamını okuyun.',
     'registered_closing'               => 'Tadını çıkarın!',
     'registered_firefly_iii_link'      => 'Firefly III:',
     'registered_pw_reset_link'         => 'Şifre sıfırlama:',
-    'registered_doc_link'              => 'Documentation:',
+    'registered_doc_link'              => 'Belge:',
 
     // email change
     'email_change_subject'             => 'Firefly III e-posta adresiniz değişti',
-    'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
-    'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
-    'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',
+    'email_change_body_to_new'         => 'Siz veya Firefly III hesabınıza erişimi olan biri e-posta adresinizi değiştirdi. Bu iletiyi beklemediyseniz, lütfen yoksayın ve silin.',
+    'email_change_body_to_old'         => 'Siz veya Firefly III hesabınıza erişimi olan biri e-posta adresinizi değiştirdi. Bunun olmasını beklemediysen, sen <strong>must</strong> hesabınızı korumak için aşağıdaki "geri al" bağlantısını takip edin!',
+    'email_change_ignore'              => 'Bu değişikliği başlattıysanız, bu iletiyi güvenle yoksayabilirsiniz.',
     'email_change_old'                 => 'Önceki e-posta adresi: :email',
     'email_change_old_strong'          => 'Önceki e-posta adresi: <strong>:email</strong>',
     'email_change_new'                 => 'Yeni e-posta adresi: :email',
     'email_change_new_strong'          => 'Yeni e-posta adresi: <strong>:email</strong>',
-    'email_change_instructions'        => 'You cannot use Firefly III until you confirm this change. Please follow the link below to do so.',
-    'email_change_undo_link'           => 'To undo the change, follow this link:',
+    'email_change_instructions'        => 'Bu değişikliği onaylayana kadar Firefly Iıı\'ü kullanamazsınız. Lütfen bunu yapmak için aşağıdaki bağlantıyı takip edin.',
+    'email_change_undo_link'           => 'Değişikliği geri almak için bu bağlantıyı takip edin:',
 
     // OAuth token created
     'oauth_created_subject'            => 'Yeni bir OAuth istemcisi oluşturuldu',
     'oauth_created_body'               => 'Birisi (umarız sensindir) senin hesabın için yeni bir Firefly III API OAuth İstemcisi oluşturdu. Adı ":name" ve yönlendirme linki <span style="font-family: monospace;">:url</span>.',
-    'oauth_created_explanation'        => 'With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
+    'oauth_created_explanation'        => 'Bu istemciyle, Firefly III API aracılığıyla mali kayıtlarınızın <strong>tümüne</strong> erişebilirler.',
+    'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at:url.',
 
     // reset password
     'reset_pw_subject'                 => 'Parola sıfırlama isteğin',
-    'reset_pw_instructions'            => 'Somebody tried to reset your password. If it was you, please follow the link below to do so.',
+    'reset_pw_instructions'            => 'Birisi şifrenizi sıfırlamaya çalıştı. Siz olsaydınız, bunu yapmak için lütfen aşağıdaki bağlantıyı takip edin.',
     'reset_pw_warning'                 => '<strong>PLEASE</strong> verify that the link actually goes to the Firefly III you expect it to go!',
 
     // error
@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'If you prefer, you can also open a new issue on <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'If you prefer, you can also open a new issue on https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'The full stacktrace is below:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III has created a new transaction|Firefly III has created :count new transactions',

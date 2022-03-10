@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Jika Anda mau, Anda juga dapat membuka isu baru di <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Jika Anda mau, Anda juga dapat membuka isu baru di https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'Jejak tumpukan lengkap ada di bawah:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III telah membuat transaksi baru|Firefly III telah membuat :count transaksi baru',

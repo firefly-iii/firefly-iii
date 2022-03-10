@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Tài khoản nguồn tài sản "@source_name" chỉ chấp nhận giao dịch bằng tiền tệ nguồn. tài khoản đícht "@dest_name" chỉ chấp nhận giao dịch bằng tiền tệ. Bạn phải cung cấp số tiền được chuyển chính xác bằng cả hai loại tiền tệ.',
     'transaction_data'                                    => 'Dữ liệu giao dịch',
     'invalid_server_configuration'                        => 'Cấu hình máy chủ không hợp lệ',
-    'invalid_locale_settings'                             => 'FFirefly III không thể định dạng số tiền vì máy chủ của bạn thiếu các gói cần thiết. Có <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">hướng dẫn cách làm điều này</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Chuyển đổi nhanh',
     'sign_in_to_start'                                    => 'Đăng nhập để bắt đầu',
     'sign_in'                                             => 'Đăng nhập',

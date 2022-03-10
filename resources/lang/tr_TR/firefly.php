@@ -189,7 +189,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Kaynak varlık hesabı "@source_name" sadece @soruce_currency işlemlerini kabul eder. Hedef varlık hesabı "@dest_name" sadece @dest_currency işlemlerini kabul eder. Aktarılan tutarı her iki para biriminde de doğru olarak girmeniz gerekir.',
     'transaction_data'                                    => 'İşlem Verileri',
     'invalid_server_configuration'                        => 'Geçersiz sunucu yapılandırması',
-    'invalid_locale_settings'                             => 'Firefly III parasal tutarları biçimlendiremiyor çünkü gerekli paketler sunucunuzda yok. <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">Bunun nasıl yapıldığıyla ilgili talimatlar</a> var.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Hızlı anahtar',
     'sign_in_to_start'                                    => 'Oturumu başlatmak için giriş yapın',
     'sign_in'                                             => 'Oturum aç',

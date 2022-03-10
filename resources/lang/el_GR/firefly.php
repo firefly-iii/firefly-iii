@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Ο κεφαλαιακός λογαριασμός προέλευσης "@source_name" δέχεται συναλλαγές μόνο σε @source_currency. Ο κεφαλαιακός λογαριασμός προορισμού "@dest_name" δέχεται συναλλαγές μόνο σε @dest_currency. Πρέπει να παρέχετε το σωστό μεταφερόμενο ποσό και στα δύο νομίσματα.',
     'transaction_data'                                    => 'Δεδομένα συναλλαγής',
     'invalid_server_configuration'                        => 'Μη έγκυρη παραμετροποίηση εξυπηρετητή',
-    'invalid_locale_settings'                             => 'Το Firefly III δεν είναι σε θέση να μορφοποιήσει χρηματικά ποσά επειδή λείπουν τα απαραίτητα πακέτα από τον εξυπηρετητή σας. Υπάρχουν <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">οδηγίες πως να το κάνετε αυτό</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Εναλλαγή',
     'sign_in_to_start'                                    => 'Συνδεθείτε για να ξεκινήσετε τη συνεδρία σας',
     'sign_in'                                             => 'Είσοδος',

@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Lähdetili "@source_name" hyväksyy tapahtumia ainoastaan valuutassa @source_currency. Kohdetili "@dest_name" hyväksyy tapahtumia ainoastaan valuutassa @dest_currency. Siirretty summa täytyy syöttää oikein - molemmilla valuutoilla.',
     'transaction_data'                                    => 'Tapahtuman tiedot',
     'invalid_server_configuration'                        => 'Serverin asetukset eivät ole kunnossa',
-    'invalid_locale_settings'                             => 'Firefly III ei pysty näyttämään rahasummia oikein koska tarvittavat tiedostot puuttuvat serveriltä. <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">Täältä</a> löydät ohjeet asian korjaamiseksi.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Pikakytkin',
     'sign_in_to_start'                                    => 'Aloita istunto kirjautumalla sisään',
     'sign_in'                                             => 'Kirjaudu sisään',
@@ -566,10 +566,10 @@ return [
     'rule_trigger_journal_id'                             => 'Tapahtumatietueen tunnus on ":trigger_value"',
     'rule_trigger_no_external_url'                        => 'Tapahtumalla ei ole ulkoista URL-osoitetta',
     'rule_trigger_any_external_url'                       => 'Tapahtumalla on ulkoinen URL-osoite',
-    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
-    'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
-    'rule_trigger_id_choice'                              => 'Transaction ID is..',
-    'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
+    'rule_trigger_any_external_url_choice'                => 'Tapahtumalla on ulkoinen URL-osoite',
+    'rule_trigger_no_external_url_choice'                 => 'Tapahtumalla ei ole ulkoista URL-osoitetta',
+    'rule_trigger_id_choice'                              => 'Tapahtuman tunnus on..',
+    'rule_trigger_id'                                     => 'Tapahtumatunnus on ":trigger_value"',
 
 
     // actions
@@ -1111,7 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Luo uusi tuottotili',
     'make_new_liabilities_account'              => 'Luo uusi laina',
     'asset_accounts'                            => 'Käyttötilit',
-    'undefined_accounts'                        => 'Accounts',
+    'undefined_accounts'                        => 'Tilit',
     'asset_accounts_inactive'                   => 'Käyttötilit (ei käytössä)',
     'expense_accounts'                          => 'Kulutustilit',
     'expense_accounts_inactive'                 => 'Kulutustilit (ei käytössä)',

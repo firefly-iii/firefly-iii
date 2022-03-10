@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Bronbetaalrekening "@source_name" accepteert alleen overschrijvingen in @source_currency. Doelbetaalrekening "@dest_name" accepteert alleen overschrijvingen in @dest_currency. Je moet het juiste bedrag in beide valuta opgeven.',
     'transaction_data'                                    => 'Transactiegegevens',
     'invalid_server_configuration'                        => 'Ongeldige serverconfiguratie',
-    'invalid_locale_settings'                             => 'Firefly III kan geldbedragen niet goed weergeven omdat je server de vereiste software mist. Er zijn <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instructies hoe dit te doen</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Quickswitch',
     'sign_in_to_start'                                    => 'Login om te beginnen',
     'sign_in'                                             => 'Inloggen',

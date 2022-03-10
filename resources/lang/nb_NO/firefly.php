@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Kildekonto "@source_name" godtar kun transaksjoner i @source_currency. Destinasjonskonto "@dest_name" aksepterer bare transaksjoner i @dest_currency. Du må angi overført beløp riktig i begge valutaene.',
     'transaction_data'                                    => 'Transaksjonsdata',
     'invalid_server_configuration'                        => 'Ugyldig serverkonfigurasjon',
-    'invalid_locale_settings'                             => 'Firefly III kan ikke formatere pengebeløp fordi serveren din mangler de nødvendige pakkene. Se følgende <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instruksjoner for hvordan du setter opp dette</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Hurtigbryter',
     'sign_in_to_start'                                    => 'Logg inn for å starte økten',
     'sign_in'                                             => 'Logg inn',

@@ -98,6 +98,7 @@ Isto pode ajudar a compor a bug que acabou de encontrar.',
     'error_github_html'                => 'Se preferir, pode também abrir uma nova issue no <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Se preferir, pode também abrir uma nova issue em https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'O rastreamento da pilha completo é:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'O Firefly III criou uma nova transação|O Firefly III criou :count novas transações',

@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'ご希望の場合は、<a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>で新しいissueを作ることもできます。',
     'error_github_text'                => 'ご希望の場合は、https://github.com/fofoflifly-iii/firelify-ii/issuesで新しいissueを作ることもできます。',
     'error_stacktrace_below'           => '完全なスタックトレースは以下の通りです:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III が取引を作成しました|Firefly III が:count件の取引を作成しました',

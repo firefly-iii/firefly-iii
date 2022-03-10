@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Účet zdrojového majetku "@source_name" prijíma iba transakcie v @source_currency. Cieľový majetkový účet „@dest_name“ prijíma iba transakcie v @dest_currency. Prevedenú čiastku musíte uviesť správne v oboch menách.',
     'transaction_data'                                    => 'Údaje o transakcii',
     'invalid_server_configuration'                        => 'Neplatné nastavenie serveru',
-    'invalid_locale_settings'                             => 'Firefly III nemôže formátovať peňažné sumy, pretože na vašom serveri chýbajú požadované balíčky. Existujú <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">pokyny, ako to urobiť</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Rýchle prepnutie',
     'sign_in_to_start'                                    => 'Pre zahájenie sedenia sa prihláste',
     'sign_in'                                             => 'Prihlásiť',

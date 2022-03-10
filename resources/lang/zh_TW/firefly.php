@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => '來源資產帳戶「@source_name」僅接受以 @source_currency 交易，目標資產帳戶「@dest_name」僅接受以 @dest_currency 交易，您必須提供對應兩種貨幣的轉帳總額。',
     'transaction_data'                                    => '交易資料',
     'invalid_server_configuration'                        => '伺服器組態無效',
-    'invalid_locale_settings'                             => 'Firefly III 無法格式化金額，因為伺服器缺少必要套件。請參閱 <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">相關指示</a>。',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => '快速切換',
     'sign_in_to_start'                                    => '登入以開始您的連線階段',
     'sign_in'                                             => '登入',

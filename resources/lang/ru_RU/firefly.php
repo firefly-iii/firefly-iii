@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Исходный счёт "@source_name" может использовать только транзакции в валюте @source_currency. Счёт назначения "@dest_name" может использовать транзакции только в валюте @dest_currency. Вы должны правильно указать сумму перевода в обеих валютах.',
     'transaction_data'                                    => 'Данные транзакции',
     'invalid_server_configuration'                        => 'Неправильная конфигурация сервера',
-    'invalid_locale_settings'                             => 'Firefly III не может обеспечить правильный формат денежных сумм, поскольку на вашем сервере отсутствуют необходимые пакеты. Воспользуйтесь <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">инструкцией</a>, объясняющей, как их установить.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Быстрое переключение',
     'sign_in_to_start'                                    => 'Войдите, чтобы начать сессию',
     'sign_in'                                             => 'Войти',

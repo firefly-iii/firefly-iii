@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'A "@source_name" forrás vagyonszámla csak a @source_currency tranzakciókat fogadja el. A "@dest_name" cél vagyonszámla csak a @dest_currency tranzakciókat fogadja el. Mindkét pénznemben helyesen kell megadnia az átutalt összeget.',
     'transaction_data'                                    => 'Tranzakciós adatok',
     'invalid_server_configuration'                        => 'Érvénytelen kiszolgálóbeállítás',
-    'invalid_locale_settings'                             => 'A Firefly III nem tudja megfelelően formázva megjeleníteni a pénzösszegeket, mert a kiszolgálóról hiányoznak az ehhez szükséges csomagok. A következő linket követve találhatók <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instrukciók a megoldáshoz</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Gyorsváltó',
     'sign_in_to_start'                                    => 'A munkamenet megkezdéséhez be kell jelentkezni',
     'sign_in'                                             => 'Bejelentkezés',

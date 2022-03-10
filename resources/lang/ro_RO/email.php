@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Dacă preferați, puteți de asemenea deschide o nouă problemă pe <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Dacă preferați, puteți de asemenea deschide o nouă problemă pe <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_stacktrace_below'           => 'Stacktrack-ul complet este mai jos:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III a creat o nouă tranzacție, Firefly III a creat :count tranzacții noi',

@@ -25,9 +25,9 @@ declare(strict_types=1);
 return [
     'home'                   => 'Beranda',
     'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
+    'subscriptions'          => 'Langganan',
+    'transactions'           => 'Transaksi',
+    'title_expenses'         => 'Pengeluaran',
     'title_withdrawal'       => 'Expenses',
     'title_revenue'          => 'Revenue / income',
     'title_deposit'          => 'Revenue / income',
