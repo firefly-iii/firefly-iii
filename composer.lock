@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b18d0182615f53ac1b5c84c9aa9832d6",
+    "content-hash": "8a903830fd93c297001cfb360b2a4bb3",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1771,16 +1771,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.83.3",
+            "version": "v8.83.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "b4ed222a188cca74ca9062296e525d26ae54a0ce"
+                "reference": "97a549f1a83cfb32dab1eecab4c4d40a984a72b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/b4ed222a188cca74ca9062296e525d26ae54a0ce",
-                "reference": "b4ed222a188cca74ca9062296e525d26ae54a0ce",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/97a549f1a83cfb32dab1eecab4c4d40a984a72b5",
+                "reference": "97a549f1a83cfb32dab1eecab4c4d40a984a72b5",
                 "shasum": ""
             },
             "require": {
@@ -1940,7 +1940,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-03-03T15:14:29+00:00"
+            "time": "2022-03-08T16:12:54+00:00"
         },
         {
             "name": "laravel/passport",
@@ -4753,16 +4753,16 @@
         },
         {
             "name": "rcrowe/twigbridge",
-            "version": "v0.13.1",
+            "version": "v0.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rcrowe/TwigBridge.git",
-                "reference": "ea5b2e18caca6c341fb8ceff2ce8e4fddb77d0df"
+                "reference": "f4968efb99537cc1b37c5bf20280614aadc31825"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/ea5b2e18caca6c341fb8ceff2ce8e4fddb77d0df",
-                "reference": "ea5b2e18caca6c341fb8ceff2ce8e4fddb77d0df",
+                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/f4968efb99537cc1b37c5bf20280614aadc31825",
+                "reference": "f4968efb99537cc1b37c5bf20280614aadc31825",
                 "shasum": ""
             },
             "require": {
@@ -4823,9 +4823,9 @@
             ],
             "support": {
                 "issues": "https://github.com/rcrowe/TwigBridge/issues",
-                "source": "https://github.com/rcrowe/TwigBridge/tree/v0.13.1"
+                "source": "https://github.com/rcrowe/TwigBridge/tree/v0.14.0"
             },
-            "time": "2022-02-10T13:51:53+00:00"
+            "time": "2022-03-08T17:21:17+00:00"
         },
         {
             "name": "spatie/data-transfer-object",
