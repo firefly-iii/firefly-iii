@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'Source asset account "@source_name" only accepts transactions in @source_currency. Destination asset account "@dest_name" only accepts transactions in @dest_currency. You must provide the transferred amount correctly in both currencies.',
     'transaction_data'                                    => 'Transaction data',
     'invalid_server_configuration'                        => 'Invalid server configuration',
-    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://docs.firefly-iii.org/firefly-iii/advanced-installation/locales/">instructions how to do this</a>.',
     'quickswitch'                                         => 'Quickswitch',
     'sign_in_to_start'                                    => 'Sign in to start your session',
     'sign_in'                                             => 'Sign in',
