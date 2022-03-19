@@ -97,12 +97,16 @@
     "league/commonmark": "2.*",
     "league/csv": "^9.7",
     "league/fractal": "0.*",
+    "nunomaduro/collision": "^6.1",
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^1.1",
     "psr/log": "<3",
     "ramsey/uuid": "^4.2",
     "rcrowe/twigbridge": "^0.14",
-    "spatie/data-transfer-object": "^3.7"
+    "spatie/data-transfer-object": "^3.7",
+    "spatie/laravel-ignition": "^1.0",
+    "symfony/http-client": "^6.0",
+    "symfony/mailgun-mailer": "^6.0"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.6",
