@@ -18,18 +18,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "boot/axios";
+import Api from "src/api/root/api";
 
-export default class Get {
-  get(identifier, date) {
-    let url = '/api/v1/accounts/' + identifier;
-    if(!date) {
-      return api.get(url);
-    }
-    return api.get(url, {params: {date: date}});
+export default class Get extends Api {
+  constructor() {
+    super('accounts'); // call the super class constructor and pass in the name parameter
   }
-  transactions(identifier, page, cacheKey) {
-    let url = '/api/v1/accounts/' + identifier + '/transactions';
-    return api.get(url, {params: {page: page, cache: cacheKey}});
+
+  /**
+   *
+   * @param identifier
+   * @param date
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  get(identifier, date) {
+    let params = {date: date};
+    if(!date) {
+      return this.apiGet(identifier);
+    }
+    return this.apiGet(identifier, params);
+  }
+
+  /**
+   *
+   * @param identifier
+   * @param page
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  transactions(identifier, page) {
+    return this.apiGetChildren('transactions', identifier, page);
   }
 }

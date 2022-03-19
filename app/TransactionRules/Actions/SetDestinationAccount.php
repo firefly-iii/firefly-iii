@@ -66,7 +66,7 @@ class SetDestinationAccount implements ActionInterface
 
             return false;
         }
-
+        $type = $object->transactionType->type;
         $this->repository->setUser($user);
 
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:

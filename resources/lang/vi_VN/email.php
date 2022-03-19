@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Nếu bạn thích, bạn cũng có thể mở một vấn đề mới trên <a href="https://github.com/firefly-iii/firefly-iii/issues"> GitHub </a>.',
     'error_github_text'                => 'Nếu bạn thích, bạn cũng có thể mở một vấn đề mới trên https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'Các stacktrace đầy đủ bên dưới:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III đã tạo một giao dịch mới | Firefly III đã tạo: :count các giao dịch mới',

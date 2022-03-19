@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Inicio',
+    'budgets'                => 'Orçamentos',
+    'subscriptions'          => 'Subscrições',
+    'transactions'           => 'Transações',
+    'title_expenses'         => 'Despesas',
+    'title_withdrawal'       => 'Despesas',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transferências',
+    'title_transfers'        => 'Transferências',
     'edit_currency'          => 'Editar moeda ":name"',
     'delete_currency'        => 'Apagar moeda ":name"',
     'newPiggyBank'           => 'Criar mealheiro',

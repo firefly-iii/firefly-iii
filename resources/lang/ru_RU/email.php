@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Если вы предпочитаете, вы также можете создать новый тикет на <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Если вы предпочитаете, вы также можете открыть новый тикет на https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'Полная трассировка стека:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III создал новую транзакцию|Firefly III создал :count новых транзакций',

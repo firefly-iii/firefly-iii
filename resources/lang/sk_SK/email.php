@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Prípadne môžete vytvoriť hlásenie na <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Prípadne môžete vytvoriť hlásenie na https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'Celý zásobník je nižšie:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III vytvoril novú transakciu|Firefly III :count nových transakcií',

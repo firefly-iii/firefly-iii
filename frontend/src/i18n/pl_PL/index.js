@@ -27,10 +27,10 @@ export default {
         "title_deposit": "Revenue \/ income",
         "title_transfer": "Transfers",
         "title_transfers": "Transfers",
-        "asset_accounts": "Asset accounts",
-        "expense_accounts": "Expense accounts",
-        "revenue_accounts": "Revenue accounts",
-        "liabilities_accounts": "Liabilities"
+        "asset_accounts": "Konta aktyw\u00f3w",
+        "expense_accounts": "Konta wydatk\u00f3w",
+        "revenue_accounts": "Konta przychod\u00f3w",
+        "liabilities_accounts": "Zobowi\u0105zania"
     },
     "firefly": {
         "rule_trigger_source_account_starts_choice": "Konto \u017ar\u00f3d\u0142owe si\u0119 zaczyna od..",
@@ -92,9 +92,9 @@ export default {
         "rule_trigger_external_id_choice": "Zewn\u0119trzne ID to..",
         "rule_trigger_internal_reference_choice": "Wewn\u0119trzne odwo\u0142anie to..",
         "rule_trigger_journal_id_choice": "ID dziennika transakcji to..",
-        "rule_trigger_any_external_url_choice": "Transaction has an external URL",
-        "rule_trigger_no_external_url_choice": "Transaction has no external URL",
-        "rule_trigger_id_choice": "Transaction ID is..",
+        "rule_trigger_any_external_url_choice": "Transakcja ma zewn\u0119trzny adres URL",
+        "rule_trigger_no_external_url_choice": "Transakcja nie ma zewn\u0119trznego adresu URL",
+        "rule_trigger_id_choice": "Identyfikator transakcji to..",
         "rule_action_delete_transaction_choice": "USU\u0143 transakcj\u0119 (!)",
         "rule_action_set_category_choice": "Ustaw kategori\u0119 na..",
         "rule_action_clear_category_choice": "Wyczy\u015b\u0107 wszystkie kategorie",

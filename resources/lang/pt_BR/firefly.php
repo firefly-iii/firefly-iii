@@ -188,7 +188,7 @@ return [
     'transfer_exchange_rate_instructions'                 => 'A conta ativa de origem "@source_name" aceita apenas transações em @source_currency. A conta ativa de destino "@dest_name" aceita apenas transações em @dest_currency. Você deve fornecer o valor transferido corretamente em ambas as moedas.',
     'transaction_data'                                    => 'Dados de transação',
     'invalid_server_configuration'                        => 'Configuração do servidor inválida',
-    'invalid_locale_settings'                             => 'O Firefly III não consegue formatar quantidades monetárias porque está faltando os pacotes necessários no seu servidor. Existem <a href="https://github.com/firefly-iii/help/wiki/Missing-locale-packages">instruções de como fazer isso</a>.',
+    'invalid_locale_settings'                             => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="">instructions how to do this</a>.',
     'quickswitch'                                         => 'Mudança rápida',
     'sign_in_to_start'                                    => 'Faça login para iniciar sua sessão',
     'sign_in'                                             => 'Entrar',
@@ -566,10 +566,10 @@ return [
     'rule_trigger_journal_id'                             => 'ID do livro de transação é ":trigger_value"',
     'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
     'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
-    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
-    'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
-    'rule_trigger_id_choice'                              => 'Transaction ID is..',
-    'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
+    'rule_trigger_any_external_url_choice'                => 'A transação tem um link externo',
+    'rule_trigger_no_external_url_choice'                 => 'A transação não tem um link externo',
+    'rule_trigger_id_choice'                              => 'O identificador da transação é..',
+    'rule_trigger_id'                                     => 'O identificador da transação é ":trigger_value"',
 
 
     // actions
@@ -1111,6 +1111,7 @@ return [
     'make_new_revenue_account'                  => 'Criar uma nova conta de receita',
     'make_new_liabilities_account'              => 'Criar um novo passivo',
     'asset_accounts'                            => 'Contas de ativo',
+    'undefined_accounts'                        => 'Contas',
     'asset_accounts_inactive'                   => 'Contas de ativos (inativas)',
     'expense_accounts'                          => 'Contas de despesas',
     'expense_accounts_inactive'                 => 'Contas de despesas (inativas)',

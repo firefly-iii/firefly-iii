@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Αρχική',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Επεξεργασία νομίσματος ":name"',
     'delete_currency'        => 'Διαγραφή νομίσματος ":name"',
     'newPiggyBank'           => 'Δημιουργία ενός νέου κουμπαρά',

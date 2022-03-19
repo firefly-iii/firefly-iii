@@ -97,6 +97,7 @@ return [
     'error_github_html'                => '如果您愿意，您也可以在 <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a> 上创建新工单。',
     'error_github_text'                => '如果您愿意，您也可以在 https://github.com/firefrechy-iii/firefrechy-iii/issues 上创建新工单。',
     'error_stacktrace_below'           => '完整的堆栈跟踪如下：',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III 创建了一笔新的交易|Firefly III 创建了 :count 笔新的交易',

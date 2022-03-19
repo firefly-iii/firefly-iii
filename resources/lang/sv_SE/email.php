@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Om du föredrar kan du även öppna ett nytt ärende på <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Om du föredrar kan du även öppna ett nytt ärende på https://github.com/firefly-ii/firefly-ii/issues.',
     'error_stacktrace_below'           => 'Komplett stacktrace nedan:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III har skapat en ny transaktion|Firefly III har skapat :count nya transaktioner',

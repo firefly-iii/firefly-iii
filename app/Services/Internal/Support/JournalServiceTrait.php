@@ -172,7 +172,7 @@ trait JournalServiceTrait
     private function findAccountByNumber(?Account $account, array $data, array $types): ?Account
     {
         // third attempt, find by account number
-        if (null === $account && null !== $data['number']) {
+        if (null === $account && null !== $data['number'] && '' !== (string) $data['number']) {
             Log::debug(sprintf('Searching for account number "%s".', $data['number']));
             // find by preferred type.
             $source = $this->accountRepository->findByAccountNumber((string)$data['number'], [$types[0]]);

@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Pokud chcete, můžete vytvořit hlášení problému na <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Pokud chcete, můžete vytvořit hlášení problému na https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'Celý zásobník je níže:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III vytvořil novou transakci|Firefly III vytvořil :count nových transakcí',

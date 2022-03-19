@@ -67,7 +67,7 @@
 <script>
 import {mapGetters, useStore} from "vuex";
 import List from "../../api/subscriptions/list";
-import Destroy from "../../api/subscriptions/destroy";
+import Destroy from "../../api/generic/destroy";
 
 export default {
   name: 'Index',
@@ -127,8 +127,7 @@ export default {
       });
     },
     destroySubscription: function (id) {
-      let destr = new Destroy;
-      destr.destroy(id).then(() => {
+      (new Destroy('bills')).destroy(id).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });

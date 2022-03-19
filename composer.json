@@ -101,9 +101,8 @@
     "predis/predis": "^1.1",
     "psr/log": "<3",
     "ramsey/uuid": "^4.2",
-    "rcrowe/twigbridge": "^0.13",
-    "spatie/data-transfer-object": "^3.7",
-    "nunomaduro/collision": "^6.1"
+    "rcrowe/twigbridge": "^0.14",
+    "spatie/data-transfer-object": "^3.7"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.6",

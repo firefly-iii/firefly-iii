@@ -24,6 +24,15 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Hjem',
+    'budgets'                => 'Budgets',
+    'subscriptions'          => 'Subscriptions',
+    'transactions'           => 'Transactions',
+    'title_expenses'         => 'Expenses',
+    'title_withdrawal'       => 'Expenses',
+    'title_revenue'          => 'Revenue / income',
+    'title_deposit'          => 'Revenue / income',
+    'title_transfer'         => 'Transfers',
+    'title_transfers'        => 'Transfers',
     'edit_currency'          => 'Rediger valuta ":name"',
     'delete_currency'        => 'Slett valuta ":name"',
     'newPiggyBank'           => 'Lag en ny sparegris',

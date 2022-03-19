@@ -60,7 +60,8 @@ class MailError extends Job implements ShouldQueue
         $this->exception   = $exceptionData;
         $debug             = $exceptionData;
         unset($debug['stackTrace']);
-        Log::error('Exception is: ' . json_encode($debug));
+        unset($debug['headers']);
+        Log::error(sprintf('Exception is: %s', json_encode($debug)));
     }
 
     /**
@@ -81,7 +82,7 @@ class MailError extends Job implements ShouldQueue
                     $args,
                     function (Message $message) use ($email) {
                         if ('mail@example.com' !== $email) {
-                            $message->to($email, $email)->subject((string)trans('email.error_subject'));
+                            $message->to($email, $email)->subject((string) trans('email.error_subject'));
                         }
                     }
                 );

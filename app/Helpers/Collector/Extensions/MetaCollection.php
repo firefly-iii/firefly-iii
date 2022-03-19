@@ -226,7 +226,9 @@ trait MetaCollection
             $q1->where(function (Builder $q2) {
                 $q2->where('journal_meta.name', '=', 'external_url');
                 $q2->whereNull('journal_meta.data');
-            })->orWhereNull('journal_meta.name');
+            })->orWhere(function (Builder $q3) {
+                $q3->where('journal_meta.name', '!=', 'external_url');
+            });
         });
 
         return $this;
@@ -416,6 +418,7 @@ trait MetaCollection
                 static function (JoinClause $join) {
                     $join->on('notes.noteable_id', '=', 'transaction_journals.id');
                     $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
+                    $join->whereNull('notes.deleted_at');
                 }
             );
             // add fields

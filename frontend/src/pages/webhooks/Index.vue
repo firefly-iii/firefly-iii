@@ -66,7 +66,7 @@
 
 <script>
 import {mapGetters} from "vuex";
-import Destroy from "../../api/webhooks/destroy";
+import Destroy from "../../api/generic/destroy";
 import List from "../../api/webhooks/list";
 
 export default {
@@ -119,8 +119,7 @@ export default {
       });
     },
     destroyWebhook: function (id) {
-      let destr = new Destroy;
-      destr.destroy(id).then(() => {
+      (new Destroy('webhooks')).destroy(id).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });

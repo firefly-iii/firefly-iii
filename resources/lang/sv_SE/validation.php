@@ -61,9 +61,9 @@ return [
     'accepted'                       => ':attribute måste godkännas.',
     'bic'                            => 'Detta är inte en giltig BIC.',
     'at_least_one_trigger'           => 'Regeln måste ha minst en utlösare.',
-    'at_least_one_active_trigger'    => 'Rule must have at least one active trigger.',
+    'at_least_one_active_trigger'    => 'Regeln måste ha minst en utlösare.',
     'at_least_one_action'            => 'Regel måste ha minst en åtgärd.',
-    'at_least_one_active_action'     => 'Rule must have at least one active action.',
+    'at_least_one_active_action'     => 'Regeln måste ha minst en aktiv åtgärd.',
     'base64'                         => 'Detta är inte giltigt bas64 data.',
     'model_id_invalid'               => 'Angivet ID verkar ogiltig för denna modell.',
     'less'                           => ':attribute måste vara mindre än 10 000 000',
@@ -216,8 +216,8 @@ return [
     'generic_invalid_source'      => 'Det går inte att använda detta konto som källkonto.',
     'generic_invalid_destination' => 'Det går inte att använda detta konto som mottagarkonto.',
 
-    'generic_no_source'      => 'You must submit source account information.',
-    'generic_no_destination' => 'You must submit destination account information.',
+    'generic_no_source'      => 'Du måste ange källkontoinformation.',
+    'generic_no_destination' => 'Du måste ange destinationskontos information.',
 
     'gte.numeric' => ':attribute måste vara större än eller lika med :value.',
     'gt.numeric'  => ':attribute måste vara större än :value.',

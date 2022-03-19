@@ -80,8 +80,7 @@
 import {mapGetters} from "vuex";
 import List from "../../api/rule-groups/list";
 import Get from "../../api/rule-groups/get";
-import Destroy from "../../api/rule-groups/destroy";
-import DestroyRule from "../../api/rules/destroy";
+import Destroy from "../../api/generic/destroy";
 
 export default {
   name: 'Index',
@@ -142,15 +141,13 @@ export default {
       });
     },
     destroyRuleGroup: function (id) {
-      let destr = new Destroy;
-      destr.destroy(id).then(() => {
+      (new Destroy('rule_groups')).destroy(id).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });
     },
     destroyRule: function (id) {
-      let destr = new DestroyRule;
-      destr.destroy(id).then(() => {
+      (new Destroy('rules')).destroy(id).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });

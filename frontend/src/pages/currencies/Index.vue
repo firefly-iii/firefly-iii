@@ -68,7 +68,7 @@
 
 <script>
 import {mapGetters, useStore} from "vuex";
-import Destroy from "../../api/currencies/destroy";
+import Destroy from "../../api/generic/destroy";
 import List from "../../api/currencies/list";
 
 export default {
@@ -137,8 +137,7 @@ export default {
       });
     },
     destroyCurrency: function (code) {
-      let destr = new Destroy;
-      destr.destroy(code).then(() => {
+      (new Destroy('currencies')).destroy(code).then(() => {
         this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });

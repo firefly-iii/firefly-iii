@@ -6,9 +6,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class CreatePersonalAccessTokensTable
+ * Class CreateLocalPersonalAccessTokensTable
  */
-class CreatePersonalAccessTokensTable extends Migration
+class CreateLocalPersonalAccessTokensTable extends Migration
 {
     /**
      * Run the migrations.

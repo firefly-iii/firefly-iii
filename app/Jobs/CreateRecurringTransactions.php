@@ -250,6 +250,7 @@ class CreateRecurringTransactions implements ShouldQueue
     private function hasNotStartedYet(Recurrence $recurrence): bool
     {
         $startDate = $this->getStartDate($recurrence);
+        Log::debug(sprintf('Start date is %s', $startDate->format('Y-m-d')));
 
         return $startDate->gt($this->date);
     }

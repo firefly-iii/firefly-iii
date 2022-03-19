@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Se você preferir, também pode abrir uma nova issue no <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'Se preferir, você também pode abrir uma nova issue em https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'O rastreamento completo está abaixo:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III criou uma nova transação.|Firefly III criou :count novas transações',

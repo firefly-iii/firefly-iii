@@ -5,7 +5,6 @@
       :rows="rows"
       :columns="columns"
       row-key="id"
-      @request="onRequest"
       v-model:pagination="pagination"
       :loading="loading"
       class="q-ma-md"
@@ -75,7 +74,7 @@
 <script>
 import {mapGetters, useStore} from "vuex";
 import List from "../../api/accounts/list";
-import Destroy from "../../api/accounts/destroy";
+import Destroy from "../../api/generic/destroy";
 
 export default {
   name: 'Index',
@@ -144,10 +143,11 @@ export default {
       });
     },
     destroyAccount: function (id) {
-      let destr = new Destroy;
-      destr.destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
-        this.triggerUpdate();
+      (new Destroy('accounts')).destroy(id).then(() => {
+        this.rows=  [];
+        this.$store.dispatch('fireflyiii/refreshCacheKey').then(() => {
+          this.triggerUpdate();
+        });
       });
     },
     updateBreadcrumbs: function () {
@@ -169,14 +169,15 @@ export default {
       return string.replace(NON_ALPHANUM, '').toUpperCase().replace(EVERY_FOUR_CHARS, "$1 ");
     },
     triggerUpdate: function () {
-      if (this.loading) {
+      this.rows=  [];
+      if (true === this.loading) {
         return;
       }
       if (null === this.range.start || null === this.range.end) {
         return;
       }
       this.loading = true;
-      const list = new List();
+      const list = new List;
       this.rows = [];
       list.list(this.type, this.page, this.getCacheKey).then(
         (response) => {
@@ -198,8 +199,10 @@ export default {
           }
           this.loading = false;
         }
-      )
-      ;
+      ).catch((err) => {
+        console.error('Error loading list');
+        console.error(err);
+      });
     }
   }
 }

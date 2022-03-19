@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Wenn Sie es bevorzugen, können Sie auch einen Fehlerbericht auf <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a> eröffnen.',
     'error_github_text'                => 'Wenn Sie es bevorzugen, können Sie auch einen Fehlerbericht auf https://github.com/firefly-iii/firefly-iii/issues eröffnen.',
     'error_stacktrace_below'           => 'Der vollständige Stacktrace ist unten:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III hat eine neue Transaktion erstellt|Firefly III hat :count neue Transaktionen erstellt',

@@ -97,6 +97,7 @@ return [
     'error_github_html'                => 'Jos haluat, voit myös avata uuden tiketin <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHubissa</a>.',
     'error_github_text'                => 'Jos haluat, voit myös avata uuden tiketin osoitteessa https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'Täydellinen stack trace:',
+    'error_headers'                    => 'The following headers may also be relevant:',
 
     // report new journals
     'new_journals_subject'             => 'Firefly III on luonut uuden tapahtuman|Firefly III on luonut :count uutta tapahtumaa',
