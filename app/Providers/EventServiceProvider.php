@@ -45,7 +45,6 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Client;
 use Laravel\Passport\Events\AccessTokenCreated;
-use LdapRecord\Laravel\Events\Import\Imported;
 use Log;
 use Mail;
 use Request;
@@ -134,11 +133,6 @@ class EventServiceProvider extends ServiceProvider
             ],
             UpdatedAccount::class               => [
                 'FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit',
-            ],
-
-            // LDAP related events:
-            Imported::class                     => [
-                'FireflyIII\Handlers\Events\LDAPEventHandler@importedUser',
             ],
         ];
 

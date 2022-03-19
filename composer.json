@@ -117,8 +117,6 @@
     "phpunit/phpunit": "^9.5"
   },
   "suggest": {
-    "directorytree/ldaprecord-laravel": "If you want to login using LDAP.",
-    "ext-ldap": "Needed to support LDAP."
   },
   "autoload": {
     "psr-4": {

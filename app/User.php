@@ -302,6 +302,7 @@ class User extends Authenticatable
 
     /**
      * Get the models LDAP domain.
+     * @deprecated
      *
      * @return string
      */
@@ -312,6 +313,7 @@ class User extends Authenticatable
 
     /**
      * Get the database column name of the domain.
+     * @deprecated
      *
      * @return string
      */
@@ -322,6 +324,7 @@ class User extends Authenticatable
 
     /**
      * Get the models LDAP GUID.
+     * @deprecated
      *
      * @return string
      */
@@ -332,6 +335,7 @@ class User extends Authenticatable
 
     /**
      * Get the models LDAP GUID database column name.
+     * @deprecated
      *
      * @return string
      */
@@ -452,6 +456,7 @@ class User extends Authenticatable
 
     /**
      * Set the models LDAP domain.
+     * @deprecated
      *
      * @param string $domain
      *
@@ -464,7 +469,7 @@ class User extends Authenticatable
 
     /**
      * Set the models LDAP GUID.
-     *
+     * @deprecated
      * @param string $guid
      *
      * @return void

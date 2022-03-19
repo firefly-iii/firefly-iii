@@ -133,11 +133,10 @@ return [
     'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
     'tracker_url'                  => env('TRACKER_URL', ''),
 
-    // LDAP and authentication settings
+    // authentication settings
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_url'            => envNonEmpty('CUSTOM_LOGOUT_URL', ''),
-    'ldap_auth_field'              => env('LDAP_AUTH_FIELD', env('ADLDAP_AUTH_FIELD', 'distinguishedname')),
 
     // static config (cannot be changed by user)
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
