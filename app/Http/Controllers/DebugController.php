@@ -160,6 +160,7 @@ class DebugController extends Controller
         $userLanguage     = app('steam')->getLanguage();
         $userLocale       = app('steam')->getLocale();
         $userAgent        = $request->header('user-agent');
+        $stateful         = join(', ', config('sanctum.stateful'));
 
 
         // expected + found DB version:
@@ -211,6 +212,7 @@ class DebugController extends Controller
                 'appEnv',
                 'appDebug',
                 'logChannel',
+                'stateful',
                 'tz',
                 'appLogLevel',
                 'remoteHeader',
