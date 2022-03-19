@@ -41,6 +41,12 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
+     * @return string|null
+     */
+    public function getNoteText(Budget $budget): ?string;
+
+    /**
+     * @param Budget $budget
      *
      * @return bool
      */

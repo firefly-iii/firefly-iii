@@ -30,6 +30,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
@@ -47,8 +48,7 @@ use Storage;
  */
 class BudgetRepository implements BudgetRepositoryInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * @return bool
@@ -323,6 +323,12 @@ class BudgetRepository implements BudgetRepositoryInterface
             Log::error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.', 0, $e);
         }
+
+        // set notes
+        if(array_key_exists('notes', $data)) {
+            $this->setNoteText($newBudget, (string)$data['notes']);
+        }
+
         if (!array_key_exists('auto_budget_type', $data) || !array_key_exists('auto_budget_amount', $data) || !array_key_exists('auto_budget_period', $data)) {
             return $newBudget;
         }
@@ -399,6 +405,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
         if (array_key_exists('active', $data)) {
             $budget->active = $data['active'];
+        }
+        if(array_key_exists('notes', $data)) {
+            $this->setNoteText($budget, (string)$data['notes']);
         }
         $budget->save();
 
@@ -514,5 +523,45 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         $autoBudget->save();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNoteText(Budget $budget): ?string
+    {
+        $note = $budget->notes()->first();
+        if (null === $note) {
+            return null;
+        }
+
+        return $note->text;
+    }
+
+    /**
+     * @param Budget $budget
+     * @param string $text
+     * @return void
+     */
+    private function setNoteText(Budget $budget, string $text): void
+    {
+        $dbNote = $budget->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note;
+                $dbNote->noteable()->associate($budget);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        if (null !== $dbNote) {
+            try {
+                $dbNote->delete();
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
+            }
+        }
     }
 }

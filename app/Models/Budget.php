@@ -152,6 +152,15 @@ class Budget extends Model
 
     /**
      * @codeCoverageIgnore
+     * Get all of the notes.
+     */
+    public function notes(): MorphMany
+    {
+        return $this->morphMany(Note::class, 'noteable');
+    }
+
+    /**
+     * @codeCoverageIgnore
      * @return BelongsToMany
      */
     public function transactionJournals(): BelongsToMany

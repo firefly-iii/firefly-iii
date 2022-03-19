@@ -73,6 +73,7 @@ class BudgetTransformer extends AbstractTransformer
         $abType         = null;
         $abAmount       = null;
         $abPeriod       = null;
+        $notes          = $this->repository->getNoteText($budget);
 
         $types = [
             AutoBudget::AUTO_BUDGET_RESET    => 'reset',
@@ -80,20 +81,21 @@ class BudgetTransformer extends AbstractTransformer
         ];
 
         if (null !== $autoBudget) {
-            $abCurrencyId   = (string)$autoBudget->transactionCurrency->id;
+            $abCurrencyId   = (string) $autoBudget->transactionCurrency->id;
             $abCurrencyCode = $autoBudget->transactionCurrency->code;
             $abType         = $types[$autoBudget->auto_budget_type];
-            $abAmount       = number_format((float)$autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
+            $abAmount       = number_format((float) $autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
             $abPeriod       = $autoBudget->period;
         }
 
         return [
-            'id'                        => (string)$budget->id,
+            'id'                        => (string) $budget->id,
             'created_at'                => $budget->created_at->toAtomString(),
             'updated_at'                => $budget->updated_at->toAtomString(),
             'active'                    => $budget->active,
             'name'                      => $budget->name,
-            'order'                      => $budget->order,
+            'order'                     => $budget->order,
+            'notes'                     => $notes,
             'auto_budget_type'          => $abType,
             'auto_budget_period'        => $abPeriod,
             'auto_budget_currency_id'   => $abCurrencyId,
@@ -118,7 +120,7 @@ class BudgetTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = number_format((float)$data['sum'], (int)$data['currency_decimal_places'], '.', '');
+            $data['sum'] = number_format((float) $data['sum'], (int) $data['currency_decimal_places'], '.', '');
             $return[]    = $data;
         }
 

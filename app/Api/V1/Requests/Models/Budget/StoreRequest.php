@@ -50,6 +50,7 @@ class StoreRequest extends FormRequest
             'name'               => ['name', 'string'],
             'active'             => ['active', 'boolean'],
             'order'              => ['active', 'integer'],
+            'notes'              => ['notes', 'string'],
 
             // auto budget currency:
             'currency_id'        => ['auto_budget_currency_id', 'integer'],
@@ -74,6 +75,7 @@ class StoreRequest extends FormRequest
             'active'             => [new IsBoolean],
             'currency_id'        => 'exists:transaction_currencies,id',
             'currency_code'      => 'exists:transaction_currencies,code',
+            'notes'              => 'nullable|between:1,65536',
             // auto budget info
             'auto_budget_type'   => 'in:reset,rollover,none',
             'auto_budget_amount' => 'numeric|min:0|max:1000000000|required_if:auto_budget_type,reset|required_if:auto_budget_type,rollover',

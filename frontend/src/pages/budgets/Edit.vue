@@ -14,6 +14,7 @@
       <div class="col-12">
         <q-card bordered>
           <q-card-section>
+            <!-- TODO dont forget budget notes -->
             <div class="text-h6">Edit budget</div>
           </q-card-section>
           <q-card-section>
