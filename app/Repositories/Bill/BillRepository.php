@@ -782,4 +782,35 @@ class BillRepository implements BillRepositoryInterface
 
         return $service->update($bill, $data);
     }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function billEndsWith(string $query, int $limit): Collection
+    {
+        $search = $this->user->bills();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%%%s', $query));
+        }
+        $search->orderBy('name', 'ASC')
+               ->where('active', true);
+
+        return $search->take($limit)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function billStartsWith(string $query, int $limit): Collection
+    {
+        $search = $this->user->bills();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%s%%', $query));
+        }
+        $search->orderBy('name', 'ASC')
+               ->where('active', true);
+
+        return $search->take($limit)->get();
+    }
 }

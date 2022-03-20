@@ -41,6 +41,22 @@ interface BillRepositoryInterface
     public function correctOrder(): void;
 
     /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function billEndsWith(string $query, int $limit): Collection;
+
+    /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function billStartsWith(string $query, int $limit): Collection;
+
+    /**
      * @param Bill $bill
      *
      * @return bool

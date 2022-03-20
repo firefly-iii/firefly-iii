@@ -5131,16 +5131,16 @@
         },
         {
             "name": "spatie/ignition",
-            "version": "1.2.4",
+            "version": "1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/ignition.git",
-                "reference": "ec58c125c15eecaa20180f01ef9667d41a568ba8"
+                "reference": "982f69f3c2e525cef62fa23ada047d745e4bcda9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/ignition/zipball/ec58c125c15eecaa20180f01ef9667d41a568ba8",
-                "reference": "ec58c125c15eecaa20180f01ef9667d41a568ba8",
+                "url": "https://api.github.com/repos/spatie/ignition/zipball/982f69f3c2e525cef62fa23ada047d745e4bcda9",
+                "reference": "982f69f3c2e525cef62fa23ada047d745e4bcda9",
                 "shasum": ""
             },
             "require": {
@@ -5197,20 +5197,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-11T13:28:02+00:00"
+            "time": "2022-03-19T14:07:30+00:00"
         },
         {
             "name": "spatie/laravel-ignition",
-            "version": "1.0.10",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-ignition.git",
-                "reference": "71df77cad94aae4db904aaef1cc2f06950daed76"
+                "reference": "5b8c360d1f6bcba339a6d593efa02816c06d17c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-ignition/zipball/71df77cad94aae4db904aaef1cc2f06950daed76",
-                "reference": "71df77cad94aae4db904aaef1cc2f06950daed76",
+                "url": "https://api.github.com/repos/spatie/laravel-ignition/zipball/5b8c360d1f6bcba339a6d593efa02816c06d17c3",
+                "reference": "5b8c360d1f6bcba339a6d593efa02816c06d17c3",
                 "shasum": ""
             },
             "require": {
@@ -5284,7 +5284,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-17T11:01:36+00:00"
+            "time": "2022-03-19T17:03:56+00:00"
         },
         {
             "name": "symfony/console",

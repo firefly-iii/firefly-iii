@@ -156,7 +156,7 @@ class OperatorQuerySearch implements SearchInterface
         $parser = new QueryParser();
         try {
             $query1 = $parser->parse($query);
-        } catch (TypeError | LogicException $e) {
+        } catch (TypeError|LogicException $e) {
             Log::error($e->getMessage());
             Log::error(sprintf('Could not parse search: "%s".', $query));
             throw new FireflyException('Invalid search value. See the logs.', 0, $e);
@@ -233,7 +233,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->collector->setUser($user);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
-        $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);
+        $this->setLimit((int) app('preferences')->getForUser($user, 'listPageSize', 50)->data);
 
     }
 
@@ -253,7 +253,7 @@ class OperatorQuerySearch implements SearchInterface
             case Subquery::class:
                 // loop all notes in subquery:
                 foreach ($searchNode->getNodes() as $subNode) { // @phpstan-ignore-line
-                    $this->handleSearchNode($subNode); // let's hope it's not too recursive!
+                    $this->handleSearchNode($subNode);          // let's hope it's not too recursive!
                 }
                 break;
             case Word::class:
@@ -265,7 +265,7 @@ class OperatorQuerySearch implements SearchInterface
             case Emoticon::class:
             case Emoji::class:
             case Mention::class:
-                $allWords = (string)$searchNode->getValue();
+                $allWords = (string) $searchNode->getValue();
                 Log::debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $allWords, $class));
                 $this->words[] = $allWords;
                 break;
@@ -276,11 +276,11 @@ class OperatorQuerySearch implements SearchInterface
                 $operator = strtolower($searchNode->getValue());
                 $value    = $searchNode->getNode()->getValue();
                 // must be valid operator:
-                if (in_array($operator, $this->validOperators, true) && $this->updateCollector($operator, (string)$value)) {
+                if (in_array($operator, $this->validOperators, true) && $this->updateCollector($operator, (string) $value)) {
                     $this->operators->push(
                         [
                             'type'  => self::getRootOperator($operator),
-                            'value' => (string)$value,
+                            'value' => (string) $value,
                         ]
                     );
                     Log::debug(sprintf('Added operator type "%s"', $operator));
@@ -289,7 +289,7 @@ class OperatorQuerySearch implements SearchInterface
                     Log::debug(sprintf('Added INVALID operator type "%s"', $operator));
                     $this->invalidOperators[] = [
                         'type'  => $operator,
-                        'value' => (string)$value,
+                        'value' => (string) $value,
                     ];
                 }
         }
@@ -322,6 +322,30 @@ class OperatorQuerySearch implements SearchInterface
             //
             // all account related searches:
             //
+            case 'account_is':
+                $this->searchAccount($value, 3, 4);
+                break;
+            case 'account_contains':
+                $this->searchAccount($value, 3, 3);
+                break;
+            case 'account_ends':
+                $this->searchAccount($value, 3, 2);
+                break;
+            case 'account_starts':
+                $this->searchAccount($value, 3, 1);
+                break;
+            case 'account_nr_is':
+                $this->searchAccountNr($value, 3, 4);
+                break;
+            case 'account_nr_contains':
+                $this->searchAccountNr($value, 3, 3);
+                break;
+            case 'account_nr_ends':
+                $this->searchAccountNr($value, 3, 2);
+                break;
+            case 'account_nr_starts':
+                $this->searchAccountNr($value, 3, 1);
+                break;
             case 'source_account_starts':
                 $this->searchAccount($value, 1, 1);
                 break;
@@ -347,7 +371,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 1, 3);
                 break;
             case 'source_account_id':
-                $account = $this->accountRepository->find((int)$value);
+                $account = $this->accountRepository->find((int) $value);
                 if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection([$account]));
                 }
@@ -389,7 +413,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 2, 3);
                 break;
             case 'destination_account_id':
-                $account = $this->accountRepository->find((int)$value);
+                $account = $this->accountRepository->find((int) $value);
                 if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
@@ -401,7 +425,7 @@ class OperatorQuerySearch implements SearchInterface
                 $parts      = explode(',', $value);
                 $collection = new Collection;
                 foreach ($parts as $accountId) {
-                    $account = $this->accountRepository->find((int)$accountId);
+                    $account = $this->accountRepository->find((int) $accountId);
                     if (null !== $account) {
                         $collection->push($account);
                     }
@@ -481,6 +505,32 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->withCategory();
                 break;
             case 'category_is':
+                $category = $this->categoryRepository->findByName($value);
+                if (null !== $category) {
+                    $this->collector->setCategory($category);
+                    break;
+                }
+                $this->collector->findNothing();
+                break;
+            case 'category_ends':
+                $result = $this->categoryRepository->categoryEndsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->setCategories($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case 'category_starts':
+                $result = $this->categoryRepository->categoryStartsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->setCategories($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case 'category_contains':
                 $result = $this->categoryRepository->searchCategory($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
@@ -498,8 +548,34 @@ class OperatorQuerySearch implements SearchInterface
             case 'has_any_budget':
                 $this->collector->withBudget();
                 break;
-            case 'budget_is':
+            case 'budget_contains':
                 $result = $this->budgetRepository->searchBudget($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->setBudgets($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case 'budget_is':
+                $budget = $this->budgetRepository->findByName($value);
+                if (null !== $budget) {
+                    $this->collector->setBudget($budget);
+                    break;
+                }
+                $this->collector->findNothing();
+                break;
+            case 'budget_ends':
+                $result = $this->budgetRepository->budgetEndsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->setBudgets($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case 'budget_starts':
+                $result = $this->budgetRepository->budgetStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBudgets($result);
                 }
@@ -516,8 +592,33 @@ class OperatorQuerySearch implements SearchInterface
             case 'has_any_bill':
                 $this->collector->withBill();
                 break;
-            case 'bill_is':
+            case 'bill_contains':
                 $result = $this->billRepository->searchBill($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->setBills($result);
+                    break;
+                }
+                $this->collector->findNothing();
+                break;
+            case 'bill_is':
+                $bill = $this->billRepository->findByName($value);
+                if (null !== $bill) {
+                    $this->collector->setBill($bill);
+                    break;
+                }
+                $this->collector->findNothing();
+                break;
+            case 'bill_ends':
+                $result = $this->billRepository->billEndsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->setBills($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case 'bill_starts':
+                $result = $this->billRepository->billStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
                 }
@@ -545,19 +646,25 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case 'tag_is_not':
+                $result = $this->tagRepository->searchTag($value);
+                if ($result->count() > 0) {
+                    $this->collector->setWithoutSpecificTags($result);
+                }
+                break;
             //
             // notes
             //
-            case 'notes_contain':
+            case 'notes_contains':
                 $this->collector->notesContain($value);
                 break;
-            case 'notes_start':
+            case 'notes_starts':
                 $this->collector->notesStartWith($value);
                 break;
-            case 'notes_end':
+            case 'notes_ends':
                 $this->collector->notesEndWith($value);
                 break;
-            case 'notes_are':
+            case 'notes_is':
                 $this->collector->notesExactly($value);
                 break;
             case 'no_notes':
@@ -569,10 +676,10 @@ class OperatorQuerySearch implements SearchInterface
             //
             // amount
             //
-            case 'amount_exactly':
+            case 'amount_is':
 
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string)$value);
+                $value = str_replace(',', '.', (string) $value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -580,7 +687,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
             case 'amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string)$value);
+                $value = str_replace(',', '.', (string) $value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -589,7 +696,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', (string)$value);
+                $value  = str_replace(',', '.', (string) $value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
@@ -657,7 +764,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public static function getRootOperator(string $operator): string
     {
-        $config = config(sprintf('firefly.search.operators.%s', $operator));
+        $config = config(sprintf('search.operators.%s', $operator));
         if (null === $config) {
             throw new FireflyException(sprintf('No configuration for search operator "%s"', $operator));
         }
@@ -672,7 +779,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * searchDirection: 1 = source (default), 2 = destination
+     * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
      * @param string $value
@@ -692,6 +799,11 @@ class OperatorQuerySearch implements SearchInterface
             // destination can be
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
             $collectorMethod = 'setDestinationAccounts';
+        }
+        // either account could be:
+        if (3 === $searchDirection) {
+            $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE, AccountType::REVENUE];
+            $collectorMethod = 'setAccounts';
         }
         // string position (default): starts with:
         $stringMethod = 'str_starts_with';
@@ -733,7 +845,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * searchDirection: 1 = source (default), 2 = destination
+     * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
      * @param string $value
@@ -754,6 +866,13 @@ class OperatorQuerySearch implements SearchInterface
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
             $collectorMethod = 'setDestinationAccounts';
         }
+
+        // either account could be:
+        if (3 === $searchDirection) {
+            $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE, AccountType::REVENUE];
+            $collectorMethod = 'setAccounts';
+        }
+
         // string position (default): starts with:
         $stringMethod = 'str_starts_with';
 
@@ -782,7 +901,7 @@ class OperatorQuerySearch implements SearchInterface
         $filtered = $accounts->filter(
             function (Account $account) use ($value, $stringMethod) {
                 // either IBAN or account number!
-                $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower((string)$value));
+                $ibanMatch      = $stringMethod(strtolower((string) $account->iban), strtolower((string) $value));
                 $accountNrMatch = false;
                 /** @var AccountMeta $meta */
                 foreach ($account->accountMeta as $meta) {

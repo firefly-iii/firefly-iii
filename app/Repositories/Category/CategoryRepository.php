@@ -420,4 +420,30 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return null;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function categoryEndsWith(string $query, int $limit): Collection
+    {
+        $search = $this->user->categories();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%%%s', $query));
+        }
+
+        return $search->take($limit)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function categoryStartsWith(string $query, int $limit): Collection
+    {
+        $search = $this->user->categories();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%s%%', $query));
+        }
+
+        return $search->take($limit)->get();
+    }
 }

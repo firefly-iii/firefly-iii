@@ -53,7 +53,7 @@ class EitherConfigKey
             // triggers and actions:
             'firefly.rule-actions',
             'firefly.context-rule-actions',
-            'firefly.search.operators'
+            'search.operators'
         ];
 
     /**

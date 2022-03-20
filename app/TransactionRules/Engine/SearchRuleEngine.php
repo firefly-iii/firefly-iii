@@ -186,7 +186,7 @@ class SearchRuleEngine implements RuleEngineInterface
             }
 
             // if needs no context, value is different:
-            $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
+            $needsContext = config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
             if (false === $needsContext) {
                 Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:true', $ruleTrigger->trigger_type));
                 $searchArray[$ruleTrigger->trigger_type][] = 'true';
@@ -310,7 +310,7 @@ class SearchRuleEngine implements RuleEngineInterface
                 continue;
             }
             $searchArray  = [];
-            $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
+            $needsContext = config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
             if (false === $needsContext) {
                 Log::debug(sprintf('SearchRuleEngine:: non strict, will search for: %s:true', $ruleTrigger->trigger_type));
                 $searchArray[$ruleTrigger->trigger_type] = 'true';

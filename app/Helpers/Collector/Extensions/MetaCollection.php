@@ -32,6 +32,7 @@ use FireflyIII\Models\Tag;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Trait MetaCollection
@@ -296,6 +297,35 @@ trait MetaCollection
     }
 
     /**
+     * Without tags
+     *
+     * @param Collection $tags
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setWithoutSpecificTags(Collection $tags): GroupCollectorInterface
+    {
+        $this->withTagInformation();
+
+        // this method adds a "postFilter" to the collector.
+        $list = $tags->pluck('tag')->toArray();
+        $filter = function (int $index, array $object) use ($list): bool {
+            foreach($object['transactions'] as $transaction) {
+                foreach($transaction['tags'] as $tag) {
+                    if(in_array($tag['name'], $list)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        $this->postFilters[] = $filter;
+
+
+        return $this;
+    }
+
+    /**
      * @return GroupCollectorInterface
      */
     public function withAnyNotes(): GroupCollectorInterface
@@ -307,7 +337,7 @@ trait MetaCollection
     }
 
     /**
-     * Limit results to transactions without a bill..
+     * Limit results to transactions without a bill.
      *
      * @return GroupCollectorInterface
      */

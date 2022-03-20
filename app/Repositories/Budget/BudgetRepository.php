@@ -564,4 +564,34 @@ class BudgetRepository implements BudgetRepositoryInterface
             }
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function budgetEndsWith(string $query, int $limit): Collection
+    {
+        $search = $this->user->budgets();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%%%s', $query));
+        }
+        $search->orderBy('order', 'ASC')
+               ->orderBy('name', 'ASC')->where('active', true);
+
+        return $search->take($limit)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function budgetStartsWith(string $query, int $limit): Collection
+    {
+        $search = $this->user->budgets();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%s%%', $query));
+        }
+        $search->orderBy('order', 'ASC')
+               ->orderBy('name', 'ASC')->where('active', true);
+
+        return $search->take($limit)->get();
+    }
 }

@@ -55,6 +55,11 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function __construct()
     {
+        $this->postFilters = [];
+        $this->user        = null;
+        $this->limit       = null;
+        $this->page        = null;
+
         $this->hasAccountInfo       = false;
         $this->hasCatInformation    = false;
         $this->hasBudgetInformation = false;
@@ -240,7 +245,12 @@ class GroupCollector implements GroupCollectorInterface
         $result = $this->query->get($this->fields);
 
         // now to parse this into an array.
-        $collection  = $this->parseArray($result);
+        $collection = $this->parseArray($result);
+
+        // filter the array using all available post filters:
+        $collection = $this->postFilterCollection($collection);
+
+        // count it and continue:
         $this->total = $collection->count();
 
         // now filter the array according to the page and the limit (if necessary)
@@ -730,7 +740,7 @@ class GroupCollector implements GroupCollectorInterface
 
         // also merge attachments:
         if (array_key_exists('attachment_id', $result)) {
-            $uploaded = 1 === (int)$result['attachment_uploaded'];
+            $uploaded     = 1 === (int) $result['attachment_uploaded'];
             $attachmentId = (int) $augumentedJournal['attachment_id'];
             if (0 !== $attachmentId && $uploaded) {
                 $result['attachments'][$attachmentId] = [
@@ -738,6 +748,8 @@ class GroupCollector implements GroupCollectorInterface
                 ];
             }
         }
+        // unset various fields:
+        unset($result['tag_id'], $result['tag_name'], $result['tag_date'], $result['tag_description'], $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level']);
 
         return $result;
     }
@@ -788,5 +800,28 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         return $groups;
+    }
+
+    /**
+     * @param Collection $collection
+     * @return Collection
+     */
+    private function postFilterCollection(Collection $collection): Collection
+    {
+        Log::debug('Now in postFilterCollection()');
+        $newCollection = new Collection;
+        foreach ($collection as $i => $item) {
+            Log::debug(sprintf('Now working on item #%d/%d', $i + 1, $collection->count()));
+            foreach ($this->postFilters as $func) {
+                if (false === $func($i, $item)) {
+                    // skip other filters, continue to next item.
+                    Log::debug('Filter returns false, jump to next item.');
+                    continue 2;
+                }
+                Log::debug('Filter returns true');
+            }
+            $newCollection->push($item);
+        }
+        return $newCollection;
     }
 }

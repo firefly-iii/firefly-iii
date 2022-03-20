@@ -420,6 +420,15 @@ interface GroupCollectorInterface
     public function setTags(Collection $tags): GroupCollectorInterface;
 
     /**
+     * Only when does not have these tags
+     *
+     * @param Collection $tags
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setWithoutSpecificTags(Collection $tags): GroupCollectorInterface;
+
+    /**
      * Limit the search to one specific transaction group.
      *
      * @param TransactionGroup $transactionGroup
