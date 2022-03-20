@@ -92,7 +92,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->invalidOperators   = [];
         $this->limit              = 25;
         $this->date               = today(config('app.timezone'));
-        $this->validOperators     = array_keys(config('firefly.search.operators'));
+        $this->validOperators     = array_keys(config('search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
         $this->categoryRepository = app(CategoryRepositoryInterface::class);

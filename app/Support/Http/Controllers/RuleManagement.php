@@ -79,7 +79,7 @@ trait RuleManagement
     protected function getPreviousTriggers(Request $request): array
     {
         // See reference nr. 34
-        $operators = config('firefly.search.operators');
+        $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
@@ -124,7 +124,7 @@ trait RuleManagement
     protected function parseFromOperators(array $submittedOperators): array
     {
         // See reference nr. 35
-        $operators       = config('firefly.search.operators');
+        $operators       = config('search.operators');
         $renderedEntries = [];
         $triggers        = [];
         foreach ($operators as $key => $operator) {

@@ -205,9 +205,9 @@ return [
         'language'           => 'en_US',
         'locale'             => 'equal',
     ],
-    'default_currency' => 'EUR',
-    'default_language' => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
-    'default_locale'   => envNonEmpty('DEFAULT_LOCALE', 'equal'),
+    'default_currency'             => 'EUR',
+    'default_language'             => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
+    'default_locale'               => envNonEmpty('DEFAULT_LOCALE', 'equal'),
 
     // "value must be in this list" values
     'valid_attachment_models'      => [
@@ -221,7 +221,7 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
-    'valid_view_ranges' => ['1D', '1W', '1M', '3M', '6M', '1Y',],
+    'valid_view_ranges'            => ['1D', '1W', '1M', '3M', '6M', '1Y',],
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',
@@ -390,7 +390,7 @@ return [
         'transfers'  => 'fa-exchange',
     ],
 
-    'bindables'                    => [
+    'bindables'            => [
         // models
         'account'          => Account::class,
         'attachment'       => Attachment::class,
@@ -442,7 +442,7 @@ return [
         'eitherConfigKey'  => EitherConfigKey::class,
 
     ],
-    'rule-actions'                 => [
+    'rule-actions'         => [
         'set_category'            => SetCategory::class,
         'clear_category'          => ClearCategory::class,
         'set_budget'              => SetBudget::class,
@@ -466,7 +466,7 @@ return [
         'update_piggy'            => UpdatePiggybank::class,
         'delete_transaction'      => DeleteTransaction::class,
     ],
-    'context-rule-actions'         => [
+    'context-rule-actions' => [
         'set_category',
         'set_budget',
         'add_tag',
@@ -485,180 +485,11 @@ return [
         'convert_transfer',
     ],
 
-    'test-triggers'    => [
+    'test-triggers' => [
         'limit' => 10,
         'range' => 200,
     ],
 
-
-    'search'                    => [
-        'operators' => [
-            'user_action'          => ['alias' => false, 'needs_context' => true,],
-            'description_starts'   => ['alias' => false, 'needs_context' => true,],
-            'description_ends'     => ['alias' => false, 'needs_context' => true,],
-            'description_contains' => ['alias' => false, 'needs_context' => true,],
-            'description_is'       => ['alias' => false, 'needs_context' => true,],
-            'description'          => ['alias' => true, 'alias_for' => 'description_contains', 'needs_context' => true,],
-
-            'currency_is'         => ['alias' => false, 'needs_context' => true,],
-            'foreign_currency_is' => ['alias' => false, 'needs_context' => true,],
-
-            'has_attachments'                 => ['alias' => false, 'needs_context' => false,],
-            'has_no_category'                 => ['alias' => false, 'needs_context' => false,],
-            'has_any_category'                => ['alias' => false, 'needs_context' => false,],
-            'has_no_budget'                   => ['alias' => false, 'needs_context' => false,],
-            'has_any_budget'                  => ['alias' => false, 'needs_context' => false,],
-            'has_no_bill'                     => ['alias' => false, 'needs_context' => false,],
-            'has_any_bill'                    => ['alias' => false, 'needs_context' => false,],
-            'has_no_tag'                      => ['alias' => false, 'needs_context' => false,],
-            'has_any_tag'                     => ['alias' => false, 'needs_context' => false,],
-            'notes_contain'                   => ['alias' => false, 'needs_context' => true,],
-            'notes_start'                     => ['alias' => false, 'needs_context' => true,],
-            'notes_end'                       => ['alias' => false, 'needs_context' => true,],
-            'notes_are'                       => ['alias' => false, 'needs_context' => true,],
-            'no_notes'                        => ['alias' => false, 'needs_context' => false,],
-            'any_notes'                       => ['alias' => false, 'needs_context' => false,],
-            'no_external_url'                 => ['alias' => false, 'needs_context' => false,],
-            'any_external_url'                => ['alias' => false, 'needs_context' => false,],
-
-            // one exact (or array of) journals:
-            'id'                              => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],
-            'journal_id'                      => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],
-
-            // exact amount
-            'amount_exactly'                  => ['alias' => false, 'needs_context' => true,],
-            'amount_is'                       => ['alias' => true, 'alias_for' => 'amount_exactly', 'needs_context' => true,],
-            'amount'                          => ['alias' => true, 'alias_for' => 'amount_exactly', 'needs_context' => true,],
-
-            // is less than
-            'amount_less'                     => ['alias' => false, 'needs_context' => true,],
-            'amount_max'                      => ['alias' => true, 'alias_for' => 'amount_less', 'needs_context' => true,],
-
-            // is more than
-            'amount_more'                     => ['alias' => false, 'needs_context' => true,],
-            'amount_min'                      => ['alias' => true, 'alias_for' => 'amount_more', 'needs_context' => true,],
-
-            // source account name is + alias:
-            'source_account_is'               => ['alias' => false, 'needs_context' => true,],
-            'from_account_is'                 => ['alias' => true, 'alias_for' => 'source_account_is', 'needs_context' => true,],
-
-            // source or dest is cash account?
-            'source_is_cash'                  => ['alias' => false, 'needs_context' => false],
-            'destination_is_cash'             => ['alias' => false, 'needs_context' => false],
-            'account_is_cash'                 => ['alias' => false, 'needs_context' => false],
-
-            // source account name contains + alias
-            'source_account_contains'         => ['alias' => false, 'needs_context' => true,],
-            'from_account_contains'           => ['alias' => true, 'alias_for' => 'source_account_contains', 'needs_context' => true,],
-            'source'                          => ['alias' => true, 'alias_for' => 'source_account_contains', 'needs_context' => true,],
-            'from'                            => ['alias' => true, 'alias_for' => 'source_account_contains', 'needs_context' => true,],
-
-            // source account name starts with + alias
-            'source_account_starts'           => ['alias' => false, 'needs_context' => true,],
-            'from_account_starts'             => ['alias' => true, 'alias_for' => 'source_account_starts', 'needs_context' => true,],
-
-            // source account name ends with + alias
-            'source_account_ends'             => ['alias' => false, 'needs_context' => true,],
-            'from_account_ends'               => ['alias' => true, 'alias_for' => 'source_account_ends', 'needs_context' => true,],
-
-            // source account ID + alias
-            'source_account_id'               => ['alias' => false, 'needs_context' => true,],
-            'from_account_id'                 => ['alias' => true, 'alias_for' => 'source_account_id', 'needs_context' => true,],
-
-            // source account number is
-            'source_account_nr_is'            => ['alias' => false, 'needs_context' => true,],
-            'from_account_nr_is'              => ['alias' => true, 'alias_for' => 'source_account_nr_is', 'needs_context' => true,],
-
-            // source account number contains
-            'source_account_nr_contains'      => ['alias' => false, 'needs_context' => true,],
-            'from_account_nr_contains'        => ['alias' => true, 'alias_for' => 'source_account_nr_contains', 'needs_context' => true,],
-
-            // source account number starts with
-            'source_account_nr_starts'        => ['alias' => false, 'needs_context' => true,],
-            'from_account_nr_starts'          => ['alias' => true, 'alias_for' => 'source_account_nr_starts', 'needs_context' => true,],
-
-            // source account number ends with
-            'source_account_nr_ends'          => ['alias' => false, 'needs_context' => true,],
-            'from_account_nr_ends'            => ['alias' => true, 'alias_for' => 'source_account_nr_ends', 'needs_context' => true,],
-
-            // destination account name is + alias
-            'destination_account_is'          => ['alias' => false, 'needs_context' => true,],
-            'to_account_is'                   => ['alias' => true, 'alias_for' => 'destination_account_is', 'needs_context' => true,],
-
-            // destination account name contains + alias
-            'destination_account_contains'    => ['alias' => false, 'needs_context' => true,],
-            'to_account_contains'             => ['alias' => true, 'alias_for' => 'destination_account_contains', 'needs_context' => true,],
-            'destination'                     => ['alias' => true, 'alias_for' => 'destination_account_contains', 'needs_context' => true,],
-            'to'                              => ['alias' => true, 'alias_for' => 'destination_account_contains', 'needs_context' => true,],
-
-            // destination account name starts with + alias
-            'destination_account_starts'      => ['alias' => false, 'needs_context' => true,],
-            'to_account_starts'               => ['alias' => true, 'alias_for' => 'destination_account_starts', 'needs_context' => true,],
-
-            // destination account name ends with + alias
-            'destination_account_ends'        => ['alias' => false, 'needs_context' => true,],
-            'to_account_ends'                 => ['alias' => true, 'alias_for' => 'destination_account_ends', 'needs_context' => true,],
-
-            // destination account ID + alias
-            'destination_account_id'          => ['alias' => false, 'needs_context' => true,],
-            'to_account_id'                   => ['alias' => true, 'alias_for' => 'destination_account_id', 'needs_context' => true,],
-
-            // destination account number is
-            'destination_account_nr_is'       => ['alias' => false, 'needs_context' => true,],
-            'to_account_nr_is'                => ['alias' => true, 'alias_for' => 'destination_account_nr_is', 'needs_context' => true,],
-
-            // destination account number contains
-            'destination_account_nr_contains' => ['alias' => false, 'needs_context' => true,],
-            'to_account_nr_contains'          => ['alias' => true, 'alias_for' => 'destination_account_nr_contains', 'needs_context' => true,],
-
-            // destination account number starts with
-            'destination_account_nr_starts'   => ['alias' => false, 'needs_context' => true,],
-            'to_account_nr_starts'            => ['alias' => true, 'alias_for' => 'destination_account_nr_starts', 'needs_context' => true,],
-
-            // destination account number ends with
-            'destination_account_nr_ends'     => ['alias' => false, 'needs_context' => true,],
-            'to_account_nr_ends'              => ['alias' => true, 'alias_for' => 'destination_account_nr_ends', 'needs_context' => true,],
-
-            // any account id is
-            'account_id'                      => ['alias' => false, 'needs_context' => true,],
-
-            // category
-            'category_is'                     => ['alias' => false, 'needs_context' => true,],
-            'category'                        => ['alias' => true, 'alias_for' => 'category_is', 'needs_context' => true,],
-
-            // budget
-            'budget_is'                       => ['alias' => false, 'needs_context' => true,],
-            'budget'                          => ['alias' => true, 'alias_for' => 'budget_is', 'needs_context' => true,],
-
-            // bill
-            'bill_is'                         => ['alias' => false, 'needs_context' => true,],
-            'bill'                            => ['alias' => true, 'alias_for' => 'bill_is', 'needs_context' => true,],
-
-            // type
-            'transaction_type'                => ['alias' => false, 'needs_context' => true,],
-            'type'                            => ['alias' => true, 'alias_for' => 'transaction_type', 'needs_context' => true,],
-
-            // date:
-            'date_is'                         => ['alias' => false, 'needs_context' => true,],
-            'date'                            => ['alias' => true, 'alias_for' => 'date_is', 'needs_context' => true,],
-            'on'                              => ['alias' => true, 'alias_for' => 'date_is', 'needs_context' => true,],
-            'date_before'                     => ['alias' => false, 'needs_context' => true,],
-            'before'                          => ['alias' => true, 'alias_for' => 'date_before', 'needs_context' => true,],
-            'date_after'                      => ['alias' => false, 'needs_context' => true,],
-            'after'                           => ['alias' => true, 'alias_for' => 'date_after', 'needs_context' => true,],
-
-            // other interesting fields
-            'tag_is'                          => ['alias' => false, 'needs_context' => true,],
-            'tag'                             => ['alias' => true, 'alias_for' => 'tag_is', 'needs_context' => true,],
-            'created_on'                      => ['alias' => false, 'needs_context' => true,],
-            'created_at'                      => ['alias' => true, 'alias_for' => 'created_on', 'needs_context' => true,],
-            'updated_on'                      => ['alias' => false, 'needs_context' => true,],
-            'updated_at'                      => ['alias' => true, 'alias_for' => 'updated_on', 'needs_context' => true,],
-            'external_id'                     => ['alias' => false, 'needs_context' => true,],
-            'internal_reference'              => ['alias' => false, 'needs_context' => true,],
-
-        ],
-    ],
 
     // expected source types for each transaction type, in order of preference.
     'expected_source_types'     => [
@@ -877,7 +708,7 @@ return [
         'import_hash', 'import_hash_v2', 'external_id', 'original_source',
 
         // recurring transactions
-        'recurrence_total', 'recurrence_count',
+        'recurrence_total', 'recurrence_count'
     ],
     'webhooks'                  => [
         'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
