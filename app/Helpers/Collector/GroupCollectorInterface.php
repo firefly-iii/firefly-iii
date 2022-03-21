@@ -306,6 +306,24 @@ interface GroupCollectorInterface
     public function setExternalId(string $externalId): GroupCollectorInterface;
 
     /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function externalIdContains(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function externalIdStarts(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function externalIdEnds(string $externalId): GroupCollectorInterface;
+
+    /**
      * Transactions without an external URL
      *
      * @return GroupCollectorInterface

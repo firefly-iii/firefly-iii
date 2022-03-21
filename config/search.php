@@ -86,12 +86,14 @@ return [
         'bill'                            => ['alias' => true, 'alias_for' => 'bill_contains', 'needs_context' => true,],
         'bill_ends'                       => ['alias' => false, 'needs_context' => true,],
         'bill_starts'                     => ['alias' => false, 'needs_context' => true,],
-        // TODO here we are
+
         'external_id_is'                  => ['alias' => false, 'needs_context' => true,],
         'external_id_contains'            => ['alias' => false, 'needs_context' => true,],
         'external_id'                     => ['alias' => true, 'alias_for' => 'external_id_contains', 'needs_context' => true,],
         'external_id_ends'                => ['alias' => false, 'needs_context' => true,],
         'external_id_starts'              => ['alias' => false, 'needs_context' => true,],
+
+        // TODO here we are!
         'internal_reference_is'           => ['alias' => false, 'needs_context' => true,],
         'internal_reference_contains'     => ['alias' => false, 'needs_context' => true,],
         'internal_reference'              => ['alias' => true, 'alias_for' => 'internal_reference_contains', 'needs_context' => true,],
