@@ -67,6 +67,24 @@ interface GroupCollectorInterface
     public function amountMore(string $amount): GroupCollectorInterface;
 
     /**
+     * @param string $day
+     * @return GroupCollectorInterface
+     */
+    public function dayAfter(string $day): GroupCollectorInterface;
+
+    /**
+     * @param string $day
+     * @return GroupCollectorInterface
+     */
+    public function dayBefore(string $day): GroupCollectorInterface;
+
+    /**
+     * @param string $day
+     * @return GroupCollectorInterface
+     */
+    public function dayIs(string $day): GroupCollectorInterface;
+
+    /**
      * End of the description must match:
      *
      * @param array $array
@@ -112,6 +130,24 @@ interface GroupCollectorInterface
     public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function externalIdContains(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function externalIdEnds(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function externalIdStarts(string $externalId): GroupCollectorInterface;
+
+    /**
      * Ensure the search will find nothing at all, zero results.
      *
      * @return GroupCollectorInterface
@@ -150,6 +186,42 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function hasAttachments(): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function internalReferenceContains(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function internalReferenceEnds(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function internalReferenceStarts(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @return GroupCollectorInterface
+     */
+    public function monthAfter(string $month): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @return GroupCollectorInterface
+     */
+    public function monthBefore(string $month): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @return GroupCollectorInterface
+     */
+    public function monthIs(string $month): GroupCollectorInterface;
 
     /**
      * @param string $value
@@ -306,38 +378,6 @@ interface GroupCollectorInterface
     public function setExternalId(string $externalId): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
-     * @return GroupCollectorInterface
-     */
-    public function externalIdContains(string $externalId): GroupCollectorInterface;
-
-    /**
-     * @param string $externalId
-     * @return GroupCollectorInterface
-     */
-    public function externalIdStarts(string $externalId): GroupCollectorInterface;
-
-    /**
-     * @param string $externalId
-     * @return GroupCollectorInterface
-     */
-    public function externalIdEnds(string $externalId): GroupCollectorInterface;
-
-    /**
-     * Transactions without an external URL
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withoutExternalUrl(): GroupCollectorInterface;
-
-    /**
-     * Transactions with an external URL
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withExternalUrl(): GroupCollectorInterface;
-
-    /**
      * Limit results to a specific foreign currency.
      *
      * @param TransactionCurrency $currency
@@ -438,15 +478,6 @@ interface GroupCollectorInterface
     public function setTags(Collection $tags): GroupCollectorInterface;
 
     /**
-     * Only when does not have these tags
-     *
-     * @param Collection $tags
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setWithoutSpecificTags(Collection $tags): GroupCollectorInterface;
-
-    /**
      * Limit the search to one specific transaction group.
      *
      * @param TransactionGroup $transactionGroup
@@ -481,6 +512,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setUser(User $user): GroupCollectorInterface;
+
+    /**
+     * Only when does not have these tags
+     *
+     * @param Collection $tags
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setWithoutSpecificTags(Collection $tags): GroupCollectorInterface;
 
     /**
      * Either account can be set, but NOT both. This effectively excludes internal transfers.
@@ -562,6 +602,13 @@ interface GroupCollectorInterface
     public function withCategoryInformation(): GroupCollectorInterface;
 
     /**
+     * Transactions with an external URL
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withExternalUrl(): GroupCollectorInterface;
+
+    /**
      * Will include notes.
      *
      * @return GroupCollectorInterface
@@ -597,6 +644,13 @@ interface GroupCollectorInterface
     public function withoutCategory(): GroupCollectorInterface;
 
     /**
+     * Transactions without an external URL
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutExternalUrl(): GroupCollectorInterface;
+
+    /**
      * @return GroupCollectorInterface
      */
     public function withoutNotes(): GroupCollectorInterface;
@@ -606,15 +660,22 @@ interface GroupCollectorInterface
      */
     public function withoutTags(): GroupCollectorInterface;
 
-
-    public function yearIs(string $year): GroupCollectorInterface;
-    public function monthIs(string $month): GroupCollectorInterface;
-    public function dayIs(string $day): GroupCollectorInterface;
-    public function yearBefore(string $year): GroupCollectorInterface;
-    public function monthBefore(string $month): GroupCollectorInterface;
-    public function dayBefore(string $day): GroupCollectorInterface;
+    /**
+     * @param string $year
+     * @return GroupCollectorInterface
+     */
     public function yearAfter(string $year): GroupCollectorInterface;
-    public function monthAfter(string $month): GroupCollectorInterface;
-    public function dayAfter(string $day): GroupCollectorInterface;
+
+    /**
+     * @param string $year
+     * @return GroupCollectorInterface
+     */
+    public function yearBefore(string $year): GroupCollectorInterface;
+
+    /**
+     * @param string $year
+     * @return GroupCollectorInterface
+     */
+    public function yearIs(string $year): GroupCollectorInterface;
 
 }

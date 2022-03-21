@@ -32,20 +32,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 trait CollectorProperties
 {
-    private array $fields;
-    private bool $hasAccountInfo;
-    private bool $hasBillInformation;
-    private bool $hasBudgetInformation;
-    private bool $hasCatInformation;
-    private bool $hasJoinedAttTables;
-    private bool $hasJoinedMetaTables;
-    private bool $hasJoinedTagTables;
-    private bool $hasNotesInformation;
-    private array $integerFields;
-    private ?int $limit;
-    private ?int $page;
+    private array   $fields;
+    private bool    $hasAccountInfo;
+    private bool    $hasBillInformation;
+    private bool    $hasBudgetInformation;
+    private bool    $hasCatInformation;
+    private bool    $hasJoinedAttTables;
+    private bool    $hasJoinedMetaTables;
+    private bool    $hasJoinedTagTables;
+    private bool    $hasNotesInformation;
+    private array   $integerFields;
+    private ?int    $limit;
+    private ?int    $page;
+    private array   $postFilters;
     private HasMany $query;
-    private int $total;
-    private ?User $user;
-    private array $postFilters;
+    private int     $total;
+    private ?User   $user;
 }

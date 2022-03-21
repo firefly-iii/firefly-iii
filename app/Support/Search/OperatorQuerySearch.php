@@ -757,8 +757,17 @@ class OperatorQuerySearch implements SearchInterface
             case 'external_id_ends':
                 $this->collector->externalIdEnds($value);
                 break;
-            case 'internal_reference':
+            case 'internal_reference_is':
                 $this->collector->setInternalReference($value);
+                break;
+            case 'internal_reference_contains':
+                $this->collector->internalReferenceContains($value);
+                break;
+            case 'internal_reference_starts':
+                $this->collector->internalReferenceStarts($value);
+                break;
+            case 'internal_reference_ends':
+                $this->collector->internalReferenceEnds($value);
                 break;
         }
 

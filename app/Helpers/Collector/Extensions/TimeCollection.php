@@ -33,6 +33,45 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 trait TimeCollection
 {
 
+    public function dayAfter(string $day): GroupCollectorInterface
+    {
+        $this->query->whereDay('transaction_journals.date', '>=', $day);
+        return $this;
+    }
+
+    public function dayBefore(string $day): GroupCollectorInterface
+    {
+        $this->query->whereDay('transaction_journals.date', '<=', $day);
+        return $this;
+    }
+
+    public function dayIs(string $day): GroupCollectorInterface
+    {
+        $this->query->whereDay('transaction_journals.date', '=', $day);
+        return $this;
+    }
+
+    public function monthAfter(string $month): GroupCollectorInterface
+    {
+        $this->query->whereMonth('transaction_journals.date', '>=', $month);
+        return $this;
+
+    }
+
+    public function monthBefore(string $month): GroupCollectorInterface
+    {
+        $this->query->whereMonth('transaction_journals.date', '<=', $month);
+        return $this;
+
+    }
+
+    public function monthIs(string $month): GroupCollectorInterface
+    {
+        $this->query->whereMonth('transaction_journals.date', '=', $month);
+        return $this;
+
+    }
+
     /**
      * Collect transactions after a specific date.
      *
@@ -120,22 +159,9 @@ trait TimeCollection
         return $this;
     }
 
-    public function yearIs(string $year): GroupCollectorInterface
+    public function yearAfter(string $year): GroupCollectorInterface
     {
-        $this->query->whereYear('transaction_journals.date', '=', $year);
-        return $this;
-    }
-
-    public function monthIs(string $month): GroupCollectorInterface
-    {
-        $this->query->whereMonth('transaction_journals.date', '=', $month);
-        return $this;
-
-    }
-
-    public function dayIs(string $day): GroupCollectorInterface
-    {
-        $this->query->whereDay('transaction_journals.date', '=', $day);
+        $this->query->whereYear('transaction_journals.date', '>=', $year);
         return $this;
     }
 
@@ -145,35 +171,9 @@ trait TimeCollection
         return $this;
     }
 
-    public function monthBefore(string $month): GroupCollectorInterface
+    public function yearIs(string $year): GroupCollectorInterface
     {
-        $this->query->whereMonth('transaction_journals.date', '<=', $month);
-        return $this;
-
-    }
-
-    public function dayBefore(string $day): GroupCollectorInterface
-    {
-        $this->query->whereDay('transaction_journals.date', '<=', $day);
-        return $this;
-    }
-
-    public function yearAfter(string $year): GroupCollectorInterface
-    {
-        $this->query->whereYear('transaction_journals.date', '>=', $year);
-        return $this;
-    }
-
-    public function monthAfter(string $month): GroupCollectorInterface
-    {
-        $this->query->whereMonth('transaction_journals.date', '>=', $month);
-        return $this;
-
-    }
-
-    public function dayAfter(string $day): GroupCollectorInterface
-    {
-        $this->query->whereDay('transaction_journals.date', '>=', $day);
+        $this->query->whereYear('transaction_journals.date', '=', $year);
         return $this;
     }
 }

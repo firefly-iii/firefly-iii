@@ -31,7 +31,6 @@ return [
         'from_account_ends'               => ['alias' => true, 'alias_for' => 'source_account_ends', 'needs_context' => true,],
         'source_account_starts'           => ['alias' => false, 'needs_context' => true,],
         'from_account_starts'             => ['alias' => true, 'alias_for' => 'source_account_starts', 'needs_context' => true,],
-
         'source_account_nr_is'            => ['alias' => false, 'needs_context' => true,],
         'from_account_nr_is'              => ['alias' => true, 'alias_for' => 'source_account_nr_is', 'needs_context' => true,],
         'source_account_nr_contains'      => ['alias' => false, 'needs_context' => true,],
@@ -40,7 +39,6 @@ return [
         'from_account_nr_ends'            => ['alias' => true, 'alias_for' => 'source_account_nr_ends', 'needs_context' => true,],
         'source_account_nr_starts'        => ['alias' => false, 'needs_context' => true,],
         'from_account_nr_starts'          => ['alias' => true, 'alias_for' => 'source_account_nr_starts', 'needs_context' => true,],
-
         'destination_account_is'          => ['alias' => false, 'needs_context' => true,],
         'to_account_is'                   => ['alias' => true, 'alias_for' => 'destination_account_is', 'needs_context' => true,],
         'destination_account_contains'    => ['alias' => false, 'needs_context' => true,],
@@ -51,7 +49,6 @@ return [
         'to_account_ends'                 => ['alias' => true, 'alias_for' => 'destination_account_ends', 'needs_context' => true,],
         'destination_account_starts'      => ['alias' => false, 'needs_context' => true,],
         'to_account_starts'               => ['alias' => true, 'alias_for' => 'destination_account_starts', 'needs_context' => true,],
-
         'destination_account_nr_is'       => ['alias' => false, 'needs_context' => true,],
         'to_account_nr_is'                => ['alias' => true, 'alias_for' => 'destination_account_nr_is', 'needs_context' => true,],
         'destination_account_nr_contains' => ['alias' => false, 'needs_context' => true,],
@@ -60,17 +57,14 @@ return [
         'to_account_nr_ends'              => ['alias' => true, 'alias_for' => 'destination_account_nr_ends', 'needs_context' => true,],
         'destination_account_nr_starts'   => ['alias' => false, 'needs_context' => true,],
         'to_account_nr_starts'            => ['alias' => true, 'alias_for' => 'destination_account_nr_starts', 'needs_context' => true,],
-
         'account_is'                      => ['alias' => false, 'needs_context' => true,],
         'account_contains'                => ['alias' => false, 'needs_context' => true,],
         'account_ends'                    => ['alias' => false, 'needs_context' => true,],
         'account_starts'                  => ['alias' => false, 'needs_context' => true,],
-
         'account_nr_is'                   => ['alias' => false, 'needs_context' => true,],
         'account_nr_contains'             => ['alias' => false, 'needs_context' => true,],
         'account_nr_ends'                 => ['alias' => false, 'needs_context' => true,],
         'account_nr_starts'               => ['alias' => false, 'needs_context' => true,],
-
         'category_is'                     => ['alias' => false, 'needs_context' => true,],
         'category_contains'               => ['alias' => false, 'needs_context' => true,],
         'category'                        => ['alias' => true, 'alias_for' => 'category_contains', 'needs_context' => true,],
@@ -86,19 +80,19 @@ return [
         'bill'                            => ['alias' => true, 'alias_for' => 'bill_contains', 'needs_context' => true,],
         'bill_ends'                       => ['alias' => false, 'needs_context' => true,],
         'bill_starts'                     => ['alias' => false, 'needs_context' => true,],
-
         'external_id_is'                  => ['alias' => false, 'needs_context' => true,],
         'external_id_contains'            => ['alias' => false, 'needs_context' => true,],
         'external_id'                     => ['alias' => true, 'alias_for' => 'external_id_contains', 'needs_context' => true,],
         'external_id_ends'                => ['alias' => false, 'needs_context' => true,],
         'external_id_starts'              => ['alias' => false, 'needs_context' => true,],
 
-        // TODO here we are!
         'internal_reference_is'           => ['alias' => false, 'needs_context' => true,],
         'internal_reference_contains'     => ['alias' => false, 'needs_context' => true,],
         'internal_reference'              => ['alias' => true, 'alias_for' => 'internal_reference_contains', 'needs_context' => true,],
         'internal_reference_ends'         => ['alias' => false, 'needs_context' => true,],
         'internal_reference_starts'       => ['alias' => false, 'needs_context' => true,],
+
+        // TODO here we are.
         'external_url_is'                 => ['alias' => false, 'needs_context' => true,],
         'external_url_contains'           => ['alias' => false, 'needs_context' => true,],
         'external_url'                    => ['alias' => true, 'alias_for' => 'external_url_contains', 'needs_context' => true,],

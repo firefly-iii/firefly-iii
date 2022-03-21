@@ -216,9 +216,9 @@ trait AccountCollection
             $this->query->leftJoin('account_types as dest_account_type', 'dest_account_type.id', '=', 'dest_account.account_type_id');
 
             // and add fields:
-            $this->fields[] = 'dest_account.name as destination_account_name';
-            $this->fields[] = 'dest_account.iban as destination_account_iban';
-            $this->fields[] = 'dest_account_type.type as destination_account_type';
+            $this->fields[]       = 'dest_account.name as destination_account_name';
+            $this->fields[]       = 'dest_account.iban as destination_account_iban';
+            $this->fields[]       = 'dest_account_type.type as destination_account_type';
             $this->hasAccountInfo = true;
         }
 
