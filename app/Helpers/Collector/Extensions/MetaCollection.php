@@ -131,6 +131,78 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
+    public function setExternalUrl(string $url): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+
+        $this->query->where('journal_meta.name', '=', 'external_url');
+        $this->query->where('journal_meta.data', '=', json_encode($url));
+
+        return $this;
+    }
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function externalUrlContains(string $url): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+        $url = json_encode($url);
+        $url = str_replace('\\', '\\\\', trim($url, '"'));
+        $this->query->where('journal_meta.name', '=', 'external_url');
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $url));
+
+        return $this;
+    }
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function externalUrlEnds(string $url): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+        $url = json_encode($url);
+        $url = str_replace('\\', '\\\\', ltrim($url, '"'));
+        $this->query->where('journal_meta.name', '=', 'external_url');
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s', $url));
+
+        return $this;
+    }
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function externalUrlStarts(string $url): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+        $url = json_encode($url);
+        $url = str_replace('\\', '\\\\', rtrim($url, '"'));
+        //var_dump($url);
+
+        $this->query->where('journal_meta.name', '=', 'external_url');
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%s%%', $url));
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function internalReferenceContains(string $externalId): GroupCollectorInterface
     {
         if (false === $this->hasJoinedMetaTables) {

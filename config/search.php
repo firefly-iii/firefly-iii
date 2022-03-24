@@ -92,7 +92,6 @@ return [
         'internal_reference_ends'         => ['alias' => false, 'needs_context' => true,],
         'internal_reference_starts'       => ['alias' => false, 'needs_context' => true,],
 
-        // TODO here we are.
         'external_url_is'                 => ['alias' => false, 'needs_context' => true,],
         'external_url_contains'           => ['alias' => false, 'needs_context' => true,],
         'external_url'                    => ['alias' => true, 'alias_for' => 'external_url_contains', 'needs_context' => true,],
@@ -100,6 +99,7 @@ return [
         'external_url_starts'             => ['alias' => false, 'needs_context' => true,],
         'has_attachments'                 => ['alias' => false, 'needs_context' => false,],
         'has_any_category'                => ['alias' => false, 'needs_context' => false,],
+        // TODO here we are
         'has_any_budget'                  => ['alias' => false, 'needs_context' => false,],
         'has_any_bill'                    => ['alias' => false, 'needs_context' => false,],
         'has_any_tag'                     => ['alias' => false, 'needs_context' => false,],

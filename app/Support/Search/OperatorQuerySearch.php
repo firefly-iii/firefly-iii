@@ -742,6 +742,18 @@ class OperatorQuerySearch implements SearchInterface
             case 'any_external_url':
                 $this->collector->withExternalUrl();
                 break;
+            case 'external_url_is':
+                $this->collector->setExternalUrl($value);
+                break;
+            case 'external_url_contains':
+                $this->collector->externalUrlContains($value);
+                break;
+            case 'external_url_starts':
+                $this->collector->externalUrlStarts($value);
+                break;
+            case 'external_url_ends':
+                $this->collector->externalUrlEnds($value);
+                break;
             //
             // other fields
             //

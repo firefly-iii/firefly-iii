@@ -148,6 +148,24 @@ interface GroupCollectorInterface
     public function externalIdStarts(string $externalId): GroupCollectorInterface;
 
     /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function externalUrlContains(string $url): GroupCollectorInterface;
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function externalUrlEnds(string $url): GroupCollectorInterface;
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function externalUrlStarts(string $url): GroupCollectorInterface;
+
+    /**
      * Ensure the search will find nothing at all, zero results.
      *
      * @return GroupCollectorInterface
@@ -607,6 +625,12 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function withExternalUrl(): GroupCollectorInterface;
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function setExternalUrl(string $url): GroupCollectorInterface;
 
     /**
      * Will include notes.
