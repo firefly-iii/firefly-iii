@@ -98,8 +98,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_audit',
                 [
-                    'start' => $start->formatLocalized($this->monthAndDayFormat),
-                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
+                    'start' => $start->isoFormat($this->monthAndDayFormat),
+                    'end'   => $end->isoFormat($this->monthAndDayFormat),
                 ]
             )
         );
@@ -134,8 +134,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_budget',
                 [
-                    'start' => $start->formatLocalized($this->monthAndDayFormat),
-                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
+                    'start' => $start->isoFormat($this->monthAndDayFormat),
+                    'end'   => $end->isoFormat($this->monthAndDayFormat),
                 ]
             )
         );
@@ -171,8 +171,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_category',
                 [
-                    'start' => $start->formatLocalized($this->monthAndDayFormat),
-                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
+                    'start' => $start->isoFormat($this->monthAndDayFormat),
+                    'end'   => $end->isoFormat($this->monthAndDayFormat),
                 ]
             )
         );
@@ -208,8 +208,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_default',
                 [
-                    'start' => $start->formatLocalized($this->monthAndDayFormat),
-                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
+                    'start' => $start->isoFormat($this->monthAndDayFormat),
+                    'end'   => $end->isoFormat($this->monthAndDayFormat),
                 ]
             )
         );
@@ -243,7 +243,8 @@ class ReportController extends Controller
             'subTitle',
             trans(
                 'firefly.report_double',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+                ['start' => $start->isoFormat($this->monthAndDayFormat),
+                 'end' => $end->isoFormat($this->monthAndDayFormat)]
             )
         );
 
@@ -409,8 +410,8 @@ class ReportController extends Controller
             trans(
                 'firefly.report_tag',
                 [
-                    'start' => $start->formatLocalized($this->monthAndDayFormat),
-                    'end'   => $end->formatLocalized($this->monthAndDayFormat),
+                    'start' => $start->isoFormat($this->monthAndDayFormat),
+                    'end'   => $end->isoFormat($this->monthAndDayFormat),
                 ]
             )
         );

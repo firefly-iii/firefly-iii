@@ -88,7 +88,7 @@ class NoCategoryController extends Controller
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         $subTitle = trans(
             'firefly.without_category_between',
-            ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]
         );
         $periods  = $this->getNoCategoryPeriodOverview($start);
 

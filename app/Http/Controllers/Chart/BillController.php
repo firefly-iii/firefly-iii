@@ -145,7 +145,7 @@ class BillController extends Controller
         ];
 
         foreach ($journals as $journal) {
-            $date                           = $journal['date']->formatLocalized((string)trans('config.month_and_day', [], $locale));
+            $date                           = $journal['date']->isoFormat((string)trans('config.month_and_day_js', [], $locale));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
             $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
 

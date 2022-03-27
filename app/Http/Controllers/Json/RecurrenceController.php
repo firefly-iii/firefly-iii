@@ -163,7 +163,7 @@ class RecurrenceController extends Controller
             $dayOfWeek  = (string)trans(sprintf('config.dow_%s', $date->dayOfWeekIso));
             $ndom       = sprintf('ndom,%s,%s', $date->weekOfMonth, $date->dayOfWeekIso);
             $yearly     = sprintf('yearly,%s', $date->format('Y-m-d'));
-            $yearlyDate = $date->formatLocalized((string)trans('config.month_and_day_no_year', [], $locale));
+            $yearlyDate = $date->isoFormat((string)trans('config.month_and_day_no_year_js', [], $locale));
             $result     = [
                 'daily'  => ['label' => (string)trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
                 $weekly  => ['label'    => (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),

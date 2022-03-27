@@ -240,7 +240,7 @@ class CategoryController extends Controller
             $outSet = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
                 $amount                               = app('steam')->positive($journal['amount']);
-                $date                                 = $journal['date']->formatLocalized($format);
+                $date                                 = $journal['date']->isoFormat($format);
                 $chartData[$outKey]['entries'][$date] = $chartData[$outKey]['entries'][$date] ?? '0';
 
                 $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
@@ -249,7 +249,7 @@ class CategoryController extends Controller
             $inSet = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
                 $amount                              = app('steam')->positive($journal['amount']);
-                $date                                = $journal['date']->formatLocalized($format);
+                $date                                = $journal['date']->isoFormat($format);
                 $chartData[$inKey]['entries'][$date] = $chartData[$inKey]['entries'][$date] ?? '0';
                 $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
             }

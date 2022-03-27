@@ -369,7 +369,7 @@ class General extends AbstractExtension
             function (string $date, string $format): string {
                 $carbon = new Carbon($date);
 
-                return $carbon->formatLocalized($format);
+                return $carbon->isoFormat($format);
             }
         );
     }

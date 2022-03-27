@@ -493,7 +493,7 @@ class AccountController extends Controller
                 while ($end >= $current) {
                     $theDate         = $current->format('Y-m-d');
                     $balance         = $range[$theDate] ?? $previous;
-                    $label           = $current->formatLocalized($format);
+                    $label           = $current->isoFormat($format);
                     $entries[$label] = (float)$balance;
                     $previous        = $balance;
                     $current->addDay();

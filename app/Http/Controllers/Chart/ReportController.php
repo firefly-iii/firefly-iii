@@ -114,7 +114,7 @@ class ReportController extends Controller
             /** @var array $netWorthItem */
             foreach ($result as $netWorthItem) {
                 $currencyId = $netWorthItem['currency']->id;
-                $label      = $current->formatLocalized((string)trans('config.month_and_day', [], $locale));
+                $label      = $current->isoFormat((string)trans('config.month_and_day_js', [], $locale));
                 if (!array_key_exists($currencyId, $chartData)) {
                     $chartData[$currencyId] = [
                         'label'           => 'Net worth in ' . $netWorthItem['currency']->name,
@@ -239,7 +239,7 @@ class ReportController extends Controller
             $currentStart = clone $start;
             while ($currentStart <= $end) {
                 $key                        = $currentStart->format($format);
-                $title                      = $currentStart->formatLocalized($titleFormat);
+                $title                      = $currentStart->isoFormat($titleFormat);
                 $income['entries'][$title]  = round((float)($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
                 $expense['entries'][$title] = round((float)($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
                 $currentStart               = app('navigation')->addPeriod($currentStart, $preferredRange, 0);

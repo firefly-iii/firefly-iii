@@ -237,7 +237,8 @@ class ReconcileController extends Controller
         // title:
         $description = trans(
             'firefly.reconciliation_transaction_title',
-            ['from' => $start->formatLocalized($this->monthAndDayFormat), 'to' => $end->formatLocalized($this->monthAndDayFormat)]
+            ['from' => $start->isoFormat($this->monthAndDayFormat),
+             'to' => $end->isoFormat($this->monthAndDayFormat)]
         );
         $submission  = [
             'user'         => auth()->user()->id,

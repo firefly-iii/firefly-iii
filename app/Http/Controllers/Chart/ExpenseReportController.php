@@ -151,7 +151,7 @@ class ExpenseReportController extends Controller
             // get expenses grouped by opposing name:
             $expenses = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));
             $income   = $this->groupByName($this->getIncomeForOpposing($accounts, $all, $currentStart, $currentEnd));
-            $label    = $currentStart->formatLocalized($format);
+            $label    = $currentStart->isoFormat($format);
 
             foreach ($combined as $name => $combination) {
                 // first is always expense account:

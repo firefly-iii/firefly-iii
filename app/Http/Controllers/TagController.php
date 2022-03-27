@@ -243,8 +243,8 @@ class TagController extends Controller
         $attachments  = $this->repository->getAttachments($tag);
         $subTitle     = trans(
             'firefly.journals_in_period_for_tag',
-            ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-             'end' => $end->formatLocalized($this->monthAndDayFormat),]
+            ['tag' => $tag->tag, 'start' => $start->isoFormat($this->monthAndDayFormat),
+             'end' => $end->isoFormat($this->monthAndDayFormat),]
         );
 
         $startPeriod = $this->repository->firstUseDate($tag);

@@ -356,7 +356,7 @@ class Navigation
         $entries = [];
         while ($begin < $end) {
             $formatted           = $begin->format($format);
-            $displayed           = $begin->formatLocalized($displayFormat);
+            $displayed           = $begin->isoFormat($displayFormat);
             $entries[$formatted] = $displayed;
             $begin->$increment();
         }
@@ -413,7 +413,7 @@ class Navigation
         ];
 
         if (array_key_exists($repeatFrequency, $formatMap)) {
-            return $date->formatLocalized((string)$formatMap[$repeatFrequency]);
+            return $date->isoFormat((string)$formatMap[$repeatFrequency]);
         }
         if ('3M' === $repeatFrequency || 'quarter' === $repeatFrequency) {
             $quarter = ceil($theDate->month / 3);
@@ -440,13 +440,13 @@ class Navigation
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {
         $locale = app('steam')->getLocale();
-        $format = (string)trans('config.month_and_day', [], $locale);
+        $format = (string)trans('config.month_and_day_js', [], $locale);
         if ($start->diffInMonths($end) > 1) {
-            $format = (string)trans('config.month', [], $locale);
+            $format = (string)trans('config.month_js', [], $locale);
         }
 
         if ($start->diffInMonths($end) > 12) {
-            $format = (string)trans('config.year', [], $locale);
+            $format = (string)trans('config.year_js', [], $locale);
         }
 
         return $format;

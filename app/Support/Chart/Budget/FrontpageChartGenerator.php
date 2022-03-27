@@ -187,8 +187,8 @@ class FrontpageChartGenerator
                 '%s (%s) (%s - %s)',
                 $budget->name,
                 $entry['currency_name'],
-                $limit->start_date->formatLocalized($this->monthAndDayFormat),
-                $limit->end_date->formatLocalized($this->monthAndDayFormat)
+                $limit->start_date->isoFormat($this->monthAndDayFormat),
+                $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
         $sumSpent = bcmul($entry['sum'], '-1'); // spent

@@ -208,8 +208,8 @@ class IndexController extends Controller
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
                     'amount'                  => number_format((float)$limit->amount, $currency->decimal_places, '.', ''),
-                    'start_date'              => $limit->start_date->formatLocalized($this->monthAndDayFormat),
-                    'end_date'                => $limit->end_date->formatLocalized($this->monthAndDayFormat),
+                    'start_date'              => $limit->start_date->isoFormat($this->monthAndDayFormat),
+                    'end_date'                => $limit->end_date->isoFormat($this->monthAndDayFormat),
                     'in_range'                => $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end),
                     'currency_id'             => $currency->id,
                     'currency_symbol'         => $currency->symbol,

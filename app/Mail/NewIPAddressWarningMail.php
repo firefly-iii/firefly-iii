@@ -57,9 +57,14 @@ class NewIPAddressWarningMail extends Mailable
     public function build(): self
     {
         // time
-        $this->time = now()->formatLocalized((string)trans('config.date_time'));
+
+        $this->time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
         $this->host = '';
-        $hostName   = gethostbyaddr($this->ipAddress);
+        try {
+            $hostName = gethostbyaddr($this->ipAddress);
+        } catch(\Exception $e) {
+            $hostName = $this->ipAddress;
+        }
         if ($hostName !== $this->ipAddress) {
             $this->host = $hostName;
         }

@@ -385,7 +385,7 @@ class BudgetController extends Controller
                         'transaction_group_id'     => $journal['transaction_group_id'],
                         'amount_float'             => (float)$journal['amount'],
                         'amount'                   => $journal['amount'],
-                        'date'                     => $journal['date']->formatLocalized($this->monthAndDayFormat),
+                        'date'                     => $journal['date']->isoFormat($this->monthAndDayFormat),
                         'date_sort'                => $journal['date']->format('Y-m-d'),
                         'destination_account_name' => $journal['destination_account_name'],
                         'destination_account_id'   => $journal['destination_account_id'],

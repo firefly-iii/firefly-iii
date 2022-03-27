@@ -98,7 +98,7 @@ trait GetConfigurationData
         $end = session('end');
         /** @var Carbon $first */
         $first    = session('first');
-        $title    = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
+        $title    = sprintf('%s - %s', $start->isoFormat($this->monthAndDayFormat), $end->isoFormat($this->monthAndDayFormat));
         $isCustom = true === session('is_custom_range', false);
         $today    = today(config('app.timezone'));
         $ranges   = [

@@ -109,8 +109,8 @@ class ShowController extends Controller
         $page             = (int)$request->get('page');
         $pageSize         = (int)app('preferences')->get('listPageSize', 50)->data;
         $currency         = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $fStart           = $start->formatLocalized($this->monthAndDayFormat);
-        $fEnd             = $end->formatLocalized($this->monthAndDayFormat);
+        $fStart           = $start->isoFormat($this->monthAndDayFormat);
+        $fEnd             = $end->isoFormat($this->monthAndDayFormat);
         $subTitle         = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUri         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;

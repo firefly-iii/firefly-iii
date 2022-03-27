@@ -184,7 +184,7 @@ class BudgetController extends Controller
             $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $currency);
             $spent            = $expenses[(int)$currency->id]['sum'] ?? '0';
             $amount           = bcadd($amount, $spent);
-            $format           = $start->formatLocalized((string)trans('config.month_and_day', [], $locale));
+            $format           = $start->isoFormat((string)trans('config.month_and_day_js', [], $locale));
             $entries[$format] = $amount;
 
             $start->addDay();
@@ -478,7 +478,7 @@ class BudgetController extends Controller
         $currentStart = clone $start;
         while ($currentStart <= $end) {
             $currentStart = app('navigation')->startOfPeriod($currentStart, $preferredRange);
-            $title        = $currentStart->formatLocalized($titleFormat);
+            $title        = $currentStart->isoFormat($titleFormat);
             $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
 
             // default limit is no limit:
@@ -539,7 +539,7 @@ class BudgetController extends Controller
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
         while ($currentStart <= $end) {
             $currentEnd        = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $title             = $currentStart->formatLocalized($titleFormat);
+            $title             = $currentStart->isoFormat($titleFormat);
             $sum               = $this->nbRepository->sumExpenses($currentStart, $currentEnd, $accounts, $currency);
             $amount            = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
             $chartData[$title] = round((float)$amount, $currency->decimal_places);

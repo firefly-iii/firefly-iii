@@ -88,7 +88,7 @@ class ShowController extends Controller
         $end      = $end ?? session('end');
         $subTitle = trans(
             'firefly.without_budget_between',
-            ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+            ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]
         );
 
         // get first journal ever to set off the budget period overview.
@@ -192,8 +192,8 @@ class ShowController extends Controller
             'firefly.budget_in_period',
             [
                 'name'     => $budget->name,
-                'start'    => $budgetLimit->start_date->formatLocalized($this->monthAndDayFormat),
-                'end'      => $budgetLimit->end_date->formatLocalized($this->monthAndDayFormat),
+                'start'    => $budgetLimit->start_date->isoFormat($this->monthAndDayFormat),
+                'end'      => $budgetLimit->end_date->isoFormat($this->monthAndDayFormat),
                 'currency' => $budgetLimit->transactionCurrency->name,
             ]
         );

@@ -212,7 +212,7 @@ class BudgetReportController extends Controller
 
             foreach ($currency['budgets'] as $currentBudget) {
                 foreach ($currentBudget['transaction_journals'] as $journal) {
-                    $key                                   = $journal['date']->formatLocalized($format);
+                    $key                                   = $journal['date']->isoFormat($format);
                     $amount                                = app('steam')->positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] = $chartData[$spentKey]['entries'][$key] ?? '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
@@ -239,7 +239,7 @@ class BudgetReportController extends Controller
         $currentStart   = clone $start;
         while ($currentStart <= $end) {
             $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->formatLocalized($format);
+            $key          = $currentStart->isoFormat($format);
             $return[$key] = '0';
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();

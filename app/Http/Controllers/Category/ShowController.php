@@ -94,8 +94,8 @@ class ShowController extends Controller
         $path         = route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $subTitle     = trans(
             'firefly.journals_in_period_for_category',
-            ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-             'end'  => $end->formatLocalized($this->monthAndDayFormat),]
+            ['name' => $category->name, 'start' => $start->isoFormat($this->monthAndDayFormat),
+             'end'  => $end->isoFormat($this->monthAndDayFormat),]
         );
 
         /** @var GroupCollectorInterface $collector */

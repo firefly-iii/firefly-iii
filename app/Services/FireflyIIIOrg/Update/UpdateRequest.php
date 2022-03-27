@@ -180,7 +180,7 @@ class UpdateRequest implements UpdateRequestInterface
             $return['message'] = (string)trans(
                 'firefly.just_new_release',
                 ['version' => $latest,
-                 'date'    => $released->formatLocalized((string)trans('config.month_and_day')),
+                 'date'    => $released->isoFormat((string)trans('config.month_and_day_js')),
                  'days'    => $expectedDiff,
                 ]
             );
@@ -196,9 +196,7 @@ class UpdateRequest implements UpdateRequestInterface
             [
                 'your_version' => $current,
                 'new_version'  => $latest,
-                'date'         => $released->formatLocalized(
-                    (string)trans('config.month_and_day')
-                )]
+                'date'         => $released->isoFormat((string)trans('config.month_and_day_js'))]
         );
         Log::debug('New release is old enough.');
 

@@ -97,8 +97,8 @@ class IndexController extends Controller
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
         $path     = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $startStr = $start->formatLocalized($this->monthAndDayFormat);
-        $endStr   = $end->formatLocalized($this->monthAndDayFormat);
+        $startStr = $start->isoFormat($this->monthAndDayFormat);
+        $endStr   = $end->isoFormat($this->monthAndDayFormat);
         $subTitle = (string)trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
 
         $firstJournal = $this->repository->firstNull();
