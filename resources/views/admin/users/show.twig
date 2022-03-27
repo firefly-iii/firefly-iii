@@ -25,7 +25,7 @@
                         <tr>
                             <td>{{ trans('list.created_at') }}</td>
                             <td>
-                                {{ user.created_at.formatLocalized(monthAndDayFormat) }}
+                                {{ user.created_at.isoFormat(monthAndDayFormat) }}
                                 {{ user.created_at.format('H:i') }}</td>
                         </tr>
                         <tr>

@@ -85,7 +85,7 @@
                 {% if account.lastActivityDate %}
                     <td class="hidden-sm hidden-xs hidden-md">
                         <!-- {{ account.lastActivityDate }} -->
-                        {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
+                        {{ account.lastActivityDate.isoFormat(monthAndDayFormat) }}
                     </td>
                 {% else %}
                     <td class="hidden-sm hidden-xs hidden-md">

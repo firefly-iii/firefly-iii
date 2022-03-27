@@ -113,8 +113,8 @@ class Range
         }
 
         // save some formats:
-        $monthAndDayFormat = (string)trans('config.month_and_day', [], $locale);
-        $dateTimeFormat    = (string)trans('config.date_time', [], $locale);
+        $monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
+        $dateTimeFormat    = (string)trans('config.date_time_js', [], $locale);
         $defaultCurrency   = app('amount')->getDefaultCurrency();
 
         // also format for moment JS:

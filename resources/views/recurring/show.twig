@@ -54,7 +54,7 @@
             <div class="box-body">
                 {% if null != array.repeat_until and today > array.repeat_until %}
                     <span class="text-danger">
-                                            {{ trans('firefly.repeat_until_in_past', {date: array.repeat_until.formatLocalized(monthAndDayFormat) }) }}
+                                            {{ trans('firefly.repeat_until_in_past', {date: array.repeat_until.isoFormat(monthAndDayFormat) }) }}
                                         </span>
                 {% endif %}
                 <ul>
@@ -69,7 +69,7 @@
                             {% endif %}
                             <ul>
                                 {% for occ in rep.occurrences %}
-                                    <li>{{ occ.formatLocalized(trans('config.month_and_date_day')) }}</li>
+                                    <li>{{ occ.isoFormat(trans('config.month_and_date_day_js')) }}</li>
                                 {% endfor %}
                             </ul>
                         </li>

@@ -23,7 +23,7 @@
                 </td>
                 <td data-value="{{ bill.expected_dates[0].format('Y-m-d')|default('0000-00-00') }}">
                     {% for date in bill.expected_dates %}
-                        {{ date.formatLocalized(monthAndDayFormat) }}<br/>
+                        {{ date.isoFormat(monthAndDayFormat) }}<br/>
                     {% endfor %}
                 </td>
                 <td style="text-align:right;">
@@ -31,7 +31,7 @@
                     {% for journals in bill.paid_moments %}
                         {% for journal in journals %}
                             {% set hitCount = hitCount+1 %}
-                            <a title="{{ journal.date.formatLocalized(monthAndDayFormat) }}"
+                            <a title="{{ journal.date.isoFormat(monthAndDayFormat) }}"
                                href="{{ route('transactions.show', [journal.transaction_group_id]) }}">{{ journal.description }}</a>,
                             {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places) }}
                             <br/>
@@ -51,7 +51,7 @@
             <td data-value="{{ line.getBill.name }}">
                 <a href="{{ route('bills.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
                 <small class="text-muted"><br/>
-                    {{ trans('firefly.bill_expected_between', {start: line.getPayDate.formatLocalized(monthAndDayFormat), end: line.getEndOfPayDate.formatLocalized(monthAndDayFormat) }) }}
+                    {{ trans('firefly.bill_expected_between', {start: line.getPayDate.isoFormat(monthAndDayFormat), end: line.getEndOfPayDate.isoFormat(monthAndDayFormat) }) }}
                 </small>
             </td>
             <td class="hidden-xs" data-value="{{ line.getMin }}" style="text-align: right;">{{ formatAmountByCurrency(line.getCurrency, line.getMin) }}</td>

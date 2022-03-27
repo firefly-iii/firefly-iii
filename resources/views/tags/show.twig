@@ -43,7 +43,7 @@
                                     {{ trans('list.date') }}
                                 </td>
                                 <td>
-                                    {{ tag.date.formatLocalized(monthAndDayFormat) }}
+                                    {{ tag.date.isoFormat(monthAndDayFormat) }}
                                 </td>
                             </tr>
                         {% endif %}

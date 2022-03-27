@@ -3,7 +3,7 @@
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'close'|_ }}"><span>&times;</span></button>
             <h4 class="modal-title" id="budgetSpentAmountLabel">
-                {{ trans('firefly.budget_spent_amount', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat), budget: budget.name}) }}
+                {{ trans('firefly.budget_spent_amount', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat), budget: budget.name}) }}
             </h4>
         </div>
         <div class="modal-body">

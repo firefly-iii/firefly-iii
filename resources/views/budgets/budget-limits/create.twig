@@ -5,7 +5,7 @@
             </button>
             <h4 class="modal-title">
                 {{ trans('firefly.set_budget_limit_title',
-                    {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat), budget: budget.name}) }}
+                    {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat), budget: budget.name}) }}
             </h4>
         </div>
 

@@ -29,9 +29,9 @@
                 <td class="hidden-xs" data-value="{{ budget_limit.start_date.format('Y-m-d')|default('0000-00-00') }}">
                     {% if null != budget_limit.budget_limit_id %}
                         <a href="{{ route('budgets.show.limit', [budget.budget_id, budget_limit.budget_limit_id]) }}">
-                            {{ budget_limit.start_date.formatLocalized(monthAndDayFormat) }}
+                            {{ budget_limit.start_date.isoFormat(monthAndDayFormat) }}
                             &mdash;
-                            {{ budget_limit.end_date.formatLocalized(monthAndDayFormat) }}
+                            {{ budget_limit.end_date.isoFormat(monthAndDayFormat) }}
                         </a>
                     {% endif %}
                 </td>
