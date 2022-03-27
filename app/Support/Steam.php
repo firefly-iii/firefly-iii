@@ -473,11 +473,41 @@ class Steam
         if ('' === $amount) {
             return '0';
         }
+        $amount = $this->floatalize($amount);
+
         if (1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
 
         return $amount;
+    }
+
+    /**
+     * https://framework.zend.com/downloads/archives
+     *
+     * Convert a scientific notation to float
+     * Additionally fixed a problem with PHP <= 5.2.x with big integers
+     *
+     * @param string $value
+     */
+    public function floatalize(string $value): string
+    {
+        Log::debug(sprintf('floatalize("%s")', $value));
+        $value = strtoupper($value);
+        if (!str_contains($value, 'E')) {
+            return $value;
+        }
+
+        $number = substr($value, 0, strpos($value, 'E'));
+        if (str_contains($number, '.')) {
+            $post   = strlen(substr($number, strpos($number, '.') + 1));
+            $mantis = substr($value, strpos($value, 'E') + 1);
+            if ($mantis < 0) {
+                $post += abs((int) $mantis);
+            }
+            return number_format((float)$value, $post, '.', '');
+        }
+        return number_format((float)$value, 0, '.', '');
     }
 
     /**
