@@ -58,7 +58,7 @@ interface GroupCollectorInterface
     public function amountLess(string $amount): GroupCollectorInterface;
 
     /**
-     * Get transactions where the amount is more than.
+     * Get transactions where the foreign amount is more than.
      *
      * @param string $amount
      *
@@ -173,6 +173,33 @@ interface GroupCollectorInterface
     public function findNothing(): GroupCollectorInterface;
 
     /**
+     * Get transactions with a specific foreign amount.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function foreignAmountIs(string $amount): GroupCollectorInterface;
+
+    /**
+     * Get transactions where the amount is less than.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function foreignAmountLess(string $amount): GroupCollectorInterface;
+
+    /**
+     * Get transactions where the foreign amount is more than.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function foreignAmountMore(string $amount): GroupCollectorInterface;
+
+    /**
      * Return the transaction journals without group information. Is useful in some instances.
      *
      * @return array
@@ -231,6 +258,69 @@ interface GroupCollectorInterface
     public function internalReferenceStarts(string $externalId): GroupCollectorInterface;
 
     /**
+     * @param string $day
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaDayAfter(string $day, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $day
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaDayBefore(string $day, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $day
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaDayIs(string $day, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaMonthAfter(string $month, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaMonthBefore(string $month, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaMonthIs(string $month, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $year
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaYearAfter(string $year, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $year
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaYearBefore(string $year, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $year
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaYearIs(string $year, string $field): GroupCollectorInterface;
+
+    /**
      * @param string $month
      * @return GroupCollectorInterface
      */
@@ -275,6 +365,69 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function notesStartWith(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $day
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectDayAfter(string $day, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $day
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectDayBefore(string $day, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $day
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectDayIs(string $day, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectMonthAfter(string $month, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectMonthBefore(string $month, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $month
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectMonthIs(string $month, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $year
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectYearAfter(string $year, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $year
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectYearBefore(string $year, string $field): GroupCollectorInterface;
+
+    /**
+     * @param string $year
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectYearIs(string $year, string $field): GroupCollectorInterface;
 
     /**
      * Define which accounts can be part of the source and destination transactions.
@@ -403,13 +556,10 @@ interface GroupCollectorInterface
     public function setExternalId(string $externalId): GroupCollectorInterface;
 
     /**
-     * Look for specific recurring ID's.
-     *
-     * @param string $recurringId
-     *
+     * @param string $url
      * @return GroupCollectorInterface
      */
-    public function setRecurrenceId(string $recurringId): GroupCollectorInterface;
+    public function setExternalUrl(string $url): GroupCollectorInterface;
 
     /**
      * Limit results to a specific foreign currency.
@@ -457,6 +607,57 @@ interface GroupCollectorInterface
     public function setLimit(int $limit): GroupCollectorInterface;
 
     /**
+     * Collect transactions after a specific date.
+     *
+     * @param Carbon $date
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function setMetaAfter(Carbon $date, string $field): GroupCollectorInterface;
+
+    /**
+     * Collect transactions before a specific date.
+     *
+     * @param Carbon $date
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function setMetaBefore(Carbon $date, string $field): GroupCollectorInterface;
+
+    /**
+     * Set the start and end time of the results to return, based on meta data.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
+
+    /**
+     * @param Carbon $date
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function setObjectAfter(Carbon $date, string $field): GroupCollectorInterface;
+
+    /**
+     * @param Carbon $date
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function setObjectBefore(Carbon $date, string $field): GroupCollectorInterface;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function setObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
+
+    /**
      * Set the page to get.
      *
      * @param int $page
@@ -476,15 +677,13 @@ interface GroupCollectorInterface
     public function setRange(Carbon $start, Carbon $end): GroupCollectorInterface;
 
     /**
-     * Set the start and end time of the results to return, based on meta data.
+     * Look for specific recurring ID's.
      *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $field
+     * @param string $recurringId
      *
      * @return GroupCollectorInterface
      */
-    public function setMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
+    public function setRecurrenceId(string $recurringId): GroupCollectorInterface;
 
     /**
      * Search for words in descriptions.
@@ -662,12 +861,6 @@ interface GroupCollectorInterface
     public function withMetaDate(string $field): GroupCollectorInterface;
 
     /**
-     * @param string $url
-     * @return GroupCollectorInterface
-     */
-    public function setExternalUrl(string $url): GroupCollectorInterface;
-
-    /**
      * Will include notes.
      *
      * @return GroupCollectorInterface
@@ -736,5 +929,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function yearIs(string $year): GroupCollectorInterface;
+
 
 }

@@ -127,7 +127,6 @@ return [
         'before'                          => ['alias' => true, 'alias_for' => 'date_before', 'needs_context' => true,],
         'date_after'                      => ['alias' => false, 'needs_context' => true,],
         'after'                           => ['alias' => true, 'alias_for' => 'date_after', 'needs_context' => true,],
-
         'interest_date_on'                => ['alias' => false, 'needs_context' => true,],
         'interest_date'                   => ['alias' => true, 'alias_for' => 'interest_date_on', 'needs_context' => true,],
         'interest_date_is'                => ['alias' => true, 'alias_for' => 'interest_date_on', 'needs_context' => true,],

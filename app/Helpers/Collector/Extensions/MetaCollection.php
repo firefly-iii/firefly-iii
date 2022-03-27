@@ -52,6 +52,19 @@ trait MetaCollection
     }
 
     /**
+     * Join table to get tag information.
+     */
+    protected function joinMetaDataTables(): void
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+            $this->fields[] = 'journal_meta.name as meta_name';
+            $this->fields[] = 'journal_meta.data as meta_data';
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     public function externalIdEnds(string $externalId): GroupCollectorInterface
@@ -71,75 +84,6 @@ trait MetaCollection
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('"%s%%', $externalId));
-
-        return $this;
-    }
-
-    /**
-     * Where has no tags.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function hasAnyTag(): GroupCollectorInterface
-    {
-        $this->withTagInformation();
-        $this->query->whereNotNull('tag_transaction_journal.tag_id');
-
-        return $this;
-    }
-
-    /**
-     * @return GroupCollectorInterface
-     */
-    public function withTagInformation(): GroupCollectorInterface
-    {
-        $this->fields[] = 'tags.id as tag_id';
-        $this->fields[] = 'tags.tag as tag_name';
-        $this->fields[] = 'tags.date as tag_date';
-        $this->fields[] = 'tags.description as tag_description';
-        $this->fields[] = 'tags.latitude as tag_latitude';
-        $this->fields[] = 'tags.longitude as tag_longitude';
-        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
-
-        $this->joinTagTables();
-
-        return $this;
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinTagTables(): void
-    {
-        if (false === $this->hasJoinedTagTables) {
-            // join some extra tables:
-            $this->hasJoinedTagTables = true;
-            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
-        }
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinMetaDataTables(): void
-    {
-        if (false === $this->hasJoinedMetaTables) {
-            $this->hasJoinedMetaTables = true;
-            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[] = 'journal_meta.name as meta_name';
-            $this->fields[] = 'journal_meta.data as meta_data';
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setExternalUrl(string $url): GroupCollectorInterface
-    {
-        $this->joinMetaDataTables();
-        $this->query->where('journal_meta.name', '=', 'external_url');
-        $this->query->where('journal_meta.data', '=', json_encode($url));
 
         return $this;
     }
@@ -189,6 +133,50 @@ trait MetaCollection
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%s%%', $url));
 
         return $this;
+    }
+
+    /**
+     * Where has no tags.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function hasAnyTag(): GroupCollectorInterface
+    {
+        $this->withTagInformation();
+        $this->query->whereNotNull('tag_transaction_journal.tag_id');
+
+        return $this;
+    }
+
+    /**
+     * @return GroupCollectorInterface
+     */
+    public function withTagInformation(): GroupCollectorInterface
+    {
+        $this->fields[] = 'tags.id as tag_id';
+        $this->fields[] = 'tags.tag as tag_name';
+        $this->fields[] = 'tags.date as tag_date';
+        $this->fields[] = 'tags.description as tag_description';
+        $this->fields[] = 'tags.latitude as tag_latitude';
+        $this->fields[] = 'tags.longitude as tag_longitude';
+        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
+
+        $this->joinTagTables();
+
+        return $this;
+    }
+
+    /**
+     * Join table to get tag information.
+     */
+    protected function joinTagTables(): void
+    {
+        if (false === $this->hasJoinedTagTables) {
+            // join some extra tables:
+            $this->hasJoinedTagTables = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
+        }
     }
 
     /**
@@ -472,11 +460,11 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
-    public function setRecurrenceId(string $recurringId): GroupCollectorInterface
+    public function setExternalUrl(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $this->query->where('journal_meta.name', '=', 'recurrence_id');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($recurringId)));
+        $this->query->where('journal_meta.name', '=', 'external_url');
+        $this->query->where('journal_meta.data', '=', json_encode($url));
 
         return $this;
     }
@@ -490,6 +478,18 @@ trait MetaCollection
 
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $internalReference));
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRecurrenceId(string $recurringId): GroupCollectorInterface
+    {
+        $this->joinMetaDataTables();
+        $this->query->where('journal_meta.name', '=', 'recurrence_id');
+        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($recurringId)));
 
         return $this;
     }

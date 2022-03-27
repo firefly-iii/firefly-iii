@@ -86,4 +86,61 @@ trait AmountCollection
 
         return $this;
     }
+
+    /**
+     * Get transactions with a specific foreign amount.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function foreignAmountIs(string $amount): GroupCollectorInterface
+    {
+        $this->query->where(
+            static function (EloquentBuilder $q) use ($amount) {
+                $q->whereNotNull('source.foreign_amount');
+                $q->where('source.foreign_amount', app('steam')->negative($amount));
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Get transactions where the amount is less than.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function foreignAmountLess(string $amount): GroupCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($amount) {
+                $q->whereNotNull('destination.foreign_amount');
+                $q->where('destination.foreign_amount', '<=', app('steam')->positive($amount));
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Get transactions where the amount is more than.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function foreignAmountMore(string $amount): GroupCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($amount) {
+                $q->whereNotNull('destination.foreign_amount');
+                $q->where('destination.foreign_amount', '>=', app('steam')->positive($amount));
+            }
+        );
+
+        return $this;
+    }
 }

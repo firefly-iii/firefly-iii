@@ -66,7 +66,7 @@
                             </span>
                         {% else %}
                             X
-                    {# {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %} #}
+                    {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
                         {% endif %}
                     {% endfor %}
                 </td>
@@ -197,7 +197,7 @@
 
                         {# THE REST #}
                     {% else %}
-                        {# {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}  #}
+                        {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}

@@ -25,6 +25,7 @@ namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Closure;
 use Exception;
 use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
 use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
@@ -402,7 +403,7 @@ class GroupCollector implements GroupCollectorInterface
             }
         }
         // unset various fields:
-        unset($result['tag_id'],$result['meta_data'], $result['meta_name'], $result['tag_name'], $result['tag_date'], $result['tag_description'], $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level']);
+        unset($result['tag_id'], $result['meta_data'], $result['meta_name'], $result['tag_name'], $result['tag_date'], $result['tag_description'], $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level']);
 
         return $result;
     }
@@ -528,20 +529,36 @@ class GroupCollector implements GroupCollectorInterface
     private function postFilterCollection(Collection $collection): Collection
     {
         Log::debug('Now in postFilterCollection()');
-        $newCollection = new Collection;
-        foreach ($collection as $i => $item) {
-            Log::debug(sprintf('Now working on item #%d/%d', (int) $i + 1, $collection->count()));
-            foreach ($this->postFilters as $func) {
-                if (false === $func($i, $item)) {
+        $currentCollection = $collection;
+        $total             = count($this->postFilters);
+        /**
+         * @var int     $i
+         * @var Closure $function
+         */
+        foreach ($this->postFilters as $i => $function) {
+            Log::debug(sprintf('Now working on filter #%d/%d', $i + 1, $total));
+
+            $nextCollection = new Collection;
+            // loop everything in the current collection
+            // and save it (or not) in the new collection.
+            // that new collection is the next current collection
+            /**
+             * @var int   $index
+             * @var array $item
+             */
+            foreach ($currentCollection as $ii => $item) {
+                $result = $function($ii, $item);
+                if (false === $result) {
                     // skip other filters, continue to next item.
                     Log::debug('Filter returns false, jump to next item.');
-                    continue 2;
+                    continue;
                 }
                 Log::debug('Filter returns true');
+                $nextCollection->push($item);
             }
-            $newCollection->push($item);
+            $currentCollection = $nextCollection;
         }
-        return $newCollection;
+        return $currentCollection;
     }
 
     /**
@@ -589,20 +606,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Has attachments
-     *
-     * @return GroupCollectorInterface
-     */
-    public function hasNoAttachments(): GroupCollectorInterface
-    {
-        Log::debug('Add filter on no attachments.');
-        $this->joinAttachmentTables();
-        $this->query->whereNull('attachments.attachable_id');
-
-        return $this;
-    }
-
-    /**
      * Join table to get attachment information.
      */
     private function joinAttachmentTables(): void
@@ -619,6 +622,20 @@ class GroupCollector implements GroupCollectorInterface
                             }
                         );
         }
+    }
+
+    /**
+     * Has attachments
+     *
+     * @return GroupCollectorInterface
+     */
+    public function hasNoAttachments(): GroupCollectorInterface
+    {
+        Log::debug('Add filter on no attachments.');
+        $this->joinAttachmentTables();
+        $this->query->whereNull('attachments.attachable_id');
+
+        return $this;
     }
 
     /**

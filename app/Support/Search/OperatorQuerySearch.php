@@ -152,7 +152,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function parseQuery(string $query)
     {
-        Log::debug(sprintf  ('Now in parseQuery(%s)', $query));
+        Log::debug(sprintf('Now in parseQuery(%s)', $query));
         $parser = new QueryParser();
         try {
             $query1 = $parser->parse($query);
@@ -689,6 +689,15 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
                 break;
+            case 'foreign_amount_is':
+
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string) $value);
+
+                $amount = app('steam')->positive($value);
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                $this->collector->foreignAmountIs($amount);
+                break;
             case 'amount_less':
                 // strip comma's, make dots.
                 $value = str_replace(',', '.', (string) $value);
@@ -697,6 +706,14 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
                 break;
+            case 'foreign_amount_less':
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string) $value);
+
+                $amount = app('steam')->positive($value);
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                $this->collector->foreignAmountLess($amount);
+                break;
             case 'amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
@@ -704,6 +721,14 @@ class OperatorQuerySearch implements SearchInterface
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
+                break;
+            case 'foreign_amount_more':
+                Log::debug(sprintf('Now handling operator "%s"', $operator));
+                // strip comma's, make dots.
+                $value  = str_replace(',', '.', (string) $value);
+                $amount = app('steam')->positive($value);
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                $this->collector->foreignAmountMore($amount);
                 break;
             //
             // transaction type
@@ -730,17 +755,107 @@ class OperatorQuerySearch implements SearchInterface
             case 'interest_date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactMetaDateParams('interest_date', $range);
-                break;
-            case 'created_on':
+                return false;
+            case 'interest_date_before':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateBeforeParams('interest_date', $range);
+                return false;
+            case 'interest_date_after':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateAfterParams('interest_date', $range);
+                return false;
+
+            case 'book_date_on':
+                $range = $this->parseDateRange($value);
+                $this->setExactMetaDateParams('book_date', $range);
+                return false;
+            case 'book_date_before':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateBeforeParams('book_date', $range);
+                return false;
+            case 'book_date_after':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateAfterParams('book_date', $range);
+                return false;
+
+            case 'process_date_on':
+                $range = $this->parseDateRange($value);
+                $this->setExactMetaDateParams('process_date', $range);
+                return false;
+            case 'process_date_before':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateBeforeParams('process_date', $range);
+                return false;
+            case 'process_date_after':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateAfterParams('process_date', $range);
+                return false;
+            case 'due_date_on':
+                $range = $this->parseDateRange($value);
+                $this->setExactMetaDateParams('due_date', $range);
+                return false;
+            case 'due_date_before':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateBeforeParams('due_date', $range);
+                return false;
+            case 'due_date_after':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateAfterParams('due_date', $range);
+                return false;
+            case 'payment_date_on':
+                $range = $this->parseDateRange($value);
+                $this->setExactMetaDateParams('payment_date', $range);
+                return false;
+            case 'payment_date_before':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateBeforeParams('payment_date', $range);
+                return false;
+            case 'payment_date_after':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateAfterParams('payment_date', $range);
+                return false;
+            case 'invoice_date_on':
+                $range = $this->parseDateRange($value);
+                $this->setExactMetaDateParams('invoice_date', $range);
+                return false;
+            case 'invoice_date_before':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateBeforeParams('invoice_date', $range);
+                return false;
+            case 'invoice_date_after':
+                $range = $this->parseDateRange($value);
+                $this->setMetaDateAfterParams('invoice_date', $range);
+                return false;
+            case 'created_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $createdAt = new Carbon($value);
-                $this->collector->setCreatedAt($createdAt);
-                break;
-            case 'updated_on':
+                $range = $this->parseDateRange($value);
+                $this->setExactObjectDateParams('created_at', $range);
+                return false;
+            case 'created_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $updatedAt = new Carbon($value);
-                $this->collector->setUpdatedAt($updatedAt);
-                break;
+                $range = $this->parseDateRange($value);
+                $this->setObjectDateBeforeParams('created_at', $range);
+                return false;
+            case 'created_at_after':
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                $range = $this->parseDateRange($value);
+                $this->setObjectDateAfterParams('created_at', $range);
+                return false;
+            case 'updated_at_on':
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                $range = $this->parseDateRange($value);
+                $this->setExactObjectDateParams('updated_at', $range);
+                return false;
+            case 'updated_at_before':
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                $range = $this->parseDateRange($value);
+                $this->setObjectDateBeforeParams('updated_at', $range);
+                return false;
+            case 'updated_at_after':
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                $range = $this->parseDateRange($value);
+                $this->setObjectDateAfterParams('updated_at', $range);
+                return false;
             //
             // external URL
             //
@@ -1060,6 +1175,46 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
+     * @param string $field
+     * @param array  $range
+     * @return void
+     * @throws FireflyException
+     */
+    private function setExactObjectDateParams(string $field,array $range): void
+    {
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setExactObjectDateParams()', $key));
+                case 'exact':
+                    Log::debug(sprintf('Set %s_is_exact value "%s"',$field, $value->format('Y-m-d')));
+                    $this->collector->setObjectRange($value, clone $value, $field);
+                    $this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
+                    $this->collector->objectYearIs($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
+                    $this->collector->objectMonthIs($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
+                    $this->collector->objectDayIs($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value,]);
+                    break;
+            }
+        }
+    }
+
+    /**
      * @param array $range
      *
      * @throws FireflyException
@@ -1092,6 +1247,84 @@ class OperatorQuerySearch implements SearchInterface
                     Log::debug(sprintf('Set date_is_before DAY value "%s"', $value));
                     $this->collector->dayBefore($value);
                     $this->operators->push(['type' => 'date_before_day', 'value' => $value,]);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param string $field
+     * @param array  $range
+     * @return void
+     * @throws FireflyException
+     */
+    private function setMetaDateBeforeParams(string $field, array $range): void
+    {
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setMetaDateBeforeParams()', $key));
+                case 'exact':
+                    $this->collector->setMetaBefore($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set %s_is_before YEAR value "%s"', $field, $value));
+                    $this->collector->metaYearBefore($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_before_year', $field), 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set %s_is_before MONTH value "%s"', $field, $value));
+                    $this->collector->metaMonthBefore($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_before_month', $field), 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set %s_is_before DAY value "%s"', $field, $value));
+                    $this->collector->metaDayBefore($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_before_day', $field), 'value' => $value,]);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param string $field
+     * @param array  $range
+     * @return void
+     * @throws FireflyException
+     */
+    private function setMetaDateAfterParams(string $field, array $range): void
+    {
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setMetaDateAfterParams()', $key));
+                case 'exact':
+                    $this->collector->setMetaAfter($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set %s_is_after YEAR value "%s"', $field, $value));
+                    $this->collector->metaYearAfter($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_after_year', $field), 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set %s_is_after MONTH value "%s"', $field, $value));
+                    $this->collector->metaMonthAfter($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_after_month', $field), 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set %s_is_after DAY value "%s"', $field, $value));
+                    $this->collector->metaDayAfter($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_after_day', $field), 'value' => $value,]);
                     break;
             }
         }
@@ -1136,6 +1369,82 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
+     * @param array $range
+     *
+     * @throws FireflyException
+     */
+    private function setObjectDateAfterParams(string $field, array $range)
+    {
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setDateAfterParams()', $key));
+                case 'exact':
+                    $this->collector->setObjectAfter($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set date_is_after YEAR value "%s"', $value));
+                    $this->collector->objectYearAfter($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_after_year', $field), 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set date_is_after MONTH value "%s"', $value));
+                    $this->collector->objectMonthAfter($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_after_month', $field), 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set date_is_after DAY value "%s"', $value));
+                    $this->collector->objectDayAfter($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_after_day', $field), 'value' => $value,]);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param array $range
+     *
+     * @throws FireflyException
+     */
+    private function setObjectDateBeforeParams(string $field, array $range)
+    {
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setDateAfterParams()', $key));
+                case 'exact':
+                    $this->collector->setObjectBefore($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set date_is_before YEAR value "%s"', $value));
+                    $this->collector->objectYearBefore($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_before_year', $field), 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set date_is_before MONTH value "%s"', $value));
+                    $this->collector->objectMonthBefore($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_before_month', $field), 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set date_is_before DAY value "%s"', $value));
+                    $this->collector->objectDayBefore($value, $field);
+                    $this->operators->push(['type' => sprintf('%s_before_day', $field), 'value' => $value,]);
+                    break;
+            }
+        }
+    }
+
+    /**
      * @param string $field
      * @param array  $range
      * @return void
@@ -1151,25 +1460,25 @@ class OperatorQuerySearch implements SearchInterface
         foreach ($range as $key => $value) {
             switch ($key) {
                 default:
-                    throw new FireflyException(sprintf('Cannot handle key "%s" in setExactParameters()', $key));
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setExactMetaDateParams()', $key));
                 case 'exact':
-                    Log::debug(sprintf('Set %s_date_is_exact value "%s"', $field, $value->format('Y-m-d')));
-                    $this->collector->setMetaDateRange($value, $value,'interest_date');
-                    //$this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d'),]);
+                    Log::debug(sprintf('Set %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
+                    $this->collector->setMetaDateRange($value, $value, $field);
+                    $this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set date_is_exact YEAR value "%s"', $value));
-                    //$this->collector->yearIs($value);
+                    Log::debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
+                    $this->collector->metaYearIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set date_is_exact MONTH value "%s"', $value));
-                    //$this->collector->monthIs($value);
+                    Log::debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
+                    $this->collector->metaMonthIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set date_is_exact DAY value "%s"', $value));
-                    //$this->collector->dayIs($value);
+                    Log::debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
+                    $this->collector->metaDayIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value,]);
                     break;
             }
