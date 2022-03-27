@@ -339,9 +339,15 @@ class GroupCollector implements GroupCollectorInterface
      */
     private function parseAugmentedJournal(TransactionJournal $augumentedJournal): array
     {
-        $result                = $augumentedJournal->toArray();
-        $result['tags']        = [];
-        $result['attachments'] = [];
+        $result                  = $augumentedJournal->toArray();
+        $result['tags']          = [];
+        $result['attachments']   = [];
+        $result['interest_date'] = null;
+        $result['payment_date']  = null;
+        $result['invoice_date']  = null;
+        $result['book_date']     = null;
+        $result['due_date']      = null;
+        $result['process_date']  = null;
         try {
             $result['date']       = new Carbon($result['date'], 'UTC');
             $result['created_at'] = new Carbon($result['created_at'], 'UTC');
@@ -353,6 +359,15 @@ class GroupCollector implements GroupCollectorInterface
             $result['updated_at']->setTimezone(config('app.timezone'));
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
+        }
+
+        // try to process meta date value (if present)
+        $dates = ['interest_date', 'payment_date', 'invoice_date', 'book_date', 'due_date', 'process_date'];
+        if (array_key_exists('meta_name', $result) && in_array($result['meta_name'], $dates, true)) {
+            $name = $result['meta_name'];
+            if (array_key_exists('meta_data', $result) && '' !== (string) $result['meta_data']) {
+                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr(json_decode($result['meta_data']), 0, 10));
+            }
         }
 
         // convert values to integers:
@@ -387,7 +402,7 @@ class GroupCollector implements GroupCollectorInterface
             }
         }
         // unset various fields:
-        unset($result['tag_id'], $result['tag_name'], $result['tag_date'], $result['tag_description'], $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level']);
+        unset($result['tag_id'],$result['meta_data'], $result['meta_name'], $result['tag_name'], $result['tag_date'], $result['tag_description'], $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level']);
 
         return $result;
     }
@@ -515,7 +530,7 @@ class GroupCollector implements GroupCollectorInterface
         Log::debug('Now in postFilterCollection()');
         $newCollection = new Collection;
         foreach ($collection as $i => $item) {
-            Log::debug(sprintf('Now working on item #%d/%d', $i + 1, $collection->count()));
+            Log::debug(sprintf('Now working on item #%d/%d', (int) $i + 1, $collection->count()));
             foreach ($this->postFilters as $func) {
                 if (false === $func($i, $item)) {
                     // skip other filters, continue to next item.
@@ -569,6 +584,20 @@ class GroupCollector implements GroupCollectorInterface
         Log::debug('Add filter on attachment ID.');
         $this->joinAttachmentTables();
         $this->query->whereNotNull('attachments.attachable_id');
+
+        return $this;
+    }
+
+    /**
+     * Has attachments
+     *
+     * @return GroupCollectorInterface
+     */
+    public function hasNoAttachments(): GroupCollectorInterface
+    {
+        Log::debug('Add filter on no attachments.');
+        $this->joinAttachmentTables();
+        $this->query->whereNull('attachments.attachable_id');
 
         return $this;
     }

@@ -206,6 +206,13 @@ interface GroupCollectorInterface
     public function hasAttachments(): GroupCollectorInterface;
 
     /**
+     * Has no attachments
+     *
+     * @return GroupCollectorInterface
+     */
+    public function hasNoAttachments(): GroupCollectorInterface;
+
+    /**
      * @param string $externalId
      * @return GroupCollectorInterface
      */
@@ -396,6 +403,15 @@ interface GroupCollectorInterface
     public function setExternalId(string $externalId): GroupCollectorInterface;
 
     /**
+     * Look for specific recurring ID's.
+     *
+     * @param string $recurringId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setRecurrenceId(string $recurringId): GroupCollectorInterface;
+
+    /**
      * Limit results to a specific foreign currency.
      *
      * @param TransactionCurrency $currency
@@ -458,6 +474,17 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setRange(Carbon $start, Carbon $end): GroupCollectorInterface;
+
+    /**
+     * Set the start and end time of the results to return, based on meta data.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
 
     /**
      * Search for words in descriptions.
@@ -625,6 +652,14 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function withExternalUrl(): GroupCollectorInterface;
+
+    /**
+     * Transaction must have meta date field X.
+     *
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function withMetaDate(string $field): GroupCollectorInterface;
 
     /**
      * @param string $url

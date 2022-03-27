@@ -85,13 +85,11 @@ return [
         'external_id'                     => ['alias' => true, 'alias_for' => 'external_id_contains', 'needs_context' => true,],
         'external_id_ends'                => ['alias' => false, 'needs_context' => true,],
         'external_id_starts'              => ['alias' => false, 'needs_context' => true,],
-
         'internal_reference_is'           => ['alias' => false, 'needs_context' => true,],
         'internal_reference_contains'     => ['alias' => false, 'needs_context' => true,],
         'internal_reference'              => ['alias' => true, 'alias_for' => 'internal_reference_contains', 'needs_context' => true,],
         'internal_reference_ends'         => ['alias' => false, 'needs_context' => true,],
         'internal_reference_starts'       => ['alias' => false, 'needs_context' => true,],
-
         'external_url_is'                 => ['alias' => false, 'needs_context' => true,],
         'external_url_contains'           => ['alias' => false, 'needs_context' => true,],
         'external_url'                    => ['alias' => true, 'alias_for' => 'external_url_contains', 'needs_context' => true,],
@@ -99,12 +97,13 @@ return [
         'external_url_starts'             => ['alias' => false, 'needs_context' => true,],
         'has_attachments'                 => ['alias' => false, 'needs_context' => false,],
         'has_any_category'                => ['alias' => false, 'needs_context' => false,],
-        // TODO here we are
         'has_any_budget'                  => ['alias' => false, 'needs_context' => false,],
         'has_any_bill'                    => ['alias' => false, 'needs_context' => false,],
         'has_any_tag'                     => ['alias' => false, 'needs_context' => false,],
         'any_notes'                       => ['alias' => false, 'needs_context' => false,],
+        'has_any_notes'                   => ['alias' => true, 'alias_for' => 'any_notes', 'needs_context' => false,],
         'any_external_url'                => ['alias' => false, 'needs_context' => false,],
+        'has_any_external_url'            => ['alias' => true, 'alias_for' => 'any_external_url', 'needs_context' => false,],
         'has_no_attachments'              => ['alias' => false, 'needs_context' => false,],
         'has_no_category'                 => ['alias' => false, 'needs_context' => false,],
         'has_no_budget'                   => ['alias' => false, 'needs_context' => false,],
@@ -128,6 +127,7 @@ return [
         'before'                          => ['alias' => true, 'alias_for' => 'date_before', 'needs_context' => true,],
         'date_after'                      => ['alias' => false, 'needs_context' => true,],
         'after'                           => ['alias' => true, 'alias_for' => 'date_after', 'needs_context' => true,],
+
         'interest_date_on'                => ['alias' => false, 'needs_context' => true,],
         'interest_date'                   => ['alias' => true, 'alias_for' => 'interest_date_on', 'needs_context' => true,],
         'interest_date_is'                => ['alias' => true, 'alias_for' => 'interest_date_on', 'needs_context' => true,],

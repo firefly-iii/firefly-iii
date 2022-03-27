@@ -143,6 +143,49 @@ trait TimeCollection
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function setMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
+    {
+        if ($end < $start) {
+            [$start, $end] = [$end, $start];
+        }
+        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end->endOfDay();
+        $start->startOfDay();
+        $this->withMetaDate($field);
+
+        $filter              = function (int $index, array $object) use ($field, $start, $end): bool {
+            foreach ($object['transactions'] as $transaction) {
+                if (array_key_exists('interest_date', $transaction) && $transaction['interest_date'] instanceof Carbon
+                ) {
+                    return $transaction['interest_date']->gte($start) && $transaction['interest_date']->lte($end);
+                }
+            }
+
+            return true;
+        };
+        $this->postFilters[] = $filter;
+        return $this;
+
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withMetaDate(string $field): GroupCollectorInterface
+    {
+        $this->joinMetaDataTables();
+        $this->query->where('journal_meta.name', '=', $field);
+        $this->query->whereNotNull('journal_meta.data');
+
+        return $this;
+    }
+
+    /**
      * Collect transactions updated on a specific date.
      *
      * @param Carbon $date

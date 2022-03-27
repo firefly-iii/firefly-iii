@@ -152,7 +152,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function parseQuery(string $query)
     {
-        Log::debug(sprintf('Now in parseQuery(%s)', $query));
+        Log::debug(sprintf  ('Now in parseQuery(%s)', $query));
         $parser = new QueryParser();
         try {
             $query1 = $parser->parse($query);
@@ -496,6 +496,10 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug('Set collector to filter on attachments.');
                 $this->collector->hasAttachments();
                 break;
+            case 'has_no_attachments':
+                Log::debug('Set collector to filter on NO attachments.');
+                $this->collector->hasNoAttachments();
+                break;
             //
             // categories
             case 'has_no_category':
@@ -711,7 +715,7 @@ class OperatorQuerySearch implements SearchInterface
             //
             // dates
             //
-            case 'date_is':
+            case 'date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactDateParams($range);
                 return false;
@@ -723,6 +727,10 @@ class OperatorQuerySearch implements SearchInterface
                 $range = $this->parseDateRange($value);
                 $this->setDateAfterParams($range);
                 return false;
+            case 'interest_date_on':
+                $range = $this->parseDateRange($value);
+                $this->setExactMetaDateParams('interest_date', $range);
+                break;
             case 'created_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $createdAt = new Carbon($value);
@@ -759,6 +767,9 @@ class OperatorQuerySearch implements SearchInterface
             //
             case 'external_id_is':
                 $this->collector->setExternalId($value);
+                break;
+            case 'recurrence_id':
+                $this->collector->setRecurrenceId($value);
                 break;
             case 'external_id_contains':
                 $this->collector->externalIdContains($value);
@@ -1027,22 +1038,22 @@ class OperatorQuerySearch implements SearchInterface
                 case 'exact':
                     Log::debug(sprintf('Set date_is_exact value "%s"', $value->format('Y-m-d')));
                     $this->collector->setRange($value, $value);
-                    $this->operators->push(['type' => 'date_is', 'value' => $value->format('Y-m-d'),]);
+                    $this->operators->push(['type' => 'date_on', 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
                     Log::debug(sprintf('Set date_is_exact YEAR value "%s"', $value));
                     $this->collector->yearIs($value);
-                    $this->operators->push(['type' => 'date_is_year', 'value' => $value,]);
+                    $this->operators->push(['type' => 'date_on_year', 'value' => $value,]);
                     break;
                 case 'month':
                     Log::debug(sprintf('Set date_is_exact MONTH value "%s"', $value));
                     $this->collector->monthIs($value);
-                    $this->operators->push(['type' => 'date_is_month', 'value' => $value,]);
+                    $this->operators->push(['type' => 'date_on_month', 'value' => $value,]);
                     break;
                 case 'day':
                     Log::debug(sprintf('Set date_is_exact DAY value "%s"', $value));
                     $this->collector->dayIs($value);
-                    $this->operators->push(['type' => 'date_is_day', 'value' => $value,]);
+                    $this->operators->push(['type' => 'date_on_day', 'value' => $value,]);
                     break;
             }
         }
@@ -1119,6 +1130,47 @@ class OperatorQuerySearch implements SearchInterface
                     Log::debug(sprintf('Set date_is_after DAY value "%s"', $value));
                     $this->collector->dayAfter($value);
                     $this->operators->push(['type' => 'date_after_day', 'value' => $value,]);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param string $field
+     * @param array  $range
+     * @return void
+     * @throws FireflyException
+     */
+    private function setExactMetaDateParams(string $field, array $range): void
+    {
+        Log::debug('Now in setExactMetaDateParams()');
+        /**
+         * @var string        $key
+         * @var Carbon|string $value
+         */
+        foreach ($range as $key => $value) {
+            switch ($key) {
+                default:
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setExactParameters()', $key));
+                case 'exact':
+                    Log::debug(sprintf('Set %s_date_is_exact value "%s"', $field, $value->format('Y-m-d')));
+                    $this->collector->setMetaDateRange($value, $value,'interest_date');
+                    //$this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d'),]);
+                    break;
+                case 'year':
+                    Log::debug(sprintf('Set date_is_exact YEAR value "%s"', $value));
+                    //$this->collector->yearIs($value);
+                    $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value,]);
+                    break;
+                case 'month':
+                    Log::debug(sprintf('Set date_is_exact MONTH value "%s"', $value));
+                    //$this->collector->monthIs($value);
+                    $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value,]);
+                    break;
+                case 'day':
+                    Log::debug(sprintf('Set date_is_exact DAY value "%s"', $value));
+                    //$this->collector->dayIs($value);
+                    $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value,]);
                     break;
             }
         }

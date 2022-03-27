@@ -285,7 +285,7 @@ return [
 
     // old
 
-    'search_modifier_date_is'                         => 'Transaction date is ":value"',
+    'search_modifier_date_on'                         => 'Transaction date is ":value"',
     'search_modifier_id'                              => 'Transaction ID is ":value"',
     'search_modifier_date_before'                     => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                      => 'Transaction date is after or on ":value"',
@@ -393,6 +393,7 @@ return [
     'search_modifier_foreign_amount_more'         => 'The foreign amount is more than ":value"',
 
     // date fields
+    'search_modifier_interest_date_on'            => 'Transaction interest date is ":value"',
     'search_modifier_interest_date_on_year'       => 'Transaction interest date is in year ":value"',
     'search_modifier_interest_date_on_month'      => 'Transaction interest date is in month ":value"',
     'search_modifier_interest_date_on_day'        => 'Transaction interest date is on day of month ":value"',
@@ -465,7 +466,29 @@ return [
     'search_modifier_created_at_after_year'       => 'Transaction was created in or after year ":value"',
     'search_modifier_created_at_after_month'      => 'Transaction was created in or after month ":value"',
     'search_modifier_created_at_after_day'        => 'Transaction was created on or after day of month ":value"',
-
+    'search_modifier_interest_date_before'        => 'Transaction interest date is before ":value"',
+    'search_modifier_interest_date_after'         => 'Transaction interest date is after ":value"',
+    'search_modifier_book_date_on'                => 'Transaction book date is on ":value"',
+    'search_modifier_book_date_before'            => 'Transaction book date is before ":value"',
+    'search_modifier_book_date_after'             => 'Transaction book date is after ":value"',
+    'search_modifier_process_date_on'             => 'Transaction process date is on ":value"',
+    'search_modifier_process_date_before'         => 'Transaction process date is before ":value"',
+    'search_modifier_process_date_after'          => 'Transaction process date is after ":value"',
+    'search_modifier_due_date_on'                 => 'Transaction due date is on ":value"',
+    'search_modifier_due_date_before'             => 'Transaction due date is before ":value"',
+    'search_modifier_due_date_after'              => 'Transaction due date is after ":value"',
+    'search_modifier_payment_date_on'             => 'Transaction payment date is on ":value"',
+    'search_modifier_payment_date_before'         => 'Transaction payment date is before ":value"',
+    'search_modifier_payment_date_after'          => 'Transaction payment date is after ":value"',
+    'search_modifier_invoice_date_on'             => 'Transaction invoice date is on ":value"',
+    'search_modifier_invoice_date_before'         => 'Transaction invoice date is before ":value"',
+    'search_modifier_invoice_date_after'          => 'Transaction invoice date is after ":value"',
+    'search_modifier_created_at_on'               => 'Transaction was created on ":value"',
+    'search_modifier_created_at_before'           => 'Transaction was created before ":value"',
+    'search_modifier_created_at_after'            => 'Transaction was created after ":value"',
+    'search_modifier_updated_at_on'               => 'Transaction was updated on ":value"',
+    'search_modifier_updated_at_before'           => 'Transaction was updated before ":value"',
+    'search_modifier_updated_at_after'            => 'Transaction was updated after ":value"',
 
     'update_rule_from_query'                              => 'Update rule ":rule" from search query',
     'create_rule_from_query'                              => 'Create new rule from search query',
