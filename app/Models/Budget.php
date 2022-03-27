@@ -77,6 +77,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                               $email
  * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserGroupId($value)
+ * @property-read Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
  */
 class Budget extends Model
 {

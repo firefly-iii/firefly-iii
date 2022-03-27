@@ -90,11 +90,16 @@ trait ModifiesPiggyBanks
     {
         $today         = today(config('app.timezone'));
         $leftOnAccount = $this->leftOnAccount($piggyBank, $today);
-        $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
-        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
-        $compare       = bccomp($amount, $maxAmount);
-        $result        = $compare <= 0;
+        $savedSoFar    = (string) $this->getRepetition($piggyBank)->currentamount;
+        $maxAmount     = $leftOnAccount;
+        $leftToSave    = null;
+        if (0.0 !== (float) $piggyBank->targetamount) {
+            $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
+            $maxAmount  = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
+        }
+
+        $compare = bccomp($amount, $maxAmount);
+        $result  = $compare <= 0;
 
         Log::debug(sprintf('Left on account: %s on %s', $leftOnAccount, $today->format('Y-m-d')));
         Log::debug(sprintf('Saved so far: %s', $savedSoFar));
@@ -208,7 +213,7 @@ trait ModifiesPiggyBanks
         $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
         $current = 1;
         foreach ($set as $piggyBank) {
-            if ((int)$piggyBank->order !== $current) {
+            if ((int) $piggyBank->order !== $current) {
                 Log::debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
                 $piggyBank->order = $current;
                 $piggyBank->save();
@@ -262,7 +267,7 @@ trait ModifiesPiggyBanks
      */
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
-        $oldOrder = (int)$piggyBank->order;
+        $oldOrder = (int) $piggyBank->order;
         Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         if ($newOrder > $oldOrder) {
             $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
@@ -332,7 +337,7 @@ trait ModifiesPiggyBanks
 
         }
         // try also with ID
-        $objectGroupId = (int)($data['object_group_id'] ?? 0);
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
@@ -354,12 +359,12 @@ trait ModifiesPiggyBanks
     {
         $piggyBank = $this->updateProperties($piggyBank, $data);
         if (array_key_exists('notes', $data)) {
-            $this->updateNote($piggyBank, (string)$data['notes']);
+            $this->updateNote($piggyBank, (string) $data['notes']);
         }
 
         // update the order of the piggy bank:
-        $oldOrder = (int)$piggyBank->order;
-        $newOrder = (int)($data['order'] ?? $oldOrder);
+        $oldOrder = (int) $piggyBank->order;
+        $newOrder = (int) ($data['order'] ?? $oldOrder);
         if ($oldOrder !== $newOrder) {
             $this->setOrder($piggyBank, $newOrder);
         }
@@ -377,7 +382,7 @@ trait ModifiesPiggyBanks
 
         // update using name:
         if (array_key_exists('object_group_title', $data)) {
-            $objectGroupTitle = (string)$data['object_group_title'];
+            $objectGroupTitle = (string) $data['object_group_title'];
             if ('' !== $objectGroupTitle) {
                 $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
                 if (null !== $objectGroup) {
@@ -396,7 +401,7 @@ trait ModifiesPiggyBanks
 
         // try also with ID:
         if (array_key_exists('object_group_id', $data)) {
-            $objectGroupId = (int)($data['object_group_id'] ?? 0);
+            $objectGroupId = (int) ($data['object_group_id'] ?? 0);
             if (0 !== $objectGroupId) {
                 $objectGroup = $this->findObjectGroupById($objectGroupId);
                 if (null !== $objectGroup) {
@@ -454,7 +459,7 @@ trait ModifiesPiggyBanks
             $piggyBank->name = $data['name'];
         }
         if (array_key_exists('account_id', $data) && 0 !== $data['account_id']) {
-            $piggyBank->account_id = (int)$data['account_id'];
+            $piggyBank->account_id = (int) $data['account_id'];
         }
         if (array_key_exists('targetamount', $data) && '' !== $data['targetamount']) {
             $piggyBank->targetamount = $data['targetamount'];
