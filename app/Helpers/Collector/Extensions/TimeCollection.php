@@ -86,6 +86,18 @@ trait TimeCollection
     }
 
     /**
+     * @inheritDoc
+     */
+    public function withMetaDate(string $field): GroupCollectorInterface
+    {
+        $this->joinMetaDataTables();
+        $this->query->where('journal_meta.name', '=', $field);
+        $this->query->whereNotNull('journal_meta.data');
+
+        return $this;
+    }
+
+    /**
      * @param string $day
      * @param string $field
      * @return GroupCollectorInterface
@@ -488,18 +500,6 @@ trait TimeCollection
             return true;
         };
         $this->postFilters[] = $filter;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withMetaDate(string $field): GroupCollectorInterface
-    {
-        $this->joinMetaDataTables();
-        $this->query->where('journal_meta.name', '=', $field);
-        $this->query->whereNotNull('journal_meta.data');
 
         return $this;
     }

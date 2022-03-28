@@ -40,6 +40,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
@@ -100,6 +101,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function getAttachments(TransactionGroup $group): array
     {
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($this->user);
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $set      = Attachment::whereIn('attachable_id', $journals)
                               ->where('attachable_type', TransactionJournal::class)
@@ -113,6 +116,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $result[$journalId]       = $result[$journalId] ?? [];
             $current                  = $attachment->toArray();
             $current['file_exists']   = true;
+            $current['notes'] = $repository->getNoteText($attachment);
             $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
             $result[$journalId][]     = $current;
 

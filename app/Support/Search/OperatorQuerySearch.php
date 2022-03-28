@@ -907,6 +907,31 @@ class OperatorQuerySearch implements SearchInterface
             case 'internal_reference_ends':
                 $this->collector->internalReferenceEnds($value);
                 break;
+            case 'attachment_name_is':
+                $this->collector->attachmentNameIs($value);
+                break;
+            case 'attachment_name_contains':
+                $this->collector->attachmentNameContains($value);
+                break;
+            case 'attachment_name_starts':
+                $this->collector->attachmentNameStarts($value);
+                break;
+            case 'attachment_name_ends':
+                $this->collector->attachmentNameEnds($value);
+                break;
+            case 'attachment_notes_are':
+                $this->collector->attachmentNotesAre($value);
+                break;
+            case 'attachment_notes_contains':
+                $this->collector->attachmentNotesContains($value);
+                break;
+            case 'attachment_notes_starts':
+                $this->collector->attachmentNotesStarts($value);
+                break;
+            case 'attachment_notes_ends':
+                $this->collector->attachmentNotesEnds($value);
+                break;
+
         }
 
         return true;

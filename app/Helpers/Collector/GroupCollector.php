@@ -29,6 +29,7 @@ use Closure;
 use Exception;
 use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
 use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
+use FireflyIII\Helpers\Collector\Extensions\AttachmentCollection;
 use FireflyIII\Helpers\Collector\Extensions\CollectorProperties;
 use FireflyIII\Helpers\Collector\Extensions\MetaCollection;
 use FireflyIII\Helpers\Collector\Extensions\TimeCollection;
@@ -49,7 +50,7 @@ use Log;
  */
 class GroupCollector implements GroupCollectorInterface
 {
-    use CollectorProperties, AccountCollection, AmountCollection, TimeCollection, MetaCollection;
+    use CollectorProperties, AccountCollection, AmountCollection, TimeCollection, MetaCollection, AttachmentCollection;
 
     /**
      * Group collector constructor.
@@ -398,12 +399,19 @@ class GroupCollector implements GroupCollectorInterface
             $attachmentId = (int) $augumentedJournal['attachment_id'];
             if (0 !== $attachmentId && $uploaded) {
                 $result['attachments'][$attachmentId] = [
-                    'id' => $attachmentId,
+                    'id'       => $attachmentId,
+                    'filename' => $augumentedJournal['attachment_filename'],
+                    'title'    => $augumentedJournal['attachment_title'],
                 ];
             }
         }
         // unset various fields:
-        unset($result['tag_id'], $result['meta_data'], $result['meta_name'], $result['tag_name'], $result['tag_date'], $result['tag_description'], $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level']);
+        unset($result['tag_id'], $result['meta_data'], $result['meta_name'],
+            $result['tag_name'], $result['tag_date'], $result['tag_description'],
+            $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level'],
+            $result['attachment_filename'], $result['attachment_id']
+
+        );
 
         return $result;
     }
@@ -591,52 +599,6 @@ class GroupCollector implements GroupCollectorInterface
         return $this;
     }
 
-    /**
-     * Has attachments
-     *
-     * @return GroupCollectorInterface
-     */
-    public function hasAttachments(): GroupCollectorInterface
-    {
-        Log::debug('Add filter on attachment ID.');
-        $this->joinAttachmentTables();
-        $this->query->whereNotNull('attachments.attachable_id');
-
-        return $this;
-    }
-
-    /**
-     * Join table to get attachment information.
-     */
-    private function joinAttachmentTables(): void
-    {
-        if (false === $this->hasJoinedAttTables) {
-            // join some extra tables:
-            $this->hasJoinedAttTables = true;
-            $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
-                        ->where(
-                            static function (EloquentBuilder $q1) {
-                                $q1->where('attachments.attachable_type', TransactionJournal::class);
-                                //$q1->where('attachments.uploaded', true);
-                                $q1->orWhereNull('attachments.attachable_type');
-                            }
-                        );
-        }
-    }
-
-    /**
-     * Has attachments
-     *
-     * @return GroupCollectorInterface
-     */
-    public function hasNoAttachments(): GroupCollectorInterface
-    {
-        Log::debug('Add filter on no attachments.');
-        $this->joinAttachmentTables();
-        $this->query->whereNull('attachments.attachable_id');
-
-        return $this;
-    }
 
     /**
      * Limit results to a specific currency, either foreign or normal one.
@@ -855,18 +817,6 @@ class GroupCollector implements GroupCollectorInterface
              ->withBudgetInformation()
             // include bill ID + name (if any)
              ->withBillInformation();
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withAttachmentInformation(): GroupCollectorInterface
-    {
-        $this->fields[] = 'attachments.id as attachment_id';
-        $this->fields[] = 'attachments.uploaded as attachment_uploaded';
-        $this->joinAttachmentTables();
 
         return $this;
     }

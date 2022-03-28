@@ -67,6 +67,54 @@ interface GroupCollectorInterface
     public function amountMore(string $amount): GroupCollectorInterface;
 
     /**
+     * @param string $name
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNameContains(string $name): GroupCollectorInterface;
+
+    /**
+     * @param string $name
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNameEnds(string $name): GroupCollectorInterface;
+
+    /**
+     * @param string $name
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNameIs(string $name): GroupCollectorInterface;
+
+    /**
+     * @param string $name
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNameStarts(string $name): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNotesAre(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNotesContains(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNotesEnds(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNotesStarts(string $value): GroupCollectorInterface;
+
+    /**
      * @param string $day
      * @return GroupCollectorInterface
      */

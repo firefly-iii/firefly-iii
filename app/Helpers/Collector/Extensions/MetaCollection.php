@@ -32,7 +32,6 @@ use FireflyIII\Models\Tag;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Trait MetaCollection
