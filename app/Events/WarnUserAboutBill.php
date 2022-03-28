@@ -1,6 +1,7 @@
 <?php
+
 /**
- * AdminTestMail.php
+ * DestroyedTransactionGroup.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,48 +19,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Mail;
+namespace FireflyIII\Events;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
+use FireflyIII\Models\Bill;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class AdminTestMail.
- *
- * Sends a test mail to administrators.
+ * Class WarnUserAboutBill.
  *
  * @codeCoverageIgnore
  */
-class AdminTestMail extends Mailable
+class WarnUserAboutBill extends Event
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
-    public string $email;
-    public string $ipAddress;
-
-    /**
-     * ConfirmEmailChangeMail constructor.
-     *
-     * @param string $email
-     * @param string $ipAddress
-     */
-    public function __construct(string $email, string $ipAddress)
-    {
-        $this->email     = $email;
-        $this->ipAddress = $ipAddress;
-    }
+    public Bill   $bill;
+    public string $field;
+    public int    $diff;
 
     /**
-     * Build the message.
-     *
-     * @return $this
+     * @param Bill   $bill
+     * @param string $field
+     * @param int    $diff
      */
-    public function build(): self
+    public function __construct(Bill $bill, string $field, int $diff)
     {
-        return $this->view('emails.admin-test-html')->text('emails.admin-test-text')
-                    ->subject((string)trans('email.admin_test_subject'));
+        $this->bill  = $bill;
+        $this->field = $field;
+        $this->diff  = $diff;
     }
 }

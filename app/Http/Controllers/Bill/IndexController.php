@@ -136,8 +136,9 @@ class IndexController extends Controller
         // summarise per currency / per group.
         $sums   = $this->getSums($bills);
         $totals = $this->getTotals($sums);
+        $today      = now()->startOfDay();
 
-        return view('bills.index', compact('bills', 'sums', 'total', 'totals'));
+        return view('bills.index', compact('bills', 'sums', 'total', 'totals','today'));
     }
 
     /**

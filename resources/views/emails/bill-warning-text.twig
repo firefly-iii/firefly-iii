@@ -1,0 +1,17 @@
+{% include 'emails.header-text' %}
+{% if field == 'end_date' and diff != 0 %}
+{{ trans('email.bill_warning_end_date_text', {name: bill.name, date: bill.end_date.isoFormat(trans('config.month_and_day_js')), diff: diff})|raw }}
+{% endif %}
+{% if field == 'extension_date' and diff != 0 %}
+{{ trans('email.bill_warning_extension_date_text', {name: bill.name|escape, date: bill.extension_date.isoFormat(trans('config.month_and_day_js')), diff: diff})|raw }}
+{% endif %}
+{% if field == 'end_date' and diff == 0 %}
+{{ trans('email.bill_warning_end_date_text_zero', {name: bill.name|escape, date: bill.end_date.isoFormat(trans('config.month_and_day_js'))})|raw }}
+{% endif %}
+{% if field == 'extension_date' and diff == 0 %}
+{{ trans('email.bill_warning_extension_date_text_zero', {name: bill.name|escape, date: bill.end_date.isoFormat(trans('config.month_and_day_js'))})|raw }}
+{% endif %}
+
+{{ trans('email.bill_warning_please_action') }}
+
+{% include 'emails.footer-text' %}

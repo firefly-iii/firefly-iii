@@ -102,6 +102,7 @@ class CreateController extends Controller
     public function store(BillStoreRequest $request): RedirectResponse
     {
         $billData           = $request->getBillData();
+
         $billData['active'] = true;
         try {
             $bill = $this->repository->store($billData);

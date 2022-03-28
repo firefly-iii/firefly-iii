@@ -166,6 +166,12 @@ class BillUpdateService
         if (array_key_exists('active', $data)) {
             $bill->active = $data['active'];
         }
+        if(array_key_exists('end_date', $data)) {
+            $bill->end_date = $data['end_date'];
+        }
+        if(array_key_exists('extension_date', $data)) {
+            $bill->extension_date = $data['extension_date'];
+        }
 
         $bill->match     = 'EMPTY';
         $bill->automatch = true;

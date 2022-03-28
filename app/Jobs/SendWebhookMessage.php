@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
-use Log;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Services\Webhook\WebhookSenderInterface;
 use Illuminate\Bus\Queueable;
@@ -32,6 +31,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 /**
  * Class SendWebhookMessage

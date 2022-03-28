@@ -37,6 +37,7 @@ use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
+use FireflyIII\Events\WarnUserAboutBill;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -133,6 +134,11 @@ class EventServiceProvider extends ServiceProvider
             ],
             UpdatedAccount::class               => [
                 'FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit',
+            ],
+
+            // bill related events:
+            WarnUserAboutBill::class => [
+                'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
             ],
         ];
 

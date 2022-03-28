@@ -68,6 +68,7 @@ class General extends AbstractExtension
             $this->getMetaField(),
             $this->hasRole(),
             $this->getRootSearchOperator(),
+            $this->carbonize()
         ];
     }
 
@@ -391,6 +392,19 @@ class General extends AbstractExtension
                 }
 
                 return $result;
+            }
+        );
+    }
+
+    /**
+     * @return TwigFunction
+     */
+    protected function carbonize(): TwigFunction
+    {
+        return new TwigFunction(
+            'carbonize',
+            static function (string $date): Carbon {
+                return new Carbon($date);
             }
         );
     }

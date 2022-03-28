@@ -16,20 +16,25 @@
     </thead>
     {% for objectGroupOrder, objectGroup in bills %}
         {% if objectGroup.bills|length > 0 %}
-            <tbody class="bill-connected-list" {% if objectGroupOrder != 0 %}data-title="{{ objectGroup.object_group_title }}" {% else %}data-title=""{% endif %}>
+            <tbody class="bill-connected-list"
+                   {% if objectGroupOrder != 0 %}data-title="{{ objectGroup.object_group_title }}"
+                   {% else %}data-title=""{% endif %}>
             <tr>
                 <td class="hidden-sm hidden-xs">&nbsp;</td>
                 <td class="hidden-sm hidden-xs">&nbsp;</td>
                 <td colspan="6"><small>{{ objectGroup.object_group_title }}</small></td>
             </tr>
             {% for entry in objectGroup.bills %}
-                <tr class="bill-sortable" data-id="{{ entry.id }}" data-name="{{ entry.name }}" data-order="{{ entry.order }}" data-position="{{ loop.index0 }}">
+                <tr class="bill-sortable" data-id="{{ entry.id }}" data-name="{{ entry.name }}"
+                    data-order="{{ entry.order }}" data-position="{{ loop.index0 }}">
                     <td class="hidden-sm hidden-xs">
                         <span class="fa fa-fw fa-bars bill-handle"></span>
                     </td>
                     <td class="hidden-sm hidden-xs">
-                        <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}" class="btn btn-default btn-xs"><span
-                                        class="fa fa-fw fa-pencil"></span></a><a href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><span
+                        <div class="btn-group btn-group-xs edit_tr_buttons"><a href="{{ route('bills.edit',entry.id) }}"
+                                                                               class="btn btn-default btn-xs"><span
+                                        class="fa fa-fw fa-pencil"></span></a><a
+                                    href="{{ route('bills.delete',entry.id) }}" class="btn btn-danger btn-xs"><span
                                         class="fa fa-fw fa-trash-o"></span></a></div>
                     </td>
                     <td>
@@ -126,6 +131,26 @@
                         {% if entry.skip > 0 %}
                             {{ 'skips_over'|_ }} {{ entry.skip }}
                         {% endif %}
+                        {% if entry.end_date %}
+                            <br>
+                            {% if carbonize(entry.end_date).lte(today) %}
+                                <span class="text-danger">
+                                    {{ trans('firefly.bill_end_index_line', {date: carbonize(entry.end_date).isoFormat(monthAndDayFormat)  })  }}
+                                    </span>
+                            {% else %}
+                                {{ trans('firefly.bill_end_index_line', {date: carbonize(entry.end_date).isoFormat(monthAndDayFormat)  })  }}
+                            {% endif %}
+                        {% endif %}
+                        {% if entry.extension_date %}
+                            <br>
+                            {% if carbonize(entry.extension_date).lte(today) %}
+                                <span class="text-danger">
+                                    {{ trans('firefly.bill_extension_index_line', {date: carbonize(entry.extension_date).isoFormat(monthAndDayFormat)  })  }}
+                                    </span>
+                            {% else %}
+                                {{ trans('firefly.bill_extension_index_line', {date: carbonize(entry.extension_date).isoFormat(monthAndDayFormat)  })  }}
+                            {% endif %}
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -150,7 +175,8 @@
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
                         <td colspan="2" style="text-align: right;"> <!-- title -->
-                            <small>{{ ('per_period_sum_'~sum.period)|_ }} ({{ sum.currency_name }}) ({{ 'active_bills_only'|_ }})</small>
+                            <small>{{ ('per_period_sum_'~sum.period)|_ }} ({{ sum.currency_name }})
+                                ({{ 'active_bills_only'|_ }})</small>
                         </td>
                         <td style="text-align: right;"> <!-- amount -->
                             {{ formatAmountBySymbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
@@ -165,43 +191,44 @@
         {% endif %}
     {% endfor %}
     {% if totals|length > 0 %}
-    <tfoot>
-    <tr>
-        <td colspan="8" style="border-top:1px #777 solid;"></td>
-    </tr>
-    {% for sum in totals %}
-        {% if '0' != sum.avg %}
-            <tr>
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
-                <td colspan="2" style="text-align: right;"> <!-- title -->
-                    <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only_total'|_ }})</small>
-                </td>
-                <td style="text-align: right;"> <!-- amount -->
-                    {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
-                </td>
-                <td>&nbsp;</td> <!-- paid in period -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
-            </tr>
-        {% endif %}
-        {% if '0' != sum.per_period %}
-            <tr>
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
-                <td colspan="2" style="text-align: right;"> <!-- title -->
-                    <small>{{ ('per_period_sum_'~sum.period)|_ }} ({{ sum.currency_name }}) ({{ 'active_bills_only_total'|_ }})</small>
-                </td>
-                <td style="text-align: right;"> <!-- amount -->
-                    {{ formatAmountBySymbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
-                </td>
-                <td>&nbsp;</td> <!-- paid in period -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
-                <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
-            </tr>
-        {% endif %}
-    {% endfor %}
-    </tfoot>
+        <tfoot>
+        <tr>
+            <td colspan="8" style="border-top:1px #777 solid;"></td>
+        </tr>
+        {% for sum in totals %}
+            {% if '0' != sum.avg %}
+                <tr>
+                    <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                    <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
+                    <td colspan="2" style="text-align: right;"> <!-- title -->
+                        <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'active_exp_bills_only_total'|_ }})</small>
+                    </td>
+                    <td style="text-align: right;"> <!-- amount -->
+                        {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
+                    </td>
+                    <td>&nbsp;</td> <!-- paid in period -->
+                    <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
+                    <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
+                </tr>
+            {% endif %}
+            {% if '0' != sum.per_period %}
+                <tr>
+                    <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                    <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
+                    <td colspan="2" style="text-align: right;"> <!-- title -->
+                        <small>{{ ('per_period_sum_'~sum.period)|_ }} ({{ sum.currency_name }})
+                            ({{ 'active_bills_only_total'|_ }})</small>
+                    </td>
+                    <td style="text-align: right;"> <!-- amount -->
+                        {{ formatAmountBySymbol(sum.per_period, sum.currency_symbol, sum.currency_decimal_places) }}
+                    </td>
+                    <td>&nbsp;</td> <!-- paid in period -->
+                    <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
+                    <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tfoot>
     {% endif %}
 
 </table>

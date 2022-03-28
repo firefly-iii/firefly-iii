@@ -221,6 +221,7 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
+    'bill_reminder_periods'        => [90, 30, 14, 7, 0],
     'valid_view_ranges'            => ['1D', '1W', '1M', '3M', '6M', '1Y',],
     'allowedMimes'                 => [
         /* plain files */
@@ -485,7 +486,7 @@ return [
         'convert_transfer',
     ],
 
-    'test-triggers' => [
+    'test-triggers'             => [
         'limit' => 10,
         'range' => 200,
     ],
@@ -708,7 +709,7 @@ return [
         'import_hash', 'import_hash_v2', 'external_id', 'original_source',
 
         // recurring transactions
-        'recurrence_total', 'recurrence_count'
+        'recurrence_total', 'recurrence_count',
     ],
     'webhooks'                  => [
         'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),

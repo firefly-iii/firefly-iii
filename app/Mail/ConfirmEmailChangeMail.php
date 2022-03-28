@@ -37,14 +37,10 @@ class ConfirmEmailChangeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var string IP address of user */
-    public $ipAddress;
-    /** @var string New email address */
-    public $newEmail;
-    /** @var string Old email address */
-    public $oldEmail;
-    /** @var string Confirmation link */
-    public $uri;
+    public string $ipAddress;
+    public string $newEmail;
+    public string $oldEmail;
+    public string $uri;
 
     /**
      * ConfirmEmailChangeMail constructor.
@@ -70,6 +66,6 @@ class ConfirmEmailChangeMail extends Mailable
     public function build(): self
     {
         return $this->view('emails.confirm-email-change-html')->text('emails.confirm-email-change-text')
-                    ->subject((string)trans('email.email_change_subject'));
+                    ->subject((string) trans('email.email_change_subject'));
     }
 }
