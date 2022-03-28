@@ -229,6 +229,6 @@ class FrontpageChartGenerator
         $this->opsRepository->setUser($user);
 
         $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string)trans('config.month_and_day', [], $locale);
+        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
     }
 }

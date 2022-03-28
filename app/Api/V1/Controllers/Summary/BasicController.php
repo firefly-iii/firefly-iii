@@ -150,7 +150,9 @@ class BasicController extends Controller
         foreach ($set as $transactionJournal) {
             $currencyId           = (int)$transactionJournal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], bcmul($transactionJournal['amount'], '-1'));
+            $incomes[$currencyId] = bcadd($incomes[$currencyId],
+                                          bcmul($transactionJournal['amount'], '-1')
+            );
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
             $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transactionJournal['amount'], '-1'));
         }
