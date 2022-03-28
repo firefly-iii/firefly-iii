@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Bejelentkezés',
     'is_owner'                    => 'Adminisztrátor',
     'url'                         => 'URL',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Szabályok alkalmazása',

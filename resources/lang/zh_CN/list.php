@@ -133,8 +133,8 @@ return [
     'interest_period'         => 'Interest period',
     'liability_type'          => '债务类型',
     'liability_direction'     => 'Liability in/out',
-    'end_date'                => 'End date',
+    'end_date'                => '截止日期',
     'payment_info'            => 'Payment information',
     'expected_info'           => 'Next expected transaction',
-    'start_date'              => 'Start date',
+    'start_date'              => '起始日期',
 ];

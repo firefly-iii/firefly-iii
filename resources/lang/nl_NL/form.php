@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Login',
     'is_owner'                    => 'Is beheerder?',
     'url'                         => 'URL',
+    'bill_end_date'               => 'Einddatum',
 
     // import
     'apply_rules'                 => 'Regels toepassen',

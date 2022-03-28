@@ -25,25 +25,36 @@ declare(strict_types=1);
 return [
     'html_language'           => 'ja',
     'locale'                  => 'ja, Japanese, ja_JP.utf8, ja_JP.UTF-8',
-    'month'                   => '%Y年%B',
-    'month_and_day'           => '%Y年%B%e日',
+    //'month'                   => '%B %Y',
+    'month_js'                => 'YYYY年MM月',
+
+    //'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js' => 'YYYY年MM月D日',
     'month_and_day_fns'       => 'y年 MMMM d日',
-    'month_and_date_day'      => '%Y年%e%B日%A',
-    'month_and_day_no_year'   => '%e%B日',
-    'date_time'               => '%Y年%B月%e日 %T',
-    'specific_day'            => '%Y年%B月%e日',
-    'week_in_year'            => 'YYYY年w[週目]',
-    'year'                    => '%Y年',
-    'half_year'               => '%Y年%B月',
-    'month_js'                => 'YYYY年MM月',
     'month_and_day_js'        => 'YYYY年MM月DD日',
+
+    //'month_and_date_day'      => '%A %B %e, %Y',
+    'month_and_date_day_js'      => 'dddd MMMM Do, YYYY',
+
+    //'month_and_day_no_year'   => '%B %e',
+    'month_and_day_no_year_js' => 'MMMM Do',
+
+    //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'            => 'YYYY年MM月DD日 HH:mm:ss',
+
+    //'specific_day'            => '%e %B %Y',
     'specific_day_js'         => 'YYYY年MM月D日',
+
+    //'week_in_year'            => 'Week %V, %G',
     'week_in_year_js'         => 'YYYY年w[週目]',
     'week_in_year_fns'        => "yyyy年w[週目]",
+
+    //'year'                    => '%Y',
     'year_js'                 => 'YYYY年',
+
+    //'half_year'               => '%B %Y',
     'half_year_js'            => 'YYYY年第Q四半期',
+
     'quarter_fns'             => "yyyy年第Q四半期",
     'half_year_fns'           => "yyyy年H[半期]",
     'dow_1'                   => '月曜日',

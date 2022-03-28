@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Logga in',
     'is_owner'                    => 'Admin?',
     'url'                         => 'Länk',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Tillämpa regler',

@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Login',
     'is_owner'                    => 'Is admin?',
     'url'                         => 'URL',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Apply rules',

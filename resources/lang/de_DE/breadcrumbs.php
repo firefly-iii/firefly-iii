@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Startseite',
-    'budgets'                => 'Budgets',
+    'budgets'                => 'Kostenrahmen',
     'subscriptions'          => 'Abonnements',
     'transactions'           => 'Buchungen',
     'title_expenses'         => 'Ausgaben',
@@ -32,7 +32,7 @@ return [
     'title_revenue'          => 'Einnahmen / Einkommen',
     'title_deposit'          => 'Einnahmen / Einkommen',
     'title_transfer'         => 'Umbuchungen',
-    'title_transfers'        => 'Transfers',
+    'title_transfers'        => 'Umbuchungen',
     'edit_currency'          => 'Währung „:name” bearbeiten',
     'delete_currency'        => 'Währung „:name” löschen',
     'newPiggyBank'           => 'Neues Sparschwein erstellen',

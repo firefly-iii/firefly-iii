@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'ログイン',
     'is_owner'                    => '管理者は？',
     'url'                         => 'URL',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => '適用',
@@ -222,12 +223,12 @@ return [
     'inward'                      => '内向きの説明',
     'outward'                     => '外向きの説明',
     'rule_group_id'               => '規則',
-    'transaction_description'     => '取り引き  ":description"  を編集する',
+    'transaction_description'     => '取引の説明',
     'first_date'                  => '日付範囲',
     'transaction_type'            => '取引の種類',
     'repeat_until'                => '繰り返し回数か、終了日(repeat_until) が必要です。両方は使えません。',
     'recurring_description'       => '取り引き ":description" を削除する',
-    'repetition_type'             => '最低でも一回の繰り返しが必要です。',
+    'repetition_type'             => '繰り返しの種類',
     'foreign_currency_id'         => '外貨',
     'repetition_end'              => 'リピート終了',
     'repetitions'                 => 'リピート',

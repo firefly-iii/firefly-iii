@@ -58,7 +58,7 @@ return [
     'currency'                    => 'Валюта',
     'account_id'                  => 'Основной счёт',
     'budget_id'                   => 'Бюджет',
-    'bill_id'                     => 'Bill',
+    'bill_id'                     => 'Счет',
     'opening_balance'             => 'Начальный баланс',
     'tagMode'                     => 'Режим метки',
     'virtual_balance'             => 'Виртуальный баланс',
@@ -121,7 +121,7 @@ return [
     'stop_processing'             => 'Остановить обработку',
     'start_date'                  => 'Начало диапазона',
     'end_date'                    => 'Конец диапазона',
-    'enddate'                     => 'End date',
+    'enddate'                     => 'Дата окончания',
     'start'                       => 'Начало диапазона',
     'end'                         => 'Конец диапазона',
     'delete_account'              => 'Удалить счёт ":name"',
@@ -180,7 +180,8 @@ return [
     'blocked_code'                => 'Причина блокировки',
     'login_name'                  => 'Логин',
     'is_owner'                    => 'Администратор?',
-    'url'                         => 'URL',
+    'url'                         => 'Ссылка',
+    'bill_end_date'               => 'Дата окончания',
 
     // import
     'apply_rules'                 => 'Применить правила',

@@ -23,13 +23,13 @@
 declare(strict_types=1);
 
 return [
-    'missing_where'                  => 'Array is missing "where"-clause',
-    'missing_update'                 => 'Array is missing "update"-clause',
-    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
-    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
-    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
-    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
-    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
+    'missing_where'                  => 'Mảng bị thiếu mệnh đề "where"',
+    'missing_update'                 => 'Mảng bị thiếu mệnh đề "update"',
+    'invalid_where_key'              => 'JSON chứa một khóa không hợp lệ cho điều khoản "where"',
+    'invalid_update_key'             => 'JSON chứa khóa không hợp lệ cho điều khoản "update"',
+    'invalid_query_data'             => 'Có dữ liệu không hợp lệ trong trường %s:%s của truy vấn của bạn.',
+    'invalid_query_account_type'     => 'Truy vấn của bạn chứa các loại tài khoản khác nhau, điều này không được phép.',
+    'invalid_query_currency'         => 'Truy vấn của bạn chứa các tài khoản có cài đặt tiền tệ khác nhau, điều này không được phép.',
     'iban'                           => 'Đây không phải là một IBAN hợp lệ.',
     'zero_or_more'                   => 'Giá trị không thể âm.',
     'date_or_time'                   => 'Giá trị phải là giá trị ngày hoặc thời gian hợp lệ (ISO 8601).',
@@ -61,9 +61,9 @@ return [
     'accepted'                       => 'Thuộc tính: phải được chấp nhận.',
     'bic'                            => 'Đây không phải là BIC hợp lệ.',
     'at_least_one_trigger'           => 'Quy tắc phải có ít nhất một kích hoạt.',
-    'at_least_one_active_trigger'    => 'Rule must have at least one active trigger.',
+    'at_least_one_active_trigger'    => 'Quy tắc phải có ít nhất một trình kích hoạt đang hoạt động.',
     'at_least_one_action'            => 'Quy tắc phải có ít nhất một hành động.',
-    'at_least_one_active_action'     => 'Rule must have at least one active action.',
+    'at_least_one_active_action'     => 'Quy tắc phải có ít nhất một hành động đang hoạt động.',
     'base64'                         => 'Đây không phải là dữ liệu được mã hóa base64 hợp lệ.',
     'model_id_invalid'               => 'ID đã cho có vẻ không hợp lệ cho mô hình này.',
     'less'                           => ':thuộc tính phải nhỏ hơn 10,000,000',
@@ -143,8 +143,8 @@ return [
     'starts_with'                    => 'Giá trị phải bắt đầu bằng :values.',
     'unique_webhook'                 => 'You already have a webhook with these values.',
     'unique_existing_webhook'        => 'You already have another webhook with these values.',
-    'same_account_type'              => 'Both accounts must be of the same account type',
-    'same_account_currency'          => 'Both accounts must have the same currency setting',
+    'same_account_type'              => 'Cả hai tài khoản phải thuộc cùng một loại tài khoản',
+    'same_account_currency'          => 'Cả hai tài khoản phải có cùng cài đặt đơn vị tiền tệ',
 
     'secure_password'             => 'Đây không phải là một mật khẩu an toàn. Vui lòng thử lại. Để biết thêm thông tin, hãy truy cập https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Loại lặp lại không hợp lệ cho các giao dịch định kỳ.',
@@ -209,15 +209,15 @@ return [
     'need_id_in_edit'           => 'Mỗi phân chia phải có giao dịch_journal_id (ID hợp lệ hoặc 0).',
 
     'ob_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
+    'lc_source_need_data' => 'Cần lấy ID tài khoản hợp lệ để tiếp tục.',
     'ob_dest_need_data'   => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
     'ob_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
 
     'generic_invalid_source'      => 'Bạn không thể sử dụng tài khoản này làm tài khoản nguồn.',
     'generic_invalid_destination' => 'Bạn không thể sử dụng tài khoản này làm tài khoản đích.',
 
-    'generic_no_source'      => 'You must submit source account information.',
-    'generic_no_destination' => 'You must submit destination account information.',
+    'generic_no_source'      => 'Bạn phải gửi thông tin tài khoản nguồn.',
+    'generic_no_destination' => 'Bạn phải gửi thông tin tài khoản đích.',
 
     'gte.numeric' => ':attribute phải lớn hơn hoặc bằng :value.',
     'gt.numeric'  => ':attribute phải lớn hơn :value.',

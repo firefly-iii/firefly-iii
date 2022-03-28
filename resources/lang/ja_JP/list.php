@@ -61,7 +61,7 @@ return [
     'process_date'            => '処理日',
     'due_date'                => '締切日',
     'payment_date'            => '引き落とし日',
-    'invoice_date'            => '日付を選択...',
+    'invoice_date'            => '領収書発行日',
     'internal_reference'      => 'システム内参考品',
     'notes'                   => '備考',
     'from'                    => 'から',
