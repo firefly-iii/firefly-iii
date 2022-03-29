@@ -77,7 +77,7 @@ class AppendBudgetLimitPeriods extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar->data;
+        return (bool) $configVar->data;
     }
 
     /**

@@ -82,7 +82,7 @@ class MigrateRecurrenceType extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -104,7 +104,7 @@ class MigrateRecurrenceType extends Command
 
     private function migrateRecurrence(Recurrence $recurrence): void
     {
-        $originalType                    = (int)$recurrence->transaction_type_id;
+        $originalType                    = (int) $recurrence->transaction_type_id;
         $newType                         = $this->getInvalidType();
         $recurrence->transaction_type_id = $newType->id;
         $recurrence->save();

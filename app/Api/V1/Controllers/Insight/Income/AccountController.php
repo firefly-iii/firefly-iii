@@ -90,11 +90,11 @@ class AccountController extends Controller
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
-                'id'               => (string)$entry['id'],
+                'id'               => (string) $entry['id'],
                 'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
-                'difference_float' => (float)$entry['sum'],
-                'currency_id'      => (string)$entry['currency_id'],
+                'difference_float' => (float) $entry['sum'],
+                'currency_id'      => (string) $entry['currency_id'],
                 'currency_code'    => $entry['currency_code'],
             ];
         }
@@ -122,11 +122,11 @@ class AccountController extends Controller
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
-                'id'               => (string)$entry['id'],
+                'id'               => (string) $entry['id'],
                 'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
-                'difference_float' => (float)$entry['sum'],
-                'currency_id'      => (string)$entry['currency_id'],
+                'difference_float' => (float) $entry['sum'],
+                'currency_id'      => (string) $entry['currency_id'],
                 'currency_code'    => $entry['currency_code'],
             ];
         }

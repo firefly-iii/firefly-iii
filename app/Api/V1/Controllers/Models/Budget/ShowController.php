@@ -53,7 +53,7 @@ class ShowController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $this->repository   = app(BudgetRepositoryInterface::class);
                 $this->blRepository = app(BudgetLimitRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
                 $this->blRepository->setUser(auth()->user());
@@ -78,7 +78,7 @@ class ShowController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getBudgets();

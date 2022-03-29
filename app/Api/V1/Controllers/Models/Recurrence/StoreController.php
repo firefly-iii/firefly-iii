@@ -69,9 +69,9 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data = $request->getAll();
+        $data       = $request->getAll();
         $recurrence = $this->repository->store($data);
-        $manager = $this->getManager();
+        $manager    = $this->getManager();
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);

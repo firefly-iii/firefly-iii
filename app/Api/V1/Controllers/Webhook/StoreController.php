@@ -64,7 +64,7 @@ class StoreController extends Controller
      */
     public function store(CreateRequest $request): JsonResponse
     {
-        $data = $request->getData();
+        $data    = $request->getData();
         $webhook = $this->repository->store($data);
         $manager = $this->getManager();
         /** @var WebhookTransformer $transformer */

@@ -81,7 +81,7 @@ class AccountController extends Controller
         $date  = $data['date'] ?? today(config('app.timezone'));
 
         $return          = [];
-        $result          = $this->repository->searchAccount((string)$query, $types, $data['limit']);
+        $result          = $this->repository->searchAccount((string) $query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         /** @var Account $account */
@@ -95,7 +95,7 @@ class AccountController extends Controller
             }
 
             $return[] = [
-                'id'                      => (string)$account->id,
+                'id'                      => (string) $account->id,
                 'name'                    => $account->name,
                 'name_with_balance'       => $nameWithBalance,
                 'type'                    => $account->accountType->type,

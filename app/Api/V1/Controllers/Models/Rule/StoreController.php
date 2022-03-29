@@ -71,7 +71,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $rule = $this->ruleRepository->store($request->getAll());
+        $rule    = $this->ruleRepository->store($request->getAll());
         $manager = $this->getManager();
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);

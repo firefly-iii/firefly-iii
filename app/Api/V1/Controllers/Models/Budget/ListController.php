@@ -83,7 +83,7 @@ class ListController extends Controller
     public function attachments(Budget $budget): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($budget);
 
         $count       = $collection->count();
@@ -118,7 +118,7 @@ class ListController extends Controller
     public function budgetLimits(Budget $budget): JsonResponse
     {
         $manager  = $this->getManager();
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $this->parameters->set('budget_id', $budget->id);
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
@@ -151,7 +151,7 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // user can overrule page size with limit parameter.
         $limit = $this->parameters->get('limit');
@@ -217,7 +217,7 @@ class ListController extends Controller
      */
     public function withoutBudget(Request $request): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // user can overrule page size with limit parameter.
         $limit = $this->parameters->get('limit');

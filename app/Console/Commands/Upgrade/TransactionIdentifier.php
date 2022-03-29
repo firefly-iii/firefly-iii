@@ -128,7 +128,7 @@ class TransactionIdentifier extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -173,7 +173,7 @@ class TransactionIdentifier extends Command
     private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
     {
         // find opposing:
-        $amount = bcmul((string)$transaction->amount, '-1');
+        $amount = bcmul((string) $transaction->amount, '-1');
 
         try {
             /** @var Transaction $opposing */

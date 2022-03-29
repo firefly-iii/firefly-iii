@@ -88,11 +88,11 @@ class BudgetController extends Controller
             /** @var array $expense */
             foreach ($expenses as $expense) {
                 $result[] = [
-                    'id'               => (string)$budget->id,
+                    'id'               => (string) $budget->id,
                     'name'             => $budget->name,
                     'difference'       => $expense['sum'],
-                    'difference_float' => (float)$expense['sum'],
-                    'currency_id'      => (string)$expense['currency_id'],
+                    'difference_float' => (float) $expense['sum'],
+                    'currency_id'      => (string) $expense['currency_id'],
                     'currency_code'    => $expense['currency_code'],
                 ];
             }
@@ -120,8 +120,8 @@ class BudgetController extends Controller
         foreach ($expenses as $expense) {
             $result[] = [
                 'difference'       => $expense['sum'],
-                'difference_float' => (float)$expense['sum'],
-                'currency_id'      => (string)$expense['currency_id'],
+                'difference_float' => (float) $expense['sum'],
+                'currency_id'      => (string) $expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];
         }

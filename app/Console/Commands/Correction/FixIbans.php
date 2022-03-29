@@ -58,7 +58,7 @@ class FixIbans extends Command
             $iban = $account->iban;
             if (str_contains($iban, ' ')) {
 
-                $iban = app('steam')->filterSpaces((string)$account->iban);
+                $iban = app('steam')->filterSpaces((string) $account->iban);
                 if ('' !== $iban) {
                     $account->iban = $iban;
                     $account->save();

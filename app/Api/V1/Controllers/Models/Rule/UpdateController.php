@@ -73,8 +73,8 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Rule $rule): JsonResponse
     {
-        $data = $request->getAll();
-        $rule = $this->ruleRepository->update($rule, $data);
+        $data    = $request->getAll();
+        $rule    = $this->ruleRepository->update($rule, $data);
         $manager = $this->getManager();
 
         /** @var RuleTransformer $transformer */

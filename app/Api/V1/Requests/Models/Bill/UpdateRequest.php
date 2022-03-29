@@ -105,10 +105,10 @@ class UpdateRequest extends FormRequest
             static function (Validator $validator) {
                 $data = $validator->getData();
                 if (array_key_exists('amount_min', $data) && array_key_exists('amount_max', $data)) {
-                    $min = (float)($data['amount_min'] ?? 0);
-                    $max = (float)($data['amount_max'] ?? 0);
+                    $min = (float) ($data['amount_min'] ?? 0);
+                    $max = (float) ($data['amount_max'] ?? 0);
                     if ($min > $max) {
-                        $validator->errors()->add('amount_min', (string)trans('validation.amount_min_over_max'));
+                        $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
                     }
                 }
             }

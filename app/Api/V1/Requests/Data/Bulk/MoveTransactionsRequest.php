@@ -76,10 +76,10 @@ class MoveTransactionsRequest extends FormRequest
                 if (array_key_exists('original_account', $data) && array_key_exists('destination_account', $data)) {
                     $repository = app(AccountRepositoryInterface::class);
                     $repository->setUser(auth()->user());
-                    $original    = $repository->find((int)$data['original_account']);
-                    $destination = $repository->find((int)$data['destination_account']);
+                    $original    = $repository->find((int) $data['original_account']);
+                    $destination = $repository->find((int) $data['destination_account']);
                     if ($original->accountType->type !== $destination->accountType->type) {
-                        $validator->errors()->add('title', (string)trans('validation.same_account_type'));
+                        $validator->errors()->add('title', (string) trans('validation.same_account_type'));
 
                         return;
                     }
@@ -87,7 +87,7 @@ class MoveTransactionsRequest extends FormRequest
                     $originalCurrency    = $repository->getAccountCurrency($original);
                     $destinationCurrency = $repository->getAccountCurrency($destination);
                     if (null === $originalCurrency xor null === $destinationCurrency) {
-                        $validator->errors()->add('title', (string)trans('validation.same_account_currency'));
+                        $validator->errors()->add('title', (string) trans('validation.same_account_currency'));
 
                         return;
                     }
@@ -96,7 +96,7 @@ class MoveTransactionsRequest extends FormRequest
                         return;
                     }
                     if ($originalCurrency->code !== $destinationCurrency->code) {
-                        $validator->errors()->add('title', (string)trans('validation.same_account_currency'));
+                        $validator->errors()->add('title', (string) trans('validation.same_account_currency'));
                     }
                 }
             }

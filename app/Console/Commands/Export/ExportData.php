@@ -202,7 +202,7 @@ class ExportData extends Command
                 $error = true;
             }
         }
-        if(null === $this->option($field)) {
+        if (null === $this->option($field)) {
             Log::info(sprintf('No date given in field "%s"', $field));
             $error = true;
         }
@@ -234,7 +234,7 @@ class ExportData extends Command
         $accounts    = new Collection;
         $accountList = $this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string)$accountList) {
+        if (null !== $accountList && '' !== (string) $accountList) {
             $accountIds = explode(',', $accountList);
             $accounts   = $this->accountRepository->getAccountsById($accountIds);
         }
@@ -262,7 +262,7 @@ class ExportData extends Command
      */
     private function getExportDirectory(): string
     {
-        $directory = (string)$this->option('export_directory');
+        $directory = (string) $this->option('export_directory');
         if (null === $directory) {
             $directory = './';
         }

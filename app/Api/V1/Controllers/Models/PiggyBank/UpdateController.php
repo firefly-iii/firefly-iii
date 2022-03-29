@@ -69,7 +69,7 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, PiggyBank $piggyBank): JsonResponse
     {
-        $data = $request->getAll();
+        $data      = $request->getAll();
         $piggyBank = $this->repository->update($piggyBank, $data);
 
         if (array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {

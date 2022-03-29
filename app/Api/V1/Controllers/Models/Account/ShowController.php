@@ -84,8 +84,8 @@ class ShowController extends Controller
         $this->parameters->set('type', $type);
 
         // types to get, page size:
-        $types = $this->mapAccountTypes($this->parameters->get('type'));
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $types    = $this->mapAccountTypes($this->parameters->get('type'));
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();

@@ -73,18 +73,18 @@ class DeleteEmptyJournals extends Command
         $total = 0;
         /** @var Transaction $row */
         foreach ($set as $row) {
-            $count = (int)$row->the_count;
+            $count = (int) $row->the_count;
             if (1 === $count % 2) {
                 // uneven number, delete journal and transactions:
                 try {
-                    TransactionJournal::find((int)$row->transaction_journal_id)->delete();
+                    TransactionJournal::find((int) $row->transaction_journal_id)->delete();
 
                 } catch (Exception $e) { // @phpstan-ignore-line
                     Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
                 }
 
 
-                Transaction::where('transaction_journal_id', (int)$row->transaction_journal_id)->delete();
+                Transaction::where('transaction_journal_id', (int) $row->transaction_journal_id)->delete();
                 $this->info(sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id));
                 $total++;
             }

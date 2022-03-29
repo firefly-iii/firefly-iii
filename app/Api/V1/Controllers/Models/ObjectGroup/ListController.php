@@ -53,7 +53,7 @@ class ListController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user             = auth()->user();
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
                 $this->repository->setUser($user);
 
@@ -78,7 +78,7 @@ class ListController extends Controller
     {
         $manager = $this->getManager();
 
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         // get list of piggy banks. Count it and split it.
         $collection = $this->repository->getBills($objectGroup);
         $count      = $collection->count();
@@ -116,7 +116,7 @@ class ListController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of piggy banks. Count it and split it.
         $collection = $this->repository->getPiggyBanks($objectGroup);

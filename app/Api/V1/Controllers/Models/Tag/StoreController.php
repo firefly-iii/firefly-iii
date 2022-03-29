@@ -71,7 +71,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $rule = $this->repository->store($request->getAll());
+        $rule    = $this->repository->store($request->getAll());
         $manager = $this->getManager();
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);

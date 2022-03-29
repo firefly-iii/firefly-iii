@@ -97,15 +97,15 @@ class UpdateRequest extends FormRequest
             }
 
             if (array_key_exists('moment', $repetition)) {
-                $current['moment'] = (string)$repetition['moment'];
+                $current['moment'] = (string) $repetition['moment'];
             }
 
             if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int)$repetition['skip'];
+                $current['skip'] = (int) $repetition['skip'];
             }
 
             if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int)$repetition['weekend'];
+                $current['weekend'] = (int) $repetition['weekend'];
             }
             $return[] = $current;
         }
@@ -150,13 +150,13 @@ class UpdateRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
 
         return [
-            'title'                 => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
-            'description'           => 'between:1,65000',
-            'first_date'            => 'date',
-            'apply_rules'           => [new IsBoolean],
-            'active'                => [new IsBoolean],
-            'repeat_until'          => 'nullable|date',
-            'nr_of_repetitions'     => 'nullable|numeric|between:1,31',
+            'title'             => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
+            'description'       => 'between:1,65000',
+            'first_date'        => 'date',
+            'apply_rules'       => [new IsBoolean],
+            'active'            => [new IsBoolean],
+            'repeat_until'      => 'nullable|date',
+            'nr_of_repetitions' => 'nullable|numeric|between:1,31',
 
             'repetitions.*.type'    => 'in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'  => 'between:0,10',
@@ -176,11 +176,11 @@ class UpdateRequest extends FormRequest
             'transactions.*.destination_name'      => 'between:1,255|nullable',
 
             // new and updated fields:
-            'transactions.*.budget_id'             => ['nullable','mustExist:budgets,id', new BelongsUser],
+            'transactions.*.budget_id'             => ['nullable', 'mustExist:budgets,id', new BelongsUser],
             'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.category_id'           => ['nullable','mustExist:categories,id', new BelongsUser],
+            'transactions.*.category_id'           => ['nullable', 'mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.piggy_bank_id'         => ['nullable','numeric', 'mustExist:piggy_banks,id', new BelongsUser],
+            'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser],
             'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.tags'                  => 'nullable|between:1,64000',
 

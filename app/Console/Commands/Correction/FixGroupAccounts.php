@@ -62,8 +62,8 @@ class FixGroupAccounts extends Command
             ->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')]);
         /** @var TransactionJournal $journal */
         foreach ($res as $journal) {
-            if ((int)$journal->the_count > 1) {
-                $groups[] = (int)$journal->transaction_group_id;
+            if ((int) $journal->the_count > 1) {
+                $groups[] = (int) $journal->transaction_group_id;
             }
         }
         $handler = new UpdatedGroupEventHandler;

@@ -63,30 +63,30 @@ class EnableCurrencies extends Command
         /** @var Collection $meta */
         $meta = AccountMeta::where('name', 'currency_id')->groupBy('data')->get(['data']);
         foreach ($meta as $entry) {
-            $found[] = (int)$entry->data;
+            $found[] = (int) $entry->data;
         }
 
         // get all from journals:
         $journals = TransactionJournal::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($journals as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
+            $found[] = (int) $entry->transaction_currency_id;
         }
 
         // get all from transactions
         $transactions = Transaction::groupBy('transaction_currency_id', 'foreign_currency_id')->get(['transaction_currency_id', 'foreign_currency_id']);
         foreach ($transactions as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
-            $found[] = (int)$entry->foreign_currency_id;
+            $found[] = (int) $entry->transaction_currency_id;
+            $found[] = (int) $entry->foreign_currency_id;
         }
 
         // get all from budget limits
         $limits = BudgetLimit::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($limits as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
+            $found[] = (int) $entry->transaction_currency_id;
         }
 
-        $found = array_values(array_unique($found));
-        $found = array_values(
+        $found   = array_values(array_unique($found));
+        $found   = array_values(
             array_filter(
                 $found, function (int $currencyId) {
                 return $currencyId !== 0;

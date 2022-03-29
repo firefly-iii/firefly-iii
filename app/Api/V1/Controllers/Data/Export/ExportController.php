@@ -78,9 +78,9 @@ class ExportController extends Controller
      */
     private function returnExport(string $key): LaravelResponse
     {
-        $date = date('Y-m-d-H-i-s');
+        $date     = date('Y-m-d-H-i-s');
         $fileName = sprintf('%s-export-%s.csv', $date, $key);
-        $data = $this->exporter->export();
+        $data     = $this->exporter->export();
 
         /** @var LaravelResponse $response */
         $response = response($data[$key]);
@@ -93,7 +93,7 @@ class ExportController extends Controller
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string)strlen($data[$key]));
+            ->header('Content-Length', (string) strlen($data[$key]));
 
         return $response;
     }

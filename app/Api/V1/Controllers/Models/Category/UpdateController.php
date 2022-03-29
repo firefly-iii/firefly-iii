@@ -69,9 +69,9 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Category $category): JsonResponse
     {
-        $data = $request->getAll();
+        $data     = $request->getAll();
         $category = $this->repository->update($category, $data);
-        $manager = $this->getManager();
+        $manager  = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
