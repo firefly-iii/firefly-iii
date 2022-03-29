@@ -195,7 +195,7 @@ class General extends AbstractExtension
                     ]
                 );
 
-                return (string) $converter->convertToHtml($text);
+                return (string) $converter->convert($text);
             }, ['is_safe' => ['html']]
         );
     }
