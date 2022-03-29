@@ -46,18 +46,6 @@ class AmountFormat extends AbstractExtension
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFunctions(): array
-    {
-        return [
-            $this->formatAmountByAccount(),
-            $this->formatAmountBySymbol(),
-            $this->formatAmountByCurrency(),
-        ];
-    }
-
-    /**
      * @return TwigFilter
      */
     protected function formatAmount(): TwigFilter
@@ -87,6 +75,18 @@ class AmountFormat extends AbstractExtension
             },
             ['is_safe' => ['html']]
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions(): array
+    {
+        return [
+            $this->formatAmountByAccount(),
+            $this->formatAmountBySymbol(),
+            $this->formatAmountByCurrency(),
+        ];
     }
 
     /**

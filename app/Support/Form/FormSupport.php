@@ -76,7 +76,7 @@ trait FormSupport
         }
         $name = str_replace('[]', '', $name);
 
-        return (string)trans('form.' . $name);
+        return (string) trans('form.' . $name);
     }
 
     /**

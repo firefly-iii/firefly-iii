@@ -32,10 +32,10 @@ use Carbon\Carbon;
  */
 abstract class AbstractCronjob
 {
-    public bool $jobErrored;
-    public bool $jobFired;
-    public bool $jobSucceeded;
-    public ?string $message;
+    public bool      $jobErrored;
+    public bool      $jobFired;
+    public bool      $jobSucceeded;
+    public ?string   $message;
     public int       $timeBetweenRuns = 43200;
     protected Carbon $date;
     protected bool   $force;

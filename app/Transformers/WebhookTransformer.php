@@ -52,7 +52,7 @@ class WebhookTransformer extends AbstractTransformer
     public function transform(Webhook $webhook): array
     {
         return [
-            'id'         => (int)$webhook->id,
+            'id'         => (int) $webhook->id,
             'created_at' => $webhook->created_at->toAtomString(),
             'updated_at' => $webhook->updated_at->toAtomString(),
             'active'     => $webhook->active,

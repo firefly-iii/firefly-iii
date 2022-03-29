@@ -77,7 +77,7 @@ class CurrencyForm
             $preFilled = [];
         }
         $key            = 'amount_currency_id_' . $name;
-        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
+        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $defaultCurrency->id;
 
         Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -92,7 +92,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round((float)$value, $defaultCurrency->decimal_places);
+            $value = round((float) $value, $defaultCurrency->decimal_places);
         }
         try {
             $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
@@ -146,7 +146,7 @@ class CurrencyForm
             $preFilled = [];
         }
         $key            = 'amount_currency_id_' . $name;
-        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
+        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $defaultCurrency->id;
 
         Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -161,7 +161,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round((float)$value, $defaultCurrency->decimal_places);
+            $value = round((float) $value, $defaultCurrency->decimal_places);
         }
         try {
             $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
@@ -215,7 +215,7 @@ class CurrencyForm
         // get all currencies:
         $list  = $currencyRepos->get();
         $array = [
-            0 => (string)trans('firefly.no_currency'),
+            0 => (string) trans('firefly.no_currency'),
         ];
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {

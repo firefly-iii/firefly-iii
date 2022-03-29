@@ -64,9 +64,9 @@ class FrontpageChartGenerator
     {
         $budgets = $this->budgetRepository->getActiveBudgets();
         $data    = [
-            ['label' => (string)trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string)trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string)trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string) trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string) trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string) trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
         ];
 
         // loop al budgets:
@@ -158,7 +158,7 @@ class FrontpageChartGenerator
         /** @var array $entry */
         foreach ($spent as $entry) {
             // only spent the entry where the entry's currency matches the budget limit's currency
-            if ($entry['currency_id'] === (int)$limit->transaction_currency_id) {
+            if ($entry['currency_id'] === (int) $limit->transaction_currency_id) {
                 $data = $this->processRow($data, $budget, $limit, $entry);
             }
         }
@@ -229,6 +229,6 @@ class FrontpageChartGenerator
         $this->opsRepository->setUser($user);
 
         $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
+        $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
     }
 }

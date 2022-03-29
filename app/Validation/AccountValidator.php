@@ -199,6 +199,21 @@ class AccountValidator
     }
 
     /**
+     * @param string $accountType
+     *
+     * @return bool
+     */
+    protected function canCreateType(string $accountType): bool
+    {
+        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
+        if (in_array($accountType, $canCreate, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param array $validTypes
      * @param array $data
      *
@@ -242,21 +257,6 @@ class AccountValidator
         }
 
         return null;
-    }
-
-    /**
-     * @param string $accountType
-     *
-     * @return bool
-     */
-    protected function canCreateType(string $accountType): bool
-    {
-        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
-        if (in_array($accountType, $canCreate, true)) {
-            return true;
-        }
-
-        return false;
     }
 
 }

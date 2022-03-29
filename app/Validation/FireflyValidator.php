@@ -55,47 +55,6 @@ class FireflyValidator extends Validator
 {
 
     /**
-     * @param $attribute
-     * @param $value
-     * @return bool
-     */
-    public function validateUniqueCurrencyName($attribute, $value): bool
-    {
-        return $this->validateUniqueCurrency('name', (string) $attribute, (string) $value);
-    }
-
-    /**
-     * @param $attribute
-     * @param $value
-     * @return bool
-     */
-    public function validateUniqueCurrencyCode($attribute, $value): bool
-    {
-        return $this->validateUniqueCurrency('code', (string) $attribute, (string) $value);
-    }
-
-    /**
-     * @param $attribute
-     * @param $value
-     * @return bool
-     */
-    public function validateUniqueCurrencySymbol($attribute, $value): bool
-    {
-        return $this->validateUniqueCurrency('symbol', (string) $attribute, (string) $value);
-    }
-
-    /**
-     * @param $attribute
-     * @param $value
-     * @return bool
-     */
-    public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
-    {
-        return 0 === DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
-    }
-
-
-    /**
      * @param mixed $attribute
      * @param mixed $value
      *
@@ -646,6 +605,46 @@ class FireflyValidator extends Validator
         }
 
         return true;
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @return bool
+     */
+    public function validateUniqueCurrencyCode($attribute, $value): bool
+    {
+        return $this->validateUniqueCurrency('code', (string) $attribute, (string) $value);
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @return bool
+     */
+    public function validateUniqueCurrencyName($attribute, $value): bool
+    {
+        return $this->validateUniqueCurrency('name', (string) $attribute, (string) $value);
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @return bool
+     */
+    public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
+    {
+        return 0 === DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @return bool
+     */
+    public function validateUniqueCurrencySymbol($attribute, $value): bool
+    {
+        return $this->validateUniqueCurrency('symbol', (string) $attribute, (string) $value);
     }
 
     /**

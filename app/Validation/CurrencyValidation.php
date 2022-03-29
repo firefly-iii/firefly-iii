@@ -55,7 +55,7 @@ trait CurrencyValidation
             ) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.foreign_amount',
-                    (string)trans('validation.require_currency_info')
+                    (string) trans('validation.require_currency_info')
                 );
             }
             // if the currency is present, then the amount must be present as well.
@@ -65,7 +65,7 @@ trait CurrencyValidation
                 )) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.foreign_amount',
-                    (string)trans('validation.require_currency_amount')
+                    (string) trans('validation.require_currency_amount')
                 );
             }
         }

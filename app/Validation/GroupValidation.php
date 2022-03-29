@@ -44,6 +44,36 @@ trait GroupValidation
     abstract protected function getTransactionsArray(Validator $validator): array;
 
     /**
+     * @param Validator $validator
+     */
+    protected function preventNoAccountInfo(Validator $validator): void
+    {
+        $transactions = $this->getTransactionsArray($validator);
+        $keys         = ['source_id', 'destination_id', 'source_name', 'destination_name', 'source_iban', 'destination_iban', 'source_number', 'destination_number'];
+        /** @var array $transaction */
+        foreach ($transactions as $index => $transaction) {
+            $hasAccountInfo = false;
+            $hasJournalId   = array_key_exists('transaction_journal_id', $transaction);
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $transaction) && '' !== (string) $transaction[$key]) {
+                    $hasAccountInfo = true;
+                }
+            }
+            // set errors:
+            if (false === $hasAccountInfo && !$hasJournalId) {
+                $validator->errors()->add(
+                    sprintf('transactions.%d.source_id', $index), (string) trans('validation.generic_no_source')
+                );
+                $validator->errors()->add(
+                    sprintf('transactions.%d.destination_id', $index), (string) trans('validation.generic_no_destination')
+                );
+            }
+        }
+
+        // only an issue if there is no transaction_journal_id
+    }
+
+    /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no
      * journal description.
      *
@@ -81,36 +111,6 @@ trait GroupValidation
         if ('' === $groupTitle && count($transactions) > 1) {
             $validator->errors()->add('group_title', (string) trans('validation.group_title_mandatory'));
         }
-    }
-
-    /**
-     * @param Validator $validator
-     */
-    protected function preventNoAccountInfo(Validator $validator): void
-    {
-        $transactions = $this->getTransactionsArray($validator);
-        $keys         = ['source_id', 'destination_id', 'source_name', 'destination_name', 'source_iban', 'destination_iban', 'source_number', 'destination_number'];
-        /** @var array $transaction */
-        foreach ($transactions as $index => $transaction) {
-            $hasAccountInfo = false;
-            $hasJournalId   = array_key_exists('transaction_journal_id', $transaction);
-            foreach ($keys as $key) {
-                if (array_key_exists($key, $transaction) && '' !== (string) $transaction[$key]) {
-                    $hasAccountInfo = true;
-                }
-            }
-            // set errors:
-            if (false === $hasAccountInfo && !$hasJournalId) {
-                $validator->errors()->add(
-                    sprintf('transactions.%d.source_id', $index), (string) trans('validation.generic_no_source')
-                );
-                $validator->errors()->add(
-                    sprintf('transactions.%d.destination_id', $index), (string) trans('validation.generic_no_destination')
-                );
-            }
-        }
-
-        // only an issue if there is no transaction_journal_id
     }
 
     /**
