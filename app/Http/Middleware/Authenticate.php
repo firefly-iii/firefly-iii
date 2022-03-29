@@ -98,10 +98,10 @@ class Authenticate
                     /** @noinspection PhpUndefinedMethodInspection */
                     /** @var User $user */
                     $user = $this->auth->authenticate();
-                    if (1 === (int)$user->blocked) {
-                        $message = (string)trans('firefly.block_account_logout');
+                    if (1 === (int) $user->blocked) {
+                        $message = (string) trans('firefly.block_account_logout');
                         if ('email_changed' === $user->blocked_code) {
-                            $message = (string)trans('firefly.email_changed_logout');
+                            $message = (string) trans('firefly.email_changed_logout');
                         }
                         app('session')->flash('logoutMessage', $message);
                         /** @noinspection PhpUndefinedMethodInspection */

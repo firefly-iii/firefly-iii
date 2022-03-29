@@ -199,7 +199,7 @@ class DoubleReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string)trans('firefly.spent_in_specific_double', ['account' => $name]),
+                        (string) trans('firefly.spent_in_specific_double', ['account' => $name]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -225,7 +225,7 @@ class DoubleReportController extends Controller
             $chartData[$earnedKey] = $chartData[$earnedKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string)trans('firefly.earned_in_specific_double', ['account' => $name]),
+                        (string) trans('firefly.earned_in_specific_double', ['account' => $name]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',

@@ -59,7 +59,7 @@ class HomeController extends Controller
     public function index()
     {
         Log::channel('audit')->info('User visits admin index.');
-        $title         = (string)trans('firefly.administration');
+        $title         = (string) trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
         $email         = auth()->user()->email;
         $pref          = app('preferences')->get('remote_guard_alt_email');
@@ -82,10 +82,10 @@ class HomeController extends Controller
     {
         Log::channel('audit')->info('User sends test message.');
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         Log::debug('Now in testMessage() controller.');
         event(new AdminRequestedTestMessage($user));
-        session()->flash('info', (string)trans('firefly.send_test_triggered'));
+        session()->flash('info', (string) trans('firefly.send_test_triggered'));
 
         return redirect(route('admin.index'));
     }

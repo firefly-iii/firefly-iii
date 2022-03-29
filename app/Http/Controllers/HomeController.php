@@ -27,7 +27,6 @@ use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
-use FireflyIII\Mail\UndoEmailChangeMail;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -36,7 +35,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Mail;
 
 /**
  * Class HomeController.

@@ -42,11 +42,11 @@ class AdminRequestedTestMessage extends Event
     /**
      * Create a new event instance.
      *
-     * @param User   $user
+     * @param User $user
      */
     public function __construct(User $user)
     {
         Log::debug(sprintf('Triggered AdminRequestedTestMessage for user #%d (%s)', $user->id, $user->email));
-        $this->user      = $user;
+        $this->user = $user;
     }
 }

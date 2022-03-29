@@ -37,8 +37,8 @@ class WarnUserAboutBill extends Event
     use SerializesModels;
 
     public Bill   $bill;
-    public string $field;
     public int    $diff;
+    public string $field;
 
     /**
      * @param Bill   $bill

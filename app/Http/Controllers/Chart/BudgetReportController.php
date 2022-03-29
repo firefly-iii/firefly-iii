@@ -1,4 +1,5 @@
-<?php /**
+<?php
+/**
  * BudgetReportController.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
@@ -200,7 +201,7 @@ class BudgetReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string)trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
+                        (string) trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',

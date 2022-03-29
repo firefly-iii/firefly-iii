@@ -30,6 +30,6 @@ namespace FireflyIII\Enums;
 class ClauseType
 {
     public const TRANSACTION = 'transaction';
-    public const WHERE       = 'where';
     public const UPDATE      = 'update';
+    public const WHERE       = 'where';
 }

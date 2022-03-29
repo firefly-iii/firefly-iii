@@ -313,16 +313,16 @@ class RecurrenceFormRequest extends FormRequest
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type')));
             case 'withdrawal':
-                $sourceId      = (int)$data['source_id'];
-                $destinationId = (int)$data['withdrawal_destination_id'];
+                $sourceId      = (int) $data['source_id'];
+                $destinationId = (int) $data['withdrawal_destination_id'];
                 break;
             case 'deposit':
-                $sourceId      = (int)$data['deposit_source_id'];
-                $destinationId = (int)$data['destination_id'];
+                $sourceId      = (int) $data['deposit_source_id'];
+                $destinationId = (int) $data['destination_id'];
                 break;
             case 'transfer':
-                $sourceId      = (int)$data['source_id'];
-                $destinationId = (int)$data['destination_id'];
+                $sourceId      = (int) $data['source_id'];
+                $destinationId = (int) $data['destination_id'];
                 break;
         }
         // validate source account.
@@ -330,7 +330,7 @@ class RecurrenceFormRequest extends FormRequest
 
         // do something with result:
         if (false === $validSource) {
-            $message = (string)trans('validation.generic_invalid_source');
+            $message = (string) trans('validation.generic_invalid_source');
             $validator->errors()->add('source_id', $message);
             $validator->errors()->add('deposit_source_id', $message);
 
@@ -341,7 +341,7 @@ class RecurrenceFormRequest extends FormRequest
         $validDestination = $accountValidator->validateDestination(['id' => $destinationId,]);
         // do something with result:
         if (false === $validDestination) {
-            $message = (string)trans('validation.generic_invalid_destination');
+            $message = (string) trans('validation.generic_invalid_destination');
             $validator->errors()->add('destination_id', $message);
             $validator->errors()->add('withdrawal_destination_id', $message);
         }

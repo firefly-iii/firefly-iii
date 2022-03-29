@@ -68,7 +68,7 @@ class IndexController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.budgets'));
+                app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository         = app(BudgetRepositoryInterface::class);
                 $this->opsRepository      = app(OperationsRepositoryInterface::class);
@@ -98,7 +98,7 @@ class IndexController extends Controller
         Log::debug('Start of IndexController::index()');
 
         // collect some basic vars:
-        $range           = (string)app('preferences')->get('viewRange', '1M')->data;
+        $range           = (string) app('preferences')->get('viewRange', '1M')->data;
         $start           = $start ?? session('start', Carbon::now()->startOfMonth());
         $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -131,7 +131,7 @@ class IndexController extends Controller
 
         // number of days for consistent budgeting.
         $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
-        $activeDaysLeft   = $this->activeDaysLeft($start, $end); // see method description.
+        $activeDaysLeft   = $this->activeDaysLeft($start, $end);   // see method description.
 
         // get all inactive budgets, and simply list them:
         $inactive = $this->repository->getInactiveBudgets();
@@ -207,7 +207,7 @@ class IndexController extends Controller
                 $currency            = $limit->transactionCurrency ?? $defaultCurrency;
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
-                    'amount'                  => number_format((float)$limit->amount, $currency->decimal_places, '.', ''),
+                    'amount'                  => number_format((float) $limit->amount, $currency->decimal_places, '.', ''),
                     'start_date'              => $limit->start_date->isoFormat($this->monthAndDayFormat),
                     'end_date'                => $limit->end_date->isoFormat($this->monthAndDayFormat),
                     'in_range'                => $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end),
@@ -307,7 +307,7 @@ class IndexController extends Controller
         $budgetIds = $request->get('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int)$budgetId;
+            $budgetId = (int) $budgetId;
             $budget   = $repository->find($budgetId);
             if (null !== $budget) {
                 Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));

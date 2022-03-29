@@ -46,7 +46,7 @@ class TransactionCurrencyFactory
         // if the code already exists (deleted)
         // force delete it and then create the transaction:
         $count = TransactionCurrency::withTrashed()->whereCode($data['code'])->count();
-        if(1 === $count) {
+        if (1 === $count) {
             $old = TransactionCurrency::withTrashed()->whereCode($data['code'])->first();
             $old->forceDelete();
             Log::warning(sprintf('Force deleted old currency with ID #%d and code "%s".', $old->id, $data['code']));
@@ -80,8 +80,8 @@ class TransactionCurrencyFactory
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        $currencyCode = (string)$currencyCode;
-        $currencyId   = (int)$currencyId;
+        $currencyCode = (string) $currencyCode;
+        $currencyId   = (int) $currencyId;
 
         if ('' === $currencyCode && 0 === $currencyId) {
             Log::debug('Cannot find anything on empty currency code and empty currency ID!');

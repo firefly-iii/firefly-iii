@@ -67,38 +67,6 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getVersion(): int
-    {
-        return $this->version;
-    }
-
-    /**
-     * @param Collection $objects
-     */
-    public function setObjects(Collection $objects): void
-    {
-        $this->objects = $objects;
-    }
-
-    /**
-     * @param int $trigger
-     */
-    public function setTrigger(int $trigger): void
-    {
-        $this->trigger = $trigger;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @return Collection
      */
     private function getWebhooks(): Collection
@@ -198,6 +166,14 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
+    /**
      * @param TransactionGroup $transactionGroup
      *
      * @return Collection
@@ -234,5 +210,29 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
 
         return $webhookMessage;
+    }
+
+    /**
+     * @param Collection $objects
+     */
+    public function setObjects(Collection $objects): void
+    {
+        $this->objects = $objects;
+    }
+
+    /**
+     * @param int $trigger
+     */
+    public function setTrigger(int $trigger): void
+    {
+        $this->trigger = $trigger;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 }

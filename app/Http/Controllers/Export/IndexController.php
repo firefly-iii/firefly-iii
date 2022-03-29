@@ -54,7 +54,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-life-bouy');
-                app('view')->share('title', (string)trans('firefly.export_data_title'));
+                app('view')->share('title', (string) trans('firefly.export_data_title'));
                 $this->journalRepository = app(JournalRepositoryInterface::class);
                 $this->middleware(IsDemoUser::class)->except(['index']);
 
@@ -85,7 +85,7 @@ class IndexController extends Controller
         $generator->setStart($firstDate);
         $result = $generator->export();
 
-        $name = sprintf('%s_transaction_export.csv', date('Y_m_d'));
+        $name   = sprintf('%s_transaction_export.csv', date('Y_m_d'));
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
         // headers for CSV file.
         /** @var LaravelResponse $response */

@@ -52,7 +52,7 @@ class CreateController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.budgets'));
+                app('view')->share('title', (string) trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository  = app(BudgetRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
@@ -75,23 +75,23 @@ class CreateController extends Controller
 
         // auto budget types
         $autoBudgetTypes   = [
-            0                                => (string)trans('firefly.auto_budget_none'),
-            AutoBudget::AUTO_BUDGET_RESET    => (string)trans('firefly.auto_budget_reset'),
-            AutoBudget::AUTO_BUDGET_ROLLOVER => (string)trans('firefly.auto_budget_rollover'),
+            0                                => (string) trans('firefly.auto_budget_none'),
+            AutoBudget::AUTO_BUDGET_RESET    => (string) trans('firefly.auto_budget_reset'),
+            AutoBudget::AUTO_BUDGET_ROLLOVER => (string) trans('firefly.auto_budget_rollover'),
         ];
         $autoBudgetPeriods = [
-            'daily'     => (string)trans('firefly.auto_budget_period_daily'),
-            'weekly'    => (string)trans('firefly.auto_budget_period_weekly'),
-            'monthly'   => (string)trans('firefly.auto_budget_period_monthly'),
-            'quarterly' => (string)trans('firefly.auto_budget_period_quarterly'),
-            'half_year' => (string)trans('firefly.auto_budget_period_half_year'),
-            'yearly'    => (string)trans('firefly.auto_budget_period_yearly'),
+            'daily'     => (string) trans('firefly.auto_budget_period_daily'),
+            'weekly'    => (string) trans('firefly.auto_budget_period_weekly'),
+            'monthly'   => (string) trans('firefly.auto_budget_period_monthly'),
+            'quarterly' => (string) trans('firefly.auto_budget_period_quarterly'),
+            'half_year' => (string) trans('firefly.auto_budget_period_half_year'),
+            'yearly'    => (string) trans('firefly.auto_budget_period_yearly'),
         ];
         $currency          = app('amount')->getDefaultCurrency();
 
         $preFilled = [
-            'auto_budget_period'      => $hasOldInput ? (bool)$request->old('auto_budget_period') : 'monthly',
-            'auto_budget_currency_id' => $hasOldInput ? (int)$request->old('auto_budget_currency_id') : $currency->id,
+            'auto_budget_period'      => $hasOldInput ? (bool) $request->old('auto_budget_period') : 'monthly',
+            'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $currency->id,
         ];
 
         $request->session()->flash('preFilled', $preFilled);
@@ -101,7 +101,7 @@ class CreateController extends Controller
             $this->rememberPreviousUri('budgets.create.uri');
         }
         $request->session()->forget('budgets.create.fromStore');
-        $subTitle = (string)trans('firefly.create_new_budget');
+        $subTitle = (string) trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle', 'autoBudgetTypes', 'autoBudgetPeriods'));
     }
@@ -120,7 +120,7 @@ class CreateController extends Controller
 
         $budget = $this->repository->store($data);
         $this->repository->cleanupBudgets();
-        $request->session()->flash('success', (string)trans('firefly.stored_new_budget', ['name' => $budget->name]));
+        $request->session()->flash('success', (string) trans('firefly.stored_new_budget', ['name' => $budget->name]));
         app('preferences')->mark();
 
         // store attachment(s):
@@ -129,7 +129,7 @@ class CreateController extends Controller
             $this->attachments->saveAttachmentsForModel($budget, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -138,7 +138,7 @@ class CreateController extends Controller
 
         $redirect = redirect($this->getPreviousUri('budgets.create.uri'));
 
-        if (1 === (int)$request->get('create_another')) {
+        if (1 === (int) $request->get('create_another')) {
 
             $request->session()->put('budgets.create.fromStore', true);
 

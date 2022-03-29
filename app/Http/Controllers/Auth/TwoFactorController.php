@@ -47,7 +47,7 @@ class TwoFactorController extends Controller
         /** @var User $user */
         $user      = auth()->user();
         $siteOwner = config('firefly.site_owner');
-        $title     = (string)trans('firefly.two_factor_forgot_title');
+        $title     = (string) trans('firefly.two_factor_forgot_title');
 
         return view('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
     }
@@ -61,7 +61,7 @@ class TwoFactorController extends Controller
     {
         /** @var array $mfaHistory */
         $mfaHistory = Preferences::get('mfa_history', [])->data;
-        $mfaCode    = (string)$request->get('one_time_password');
+        $mfaCode    = (string) $request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {

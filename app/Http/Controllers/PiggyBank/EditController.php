@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
+use Amount;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankUpdateRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use Amount;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -41,9 +41,9 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
+    private AccountRepositoryInterface   $accountRepository;
     private AttachmentHelperInterface    $attachments;
     private PiggyBankRepositoryInterface $piggyRepos;
-    private AccountRepositoryInterface   $accountRepository;
 
     /**
      * PiggyBankController constructor.
@@ -95,7 +95,7 @@ class EditController extends Controller
                       'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
                       'notes'        => null === $note ? '' : $note->text,
         ];
-        if(0.0 === (float) $piggyBank->targetamount) {
+        if (0.0 === (float) $piggyBank->targetamount) {
             $preFilled['targetamount'] = '';
         }
         session()->flash('preFilled', $preFilled);

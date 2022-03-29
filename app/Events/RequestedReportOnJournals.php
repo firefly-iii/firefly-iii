@@ -41,7 +41,7 @@ class RequestedReportOnJournals
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public Collection $groups;
-    public int $userId;
+    public int        $userId;
 
     /**
      * Create a new event instance.

@@ -51,7 +51,7 @@ class AdminEventHandler
 
         // is user even admin?
         if ($repository->hasRole($event->user, 'owner')) {
-            $email     = $event->user->email;
+            $email = $event->user->email;
 
             // if user is demo user, send to owner:
             if ($event->user->hasRole('demo')) {

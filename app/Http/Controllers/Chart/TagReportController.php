@@ -270,7 +270,7 @@ class TagReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string)trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]),
+                        (string) trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -297,7 +297,7 @@ class TagReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string)trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]),
+                        (string) trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',

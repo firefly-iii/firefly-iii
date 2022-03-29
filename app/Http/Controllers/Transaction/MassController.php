@@ -61,7 +61,7 @@ class MassController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -79,7 +79,7 @@ class MassController extends Controller
      */
     public function delete(array $journals): IlluminateView
     {
-        $subTitle = (string)trans('firefly.mass_delete_journals');
+        $subTitle = (string) trans('firefly.mass_delete_journals');
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-delete.uri');
@@ -104,15 +104,15 @@ class MassController extends Controller
             foreach ($ids as $journalId) {
 
                 /** @var TransactionJournal $journal */
-                $journal = $this->repository->find((int)$journalId);
-                if (null !== $journal && (int)$journalId === $journal->id) {
+                $journal = $this->repository->find((int) $journalId);
+                if (null !== $journal && (int) $journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
                 }
             }
         }
         app('preferences')->mark();
-        session()->flash('success', (string)trans_choice('firefly.mass_deleted_transactions_success', $count));
+        session()->flash('success', (string) trans_choice('firefly.mass_deleted_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
@@ -127,7 +127,7 @@ class MassController extends Controller
      */
     public function edit(array $journals): IlluminateView
     {
-        $subTitle = (string)trans('firefly.mass_edit_journals');
+        $subTitle = (string) trans('firefly.mass_edit_journals');
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
@@ -146,7 +146,7 @@ class MassController extends Controller
 
         // reverse amounts
         foreach ($journals as $index => $journal) {
-            $journals[$index]['amount']         = number_format((float) app('steam')->positive($journal['amount']), $journal['currency_decimal_places'],'.','');
+            $journals[$index]['amount']         = number_format((float) app('steam')->positive($journal['amount']), $journal['currency_decimal_places'], '.', '');
             $journals[$index]['foreign_amount'] = null === $journal['foreign_amount'] ?
                 null : app('steam')->positive($journal['foreign_amount']);
         }
@@ -174,7 +174,7 @@ class MassController extends Controller
         $count = 0;
         /** @var string $journalId */
         foreach ($journalIds as $journalId) {
-            $integer = (int)$journalId;
+            $integer = (int) $journalId;
             try {
                 $this->updateJournal($integer, $request);
                 $count++;
@@ -184,7 +184,7 @@ class MassController extends Controller
         }
 
         app('preferences')->mark();
-        session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
+        session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));
@@ -273,7 +273,7 @@ class MassController extends Controller
             return null;
         }
 
-        return (string)$value[$journalId];
+        return (string) $value[$journalId];
     }
 
     /**
@@ -294,6 +294,6 @@ class MassController extends Controller
             return null;
         }
 
-        return (int)$value[$journalId];
+        return (int) $value[$journalId];
     }
 }
