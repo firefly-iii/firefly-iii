@@ -229,11 +229,10 @@ class UserEventHandler
         $newEmail  = $event->newEmail;
         $oldEmail  = $event->oldEmail;
         $user      = $event->user;
-        $ipAddress = $event->ipAddress;
         $token     = app('preferences')->getForUser($user, 'email_change_confirm_token', 'invalid');
         $uri       = route('profile.confirm-email-change', [$token->data]);
         try {
-            Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
+            Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $uri));
 
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
@@ -255,12 +254,11 @@ class UserEventHandler
         $newEmail  = $event->newEmail;
         $oldEmail  = $event->oldEmail;
         $user      = $event->user;
-        $ipAddress = $event->ipAddress;
         $token     = app('preferences')->getForUser($user, 'email_change_undo_token', 'invalid');
         $hashed    = hash('sha256', sprintf('%s%s', (string)config('app.key'), $oldEmail));
         $uri       = route('profile.undo-email-change', [$token->data, $hashed]);
         try {
-            Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
+            Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $uri));
 
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());

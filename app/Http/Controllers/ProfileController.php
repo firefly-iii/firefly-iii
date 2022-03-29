@@ -427,9 +427,7 @@ class ProfileController extends Controller
         // now actually update user:
         $repository->changeEmail($user, $newEmail);
 
-        // call event.
-        $ipAddress = $request->ip();
-        event(new UserChangedEmail($user, $newEmail, $oldEmail, $ipAddress));
+        event(new UserChangedEmail($user, $newEmail, $oldEmail));
 
         // force user logout.
         Auth::guard()->logout();

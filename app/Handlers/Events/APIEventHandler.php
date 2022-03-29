@@ -59,18 +59,16 @@ class APIEventHandler
                 $email = config('firefly.site_owner');
             }
 
-            $ipAddress = Request::ip();
-
             // see if user has alternative email address:
             $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
             if (null !== $pref) {
                 $email = (string)(is_array($pref->data) ? $email : $pref->data);
             }
 
-            Log::debug(sprintf('Now in APIEventHandler::accessTokenCreated. Email is %s, IP is %s', $email, $ipAddress));
+            Log::debug(sprintf('Now in APIEventHandler::accessTokenCreated. Email is %s', $email));
             try {
                 Log::debug('Trying to send message...');
-                Mail::to($email)->send(new AccessTokenCreatedMail($email, $ipAddress));
+                Mail::to($email)->send(new AccessTokenCreatedMail);
 
             } catch (Exception $e) { // @phpstan-ignore-line
                 Log::debug('Send message failed! :(');

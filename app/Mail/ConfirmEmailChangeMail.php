@@ -37,25 +37,23 @@ class ConfirmEmailChangeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public string $ipAddress;
     public string $newEmail;
     public string $oldEmail;
-    public string $uri;
+    public string $url;
 
     /**
      * ConfirmEmailChangeMail constructor.
      *
      * @param string $newEmail
      * @param string $oldEmail
-     * @param string $uri
+     * @param string $url
      * @param string $ipAddress
      */
-    public function __construct(string $newEmail, string $oldEmail, string $uri, string $ipAddress)
+    public function __construct(string $newEmail, string $oldEmail, string $url)
     {
         $this->newEmail  = $newEmail;
         $this->oldEmail  = $oldEmail;
-        $this->uri       = $uri;
-        $this->ipAddress = $ipAddress;
+        $this->url       = $url;
     }
 
     /**
@@ -65,7 +63,10 @@ class ConfirmEmailChangeMail extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.confirm-email-change-html')->text('emails.confirm-email-change-text')
-                    ->subject((string) trans('email.email_change_subject'));
+        return $this
+            //->view('emails.confirm-email-change-html')
+            //->text('emails.confirm-email-change-text')
+                ->markdown('emails.confirm-email-change')
+            ->subject((string) trans('email.email_change_subject'));
     }
 }

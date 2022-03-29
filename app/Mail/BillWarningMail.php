@@ -14,7 +14,6 @@ class BillWarningMail extends Mailable
     public Bill   $bill;
     public string $field;
     public int    $diff;
-    public string $ipAddress;
 
     /**
      * ConfirmEmailChangeMail constructor.
@@ -22,14 +21,12 @@ class BillWarningMail extends Mailable
      * @param Bill   $bill
      * @param string $field
      * @param int    $diff
-     * @param string $ipAddress
      */
-    public function __construct(Bill $bill, string $field, int $diff, string $ipAddress)
+    public function __construct(Bill $bill, string $field, int $diff)
     {
         $this->bill      = $bill;
         $this->field     = $field;
         $this->diff      = $diff;
-        $this->ipAddress = $ipAddress;
     }
 
     /**
@@ -45,8 +42,7 @@ class BillWarningMail extends Mailable
         }
 
         return $this
-            ->view('emails.bill-warning-html')
-            ->text('emails.bill-warning-text')
+            ->markdown('emails.bill-warning')
             ->subject($subject);
     }
 }

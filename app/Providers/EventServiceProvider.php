@@ -179,7 +179,6 @@ class EventServiceProvider extends ServiceProvider
                 }
 
                 $email     = $user->email;
-                $ipAddress = Request::ip();
 
                 // see if user has alternative email address:
                 $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
@@ -187,10 +186,10 @@ class EventServiceProvider extends ServiceProvider
                     $email = $pref->data;
                 }
 
-                Log::debug(sprintf('Now in EventServiceProvider::registerCreateEvents. Email is %s, IP is %s', $email, $ipAddress));
+                Log::debug(sprintf('Now in EventServiceProvider::registerCreateEvents. Email is %s', $email));
                 try {
                     Log::debug('Trying to send message...');
-                    Mail::to($email)->send(new OAuthTokenCreatedMail($email, $ipAddress, $oauthClient));
+                    Mail::to($email)->send(new OAuthTokenCreatedMail($oauthClient));
                 } catch (Exception $e) { // @phpstan-ignore-line
                     Log::debug('Send message failed! :(');
                     Log::error($e->getMessage());

@@ -83,9 +83,8 @@ class HomeController extends Controller
         Log::channel('audit')->info('User sends test message.');
         /** @var User $user */
         $user      = auth()->user();
-        $ipAddress = $request->ip();
-        Log::debug(sprintf('Now in testMessage() controller. IP is %s', $ipAddress));
-        event(new AdminRequestedTestMessage($user, $ipAddress));
+        Log::debug('Now in testMessage() controller.');
+        event(new AdminRequestedTestMessage($user));
         session()->flash('info', (string)trans('firefly.send_test_triggered'));
 
         return redirect(route('admin.index'));

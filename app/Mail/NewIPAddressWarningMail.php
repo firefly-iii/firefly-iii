@@ -56,8 +56,6 @@ class NewIPAddressWarningMail extends Mailable
      */
     public function build(): self
     {
-        // time
-
         $this->time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
         $this->host = '';
         try {
@@ -69,7 +67,8 @@ class NewIPAddressWarningMail extends Mailable
             $this->host = $hostName;
         }
 
-        return $this->view('emails.new-ip-html')->text('emails.new-ip-text')
+        return $this
+            ->markdown('emails.new-ip')
                     ->subject((string)trans('email.login_from_new_ip'));
     }
 }

@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+use FireflyIII\Http\Middleware\EncryptCookies;
+use FireflyIII\Http\Middleware\VerifyCsrfToken;
+
 return [
 
     /*
@@ -55,8 +58,8 @@ return [
     */
 
     'middleware' => [
-        'verify_csrf_token' => \FireflyIII\Http\Middleware\VerifyCsrfToken::class,
-        'encrypt_cookies'   => \FireflyIII\Http\Middleware\EncryptCookies::class,
+        'verify_csrf_token' => VerifyCsrfToken::class,
+        'encrypt_cookies'   => EncryptCookies::class,
     ],
 
 ];
