@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -101,7 +102,7 @@ class BillTransformer extends AbstractTransformer
         $current = $payDatesFormatted[0] ?? null;
         if (null !== $current && !$temp->isToday()) {
             $temp2                 = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
-            $nextExpectedMatchDiff = $temp2->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
+            $nextExpectedMatchDiff = $temp2->diffForHumans(today(), CarbonInterface::DIFF_RELATIVE_TO_NOW);
         }
         unset($temp, $temp2);
 

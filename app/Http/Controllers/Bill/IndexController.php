@@ -146,6 +146,8 @@ class IndexController extends Controller
      *
      * @return array
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function getSums(array $bills): array
     {

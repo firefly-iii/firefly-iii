@@ -74,6 +74,7 @@ class StoreController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function store(StoreRequest $request): JsonResponse
     {

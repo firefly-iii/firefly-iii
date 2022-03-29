@@ -116,6 +116,8 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @return Collection
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function getTags(): Collection
     {

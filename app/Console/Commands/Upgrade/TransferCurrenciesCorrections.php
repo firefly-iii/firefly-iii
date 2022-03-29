@@ -68,6 +68,9 @@ class TransferCurrenciesCorrections extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -134,6 +137,8 @@ class TransferCurrenciesCorrections extends Command
     /**
      * @return bool
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {

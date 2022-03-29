@@ -50,6 +50,7 @@ class VerifySecurityAlerts extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws \League\Flysystem\FilesystemException
      */
     public function handle(): int
     {

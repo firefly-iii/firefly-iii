@@ -482,10 +482,10 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * @param RuleGroup $group
      *
-     * @return bool
+     * @return void
      * @throws FireflyException
      */
-    private function fireGroup(RuleGroup $group): bool
+    private function fireGroup(RuleGroup $group): void
     {
         $all = false;
         Log::debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $group->rules->count()));
@@ -499,11 +499,10 @@ class SearchRuleEngine implements RuleEngineInterface
             if (true === $result && true === $rule->stop_processing) {
                 Log::debug(sprintf('The rule was triggered and rule->stop_processing = true, so group #%d will stop processing further rules.', $group->id));
 
-                return true;
+                return;
             }
         }
 
-        return $all;
     }
 
     /**

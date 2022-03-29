@@ -417,6 +417,8 @@ class TransactionJournalFactory
      * @param Account                  $account
      *
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {

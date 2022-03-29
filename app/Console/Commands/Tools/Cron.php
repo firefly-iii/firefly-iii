@@ -166,7 +166,7 @@ class Cron extends Command
     /**
      * @param bool        $force
      * @param Carbon|null $date
-     *
+     * @throws FireflyException
      */
     private function billWarningCronJob(bool $force, ?Carbon $date): void
     {

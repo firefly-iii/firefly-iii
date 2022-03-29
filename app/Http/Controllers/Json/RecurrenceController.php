@@ -143,6 +143,9 @@ class RecurrenceController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function suggest(Request $request): JsonResponse
     {

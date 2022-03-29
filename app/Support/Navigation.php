@@ -333,6 +333,7 @@ class Navigation
      * @param Carbon $end
      *
      * @return array
+     * @throws FireflyException
      */
     public function listOfPeriods(Carbon $start, Carbon $end): array
     {
@@ -436,6 +437,7 @@ class Navigation
      * @param Carbon $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {

@@ -73,7 +73,9 @@ class IndexController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
-     * @throws Exception
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(Request $request, string $objectType, Carbon $start = null, Carbon $end = null)
     {
@@ -130,7 +132,9 @@ class IndexController extends Controller
      * @param string  $objectType
      *
      * @return Factory|View
-     * @throws Exception
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function indexAll(Request $request, string $objectType)
     {

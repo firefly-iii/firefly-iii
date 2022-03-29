@@ -129,6 +129,8 @@ class MigrateToGroups extends Command
     /**
      * @return bool
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isMigrated(): bool
     {

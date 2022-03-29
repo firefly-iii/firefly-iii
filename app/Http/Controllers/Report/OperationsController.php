@@ -67,7 +67,6 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws JsonException
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -103,7 +102,6 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     * @throws JsonException
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
@@ -139,7 +137,6 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws JsonException
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {

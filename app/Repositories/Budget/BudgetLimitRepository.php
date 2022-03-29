@@ -304,6 +304,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      *
      * @return BudgetLimit
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function store(array $data): BudgetLimit
     {
@@ -352,6 +353,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      * @param array       $data
      *
      * @return BudgetLimit
+     * @throws FireflyException
+     * @throws \JsonException
      */
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {

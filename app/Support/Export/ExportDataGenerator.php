@@ -590,6 +590,8 @@ class ExportDataGenerator
     /**
      * @return string
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function exportTags(): string
     {

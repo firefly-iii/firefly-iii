@@ -46,6 +46,9 @@ class FiscalHelper implements FiscalHelperInterface
      * @param Carbon $date
      *
      * @return Carbon date object
+     * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function endOfFiscalYear(Carbon $date): Carbon
     {
@@ -69,6 +72,8 @@ class FiscalHelper implements FiscalHelperInterface
      *
      * @return Carbon date object
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function startOfFiscalYear(Carbon $date): Carbon
     {

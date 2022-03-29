@@ -45,6 +45,8 @@ class AccountTasker implements AccountTaskerInterface
      * @param Carbon     $end
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -150,6 +152,8 @@ class AccountTasker implements AccountTaskerInterface
      * @param array $array
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     private function groupExpenseByDestination(array $array): array
     {
@@ -243,6 +247,8 @@ class AccountTasker implements AccountTaskerInterface
      * @param array $array
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     private function groupIncomeBySource(array $array): array
     {

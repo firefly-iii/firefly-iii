@@ -171,6 +171,8 @@ class AvailableBudgetController extends Controller
      * @param Request $request
      *
      * @return RedirectResponse|Redirector
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function store(Request $request)
     {

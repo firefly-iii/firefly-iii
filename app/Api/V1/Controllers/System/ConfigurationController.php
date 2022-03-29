@@ -94,6 +94,8 @@ class ConfigurationController extends Controller
      *
      * @return array
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function getDynamicConfiguration(): array
     {

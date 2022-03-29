@@ -99,6 +99,7 @@ class HomeController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return mixed
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function index(AccountRepositoryInterface $repository): mixed
     {

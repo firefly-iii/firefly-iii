@@ -332,11 +332,11 @@ class UserEventHandler
 
     /**
      * @param ActuallyLoggedIn $event
+     * @throws FireflyException
      */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {
         Log::debug('Now in storeUserIPAddress');
-        /** @var User $user */
         $user = $event->user;
         /** @var array $preference */
         try {

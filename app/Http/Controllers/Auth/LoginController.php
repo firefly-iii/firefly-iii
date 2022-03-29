@@ -203,6 +203,8 @@ class LoginController extends Controller
      *
      * @return Factory|Application|View|Redirector|RedirectResponse
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function showLoginForm(Request $request)
     {

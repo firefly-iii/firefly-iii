@@ -102,6 +102,8 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     /**
      * @param Webhook $webhook
      * @param Model   $model
+     * @throws FireflyException
+     * @throws \JsonException
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
@@ -196,9 +198,9 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      * @param Webhook $webhook
      * @param array   $message
      *
-     * @return WebhookMessage
+     * @return void
      */
-    private function storeMessage(Webhook $webhook, array $message): WebhookMessage
+    private function storeMessage(Webhook $webhook, array $message): void
     {
         $webhookMessage = new WebhookMessage;
         $webhookMessage->webhook()->associate($webhook);
@@ -209,7 +211,6 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $webhookMessage->save();
         Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
 
-        return $webhookMessage;
     }
 
     /**

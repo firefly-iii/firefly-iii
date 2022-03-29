@@ -65,6 +65,7 @@ class Amount
      *
      * @return string
      *
+     * @throws FireflyException
      * @noinspection MoreThanThreeArgumentsInspection
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
@@ -112,7 +113,8 @@ class Amount
     /**
      * @return string
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function getCurrencyCode(): string
     {
@@ -136,6 +138,8 @@ class Amount
 
     /**
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
@@ -150,7 +154,6 @@ class Amount
      *
      * @return TransactionCurrency
      * @throws FireflyException
-     * @throws JsonException
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
@@ -221,6 +224,7 @@ class Amount
 
     /**
      * @return array
+     * @throws FireflyException
      */
     private function getLocaleInfo(): array
     {

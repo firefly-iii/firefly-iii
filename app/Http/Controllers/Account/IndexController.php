@@ -74,6 +74,9 @@ class IndexController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function inactive(Request $request, string $objectType)
     {
@@ -128,7 +131,10 @@ class IndexController extends Controller
      * @param string  $objectType
      *
      * @return Factory|View
-     * @throws Exception
+     * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(Request $request, string $objectType)
     {

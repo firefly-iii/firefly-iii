@@ -43,7 +43,6 @@ class AutomationHandler
      * @param RequestedReportOnJournals $event
      *
      * @return bool
-     * @throws FireflyException
      */
     public function reportJournals(RequestedReportOnJournals $event): bool
     {

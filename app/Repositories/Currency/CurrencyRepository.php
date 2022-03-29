@@ -273,6 +273,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @param string|null $currencyCode
      *
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws \JsonException
      */
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {

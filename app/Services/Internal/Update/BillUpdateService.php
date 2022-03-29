@@ -49,6 +49,8 @@ class BillUpdateService
      * @param array $data
      *
      * @return Bill
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function update(Bill $bill, array $data): Bill
     {

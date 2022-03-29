@@ -363,6 +363,8 @@ class BudgetReportGenerator
 
     /**
      * @param User $user
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function setUser(User $user): void
     {

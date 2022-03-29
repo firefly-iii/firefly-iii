@@ -74,6 +74,8 @@ abstract class Controller extends BaseController
      * Method to grab all parameters from the URI.
      *
      * @return ParameterBag
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function getParameters(): ParameterBag
     {

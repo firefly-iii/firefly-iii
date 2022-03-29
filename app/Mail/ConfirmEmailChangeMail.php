@@ -47,7 +47,6 @@ class ConfirmEmailChangeMail extends Mailable
      * @param string $newEmail
      * @param string $oldEmail
      * @param string $url
-     * @param string $ipAddress
      */
     public function __construct(string $newEmail, string $oldEmail, string $url)
     {

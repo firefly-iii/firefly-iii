@@ -66,6 +66,8 @@ class PreferencesController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -147,6 +149,8 @@ class PreferencesController extends Controller
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function postIndex(Request $request)
     {

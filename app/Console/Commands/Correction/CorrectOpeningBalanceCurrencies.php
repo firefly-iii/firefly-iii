@@ -57,7 +57,6 @@ class CorrectOpeningBalanceCurrencies extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws JsonException
      */
     public function handle(): int
     {
@@ -136,6 +135,8 @@ class CorrectOpeningBalanceCurrencies extends Command
      * @param Account $account
      *
      * @return TransactionCurrency
+     * @throws JsonException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function getCurrency(Account $account): TransactionCurrency
     {

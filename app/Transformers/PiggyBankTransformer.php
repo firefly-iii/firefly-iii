@@ -56,6 +56,8 @@ class PiggyBankTransformer extends AbstractTransformer
      * @param PiggyBank $piggyBank
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function transform(PiggyBank $piggyBank): array
     {

@@ -69,7 +69,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     * @throws JsonException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function netWorth(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {

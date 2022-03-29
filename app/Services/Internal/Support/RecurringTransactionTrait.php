@@ -108,6 +108,7 @@ trait RecurringTransactionTrait
      * @param array      $transactions
      *
      * @throws FireflyException
+     * @throws \JsonException
      */
     protected function createTransactions(Recurrence $recurrence, array $transactions): void
     {

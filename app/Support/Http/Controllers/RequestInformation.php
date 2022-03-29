@@ -86,6 +86,8 @@ trait RequestInformation
      *
      * @return bool
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     final protected function hasSeenDemo(): bool // get request info + get preference
     {

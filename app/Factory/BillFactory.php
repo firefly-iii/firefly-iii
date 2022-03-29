@@ -46,6 +46,7 @@ class BillFactory
      *
      * @return Bill|null
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function create(array $data): ?Bill
     {

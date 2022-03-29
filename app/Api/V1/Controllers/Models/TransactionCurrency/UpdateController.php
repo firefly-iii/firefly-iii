@@ -75,6 +75,8 @@ class UpdateController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      * @codeCoverageIgnore
      */
     public function disable(TransactionCurrency $currency): JsonResponse
@@ -108,6 +110,8 @@ class UpdateController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      * @codeCoverageIgnore
      */
     public function enable(TransactionCurrency $currency): JsonResponse

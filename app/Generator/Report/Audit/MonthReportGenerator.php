@@ -49,6 +49,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * Generates the report.
      *
      * @return string
+     * @throws FireflyException
+     * @throws JsonException
      * @codeCoverageIgnore
      */
     public function generate(): string

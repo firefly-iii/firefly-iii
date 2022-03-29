@@ -209,8 +209,6 @@ class ListController extends Controller
      *
      * @param Request $request
      *
-     * @param Budget  $budget
-     *
      * @return JsonResponse
      * @throws FireflyException
      * @codeCoverageIgnore

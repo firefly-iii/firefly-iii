@@ -71,7 +71,8 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function all(Category $category): JsonResponse
     {
@@ -118,7 +119,6 @@ class CategoryController extends Controller
      * See reference nr. 60
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function frontPage(): JsonResponse
     {
@@ -151,7 +151,6 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -267,7 +266,6 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -295,7 +293,8 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {

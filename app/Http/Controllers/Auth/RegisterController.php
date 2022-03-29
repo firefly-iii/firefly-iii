@@ -109,6 +109,7 @@ class RegisterController extends Controller
 
     /**
      * @return bool
+     * @throws FireflyException
      */
     protected function allowedToRegister(): bool
     {
@@ -136,7 +137,9 @@ class RegisterController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function showRegistrationForm(Request $request)
     {

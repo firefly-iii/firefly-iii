@@ -113,7 +113,7 @@ class BasicController extends Controller
         // give new keys
         $return = [];
         foreach ($total as $entry) {
-            if (null === $code || (null !== $code && $code === $entry['currency_code'])) {
+            if (null === $code || ($code === $entry['currency_code'])) {
                 $return[$entry['key']] = $entry;
             }
         }

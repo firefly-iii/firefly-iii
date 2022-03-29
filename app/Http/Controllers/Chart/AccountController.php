@@ -175,6 +175,7 @@ class AccountController extends Controller
      * @param Account                    $account
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
@@ -192,7 +193,6 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function expenseBudget(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -250,6 +250,7 @@ class AccountController extends Controller
      * @param Account                    $account
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
@@ -267,7 +268,6 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function expenseCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -323,6 +323,9 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function frontpage(AccountRepositoryInterface $repository): JsonResponse
     {
@@ -348,6 +351,7 @@ class AccountController extends Controller
      * @param Account                    $account
      *
      * @return JsonResponse
+     * @throws JsonException
      */
     public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
@@ -365,7 +369,6 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function incomeCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -517,11 +520,13 @@ class AccountController extends Controller
      *
      * See reference nr. 55
      *
-     * @param Carbon     $start
-     * @param Carbon     $end
      * @param Collection $accounts
      *
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function report(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {

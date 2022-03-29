@@ -77,6 +77,9 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function overview(DateRequest $request): JsonResponse
     {

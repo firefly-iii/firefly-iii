@@ -79,6 +79,9 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
     {
@@ -115,6 +118,8 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function noBudgetAll(Request $request)
     {
@@ -144,6 +149,9 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function show(Request $request, Budget $budget)
     {
@@ -179,6 +187,9 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {

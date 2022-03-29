@@ -358,6 +358,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
+     * @throws JsonException
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
@@ -393,7 +394,6 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
-     * @throws JsonException
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {

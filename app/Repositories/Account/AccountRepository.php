@@ -442,6 +442,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @return Account|null
      *
      * @throws FireflyException
+     * @throws JsonException
      */
     public function getReconciliation(Account $account): ?Account
     {
@@ -754,6 +755,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      * @throws FireflyException
+     * @throws JsonException
      */
     public function store(array $data): Account
     {
@@ -770,7 +772,6 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      * @throws FireflyException
-     * @throws JsonException
      */
     public function update(Account $account, array $data): Account
     {

@@ -173,7 +173,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param TransactionJournal  $journal
      *
      * @return string
-     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
@@ -357,6 +358,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param Carbon    $date
      *
      * @return string
+     * @throws \JsonException
      */
     public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string
     {

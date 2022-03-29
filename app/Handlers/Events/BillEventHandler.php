@@ -37,6 +37,7 @@ class BillEventHandler
     /**
      * @param WarnUserAboutBill $event
      * @return void
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function warnAboutBill(WarnUserAboutBill $event): void
     {

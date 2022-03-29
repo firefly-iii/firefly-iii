@@ -147,6 +147,8 @@ class ProfileController extends Controller
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function code(Request $request)
     {
@@ -314,6 +316,8 @@ class ProfileController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index()
     {
@@ -479,6 +483,8 @@ class ProfileController extends Controller
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function postCode(TokenFormRequest $request)
     {
@@ -523,6 +529,8 @@ class ProfileController extends Controller
      * @param string $mfaCode
      *
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function addToMFAHistory(string $mfaCode): void
     {

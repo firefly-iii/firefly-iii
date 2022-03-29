@@ -137,6 +137,8 @@ class CreateController extends Controller
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function store(AccountFormRequest $request)
     {

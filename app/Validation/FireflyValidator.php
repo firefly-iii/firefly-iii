@@ -628,8 +628,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param string $field
+     * @param string $attribute
+     * @param string $value
      * @return bool
      */
     public function validateUniqueCurrency(string $field, string $attribute, string $value): bool

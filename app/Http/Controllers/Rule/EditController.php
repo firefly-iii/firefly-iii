@@ -93,7 +93,7 @@ class EditController extends Controller
             $operators = $search->getOperators()->toArray();
             if ('' !== $words) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => $words]));
-                array_push($operators, ['type' => 'description_contains', 'value' => $words]);
+                $operators[] = ['type' => 'description_contains', 'value' => $words];
             }
             $oldTriggers = $this->parseFromOperators($operators);
         }

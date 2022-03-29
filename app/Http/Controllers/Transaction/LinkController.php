@@ -153,8 +153,7 @@ class LinkController extends Controller
     /**
      * Switch link from A <> B to B <> A.
      *
-     * @param TransactionJournalLink $link
-     *
+     * @param Request $request
      * @return RedirectResponse|Redirector
      */
     public function switchLink(Request $request)

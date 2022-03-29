@@ -72,6 +72,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @throws \JsonException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse
@@ -106,6 +107,8 @@ class ShowController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws \JsonException
      * @codeCoverageIgnore
      */
     public function show(TransactionCurrency $currency): JsonResponse
@@ -130,6 +133,8 @@ class ShowController extends Controller
      * Show a currency.
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws \JsonException
      * @codeCoverageIgnore
      */
     public function showDefault(): JsonResponse

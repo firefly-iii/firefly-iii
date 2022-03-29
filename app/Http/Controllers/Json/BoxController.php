@@ -52,7 +52,6 @@ class BoxController extends Controller
      * 2) if the user has no available amount set this period: spent per day
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function available(): JsonResponse
     {
@@ -131,7 +130,6 @@ class BoxController extends Controller
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {

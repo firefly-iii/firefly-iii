@@ -1360,7 +1360,8 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param array $range
+     * @param string $field
+     * @param array  $range
      *
      * @throws FireflyException
      */
@@ -1398,7 +1399,8 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param array $range
+     * @param string $field
+     * @param array  $range
      *
      * @throws FireflyException
      */

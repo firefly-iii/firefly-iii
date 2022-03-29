@@ -109,6 +109,8 @@ class DecryptDatabase extends Command
      * @param string $table
      *
      * @return bool
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isDecrypted(string $table): bool
     {

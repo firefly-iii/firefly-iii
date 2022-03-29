@@ -74,6 +74,8 @@ class IndexController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function index(Request $request)
     {

@@ -416,9 +416,9 @@ class RuleRepository implements RuleRepositoryInterface
      * @param Rule  $rule
      * @param array $data
      *
-     * @return bool
+     * @return void
      */
-    private function storeTriggers(Rule $rule, array $data): bool
+    private function storeTriggers(Rule $rule, array $data): void
     {
         $order = 1;
         foreach ($data['triggers'] as $trigger) {
@@ -437,7 +437,6 @@ class RuleRepository implements RuleRepositoryInterface
             ++$order;
         }
 
-        return true;
     }
 
     /**
@@ -464,9 +463,9 @@ class RuleRepository implements RuleRepositoryInterface
      * @param Rule  $rule
      * @param array $data
      *
-     * @return bool
+     * @return void
      */
-    private function storeActions(Rule $rule, array $data): bool
+    private function storeActions(Rule $rule, array $data): void
     {
         $order = 1;
         foreach ($data['actions'] as $action) {
@@ -484,7 +483,6 @@ class RuleRepository implements RuleRepositoryInterface
             ++$order;
         }
 
-        return true;
     }
 
     /**

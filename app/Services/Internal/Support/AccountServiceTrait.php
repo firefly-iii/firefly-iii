@@ -367,6 +367,8 @@ trait AccountServiceTrait
      * @param string $currencyCode
      *
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws \JsonException
      */
     protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
     {

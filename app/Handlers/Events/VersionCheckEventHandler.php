@@ -44,6 +44,8 @@ class VersionCheckEventHandler
      * @param RequestedVersionCheckStatus $event
      *
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
@@ -90,6 +92,8 @@ class VersionCheckEventHandler
      * @param RequestedVersionCheckStatus $event
      *
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {

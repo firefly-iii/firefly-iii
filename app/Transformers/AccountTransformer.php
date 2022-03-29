@@ -53,7 +53,6 @@ class AccountTransformer extends AbstractTransformer
      * @param Account $account
      *
      * @return array
-     * @throws FireflyException
      * @throws JsonException
      */
     public function transform(Account $account): array
@@ -171,6 +170,8 @@ class AccountTransformer extends AbstractTransformer
      * @param Account $account
      *
      * @return array
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function getCurrency(Account $account): array
     {

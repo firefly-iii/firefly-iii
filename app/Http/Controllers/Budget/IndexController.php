@@ -92,6 +92,9 @@ class IndexController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {

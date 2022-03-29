@@ -74,6 +74,7 @@ class AccountFactory
      *
      * @return Account
      * @throws FireflyException
+     * @throws JsonException
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
@@ -182,6 +183,7 @@ class AccountFactory
      * @param array       $data
      *
      * @return Account
+     * @throws FireflyException
      * @throws JsonException
      */
     private function createAccount(AccountType $type, array $data): Account
@@ -361,7 +363,6 @@ class AccountFactory
      * @param array   $data
      *
      * @throws FireflyException
-     * @throws JsonException
      */
     private function storeOrder(Account $account, array $data): void
     {

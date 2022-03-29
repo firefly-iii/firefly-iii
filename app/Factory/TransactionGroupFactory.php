@@ -57,6 +57,7 @@ class TransactionGroupFactory
      * @return TransactionGroup
      * @throws DuplicateTransactionException
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function create(array $data): TransactionGroup
     {

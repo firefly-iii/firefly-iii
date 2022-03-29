@@ -76,12 +76,14 @@ class ReconcileController extends Controller
     /**
      * Overview of reconciliation.
      *
-     * @param Request $request
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Request      $request
+     * @param Account|null $account
+     * @param Carbon|null  $start
+     * @param Carbon|null  $end
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function overview(Request $request, Account $account = null, Carbon $start = null, Carbon $end = null): JsonResponse
     {
@@ -216,9 +218,9 @@ class ReconcileController extends Controller
     /**
      * Returns a list of transactions in a modal.
      *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Account     $account
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return JsonResponse
      * @throws FireflyException

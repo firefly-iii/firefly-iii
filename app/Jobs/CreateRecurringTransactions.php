@@ -291,6 +291,8 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Recurrence $recurrence
      *
      * @return Collection
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     private function handleRepetitions(Recurrence $recurrence): Collection
     {

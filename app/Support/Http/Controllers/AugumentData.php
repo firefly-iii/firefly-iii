@@ -191,7 +191,6 @@ trait AugumentData
      * @param Carbon $end
      *
      * @return Collection
-     * @throws JsonException
      */
     protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
     {

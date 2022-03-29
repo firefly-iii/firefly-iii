@@ -335,6 +335,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return Budget
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function store(array $data): Budget
     {
@@ -549,6 +550,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * @param Budget $budget
      * @param array  $data
+     * @throws FireflyException
+     * @throws \JsonException
      */
     private function updateAutoBudget(Budget $budget, array $data): void
     {

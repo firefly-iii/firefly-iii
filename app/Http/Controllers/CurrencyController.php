@@ -208,9 +208,8 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param Request             $request
-     * @param TransactionCurrency $currency
-     *
+     * @param Request $request
+     * @return JsonResponse
      * @throws FireflyException
      */
     public function disableCurrency(Request $request): JsonResponse
@@ -312,8 +311,7 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency $currency
-     *
+     * @param Request $request
      * @return RedirectResponse|Redirector
      */
     public function enableCurrency(Request $request)
@@ -341,6 +339,8 @@ class CurrencyController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(Request $request)
     {

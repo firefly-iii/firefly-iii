@@ -142,9 +142,7 @@ class AccountUpdateService
         //$liabilityType = $data['liability_type'] ?? '';
         if ($this->isLiability($account) && array_key_exists('liability_type', $data)) {
             $type = $this->getAccountType($data['liability_type']);
-            if (null !== $type) {
-                $account->account_type_id = $type->id;
-            }
+            $account->account_type_id = $type->id;
         }
         // set liability, alternative method used in v1 layout:
 

@@ -86,7 +86,10 @@ class ReconcileController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|RedirectResponse|Redirector|View
-     * @throws Exception
+     * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {

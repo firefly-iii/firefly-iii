@@ -123,7 +123,9 @@ class ShowController extends Controller
      * @param Bill    $bill
      *
      * @return Factory|View
-     * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function show(Request $request, Bill $bill)
     {

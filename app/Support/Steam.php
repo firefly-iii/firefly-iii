@@ -48,7 +48,6 @@ class Steam
      * @param Carbon  $date
      *
      * @return string
-     * @throws JsonException
      */
     public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
@@ -203,6 +202,7 @@ class Steam
      * @param TransactionCurrency|null $currency
      *
      * @return string
+     * @throws FireflyException
      * @throws JsonException
      */
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
@@ -252,7 +252,6 @@ class Steam
      * @param Carbon     $date
      *
      * @return array
-     * @throws FireflyException
      * @throws JsonException
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
@@ -317,7 +316,6 @@ class Steam
      * @param Carbon  $date
      *
      * @return array
-     * @throws JsonException
      */
     public function balancePerCurrency(Account $account, Carbon $date): array
     {
@@ -431,6 +429,8 @@ class Steam
      *
      * @return string
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function getLocale(): string // get preference
     {
@@ -452,6 +452,8 @@ class Steam
      *
      * @return string
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function getLanguage(): string // get preference
     {
@@ -547,6 +549,7 @@ class Steam
      * Additionally fixed a problem with PHP <= 5.2.x with big integers
      *
      * @param string $value
+     * @return string
      */
     public function floatalize(string $value): string
     {

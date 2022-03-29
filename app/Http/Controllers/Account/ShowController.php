@@ -83,8 +83,10 @@ class ShowController extends Controller
      * @param Carbon|null $end
      *
      * @return RedirectResponse|Redirector|Factory|View
-     * @throws Exception
-     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
@@ -164,8 +166,10 @@ class ShowController extends Controller
      * @param Account $account
      *
      * @return RedirectResponse|Redirector|Factory|View
-     * @throws Exception
-     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function showAll(Request $request, Account $account)
     {

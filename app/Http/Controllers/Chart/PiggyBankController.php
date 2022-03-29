@@ -64,7 +64,7 @@ class PiggyBankController extends Controller
      * @param PiggyBank                    $piggyBank
      *
      * @return JsonResponse
-     * @throws JsonException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {

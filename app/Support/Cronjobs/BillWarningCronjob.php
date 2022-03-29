@@ -36,6 +36,8 @@ class BillWarningCronjob extends AbstractCronjob
 {
     /**
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function fire(): void
     {
