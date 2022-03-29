@@ -21,7 +21,6 @@
  */
 
 declare(strict_types=1);
-use FireflyIII\Http\Middleware\IsAdmin;
 
 /**
  * Autocomplete controllers
