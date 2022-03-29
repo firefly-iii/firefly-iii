@@ -23,45 +23,45 @@
 declare(strict_types=1);
 
 return [
-    'html_language'           => 'cs',
-    'locale'                  => 'cs, Čeština, cs_CZ, cs_CZ.utf8, cs_CZ.UTF-8',
+    'html_language'            => 'cs',
+    'locale'                   => 'cs, Čeština, cs_CZ, cs_CZ.utf8, cs_CZ.UTF-8',
     //'month'                   => '%B %Y',
-    'month_js'                => 'MMMM YYYY',
+    'month_js'                 => 'MMMM YYYY',
 
     //'month_and_day'           => '%B %e, %Y',
-    'month_and_day_moment_js' => 'MMM D, RRRR',
-    'month_and_day_fns'       => 'd MMMM, y',
-    'month_and_day_js'        => 'D. MMMM YYYY',
+    'month_and_day_moment_js'  => 'MMM D, RRRR',
+    'month_and_day_fns'        => 'd MMMM, y',
+    'month_and_day_js'         => 'D. MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'      => 'dddd MMMM Do, YYYY',
+    'month_and_date_day_js'    => 'dddd MMMM Do, YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
     'month_and_day_no_year_js' => 'MMMM Do',
 
     //'date_time'               => '%B %e, %Y, @ %T',
-    'date_time_js'            => 'D. MMMM YYYY, @ HH:mm:ss',
+    'date_time_js'             => 'D. MMMM YYYY, @ HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
-    'specific_day_js'         => 'D. MMMM YYYY',
+    'specific_day_js'          => 'D. MMMM YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'         => '[Week] t, RRRR',
-    'week_in_year_fns'        => "'týden' w, yyyy",
+    'week_in_year_js'          => '[Week] t, RRRR',
+    'week_in_year_fns'         => "'týden' w, yyyy",
 
     //'year'                    => '%Y',
-    'year_js'                 => 'YYYY',
+    'year_js'                  => 'YYYY',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'            => 'Q YYYY',
+    'half_year_js'             => 'Q YYYY',
 
-    'quarter_fns'             => "Q'Q, yyyy",
-    'half_year_fns'           => "'H{half}', yyyy",
-    'dow_1'                   => 'Pondělí',
-    'dow_2'                   => 'Úterý',
-    'dow_3'                   => 'Středa',
-    'dow_4'                   => 'Čtvrtek',
-    'dow_5'                   => 'Pátek',
-    'dow_6'                   => 'Sobota',
-    'dow_7'                   => 'Neděle',
+    'quarter_fns'   => "Q'Q, yyyy",
+    'half_year_fns' => "'H{half}', yyyy",
+    'dow_1'         => 'Pondělí',
+    'dow_2'         => 'Úterý',
+    'dow_3'         => 'Středa',
+    'dow_4'         => 'Čtvrtek',
+    'dow_5'         => 'Pátek',
+    'dow_6'         => 'Sobota',
+    'dow_7'         => 'Neděle',
 ];

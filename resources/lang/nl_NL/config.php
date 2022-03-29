@@ -23,45 +23,45 @@
 declare(strict_types=1);
 
 return [
-    'html_language'           => 'nl',
-    'locale'                  => 'nl, Dutch, nl_NL.utf8, nl_NL.UTF-8',
+    'html_language'            => 'nl',
+    'locale'                   => 'nl, Dutch, nl_NL.utf8, nl_NL.UTF-8',
     //'month'                   => '%B %Y',
-    'month_js'                => 'MMMM YYYY',
+    'month_js'                 => 'MMMM YYYY',
 
     //'month_and_day'           => '%B %e, %Y',
-    'month_and_day_moment_js' => 'D MMM YYYY',
-    'month_and_day_fns'       => 'd MMMM y',
-    'month_and_day_js'        => 'D MMMM YYYY',
+    'month_and_day_moment_js'  => 'D MMM YYYY',
+    'month_and_day_fns'        => 'd MMMM y',
+    'month_and_day_js'         => 'D MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'      => 'dddd D MMMM, YYYY',
+    'month_and_date_day_js'    => 'dddd D MMMM, YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
     'month_and_day_no_year_js' => 'D MMMM',
 
     //'date_time'               => '%B %e, %Y, @ %T',
-    'date_time_js'            => 'D MMMM YYYY @ HH:mm:ss',
+    'date_time_js'             => 'D MMMM YYYY @ HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
-    'specific_day_js'         => 'D MMMM YYYY',
+    'specific_day_js'          => 'D MMMM YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'         => '[Week] w, YYYY',
-    'week_in_year_fns'        => "'Week' w, yyyy",
+    'week_in_year_js'          => '[Week] w, YYYY',
+    'week_in_year_fns'         => "'Week' w, yyyy",
 
     //'year'                    => '%Y',
-    'year_js'                 => 'YYYY',
+    'year_js'                  => 'YYYY',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'            => 'Q YYYY',
+    'half_year_js'             => 'Q YYYY',
 
-    'quarter_fns'             => "'Q'Q, yyyy",
-    'half_year_fns'           => "'H{half}', yyyy",
-    'dow_1'                   => 'Maandag',
-    'dow_2'                   => 'Dinsdag',
-    'dow_3'                   => 'Woensdag',
-    'dow_4'                   => 'Donderdag',
-    'dow_5'                   => 'Vrijdag',
-    'dow_6'                   => 'Zaterdag',
-    'dow_7'                   => 'Zondag',
+    'quarter_fns'   => "'Q'Q, yyyy",
+    'half_year_fns' => "'H{half}', yyyy",
+    'dow_1'         => 'Maandag',
+    'dow_2'         => 'Dinsdag',
+    'dow_3'         => 'Woensdag',
+    'dow_4'         => 'Donderdag',
+    'dow_5'         => 'Vrijdag',
+    'dow_6'         => 'Zaterdag',
+    'dow_7'         => 'Zondag',
 ];

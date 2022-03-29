@@ -24,46 +24,46 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => 'Firefly IIIのインデックスページへようこそ。このイントロダクションでは、Firefly IIIがどのように機能するのかをご紹介します。',
-    'index_accounts-chart'                            => 'このチャートは、お客様の資産口座の現在の残高を表示しています。お客様のご希望でここに表示するかどうか選択できます。',
-    'index_box_out_holder'                            => 'この小さな吹き出しとこの横にある吹き出しは収支状況の概要を表示しています。',
-    'index_help'                                      => 'ページや入力欄について助けが必要なら、このボタンを押して下さい。',
-    'index_outro'                                     => 'Firefly IIIの多くのページはこのような小さなツアーから始まります。もし質問やコメントがある場合は、私に連絡して下さい。楽しんで！',
-    'index_sidebar-toggle'                            => '新しい取引やアカウントなどを作成するには、このアイコン下のメニューを使用して下さい。',
-    'index_cash_account'                              => 'これらは今までに作られたアカウントです。現金支出を管理するため現金アカウントを使うこともできますが、もちろん強制ではありません。',
+    'index_intro'                           => 'Firefly IIIのインデックスページへようこそ。このイントロダクションでは、Firefly IIIがどのように機能するのかをご紹介します。',
+    'index_accounts-chart'                  => 'このチャートは、お客様の資産口座の現在の残高を表示しています。お客様のご希望でここに表示するかどうか選択できます。',
+    'index_box_out_holder'                  => 'この小さな吹き出しとこの横にある吹き出しは収支状況の概要を表示しています。',
+    'index_help'                            => 'ページや入力欄について助けが必要なら、このボタンを押して下さい。',
+    'index_outro'                           => 'Firefly IIIの多くのページはこのような小さなツアーから始まります。もし質問やコメントがある場合は、私に連絡して下さい。楽しんで！',
+    'index_sidebar-toggle'                  => '新しい取引やアカウントなどを作成するには、このアイコン下のメニューを使用して下さい。',
+    'index_cash_account'                    => 'これらは今までに作られたアカウントです。現金支出を管理するため現金アカウントを使うこともできますが、もちろん強制ではありません。',
 
     // transactions
-    'transactions_create_basic_info'                  => '貸方、借方、日付、説明など、取引の基本情報を入力します。',
-    'transactions_create_amount_info'                 => '取引の金額を入力します。必要に応じて、フィールドは自動的に更新されます。',
-    'transactions_create_optional_info'               => 'これらのフィールドはすべて任意です。ここにメタデータを追加すると、取引をより整理できます。',
-    'transactions_create_split'                       => '取引を分割する場合は、このボタンでさらに分割を追加します',
+    'transactions_create_basic_info'        => '貸方、借方、日付、説明など、取引の基本情報を入力します。',
+    'transactions_create_amount_info'       => '取引の金額を入力します。必要に応じて、フィールドは自動的に更新されます。',
+    'transactions_create_optional_info'     => 'これらのフィールドはすべて任意です。ここにメタデータを追加すると、取引をより整理できます。',
+    'transactions_create_split'             => '取引を分割する場合は、このボタンでさらに分割を追加します',
 
     // create account:
-    'accounts_create_iban'                            => 'あなたのアカウントには有効なIBANを設定してください。これは将来のデータインポートをとても簡単にします。',
-    'accounts_create_asset_opening_balance'           => '経費勘定はFirefly IIIでのこのアカウントの始まりを示す"期首残高"を持っているかもしれません。',
-    'accounts_create_asset_currency'                  => 'Firefly IIIは複数の通貨をサポートしています。経費勘定は一つの主通貨を持っており、あなたはここでそれを選択する必要があります。',
-    'accounts_create_asset_virtual'                   => 'あなたのアカウントに仮想の残高を与えることはしばしば助けになるかもしれません: 余剰は常に実際の残高から差し引かれます。',
+    'accounts_create_iban'                  => 'あなたのアカウントには有効なIBANを設定してください。これは将来のデータインポートをとても簡単にします。',
+    'accounts_create_asset_opening_balance' => '経費勘定はFirefly IIIでのこのアカウントの始まりを示す"期首残高"を持っているかもしれません。',
+    'accounts_create_asset_currency'        => 'Firefly IIIは複数の通貨をサポートしています。経費勘定は一つの主通貨を持っており、あなたはここでそれを選択する必要があります。',
+    'accounts_create_asset_virtual'         => 'あなたのアカウントに仮想の残高を与えることはしばしば助けになるかもしれません: 余剰は常に実際の残高から差し引かれます。',
 
     // budgets index
-    'budgets_index_intro'                             => '予算はあなたの財源を管理するために使用され、Firefly IIIの一つの主要機能を構成します。',
-    'budgets_index_set_budget'                        => 'Firefly IIIがあなたが割り当て可能なすべての金額を予算計上したかどうか伝えられるように。あなたの毎期間の合計予算を設定してください。',
-    'budgets_index_see_expenses_bar'                  => '消費した金額が少しずつこのバーを埋めます。',
-    'budgets_index_navigate_periods'                  => '期間を操作することで、予算を事前に簡単に設定できます。',
-    'budgets_index_new_budget'                        => 'あなたが妥当だと考える新しい予算を設定してください。',
-    'budgets_index_list_of_budgets'                   => '各予算の金額を設定したり自分の行っていることを確認するためにこの表を使ってください。',
-    'budgets_index_outro'                             => '予算計上についてもっと知るには、右上のヘルプアイコンを確認してください。',
+    'budgets_index_intro'                   => '予算はあなたの財源を管理するために使用され、Firefly IIIの一つの主要機能を構成します。',
+    'budgets_index_set_budget'              => 'Firefly IIIがあなたが割り当て可能なすべての金額を予算計上したかどうか伝えられるように。あなたの毎期間の合計予算を設定してください。',
+    'budgets_index_see_expenses_bar'        => '消費した金額が少しずつこのバーを埋めます。',
+    'budgets_index_navigate_periods'        => '期間を操作することで、予算を事前に簡単に設定できます。',
+    'budgets_index_new_budget'              => 'あなたが妥当だと考える新しい予算を設定してください。',
+    'budgets_index_list_of_budgets'         => '各予算の金額を設定したり自分の行っていることを確認するためにこの表を使ってください。',
+    'budgets_index_outro'                   => '予算計上についてもっと知るには、右上のヘルプアイコンを確認してください。',
 
     // reports (index)
-    'reports_index_intro'                             => 'あなたの財務状況の詳細を見るにはこれらのレポートを使用してください。',
-    'reports_index_inputReportType'                   => 'レポートの種類を選択してください。それぞれのレポートが何を表示するかを見るにはヘルプページを確認してください。',
-    'reports_index_inputAccountsSelect'               => '経費勘定の除外や追加は自由に行えます。',
-    'reports_index_inputDateRange'                    => '選択した日付の範囲は、1日から10年まで自由に設定できます。',
-    'reports_index_extra-options-box'                 => 'あなたが選んだレポートに応じて、追加のフィルターやオプションを選択できます。',
+    'reports_index_intro'                   => 'あなたの財務状況の詳細を見るにはこれらのレポートを使用してください。',
+    'reports_index_inputReportType'         => 'レポートの種類を選択してください。それぞれのレポートが何を表示するかを見るにはヘルプページを確認してください。',
+    'reports_index_inputAccountsSelect'     => '経費勘定の除外や追加は自由に行えます。',
+    'reports_index_inputDateRange'          => '選択した日付の範囲は、1日から10年まで自由に設定できます。',
+    'reports_index_extra-options-box'       => 'あなたが選んだレポートに応じて、追加のフィルターやオプションを選択できます。',
 
     // reports (reports)
-    'reports_report_default_intro'                    => 'このレポートはあなたの財務状況の素早く包括的な概要を表示します。他の何かを表示したい場合、私に連絡することをためらわないでください！',
-    'reports_report_audit_intro'                      => 'このレポートはあなたの経費勘定の詳細を表示します。',
-    'reports_report_audit_optionsBox'                 => 'あなたが興味のある列を表示したり隠したりするにはこれらのチェックボックスを使用してください。',
+    'reports_report_default_intro'          => 'このレポートはあなたの財務状況の素早く包括的な概要を表示します。他の何かを表示したい場合、私に連絡することをためらわないでください！',
+    'reports_report_audit_intro'            => 'このレポートはあなたの経費勘定の詳細を表示します。',
+    'reports_report_audit_optionsBox'       => 'あなたが興味のある列を表示したり隠したりするにはこれらのチェックボックスを使用してください。',
 
     'reports_report_category_intro'                  => 'このレポートは一つまたは複数のカテゴリーの見通しを表示します。',
     'reports_report_category_pieCharts'              => 'これらの図表は支出の見通しやカテゴリ、勘定ごとの収入を表示します。',

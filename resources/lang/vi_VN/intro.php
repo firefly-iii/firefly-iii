@@ -24,46 +24,46 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => 'Chào mừng bạn đến trang chỉ mục của Firefly III. Hãy dành thời gian để đi qua phần giới thiệu này để hiểu cách Firefly III hoạt động.',
-    'index_accounts-chart'                            => 'Biểu đồ này cho thấy số dư hiện tại của tài khoản của bạn. Bạn có thể chọn các tài khoản hiển thị ở đây trong tùy chọn của bạn.',
-    'index_box_out_holder'                            => 'Chiếc hộp nhỏ này và những chiếc hộp bên cạnh sẽ cho bạn cái nhìn tổng quan nhanh về tình hình tài chính của bạn.',
-    'index_help'                                      => 'Nếu bạn cần trợ giúp với một trang hoặc một form, nhấn nút này.',
-    'index_outro'                                     => 'Hầu hết các trang của Firefly III sẽ bắt đầu với một chuyến tham quan nhỏ như thế này. Hãy liên hệ với tôi khi bạn có thắc mắc hoặc ý kiến.',
-    'index_sidebar-toggle'                            => 'Để tạo giao dịch, tài khoản mới hoặc những thứ khác, hãy sử dụng menu dưới biểu tượng này.',
-    'index_cash_account'                              => 'Đây là những tài khoản được tạo ra cho đến nay. Bạn có thể sử dụng tài khoản tiền mặt để theo dõi chi phí tiền mặt nhưng tất nhiên đó không phải là bắt buộc.',
+    'index_intro'                           => 'Chào mừng bạn đến trang chỉ mục của Firefly III. Hãy dành thời gian để đi qua phần giới thiệu này để hiểu cách Firefly III hoạt động.',
+    'index_accounts-chart'                  => 'Biểu đồ này cho thấy số dư hiện tại của tài khoản của bạn. Bạn có thể chọn các tài khoản hiển thị ở đây trong tùy chọn của bạn.',
+    'index_box_out_holder'                  => 'Chiếc hộp nhỏ này và những chiếc hộp bên cạnh sẽ cho bạn cái nhìn tổng quan nhanh về tình hình tài chính của bạn.',
+    'index_help'                            => 'Nếu bạn cần trợ giúp với một trang hoặc một form, nhấn nút này.',
+    'index_outro'                           => 'Hầu hết các trang của Firefly III sẽ bắt đầu với một chuyến tham quan nhỏ như thế này. Hãy liên hệ với tôi khi bạn có thắc mắc hoặc ý kiến.',
+    'index_sidebar-toggle'                  => 'Để tạo giao dịch, tài khoản mới hoặc những thứ khác, hãy sử dụng menu dưới biểu tượng này.',
+    'index_cash_account'                    => 'Đây là những tài khoản được tạo ra cho đến nay. Bạn có thể sử dụng tài khoản tiền mặt để theo dõi chi phí tiền mặt nhưng tất nhiên đó không phải là bắt buộc.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Nhập thông tin cơ bản của giao dịch. Nguồn, đích, ngày tháng và mô tả.',
-    'transactions_create_amount_info'                 => 'Nhập số tiền của giao dịch. Nếu cần, các trường sẽ tự động cập nhật thông tin về ngoại tệ.',
-    'transactions_create_optional_info'               => 'Tất cả các trường là tùy chọn. Thêm siêu dữ liệu ở đây sẽ làm cho các giao dịch của bạn được tổ chức tốt hơn.',
-    'transactions_create_split'                       => 'Nếu bạn muốn phân tách một giao dịch, hãy thêm nhiều lần chia tách bằng nút này',
+    'transactions_create_basic_info'        => 'Nhập thông tin cơ bản của giao dịch. Nguồn, đích, ngày tháng và mô tả.',
+    'transactions_create_amount_info'       => 'Nhập số tiền của giao dịch. Nếu cần, các trường sẽ tự động cập nhật thông tin về ngoại tệ.',
+    'transactions_create_optional_info'     => 'Tất cả các trường là tùy chọn. Thêm siêu dữ liệu ở đây sẽ làm cho các giao dịch của bạn được tổ chức tốt hơn.',
+    'transactions_create_split'             => 'Nếu bạn muốn phân tách một giao dịch, hãy thêm nhiều lần chia tách bằng nút này',
 
     // create account:
-    'accounts_create_iban'                            => 'Cung cấp cho tài khoản của bạn một IBAN hợp lệ. Điều này có thể làm cho việc nhập dữ liệu rất dễ dàng trong tương lai.',
-    'accounts_create_asset_opening_balance'           => 'tài khoản có thể có "số dư mở", cho biết bắt đầu lịch sử của tài khoản này trong Firefly III.',
-    'accounts_create_asset_currency'                  => 'Firefly III hỗ trợ nhiều loại tiền tệ. tài khoản có một loại tiền tệ chính mà bạn phải đặt ở đây.',
-    'accounts_create_asset_virtual'                   => 'Đôi khi có thể giúp cung cấp cho tài khoản của bạn một số dư ảo: một số tiền bổ sung luôn được thêm vào hoặc xóa khỏi số dư thực tế.',
+    'accounts_create_iban'                  => 'Cung cấp cho tài khoản của bạn một IBAN hợp lệ. Điều này có thể làm cho việc nhập dữ liệu rất dễ dàng trong tương lai.',
+    'accounts_create_asset_opening_balance' => 'tài khoản có thể có "số dư mở", cho biết bắt đầu lịch sử của tài khoản này trong Firefly III.',
+    'accounts_create_asset_currency'        => 'Firefly III hỗ trợ nhiều loại tiền tệ. tài khoản có một loại tiền tệ chính mà bạn phải đặt ở đây.',
+    'accounts_create_asset_virtual'         => 'Đôi khi có thể giúp cung cấp cho tài khoản của bạn một số dư ảo: một số tiền bổ sung luôn được thêm vào hoặc xóa khỏi số dư thực tế.',
 
     // budgets index
-    'budgets_index_intro'                             => 'Ngân sách được sử dụng để quản lý tài chính của bạn và tạo thành một trong những chức năng cốt lõi của Firefly III.',
-    'budgets_index_set_budget'                        => 'Đặt tổng ngân sách của bạn cho mọi thời kỳ để Firefly III có thể cho bạn biết nếu bạn đã lập ngân sách tất cả số tiền có sẵn.',
-    'budgets_index_see_expenses_bar'                  => 'Khi tiêu tiền thanh này sẽ được lấp đầy từ từ.',
-    'budgets_index_navigate_periods'                  => 'Điều hướng qua các thời kỳ để dễ dàng đặt ngân sách trước thời hạn.',
-    'budgets_index_new_budget'                        => 'Tạo ngân sách mới khi bạn thấy phù hợp.',
-    'budgets_index_list_of_budgets'                   => 'Sử dụng bảng này để đặt số tiền cho từng ngân sách và xem bạn đang làm như thế nào.',
-    'budgets_index_outro'                             => 'Để tìm hiểu thêm về lập ngân sách, hãy kiểm tra biểu tượng trợ giúp ở góc trên bên phải.',
+    'budgets_index_intro'                   => 'Ngân sách được sử dụng để quản lý tài chính của bạn và tạo thành một trong những chức năng cốt lõi của Firefly III.',
+    'budgets_index_set_budget'              => 'Đặt tổng ngân sách của bạn cho mọi thời kỳ để Firefly III có thể cho bạn biết nếu bạn đã lập ngân sách tất cả số tiền có sẵn.',
+    'budgets_index_see_expenses_bar'        => 'Khi tiêu tiền thanh này sẽ được lấp đầy từ từ.',
+    'budgets_index_navigate_periods'        => 'Điều hướng qua các thời kỳ để dễ dàng đặt ngân sách trước thời hạn.',
+    'budgets_index_new_budget'              => 'Tạo ngân sách mới khi bạn thấy phù hợp.',
+    'budgets_index_list_of_budgets'         => 'Sử dụng bảng này để đặt số tiền cho từng ngân sách và xem bạn đang làm như thế nào.',
+    'budgets_index_outro'                   => 'Để tìm hiểu thêm về lập ngân sách, hãy kiểm tra biểu tượng trợ giúp ở góc trên bên phải.',
 
     // reports (index)
-    'reports_index_intro'                             => 'Sử dụng các báo cáo này để có được thông tin chi tiết về tài chính của bạn.',
-    'reports_index_inputReportType'                   => 'Chọn một loại báo cáo. Kiểm tra các trang trợ giúp để xem mỗi báo cáo hiển thị cho bạn.',
-    'reports_index_inputAccountsSelect'               => 'Bạn có thể loại trừ hoặc bao gồm các tài khoản khi bạn thấy phù hợp.',
-    'reports_index_inputDateRange'                    => 'Phạm vi ngày đã chọn hoàn toàn tùy thuộc vào bạn: từ một ngày đến 10 năm.',
-    'reports_index_extra-options-box'                 => 'Tùy thuộc vào báo cáo bạn đã chọn, bạn có thể chọn các bộ lọc và tùy chọn bổ sung tại đây. Xem hộp này khi bạn thay đổi loại báo cáo.',
+    'reports_index_intro'                   => 'Sử dụng các báo cáo này để có được thông tin chi tiết về tài chính của bạn.',
+    'reports_index_inputReportType'         => 'Chọn một loại báo cáo. Kiểm tra các trang trợ giúp để xem mỗi báo cáo hiển thị cho bạn.',
+    'reports_index_inputAccountsSelect'     => 'Bạn có thể loại trừ hoặc bao gồm các tài khoản khi bạn thấy phù hợp.',
+    'reports_index_inputDateRange'          => 'Phạm vi ngày đã chọn hoàn toàn tùy thuộc vào bạn: từ một ngày đến 10 năm.',
+    'reports_index_extra-options-box'       => 'Tùy thuộc vào báo cáo bạn đã chọn, bạn có thể chọn các bộ lọc và tùy chọn bổ sung tại đây. Xem hộp này khi bạn thay đổi loại báo cáo.',
 
     // reports (reports)
-    'reports_report_default_intro'                    => 'Báo cáo này sẽ cung cấp cho bạn một cái nhìn tổng quan nhanh chóng và toàn diện về tài chính của bạn. Nếu bạn muốn thấy bất cứ điều gì khác, xin vui lòng không liên lạc với tôi!',
-    'reports_report_audit_intro'                      => 'Báo cáo này sẽ cung cấp cho bạn thông tin chi tiết về tài khoản của bạn.',
-    'reports_report_audit_optionsBox'                 => 'Sử dụng các hộp kiểm này để hiển thị hoặc ẩn các cột bạn quan tâm.',
+    'reports_report_default_intro'          => 'Báo cáo này sẽ cung cấp cho bạn một cái nhìn tổng quan nhanh chóng và toàn diện về tài chính của bạn. Nếu bạn muốn thấy bất cứ điều gì khác, xin vui lòng không liên lạc với tôi!',
+    'reports_report_audit_intro'            => 'Báo cáo này sẽ cung cấp cho bạn thông tin chi tiết về tài khoản của bạn.',
+    'reports_report_audit_optionsBox'       => 'Sử dụng các hộp kiểm này để hiển thị hoặc ẩn các cột bạn quan tâm.',
 
     'reports_report_category_intro'                  => 'Báo cáo này sẽ cung cấp cho bạn cái nhìn sâu sắc trong một hoặc nhiều danh mục.',
     'reports_report_category_pieCharts'              => 'Những biểu đồ này sẽ cung cấp cho bạn cái nhìn sâu sắc về chi phí và thu nhập cho mỗi danh mục hoặc mỗi tài khoản.',

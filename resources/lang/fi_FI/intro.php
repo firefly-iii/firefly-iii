@@ -24,46 +24,46 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => 'Tervetuloa Firefly III:n hakemistosivulle. Käytä hetki aikaa käydäksesi läpi tämän esittelyn ja saadaksesi kuvan siitä, kuinka Firefly III toimii.',
-    'index_accounts-chart'                            => 'Tämä kaavio näyttää omaisuustiliesi tämänhetkisen saldon. Voit valita täällä näkyvät tilit asetuksista.',
-    'index_box_out_holder'                            => 'Tämä pieni laatikko ja tämän vieressä olevat laatikot antavat sinulle nopean yleiskuvan taloudellisesta tilanteestasi.',
-    'index_help'                                      => 'Jos koskaan tarvitset apua sivun tai lomakkeen kanssa, paina tätä painiketta.',
-    'index_outro'                                     => 'Useimmat Firefly III -sivut alkavat tällaisella pienellä opastuksella. Ota minuun yhteyttä, kun sinulla on kysyttävää tai kommentteja. Nauti!',
-    'index_sidebar-toggle'                            => 'Luo uusia tapahtumia, tilejä tai muita juttuja käyttämällä tämän kuvakkeen alla olevaa valikkoa.',
-    'index_cash_account'                              => 'Tässä ovat tähän mennessä luodut tilit. Käteistilillä voit seurata käteiskuluja, mutta se ei tietenkään ole pakollista.',
+    'index_intro'                           => 'Tervetuloa Firefly III:n hakemistosivulle. Käytä hetki aikaa käydäksesi läpi tämän esittelyn ja saadaksesi kuvan siitä, kuinka Firefly III toimii.',
+    'index_accounts-chart'                  => 'Tämä kaavio näyttää omaisuustiliesi tämänhetkisen saldon. Voit valita täällä näkyvät tilit asetuksista.',
+    'index_box_out_holder'                  => 'Tämä pieni laatikko ja tämän vieressä olevat laatikot antavat sinulle nopean yleiskuvan taloudellisesta tilanteestasi.',
+    'index_help'                            => 'Jos koskaan tarvitset apua sivun tai lomakkeen kanssa, paina tätä painiketta.',
+    'index_outro'                           => 'Useimmat Firefly III -sivut alkavat tällaisella pienellä opastuksella. Ota minuun yhteyttä, kun sinulla on kysyttävää tai kommentteja. Nauti!',
+    'index_sidebar-toggle'                  => 'Luo uusia tapahtumia, tilejä tai muita juttuja käyttämällä tämän kuvakkeen alla olevaa valikkoa.',
+    'index_cash_account'                    => 'Tässä ovat tähän mennessä luodut tilit. Käteistilillä voit seurata käteiskuluja, mutta se ei tietenkään ole pakollista.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Anna tapahtuman perustiedot. Lähde, kohde, päivämäärä ja kuvaus.',
-    'transactions_create_amount_info'                 => 'Syötä tapahtuman summa. Tarvittaessa kentät päivittyvät automaattisesti ulkomaisen valuutan tietoihin.',
-    'transactions_create_optional_info'               => 'Kaikki nämä kentät ovat vapaaehtoisia. Metatietojen lisääminen tässä tekee tapahtumista paremmin organisoituja.',
-    'transactions_create_split'                       => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää osia tällä painikkeella',
+    'transactions_create_basic_info'        => 'Anna tapahtuman perustiedot. Lähde, kohde, päivämäärä ja kuvaus.',
+    'transactions_create_amount_info'       => 'Syötä tapahtuman summa. Tarvittaessa kentät päivittyvät automaattisesti ulkomaisen valuutan tietoihin.',
+    'transactions_create_optional_info'     => 'Kaikki nämä kentät ovat vapaaehtoisia. Metatietojen lisääminen tässä tekee tapahtumista paremmin organisoituja.',
+    'transactions_create_split'             => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää osia tällä painikkeella',
 
     // create account:
-    'accounts_create_iban'                            => 'Anna tilillesi kelvollinen IBAN-tunnus. Tämä voi tehdä tietojen automaattisesta tuonnista jatkossa tosi helppoa.',
-    'accounts_create_asset_opening_balance'           => 'Omaisuustilillä voi olla "alkusaldo", joka ilmaisee tilin historian alkamisen Firefly III:ssa.',
-    'accounts_create_asset_currency'                  => 'Firefly III tukee useita valuuttoja. Omaisuustilillä on yksi päävaluutta, joka täytyy asettaa tässä.',
-    'accounts_create_asset_virtual'                   => 'Joskus voi olla hyödyllistä antaa tilille virtuaalinen saldo: lisäsumma joka aina lisätään tai vähennetään todellisesta saldosta.',
+    'accounts_create_iban'                  => 'Anna tilillesi kelvollinen IBAN-tunnus. Tämä voi tehdä tietojen automaattisesta tuonnista jatkossa tosi helppoa.',
+    'accounts_create_asset_opening_balance' => 'Omaisuustilillä voi olla "alkusaldo", joka ilmaisee tilin historian alkamisen Firefly III:ssa.',
+    'accounts_create_asset_currency'        => 'Firefly III tukee useita valuuttoja. Omaisuustilillä on yksi päävaluutta, joka täytyy asettaa tässä.',
+    'accounts_create_asset_virtual'         => 'Joskus voi olla hyödyllistä antaa tilille virtuaalinen saldo: lisäsumma joka aina lisätään tai vähennetään todellisesta saldosta.',
 
     // budgets index
-    'budgets_index_intro'                             => 'Budjetteja käytetään talouden hallintaan ja ne muodostavat yhden Firefly III:n ydintoiminnoista.',
-    'budgets_index_set_budget'                        => 'Aseta kokonaisbudjettisi jokaiselle jaksolle, jotta Firefly III voi kertoa, oletko budjetoinut kaikki käytettävissä olevat rahat.',
-    'budgets_index_see_expenses_bar'                  => 'Rahan kulutus täyttää hitaasti tämän palkin.',
-    'budgets_index_navigate_periods'                  => 'Selaa ajanjaksoja ja määritä helposti budjetteja etukäteen.',
-    'budgets_index_new_budget'                        => 'Luo uusia budjetteja mielesi mukaan.',
-    'budgets_index_list_of_budgets'                   => 'Tämän taulukon avulla voit asettaa summat jokaiselle budjetille ja nähdä miten sinulla menee.',
-    'budgets_index_outro'                             => 'Lisätietoja budjetoinnista saat tutustumalla oikeassa yläkulmassa olevaan ohjekuvakkeeseen.',
+    'budgets_index_intro'                   => 'Budjetteja käytetään talouden hallintaan ja ne muodostavat yhden Firefly III:n ydintoiminnoista.',
+    'budgets_index_set_budget'              => 'Aseta kokonaisbudjettisi jokaiselle jaksolle, jotta Firefly III voi kertoa, oletko budjetoinut kaikki käytettävissä olevat rahat.',
+    'budgets_index_see_expenses_bar'        => 'Rahan kulutus täyttää hitaasti tämän palkin.',
+    'budgets_index_navigate_periods'        => 'Selaa ajanjaksoja ja määritä helposti budjetteja etukäteen.',
+    'budgets_index_new_budget'              => 'Luo uusia budjetteja mielesi mukaan.',
+    'budgets_index_list_of_budgets'         => 'Tämän taulukon avulla voit asettaa summat jokaiselle budjetille ja nähdä miten sinulla menee.',
+    'budgets_index_outro'                   => 'Lisätietoja budjetoinnista saat tutustumalla oikeassa yläkulmassa olevaan ohjekuvakkeeseen.',
 
     // reports (index)
-    'reports_index_intro'                             => 'Näiden raporttien avulla saat yksityiskohtaista tietoa taloudestasi.',
-    'reports_index_inputReportType'                   => 'Valitse raporttityyppi. Katso ohjesivuilta, mitä kukin raportti näyttää sinulle.',
-    'reports_index_inputAccountsSelect'               => 'Voit sisällyttää tai olla näyttämättä tilejä mielesi mukaan.',
-    'reports_index_inputDateRange'                    => 'Valittu ajanjakso on täysin sinun hallinnassasi: yhdestä päivästä 10 vuoteen.',
-    'reports_index_extra-options-box'                 => 'Valitsemastasi raportista riippuen voit valita täältä lisäsuodattimia ja -vaihtoehtoja. Katso tätä ruutua, kun muutat raporttityyppejä.',
+    'reports_index_intro'                   => 'Näiden raporttien avulla saat yksityiskohtaista tietoa taloudestasi.',
+    'reports_index_inputReportType'         => 'Valitse raporttityyppi. Katso ohjesivuilta, mitä kukin raportti näyttää sinulle.',
+    'reports_index_inputAccountsSelect'     => 'Voit sisällyttää tai olla näyttämättä tilejä mielesi mukaan.',
+    'reports_index_inputDateRange'          => 'Valittu ajanjakso on täysin sinun hallinnassasi: yhdestä päivästä 10 vuoteen.',
+    'reports_index_extra-options-box'       => 'Valitsemastasi raportista riippuen voit valita täältä lisäsuodattimia ja -vaihtoehtoja. Katso tätä ruutua, kun muutat raporttityyppejä.',
 
     // reports (reports)
-    'reports_report_default_intro'                    => 'Tämä raportti antaa sinulle nopean ja kattavan yleiskatsauksen taloudestasi. Jos haluat nähdä jotain muuta, älä epäröi ottaa minuun yhteyttä!',
-    'reports_report_audit_intro'                      => 'Tämä raportti antaa sinulle yksityiskohtaisen kuvan omaisuustileistäsi.',
-    'reports_report_audit_optionsBox'                 => 'Näiden valintaruutujen avulla voit näyttää kiinnostavat tai piilottaa vähemmän kiinnostavat sarakkeet.',
+    'reports_report_default_intro'          => 'Tämä raportti antaa sinulle nopean ja kattavan yleiskatsauksen taloudestasi. Jos haluat nähdä jotain muuta, älä epäröi ottaa minuun yhteyttä!',
+    'reports_report_audit_intro'            => 'Tämä raportti antaa sinulle yksityiskohtaisen kuvan omaisuustileistäsi.',
+    'reports_report_audit_optionsBox'       => 'Näiden valintaruutujen avulla voit näyttää kiinnostavat tai piilottaa vähemmän kiinnostavat sarakkeet.',
 
     'reports_report_category_intro'                  => 'Tällä raportilla pääset tarkastelemaan talouttasi yhden tai useamman kategorian kannalta.',
     'reports_report_category_pieCharts'              => 'Nämä kaaviot antavat sinulle tietoa kustannuksista ja tuloista kategorioittain tai tileittäin.',

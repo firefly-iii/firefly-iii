@@ -24,46 +24,46 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => 'Bem vindo à pagina inicial do Firefly III. Por favor, reserve um momento para ler a nossa introdução para perceber o modo de funcionamento do Firefly III.',
-    'index_accounts-chart'                            => 'Este gráfico mostra o saldo atual das tuas contas de ativas. Podes selecionar as contas a aparecer aqui, nas tuas preferências.',
-    'index_box_out_holder'                            => 'Esta caixa e as restantes ao lado dão-lhe um breve resumo da sua situação financeira.',
-    'index_help'                                      => 'Se alguma vez precisares de ajuda com uma página ou um formulário, usa este botão.',
-    'index_outro'                                     => 'A maioria das paginas no Firefly III vão começar com um pequeno tutorial como este. Por favor contacta-me quando tiveres questões ou comentários. Desfruta!',
-    'index_sidebar-toggle'                            => 'Para criar transações, contas ou outras coisas, usa o menu sobre este ícone.',
-    'index_cash_account'                              => 'Estas são as contas criadas até agora. Você pode usar uma conta caixa para acompanhar as suas despesas em dinheiro, no entanto não é obrigatório usar.',
+    'index_intro'                           => 'Bem vindo à pagina inicial do Firefly III. Por favor, reserve um momento para ler a nossa introdução para perceber o modo de funcionamento do Firefly III.',
+    'index_accounts-chart'                  => 'Este gráfico mostra o saldo atual das tuas contas de ativas. Podes selecionar as contas a aparecer aqui, nas tuas preferências.',
+    'index_box_out_holder'                  => 'Esta caixa e as restantes ao lado dão-lhe um breve resumo da sua situação financeira.',
+    'index_help'                            => 'Se alguma vez precisares de ajuda com uma página ou um formulário, usa este botão.',
+    'index_outro'                           => 'A maioria das paginas no Firefly III vão começar com um pequeno tutorial como este. Por favor contacta-me quando tiveres questões ou comentários. Desfruta!',
+    'index_sidebar-toggle'                  => 'Para criar transações, contas ou outras coisas, usa o menu sobre este ícone.',
+    'index_cash_account'                    => 'Estas são as contas criadas até agora. Você pode usar uma conta caixa para acompanhar as suas despesas em dinheiro, no entanto não é obrigatório usar.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Adicione a informação básica da sua transação. Origem, destino, data e descrição.',
-    'transactions_create_amount_info'                 => 'Adicione a quantia da transação. Se necessário os campos irão atualizar-se automaticamente de informações de moedas estrangeiras.',
-    'transactions_create_optional_info'               => 'Todos estes campos são opcionais. Adicionar meta-dados aqui irá ajudar a organizar melhor as suas transações.',
-    'transactions_create_split'                       => 'Se quiser dividir uma transação, adicione mais divisões com este botão',
+    'transactions_create_basic_info'        => 'Adicione a informação básica da sua transação. Origem, destino, data e descrição.',
+    'transactions_create_amount_info'       => 'Adicione a quantia da transação. Se necessário os campos irão atualizar-se automaticamente de informações de moedas estrangeiras.',
+    'transactions_create_optional_info'     => 'Todos estes campos são opcionais. Adicionar meta-dados aqui irá ajudar a organizar melhor as suas transações.',
+    'transactions_create_split'             => 'Se quiser dividir uma transação, adicione mais divisões com este botão',
 
     // create account:
-    'accounts_create_iban'                            => 'Atribua IBAN\'s válidos nas suas contas. Isto pode ajudar a tornar a importação de dados muito simples no futuro.',
-    'accounts_create_asset_opening_balance'           => 'Contas de ativos podem ter um saldo de abertura, desta forma indicando o inicio do seu historial no Firefly III.',
-    'accounts_create_asset_currency'                  => 'O Firefly III suporta múltiplas moedas. Contas de ativos tem uma moeda principal, que deve ser definida aqui.',
-    'accounts_create_asset_virtual'                   => 'Por vezes, pode ajudar dar a tua conta um saldo virtual: uma quantia extra sempre adicionada ou removida do saldo real.',
+    'accounts_create_iban'                  => 'Atribua IBAN\'s válidos nas suas contas. Isto pode ajudar a tornar a importação de dados muito simples no futuro.',
+    'accounts_create_asset_opening_balance' => 'Contas de ativos podem ter um saldo de abertura, desta forma indicando o inicio do seu historial no Firefly III.',
+    'accounts_create_asset_currency'        => 'O Firefly III suporta múltiplas moedas. Contas de ativos tem uma moeda principal, que deve ser definida aqui.',
+    'accounts_create_asset_virtual'         => 'Por vezes, pode ajudar dar a tua conta um saldo virtual: uma quantia extra sempre adicionada ou removida do saldo real.',
 
     // budgets index
-    'budgets_index_intro'                             => 'Os orçamentos são usados para gerir as tuas finanças e fazem parte de uma das funções principais do Firefly III.',
-    'budgets_index_set_budget'                        => 'Define o teu orçamento total para cada período, assim o Firefly III pode-te dizer se tens orçamentado todo o teu dinheiro disponível.',
-    'budgets_index_see_expenses_bar'                  => 'Ao gastar dinheiro esta barra vai sendo preenchida.',
-    'budgets_index_navigate_periods'                  => 'Navega através de intervalos para definir os orçamentos antecipadamente.',
-    'budgets_index_new_budget'                        => 'Crie novos orçamentos como achar melhor.',
-    'budgets_index_list_of_budgets'                   => 'Use esta tabela para definir os valores para cada orçamento e manter o controlo dos gastos.',
-    'budgets_index_outro'                             => 'Para obter mais informações sobre orçamentos, verifica o ícone de ajuda no canto superior direito.',
+    'budgets_index_intro'                   => 'Os orçamentos são usados para gerir as tuas finanças e fazem parte de uma das funções principais do Firefly III.',
+    'budgets_index_set_budget'              => 'Define o teu orçamento total para cada período, assim o Firefly III pode-te dizer se tens orçamentado todo o teu dinheiro disponível.',
+    'budgets_index_see_expenses_bar'        => 'Ao gastar dinheiro esta barra vai sendo preenchida.',
+    'budgets_index_navigate_periods'        => 'Navega através de intervalos para definir os orçamentos antecipadamente.',
+    'budgets_index_new_budget'              => 'Crie novos orçamentos como achar melhor.',
+    'budgets_index_list_of_budgets'         => 'Use esta tabela para definir os valores para cada orçamento e manter o controlo dos gastos.',
+    'budgets_index_outro'                   => 'Para obter mais informações sobre orçamentos, verifica o ícone de ajuda no canto superior direito.',
 
     // reports (index)
-    'reports_index_intro'                             => 'Use estes relatórios para obter sínteses detalhadas sobre as suas finanças.',
-    'reports_index_inputReportType'                   => 'Escolha um tipo de relatório. Confira as páginas de ajuda para ter a certeza do que cada relatório mostra.',
-    'reports_index_inputAccountsSelect'               => 'Podes incluir ou excluir contas de ativos conforme as suas necessidades.',
-    'reports_index_inputDateRange'                    => 'O intervalo temporal a definir é totalmente preferencial: desde 1 dia ate 10 anos.',
-    'reports_index_extra-options-box'                 => 'Dependendo do relatório que selecionou, pode selecionar campos extra aqui. Repare nesta caixa quando mudar os tipos de relatório.',
+    'reports_index_intro'                   => 'Use estes relatórios para obter sínteses detalhadas sobre as suas finanças.',
+    'reports_index_inputReportType'         => 'Escolha um tipo de relatório. Confira as páginas de ajuda para ter a certeza do que cada relatório mostra.',
+    'reports_index_inputAccountsSelect'     => 'Podes incluir ou excluir contas de ativos conforme as suas necessidades.',
+    'reports_index_inputDateRange'          => 'O intervalo temporal a definir é totalmente preferencial: desde 1 dia ate 10 anos.',
+    'reports_index_extra-options-box'       => 'Dependendo do relatório que selecionou, pode selecionar campos extra aqui. Repare nesta caixa quando mudar os tipos de relatório.',
 
     // reports (reports)
-    'reports_report_default_intro'                    => 'Este relatório vai-lhe dar uma visão rápida e abrangente das suas finanças. Se desejar ver algo a mais, por favor não hesite em contactar-me!',
-    'reports_report_audit_intro'                      => 'Este relatório vai-lhe dar informações detalhadas das suas contas de ativos.',
-    'reports_report_audit_optionsBox'                 => 'Usa estes campos para mostrar ou esconder colunas que tenhas interesse.',
+    'reports_report_default_intro'          => 'Este relatório vai-lhe dar uma visão rápida e abrangente das suas finanças. Se desejar ver algo a mais, por favor não hesite em contactar-me!',
+    'reports_report_audit_intro'            => 'Este relatório vai-lhe dar informações detalhadas das suas contas de ativos.',
+    'reports_report_audit_optionsBox'       => 'Usa estes campos para mostrar ou esconder colunas que tenhas interesse.',
 
     'reports_report_category_intro'                  => 'Este relatório irá-lhe dar informações detalhadas numa ou múltiplas categorias.',
     'reports_report_category_pieCharts'              => 'Estes gráficos irão-lhe dar informações de despesas e receitas, por categoria ou por conta.',
