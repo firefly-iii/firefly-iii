@@ -305,10 +305,10 @@ class OperationsRepository implements OperationsRepositoryInterface
         // TODO this filter must be somewhere in AccountRepositoryInterface because I suspect its needed more often (A113)
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $accounts  = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
         $selection = new Collection;
         /** @var Account $account */
-        foreach ($accounts as $account) {
+        foreach ($subset as $account) {
             if ('credit' === $repository->getMetaValue($account, 'liability_direction')) {
                 $selection->push($account);
             }
