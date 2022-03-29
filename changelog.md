@@ -2,6 +2,42 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.0
+
+- ⚠️ This release no longer supports LDAP.
+- ⚠️ This is the last release that supports PHP 8.0
+
+Please refer to the [documentation](https://docs.firefly-iii.org/firefly-iii/) and support channels if you run into problems:
+
+- [Gitter.im](https://gitter.im/firefly-iii/firefly-iii)
+- [Twitter](https://twitter.com/Firefly_III/)
+- [GitHub Issues](https://github.com/firefly-iii/firefly-iii/issues)
+- [GitHub Discussions](https://github.com/firefly-iii/firefly-iii/discussions)
+
+### Added
+- Error email message now includes HTTP headers.
+- [Issue 5373](https://github.com/firefly-iii/firefly-iii/issues/5373) You can give budgets notes, although they're not visible yet.
+- [Issue 5648](https://github.com/firefly-iii/firefly-iii/issues/5648) The Docker image supports custom locales, see `.env.example` for instructions.
+- [Issue 3984](https://github.com/firefly-iii/firefly-iii/issues/3984) [issue 5636](https://github.com/firefly-iii/firefly-iii/issues/5636) [issue 4903](https://github.com/firefly-iii/firefly-iii/issues/4903) [issue 5326](https://github.com/firefly-iii/firefly-iii/issues/5326) Lots of new search and rule operators.
+- [Issue 5269](https://github.com/firefly-iii/firefly-iii/issues/5269) It's possible to add piggy banks that have no explicit target amount goal.
+- [Issue 4893](https://github.com/firefly-iii/firefly-iii/issues/4893) Bills can be given an end date and an extension date and will warn you about those dates.
+
+### Changed
+- [Issue 5757](https://github.com/firefly-iii/firefly-iii/issues/5757) Upgrade to Laravel 9.
+
+### Deprecated
+- [Issue 5911](https://github.com/firefly-iii/firefly-iii/issues/5911) Removed support for LDAP
+
+### Fixed
+- [Issue 5810](https://github.com/firefly-iii/firefly-iii/issues/5810) Could not search for `no_notes:true` in some cases.
+- [Issue 5869](https://github.com/firefly-iii/firefly-iii/issues/5869) Converting transactions would sometimes fail.
+- [Issue 5870](https://github.com/firefly-iii/firefly-iii/issues/5870) Fixed broken link to instructions.
+- [Issue 5903](https://github.com/firefly-iii/firefly-iii/issues/5903) API budget limits was broken due to upgraded package.
+- [Issue 5852](https://github.com/firefly-iii/firefly-iii/issues/5852) It was not possible to recreate a currency.
+- [Issue 5882](https://github.com/firefly-iii/firefly-iii/issues/5882) `no_external_url:true` was broken.
+- [Issue 5770](https://github.com/firefly-iii/firefly-iii/issues/5770) Liabilities spent amount would be doubled.
+- [Issue 4013](https://github.com/firefly-iii/firefly-iii/issues/4013) Date in email message was not localized.
+
 ## 5.6.16 - 2022-03-01
 
 ### Fixed

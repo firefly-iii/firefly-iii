@@ -34,10 +34,10 @@ return [
     'month_and_day_js'        => 'Do MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'      => 'dddd MMMM Do, YYYY',
+    'month_and_date_day_js'      => 'dddd DD. MMMM YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
-    'month_and_day_no_year_js' => 'MMMM Do',
+    'month_and_day_no_year_js' => 'DD. MMMM',
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'            => 'Do MMMM YYYY um HH:mm:ss',
