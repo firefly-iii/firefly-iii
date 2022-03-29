@@ -139,7 +139,7 @@ class Bill extends Model
     public static function routeBinder(string $value): Bill
     {
         if (auth()->check()) {
-            $billId = (int)$value;
+            $billId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Bill $bill */
@@ -184,7 +184,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value): void
     {
-        $this->attributes['amount_max'] = (string)$value;
+        $this->attributes['amount_max'] = (string) $value;
     }
 
     /**
@@ -194,7 +194,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value): void
     {
-        $this->attributes['amount_min'] = (string)$value;
+        $this->attributes['amount_min'] = (string) $value;
     }
 
     /**

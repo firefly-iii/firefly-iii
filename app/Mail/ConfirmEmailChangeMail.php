@@ -51,9 +51,9 @@ class ConfirmEmailChangeMail extends Mailable
      */
     public function __construct(string $newEmail, string $oldEmail, string $url)
     {
-        $this->newEmail  = $newEmail;
-        $this->oldEmail  = $oldEmail;
-        $this->url       = $url;
+        $this->newEmail = $newEmail;
+        $this->oldEmail = $oldEmail;
+        $this->url      = $url;
     }
 
     /**
@@ -66,7 +66,7 @@ class ConfirmEmailChangeMail extends Mailable
         return $this
             //->view('emails.confirm-email-change-html')
             //->text('emails.confirm-email-change-text')
-                ->markdown('emails.confirm-email-change')
+            ->markdown('emails.confirm-email-change')
             ->subject((string) trans('email.email_change_subject'));
     }
 }

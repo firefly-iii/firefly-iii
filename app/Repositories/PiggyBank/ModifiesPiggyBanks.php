@@ -128,21 +128,6 @@ trait ModifiesPiggyBanks
     }
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
-     * @return PiggyBankEvent
-     */
-    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
-    {
-        if (0 === bccomp('0', $amount)) {
-            return new PiggyBankEvent;
-        }
-
-        return PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
-    }
-
-    /**
      * @param PiggyBank          $piggyBank
      * @param string             $amount
      * @param TransactionJournal $journal
@@ -196,6 +181,21 @@ trait ModifiesPiggyBanks
     }
 
     /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return PiggyBankEvent
+     */
+    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
+    {
+        if (0 === bccomp('0', $amount)) {
+            return new PiggyBankEvent;
+        }
+
+        return PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
+    }
+
+    /**
      * @inheritDoc
      */
     public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank
@@ -203,23 +203,6 @@ trait ModifiesPiggyBanks
         $piggyBank->objectGroups()->sync([]);
 
         return $piggyBank;
-    }
-
-    /**
-     * Correct order of piggies in case of issues.
-     */
-    public function resetOrder(): void
-    {
-        $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
-        $current = 1;
-        foreach ($set as $piggyBank) {
-            if ((int) $piggyBank->order !== $current) {
-                Log::debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
-                $piggyBank->order = $current;
-                $piggyBank->save();
-            }
-            $current++;
-        }
     }
 
     /**
@@ -260,34 +243,6 @@ trait ModifiesPiggyBanks
 
         return $piggyBank;
 
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
-    {
-        $oldOrder = (int) $piggyBank->order;
-        Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
-        if ($newOrder > $oldOrder) {
-            $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
-                       ->where('piggy_banks.id', '!=', $piggyBank->id)
-                       ->decrement('piggy_banks.order');
-            $piggyBank->order = $newOrder;
-            Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
-            $piggyBank->save();
-
-            return true;
-        }
-
-        $this->user->piggyBanks()->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
-                   ->where('piggy_banks.id', '!=', $piggyBank->id)
-                   ->increment('piggy_banks.order');
-        $piggyBank->order = $newOrder;
-        Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
-        $piggyBank->save();
-
-        return true;
     }
 
     /**
@@ -347,6 +302,82 @@ trait ModifiesPiggyBanks
         }
 
         return $piggyBank;
+    }
+
+    /**
+     * Correct order of piggies in case of issues.
+     */
+    public function resetOrder(): void
+    {
+        $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
+        $current = 1;
+        foreach ($set as $piggyBank) {
+            if ((int) $piggyBank->order !== $current) {
+                Log::debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
+                $piggyBank->order = $current;
+                $piggyBank->save();
+            }
+            $current++;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
+    {
+        $oldOrder = (int) $piggyBank->order;
+        Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
+        if ($newOrder > $oldOrder) {
+            $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
+                       ->where('piggy_banks.id', '!=', $piggyBank->id)
+                       ->decrement('piggy_banks.order');
+            $piggyBank->order = $newOrder;
+            Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
+            $piggyBank->save();
+
+            return true;
+        }
+
+        $this->user->piggyBanks()->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
+                   ->where('piggy_banks.id', '!=', $piggyBank->id)
+                   ->increment('piggy_banks.order');
+        $piggyBank->order = $newOrder;
+        Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
+        $piggyBank->save();
+
+        return true;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $note
+     *
+     * @return bool
+     */
+    private function updateNote(PiggyBank $piggyBank, string $note): bool
+    {
+        if ('' === $note) {
+            $dbNote = $piggyBank->notes()->first();
+            if (null !== $dbNote) {
+                try {
+                    $dbNote->delete();
+                } catch (Exception $e) { // @phpstan-ignore-line
+                    // @ignoreException
+                }
+            }
+
+            return true;
+        }
+        $dbNote = $piggyBank->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note;
+            $dbNote->noteable()->associate($piggyBank);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
     }
 
     /**
@@ -414,37 +445,6 @@ trait ModifiesPiggyBanks
         }
 
         return $piggyBank;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string    $note
-     *
-     * @return bool
-     */
-    private function updateNote(PiggyBank $piggyBank, string $note): bool
-    {
-        if ('' === $note) {
-            $dbNote = $piggyBank->notes()->first();
-            if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
-                    // @ignoreException
-                }
-            }
-
-            return true;
-        }
-        $dbNote = $piggyBank->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note;
-            $dbNote->noteable()->associate($piggyBank);
-        }
-        $dbNote->text = trim($note);
-        $dbNote->save();
-
-        return true;
     }
 
     /**

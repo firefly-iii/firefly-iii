@@ -82,6 +82,14 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->tags()->orderBy('tag', 'ASC')->get();
+    }
+
+    /**
      * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end
@@ -135,14 +143,6 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return $this->user->tags()->orderBy('tag', 'ASC')->get();
-    }
-
-    /**
      * @inheritDoc
      */
     public function getAttachments(Tag $tag): Collection
@@ -160,14 +160,6 @@ class TagRepository implements TagRepositoryInterface
                 $attachment->notes_text  = null === $note ? '' : $note->text;
             }
         );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getLocation(Tag $tag): ?Location
-    {
-        return $tag->locations()->first();
     }
 
     /**
@@ -338,7 +330,7 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
+            $currencyId        = (int) $journal['currency_id'];
             $sums[$currencyId] = $sums[$currencyId] ?? [
                     'currency_id'                    => $currencyId,
                     'currency_name'                  => $journal['currency_name'],
@@ -352,7 +344,7 @@ class TagRepository implements TagRepositoryInterface
                 ];
 
             // add amount to correct type:
-            $amount = app('steam')->positive((string)$journal['amount']);
+            $amount = app('steam')->positive((string) $journal['amount']);
             $type   = $journal['transaction_type_type'];
             if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
@@ -373,7 +365,7 @@ class TagRepository implements TagRepositoryInterface
                         TransactionType::OPENING_BALANCE => '0',
                     ];
                 // add foreign amount to correct type:
-                $amount = app('steam')->positive((string)$journal['foreign_amount']);
+                $amount = app('steam')->positive((string) $journal['foreign_amount']);
                 $type   = $journal['transaction_type_type'];
                 if (TransactionType::WITHDRAWAL === $type) {
                     $amount = bcmul($amount, '-1');
@@ -456,6 +448,14 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return $tag;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocation(Tag $tag): ?Location
+    {
+        return $tag->locations()->first();
     }
 
 }

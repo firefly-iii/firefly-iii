@@ -40,7 +40,7 @@ class ValidRecurrenceRepetitionType implements Rule
      */
     public function message(): string
     {
-        return (string)trans('validation.valid_recurrence_rep_type');
+        return (string) trans('validation.valid_recurrence_rep_type');
     }
 
     /**
@@ -54,7 +54,7 @@ class ValidRecurrenceRepetitionType implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        $value = (string)$value;
+        $value = (string) $value;
         if ('daily' === $value) {
             return true;
         }

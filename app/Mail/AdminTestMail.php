@@ -46,7 +46,7 @@ class AdminTestMail extends Mailable
      */
     public function __construct(string $email)
     {
-        $this->email     = $email;
+        $this->email = $email;
     }
 
     /**
@@ -58,6 +58,6 @@ class AdminTestMail extends Mailable
     {
         return $this
             ->markdown('emails.admin-test')
-            ->subject((string)trans('email.admin_test_subject'));
+            ->subject((string) trans('email.admin_test_subject'));
     }
 }

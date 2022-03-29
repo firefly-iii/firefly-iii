@@ -41,7 +41,7 @@ use stdClass;
 class AccountDestroyService
 {
     /**
-     * @param Account $account
+     * @param Account      $account
      * @param Account|null $moveTo
      *
      * @return void
@@ -87,7 +87,7 @@ class AccountDestroyService
                        ->where('transaction_types.type', TransactionType::OPENING_BALANCE)
                        ->get(['transactions.transaction_journal_id']);
         if ($set->count() > 0) {
-            $journalId = (int)$set->first()->transaction_journal_id;
+            $journalId = (int) $set->first()->transaction_journal_id;
             Log::debug(sprintf('Found opening balance journal with ID #%d', $journalId));
 
             // get transactions with this journal (should be just one):
@@ -133,8 +133,8 @@ class AccountDestroyService
         $user    = $account->user;
         /** @var stdClass $row */
         foreach ($collection as $row) {
-            if ((int)$row->the_count > 1) {
-                $journalId = (int)$row->transaction_journal_id;
+            if ((int) $row->the_count > 1) {
+                $journalId = (int) $row->transaction_journal_id;
                 $journal   = $user->transactionJournals()->find($journalId);
                 if (null !== $journal) {
                     Log::debug(sprintf('Deleted journal #%d because it has the same source as destination.', $journal->id));
@@ -192,7 +192,7 @@ class AccountDestroyService
         /** @var RecurrenceDestroyService $destroyService */
         $destroyService = app(RecurrenceDestroyService::class);
         foreach ($recurrences as $recurrenceId) {
-            $destroyService->destroyById((int)$recurrenceId);
+            $destroyService->destroyById((int) $recurrenceId);
         }
     }
 

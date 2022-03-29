@@ -53,14 +53,14 @@ use Illuminate\Support\Carbon;
  */
 class UserRole extends Model
 {
-    public const READ_ONLY           = 'ro';
-    public const CHANGE_TRANSACTIONS = 'change_tx';
-    public const CHANGE_RULES        = 'change_rules';
     public const CHANGE_PIGGY_BANKS  = 'change_piggies';
     public const CHANGE_REPETITIONS  = 'change_reps';
-    public const VIEW_REPORTS        = 'view_reports';
+    public const CHANGE_RULES        = 'change_rules';
+    public const CHANGE_TRANSACTIONS = 'change_tx';
     public const FULL                = 'full';
     public const OWNER               = 'owner';
+    public const READ_ONLY           = 'ro';
+    public const VIEW_REPORTS        = 'view_reports';
     protected $fillable = ['title'];
 
     /**

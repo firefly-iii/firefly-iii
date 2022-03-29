@@ -190,7 +190,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         }
 
         // return when something else:
-        $return = (string)$value;
+        $return = (string) $value;
         try {
             $cache->store($return);
         } catch (Exception $e) { // @phpstan-ignore-line
@@ -232,8 +232,8 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         $journalIds = [];
         /** @var stdClass $row */
         foreach ($result as $row) {
-            if ((int)$row->transaction_count > 2) {
-                $journalIds[] = (int)$row->id;
+            if ((int) $row->transaction_count > 2) {
+                $journalIds[] = (int) $row->id;
             }
         }
         $journalIds = array_unique($journalIds);

@@ -90,7 +90,7 @@ class ObjectGroup extends Model
     public static function routeBinder(string $value): ObjectGroup
     {
         if (auth()->check()) {
-            $objectGroupId = (int)$value;
+            $objectGroupId = (int) $value;
             /** @var ObjectGroup $objectGroup */
             $objectGroup = self::where('object_groups.id', $objectGroupId)
                                ->where('object_groups.user_id', auth()->user()->id)->first();

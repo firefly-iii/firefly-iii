@@ -124,7 +124,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                                       ->where('start_date', $start->format('Y-m-d'))
                                       ->where('end_date', $end->format('Y-m-d'))->first();
         if (null !== $availableBudget) {
-            $amount = (string)$availableBudget->amount;
+            $amount = (string) $availableBudget->amount;
         }
 
         return $amount;

@@ -115,7 +115,7 @@ class PiggyBank extends Model
     public static function routeBinder(string $value): PiggyBank
     {
         if (auth()->check()) {
-            $piggyBankId = (int)$value;
+            $piggyBankId = (int) $value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
                                ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
@@ -186,6 +186,6 @@ class PiggyBank extends Model
      */
     public function setTargetamountAttribute($value): void
     {
-        $this->attributes['targetamount'] = (string)$value;
+        $this->attributes['targetamount'] = (string) $value;
     }
 }

@@ -36,11 +36,6 @@ interface BillRepositoryInterface
 {
 
     /**
-     * Add correct order to bills.
-     */
-    public function correctOrder(): void;
-
-    /**
      * @param string $query
      * @param int    $limit
      *
@@ -55,6 +50,11 @@ interface BillRepositoryInterface
      * @return Collection
      */
     public function billStartsWith(string $query, int $limit): Collection;
+
+    /**
+     * Add correct order to bills.
+     */
+    public function correctOrder(): void;
 
     /**
      * @param Bill $bill

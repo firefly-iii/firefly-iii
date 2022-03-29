@@ -53,7 +53,7 @@ class IsAssetAccountId implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        $accountId = (int)$value;
+        $accountId = (int) $value;
         $account   = Account::with('accountType')->find($accountId);
         if (null === $account) {
             return false;

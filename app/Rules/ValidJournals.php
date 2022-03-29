@@ -42,7 +42,7 @@ class ValidJournals implements Rule
      */
     public function message(): string
     {
-        return (string)trans('validation.invalid_selection');
+        return (string) trans('validation.invalid_selection');
     }
 
     /**

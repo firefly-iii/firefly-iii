@@ -80,17 +80,17 @@ class Webhook extends Model
 
     // dont forget to update the config in firefly.php
     // triggers
-    public const TRIGGER_STORE_TRANSACTION   = 100;
-    public const TRIGGER_UPDATE_TRANSACTION  = 110;
-    public const TRIGGER_DESTROY_TRANSACTION = 120;
-
-    // actions
-    public const RESPONSE_TRANSACTIONS = 200;
+    public const DELIVERY_JSON = 300;
     public const RESPONSE_ACCOUNTS     = 210;
     public const RESPONSE_NONE         = 220;
 
+    // actions
+    public const RESPONSE_TRANSACTIONS = 200;
+    public const TRIGGER_DESTROY_TRANSACTION = 120;
+    public const TRIGGER_STORE_TRANSACTION   = 100;
+
     // delivery
-    public const DELIVERY_JSON = 300;
+    public const TRIGGER_UPDATE_TRANSACTION  = 110;
     protected $casts
                         = [
             'active'   => 'boolean',
@@ -111,7 +111,7 @@ class Webhook extends Model
     public static function routeBinder(string $value): Webhook
     {
         if (auth()->check()) {
-            $webhookId = (int)$value;
+            $webhookId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Webhook $webhook */

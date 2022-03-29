@@ -61,7 +61,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
+            $currencyId = (int) $journal['currency_id'];
 
             $data[$currencyId] = $data[$currencyId] ?? [
                     'id'                      => 0,
@@ -133,12 +133,12 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
             /** @var TransactionCurrency $currency */
             $currency = $currencies[$code];
             $return[] = [
-                'currency_id'             => (string)$currency['id'],
+                'currency_id'             => (string) $currency['id'],
                 'currency_code'           => $code,
                 'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => number_format((float)$spent, $currency['decimal_places'], '.', ''),
+                'amount'                  => number_format((float) $spent, $currency['decimal_places'], '.', ''),
             ];
         }
 
@@ -176,7 +176,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int)$journal['currency_id'];
+            $currencyId                = (int) $journal['currency_id'];
             $array[$currencyId]        = $array[$currencyId] ?? [
                     'sum'                     => '0',
                     'currency_id'             => $currencyId,

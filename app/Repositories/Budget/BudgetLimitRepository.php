@@ -148,6 +148,22 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
+     * @param TransactionCurrency $currency
+     * @param Carbon|null         $start
+     * @param Carbon|null         $end
+     *
+     * @return Collection
+     */
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection
+    {
+        return $this->getAllBudgetLimits($start, $end)->filter(
+            static function (BudgetLimit $budgetLimit) use ($currency) {
+                return $budgetLimit->transaction_currency_id === $currency->id;
+            }
+        );
+    }
+
+    /**
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -213,22 +229,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                                      );
                               }
                           )->get(['budget_limits.*']);
-    }
-
-    /**
-     * @param TransactionCurrency $currency
-     * @param Carbon|null         $start
-     * @param Carbon|null         $end
-     *
-     * @return Collection
-     */
-    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection
-    {
-        return $this->getAllBudgetLimits($start, $end)->filter(
-            static function (BudgetLimit $budgetLimit) use ($currency) {
-                return $budgetLimit->transaction_currency_id === $currency->id;
-            }
-        );
     }
 
     /**
@@ -318,7 +318,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $currency->save();
 
         // find the budget:
-        $budget = $this->user->budgets()->find((int)$data['budget_id']);
+        $budget = $this->user->budgets()->find((int) $data['budget_id']);
         if (null === $budget) {
             throw new FireflyException('200004: Budget does not exist.');
         }

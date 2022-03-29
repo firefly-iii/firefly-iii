@@ -75,7 +75,7 @@ class WebhookAttempt extends Model
     public static function routeBinder(string $value): WebhookAttempt
     {
         if (auth()->check()) {
-            $attemptId = (int)$value;
+            $attemptId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var WebhookAttempt $attempt */

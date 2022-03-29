@@ -34,8 +34,8 @@ class BillWarningMail extends Mailable
     use Queueable, SerializesModels;
 
     public Bill   $bill;
-    public string $field;
     public int    $diff;
+    public string $field;
 
     /**
      * ConfirmEmailChangeMail constructor.
@@ -46,9 +46,9 @@ class BillWarningMail extends Mailable
      */
     public function __construct(Bill $bill, string $field, int $diff)
     {
-        $this->bill      = $bill;
-        $this->field     = $field;
-        $this->diff      = $diff;
+        $this->bill  = $bill;
+        $this->field = $field;
+        $this->diff  = $diff;
     }
 
     /**

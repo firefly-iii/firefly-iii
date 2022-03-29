@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\WarnUserAboutBill;
 use FireflyIII\Models\Bill;
 use Illuminate\Bus\Queueable;

@@ -33,7 +33,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Log;
 
 /**
  * Class AttachmentRepository.

@@ -78,7 +78,7 @@ class RecurrenceUpdateService
                 $recurrence->repetitions  = 0;
             }
             if (array_key_exists('nr_of_repetitions', $info)) {
-                if (0 !== (int)$info['nr_of_repetitions']) {
+                if (0 !== (int) $info['nr_of_repetitions']) {
                     $recurrence->repeat_until = null;
                 }
                 $recurrence->repetitions = $info['nr_of_repetitions'];
@@ -257,7 +257,7 @@ class RecurrenceUpdateService
                     unset($current['currency_id'], $current['currency_code']);
                 }
                 if (null !== $currency) {
-                    $current['currency_id'] = (int)$currency->id;
+                    $current['currency_id'] = (int) $currency->id;
                 }
                 if (array_key_exists('foreign_currency_id', $current) || array_key_exists('foreign_currency_code', $current)) {
                     $foreignCurrency = $currencyFactory->find($current['foreign_currency_id'] ?? null, $currency['foreign_currency_code'] ?? null);
@@ -266,7 +266,7 @@ class RecurrenceUpdateService
                     unset($current['foreign_currency_id'], $currency['foreign_currency_code']);
                 }
                 if (null !== $foreignCurrency) {
-                    $current['foreign_currency_id'] = (int)$foreignCurrency->id;
+                    $current['foreign_currency_id'] = (int) $foreignCurrency->id;
                 }
 
                 // update fields
@@ -287,27 +287,27 @@ class RecurrenceUpdateService
                 }
                 // update meta data
                 if (array_key_exists('budget_id', $current)) {
-                    $this->setBudget($match, (int)$current['budget_id']);
+                    $this->setBudget($match, (int) $current['budget_id']);
                 }
                 if (array_key_exists('bill_id', $current)) {
-                    $this->setBill($match, (int)$current['bill_id']);
+                    $this->setBill($match, (int) $current['bill_id']);
                 }
                 // reset category if name is set but empty:
                 // can be removed when v1 is retired.
-                if (array_key_exists('category_name', $current) && '' === (string)$current['category_name']) {
+                if (array_key_exists('category_name', $current) && '' === (string) $current['category_name']) {
                     $current['category_name'] = null;
                     $current['category_id']   = 0;
                 }
 
                 if (array_key_exists('category_id', $current)) {
-                    $this->setCategory($match, (int)$current['category_id']);
+                    $this->setCategory($match, (int) $current['category_id']);
                 }
 
                 if (array_key_exists('tags', $current) && is_array($current['tags'])) {
                     $this->updateTags($match, $current['tags']);
                 }
                 if (array_key_exists('piggy_bank_id', $current)) {
-                    $this->updatePiggyBank($match, (int)$current['piggy_bank_id']);
+                    $this->updatePiggyBank($match, (int) $current['piggy_bank_id']);
                 }
             }
         }

@@ -146,7 +146,7 @@ trait AccountServiceTrait
                     $data[$field] = 1;
                 }
 
-                $factory->crud($account, $field, (string)$data[$field]);
+                $factory->crud($account, $field, (string) $data[$field]);
             }
         }
     }
@@ -192,7 +192,7 @@ trait AccountServiceTrait
      */
     public function validOBData(array $data): bool
     {
-        $data['opening_balance'] = (string)($data['opening_balance'] ?? '');
+        $data['opening_balance'] = (string) ($data['opening_balance'] ?? '');
         if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
             $data['opening_balance'] = '';
         }
@@ -513,6 +513,63 @@ trait AccountServiceTrait
     }
 
     /**
+     * See reference nr. 99
+     *
+     * @param TransactionGroup $group
+     *
+     * @return TransactionJournal
+     * @throws FireflyException
+     */
+    private function getObJournal(TransactionGroup $group): TransactionJournal
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $group->transactionJournals()->first();
+        if (null === $journal) {
+            throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
+        }
+
+        return $journal;
+    }
+
+    /**
+     * See reference nr. 98
+     *
+     * @param TransactionJournal $journal
+     * @param Account            $account
+     *
+     * @return Transaction
+     * @throws FireflyException
+     */
+    private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
+        }
+
+        return $transaction;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Account            $account
+     *
+     * @return Transaction
+     * @throws FireflyException
+     */
+    private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
+        }
+
+        return $transaction;
+    }
+
+    /**
      * Update or create the opening balance group.
      * Since opening balance and date can still be empty strings, it may fail.
      *
@@ -666,62 +723,5 @@ trait AccountServiceTrait
         }
 
         return $group;
-    }
-
-    /**
-     * See reference nr. 99
-     *
-     * @param TransactionGroup $group
-     *
-     * @return TransactionJournal
-     * @throws FireflyException
-     */
-    private function getObJournal(TransactionGroup $group): TransactionJournal
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $group->transactionJournals()->first();
-        if (null === $journal) {
-            throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
-        }
-
-        return $journal;
-    }
-
-    /**
-     * See reference nr. 98
-     *
-     * @param TransactionJournal $journal
-     * @param Account            $account
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        /** @var Transaction $transaction */
-        $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
-        }
-
-        return $transaction;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Account            $account
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        /** @var Transaction $transaction */
-        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
-        }
-
-        return $transaction;
     }
 }

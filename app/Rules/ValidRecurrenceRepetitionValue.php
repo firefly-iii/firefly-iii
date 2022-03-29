@@ -43,7 +43,7 @@ class ValidRecurrenceRepetitionValue implements Rule
      */
     public function message(): string
     {
-        return (string)trans('validation.valid_recurrence_rep_type');
+        return (string) trans('validation.valid_recurrence_rep_type');
     }
 
     /**
@@ -57,7 +57,7 @@ class ValidRecurrenceRepetitionValue implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        $value = (string)$value;
+        $value = (string) $value;
 
         if ('daily' === $value) {
             return true;
@@ -93,7 +93,7 @@ class ValidRecurrenceRepetitionValue implements Rule
      */
     private function validateMonthly(string $value): bool
     {
-        $dayOfMonth = (int)substr($value, 8);
+        $dayOfMonth = (int) substr($value, 8);
 
         return $dayOfMonth > 0 && $dayOfMonth < 32;
     }
@@ -110,8 +110,8 @@ class ValidRecurrenceRepetitionValue implements Rule
         if (2 !== count($parameters)) {
             return false;
         }
-        $nthDay    = (int)($parameters[0] ?? 0.0);
-        $dayOfWeek = (int)($parameters[1] ?? 0.0);
+        $nthDay    = (int) ($parameters[0] ?? 0.0);
+        $dayOfWeek = (int) ($parameters[1] ?? 0.0);
         if ($nthDay < 1 || $nthDay > 5) {
             return false;
         }
@@ -126,7 +126,7 @@ class ValidRecurrenceRepetitionValue implements Rule
      */
     private function validateWeekly(string $value): bool
     {
-        $dayOfWeek = (int)substr($value, 7);
+        $dayOfWeek = (int) substr($value, 7);
 
         return $dayOfWeek > 0 && $dayOfWeek < 8;
     }

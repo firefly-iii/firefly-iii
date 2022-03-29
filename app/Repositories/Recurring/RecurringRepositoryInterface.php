@@ -65,6 +65,15 @@ interface RecurringRepositoryInterface
     public function getAll(): Collection;
 
     /**
+     * Get the category from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recTransaction
+     *
+     * @return null|int
+     */
+    public function getBillId(RecurrenceTransaction $recTransaction): ?int;
+
+    /**
      * Get the budget ID from a recurring transaction transaction.
      *
      * @param RecurrenceTransaction $recTransaction
@@ -81,15 +90,6 @@ interface RecurringRepositoryInterface
      * @return null|int
      */
     public function getCategoryId(RecurrenceTransaction $recTransaction): ?int;
-
-    /**
-     * Get the category from a recurring transaction transaction.
-     *
-     * @param RecurrenceTransaction $recTransaction
-     *
-     * @return null|int
-     */
-    public function getBillId(RecurrenceTransaction $recTransaction): ?int;
 
     /**
      * Get the category from a recurring transaction transaction.

@@ -55,6 +55,37 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @param int|null    $piggyBankId
+     * @param string|null $piggyBankName
+     *
+     * @return PiggyBank|null
+     */
+    public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
+    {
+        Log::debug('Searching for piggy information.');
+
+        if (null !== $piggyBankId) {
+            $searchResult = $this->find((int) $piggyBankId);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found piggy based on #%d, will return it.', $piggyBankId));
+
+                return $searchResult;
+            }
+        }
+        if (null !== $piggyBankName) {
+            $searchResult = $this->findByName((string) $piggyBankName);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found piggy based on "%s", will return it.', $piggyBankName));
+
+                return $searchResult;
+            }
+        }
+        Log::debug('Found nothing');
+
+        return null;
+    }
+
+    /**
      * @param int $piggyBankId
      *
      * @return PiggyBank|null
@@ -74,37 +105,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function findByName(string $name): ?PiggyBank
     {
         return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first(['piggy_banks.*']);
-    }
-
-    /**
-     * @param int|null    $piggyBankId
-     * @param string|null $piggyBankName
-     *
-     * @return PiggyBank|null
-     */
-    public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
-    {
-        Log::debug('Searching for piggy information.');
-
-        if (null !== $piggyBankId) {
-            $searchResult = $this->find((int)$piggyBankId);
-            if (null !== $searchResult) {
-                Log::debug(sprintf('Found piggy based on #%d, will return it.', $piggyBankId));
-
-                return $searchResult;
-            }
-        }
-        if (null !== $piggyBankName) {
-            $searchResult = $this->findByName((string)$piggyBankName);
-            if (null !== $searchResult) {
-                Log::debug(sprintf('Found piggy based on "%s", will return it.', $piggyBankName));
-
-                return $searchResult;
-            }
-        }
-        Log::debug('Found nothing');
-
-        return null;
     }
 
     /**
@@ -142,7 +142,17 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             return '0';
         }
 
-        return (string)$rep->currentamount;
+        return (string) $rep->currentamount;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return PiggyBankRepetition|null
+     */
+    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
+    {
+        return $piggyBank->piggyBankRepetitions()->first();
     }
 
     /**
@@ -210,11 +220,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         // currency of the account + the piggy bank currency are almost the same.
         // which amount from the transaction matches?
         $amount = null;
-        if ((int)$source->transaction_currency_id === (int)$currency->id) {
+        if ((int) $source->transaction_currency_id === (int) $currency->id) {
             Log::debug('Use normal amount');
             $amount = app('steam')->$operator($source->amount);
         }
-        if ((int)$source->foreign_currency_id === (int)$currency->id) {
+        if ((int) $source->foreign_currency_id === (int) $currency->id) {
             Log::debug('Use foreign amount');
             $amount = app('steam')->$operator($source->foreign_amount);
         }
@@ -225,7 +235,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         Log::debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-        $room    = bcsub((string)$piggyBank->targetamount, (string)$repetition->currentamount);
+        $room    = bcsub((string) $piggyBank->targetamount, (string) $repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
@@ -248,7 +258,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             return $compare;
         }
 
-        return (string)$amount;
+        return (string) $amount;
     }
 
     /**
@@ -256,7 +266,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getMaxOrder(): int
     {
-        return (int)$this->user->piggyBanks()->max('piggy_banks.order');
+        return (int) $this->user->piggyBanks()->max('piggy_banks.order');
     }
 
     /**
@@ -275,14 +285,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         return $note->text;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getPiggyBanks(): Collection
-    {
-        return $this->user->piggyBanks()->with(['account', 'objectGroups'])->orderBy('order', 'ASC')->get();
     }
 
     /**
@@ -307,13 +309,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return PiggyBankRepetition|null
+     * @return Collection
      */
-    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
+    public function getPiggyBanks(): Collection
     {
-        return $piggyBank->piggyBankRepetitions()->first();
+        return $this->user->piggyBanks()->with(['account', 'objectGroups'])->orderBy('order', 'ASC')->get();
     }
 
     /**
@@ -338,7 +338,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
             // more than 1 month to go and still need money to save:
             if ($diffInMonths > 0 && 1 === bccomp($remainingAmount, '0')) {
-                $savePerMonth = bcdiv($remainingAmount, (string)$diffInMonths);
+                $savePerMonth = bcdiv($remainingAmount, (string) $diffInMonths);
             }
 
             // less than 1 month to go but still need money to save:

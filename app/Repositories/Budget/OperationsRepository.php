@@ -201,14 +201,25 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    private function getBudgets(): Collection
+    {
+        /** @var BudgetRepositoryInterface $repos */
+        $repos = app(BudgetRepositoryInterface::class);
+
+        return $repos->getActiveBudgets();
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $budgets
@@ -369,17 +380,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $array;
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getBudgets(): Collection
-    {
-        /** @var BudgetRepositoryInterface $repos */
-        $repos = app(BudgetRepositoryInterface::class);
-
-        return $repos->getActiveBudgets();
     }
 
     /**

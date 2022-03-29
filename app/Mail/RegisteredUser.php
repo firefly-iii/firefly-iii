@@ -47,7 +47,7 @@ class RegisteredUser extends Mailable
      */
     public function __construct(string $address)
     {
-        $this->address   = $address;
+        $this->address = $address;
     }
 
     /**
@@ -59,6 +59,6 @@ class RegisteredUser extends Mailable
     {
         return $this
             ->markdown('emails.registered')
-            ->subject((string)trans('email.registered_subject'));
+            ->subject((string) trans('email.registered_subject'));
     }
 }

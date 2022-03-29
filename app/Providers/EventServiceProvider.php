@@ -48,7 +48,6 @@ use Laravel\Passport\Client;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Log;
 use Mail;
-use Request;
 use Session;
 
 /**
@@ -76,7 +75,7 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
             ],
-            ActuallyLoggedIn::class => [
+            ActuallyLoggedIn::class             => [
                 'FireflyIII\Handlers\Events\UserEventHandler@storeUserIPAddress',
             ],
             DetectedNewIPAddress::class         => [
@@ -137,7 +136,7 @@ class EventServiceProvider extends ServiceProvider
             ],
 
             // bill related events:
-            WarnUserAboutBill::class => [
+            WarnUserAboutBill::class            => [
                 'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
             ],
         ];
@@ -171,14 +170,14 @@ class EventServiceProvider extends ServiceProvider
             static function (Client $oauthClient) {
                 /** @var UserRepositoryInterface $repository */
                 $repository = app(UserRepositoryInterface::class);
-                $user       = $repository->find((int)$oauthClient->user_id);
+                $user       = $repository->find((int) $oauthClient->user_id);
                 if (null === $user) {
                     Log::info('OAuth client generated but no user associated.');
 
                     return;
                 }
 
-                $email     = $user->email;
+                $email = $user->email;
 
                 // see if user has alternative email address:
                 $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
