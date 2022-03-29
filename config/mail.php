@@ -23,23 +23,23 @@ declare(strict_types=1);
 
 return [
 
-/*
-|--------------------------------------------------------------------------
-| Default Mailer
-|--------------------------------------------------------------------------
-|
-| This option controls the default mailer that is used to send any email
-| messages sent by your application. Alternative mailers may be setup
-| and used as needed; however, this mailer will be used by default.
-|
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | Default Mailer
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the default mailer that is used to send any email
+    | messages sent by your application. Alternative mailers may be setup
+    | and used as needed; however, this mailer will be used by default.
+    |
+    */
     'default' => env('MAIL_MAILER', 'smtp'),
 
     'mailers' => [
         'smtp' => [
             'transport'  => 'smtp',
-            'host' => env('MAIL_HOST', 'smtp.mailtrap.io'),
-            'port' => env('MAIL_PORT', 2525),
+            'host'       => env('MAIL_HOST', 'smtp.mailtrap.io'),
+            'port'       => env('MAIL_PORT', 2525),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username'   => env('MAIL_USERNAME'),
             'password'   => env('MAIL_PASSWORD'),
@@ -62,7 +62,7 @@ return [
             'transport' => 'sendmail',
             'path'      => '/usr/sbin/sendmail -bs',
         ],
-        'log' => [
+        'log'      => [
             'transport' => 'log',
             'channel'   => env('MAIL_LOG_CHANNEL', 'stack'),
             'level'     => 'notice',
@@ -73,7 +73,7 @@ return [
         ],
     ],
 
-    'from' => ['address' => envNonEmpty('MAIL_FROM', 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
+    'from'     => ['address' => envNonEmpty('MAIL_FROM', 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
     'markdown' => [
         'theme' => 'default',
 

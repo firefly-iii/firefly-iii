@@ -32,6 +32,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateLocalPersonalAccessTokensTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('personal_access_tokens');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -49,15 +59,5 @@ class CreateLocalPersonalAccessTokensTable extends Migration
                 $table->timestamps();
             });
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('personal_access_tokens');
     }
 }

@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-if('ldap' === strtolower((string) env('AUTHENTICATION_GUARD'))) {
+if ('ldap' === strtolower((string) env('AUTHENTICATION_GUARD'))) {
     die('LDAP is no longer supported by Firefly III v5.7+. Sorry about that. You will have to switch to "remote_user_guard", and use tools like Authelia or Keycloak to use LDAP together with Firefly III.');
 }
 
@@ -95,8 +95,8 @@ return [
 
     'providers' => [
         'users'                => [
-            'driver'   => 'eloquent',
-            'model'    => FireflyIII\User::class,
+            'driver' => 'eloquent',
+            'model'  => FireflyIII\User::class,
         ],
         'remote_user_provider' => [
             'driver' => 'remote_user_provider',

@@ -51,6 +51,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 use FireflyIII\Support\Twig\AmountFormat;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Rule;
@@ -78,15 +79,15 @@ use TwigBridge\Extension\Loader\Globals;
 return [
 
     'twig' => [
-        'extension' => 'twig',
-        'environment' => [
-            'debug' => env('APP_DEBUG', false),
-            'charset' => 'utf-8',
-            'cache' => null,
-            'auto_reload' => true,
+        'extension'    => 'twig',
+        'environment'  => [
+            'debug'            => env('APP_DEBUG', false),
+            'charset'          => 'utf-8',
+            'cache'            => null,
+            'auto_reload'      => true,
             'strict_variables' => false,
-            'autoescape' => 'html',
-            'optimizations' => -1,
+            'autoescape'       => 'html',
+            'optimizations'    => -1,
         ],
         /*
         |--------------------------------------------------------------------------
@@ -110,7 +111,7 @@ return [
         | NOTE: these will be overwritten if you pass data into the view with the same key.
         |
         */
-        'globals' => [],
+        'globals'      => [],
     ],
 
     'extensions' => [
@@ -125,7 +126,7 @@ return [
         | `Twig\Extension\DebugExtension` is enabled automatically if twig.debug is TRUE.
         |
         */
-        'enabled' => [
+        'enabled'   => [
             Facades::class,
             Filters::class,
             Functions::class,
@@ -175,7 +176,7 @@ return [
         | in order to be marked as safe.
         |
         */
-        'facades' => [
+        'facades'   => [
             'Breadcrumbs'   => [
                 'is_safe' => [
                     'render',
@@ -194,7 +195,7 @@ return [
             'ExpandedForm'  => [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file', 'staticText',
-                    'password', 'nonSelectableAmount', 'number', 'amountNoCurrency', 'percentage','objectGroup'
+                    'password', 'nonSelectableAmount', 'number', 'amountNoCurrency', 'percentage', 'objectGroup',
 
                 ],
             ],
@@ -283,7 +284,7 @@ return [
         | </code>
         |
         */
-        'filters' => [
+        'filters'   => [
             'get' => 'data_get',
         ],
     ],

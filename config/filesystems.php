@@ -52,35 +52,35 @@ return [
     */
 
     'disks' => [
-        'local'    => [
+        'local'     => [
             'driver' => 'local',
             'root'   => storage_path('app'),
         ],
 
         // local storage configuration for upload and export:
-        'upload'   => [
+        'upload'    => [
             'driver' => 'local',
             'root'   => storage_path('upload'),
         ],
-        'export'   => [
+        'export'    => [
             'driver' => 'local',
             'root'   => storage_path('export'),
         ],
 
         // various other paths:
-        'database' => [
+        'database'  => [
             'driver' => 'local',
             'root'   => storage_path('database'),
         ],
-        'seeds'    => [
+        'seeds'     => [
             'driver' => 'local',
             'root'   => base_path('resources/seeds'),
         ],
-        'stubs'    => [
+        'stubs'     => [
             'driver' => 'local',
             'root'   => base_path('resources/stubs'),
         ],
-        'resources'    => [
+        'resources' => [
             'driver' => 'local',
             'root'   => base_path('resources'),
         ],
