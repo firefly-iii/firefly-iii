@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "vi",
@@ -36,31 +16,43 @@ export default {
         "skip": "B\u1ecf qua",
         "date": "Ng\u00e0y"
     },
+    "list": {
+        "name": "T\u00ean",
+        "account_number": "Account number",
+        "currentBalance": "S\u1ed1 d\u01b0 hi\u1ec7n t\u1ea1i",
+        "lastActivity": "Ho\u1ea1t \u0111\u1ed9ng cu\u1ed1i c\u00f9ng",
+        "active": "\u0110ang ho\u1ea1t \u0111\u1ed9ng?"
+    },
     "breadcrumbs": {
-        "placeholder": "[Placeholder]",
-        "budgets": "Budgets",
-        "subscriptions": "Subscriptions",
-        "transactions": "Transactions",
-        "title_expenses": "Expenses",
-        "title_withdrawal": "Expenses",
-        "title_revenue": "Revenue \/ income",
-        "title_deposit": "Revenue \/ income",
-        "title_transfer": "Transfers",
-        "title_transfers": "Transfers",
-        "asset_accounts": "Asset accounts",
-        "expense_accounts": "Expense accounts",
-        "revenue_accounts": "Revenue accounts",
-        "liabilities_accounts": "Liabilities"
+        "placeholder": "Gi\u1eef ch\u1ed7",
+        "budgets": "Ng\u00e2n s\u00e1ch",
+        "subscriptions": "\u0110\u0103ng k\u00fd nh\u1eadn th\u00f4ng tin",
+        "transactions": "Giao d\u1ecbch",
+        "title_expenses": "Chi ph\u00ed",
+        "title_withdrawal": "Chi ph\u00ed",
+        "title_revenue": "Thu nh\u1eadp doanh thu",
+        "title_deposit": "Thu nh\u1eadp doanh thu",
+        "title_transfer": "Chuy\u1ec3n",
+        "title_transfers": "Chuy\u1ec3n",
+        "asset_accounts": "T\u00e0i kho\u1ea3n t\u00e0i s\u1ea3n",
+        "expense_accounts": "T\u00e0i kho\u1ea3n chi ph\u00ed",
+        "revenue_accounts": "T\u00e0i kho\u1ea3n thu nh\u1eadp",
+        "liabilities_accounts": "N\u1ee3 ph\u1ea3i tr\u1ea3"
     },
     "firefly": {
+        "actions": "H\u00e0nh \u0111\u1ed9ng",
+        "edit": "S\u1eeda",
+        "delete": "X\u00f3a",
+        "reconcile": "\u0110\u1ed1i chi\u1ebfu",
+        "create_new_asset": "T\u1ea1o t\u00e0i kho\u1ea3n m\u1edbi",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",
-        "rule_trigger_source_account_contains_choice": "Source account name contains..",
-        "rule_trigger_account_id_choice": "Account ID (source\/destination) is exactly..",
+        "rule_trigger_source_account_contains_choice": "T\u00ean t\u00e0i kho\u1ea3n ch\u1ee9a..",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "Source account ID is exactly..",
         "rule_trigger_destination_account_id_choice": "Destination account ID is exactly..",
-        "rule_trigger_account_is_cash_choice": "Account (source\/destination) is (cash) account",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "Source account is (cash) account",
         "rule_trigger_destination_is_cash_choice": "Destination account is (cash) account",
         "rule_trigger_source_account_nr_starts_choice": "Source account number \/ IBAN starts with..",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "Giao d\u1ecbch thu\u1ed9c lo\u1ea1i..",
         "rule_trigger_category_is_choice": "Danh m\u1ee5c l\u00e0..",
         "rule_trigger_amount_less_choice": "S\u1ed1 ti\u1ec1n \u00edt h\u01a1n..",
-        "rule_trigger_amount_exactly_choice": "S\u1ed1 ti\u1ec1n l\u00e0..",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "S\u1ed1 ti\u1ec1n nhi\u1ec1u h\u01a1n..",
         "rule_trigger_description_starts_choice": "M\u00f4 t\u1ea3 b\u1eaft \u0111\u1ea7u b\u1eb1ng..",
         "rule_trigger_description_ends_choice": "M\u00f4 t\u1ea3 k\u1ebft th\u00fac b\u1eb1ng..",
         "rule_trigger_description_contains_choice": "M\u00f4 t\u1ea3 c\u00f3 ch\u1ee9a..",
         "rule_trigger_description_is_choice": "M\u00f4 t\u1ea3 l\u00e0..",
-        "rule_trigger_date_is_choice": "Ng\u00e0y giao d\u1ecbch..",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "Ng\u00e0y giao d\u1ecbch tr\u01b0\u1edbc..",
         "rule_trigger_date_after_choice": "Ng\u00e0y giao d\u1ecbch sau..",
-        "rule_trigger_created_on_choice": "Giao d\u1ecbch b\u1ecb t\u1eeb ch\u1ed1i..",
-        "rule_trigger_updated_on_choice": "Giao d\u1ecbch \u0111\u01b0\u1ee3c c\u1eadp nh\u1eadt l\u1ea7n cu\u1ed1i v\u00e0o..",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "Ng\u00e2n s\u00e1ch l\u00e0..",
-        "rule_trigger_tag_is_choice": "Nh\u00e3n l\u00e0..",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "Ti\u1ec1n t\u1ec7 giao d\u1ecbch l\u00e0..",
         "rule_trigger_foreign_currency_is_choice": "Giao d\u1ecbch ngo\u1ea1i t\u1ec7 l\u00e0..",
         "rule_trigger_has_attachments_choice": "C\u00f3 \u00edt nh\u1ea5t nhi\u1ec1u t\u1ec7p \u0111\u00ednh k\u00e8m n\u00e0y",
@@ -104,13 +96,13 @@ export default {
         "rule_trigger_has_any_tag_choice": "C\u00f3 m\u1ed9t ho\u1eb7c nhi\u1ec1u nh\u00e3n(b\u1ea5t k\u1ef3)",
         "rule_trigger_any_notes_choice": "C\u00f3 (b\u1ea5t k\u1ef3) ghi ch\u00fa",
         "rule_trigger_no_notes_choice": "Kh\u00f4ng c\u00f3 ghi ch\u00fa",
-        "rule_trigger_notes_are_choice": "Ghi ch\u00fa l\u00e0..",
-        "rule_trigger_notes_contain_choice": "Ghi ch\u00fa c\u00f3 ch\u1ee9a..",
-        "rule_trigger_notes_start_choice": "Ghi ch\u00fa b\u1eaft \u0111\u1ea7u b\u1eb1ng..",
-        "rule_trigger_notes_end_choice": "Ghi ch\u00fa k\u1ebft th\u00fac b\u1eb1ng..",
-        "rule_trigger_bill_is_choice": "Bill is..",
-        "rule_trigger_external_id_choice": "ID b\u00ean ngo\u00e0i l\u00e0..",
-        "rule_trigger_internal_reference_choice": "Internal reference is..",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notes end with..",
+        "rule_trigger_bill_is_choice": "H\u00f3a \u0111\u01a1n l\u00e0..",
+        "rule_trigger_external_id_is_choice": "External ID is..",
+        "rule_trigger_internal_reference_is_choice": "Internal reference is..",
         "rule_trigger_journal_id_choice": "Transaction journal ID is..",
         "rule_trigger_any_external_url_choice": "Transaction has an external URL",
         "rule_trigger_no_external_url_choice": "Transaction has no external URL",
@@ -190,10 +182,10 @@ export default {
         "bills_to_pay": "H\u00f3a \u0111\u01a1n ph\u1ea3i tr\u1ea3",
         "left_to_spend": "C\u00f2n l\u1ea1i \u0111\u1ec3 chi ti\u00eau",
         "net_worth": "T\u00e0i s\u1ea3n th\u1ef1c",
-        "pref_last365": "Last year",
-        "pref_last90": "Last 90 days",
-        "pref_last30": "Last 30 days",
-        "pref_last7": "Last 7 days",
+        "pref_last365": "N\u0103m tr\u01b0\u1edbc",
+        "pref_last90": "90 ng\u00e0y cu\u1ed1i",
+        "pref_last30": "30 ng\u00e0y cu\u1ed1i",
+        "pref_last7": "7 ng\u00e0y tr\u01b0\u1edbc",
         "pref_YTD": "Year to date",
         "pref_QTD": "Quarter to date",
         "pref_MTD": "Month to date"

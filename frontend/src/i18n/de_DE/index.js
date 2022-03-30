@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "de",
@@ -36,31 +16,43 @@ export default {
         "skip": "\u00dcberspringen",
         "date": "Datum"
     },
+    "list": {
+        "name": "Name",
+        "account_number": "Account number",
+        "currentBalance": "Aktueller Kontostand",
+        "lastActivity": "Letzte Aktivit\u00e4t",
+        "active": "Aktiv?"
+    },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
-        "budgets": "Budgets",
-        "subscriptions": "Subscriptions",
-        "transactions": "Transactions",
-        "title_expenses": "Expenses",
-        "title_withdrawal": "Expenses",
-        "title_revenue": "Revenue \/ income",
-        "title_deposit": "Revenue \/ income",
-        "title_transfer": "Transfers",
-        "title_transfers": "Transfers",
+        "budgets": "Kostenrahmen",
+        "subscriptions": "Abonnements",
+        "transactions": "Buchungen",
+        "title_expenses": "Ausgaben",
+        "title_withdrawal": "Ausgaben",
+        "title_revenue": "Einnahmen \/ Einkommen",
+        "title_deposit": "Einnahmen \/ Einkommen",
+        "title_transfer": "Umbuchungen",
+        "title_transfers": "Umbuchungen",
         "asset_accounts": "Bestandskonten",
         "expense_accounts": "Ausgabekonten",
         "revenue_accounts": "Einnahmenkonten",
         "liabilities_accounts": "Verbindlichkeiten"
     },
     "firefly": {
+        "actions": "Aktionen",
+        "edit": "Bearbeiten",
+        "delete": "L\u00f6schen",
+        "reconcile": "Abgleichen",
+        "create_new_asset": "Neues Bestandskonto erstellen",
         "rule_trigger_source_account_starts_choice": "Name des Quellkontos beginnt mit..",
         "rule_trigger_source_account_ends_choice": "Quellkonto-Name endet mit..",
         "rule_trigger_source_account_is_choice": "Quellkonto-Name lautet..",
         "rule_trigger_source_account_contains_choice": "Quellkonto-Name enh\u00e4lt..",
-        "rule_trigger_account_id_choice": "Account ID (Quelle\/Ziel) ist genau..",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "Quellkonto ID ist genau..",
         "rule_trigger_destination_account_id_choice": "Zielkonto ID ist genau..",
-        "rule_trigger_account_is_cash_choice": "Konto (Quelle\/Ziel) ist (bar)",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "Quellkonto ist (bar)",
         "rule_trigger_destination_is_cash_choice": "Zielkonto ist (bar)",
         "rule_trigger_source_account_nr_starts_choice": "Quellkontonummer\/IBAN beginnt mit..",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "Buchung ist vom Typ..",
         "rule_trigger_category_is_choice": "Kategorie ist..",
         "rule_trigger_amount_less_choice": "Betrag ist geringer als..",
-        "rule_trigger_amount_exactly_choice": "Betrag ist..",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "Betrag ist mehr als..",
         "rule_trigger_description_starts_choice": "Beschreibung beginnt mit..",
         "rule_trigger_description_ends_choice": "Beschreibung endet mit..",
         "rule_trigger_description_contains_choice": "Beschreibung enth\u00e4lt..",
         "rule_trigger_description_is_choice": "Beschreibung ist..",
-        "rule_trigger_date_is_choice": "Buchungsdatum ist \u2026",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "Buchungsdatum ist vor \u2026",
         "rule_trigger_date_after_choice": "Buchungsdatum ist nach \u2026",
-        "rule_trigger_created_on_choice": "Buchungsdatum ist..",
-        "rule_trigger_updated_on_choice": "Buchung zuletzt bearbeitet am..",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "Budget ist..",
-        "rule_trigger_tag_is_choice": "(Ein) Schlagwort ist \u2026",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "Buchungsw\u00e4hrung ist \u2026",
         "rule_trigger_foreign_currency_is_choice": "Fremdw\u00e4hrung der Buchung ist \u2026",
         "rule_trigger_has_attachments_choice": "Hat mindestens so viele Anh\u00e4nge",
@@ -104,16 +96,16 @@ export default {
         "rule_trigger_has_any_tag_choice": "Enth\u00e4lt einen oder mehrere (beliebige) Schlagw\u00f6rter",
         "rule_trigger_any_notes_choice": "Hat (beliebige) Notizen",
         "rule_trigger_no_notes_choice": "Hat keine Notizen",
-        "rule_trigger_notes_are_choice": "Notizen sind..",
-        "rule_trigger_notes_contain_choice": "Notizen enthalten..",
-        "rule_trigger_notes_start_choice": "Notizen beginnen mit..",
-        "rule_trigger_notes_end_choice": "Notizen enden mit ..",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notizen enden mit..",
         "rule_trigger_bill_is_choice": "Rechnung ist..",
-        "rule_trigger_external_id_choice": "Externe ID ist..",
-        "rule_trigger_internal_reference_choice": "Interne Referenz ist..",
+        "rule_trigger_external_id_is_choice": "Externe ID ist..",
+        "rule_trigger_internal_reference_is_choice": "Interne Referenz ist..",
         "rule_trigger_journal_id_choice": "Transaktions-Journal-ID ist..",
-        "rule_trigger_any_external_url_choice": "Transaction has an external URL",
-        "rule_trigger_no_external_url_choice": "Transaction has no external URL",
+        "rule_trigger_any_external_url_choice": "Buchung hat eine externe URL",
+        "rule_trigger_no_external_url_choice": "Buchung hat keine externe URL",
         "rule_trigger_id_choice": "Buchungskennung lautet \u2026",
         "rule_action_delete_transaction_choice": "Buchung l\u00f6schen (!)",
         "rule_action_set_category_choice": "Kategorie festlegen..",
@@ -157,7 +149,7 @@ export default {
         "asset_accounts": "Bestandskonten",
         "expense_accounts": "Ausgabekonten",
         "liabilities_accounts": "Verbindlichkeiten",
-        "undefined_accounts": "Accounts",
+        "undefined_accounts": "Konten",
         "name": "Name",
         "revenue_accounts": "Einnahmekonten",
         "description": "Beschreibung",

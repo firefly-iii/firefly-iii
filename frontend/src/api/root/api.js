@@ -53,6 +53,12 @@ export default class Api {
     return api.get(url);
   }
 
+  /**
+   * This is a generic method that works for all DELETE operations.
+   *
+   * @param identifier
+   * @returns {Promise<AxiosResponse<any>>}
+   */
   destroy(identifier) {
     let url = this.apiPathId(identifier);
     return api.delete(url);

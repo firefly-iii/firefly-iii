@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "pl",
@@ -36,31 +16,43 @@ export default {
         "skip": "Pomi\u0144",
         "date": "Data"
     },
+    "list": {
+        "name": "Nazwa",
+        "account_number": "Account number",
+        "currentBalance": "Bie\u017c\u0105ce saldo",
+        "lastActivity": "Ostatnia aktywno\u015b\u0107",
+        "active": "Jest aktywny?"
+    },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
-        "budgets": "Budgets",
-        "subscriptions": "Subscriptions",
-        "transactions": "Transactions",
-        "title_expenses": "Expenses",
-        "title_withdrawal": "Expenses",
-        "title_revenue": "Revenue \/ income",
-        "title_deposit": "Revenue \/ income",
-        "title_transfer": "Transfers",
-        "title_transfers": "Transfers",
+        "budgets": "Bud\u017cety",
+        "subscriptions": "Subskrypcje",
+        "transactions": "Transakcje",
+        "title_expenses": "Wydatki",
+        "title_withdrawal": "Wydatki",
+        "title_revenue": "Przychody \/ dochody",
+        "title_deposit": "Przych\u00f3d \/ doch\u00f3d",
+        "title_transfer": "Transfery",
+        "title_transfers": "Transfery",
         "asset_accounts": "Konta aktyw\u00f3w",
         "expense_accounts": "Konta wydatk\u00f3w",
         "revenue_accounts": "Konta przychod\u00f3w",
         "liabilities_accounts": "Zobowi\u0105zania"
     },
     "firefly": {
+        "actions": "Akcje",
+        "edit": "Modyfikuj",
+        "delete": "Usu\u0144",
+        "reconcile": "Uzgodnij",
+        "create_new_asset": "Utw\u00f3rz nowe konto aktyw\u00f3w",
         "rule_trigger_source_account_starts_choice": "Konto \u017ar\u00f3d\u0142owe si\u0119 zaczyna od..",
         "rule_trigger_source_account_ends_choice": "Konto \u017ar\u00f3d\u0142owe ko\u0144czy si\u0119 na..",
         "rule_trigger_source_account_is_choice": "Kontem \u017ar\u00f3d\u0142owym jest..",
         "rule_trigger_source_account_contains_choice": "Nazwa konta \u017ar\u00f3d\u0142owego zawiera..",
-        "rule_trigger_account_id_choice": "ID konta (\u017ar\u00f3d\u0142owego\/docelowego) to dok\u0142adnie..",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "ID konta \u017ar\u00f3d\u0142owego to dok\u0142adnie..",
         "rule_trigger_destination_account_id_choice": "ID konta docelowego to dok\u0142adnie..",
-        "rule_trigger_account_is_cash_choice": "Konto (\u017ar\u00f3d\u0142owe\/docelowe) to konto (got\u00f3wkowe)",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "Konto \u017ar\u00f3d\u0142owe to konto (got\u00f3wkowe)",
         "rule_trigger_destination_is_cash_choice": "Konto docelowe to konto (got\u00f3wkowe)",
         "rule_trigger_source_account_nr_starts_choice": "Numer \/ IBAN konta \u017ar\u00f3d\u0142owego zaczyna si\u0119 od..",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "Transakcja jest typu..",
         "rule_trigger_category_is_choice": "Kategoria to..",
         "rule_trigger_amount_less_choice": "Kwota jest mniejsza ni\u017c..",
-        "rule_trigger_amount_exactly_choice": "Kwota jest r\u00f3wna..",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "Kwota jest wi\u0119ksza ni\u017c..",
         "rule_trigger_description_starts_choice": "Opis zaczyna si\u0119 od..",
         "rule_trigger_description_ends_choice": "Opis ko\u0144czy si\u0119 na..",
         "rule_trigger_description_contains_choice": "Opis zawiera..",
         "rule_trigger_description_is_choice": "Opis to..",
-        "rule_trigger_date_is_choice": "Daty transakcji to..",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "Data transakcji jest przed..",
         "rule_trigger_date_after_choice": "Data transakcji jest po..",
-        "rule_trigger_created_on_choice": "Transaction was made on..",
-        "rule_trigger_updated_on_choice": "Transakcja edytowana..",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "Bud\u017cet to..",
-        "rule_trigger_tag_is_choice": "Tag to..",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "Waluta transakcji to..",
         "rule_trigger_foreign_currency_is_choice": "Waluta obca transakcji to..",
         "rule_trigger_has_attachments_choice": "Ma co najmniej podan\u0105 liczb\u0119 za\u0142\u0105cznik\u00f3w",
@@ -104,13 +96,13 @@ export default {
         "rule_trigger_has_any_tag_choice": "Ma (dowolny) tag (lub kilka)",
         "rule_trigger_any_notes_choice": "Ma (dowolne) notatki",
         "rule_trigger_no_notes_choice": "Brak notatek",
-        "rule_trigger_notes_are_choice": "Notatki to..",
-        "rule_trigger_notes_contain_choice": "Notatki zawieraj\u0105..",
-        "rule_trigger_notes_start_choice": "Notatki zaczynaj\u0105 si\u0119 od..",
-        "rule_trigger_notes_end_choice": "Notatki ko\u0144cz\u0105 si\u0119 na..",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notes end with..",
         "rule_trigger_bill_is_choice": "Rachunek to..",
-        "rule_trigger_external_id_choice": "Zewn\u0119trzne ID to..",
-        "rule_trigger_internal_reference_choice": "Wewn\u0119trzne odwo\u0142anie to..",
+        "rule_trigger_external_id_is_choice": "External ID is..",
+        "rule_trigger_internal_reference_is_choice": "Internal reference is..",
         "rule_trigger_journal_id_choice": "ID dziennika transakcji to..",
         "rule_trigger_any_external_url_choice": "Transakcja ma zewn\u0119trzny adres URL",
         "rule_trigger_no_external_url_choice": "Transakcja nie ma zewn\u0119trznego adresu URL",
@@ -157,7 +149,7 @@ export default {
         "asset_accounts": "Konta aktyw\u00f3w",
         "expense_accounts": "Konta wydatk\u00f3w",
         "liabilities_accounts": "Zobowi\u0105zania",
-        "undefined_accounts": "Accounts",
+        "undefined_accounts": "Konta",
         "name": "Nazwa",
         "revenue_accounts": "Konta przychod\u00f3w",
         "description": "Opis",

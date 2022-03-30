@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "bg",
@@ -36,6 +16,13 @@ export default {
         "skip": "\u041f\u0440\u043e\u043f\u0443\u0441\u043d\u0438",
         "date": "\u0414\u0430\u0442\u0430"
     },
+    "list": {
+        "name": "\u0418\u043c\u0435",
+        "account_number": "Account number",
+        "currentBalance": "\u0422\u0435\u043a\u0443\u0449 \u0431\u0430\u043b\u0430\u043d\u0441",
+        "lastActivity": "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0430 \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442",
+        "active": "\u0410\u043a\u0442\u0438\u0432\u0435\u043d \u043b\u0438 \u0435?"
+    },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
         "budgets": "Budgets",
@@ -53,14 +40,19 @@ export default {
         "liabilities_accounts": "Liabilities"
     },
     "firefly": {
+        "actions": "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044f",
+        "edit": "\u041f\u0440\u043e\u043c\u0435\u043d\u0438",
+        "delete": "\u0418\u0437\u0442\u0440\u0438\u0439",
+        "reconcile": "\u0421\u044a\u0433\u043b\u0430\u0441\u0443\u0432\u0430\u0439",
+        "create_new_asset": "\u0421\u044a\u0437\u0434\u0430\u0439 \u043d\u043e\u0432\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0437\u0430 \u0430\u043a\u0442\u0438\u0432\u0438",
         "rule_trigger_source_account_starts_choice": "\u0418\u043c\u0435\u0442\u043e \u043d\u0430 \u0440\u0430\u0437\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0437\u0430\u043f\u043e\u0447\u0432\u0430 \u0441..",
         "rule_trigger_source_account_ends_choice": "\u0418\u043c\u0435\u0442\u043e \u043d\u0430 \u0440\u0430\u0437\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0437\u0430\u0432\u044a\u0440\u0448\u0432\u0430 \u0441..",
         "rule_trigger_source_account_is_choice": "\u0418\u043c\u0435\u0442\u043e \u043d\u0430 \u0440\u0430\u0437\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0435..",
         "rule_trigger_source_account_contains_choice": "\u0418\u043c\u0435\u0442\u043e \u043d\u0430 \u0440\u0430\u0437\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0441\u044a\u0434\u044a\u0440\u0436\u0430..",
-        "rule_trigger_account_id_choice": "ID \u043d\u0430 \u0441\u043c\u0435\u0442\u043a\u0430\u0442\u0430 (\u0440\u0430\u0437\u0445\u043e\u0434\u043d\u0430\/\u043f\u0440\u0438\u0445\u043e\u0434\u043d\u0430) \u0435 \u0442\u043e\u0447\u043d\u043e..",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "ID \u043d\u0430 \u0440\u0430\u0437\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0435 \u0442\u043e\u0447\u043d\u043e..",
         "rule_trigger_destination_account_id_choice": "ID \u043d\u0430 \u043f\u0440\u0438\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0435 \u0442\u043e\u0447\u043d\u043e..",
-        "rule_trigger_account_is_cash_choice": "\u0421\u043c\u0435\u0442\u043a\u0430\u0442\u0430 (\u0440\u0430\u0437\u0445\u043e\u0434\u043d\u0430\/\u043f\u0440\u0438\u0445\u043e\u0434\u043d\u0430) \u0435 \u0441\u043c\u0435\u0442\u043a\u0430 (\u0432 \u0431\u0440\u043e\u0439)",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "\u0420\u0430\u0437\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0435 \u0441\u043c\u0435\u0442\u043a\u0430 (\u0432 \u0431\u0440\u043e\u0439)",
         "rule_trigger_destination_is_cash_choice": "\u041f\u0440\u0438\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0435 \u0441\u043c\u0435\u0442\u043a\u0430 (\u0432 \u0431\u0440\u043e\u0439)",
         "rule_trigger_source_account_nr_starts_choice": "\u041d\u043e\u043c\u0435\u0440\u044a\u0442 \u043d\u0430 \u0440\u0430\u0437\u0445\u043e\u0434\u043d\u0430\u0442\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \/ IBAN \u0437\u0430\u043f\u043e\u0447\u0432\u0430 \u0441..",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "\u0422\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435 \u043e\u0442 \u0442\u0438\u043f..",
         "rule_trigger_category_is_choice": "\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f\u0442\u0430 \u0435..",
         "rule_trigger_amount_less_choice": "\u0421\u0443\u043c\u0430\u0442\u0430 \u0435 \u043f\u043e-\u043c\u0430\u043b\u043a\u043e \u043e\u0442..",
-        "rule_trigger_amount_exactly_choice": "\u0421\u0443\u043c\u0430\u0442\u0430 \u0435..",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "\u0421\u0443\u043c\u0430\u0442\u0430 \u0435 \u043f\u043e-\u0433\u043e\u043b\u044f\u043c\u0430 \u043e\u0442..",
         "rule_trigger_description_starts_choice": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435\u0442\u043e \u0437\u0430\u043f\u043e\u0447\u0432\u0430 \u0441..",
         "rule_trigger_description_ends_choice": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435\u0442\u043e \u0437\u0430\u0432\u044a\u0440\u0448\u0432\u0430 \u0441..",
         "rule_trigger_description_contains_choice": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435\u0442\u043e \u0441\u044a\u0434\u044a\u0440\u0436\u0430..",
         "rule_trigger_description_is_choice": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435\u0442\u043e \u0435..",
-        "rule_trigger_date_is_choice": "\u0414\u0430\u0442\u0430\u0442\u0430 \u043d\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435..",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "\u0414\u0430\u0442\u0430\u0442\u0430 \u043d\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435 \u043f\u0440\u0435\u0434\u0438..",
         "rule_trigger_date_after_choice": "\u0414\u0430\u0442\u0430\u0442\u0430 \u043d\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435 \u0441\u043b\u0435\u0434..",
-        "rule_trigger_created_on_choice": "\u0422\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435 \u043d\u0430\u043f\u0440\u0430\u0432\u0435\u043d\u0430 \u043d\u0430..",
-        "rule_trigger_updated_on_choice": "\u0422\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u043e \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u0430\u043d\u0430 \u043d\u0430..",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "\u0411\u044e\u0434\u0436\u0435\u0442\u044a\u0442 \u0435..",
-        "rule_trigger_tag_is_choice": "\u0415\u0442\u0438\u043a\u0435\u0442(\u044a\u0442) \u0435..",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "\u0412\u0430\u043b\u0443\u0442\u0430\u0442\u0430 \u043d\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435..",
         "rule_trigger_foreign_currency_is_choice": "\u0427\u0443\u0436\u0434\u0430\u0442\u0430 \u0432\u0430\u043b\u0443\u0442\u0430 \u043d\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435..",
         "rule_trigger_has_attachments_choice": "\u0418\u043c\u0430 \u043f\u043e\u043d\u0435 \u0442\u043e\u043b\u043a\u043e\u0432\u0430 \u043f\u0440\u0438\u043a\u0430\u0447\u0435\u043d\u0438 \u0444\u0430\u0439\u043b\u043e\u0432\u0435",
@@ -104,13 +96,13 @@ export default {
         "rule_trigger_has_any_tag_choice": "\u0418\u043c\u0430 \u0435\u0434\u0438\u043d \u0438\u043b\u0438 \u043f\u043e\u0432\u0435\u0447\u0435 (\u043d\u044f\u043a\u0430\u043a\u0432\u0438) \u0435\u0442\u0438\u043a\u0435\u0442\u0438",
         "rule_trigger_any_notes_choice": "\u0418\u043c\u0430 (\u043d\u044f\u043a\u0430\u043a\u0432\u0438) \u0431\u0435\u043b\u0435\u0436\u043a\u0438",
         "rule_trigger_no_notes_choice": "\u041d\u044f\u043c\u0430 \u0431\u0435\u043b\u0435\u0436\u043a\u0438",
-        "rule_trigger_notes_are_choice": "\u0411\u0435\u043b\u0435\u0436\u043a\u0438\u0442\u0435 \u0441\u0430..",
-        "rule_trigger_notes_contain_choice": "\u0411\u0435\u043b\u0435\u0436\u043a\u0438\u0442\u0435 \u0441\u044a\u0434\u044a\u0440\u0436\u0430\u0442..",
-        "rule_trigger_notes_start_choice": "\u0411\u0435\u043b\u0435\u0436\u043a\u0438\u0442\u0435 \u0437\u0430\u043f\u043e\u0447\u0432\u0430\u0442 \u0441..",
-        "rule_trigger_notes_end_choice": "\u0411\u0435\u043b\u0435\u0436\u043a\u0438\u0442\u0435 \u0437\u0430\u0432\u044a\u0440\u0448\u0432\u0430\u0442 \u0441..",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notes end with..",
         "rule_trigger_bill_is_choice": "\u0421\u043c\u0435\u0442\u043a\u0430\u0442\u0430 \u0435..",
-        "rule_trigger_external_id_choice": "\u0412\u044a\u043d\u0448\u043d\u043e\u0442\u043e ID \u0435..",
-        "rule_trigger_internal_reference_choice": "\u0412\u044a\u0442\u0440\u0435\u0448\u043d\u0430\u0442\u0430 \u0440\u0435\u0444\u0435\u0440\u0435\u043d\u0446\u0438\u044f \u0435..",
+        "rule_trigger_external_id_is_choice": "External ID is..",
+        "rule_trigger_internal_reference_is_choice": "Internal reference is..",
         "rule_trigger_journal_id_choice": "ID \u043d\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f\u0442\u0430 \u0435..",
         "rule_trigger_any_external_url_choice": "Transaction has an external URL",
         "rule_trigger_no_external_url_choice": "Transaction has no external URL",

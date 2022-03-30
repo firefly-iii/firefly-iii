@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "es",
@@ -36,31 +16,43 @@ export default {
         "skip": "Saltar",
         "date": "Fecha"
     },
+    "list": {
+        "name": "Nombre",
+        "account_number": "Account number",
+        "currentBalance": "Balance actual",
+        "lastActivity": "Actividad m\u00e1s reciente",
+        "active": "\u00bfEst\u00e1 Activo?"
+    },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
-        "budgets": "Budgets",
-        "subscriptions": "Subscriptions",
-        "transactions": "Transactions",
-        "title_expenses": "Expenses",
-        "title_withdrawal": "Expenses",
-        "title_revenue": "Revenue \/ income",
-        "title_deposit": "Revenue \/ income",
-        "title_transfer": "Transfers",
-        "title_transfers": "Transfers",
+        "budgets": "Presupuestos",
+        "subscriptions": "Suscripciones",
+        "transactions": "Transacciones",
+        "title_expenses": "Gastos",
+        "title_withdrawal": "Gastos",
+        "title_revenue": "Ingresos \/ salario",
+        "title_deposit": "Ingresos \/ salario",
+        "title_transfer": "Transferencias",
+        "title_transfers": "Transferencias",
         "asset_accounts": "Cuentas de activos",
         "expense_accounts": "Cuentas de gastos",
         "revenue_accounts": "Cuentas de ingresos",
         "liabilities_accounts": "Pasivos"
     },
     "firefly": {
+        "actions": "Acciones",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "reconcile": "Reconciliar",
+        "create_new_asset": "Crear nueva cuenta de activos",
         "rule_trigger_source_account_starts_choice": "El nombre de la cuenta de origen comienza con..",
         "rule_trigger_source_account_ends_choice": "El nombre de la cuenta de origen termina con..",
         "rule_trigger_source_account_is_choice": "El nombre de la cuenta origen es..",
         "rule_trigger_source_account_contains_choice": "El nombre de cuenta de origen contiene..",
-        "rule_trigger_account_id_choice": "El ID de cuenta (origen\/destino) es exactamente..",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "El ID de la cuenta de origen es exactamente..",
         "rule_trigger_destination_account_id_choice": "El ID de la cuenta de destino es exactamente..",
-        "rule_trigger_account_is_cash_choice": "La cuenta (origen\/destino) es de efectivo",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "La cuenta de origen es de efectivo",
         "rule_trigger_destination_is_cash_choice": "La cuenta de destino es de efectivo",
         "rule_trigger_source_account_nr_starts_choice": "N\u00famero de la cuenta de origen \/ IBAN comienza con..",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "Transacci\u00f3n es del tipo..",
         "rule_trigger_category_is_choice": "Categor\u00eda es..",
         "rule_trigger_amount_less_choice": "Cantidad es menos de..",
-        "rule_trigger_amount_exactly_choice": "Cantidad es..",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "Cantidad es mas de..",
         "rule_trigger_description_starts_choice": "Descripci\u00f3n comienza con..",
         "rule_trigger_description_ends_choice": "Descripci\u00f3n termina con..",
         "rule_trigger_description_contains_choice": "Descripci\u00f3n contiene..",
         "rule_trigger_description_is_choice": "Descripci\u00f3n es..",
-        "rule_trigger_date_is_choice": "Fecha de la transacci\u00f3n es..",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "La fecha de la transacci\u00f3n es anterior a..",
         "rule_trigger_date_after_choice": "La fecha de la transacci\u00f3n es despu\u00e9s de..",
-        "rule_trigger_created_on_choice": "La transacci\u00f3n se realiz\u00f3 el..",
-        "rule_trigger_updated_on_choice": "La transacci\u00f3n fue editada por \u00faltima vez el..",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "Presupuesto es..",
-        "rule_trigger_tag_is_choice": "(una) etiqueta es..",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "La moneda de la transacci\u00f3n es..",
         "rule_trigger_foreign_currency_is_choice": "La transacci\u00f3n en moneda extranjera es..",
         "rule_trigger_has_attachments_choice": "Tiene al menos tantos archivos adjuntos",
@@ -104,13 +96,13 @@ export default {
         "rule_trigger_has_any_tag_choice": "Tiene una o mas (cualquier) etiquetas",
         "rule_trigger_any_notes_choice": "Tiene (cualquier) notas",
         "rule_trigger_no_notes_choice": "No tiene notas",
-        "rule_trigger_notes_are_choice": "Notas son..",
-        "rule_trigger_notes_contain_choice": "Las notas contienen..",
-        "rule_trigger_notes_start_choice": "Las notas comienzan con..",
-        "rule_trigger_notes_end_choice": "Las notas terminan con..",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notes end with..",
         "rule_trigger_bill_is_choice": "La factura es..",
-        "rule_trigger_external_id_choice": "El ID externo es..",
-        "rule_trigger_internal_reference_choice": "La referencia interna es..",
+        "rule_trigger_external_id_is_choice": "External ID is..",
+        "rule_trigger_internal_reference_is_choice": "Internal reference is..",
         "rule_trigger_journal_id_choice": "El ID del diario de transacciones es..",
         "rule_trigger_any_external_url_choice": "La transacci\u00f3n tiene una URL externa",
         "rule_trigger_no_external_url_choice": "La transacci\u00f3n no tiene URL externa",
@@ -157,7 +149,7 @@ export default {
         "asset_accounts": "Cuenta de activos",
         "expense_accounts": "Cuentas de gastos",
         "liabilities_accounts": "Pasivos",
-        "undefined_accounts": "Accounts",
+        "undefined_accounts": "Cuentas",
         "name": "Nombre",
         "revenue_accounts": "Cuentas de ingresos",
         "description": "Descripci\u00f3n",

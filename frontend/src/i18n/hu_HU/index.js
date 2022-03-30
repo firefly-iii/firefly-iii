@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "hu",
@@ -36,6 +16,13 @@ export default {
         "skip": "Kihagy\u00e1s",
         "date": "D\u00e1tum"
     },
+    "list": {
+        "name": "N\u00e9v",
+        "account_number": "Account number",
+        "currentBalance": "Aktu\u00e1lis egyenleg",
+        "lastActivity": "Utols\u00f3 aktivit\u00e1s",
+        "active": "Akt\u00edv?"
+    },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
         "budgets": "Budgets",
@@ -53,14 +40,19 @@ export default {
         "liabilities_accounts": "Liabilities"
     },
     "firefly": {
+        "actions": "M\u0171veletek",
+        "edit": "Szerkeszt\u00e9s",
+        "delete": "T\u00f6rl\u00e9s",
+        "reconcile": "Egyeztet\u00e9s",
+        "create_new_asset": "\u00daj eszk\u00f6zsz\u00e1mla l\u00e9trehoz\u00e1sa",
         "rule_trigger_source_account_starts_choice": "Forr\u00e1ssz\u00e1mla nev\u00e9nek eleje..",
         "rule_trigger_source_account_ends_choice": "Forr\u00e1ssz\u00e1mla nev\u00e9nek v\u00e9ge..",
         "rule_trigger_source_account_is_choice": "A forr\u00e1ssz\u00e1mla neve..",
         "rule_trigger_source_account_contains_choice": "Forr\u00e1ssz\u00e1mla neve tartalmazza..",
-        "rule_trigger_account_id_choice": "Sz\u00e1mla ID (forr\u00e1s\/c\u00e9l) pontosan..",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "Forr\u00e1ssz\u00e1mla ID pontosan..",
         "rule_trigger_destination_account_id_choice": "C\u00e9lsz\u00e1mla ID pontosan..",
-        "rule_trigger_account_is_cash_choice": "Sz\u00e1mla (forr\u00e1s\/c\u00e9l) egy k\u00e9szp\u00e9nz sz\u00e1mla",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "Forr\u00e1ssz\u00e1mla egy k\u00e9szp\u00e9nz sz\u00e1mla",
         "rule_trigger_destination_is_cash_choice": "C\u00e9lsz\u00e1mla egy k\u00e9szp\u00e9nz sz\u00e1mla",
         "rule_trigger_source_account_nr_starts_choice": "Forr\u00e1ssz\u00e1mla sz\u00e1mlasz\u00e1ma \/ IBAN eleje..",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "A tranzakci\u00f3 t\u00edpusa..",
         "rule_trigger_category_is_choice": "A kateg\u00f3ria..",
         "rule_trigger_amount_less_choice": "\u00d6sszeg kevesebb mint..",
-        "rule_trigger_amount_exactly_choice": "Az \u00f6sszeg pontosan..",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "\u00d6sszeg t\u00f6bb, mint..",
         "rule_trigger_description_starts_choice": "Le\u00edr\u00e1s eleje..",
         "rule_trigger_description_ends_choice": "Le\u00edr\u00e1s v\u00e9ge..",
         "rule_trigger_description_contains_choice": "A le\u00edr\u00e1s tartalmazza..",
         "rule_trigger_description_is_choice": "A le\u00edr\u00e1s pontosan..",
-        "rule_trigger_date_is_choice": "Tranzakci\u00f3 d\u00e1tuma..",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "Tranzakci\u00f3 d\u00e1tuma kor\u00e1bbi, mint..",
         "rule_trigger_date_after_choice": "Tranzakci\u00f3 d\u00e1tuma k\u00e9s\u0151bbi, mint..",
-        "rule_trigger_created_on_choice": "Tranzakci\u00f3 l\u00e9trehozva..",
-        "rule_trigger_updated_on_choice": "Tranzakci\u00f3 utolj\u00e1ra m\u00f3dos\u00edtva..",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "A k\u00f6lts\u00e9gkeret..",
-        "rule_trigger_tag_is_choice": "A c\u00edmke..",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "A tranzakci\u00f3 p\u00e9nzneme..",
         "rule_trigger_foreign_currency_is_choice": "Transaction foreign currency is..",
         "rule_trigger_has_attachments_choice": "Legal\u00e1bb ennyi mell\u00e9klete van",
@@ -104,13 +96,13 @@ export default {
         "rule_trigger_has_any_tag_choice": "Van legal\u00e1bb egy c\u00edmk\u00e9je",
         "rule_trigger_any_notes_choice": "Van megjegyz\u00e9se",
         "rule_trigger_no_notes_choice": "Nincsenek megjegyz\u00e9sei",
-        "rule_trigger_notes_are_choice": "A megjegyz\u00e9sek..",
-        "rule_trigger_notes_contain_choice": "Jegyzetek tartalmazz\u00e1k..",
-        "rule_trigger_notes_start_choice": "Megjegyz\u00e9sek kezdet\u00e9n..",
-        "rule_trigger_notes_end_choice": "Megjegyz\u00e9sek a v\u00e9g\u00e9n..",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notes end with..",
         "rule_trigger_bill_is_choice": "A sz\u00e1mla..",
-        "rule_trigger_external_id_choice": "K\u00fcls\u0151 ID pontosan..",
-        "rule_trigger_internal_reference_choice": "Internal reference is..",
+        "rule_trigger_external_id_is_choice": "External ID is..",
+        "rule_trigger_internal_reference_is_choice": "Internal reference is..",
         "rule_trigger_journal_id_choice": "Transaction journal ID is..",
         "rule_trigger_any_external_url_choice": "Transaction has an external URL",
         "rule_trigger_no_external_url_choice": "Transaction has no external URL",

@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "it",
@@ -36,31 +16,43 @@ export default {
         "skip": "Salta ogni",
         "date": "Data"
     },
+    "list": {
+        "name": "Nome",
+        "account_number": "Account number",
+        "currentBalance": "Saldo corrente",
+        "lastActivity": "Ultima attivit\u00e0",
+        "active": "Attivo"
+    },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
-        "budgets": "Budgets",
-        "subscriptions": "Subscriptions",
-        "transactions": "Transactions",
-        "title_expenses": "Expenses",
-        "title_withdrawal": "Expenses",
-        "title_revenue": "Revenue \/ income",
-        "title_deposit": "Revenue \/ income",
-        "title_transfer": "Transfers",
-        "title_transfers": "Transfers",
-        "asset_accounts": "Asset accounts",
-        "expense_accounts": "Expense accounts",
-        "revenue_accounts": "Revenue accounts",
-        "liabilities_accounts": "Liabilities"
+        "budgets": "Budget",
+        "subscriptions": "Abbonamenti",
+        "transactions": "Transazioni",
+        "title_expenses": "Uscite",
+        "title_withdrawal": "Prelievi",
+        "title_revenue": "Redditi \/ entrate",
+        "title_deposit": "Versamenti",
+        "title_transfer": "Trasferimenti",
+        "title_transfers": "Trasferimenti",
+        "asset_accounts": "Conti attivit\u00e0",
+        "expense_accounts": "Conti uscite",
+        "revenue_accounts": "Conti entrate",
+        "liabilities_accounts": "Passivit\u00e0"
     },
     "firefly": {
+        "actions": "Azioni",
+        "edit": "Modifica",
+        "delete": "Elimina",
+        "reconcile": "Riconcilia",
+        "create_new_asset": "Crea un nuovo conto attivit\u00e0",
         "rule_trigger_source_account_starts_choice": "Il nome del conto di origine inizia con..",
         "rule_trigger_source_account_ends_choice": "Il nome del conto di origine termina con..",
         "rule_trigger_source_account_is_choice": "Il nome del conto di origine \u00e8..",
         "rule_trigger_source_account_contains_choice": "Il nome del conto di origine contiene...",
-        "rule_trigger_account_id_choice": "L'ID del conto (sorgente\/destinazione) \u00e8 esattamente...",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "L'ID del conto di origine \u00e8 esattamente...",
         "rule_trigger_destination_account_id_choice": "L'ID del conto di destinazione \u00e8 esattamente...",
-        "rule_trigger_account_is_cash_choice": "Il conto (origine\/destinazione) \u00e8 un conto (in contanti)",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "Il conte di origine \u00e8 un conto (in contanti)",
         "rule_trigger_destination_is_cash_choice": "Il conto destinazione \u00e8 un conto (in contanti)",
         "rule_trigger_source_account_nr_starts_choice": "Il numero del conto di origine \/ l'IBAN inizia con...",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "La transazione \u00e8 di tipo...",
         "rule_trigger_category_is_choice": "La categoria \u00e8...",
         "rule_trigger_amount_less_choice": "L'importo \u00e8 inferiore a...",
-        "rule_trigger_amount_exactly_choice": "L'importo \u00e8...",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "L'importo \u00e8 pi\u00f9 di...",
         "rule_trigger_description_starts_choice": "La descrizione inizia con...",
         "rule_trigger_description_ends_choice": "La descrizione termina con...",
         "rule_trigger_description_contains_choice": "La descrizione contiene...",
         "rule_trigger_description_is_choice": "La descrizione \u00e8...",
-        "rule_trigger_date_is_choice": "La data della transazione \u00e8...",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "La data della transazione \u00e8 antecedente al...",
         "rule_trigger_date_after_choice": "La data della transazione \u00e8 successiva al...",
-        "rule_trigger_created_on_choice": "La transazione \u00e8 stata creata il...",
-        "rule_trigger_updated_on_choice": "La transazione \u00e8 stata modificata l'ultima volta il...",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "Il budget \u00e8...",
-        "rule_trigger_tag_is_choice": "Un tag \u00e8...",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "La valuta della transazione \u00e8...",
         "rule_trigger_foreign_currency_is_choice": "La valuta estera della transazione \u00e8...",
         "rule_trigger_has_attachments_choice": "Ha almeno cos\u00ec tanti allegati",
@@ -104,13 +96,13 @@ export default {
         "rule_trigger_has_any_tag_choice": "Ha una o pi\u00f9 etichette (qualsiasi)",
         "rule_trigger_any_notes_choice": "Ha una (qualsiasi) nota",
         "rule_trigger_no_notes_choice": "Non ha note",
-        "rule_trigger_notes_are_choice": "Le note sono...",
-        "rule_trigger_notes_contain_choice": "Le note contengono...",
-        "rule_trigger_notes_start_choice": "Le note iniziano con...",
-        "rule_trigger_notes_end_choice": "Le note finiscono con...",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notes end with..",
         "rule_trigger_bill_is_choice": "La bollett\u00e0 \u00e8...",
-        "rule_trigger_external_id_choice": "L'ID esterno \u00e8...",
-        "rule_trigger_internal_reference_choice": "Il riferimento interno \u00e8...",
+        "rule_trigger_external_id_is_choice": "External ID is..",
+        "rule_trigger_internal_reference_is_choice": "Internal reference is..",
         "rule_trigger_journal_id_choice": "L'ID journal della transazione \u00e8...",
         "rule_trigger_any_external_url_choice": "La transazione ha un URL esterno",
         "rule_trigger_no_external_url_choice": "La transazione non ha URL esterno",
@@ -157,7 +149,7 @@ export default {
         "asset_accounts": "Conti attivit\u00e0",
         "expense_accounts": "Conti uscite",
         "liabilities_accounts": "Passivit\u00e0",
-        "undefined_accounts": "Accounts",
+        "undefined_accounts": "Conti",
         "name": "Nome",
         "revenue_accounts": "Conti entrate",
         "description": "Descrizione",

@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "nb",
@@ -36,6 +16,13 @@ export default {
         "skip": "Hopp over",
         "date": "Dato"
     },
+    "list": {
+        "name": "Navn",
+        "account_number": "Account number",
+        "currentBalance": "N\u00e5v\u00e6rende saldo",
+        "lastActivity": "Siste aktivitet",
+        "active": "Er aktiv?"
+    },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
         "budgets": "Budgets",
@@ -53,14 +40,19 @@ export default {
         "liabilities_accounts": "Liabilities"
     },
     "firefly": {
+        "actions": "Handlinger",
+        "edit": "Rediger",
+        "delete": "Slett",
+        "reconcile": "Reconcile",
+        "create_new_asset": "Opprett ny aktivakonto",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",
         "rule_trigger_source_account_contains_choice": "Source account name contains..",
-        "rule_trigger_account_id_choice": "Account ID (source\/destination) is exactly..",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "Source account ID is exactly..",
         "rule_trigger_destination_account_id_choice": "Destination account ID is exactly..",
-        "rule_trigger_account_is_cash_choice": "Account (source\/destination) is (cash) account",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "Source account is (cash) account",
         "rule_trigger_destination_is_cash_choice": "Destination account is (cash) account",
         "rule_trigger_source_account_nr_starts_choice": "Source account number \/ IBAN starts with..",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "Transaksjonen er av typen..",
         "rule_trigger_category_is_choice": "Kategori er..",
         "rule_trigger_amount_less_choice": "Bel\u00f8pet er mindre enn..",
-        "rule_trigger_amount_exactly_choice": "Bel\u00f8pet er..",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "Bel\u00f8pet er mer enn..",
         "rule_trigger_description_starts_choice": "Beskrivelse starter med..",
         "rule_trigger_description_ends_choice": "Beskrivelse slutter med..",
         "rule_trigger_description_contains_choice": "Beskrivelse inneholder..",
         "rule_trigger_description_is_choice": "Beskrivelse er..",
-        "rule_trigger_date_is_choice": "Transaction date is..",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "Transaction date is before..",
         "rule_trigger_date_after_choice": "Transaction date is after..",
-        "rule_trigger_created_on_choice": "Transaction was made on..",
-        "rule_trigger_updated_on_choice": "Transaction was last edited on..",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "Budsjett er..",
-        "rule_trigger_tag_is_choice": "(En) tagg er..",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "Transaksjonsvaluta er..",
         "rule_trigger_foreign_currency_is_choice": "Transaction foreign currency is..",
         "rule_trigger_has_attachments_choice": "Har minst s\u00e5 mange vedlegg",
@@ -104,13 +96,13 @@ export default {
         "rule_trigger_has_any_tag_choice": "Har en eller flere tagger",
         "rule_trigger_any_notes_choice": "Har ett eller flere notater",
         "rule_trigger_no_notes_choice": "Har ingen notater",
-        "rule_trigger_notes_are_choice": "Notater er..",
-        "rule_trigger_notes_contain_choice": "Notater inneholder..",
-        "rule_trigger_notes_start_choice": "Notater begynner med..",
-        "rule_trigger_notes_end_choice": "Notat som slutter med..",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notes end with..",
         "rule_trigger_bill_is_choice": "Bill is..",
-        "rule_trigger_external_id_choice": "External ID is..",
-        "rule_trigger_internal_reference_choice": "Internal reference is..",
+        "rule_trigger_external_id_is_choice": "External ID is..",
+        "rule_trigger_internal_reference_is_choice": "Internal reference is..",
         "rule_trigger_journal_id_choice": "Transaction journal ID is..",
         "rule_trigger_any_external_url_choice": "Transaction has an external URL",
         "rule_trigger_no_external_url_choice": "Transaction has no external URL",

@@ -1,23 +1,3 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
 export default {
     "config": {
         "html_language": "ja",
@@ -36,6 +16,13 @@ export default {
         "skip": "\u30b9\u30ad\u30c3\u30d7",
         "date": "\u65e5\u4ed8"
     },
+    "list": {
+        "name": "\u540d\u524d",
+        "account_number": "Account number",
+        "currentBalance": "\u73fe\u5728\u306e\u6b8b\u9ad8",
+        "lastActivity": "\u6700\u7d42\u30a2\u30af\u30c6\u30a3\u30d3\u30c6\u30a3",
+        "active": "\u6709\u52b9?"
+    },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
         "budgets": "Budgets",
@@ -53,14 +40,19 @@ export default {
         "liabilities_accounts": "Liabilities"
     },
     "firefly": {
+        "actions": "\u64cd\u4f5c",
+        "edit": "\u7de8\u96c6",
+        "delete": "\u524a\u9664",
+        "reconcile": "\u7a81\u5408",
+        "create_new_asset": "\u652f\u51fa\u30a2\u30ab\u30a6\u30f3\u30c8\uff08\u8cc7\u7523\u52d8\u5b9a\uff09",
         "rule_trigger_source_account_starts_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u540d\u304c...\u3067\u59cb\u307e\u308b",
         "rule_trigger_source_account_ends_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u540d\u304c\u6b21\u3067\u7d42\u308f\u308b",
         "rule_trigger_source_account_is_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u540d\u304c...",
         "rule_trigger_source_account_contains_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u540d\u304c\u6b21\u3092\u542b\u3080",
-        "rule_trigger_account_id_choice": "\u53e3\u5ea7ID (\u51fa\u91d1\u5143\/\u9001\u91d1\u5148) \u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
+        "rule_trigger_account_id_choice": "Either account ID is exactly..",
         "rule_trigger_source_account_id_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7ID\u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
         "rule_trigger_destination_account_id_choice": "\u9001\u91d1\u5148\u53e3\u5ea7ID\u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
-        "rule_trigger_account_is_cash_choice": "\u53e3\u5ea7 (\u9001\u4fe1\u5143\/\u5b9b\u5148) \u304c\u73fe\u91d1\u53e3\u5ea7",
+        "rule_trigger_account_is_cash_choice": "Either account is cash",
         "rule_trigger_source_is_cash_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u304c\u73fe\u91d1\u53e3\u5ea7",
         "rule_trigger_destination_is_cash_choice": "\u9001\u91d1\u5148\u53e3\u5ea7\u304c\u73fe\u91d1\u53e3\u5ea7",
         "rule_trigger_source_account_nr_starts_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u756a\u53f7\/IBAN\u304c\u6b21\u3067\u59cb\u307e\u308b",
@@ -78,19 +70,19 @@ export default {
         "rule_trigger_transaction_type_choice": "\u7121\u52b9\u306a\u30c8\u30e9\u30f3\u30b6\u30af\u30b7\u30e7\u30f3\u5f62\u5f0f\u3067\u3059\u3002",
         "rule_trigger_category_is_choice": "\u30ab\u30c6\u30b4\u30ea",
         "rule_trigger_amount_less_choice": "\u91d1\u984d\u304c\u6b21\u3088\u308a\u5c0f\u3055\u3044",
-        "rule_trigger_amount_exactly_choice": "\u6570\u91cf",
+        "rule_trigger_amount_is_choice": "Amount is..",
         "rule_trigger_amount_more_choice": "\u91d1\u984d\u304c\u6b21\u3088\u308a\u5927\u304d\u3044",
         "rule_trigger_description_starts_choice": "\u8aac\u660e",
         "rule_trigger_description_ends_choice": "\u8aac\u660e",
         "rule_trigger_description_contains_choice": "\u8aac\u660e",
         "rule_trigger_description_is_choice": "\u8aac\u660e",
-        "rule_trigger_date_is_choice": "\u53d6\u5f15\u65e5\u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
+        "rule_trigger_date_on_choice": "Transaction date is..",
         "rule_trigger_date_before_choice": "\u53d6\u5f15\u65e5\u304c\u6b21\u3088\u308a\u524d",
         "rule_trigger_date_after_choice": "\u53d6\u5f15\u65e5\u304c\u6b21\u3088\u308a\u5f8c",
-        "rule_trigger_created_on_choice": "\u53d6\u5f15\u304c\u6b21\u306b\u4f5c\u6210\u3055\u308c\u305f",
-        "rule_trigger_updated_on_choice": "\u53d6\u5f15\u306e\u6700\u7d42\u7de8\u96c6\u304c\u6b21\u306b\u3055\u308c\u305f",
+        "rule_trigger_created_at_on_choice": "Transaction was made on..",
+        "rule_trigger_updated_at_on_choice": "Transaction was last edited on..",
         "rule_trigger_budget_is_choice": "\u4e88\u7b97",
-        "rule_trigger_tag_is_choice": "\u30bf\u30b0\u30e2\u30fc\u30c9",
+        "rule_trigger_tag_is_choice": "Any tag is..",
         "rule_trigger_currency_is_choice": "\u53d6\u5f15",
         "rule_trigger_foreign_currency_is_choice": "\u53d6\u5f15\u5916\u56fd\u901a\u8ca8\u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
         "rule_trigger_has_attachments_choice": "\u6b21\u306e\u500b\u6570\u4ee5\u4e0a\u306e\u6dfb\u4ed8\u30d5\u30a1\u30a4\u30eb\u304c\u3042\u308b",
@@ -104,13 +96,13 @@ export default {
         "rule_trigger_has_any_tag_choice": "\u4e00\u3064\u4ee5\u4e0a\u306e\u30bf\u30b0\u304c\u3042\u308b",
         "rule_trigger_any_notes_choice": "\u5099\u8003",
         "rule_trigger_no_notes_choice": "\u5099\u8003",
-        "rule_trigger_notes_are_choice": "\u5099\u8003",
-        "rule_trigger_notes_contain_choice": "\u5099\u8003",
-        "rule_trigger_notes_start_choice": "\u5099\u8003",
-        "rule_trigger_notes_end_choice": "\u5099\u8003",
+        "rule_trigger_notes_is_choice": "Notes are..",
+        "rule_trigger_notes_contains_choice": "Notes contain..",
+        "rule_trigger_notes_starts_choice": "Notes start with..",
+        "rule_trigger_notes_ends_choice": "Notes end with..",
         "rule_trigger_bill_is_choice": "\u8acb\u6c42\u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
-        "rule_trigger_external_id_choice": "\u5916\u90e8ID\u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
-        "rule_trigger_internal_reference_choice": "\u5185\u90e8ID\u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
+        "rule_trigger_external_id_is_choice": "External ID is..",
+        "rule_trigger_internal_reference_is_choice": "Internal reference is..",
         "rule_trigger_journal_id_choice": "\u53d6\u5f15ID\u304c\u6b21\u3068\u4e00\u81f4\u3059\u308b",
         "rule_trigger_any_external_url_choice": "Transaction has an external URL",
         "rule_trigger_no_external_url_choice": "Transaction has no external URL",
@@ -155,7 +147,7 @@ export default {
         "repeat_freq_weekly": "\u9031\u6bce",
         "single_split": "\u5206\u5272",
         "asset_accounts": "\u8cc7\u7523\u52d8\u5b9a",
-        "expense_accounts": "\u652f\u51fa\u5148\u3092\u898b\u308b",
+        "expense_accounts": "\u652f\u51fa\u53e3\u5ea7",
         "liabilities_accounts": "\u8ca0\u50b5",
         "undefined_accounts": "Accounts",
         "name": "\u540d\u524d",
@@ -186,7 +178,7 @@ export default {
         "balance": "\u6b8b\u9ad8",
         "budgets": "\u4e88\u7b97",
         "subscriptions": "\u8b1b\u8aad",
-        "welcome_back": "\u4f55\u3092\u3084\u3063\u3066\u3044\u308b\u306e?",
+        "welcome_back": "\u6982\u8981",
         "bills_to_pay": "\u8acb\u6c42\u66f8",
         "left_to_spend": "\u652f\u51fa\u3067\u304d\u308b\u6b8b\u308a",
         "net_worth": "\u7d14\u8cc7\u7523",

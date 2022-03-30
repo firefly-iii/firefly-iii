@@ -25,6 +25,7 @@
       :rows="rows"
       :columns="columns"
       row-key="id"
+      :dense="$q.screen.lt.md"
       v-model:pagination="pagination"
       :loading="loading"
       class="q-ma-md"
@@ -46,26 +47,41 @@
             <router-link :to="{ name: 'accounts.show', params: {id: props.row.id} }" class="text-primary">
               {{ props.row.name }}
             </router-link>
+            <q-popup-edit v-model="props.row.name" v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter />
+            </q-popup-edit>
           </q-td>
           <q-td key="iban" :props="props">
             {{ formatIban(props.row.iban) }}
+            <q-popup-edit v-model="props.row.iban" v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter />
+            </q-popup-edit>
+          </q-td>
+          <q-td key="current_balance" :props="props">
+            A
+          </q-td>
+          <q-td key="active" :props="props">
+            B
+          </q-td>
+          <q-td key="last_activity" :props="props">
+            C
           </q-td>
           <q-td key="menu" :props="props">
-            <q-btn-dropdown color="primary" label="Actions" size="sm">
+            <q-btn-dropdown color="primary" :label="$t('firefly.actions')" size="sm">
               <q-list>
                 <q-item clickable v-close-popup :to="{name: 'accounts.edit', params: {id: props.row.id}}">
                   <q-item-section>
-                    <q-item-label>Edit</q-item-label>
+                    <q-item-label>{{ $t('firefly.edit') }}</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup :to="{name: 'accounts.reconcile', params: {id: props.row.id}}" v-if="'asset' === props.row.type">
                   <q-item-section>
-                    <q-item-label>Reconcile</q-item-label>
+                    <q-item-label>{{ $t('firefly.reconcile') }}</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup @click="deleteAccount(props.row.id, props.row.name)">
                   <q-item-section>
-                    <q-item-label>Delete</q-item-label>
+                    <q-item-label>{{ $t('firefly.delete') }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -76,7 +92,7 @@
     </q-table>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-fab
-        label="Actions"
+        :label="$t('firefly.actions')"
         square
         vertical-actions-align="right"
         label-position="left"
@@ -84,8 +100,9 @@
         icon="fas fa-chevron-up"
         direction="up"
       >
+        <!-- TODO -->
         <!--<q-fab-action color="primary" square :to="{ name: 'accounts.create', params: {type: 'liability'} }" icon="fas fa-long-arrow-alt-right" label="New liability"/>-->
-        <q-fab-action color="primary" square :to="{ name: 'accounts.create', params: {type: 'asset'} }" icon="fas fa-exchange-alt" label="New asset account"/>
+        <q-fab-action color="primary" square :to="{ name: 'accounts.create', params: {type: 'asset'} }" icon="fas fa-exchange-alt" :label="$t('firefly.create_new_asset')"/>
       </q-fab>
     </q-page-sticky>
   </q-page>
@@ -122,8 +139,11 @@ export default {
       },
       loading: false,
       columns: [
-        {name: 'name', label: 'Name', field: 'name', align: 'left'},
-        {name: 'iban', label: 'IBAN', field: 'iban', align: 'left'},
+        {name: 'name', label: this.$t('list.name'), field: 'name', align: 'left'},
+        {name: 'iban', label: this.$t('list.account_number'), field: 'iban', align: 'left'},
+        {name: 'current_balance', label: this.$t('list.currentBalance'), field: 'current_balance', align: 'left'},
+        {name: 'active', label: this.$t('list.active'), field: 'active', align: 'left'},
+        {name: 'last_activity', label: this.$t('list.lastActivity'), field: 'last_activity', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
     }
@@ -154,7 +174,7 @@ export default {
   methods: {
     deleteAccount: function (id, name) {
       this.$q.dialog({
-                       title: 'Confirm',
+                       title: this.$t('firefly.confirm_action'),
                        message: 'Do you want to delete account "' + name + '"? Any and all transactions linked to this account will ALSO be deleted.',
                        cancel: true,
                        persistent: true
