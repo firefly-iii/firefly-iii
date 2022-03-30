@@ -553,7 +553,6 @@ class Steam
      */
     public function floatalize(string $value): string
     {
-        Log::debug(sprintf('floatalize("%s")', $value));
         $value = strtoupper($value);
         if (!str_contains($value, 'E')) {
             return $value;
