@@ -39,6 +39,7 @@ use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -201,6 +202,25 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function ensureMinimalEnabledCurrencies(): void
+    {
+        // if no currencies are enabled, enable the first one in the DB (usually the EUR)
+        if (0 === $this->get()->count()) {
+            /** @var TransactionCurrency $first */
+            $first = $this->getAll()->first();
+            if (null === $first) {
+                throw new FireflyException('No currencies found. You broke Firefly III');
+            }
+            Log::channel('audit')->info(sprintf('Auto-enabled currency %s.', $first->code));
+            $this->enable($first);
+            app('preferences')->set('currencyPreference', $first->code);
+            app('preferences')->mark();
+        }
+    }
+
+    /**
      * Find by currency code, return NULL if unfound.
      * Used in Import Currency!
      *
@@ -274,7 +294,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {

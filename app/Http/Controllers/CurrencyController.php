@@ -215,56 +215,50 @@ class CurrencyController extends Controller
     public function disableCurrency(Request $request): JsonResponse
     {
         $currencyId = (int) $request->get('id');
-        if ($currencyId > 0) {
-            // valid currency?
-            $currency = $this->repository->find($currencyId);
-            if (null !== $currency) {
-                app('preferences')->mark();
+        $currency   = $this->repository->find($currencyId);
 
-                /** @var User $user */
-                $user = auth()->user();
-                if (!$this->userRepository->hasRole($user, 'owner')) {
-
-                    $request->session()->flash('error', (string) trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
-                    Log::channel('audit')->info(sprintf('Tried to disable currency %s but is not site owner.', $currency->code));
-                    return response()->json([]);
-
-                }
-
-                if ($this->repository->currencyInUse($currency)) {
-
-                    $location = $this->repository->currencyInUseAt($currency);
-                    $message  = (string) trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
-
-                    $request->session()->flash('error', $message);
-                    Log::channel('audit')->info(sprintf('Tried to disable currency %s but is in use.', $currency->code));
-                    return response()->json([]);
-                }
-
-                $this->repository->disable($currency);
-                Log::channel('audit')->info(sprintf('Disabled currency %s.', $currency->code));
-                // if no currencies are enabled, enable the first one in the DB (usually the EUR)
-                if (0 === $this->repository->get()->count()) {
-                    /** @var TransactionCurrency $first */
-                    $first = $this->repository->getAll()->first();
-                    if (null === $first) {
-                        throw new FireflyException('No currencies found.');
-                    }
-                    Log::channel('audit')->info(sprintf('Auto-enabled currency %s.', $first->code));
-                    $this->repository->enable($first);
-                    app('preferences')->set('currencyPreference', $first->code);
-                    app('preferences')->mark();
-                }
-
-                if ('EUR' === $currency->code) {
-                    session()->flash('warning', (string) trans('firefly.disable_EUR_side_effects'));
-                }
-
-                session()->flash('success', (string) trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));
-            }
+        // valid currency?
+        if (null === $currency) {
+            return response()->json([]);
         }
 
-        return response()->json([]);
+        app('preferences')->mark();
+
+        // user must be "owner"
+        /** @var User $user */
+        $user = auth()->user();
+        if (!$this->userRepository->hasRole($user, 'owner')) {
+
+            $request->session()->flash('error', (string) trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
+            Log::channel('audit')->info(sprintf('Tried to disable currency %s but is not site owner.', $currency->code));
+            return response()->json([]);
+
+        }
+
+        // currency cannot be in use.
+        if ($this->repository->currencyInUse($currency)) {
+
+            $location = $this->repository->currencyInUseAt($currency);
+            $message  = (string) trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
+
+            $request->session()->flash('error', $message);
+            Log::channel('audit')->info(sprintf('Tried to disable currency %s but is in use.', $currency->code));
+            return response()->json([]);
+        }
+
+        // currency disabled!
+        $this->repository->disable($currency);
+        Log::channel('audit')->info(sprintf('Disabled currency %s.', $currency->code));
+
+        $this->repository->ensureMinimalEnabledCurrencies();
+
+        // extra warning
+        if ('EUR' === $currency->code) {
+            session()->flash('warning', (string) trans('firefly.disable_EUR_side_effects'));
+        }
+
+        session()->flash('success', (string) trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));
+
     }
 
     /**
