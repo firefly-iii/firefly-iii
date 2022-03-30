@@ -536,15 +536,12 @@ class GroupCollector implements GroupCollectorInterface
      */
     private function postFilterCollection(Collection $collection): Collection
     {
-        Log::debug('Now in postFilterCollection()');
         $currentCollection = $collection;
-        $total             = count($this->postFilters);
         /**
          * @var int     $i
          * @var Closure $function
          */
-        foreach ($this->postFilters as $i => $function) {
-            Log::debug(sprintf('Now working on filter #%d/%d', $i + 1, $total));
+        foreach ($this->postFilters as $function) {
 
             $nextCollection = new Collection;
             // loop everything in the current collection
@@ -558,10 +555,8 @@ class GroupCollector implements GroupCollectorInterface
                 $result = $function($ii, $item);
                 if (false === $result) {
                     // skip other filters, continue to next item.
-                    Log::debug('Filter returns false, jump to next item.');
                     continue;
                 }
-                Log::debug('Filter returns true');
                 $nextCollection->push($item);
             }
             $currentCollection = $nextCollection;

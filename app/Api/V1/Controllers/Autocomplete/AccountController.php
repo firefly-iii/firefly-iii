@@ -71,6 +71,8 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      * @throws JsonException
+     * @throws FireflyException
+     * @throws FireflyException
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {

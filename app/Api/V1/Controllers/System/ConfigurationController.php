@@ -30,6 +30,8 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Binder\EitherConfigKey;
 use Illuminate\Http\JsonResponse;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ConfigurationController
@@ -94,8 +96,8 @@ class ConfigurationController extends Controller
      *
      * @return array
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function getDynamicConfiguration(): array
     {

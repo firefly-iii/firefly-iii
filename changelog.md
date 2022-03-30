@@ -18,7 +18,7 @@ Please refer to the [documentation](https://docs.firefly-iii.org/firefly-iii/) a
 - Error email message now includes HTTP headers.
 - [Issue 5373](https://github.com/firefly-iii/firefly-iii/issues/5373) You can give budgets notes, although they're not visible yet.
 - [Issue 5648](https://github.com/firefly-iii/firefly-iii/issues/5648) The Docker image supports custom locales, see `.env.example` for instructions.
-- [Issue 3984](https://github.com/firefly-iii/firefly-iii/issues/3984) [issue 5636](https://github.com/firefly-iii/firefly-iii/issues/5636) [issue 4903](https://github.com/firefly-iii/firefly-iii/issues/4903) [issue 5326](https://github.com/firefly-iii/firefly-iii/issues/5326) Lots of new search and rule operators.
+- [Issue 3984](https://github.com/firefly-iii/firefly-iii/issues/3984) [issue 5636](https://github.com/firefly-iii/firefly-iii/issues/5636) [issue 4903](https://github.com/firefly-iii/firefly-iii/issues/4903) [issue 5326](https://github.com/firefly-iii/firefly-iii/issues/5326) Lots of new search and rule operators. For the full list, see [search.php](https://github.com/firefly-iii/firefly-iii/blob/main/config/search.php) (a bit technical).
 - [Issue 5269](https://github.com/firefly-iii/firefly-iii/issues/5269) It's possible to add piggy banks that have no explicit target amount goal.
 - [Issue 4893](https://github.com/firefly-iii/firefly-iii/issues/4893) Bills can be given an end date and an extension date and will warn you about those dates.
 
@@ -26,7 +26,7 @@ Please refer to the [documentation](https://docs.firefly-iii.org/firefly-iii/) a
 - [Issue 5757](https://github.com/firefly-iii/firefly-iii/issues/5757) Upgrade to Laravel 9.
 
 ### Deprecated
-- [Issue 5911](https://github.com/firefly-iii/firefly-iii/issues/5911) Removed support for LDAP
+- [Issue 5911](https://github.com/firefly-iii/firefly-iii/issues/5911) Removed support for LDAP.
 
 ### Fixed
 - [Issue 5810](https://github.com/firefly-iii/firefly-iii/issues/5810) Could not search for `no_notes:true` in some cases.

@@ -35,6 +35,9 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use JsonException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountController
@@ -77,9 +80,9 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function overview(DateRequest $request): JsonResponse
     {

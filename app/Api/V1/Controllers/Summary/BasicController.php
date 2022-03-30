@@ -364,7 +364,7 @@ class BasicController extends Controller
             function (Account $account) {
                 $includeNetWorth = $this->accountRepository->getMetaValue($account, 'include_net_worth');
 
-                return null === $includeNetWorth ? true : '1' === $includeNetWorth;
+                return null === $includeNetWorth || '1' === $includeNetWorth;
             }
         );
 
