@@ -25,7 +25,7 @@ Only then [create a new issue](https://github.com/firefly-iii/firefly-iii/issues
 ## Issue closure and abandonment policy
 
 - Issues can be converted into discussions if it's not a bug or feature request.
-- Features that won't be implemented will be labelled "wontfix". [This isn't personal](https://docs.firefly-iii.org/firefly-iii/support/features/#ideas-that-wont-be-implemented).
+- Features that won't be implemented will be labelled "wontfix". [This isn't personal](https://docs.firefly-iii.org/firefly-iii/about-firefly-iii/what-its-not/).
 - Issues can be closed if they're duplicates of other issues.
 - Issues can be closed if the answer is in the FAQ.
 - Issues will be closed automatically after 14 days.
