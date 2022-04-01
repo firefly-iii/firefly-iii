@@ -75,6 +75,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
             case 'accounts.show.all':
                 return $this->handleAccount($request, $e);
             case 'transactions.show':
+            case 'transactions.edit':
                 return $this->handleGroup($request, $e);
             case 'attachments.show':
             case 'attachments.edit':
@@ -120,7 +121,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 $request->session()->reflash();
 
                 return redirect(route('rules.index'));
-            case 'transactions.edit':
             case 'transactions.mass.edit':
             case 'transactions.mass.delete':
             case 'transactions.bulk.edit':
