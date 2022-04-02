@@ -65,7 +65,6 @@
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}{% if loop.index != group.sums|length %},{% endif %}X
                             </span>
                         {% else %}
-                            X
                     {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
                         {% endif %}
                     {% endfor %}
