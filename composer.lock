@@ -1781,27 +1781,27 @@
         },
         {
             "name": "jc5/recovery",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/recovery.git",
-                "reference": "33e7f314fdf0c43db34a17e5757d19190815b363"
+                "reference": "ad69cb910a92e1aeb75fd7eaa65701cc5b0416f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/recovery/zipball/33e7f314fdf0c43db34a17e5757d19190815b363",
-                "reference": "33e7f314fdf0c43db34a17e5757d19190815b363",
+                "url": "https://api.github.com/repos/JC5/recovery/zipball/ad69cb910a92e1aeb75fd7eaa65701cc5b0416f3",
+                "reference": "ad69cb910a92e1aeb75fd7eaa65701cc5b0416f3",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "^7.4|^8.0",
+                "php": ">=8.0",
                 "pragmarx/random": "~0.1"
             },
             "require-dev": {
                 "phpunit/phpunit": ">=5.4.3",
                 "squizlabs/php_codesniffer": "^2.3",
-                "tightenco/collect": "^5"
+                "tightenco/collect": "^5.0"
             },
             "suggest": {
                 "tightenco/collect": "Allows to generate recovery codes as collections"
@@ -1849,9 +1849,9 @@
                 "two factor auth"
             ],
             "support": {
-                "source": "https://github.com/JC5/recovery/tree/v2.1.0"
+                "source": "https://github.com/JC5/recovery/tree/v2.2.0"
             },
-            "time": "2021-01-23T06:04:19+00:00"
+            "time": "2022-03-31T05:55:34+00:00"
         },
         {
             "name": "laravel/framework",
