@@ -14,13 +14,14 @@ Patch releases are based on the major/minor release tag. The release speed is on
 The different alpha and beta builds will be compiled from their corresponding tags. Please note they are done to assist in the stabilization process. If it breaks you get to keep both parts.
 
 ### Minor Release Support Matrix
-| Version | Supported          |
-| ------- | ------------------ |
-| Firefly III v5.6.x   | :white_check_mark: |
-| Firefly III v5.5.x   | :x: |
-| Firefly III v5.4.x   | :x: |
-| Firefly III v5.3.x   | :x: |
-| Firefly III v5.2.x (and earlier)   | :x: |
+| Version                          | Supported          |
+|----------------------------------|--------------------|
+| Firefly III v5.7.x               | :white_check_mark: |
+| Firefly III v5.6.x               | :x:                |
+| Firefly III v5.5.x               | :x:                |
+| Firefly III v5.4.x               | :x:                |
+| Firefly III v5.3.x               | :x:                |
+| Firefly III v5.2.x (and earlier) | :x:                |
 
 ### Upgrade path and support policy
 The upgrade path for Firefly III is:
