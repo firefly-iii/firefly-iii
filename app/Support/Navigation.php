@@ -582,6 +582,32 @@ class Navigation
 
             return $date;
         }
+        switch ($repeatFreq) {
+            default:
+                break;
+            case 'last7';
+                $date->subDays(7);
+                return $date;
+            case 'last30';
+                $date->subDays(30);
+                return $date;
+            case 'last90':
+                $date->subDays(90);
+                return $date;
+            case 'last365':
+                $date->subDays(365);
+                return $date;
+            case 'YTD':
+                $date->subYear();
+                return $date;
+            case 'QTD':
+                $date->subQuarter();
+                return $date;
+            case 'MTD':
+                $date->subMonth();
+                return $date;
+        }
+
 
         throw new FireflyException(sprintf('Cannot do subtractPeriod for $repeat_freq "%s"', $repeatFreq));
     }
