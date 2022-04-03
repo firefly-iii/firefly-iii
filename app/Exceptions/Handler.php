@@ -171,6 +171,7 @@ class Handler extends ExceptionHandler
             'url'          => request()->fullUrl(),
             'userAgent'    => request()->userAgent(),
             'json'         => request()->acceptsJson(),
+            'method'       => request()->method(),
             'headers'      => $headers,
         ];
 
