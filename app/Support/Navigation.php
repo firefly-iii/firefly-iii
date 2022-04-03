@@ -629,6 +629,19 @@ class Navigation
 
             return $fiscalHelper->endOfFiscalYear($end);
         }
+        switch ($range) {
+            default:
+                break;
+            case 'last7';
+            case 'last30';
+            case 'last90':
+            case 'last365':
+            case 'YTD':
+            case 'QTD':
+            case 'MTD':
+                return $end;
+        }
+
         throw new FireflyException(sprintf('updateEndDate cannot handle range "%s"', $range));
     }
 
@@ -673,7 +686,31 @@ class Navigation
 
             return $fiscalHelper->startOfFiscalYear($start);
         }
-
+        switch ($range) {
+            default:
+                break;
+            case 'last7';
+                $start->subDays(7);
+                return $start;
+            case 'last30';
+                $start->subDays(30);
+                return $start;
+            case 'last90':
+                $start->subDays(90);
+                return $start;
+            case 'last365':
+                $start->subDays(365);
+                return $start;
+            case 'YTD':
+                $start->startOfYear();
+                return $start;
+            case 'QTD':
+                $start->startOfQuarter();
+                return $start;
+            case 'MTD':
+                $start->startOfMonth();
+                return $start;
+        }
         throw new FireflyException(sprintf('updateStartDate cannot handle range "%s"', $range));
     }
 }
