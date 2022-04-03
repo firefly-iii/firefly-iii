@@ -76,6 +76,7 @@ return [
     'type'                    => 'Τύπος',
     'completed'               => 'Ολοκληρώθηκε',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Πληρώθηκαν αυτή την περίοδο',
     'email'                   => 'Email',
     'registered_at'           => 'Εγγράφηκε στις',

@@ -45,6 +45,7 @@ export default {
         "delete": "Apagar",
         "reconcile": "Reconciliar",
         "create_new_asset": "Criar nova conta de activos",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "O nome da conta de origem come\u00e7a com..",
         "rule_trigger_source_account_ends_choice": "O nome da conta de origem acaba com..",
         "rule_trigger_source_account_is_choice": "O nome da conta de origem \u00e9..",

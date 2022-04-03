@@ -31,6 +31,7 @@ return [
     'split'                                => 'Împarte',
     'single_split'                         => 'Împarte',
     'clone'                                => 'Clonă',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Ultimele 7 zile',
     'last_thirty_days'                     => 'Ultimele 30 de zile',
     'last_180_days'                        => 'Ultimele 180 de zile',

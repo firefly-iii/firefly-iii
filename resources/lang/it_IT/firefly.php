@@ -31,6 +31,7 @@ return [
     'split'                                => 'Dividi',
     'single_split'                         => 'Divisione',
     'clone'                                => 'Clona',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Ultimi sette giorni',
     'last_thirty_days'                     => 'Ultimi trenta giorni',
     'last_180_days'                        => 'Ultimi 180 giorni',

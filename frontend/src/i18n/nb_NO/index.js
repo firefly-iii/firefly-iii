@@ -45,6 +45,7 @@ export default {
         "delete": "Slett",
         "reconcile": "Reconcile",
         "create_new_asset": "Opprett ny aktivakonto",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",

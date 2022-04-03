@@ -76,6 +76,7 @@ return [
     'type'                    => '種類',
     'completed'               => '完了',
     'iban'                    => '国際銀行口座番号',
+    'account_number'              => 'Account number',
     'paid_current_period'     => '期間',
     'email'                   => '新しいメールアドレス',
     'registered_at'           => '登録に成功しました！',

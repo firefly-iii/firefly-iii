@@ -31,6 +31,7 @@ return [
     'split'                                => 'Felosztás',
     'single_split'                         => 'Felosztás',
     'clone'                                => 'Másolás',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Utolsó hét nap',
     'last_thirty_days'                     => 'Elmúlt harminc nap',
     'last_180_days'                        => 'Last 180 days',

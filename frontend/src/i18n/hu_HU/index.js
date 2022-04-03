@@ -45,6 +45,7 @@ export default {
         "delete": "T\u00f6rl\u00e9s",
         "reconcile": "Egyeztet\u00e9s",
         "create_new_asset": "\u00daj eszk\u00f6zsz\u00e1mla l\u00e9trehoz\u00e1sa",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "Forr\u00e1ssz\u00e1mla nev\u00e9nek eleje..",
         "rule_trigger_source_account_ends_choice": "Forr\u00e1ssz\u00e1mla nev\u00e9nek v\u00e9ge..",
         "rule_trigger_source_account_is_choice": "A forr\u00e1ssz\u00e1mla neve..",

@@ -31,6 +31,7 @@ return [
     'split'                                => '拆分',
     'single_split'                         => '拆分',
     'clone'                                => '复制',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => '最近 7 天',
     'last_thirty_days'                     => '最近 30 天',
     'last_180_days'                        => '最近 180 天',

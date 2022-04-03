@@ -76,6 +76,7 @@ return [
     'type'                    => 'Jenis',
     'completed'               => 'Lengkap',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Membayar periode ini',
     'email'                   => 'Email',
     'registered_at'           => 'Terdaftar di',

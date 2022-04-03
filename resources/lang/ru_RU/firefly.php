@@ -31,6 +31,7 @@ return [
     'split'                                => 'Разделить',
     'single_split'                         => 'Разделённая транзакция',
     'clone'                                => 'Клонировать',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Последние 7 дней',
     'last_thirty_days'                     => 'Последние 30 дней',
     'last_180_days'                        => 'Последние 180 дней',

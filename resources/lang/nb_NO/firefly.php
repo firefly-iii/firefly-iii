@@ -31,6 +31,7 @@ return [
     'split'                                => 'Del opp',
     'single_split'                         => 'Split',
     'clone'                                => 'Klon',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Syv siste dager',
     'last_thirty_days'                     => 'Tredve siste dager',
     'last_180_days'                        => 'Last 180 days',

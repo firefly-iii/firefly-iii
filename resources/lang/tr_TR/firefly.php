@@ -31,6 +31,7 @@ return [
     'split'                                => 'Böl',
     'single_split'                         => 'Böl',
     'clone'                                => 'Klonla',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Son yedi gün',
     'last_thirty_days'                     => 'Son otuz gün',
     'last_180_days'                        => 'Son 180 gün',

@@ -45,6 +45,7 @@ export default {
         "delete": "\u522a\u9664",
         "reconcile": "Reconcile",
         "create_new_asset": "\u5efa\u7acb\u65b0\u8cc7\u7522\u5e33\u6236",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",

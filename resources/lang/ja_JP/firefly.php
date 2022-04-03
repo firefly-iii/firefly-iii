@@ -31,6 +31,7 @@ return [
     'split'                                => '分割',
     'single_split'                         => '分割',
     'clone'                                => '複製',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => '過去7日間',
     'last_thirty_days'                     => '過去30日間',
     'last_180_days'                        => '過去180日間',

@@ -45,6 +45,7 @@ export default {
         "delete": "Supprimer",
         "reconcile": "Rapprocher",
         "create_new_asset": "Cr\u00e9er un nouveau compte d\u2019actif",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "Le nom du compte source commence par..",
         "rule_trigger_source_account_ends_choice": "Le nom du compte source se termine par..",
         "rule_trigger_source_account_is_choice": "Le nom du compte source est..",

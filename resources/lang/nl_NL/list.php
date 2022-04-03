@@ -76,6 +76,7 @@ return [
     'type'                    => 'Type',
     'completed'               => 'Opgeslagen',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Betaald deze periode',
     'email'                   => 'E-mail',
     'registered_at'           => 'Geregistreerd op',

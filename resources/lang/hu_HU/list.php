@@ -76,6 +76,7 @@ return [
     'type'                    => 'Típus',
     'completed'               => 'Teljesített',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Fizetve ebben az időszakban',
     'email'                   => 'Email',
     'registered_at'           => 'Regisztrálva:',

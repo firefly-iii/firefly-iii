@@ -76,6 +76,7 @@ return [
     'type'                    => 'Вид',
     'completed'               => 'Завършен',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Платени този период',
     'email'                   => 'Имейл',
     'registered_at'           => 'Регистриран на',

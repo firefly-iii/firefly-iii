@@ -62,25 +62,25 @@ return [
     // email change
     'email_change_subject'                    => 'Ihre Firefly III E-Mail-Adresse hat sich geändert',
     'email_change_body_to_new'                => 'Sie oder jemand mit Zugriff auf Ihr Firefly III-Konto hat Ihre E-Mail-Adresse geändert. Wenn Sie diese Nachricht nicht erwartet haben, bitte ignorieren und löschen Sie sie.',
-    'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
+    'email_change_body_to_old'                => 'Durch Sie oder jemanden, der Zugriff auf Ihr Firefly III Konto hat, wurde Ihre E-Mail-Adresse geändert. Wenn Sie nicht mit diesem Vorfall gerechnet haben, **müssen** Sie dem nachfolgenden Link zum „Widerufen” folgen, um Ihr Konto zu schützen!',
     'email_change_ignore'                     => 'Wenn Sie diese Änderung initiiert haben, können Sie diese Nachricht ignorieren.',
     'email_change_old'                        => 'Die alte E-Mail-Adresse war: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => 'Die alte E-Mail-Adresse war: **:email**',
     'email_change_new'                        => 'Die neue E-Mail-Adresse ist: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => 'Die neue E-Mail-Adresse ist: **:email**',
     'email_change_instructions'               => 'Sie können Firefly III erst verwenden, wenn Sie diese Änderung bestätigen. Bitte folgen Sie dem unten stehenden Link, um dies zu tun.',
     'email_change_undo_link'                  => 'Um die Änderung rückgängig zu machen, folgen Sie diesem Link:',
 
     // OAuth token created
     'oauth_created_subject'                   => 'Ein neuer OAuth Client wurde erstellt',
     'oauth_created_body'                      => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_explanation'               => 'Mit diesem Client können Sie über die API von Firefly III auf **alle** Ihrer Finanzdaten zugreifen.',
+    'oauth_created_undo'                      => 'Wenn Sie es nicht waren, widerrufen Sie diesen Client bitte so schnell wie möglich unter „:url”',
 
     // reset password
     'reset_pw_subject'                        => 'Anfrage zum Zurücksetzen des Passworts',
     'reset_pw_instructions'                   => 'Jemand hat versucht, Ihr Passwort zurückzusetzen. Wenn Sie es waren, folgen Sie bitte dem untenstehenden Link.',
-    'reset_pw_warning'                        => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_warning'                        => '**BITTE** überprüfen Sie, dass der Link tatsächlich zu der erwarteten Firefly III Instanz führt!',
 
     // error
     'error_subject'                           => 'Fehler in Firefly III gefunden',

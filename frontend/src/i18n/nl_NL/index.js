@@ -45,6 +45,7 @@ export default {
         "delete": "Verwijder",
         "reconcile": "Afstemmen",
         "create_new_asset": "Nieuwe betaalrekening",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "Bronrekeningnaam begint met..",
         "rule_trigger_source_account_ends_choice": "Bronrekeningnaam eindigt op..",
         "rule_trigger_source_account_is_choice": "Bronrekeningnaam is..",

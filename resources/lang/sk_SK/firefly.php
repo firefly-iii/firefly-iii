@@ -31,6 +31,7 @@ return [
     'split'                                => 'Rozúčtovať',
     'single_split'                         => 'Rozúčtovať',
     'clone'                                => 'Klonovať',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Uplynulých 7 dní',
     'last_thirty_days'                     => 'Uplynulých 30 dní',
     'last_180_days'                        => 'Posledných 180 dní',

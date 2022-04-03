@@ -45,6 +45,7 @@ export default {
         "delete": "Eliminar",
         "reconcile": "Reconciliar",
         "create_new_asset": "Crear nueva cuenta de activos",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "El nombre de la cuenta de origen comienza con..",
         "rule_trigger_source_account_ends_choice": "El nombre de la cuenta de origen termina con..",
         "rule_trigger_source_account_is_choice": "El nombre de la cuenta origen es..",

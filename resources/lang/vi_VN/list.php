@@ -76,6 +76,7 @@ return [
     'type'                    => 'Loại',
     'completed'               => 'Đã hoàn thành',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Được trả ở thời gian này',
     'email'                   => 'Thư điện tử',
     'registered_at'           => 'Đã đăng ký tại',

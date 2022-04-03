@@ -31,6 +31,7 @@ return [
     'split'                                => '分割',
     'single_split'                         => 'Split',
     'clone'                                => '複製',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => '最近7天',
     'last_thirty_days'                     => '最近30天',
     'last_180_days'                        => 'Last 180 days',

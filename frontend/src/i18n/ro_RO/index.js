@@ -45,6 +45,7 @@ export default {
         "delete": "\u0218terge",
         "reconcile": "Reconcilia",
         "create_new_asset": "Crea\u021bi un nou cont de active",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "Numele contului surs\u0103 \u00eencepe cu..",
         "rule_trigger_source_account_ends_choice": "Numele contului surs\u0103 se termin\u0103 cu..",
         "rule_trigger_source_account_is_choice": "Numele contului surs\u0103 este..",

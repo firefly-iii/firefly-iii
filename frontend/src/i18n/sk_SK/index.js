@@ -45,6 +45,7 @@ export default {
         "delete": "Odstr\u00e1ni\u0165",
         "reconcile": "Vy\u00fa\u010dtova\u0165",
         "create_new_asset": "Vytvori\u0165 nov\u00fd \u00fa\u010det akt\u00edv",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "N\u00e1zov zdrojov\u00e9ho \u00fa\u010dtu za\u010d\u00edna..",
         "rule_trigger_source_account_ends_choice": "N\u00e1zov zdrojov\u00e9ho \u00fa\u010dtu kon\u010d\u00ed..",
         "rule_trigger_source_account_is_choice": "N\u00e1zov zdrojov\u00e9ho \u00fa\u010dtu je..",

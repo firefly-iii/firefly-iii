@@ -31,6 +31,7 @@ return [
     'split'                                => 'Chia ra',
     'single_split'                         => 'Chia ra',
     'clone'                                => 'Nhân ra',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Bảy ngày gần đây',
     'last_thirty_days'                     => 'Ba mươi ngày gần đây',
     'last_180_days'                        => '180 ngày qua',

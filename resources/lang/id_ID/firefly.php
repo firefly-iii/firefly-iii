@@ -31,6 +31,7 @@ return [
     'split'                                => 'Pisah',
     'single_split'                         => 'Pisah',
     'clone'                                => 'Duplikasi',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => '7 hari terakhir',
     'last_thirty_days'                     => '30 hari terakhir',
     'last_180_days'                        => '180 hari terakhir',

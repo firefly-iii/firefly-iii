@@ -45,6 +45,7 @@ export default {
         "delete": "X\u00f3a",
         "reconcile": "\u0110\u1ed1i chi\u1ebfu",
         "create_new_asset": "T\u1ea1o t\u00e0i kho\u1ea3n m\u1edbi",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",

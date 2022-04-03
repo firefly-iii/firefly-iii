@@ -31,6 +31,7 @@ return [
     'split'                                => 'Ventiler',
     'single_split'                         => 'Ventilation',
     'clone'                                => 'Cloner',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => '7 Derniers Jours',
     'last_thirty_days'                     => 'Trente derniers jours',
     'last_180_days'                        => '180 derniers jours',

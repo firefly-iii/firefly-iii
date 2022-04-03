@@ -45,6 +45,7 @@ export default {
         "delete": "\u5220\u9664",
         "reconcile": "\u5bf9\u8d26",
         "create_new_asset": "\u521b\u5efa\u65b0\u8d44\u4ea7\u8d26\u6237",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "\u6765\u6e90\u8d26\u6237\u540d\u79f0\u5f00\u5934\u4e3a...",
         "rule_trigger_source_account_ends_choice": "\u6765\u6e90\u8d26\u6237\u7ed3\u5c3e\u4e3a\u2026",
         "rule_trigger_source_account_is_choice": "\u6765\u6e90\u8d26\u6237\u540d\u79f0\u4e3a...",

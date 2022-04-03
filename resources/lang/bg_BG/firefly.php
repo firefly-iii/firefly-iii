@@ -31,6 +31,7 @@ return [
     'split'                                => 'Раздели',
     'single_split'                         => 'Раздел',
     'clone'                                => 'Дублирай',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Последните седем дни',
     'last_thirty_days'                     => 'Последните трийсет дни',
     'last_180_days'                        => 'Последните 180 дни',

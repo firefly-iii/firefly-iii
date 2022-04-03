@@ -2,10 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.7.0
+## 5.7.0 - 2022-04-04
 
 - ⚠️ This release no longer supports LDAP.
 - ⚠️ This is the last release that supports PHP 8.0
+- 👍 Want to try the new v3 layout? At your own risk, browse to `/v3/`.
 
 Please refer to the [documentation](https://docs.firefly-iii.org/firefly-iii/) and support channels if you run into problems:
 
@@ -37,6 +38,7 @@ Please refer to the [documentation](https://docs.firefly-iii.org/firefly-iii/) a
 - [Issue 5882](https://github.com/firefly-iii/firefly-iii/issues/5882) `no_external_url:true` was broken.
 - [Issue 5770](https://github.com/firefly-iii/firefly-iii/issues/5770) Liabilities spent amount would be doubled.
 - [Issue 4013](https://github.com/firefly-iii/firefly-iii/issues/4013) Date in email message was not localized.
+- [Issue 5949](https://github.com/firefly-iii/firefly-iii/issues/5949) Deleting a transaction would sometimes send you back to a 404.
 
 ## 5.6.16 - 2022-03-01
 

@@ -31,6 +31,7 @@ return [
     'split'                                => 'Dela',
     'single_split'                         => 'Dela',
     'clone'                                => 'Klona',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Senaste 7 dagarna',
     'last_thirty_days'                     => 'Senaste 30 dagarna',
     'last_180_days'                        => 'Senaste 180 dagarna',

@@ -45,6 +45,7 @@ export default {
         "delete": "Poista",
         "reconcile": "T\u00e4sm\u00e4yt\u00e4",
         "create_new_asset": "Luo uusi omaisuustili",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "L\u00e4hdetilin nimi alkaa ...",
         "rule_trigger_source_account_ends_choice": "L\u00e4hdetilin nimi p\u00e4\u00e4ttyy..",
         "rule_trigger_source_account_is_choice": "L\u00e4hdetilin nimi on..",

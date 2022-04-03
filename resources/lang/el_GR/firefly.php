@@ -31,6 +31,7 @@ return [
     'split'                                => 'Διαχωρισμός',
     'single_split'                         => 'Διαχωρισμός',
     'clone'                                => 'Κλωνοποίηση',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Τελευταίες επτά ημέρες',
     'last_thirty_days'                     => 'Τελευταίες τριάντα ημέρες',
     'last_180_days'                        => 'Τελευταίες 180 ημέρες',

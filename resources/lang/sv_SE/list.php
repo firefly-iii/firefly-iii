@@ -76,6 +76,7 @@ return [
     'type'                    => 'Typ',
     'completed'               => 'Slutförd',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Betalt den här perioden',
     'email'                   => 'E-post',
     'registered_at'           => 'Registrerad den',

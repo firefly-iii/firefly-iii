@@ -31,6 +31,7 @@ return [
     'split'                                => 'Jaa',
     'single_split'                         => 'Jako',
     'clone'                                => 'Kopioi',
+    'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Viimeiset 7 päivää',
     'last_thirty_days'                     => 'Viimeiset 30 päivää',
     'last_180_days'                        => 'Viimeiset 180 päivää',

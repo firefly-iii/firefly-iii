@@ -45,6 +45,7 @@ export default {
         "delete": "Odstranit",
         "reconcile": "Reconcile",
         "create_new_asset": "Vytvo\u0159it nov\u00fd \u00fa\u010det aktiv",
+        "confirm_action": "Confirm action",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",
