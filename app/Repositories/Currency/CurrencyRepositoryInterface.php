@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
-
     /**
      * @param TransactionCurrency $currency
      *
@@ -79,6 +78,11 @@ interface CurrencyRepositoryInterface
      * @param TransactionCurrency $currency
      */
     public function enable(TransactionCurrency $currency): void;
+
+    /**
+     * @return void
+     */
+    public function ensureMinimalEnabledCurrencies(): void;
 
     /**
      * Find by ID, return NULL if not found.

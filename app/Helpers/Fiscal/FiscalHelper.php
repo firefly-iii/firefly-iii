@@ -46,6 +46,9 @@ class FiscalHelper implements FiscalHelperInterface
      * @param Carbon $date
      *
      * @return Carbon date object
+     * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function endOfFiscalYear(Carbon $date): Carbon
     {
@@ -69,6 +72,8 @@ class FiscalHelper implements FiscalHelperInterface
      *
      * @return Carbon date object
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function startOfFiscalYear(Carbon $date): Carbon
     {
@@ -77,7 +82,7 @@ class FiscalHelper implements FiscalHelperInterface
         if (true === $this->useCustomFiscalYear) {
             $prefStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
             [$mth, $day] = explode('-', $prefStartStr);
-            $startDate->day((int)$day)->month((int)$mth);
+            $startDate->day((int) $day)->month((int) $mth);
 
             // if start date is after passed date, sub 1 year.
             if ($startDate > $date) {

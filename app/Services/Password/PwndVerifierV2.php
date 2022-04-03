@@ -62,7 +62,7 @@ class PwndVerifierV2 implements Verifier
         try {
             $client = new Client();
             $res    = $client->request('GET', $uri, $opt);
-        } catch (GuzzleException | RequestException $e) {
+        } catch (GuzzleException|RequestException $e) {
             Log::error(sprintf('Could not verify password security: %s', $e->getMessage()));
 
             return true;

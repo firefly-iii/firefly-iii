@@ -35,6 +35,22 @@ interface CategoryRepositoryInterface
 {
 
     /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function categoryEndsWith(string $query, int $limit): Collection;
+
+    /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function categoryStartsWith(string $query, int $limit): Collection;
+
+    /**
      * @param Category $category
      *
      * @return bool

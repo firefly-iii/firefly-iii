@@ -110,8 +110,8 @@ class UpdateRequest extends FormRequest
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -185,7 +185,7 @@ class UpdateRequest extends FormRequest
         $triggers = $data['triggers'] ?? null;
         // need at least one trigger
         if (is_array($triggers) && empty($triggers)) {
-            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
         }
     }
 
@@ -214,7 +214,7 @@ class UpdateRequest extends FormRequest
             }
         }
         if (true === $allInactive) {
-            $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_trigger'));
+            $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_trigger'));
         }
     }
 
@@ -229,7 +229,7 @@ class UpdateRequest extends FormRequest
         $actions = $data['actions'] ?? null;
         // need at least one action
         if (is_array($actions) && empty($actions)) {
-            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
         }
     }
 
@@ -259,7 +259,7 @@ class UpdateRequest extends FormRequest
             }
         }
         if (true === $allInactive) {
-            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_action'));
+            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
         }
     }
 }

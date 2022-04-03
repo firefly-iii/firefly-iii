@@ -63,7 +63,7 @@ class ReconcileController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string)trans('firefly.accounts'));
+                app('view')->share('title', (string) trans('firefly.accounts'));
                 $this->repository    = app(JournalRepositoryInterface::class);
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -76,12 +76,14 @@ class ReconcileController extends Controller
     /**
      * Overview of reconciliation.
      *
-     * @param Request $request
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Request      $request
+     * @param Account|null $account
+     * @param Carbon|null  $start
+     * @param Carbon|null  $end
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function overview(Request $request, Account $account = null, Carbon $start = null, Carbon $end = null): JsonResponse
     {
@@ -216,9 +218,9 @@ class ReconcileController extends Controller
     /**
      * Returns a list of transactions in a modal.
      *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Account     $account
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -236,8 +238,8 @@ class ReconcileController extends Controller
         $startDate->subDay();
 
         $currency     = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $startBalance = round((float)app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance   = round((float)app('steam')->balance($account, $end), $currency->decimal_places);
+        $startBalance = round((float) app('steam')->balance($account, $startDate), $currency->decimal_places);
+        $endBalance   = round((float) app('steam')->balance($account, $end), $currency->decimal_places);
 
         // get the transactions
         $selectionStart = clone $start;

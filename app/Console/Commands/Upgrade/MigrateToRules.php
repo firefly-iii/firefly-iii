@@ -120,12 +120,14 @@ class MigrateToRules extends Command
     /**
      * @return bool
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -146,14 +148,14 @@ class MigrateToRules extends Command
 
         /** @var Preference $lang */
         $lang       = app('preferences')->getForUser($user, 'language', 'en_US');
-        $groupTitle = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
+        $groupTitle = (string) trans('firefly.rulegroup_for_bills_title', [], $lang->data);
         $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);
 
         if (null === $ruleGroup) {
             $ruleGroup = $this->ruleGroupRepository->store(
                 [
-                    'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data),
-                    'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $lang->data),
+                    'title'       => (string) trans('firefly.rulegroup_for_bills_title', [], $lang->data),
+                    'description' => (string) trans('firefly.rulegroup_for_bills_description', [], $lang->data),
                     'active'      => true,
                 ]
             );
@@ -185,8 +187,8 @@ class MigrateToRules extends Command
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $language->data),
-            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $language->data),
+            'title'           => (string) trans('firefly.rule_for_bill_title', ['name' => $bill->name], $language->data),
+            'description'     => (string) trans('firefly.rule_for_bill_description', ['name' => $bill->name], $language->data),
             'trigger'         => 'store-journal',
             'triggers'        => [
                 [

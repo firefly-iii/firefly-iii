@@ -75,7 +75,7 @@ class RestoreOAuthKeys extends Command
         if ($this->keysInDatabase() && !$this->keysOnDrive()) {
             Log::debug('Keys are in DB and keys are not on the drive. Restore.');
             $result = $this->restoreKeysFromDB();
-            if(true === $result) {
+            if (true === $result) {
                 $this->line('Restored OAuth keys from database.');
 
                 return;

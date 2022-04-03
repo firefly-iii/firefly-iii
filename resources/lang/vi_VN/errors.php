@@ -47,8 +47,8 @@ return [
     'tell_more'               => 'Hãy nói với chúng tôi nhiều hơn "nó nói Rất tiếc!"',
     'include_logs'            => 'Bao gồm các bản ghi lỗi (xem ở trên).',
     'what_did_you_do'         => 'Hãy cho chúng tôi biết những gì bạn đã làm.',
-    'offline_header'          => 'You are probably offline',
-    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
-    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'offline_header'          => 'Bạn có thể đang ngoại tuyến',
+    'offline_unreachable'     => 'Không thể truy cập Firefly III. Thiết bị của bạn hiện đang ngoại tuyến hoặc máy chủ không hoạt động.',
+    'offline_github'          => 'Nếu bạn chắc chắn cả thiết bị của mình và máy chủ đều trực tuyến, vui lòng tạo một yêu cầu hỗ trợ tại <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

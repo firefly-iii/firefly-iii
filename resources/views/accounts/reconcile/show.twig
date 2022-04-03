@@ -44,7 +44,7 @@
                         </tr>
                         <tr>
                             <td style="width:30%;">{{ trans('list.date') }}</td>
-                            <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
+                            <td>{{ journal.date.isoFormat(monthAndDayFormat) }}</td>
                         </tr>
                         </tbody>
                     </table>

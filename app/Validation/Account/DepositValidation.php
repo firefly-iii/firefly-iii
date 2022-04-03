@@ -40,7 +40,7 @@ trait DepositValidation
     abstract protected function canCreateTypes(array $accountTypes): bool;
 
     /**
-     * @param array  $validTypes
+     * @param array $validTypes
      * @param array $data
      *
      * @return Account|null
@@ -65,7 +65,7 @@ trait DepositValidation
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
-            $this->destError = (string)trans('validation.deposit_dest_need_data');
+            $this->destError = (string) trans('validation.deposit_dest_need_data');
             Log::error('Both values are NULL, cant create deposit destination.');
             $result = false;
         }
@@ -80,7 +80,7 @@ trait DepositValidation
             $search = $this->findExistingAccount($validTypes, $array);
             if (null === $search) {
                 Log::debug('findExistingAccount() returned NULL, so the result is false.');
-                $this->destError = (string)trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+                $this->destError = (string) trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
                 $result          = false;
             }
             if (null !== $search) {
@@ -114,7 +114,7 @@ trait DepositValidation
             // if both values are NULL return false,
             // because the source of a deposit can't be created.
             // (this never happens).
-            $this->sourceError = (string)trans('validation.deposit_source_need_data');
+            $this->sourceError = (string) trans('validation.deposit_source_need_data');
             $result            = false;
         }
 

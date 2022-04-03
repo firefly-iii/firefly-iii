@@ -47,7 +47,7 @@ class PreferenceStoreRequest extends FormRequest
             $array['data'] = false;
         }
         if (is_numeric($array['data'])) {
-            $array['data'] = (float)$array['data'];
+            $array['data'] = (float) $array['data'];
         }
 
         return $array;

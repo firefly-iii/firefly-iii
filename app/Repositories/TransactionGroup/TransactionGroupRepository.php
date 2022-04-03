@@ -40,6 +40,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
@@ -54,6 +55,18 @@ use Log;
 class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 {
     private User $user;
+
+    /**
+     * @inheritDoc
+     */
+    public function countAttachments(int $journalId): int
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->attachments()->count();
+
+    }
 
     /**
      * @param TransactionGroup $group
@@ -80,6 +93,56 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return array
+     */
+    private function expandJournal(TransactionJournal $journal): array
+    {
+        $array                      = $journal->toArray();
+        $array['transactions']      = [];
+        $array['meta']              = $journal->transactionJournalMeta->toArray();
+        $array['tags']              = $journal->tags->toArray();
+        $array['categories']        = $journal->categories->toArray();
+        $array['budgets']           = $journal->budgets->toArray();
+        $array['notes']             = $journal->notes->toArray();
+        $array['locations']         = [];
+        $array['attachments']       = $journal->attachments->toArray();
+        $array['links']             = [];
+        $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $array['transactions'][] = $this->expandTransaction($transaction);
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return array
+     */
+    private function expandTransaction(Transaction $transaction): array
+    {
+        $array               = $transaction->toArray();
+        $array['account']    = $transaction->account->toArray();
+        $array['budgets']    = [];
+        $array['categories'] = [];
+
+        foreach ($transaction->categories as $category) {
+            $array['categories'][] = $category->toArray();
+        }
+
+        foreach ($transaction->budgets as $budget) {
+            $array['budgets'][] = $budget->toArray();
+        }
+
+        return $array;
+    }
+
+    /**
      * Find a transaction group by its ID.
      *
      * @param int $groupId
@@ -100,6 +163,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function getAttachments(TransactionGroup $group): array
     {
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($this->user);
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $set      = Attachment::whereIn('attachable_id', $journals)
                               ->where('attachable_type', TransactionJournal::class)
@@ -109,10 +174,11 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $result = [];
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
-            $journalId                = (int)$attachment->attachable_id;
+            $journalId                = (int) $attachment->attachable_id;
             $result[$journalId]       = $result[$journalId] ?? [];
             $current                  = $attachment->toArray();
             $current['file_exists']   = true;
+            $current['notes']         = $repository->getNoteText($attachment);
             $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
             $result[$journalId][]     = $current;
 
@@ -155,7 +221,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->outward,
                     'group'          => $entry->destination->transaction_group_id,
                     'description'    => $entry->destination->description,
-                    'editable'       => 1===$entry->editable,
+                    'editable'       => 1 === $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
@@ -168,11 +234,61 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->inward,
                     'group'          => $entry->source->transaction_group_id,
                     'description'    => $entry->source->description,
-                    'editable'       => 1===$entry->editable,
+                    'editable'       => 1 === $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
             }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    private function getFormattedAmount(TransactionJournal $journal): string
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions->first();
+        $currency    = $transaction->transactionCurrency;
+        $type        = $journal->transactionType->type;
+        $amount      = app('steam')->positive($transaction->amount);
+        $return      = '';
+        if (TransactionType::WITHDRAWAL === $type) {
+            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
+        }
+        if (TransactionType::WITHDRAWAL !== $type) {
+            $return = app('amount')->formatAnything($currency, $amount);
+
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    private function getFormattedForeignAmount(TransactionJournal $journal): string
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions->first();
+        if (null === $transaction->foreign_amount) {
+            return '';
+        }
+        $currency = $transaction->foreignCurrency;
+        $type     = $journal->transactionType->type;
+        $amount   = app('steam')->positive($transaction->foreign_amount);
+        $return   = '';
+        if (TransactionType::WITHDRAWAL === $type) {
+            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
+        }
+        if (TransactionType::WITHDRAWAL !== $type) {
+            $return = app('amount')->formatAnything($currency, $amount);
         }
 
         return $return;
@@ -268,6 +384,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      *
      * @return array
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function getPiggyEvents(TransactionGroup $group): array
     {
@@ -295,7 +412,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                 $currencyCode = app('preferences')->getForUser($this->user, 'currencyPreference', 'EUR')->data;
                 $currency     = TransactionCurrency::where('code', $currencyCode)->first();
             }
-            $journalId          = (int)$row->transaction_journal_id;
+            $journalId          = (int) $row->transaction_journal_id;
             $return[$journalId] = $return[$journalId] ?? [];
 
             $return[$journalId][] = [
@@ -385,117 +502,5 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $service = app(GroupUpdateService::class);
 
         return $service->update($transactionGroup, $data);
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     */
-    private function expandJournal(TransactionJournal $journal): array
-    {
-        $array                      = $journal->toArray();
-        $array['transactions']      = [];
-        $array['meta']              = $journal->transactionJournalMeta->toArray();
-        $array['tags']              = $journal->tags->toArray();
-        $array['categories']        = $journal->categories->toArray();
-        $array['budgets']           = $journal->budgets->toArray();
-        $array['notes']             = $journal->notes->toArray();
-        $array['locations']         = [];
-        $array['attachments']       = $journal->attachments->toArray();
-        $array['links']             = [];
-        $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
-
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $array['transactions'][] = $this->expandTransaction($transaction);
-        }
-
-        return $array;
-    }
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return array
-     */
-    private function expandTransaction(Transaction $transaction): array
-    {
-        $array               = $transaction->toArray();
-        $array['account']    = $transaction->account->toArray();
-        $array['budgets']    = [];
-        $array['categories'] = [];
-
-        foreach ($transaction->categories as $category) {
-            $array['categories'][] = $category->toArray();
-        }
-
-        foreach ($transaction->budgets as $budget) {
-            $array['budgets'][] = $budget->toArray();
-        }
-
-        return $array;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return string
-     */
-    private function getFormattedAmount(TransactionJournal $journal): string
-    {
-        /** @var Transaction $transaction */
-        $transaction = $journal->transactions->first();
-        $currency    = $transaction->transactionCurrency;
-        $type        = $journal->transactionType->type;
-        $amount      = app('steam')->positive($transaction->amount);
-        $return      = '';
-        if (TransactionType::WITHDRAWAL === $type) {
-            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
-        }
-        if (TransactionType::WITHDRAWAL !== $type) {
-            $return = app('amount')->formatAnything($currency, $amount);
-
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return string
-     */
-    private function getFormattedForeignAmount(TransactionJournal $journal): string
-    {
-        /** @var Transaction $transaction */
-        $transaction = $journal->transactions->first();
-        if (null === $transaction->foreign_amount) {
-            return '';
-        }
-        $currency = $transaction->foreignCurrency;
-        $type     = $journal->transactionType->type;
-        $amount   = app('steam')->positive($transaction->foreign_amount);
-        $return   = '';
-        if (TransactionType::WITHDRAWAL === $type) {
-            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
-        }
-        if (TransactionType::WITHDRAWAL !== $type) {
-            $return = app('amount')->formatAnything($currency, $amount);
-        }
-
-        return $return;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function countAttachments(int $journalId): int
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $this->user->transactionJournals()->find($journalId);
-
-        return $journal->attachments()->count();
-
     }
 }

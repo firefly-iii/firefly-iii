@@ -76,6 +76,7 @@ return [
     'type'                    => 'Tipo',
     'completed'               => 'Completo',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Pago este período',
     'email'                   => 'Email',
     'registered_at'           => 'Registrado em',

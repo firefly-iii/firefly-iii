@@ -30,7 +30,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Log;
 use Mail;
-use Request;
 use Session;
 
 /**
@@ -50,7 +49,7 @@ class APIEventHandler
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find((int)$event->userId);
+        $user       = $repository->find((int) $event->userId);
         if (null !== $user) {
             $email = $user->email;
 
@@ -59,18 +58,16 @@ class APIEventHandler
                 $email = config('firefly.site_owner');
             }
 
-            $ipAddress = Request::ip();
-
             // see if user has alternative email address:
             $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
             if (null !== $pref) {
-                $email = (string)(is_array($pref->data) ? $email : $pref->data);
+                $email = (string) (is_array($pref->data) ? $email : $pref->data);
             }
 
-            Log::debug(sprintf('Now in APIEventHandler::accessTokenCreated. Email is %s, IP is %s', $email, $ipAddress));
+            Log::debug(sprintf('Now in APIEventHandler::accessTokenCreated. Email is %s', $email));
             try {
                 Log::debug('Trying to send message...');
-                Mail::to($email)->send(new AccessTokenCreatedMail($email, $ipAddress));
+                Mail::to($email)->send(new AccessTokenCreatedMail);
 
             } catch (Exception $e) { // @phpstan-ignore-line
                 Log::debug('Send message failed! :(');

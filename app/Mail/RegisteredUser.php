@@ -38,21 +38,16 @@ class RegisteredUser extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var string Email address of user */
-    public $address;
-    /** @var string IP address of user */
-    public $ipAddress;
+    public string $address;
 
     /**
      * Create a new message instance.
      *
      * @param string $address
-     * @param string $ipAddress
      */
-    public function __construct(string $address, string $ipAddress)
+    public function __construct(string $address)
     {
-        $this->address   = $address;
-        $this->ipAddress = $ipAddress;
+        $this->address = $address;
     }
 
     /**
@@ -62,6 +57,8 @@ class RegisteredUser extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.registered-html')->text('emails.registered-text')->subject((string)trans('email.registered_subject'));
+        return $this
+            ->markdown('emails.registered')
+            ->subject((string) trans('email.registered_subject'));
     }
 }

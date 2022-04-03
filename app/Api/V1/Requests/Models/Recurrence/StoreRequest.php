@@ -115,10 +115,10 @@ class StoreRequest extends FormRequest
                 $current['moment'] = $repetition['moment'];
             }
             if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int)$repetition['skip'];
+                $current['skip'] = (int) $repetition['skip'];
             }
             if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int)$repetition['weekend'];
+                $current['weekend'] = (int) $repetition['weekend'];
             }
 
             $return[] = $current;
@@ -135,19 +135,19 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type'                                 => 'required|in:withdrawal,transfer,deposit',
-            'title'                                => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
-            'description'                          => 'between:1,65000',
-            'first_date'                           => 'required|date',
-            'apply_rules'                          => [new IsBoolean],
-            'active'                               => [new IsBoolean],
-            'repeat_until'                         => 'nullable|date',
-            'nr_of_repetitions'                    => 'nullable|numeric|between:1,31',
+            'type'              => 'required|in:withdrawal,transfer,deposit',
+            'title'             => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
+            'description'       => 'between:1,65000',
+            'first_date'        => 'required|date',
+            'apply_rules'       => [new IsBoolean],
+            'active'            => [new IsBoolean],
+            'repeat_until'      => 'nullable|date',
+            'nr_of_repetitions' => 'nullable|numeric|between:1,31',
 
-            'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'                 => 'between:0,10',
-            'repetitions.*.skip'                   => 'nullable|numeric|between:0,31',
-            'repetitions.*.weekend'                => 'numeric|min:1|max:4',
+            'repetitions.*.type'    => 'required|in:daily,weekly,ndom,monthly,yearly',
+            'repetitions.*.moment'  => 'between:0,10',
+            'repetitions.*.skip'    => 'nullable|numeric|between:0,31',
+            'repetitions.*.weekend' => 'numeric|min:1|max:4',
 
             'transactions.*.description'           => 'required|between:1,255',
             'transactions.*.amount'                => 'required|numeric|gt:0',
@@ -162,11 +162,11 @@ class StoreRequest extends FormRequest
             'transactions.*.destination_name'      => 'between:1,255|nullable',
 
             // new and updated fields:
-            'transactions.*.budget_id'             => ['nullable','mustExist:budgets,id', new BelongsUser],
+            'transactions.*.budget_id'             => ['nullable', 'mustExist:budgets,id', new BelongsUser],
             'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.category_id'           => ['nullable','mustExist:categories,id', new BelongsUser],
+            'transactions.*.category_id'           => ['nullable', 'mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.piggy_bank_id'         => ['nullable','numeric', 'mustExist:piggy_banks,id', new BelongsUser],
+            'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser],
             'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.tags'                  => 'nullable|between:1,64000',
         ];

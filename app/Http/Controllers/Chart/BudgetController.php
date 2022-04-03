@@ -85,7 +85,6 @@ class BudgetController extends Controller
      * @param Budget $budget
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function budget(Budget $budget): JsonResponse
     {
@@ -154,7 +153,6 @@ class BudgetController extends Controller
      * @return JsonResponse
      *
      * @throws FireflyException
-     * @throws JsonException
      */
     public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
@@ -182,14 +180,14 @@ class BudgetController extends Controller
         while ($start <= $end) {
             $current          = clone $start;
             $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $currency);
-            $spent            = $expenses[(int)$currency->id]['sum'] ?? '0';
+            $spent            = $expenses[(int) $currency->id]['sum'] ?? '0';
             $amount           = bcadd($amount, $spent);
-            $format           = $start->formatLocalized((string)trans('config.month_and_day', [], $locale));
+            $format           = $start->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $entries[$format] = $amount;
 
             $start->addDay();
         }
-        $data = $this->generator->singleSet((string)trans('firefly.left'), $entries);
+        $data = $this->generator->singleSet((string) trans('firefly.left'), $entries);
         // add currency symbol from budget limit:
         $data['datasets'][0]['currency_symbol'] = $budgetLimit->transactionCurrency->symbol;
         $data['datasets'][0]['currency_code']   = $budgetLimit->transactionCurrency->code;
@@ -205,7 +203,6 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -238,7 +235,7 @@ class BudgetController extends Controller
 
         // group by asset account ID:
         foreach ($journals as $journal) {
-            $key                    = sprintf('%d-%d', (int)$journal['source_account_id'], $journal['currency_id']);
+            $key                    = sprintf('%d-%d', (int) $journal['source_account_id'], $journal['currency_id']);
             $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
@@ -251,7 +248,7 @@ class BudgetController extends Controller
         $names = $this->getAccountNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts   = explode('-', $combinedId);
-            $assetId = (int)$parts[0];
+            $assetId = (int) $parts[0];
             $title   = sprintf('%s (%s)', $names[$assetId] ?? '(empty)', $info['currency_name']);
             $chartData[$title]
                      = [
@@ -274,7 +271,6 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -317,7 +313,7 @@ class BudgetController extends Controller
         $names = $this->getCategoryNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts             = explode('-', $combinedId);
-            $categoryId        = (int)$parts[0];
+            $categoryId        = (int) $parts[0];
             $title             = sprintf('%s (%s)', $names[$categoryId] ?? '(empty)', $info['currency_name']);
             $chartData[$title] = [
                 'amount'          => $info['amount'],
@@ -339,7 +335,6 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -383,7 +378,7 @@ class BudgetController extends Controller
         $names = $this->getAccountNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts             = explode('-', $combinedId);
-            $opposingId        = (int)$parts[0];
+            $opposingId        = (int) $parts[0];
             $name              = $names[$opposingId] ?? 'no name';
             $title             = sprintf('%s (%s)', $name, $info['currency_name']);
             $chartData[$title] = [
@@ -403,7 +398,6 @@ class BudgetController extends Controller
      * Shows a budget list with spent/left/overspent.
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function frontpage(): JsonResponse
     {
@@ -441,7 +435,6 @@ class BudgetController extends Controller
      * @param Carbon              $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function period(Budget $budget, TransactionCurrency $currency, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -460,14 +453,14 @@ class BudgetController extends Controller
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
         $chartData      = [
             [
-                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
+                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'entries'         => [],
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,
             ],
             [
-                'label'           => (string)trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
+                'label'           => (string) trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,
@@ -478,7 +471,7 @@ class BudgetController extends Controller
         $currentStart = clone $start;
         while ($currentStart <= $end) {
             $currentStart = app('navigation')->startOfPeriod($currentStart, $preferredRange);
-            $title        = $currentStart->formatLocalized($titleFormat);
+            $title        = $currentStart->isoFormat($titleFormat);
             $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
 
             // default limit is no limit:
@@ -490,13 +483,13 @@ class BudgetController extends Controller
             // get budget limit in this period for this currency.
             $limit = $this->blRepository->find($budget, $currency, $currentStart, $currentEnd);
             if (null !== $limit) {
-                $chartData[1]['entries'][$title] = round((float)$limit->amount, $currency->decimal_places);
+                $chartData[1]['entries'][$title] = round((float) $limit->amount, $currency->decimal_places);
             }
 
             // get spent amount in this period for this currency.
             $sum                             = $this->opsRepository->sumExpenses($currentStart, $currentEnd, $accounts, new Collection([$budget]), $currency);
             $amount                          = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
-            $chartData[0]['entries'][$title] = round((float)$amount, $currency->decimal_places);
+            $chartData[0]['entries'][$title] = round((float) $amount, $currency->decimal_places);
 
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();
@@ -517,7 +510,6 @@ class BudgetController extends Controller
      * @param Carbon              $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function periodNoBudget(TransactionCurrency $currency, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -539,14 +531,14 @@ class BudgetController extends Controller
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
         while ($currentStart <= $end) {
             $currentEnd        = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $title             = $currentStart->formatLocalized($titleFormat);
+            $title             = $currentStart->isoFormat($titleFormat);
             $sum               = $this->nbRepository->sumExpenses($currentStart, $currentEnd, $accounts, $currency);
             $amount            = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
-            $chartData[$title] = round((float)$amount, $currency->decimal_places);
+            $chartData[$title] = round((float) $amount, $currency->decimal_places);
             $currentStart      = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
         }
 
-        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
+        $data = $this->generator->singleSet((string) trans('firefly.spent'), $chartData);
         $cache->store($data);
 
         return response()->json($data);

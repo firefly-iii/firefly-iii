@@ -86,7 +86,7 @@ class ShowController extends Controller
     {
         $manager = $this->getManager();
         $manager->parseIncludes('budget');
-        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize     = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
@@ -119,7 +119,7 @@ class ShowController extends Controller
     {
         $manager = $this->getManager();
         $manager->parseIncludes('budget');
-        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize     = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection   = $this->blRepository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
@@ -149,7 +149,7 @@ class ShowController extends Controller
      */
     public function show(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
-        if ((int)$budget->id !== (int)$budgetLimit->budget_id) {
+        if ((int) $budget->id !== (int) $budgetLimit->budget_id) {
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
         // continue!

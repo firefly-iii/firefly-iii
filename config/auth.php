@@ -21,20 +21,8 @@
 
 declare(strict_types=1);
 
-use FireflyIII\Ldap\AttributeHandler;
-use FireflyIII\Ldap\Rules\UserDefinedRule;
-
-# select ldap model based on configuration option
-switch(env('LDAP_DIALECT')) {
-    case 'ActiveDirectory':
-        $ldapModel = class_exists(LdapRecord\Models\ActiveDirectory\User::class) ? LdapRecord\Models\ActiveDirectory\User::class : '';
-        break;
-    case 'FreeIPA':
-        $ldapModel = class_exists(LdapRecord\Models\FreeIPA\User::class) ? LdapRecord\Models\FreeIPA\User::class : '';
-        break;
-    default:
-        # default to openLDAP
-        $ldapModel = class_exists(LdapRecord\Models\OpenLDAP\User::class) ? LdapRecord\Models\OpenLDAP\User::class : '';
+if ('ldap' === strtolower((string) env('AUTHENTICATION_GUARD'))) {
+    die('LDAP is no longer supported by Firefly III v5.7+. Sorry about that. You will have to switch to "remote_user_guard", and use tools like Authelia or Keycloak to use LDAP together with Firefly III.');
 }
 
 return [
@@ -78,10 +66,6 @@ return [
             'driver'   => 'session',
             'provider' => 'users',
         ],
-        'ldap'              => [
-            'driver'   => 'session',
-            'provider' => 'ldap',
-        ],
         'remote_user_guard' => [
             'driver'   => 'remote_user_guard',
             'provider' => 'remote_user_provider',
@@ -111,25 +95,12 @@ return [
 
     'providers' => [
         'users'                => [
-            'driver'   => 'eloquent',
-            'model'    => FireflyIII\User::class,
+            'driver' => 'eloquent',
+            'model'  => FireflyIII\User::class,
         ],
         'remote_user_provider' => [
             'driver' => 'remote_user_provider',
             'model'  => FireflyIII\User::class,
-        ],
-
-        'ldap' => [
-            'driver'   => 'ldap',
-            'model'    => $ldapModel,
-            'rules'    => [
-                UserDefinedRule::class,
-            ],
-            'database' => [
-                'model'           => FireflyIII\User::class,
-                'sync_passwords'  => false,
-                'sync_attributes' => AttributeHandler::class,
-            ],
         ],
     ],
 

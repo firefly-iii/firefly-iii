@@ -130,7 +130,6 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      *
      * @return string
-     * @throws JsonException
      */
     public function getJournalTotal(TransactionJournal $journal): string
     {
@@ -143,7 +142,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // saves on queries:
         $amount = $journal->transactions()->where('amount', '>', 0)->get()->sum('amount');
-        $amount = (string)$amount;
+        $amount = (string) $amount;
         $cache->store($amount);
 
         return $amount;
@@ -187,7 +186,6 @@ class JournalRepository implements JournalRepositoryInterface
      * @param string $field
      *
      * @return null|Carbon
-     * @throws JsonException
      */
     public function getMetaDateById(int $journalId, string $field): ?Carbon
     {

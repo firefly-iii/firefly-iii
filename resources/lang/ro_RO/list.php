@@ -76,6 +76,7 @@ return [
     'type'                    => 'Tip',
     'completed'               => 'Finalizată',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Plătit această perioadă',
     'email'                   => 'E-mail',
     'registered_at'           => 'Înregistrat la',

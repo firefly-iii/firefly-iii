@@ -69,8 +69,8 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Bill $bill): JsonResponse
     {
-        $data = $request->getAll();
-        $bill = $this->repository->update($bill, $data);
+        $data    = $request->getAll();
+        $bill    = $this->repository->update($bill, $data);
         $manager = $this->getManager();
 
         /** @var BillTransformer $transformer */

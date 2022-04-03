@@ -180,7 +180,8 @@ return [
     'blocked_code'                => 'Razão para ser reportado',
     'login_name'                  => 'Login',
     'is_owner'                    => 'É administrador(a)?',
-    'url'                         => 'URL',
+    'url'                         => 'link',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Aplicar Regras',

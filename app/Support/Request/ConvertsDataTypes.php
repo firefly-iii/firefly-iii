@@ -41,7 +41,7 @@ trait ConvertsDataTypes
      */
     public function integer(string $field): int
     {
-        return (int)$this->get($field);
+        return (int) $this->get($field);
     }
 
     /**
@@ -53,7 +53,7 @@ trait ConvertsDataTypes
      */
     public function string(string $field): string
     {
-        return $this->clearString((string)($this->get($field) ?? ''), false);
+        return $this->clearString((string) ($this->get($field) ?? ''), false);
     }
 
     /**
@@ -131,7 +131,7 @@ trait ConvertsDataTypes
      */
     public function stringWithNewlines(string $field): string
     {
-        return $this->clearString((string)($this->get($field) ?? ''));
+        return $this->clearString((string) ($this->get($field) ?? ''));
     }
 
     /**
@@ -181,28 +181,6 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Return date or NULL.
-     *
-     * @param string $field
-     *
-     * @return Carbon|null
-     */
-    protected function getCarbonDate(string $field): ?Carbon
-    {
-        $result = null;
-        try {
-            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
-        } catch (InvalidFormatException $e) {
-            // @ignoreException
-        }
-        if (null === $result) {
-            Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
-        }
-
-        return $result;
-    }
-
-    /**
      * @param string|null $string
      *
      * @return Carbon|null
@@ -245,7 +223,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (float)$res;
+        return (float) $res;
     }
 
     /**
@@ -270,6 +248,28 @@ trait ConvertsDataTypes
     }
 
     /**
+     * Return date or NULL.
+     *
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    protected function getCarbonDate(string $field): ?Carbon
+    {
+        $result = null;
+        try {
+            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
+        } catch (InvalidFormatException $e) {
+            // @ignoreException
+        }
+        if (null === $result) {
+            Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
+        }
+
+        return $result;
+    }
+
+    /**
      * Parse to integer
      *
      * @param string|null $string
@@ -285,7 +285,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (int)$string;
+        return (int) $string;
     }
 
     /**
@@ -301,12 +301,12 @@ trait ConvertsDataTypes
             return null;
         }
 
-        $value = (string)$this->get($field);
+        $value = (string) $this->get($field);
         if ('' === $value) {
             return null;
         }
 
-        return (int)$value;
+        return (int) $value;
     }
 
 }

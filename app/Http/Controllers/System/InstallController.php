@@ -47,8 +47,8 @@ class InstallController extends Controller
 {
     use GetConfigurationData;
 
-    public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     public const BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
+    public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     public const OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
     private string $lastError;
     private array  $upgradeCommands;
@@ -127,10 +127,10 @@ class InstallController extends Controller
     public function index()
     {
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
+        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
 
         // set new DB version.
-        app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
+        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
 
         return view('install.index');
     }
@@ -142,7 +142,7 @@ class InstallController extends Controller
      */
     public function runCommand(Request $request): JsonResponse
     {
-        $requestIndex = (int)$request->get('index');
+        $requestIndex = (int) $request->get('index');
         $response     = [
             'hasNextCommand' => false,
             'done'           => true,

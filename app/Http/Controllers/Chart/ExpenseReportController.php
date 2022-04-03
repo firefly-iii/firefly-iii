@@ -113,27 +113,27 @@ class ExpenseReportController extends Controller
             /** @var Account $exp */
             $exp                          = $combination->first();
             $chartData[$exp->id . '-in']  = [
-                'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.income')),
+                'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.income')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             $chartData[$exp->id . '-out'] = [
-                'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.expenses')),
+                'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.expenses')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             // total in, total out:
             $chartData[$exp->id . '-total-in']  = [
-                'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.sum_of_income')),
+                'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.sum_of_income')),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
             $chartData[$exp->id . '-total-out'] = [
-                'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.sum_of_expenses')),
+                'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.sum_of_expenses')),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
@@ -151,7 +151,7 @@ class ExpenseReportController extends Controller
             // get expenses grouped by opposing name:
             $expenses = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));
             $income   = $this->groupByName($this->getIncomeForOpposing($accounts, $all, $currentStart, $currentEnd));
-            $label    = $currentStart->formatLocalized($format);
+            $label    = $currentStart->isoFormat($format);
 
             foreach ($combined as $name => $combination) {
                 // first is always expense account:

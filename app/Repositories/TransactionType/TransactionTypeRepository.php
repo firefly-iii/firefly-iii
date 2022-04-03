@@ -34,18 +34,6 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
 
     /**
-     * @param string $type
-     *
-     * @return TransactionType|null
-     */
-    public function findByType(string $type): ?TransactionType
-    {
-        $search = ucfirst($type);
-
-        return TransactionType::whereType($search)->first();
-    }
-
-    /**
      * @param TransactionType|null $type
      * @param string|null          $typeString
      *
@@ -67,6 +55,18 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
         Log::debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
 
         return $search;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return TransactionType|null
+     */
+    public function findByType(string $type): ?TransactionType
+    {
+        $search = ucfirst($type);
+
+        return TransactionType::whereType($search)->first();
     }
 
     /**

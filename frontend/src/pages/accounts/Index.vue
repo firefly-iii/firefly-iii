@@ -1,3 +1,23 @@
+<!--
+  - Index.vue
+  - Copyright (c) 2022 james@firefly-iii.org
+  -
+  - This file is part of Firefly III (https://github.com/firefly-iii).
+  -
+  - This program is free software: you can redistribute it and/or modify
+  - it under the terms of the GNU Affero General Public License as
+  - published by the Free Software Foundation, either version 3 of the
+  - License, or (at your option) any later version.
+  -
+  - This program is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU Affero General Public License for more details.
+  -
+  - You should have received a copy of the GNU Affero General Public License
+  - along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
 <template>
   <q-page>
     <q-table
@@ -5,7 +25,7 @@
       :rows="rows"
       :columns="columns"
       row-key="id"
-      @request="onRequest"
+      :dense="$q.screen.lt.md"
       v-model:pagination="pagination"
       :loading="loading"
       class="q-ma-md"
@@ -27,26 +47,41 @@
             <router-link :to="{ name: 'accounts.show', params: {id: props.row.id} }" class="text-primary">
               {{ props.row.name }}
             </router-link>
+            <q-popup-edit v-model="props.row.name" v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter />
+            </q-popup-edit>
           </q-td>
           <q-td key="iban" :props="props">
             {{ formatIban(props.row.iban) }}
+            <q-popup-edit v-model="props.row.iban" v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter />
+            </q-popup-edit>
+          </q-td>
+          <q-td key="current_balance" :props="props">
+            A
+          </q-td>
+          <q-td key="active" :props="props">
+            B
+          </q-td>
+          <q-td key="last_activity" :props="props">
+            C
           </q-td>
           <q-td key="menu" :props="props">
-            <q-btn-dropdown color="primary" label="Actions" size="sm">
+            <q-btn-dropdown color="primary" :label="$t('firefly.actions')" size="sm">
               <q-list>
                 <q-item clickable v-close-popup :to="{name: 'accounts.edit', params: {id: props.row.id}}">
                   <q-item-section>
-                    <q-item-label>Edit</q-item-label>
+                    <q-item-label>{{ $t('firefly.edit') }}</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup :to="{name: 'accounts.reconcile', params: {id: props.row.id}}" v-if="'asset' === props.row.type">
                   <q-item-section>
-                    <q-item-label>Reconcile</q-item-label>
+                    <q-item-label>{{ $t('firefly.reconcile') }}</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup @click="deleteAccount(props.row.id, props.row.name)">
                   <q-item-section>
-                    <q-item-label>Delete</q-item-label>
+                    <q-item-label>{{ $t('firefly.delete') }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -57,7 +92,7 @@
     </q-table>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-fab
-        label="Actions"
+        :label="$t('firefly.actions')"
         square
         vertical-actions-align="right"
         label-position="left"
@@ -65,8 +100,9 @@
         icon="fas fa-chevron-up"
         direction="up"
       >
+        <!-- TODO -->
         <!--<q-fab-action color="primary" square :to="{ name: 'accounts.create', params: {type: 'liability'} }" icon="fas fa-long-arrow-alt-right" label="New liability"/>-->
-        <q-fab-action color="primary" square :to="{ name: 'accounts.create', params: {type: 'asset'} }" icon="fas fa-exchange-alt" label="New asset account"/>
+        <q-fab-action color="primary" square :to="{ name: 'accounts.create', params: {type: 'asset'} }" icon="fas fa-exchange-alt" :label="$t('firefly.create_new_asset')"/>
       </q-fab>
     </q-page-sticky>
   </q-page>
@@ -75,7 +111,7 @@
 <script>
 import {mapGetters, useStore} from "vuex";
 import List from "../../api/accounts/list";
-import Destroy from "../../api/accounts/destroy";
+import Destroy from "../../api/generic/destroy";
 
 export default {
   name: 'Index',
@@ -103,8 +139,11 @@ export default {
       },
       loading: false,
       columns: [
-        {name: 'name', label: 'Name', field: 'name', align: 'left'},
-        {name: 'iban', label: 'IBAN', field: 'iban', align: 'left'},
+        {name: 'name', label: this.$t('list.name'), field: 'name', align: 'left'},
+        {name: 'iban', label: this.$t('list.account_number'), field: 'iban', align: 'left'},
+        {name: 'current_balance', label: this.$t('list.currentBalance'), field: 'current_balance', align: 'left'},
+        {name: 'active', label: this.$t('list.active'), field: 'active', align: 'left'},
+        {name: 'last_activity', label: this.$t('list.lastActivity'), field: 'last_activity', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
     }
@@ -135,7 +174,7 @@ export default {
   methods: {
     deleteAccount: function (id, name) {
       this.$q.dialog({
-                       title: 'Confirm',
+                       title: this.$t('firefly.confirm_action'),
                        message: 'Do you want to delete account "' + name + '"? Any and all transactions linked to this account will ALSO be deleted.',
                        cancel: true,
                        persistent: true
@@ -144,10 +183,11 @@ export default {
       });
     },
     destroyAccount: function (id) {
-      let destr = new Destroy;
-      destr.destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
-        this.triggerUpdate();
+      (new Destroy('accounts')).destroy(id).then(() => {
+        this.rows=  [];
+        this.$store.dispatch('fireflyiii/refreshCacheKey').then(() => {
+          this.triggerUpdate();
+        });
       });
     },
     updateBreadcrumbs: function () {
@@ -169,14 +209,15 @@ export default {
       return string.replace(NON_ALPHANUM, '').toUpperCase().replace(EVERY_FOUR_CHARS, "$1 ");
     },
     triggerUpdate: function () {
-      if (this.loading) {
+      this.rows=  [];
+      if (true === this.loading) {
         return;
       }
       if (null === this.range.start || null === this.range.end) {
         return;
       }
       this.loading = true;
-      const list = new List();
+      const list = new List;
       this.rows = [];
       list.list(this.type, this.page, this.getCacheKey).then(
         (response) => {
@@ -198,8 +239,10 @@ export default {
           }
           this.loading = false;
         }
-      )
-      ;
+      ).catch((err) => {
+        console.error('Error loading list');
+        console.error(err);
+      });
     }
   }
 }

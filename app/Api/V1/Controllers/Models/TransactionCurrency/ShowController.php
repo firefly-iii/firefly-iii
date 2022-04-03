@@ -33,6 +33,7 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use JsonException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -72,11 +73,12 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @throws JsonException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse
     {
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAll();
         $count      = $collection->count();
         // slice them:
@@ -106,6 +108,8 @@ class ShowController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      * @codeCoverageIgnore
      */
     public function show(TransactionCurrency $currency): JsonResponse
@@ -130,6 +134,8 @@ class ShowController extends Controller
      * Show a currency.
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      * @codeCoverageIgnore
      */
     public function showDefault(): JsonResponse

@@ -51,6 +51,7 @@ class UpdateRequest extends FormRequest
             'name'               => ['name', 'string'],
             'active'             => ['active', 'boolean'],
             'order'              => ['order', 'integer'],
+            'notes'              => ['notes', 'string'],
             'currency_id'        => ['auto_budget_currency_id', 'integer'],
             'currency_code'      => ['auto_budget_currency_code', 'string'],
             'auto_budget_type'   => ['auto_budget_type', 'string'],
@@ -82,6 +83,7 @@ class UpdateRequest extends FormRequest
         return [
             'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active'                    => [new IsBoolean],
+            'notes'                     => 'nullable|between:1,65536',
             'auto_budget_type'          => 'in:reset,rollover,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',

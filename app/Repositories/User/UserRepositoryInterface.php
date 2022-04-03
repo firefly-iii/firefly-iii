@@ -40,11 +40,6 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
-     *
-     */
-    public function deleteEmptyGroups(): void;
-
-    /**
      * Gives a user a role.
      *
      * @param User   $user
@@ -99,6 +94,11 @@ interface UserRepositoryInterface
      * @return Role
      */
     public function createRole(string $name, string $displayName, string $description): Role;
+
+    /**
+     *
+     */
+    public function deleteEmptyGroups(): void;
 
     /**
      * @param User $user

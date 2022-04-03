@@ -81,7 +81,7 @@ class RemoteUserGuard implements Guard
         $header = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string)(request()->server($header) ?? null);
+            $emailAddress = (string) (request()->server($header) ?? null);
             $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if (null !== $emailAddress && null === $preference && $emailAddress !== $userID) {
@@ -96,6 +96,14 @@ class RemoteUserGuard implements Guard
     /**
      * @inheritDoc
      */
+    public function guest(): bool
+    {
+        return !$this->check();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function check(): bool
     {
         return !is_null($this->user());
@@ -104,9 +112,17 @@ class RemoteUserGuard implements Guard
     /**
      * @inheritDoc
      */
-    public function guest(): bool
+    public function user(): ?User
     {
-        return !$this->check();
+        return $this->user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasUser()
+    {
+        // TODO: Implement hasUser() method.
     }
 
     /**
@@ -123,14 +139,6 @@ class RemoteUserGuard implements Guard
     public function setUser(Authenticatable $user)
     {
         $this->user = $user;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function user(): ?User
-    {
-        return $this->user;
     }
 
     /**

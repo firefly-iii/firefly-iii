@@ -45,7 +45,7 @@ return [
         'basic_info'    => ['element' => '#transaction-info', 'position' => 'right'],
         'amount_info'   => ['element' => '#amount-info', 'position' => 'bottom'],
         'optional_info' => ['element' => '#optional-info', 'position' => 'left'],
-        'split'         => ['element' => '.split_add_btn','position' => 'top'],
+        'split'         => ['element' => '.split_add_btn', 'position' => 'top'],
     ],
 
     'transactions_create_withdrawal' => [

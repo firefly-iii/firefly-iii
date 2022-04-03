@@ -38,9 +38,9 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => 'binders-only',  'namespace' => 'FireflyIII\Http\Controllers\System'],
+    ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System'],
     static function () {
-        Route::get('offline', fn () => view('errors.offline'));
+        Route::get('offline', fn() => view('errors.offline'));
         Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
     }
 );
@@ -52,7 +52,7 @@ Route::group(
     ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'],
     static function () {
 
-    // Authentication Routes...
+        // Authentication Routes...
         Route::get('login', ['uses' => 'Auth\LoginController@showLoginForm', 'as' => 'login']);
         Route::post('login', ['uses' => 'Auth\LoginController@login', 'as' => 'login.post']);
 
@@ -234,7 +234,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'budgets', 'as' => 'budgets.'],
     static function () {
 
-    // delete
+        // delete
         Route::get('delete/{budget}', ['uses' => 'Budget\DeleteController@delete', 'as' => 'delete']);
         Route::post('destroy/{budget}', ['uses' => 'Budget\DeleteController@destroy', 'as' => 'destroy']);
 
@@ -305,7 +305,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'categories', 'as' => 'categories.'],
     static function () {
 
-    // index:
+        // index:
         Route::get('', ['uses' => 'Category\IndexController@index', 'as' => 'index']);
 
         // create
@@ -563,7 +563,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'export', 'as' => 'export.'],
     static function () {
 
-    // index
+        // index
         Route::get('', ['uses' => 'Export\IndexController@index', 'as' => 'index']);
         Route::post('export', ['uses' => 'Export\IndexController@export', 'as' => 'export']);
     }
@@ -724,7 +724,7 @@ Route::group(
 
 /**
  * Recurring Transactions Controller.
- * 
+ *
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'recurring', 'as' => 'recurring.'],
@@ -903,7 +903,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'rules', 'as' => 'rules.'],
     static function () {
 
-    // create controller
+        // create controller
         Route::get('create/{ruleGroup?}', ['uses' => 'Rule\CreateController@create', 'as' => 'create']);
         Route::get('create-from-bill/{bill}', ['uses' => 'Rule\CreateController@createFromBill', 'as' => 'create-from-bill']);
         Route::get('create-from-journal/{tj}', ['uses' => 'Rule\CreateController@createFromJournal', 'as' => 'create-from-journal']);
@@ -992,7 +992,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'transactions', 'as' => 'transactions.'],
     static function () {
 
-    // show groups:
+        // show groups:
 // See reference nr. 5
         Route::get('{what}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(
             ['what' => 'withdrawal|deposit|transfers|transfer']
@@ -1101,7 +1101,7 @@ Route::group(
     ['middleware' => 'admin', 'namespace' => 'FireflyIII\Http\Controllers\Admin', 'prefix' => 'admin', 'as' => 'admin.'],
     static function () {
 
-    // admin home
+        // admin home
         Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::post('test-message', ['uses' => 'HomeController@testMessage', 'as' => 'test-message']);
 

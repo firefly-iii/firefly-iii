@@ -65,7 +65,7 @@
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}{% if loop.index != group.sums|length %},{% endif %}X
                             </span>
                         {% else %}
-                            {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
+                    {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
                         {% endif %}
                     {% endfor %}
                 </td>
@@ -203,7 +203,7 @@
                     {% endif %}
                 </td>
                 <td style=" {{ style|raw }}" class="hidden-xs">
-                    {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+                    {{ transaction.date.isoFormat(monthAndDayFormat) }}
                 </td>
                 <td style=" {{ style|raw }}">
                     {% if 'Cash account' == transaction.source_account_type %}

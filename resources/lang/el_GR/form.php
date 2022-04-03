@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Είσοδος',
     'is_owner'                    => 'Είναι διαχειριστής;',
     'url'                         => 'URL',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Εφαρμογή κανόνων',

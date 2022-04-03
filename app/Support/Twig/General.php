@@ -54,24 +54,6 @@ class General extends AbstractExtension
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFunctions(): array
-    {
-        return [
-            $this->phpdate(),
-            $this->activeRouteStrict(),
-            $this->activeRoutePartial(),
-            $this->activeRoutePartialObjectType(),
-            $this->menuOpenRoutePartial(),
-            $this->formatDate(),
-            $this->getMetaField(),
-            $this->hasRole(),
-            $this->getRootSearchOperator(),
-        ];
-    }
-
-    /**
      * Show account balance. Only used on the front page of Firefly III.
      *
      * @return TwigFilter
@@ -88,24 +70,6 @@ class General extends AbstractExtension
                 $date = session('end', Carbon::now()->endOfMonth());
 
                 return app('steam')->balance($account, $date);
-            }
-        );
-    }
-
-    /**
-     * Show URL host name
-     *
-     * @return TwigFilter
-     */
-    protected function phpHostName(): TwigFilter
-    {
-        return new TwigFilter(
-            'phphost',
-            static function (string $string): string {
-                $proto = (string)parse_url($string, PHP_URL_SCHEME);
-                $host  = (string)parse_url($string, PHP_URL_HOST);
-
-                return e(sprintf('%s://%s', $proto, $host));
             }
         );
     }
@@ -231,7 +195,7 @@ class General extends AbstractExtension
                     ]
                 );
 
-                return (string)$converter->convertToHtml($text);
+                return (string) $converter->convert($text);
             }, ['is_safe' => ['html']]
         );
     }
@@ -244,9 +208,46 @@ class General extends AbstractExtension
         return new TwigFilter(
             'floatval',
             static function ($value): float {
-                return (float)$value;
+                return (float) $value;
             }
         );
+    }
+
+    /**
+     * Show URL host name
+     *
+     * @return TwigFilter
+     */
+    protected function phpHostName(): TwigFilter
+    {
+        return new TwigFilter(
+            'phphost',
+            static function (string $string): string {
+                $proto = (string) parse_url($string, PHP_URL_SCHEME);
+                $host  = (string) parse_url($string, PHP_URL_HOST);
+
+                return e(sprintf('%s://%s', $proto, $host));
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions(): array
+    {
+        return [
+            $this->phpdate(),
+            $this->activeRouteStrict(),
+            $this->activeRoutePartial(),
+            $this->activeRoutePartialObjectType(),
+            $this->menuOpenRoutePartial(),
+            $this->formatDate(),
+            $this->getMetaField(),
+            $this->hasRole(),
+            $this->getRootSearchOperator(),
+            $this->carbonize(),
+        ];
     }
 
     /**
@@ -369,7 +370,7 @@ class General extends AbstractExtension
             function (string $date, string $format): string {
                 $carbon = new Carbon($date);
 
-                return $carbon->formatLocalized($format);
+                return $carbon->isoFormat($format);
             }
         );
     }
@@ -421,6 +422,19 @@ class General extends AbstractExtension
             'getRootSearchOperator',
             static function (string $operator): string {
                 return OperatorQuerySearch::getRootOperator($operator);
+            }
+        );
+    }
+
+    /**
+     * @return TwigFunction
+     */
+    protected function carbonize(): TwigFunction
+    {
+        return new TwigFunction(
+            'carbonize',
+            static function (string $date): Carbon {
+                return new Carbon($date);
             }
         );
     }

@@ -132,12 +132,12 @@ class UpdatedGroupEventHandler
                        ->orderBy('transaction_journals.description', 'DESC')
                        ->first();
 
-        if(null === $first) {
+        if (null === $first) {
             Log::warning(sprintf('Group #%d has no transaction journals.', $group->id));
             return;
         }
 
-        $all   = $group->transactionJournals()->get()->pluck('id')->toArray();
+        $all = $group->transactionJournals()->get()->pluck('id')->toArray();
         /** @var Account $sourceAccount */
         $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
         /** @var Account $destAccount */

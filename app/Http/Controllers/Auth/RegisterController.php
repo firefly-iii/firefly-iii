@@ -36,6 +36,8 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class RegisterController
@@ -85,18 +87,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        // is allowed to?
-        $allowRegistration = true;
-        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $userCount         = User::count();
-        $guard             = config('auth.defaults.guard');
-        if (true === $singleUserMode && $userCount > 0 && 'ldap' !== $guard) {
-            $allowRegistration = false;
-        }
-
-        if ('ldap' === $guard) {
-            $allowRegistration = false;
-        }
+        $allowRegistration = $this->allowedToRegister();
 
         if (false === $allowRegistration) {
             throw new FireflyException('Registration is currently not available :(');
@@ -105,15 +96,39 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
         $user = $this->createUser($request->all());
         Log::info(sprintf('Registered new user %s', $user->email));
-        event(new RegisteredUser($user, $request->ip()));
+        event(new RegisteredUser($user));
 
         $this->guard()->login($user);
 
-        session()->flash('success', (string)trans('firefly.registered'));
+        session()->flash('success', (string) trans('firefly.registered'));
 
         $this->registered($request, $user);
 
         return redirect($this->redirectPath());
+    }
+
+    /**
+     * @return bool
+     * @throws FireflyException
+     */
+    protected function allowedToRegister(): bool
+    {
+        // is allowed to register?
+        $allowRegistration = true;
+        try {
+            $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
+            $singleUserMode = true;
+        }
+        $userCount = User::count();
+        $guard     = config('auth.defaults.guard');
+        if (true === $singleUserMode && $userCount > 0 && 'web' === $guard) {
+            $allowRegistration = false;
+        }
+        if ('web' !== $guard) {
+            $allowRegistration = false;
+        }
+        return $allowRegistration;
     }
 
     /**
@@ -122,28 +137,15 @@ class RegisterController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function showRegistrationForm(Request $request)
     {
-        $allowRegistration = true;
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $userCount         = User::count();
-        $pageTitle         = (string)trans('firefly.register_page_title');
-        $guard             = config('auth.defaults.guard');
-
-        if (true === $isDemoSite) {
-            $allowRegistration = false;
-        }
-
-        if (true === $singleUserMode && $userCount > 0 && 'ldap' !== $guard) {
-            $allowRegistration = false;
-        }
-
-        if ('ldap' === $guard) {
-            $allowRegistration = false;
-        }
+        $pageTitle         = (string) trans('firefly.register_page_title');
+        $allowRegistration = $this->allowedToRegister();
 
         if (false === $allowRegistration) {
             $message = 'Registration is currently not available.';
@@ -155,5 +157,4 @@ class RegisterController extends Controller
 
         return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
     }
-
 }

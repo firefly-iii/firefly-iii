@@ -59,19 +59,19 @@ class TransactionType extends Model
     use SoftDeletes;
 
     /** @var string */
-    public const WITHDRAWAL = 'Withdrawal';
-    /** @var string */
     public const DEPOSIT = 'Deposit';
     /** @var string */
-    public const TRANSFER = 'Transfer';
+    public const INVALID = 'Invalid';
+    /** @var string */
+    public const LIABILITY_CREDIT = 'Liability credit';
     /** @var string */
     public const OPENING_BALANCE = 'Opening balance';
     /** @var string */
     public const RECONCILIATION = 'Reconciliation';
     /** @var string */
-    public const INVALID = 'Invalid';
+    public const TRANSFER = 'Transfer';
     /** @var string */
-    public const LIABILITY_CREDIT = 'Liability credit';
+    public const WITHDRAWAL = 'Withdrawal';
     /** @var string[] */
     protected $casts
         = [

@@ -31,7 +31,7 @@
             </td>
             {% if category.lastActivity %}
                 <td class="hidden-sm hidden-xs" data-value="{{ category.lastActivity.format('Y-m-d H-i-s') }}">
-                    {{ category.lastActivity.formatLocalized(monthAndDayFormat) }}
+                    {{ category.lastActivity.isoFormat(monthAndDayFormat) }}
                 </td>
             {% else %}
                 <td class="hidden-sm hidden-xs" data-value="0000-00-00 00-00-00">

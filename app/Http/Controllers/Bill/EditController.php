@@ -53,7 +53,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.bills'));
+                app('view')->share('title', (string) trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->repository  = app(BillRepositoryInterface::class);
@@ -78,10 +78,10 @@ class EditController extends Controller
         $billPeriods = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string)trans('firefly.' . $current);
+            $periods[$current] = (string) trans('firefly.' . $current);
         }
 
-        $subTitle = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle = (string) trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
@@ -89,8 +89,8 @@ class EditController extends Controller
         }
 
         $currency         = app('amount')->getDefaultCurrency();
-        $bill->amount_min = round((float)$bill->amount_min, $currency->decimal_places);
-        $bill->amount_max = round((float)$bill->amount_max, $currency->decimal_places);
+        $bill->amount_min = round((float) $bill->amount_min, $currency->decimal_places);
+        $bill->amount_max = round((float) $bill->amount_max, $currency->decimal_places);
         $rules            = $this->repository->getRulesForBill($bill);
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
@@ -98,9 +98,11 @@ class EditController extends Controller
         $hasOldInput = null !== $request->old('_token');
 
         $preFilled = [
+            'bill_end_date'           => $bill->end_date,
+            'extension_date'          => $bill->extension_date,
             'notes'                   => $this->repository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
-            'active'                  => $hasOldInput ? (bool)$request->old('active') : $bill->active,
+            'active'                  => $hasOldInput ? (bool) $request->old('active') : $bill->active,
             'object_group'            => $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
         ];
 
@@ -123,7 +125,7 @@ class EditController extends Controller
         $billData = $request->getBillData();
         $bill     = $this->repository->update($bill, $billData);
 
-        $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
+        $request->session()->flash('success', (string) trans('firefly.updated_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
         /** @var array $files */
@@ -132,7 +134,7 @@ class EditController extends Controller
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         // flash messages
@@ -141,7 +143,7 @@ class EditController extends Controller
         }
         $redirect = redirect($this->getPreviousUri('bills.edit.uri'));
 
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
 
             $request->session()->put('bills.edit.fromUpdate', true);
 

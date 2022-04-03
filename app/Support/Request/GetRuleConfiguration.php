@@ -34,7 +34,7 @@ trait GetRuleConfiguration
      */
     protected function getTriggers(): array
     {
-        return array_keys(config('firefly.search.operators'));
+        return array_keys(config('search.operators'));
     }
 
     /**
@@ -42,7 +42,7 @@ trait GetRuleConfiguration
      */
     protected function getTriggersWithContext(): array
     {
-        $list   = config('firefly.search.operators');
+        $list   = config('search.operators');
         $return = [];
         foreach ($list as $key => $info) {
             if (true === $info['needs_context']) {

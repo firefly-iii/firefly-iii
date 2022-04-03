@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Iniciar sessao',
     'is_owner'                    => 'É administrador?',
     'url'                         => 'URL',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Aplicar regras',

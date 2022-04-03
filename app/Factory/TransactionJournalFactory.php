@@ -160,11 +160,11 @@ class TransactionJournalFactory
         $type            = $this->typeRepository->findTransactionType(null, $row['type']);
         $carbon          = $row['date'] ?? today(config('app.timezone'));
         $order           = $row['order'] ?? 0;
-        $currency        = $this->currencyRepository->findCurrency((int)$row['currency_id'], $row['currency_code']);
+        $currency        = $this->currencyRepository->findCurrency((int) $row['currency_id'], $row['currency_code']);
         $foreignCurrency = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
-        $bill            = $this->billRepository->findBill((int)$row['bill_id'], $row['bill_name']);
+        $bill            = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
         $billId          = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
-        $description     = (string)$row['description'];
+        $description     = (string) $row['description'];
 
         /** Manipulate basic fields */
         $carbon->setTimezone(config('app.timezone'));
@@ -237,7 +237,7 @@ class TransactionJournalFactory
         $transactionFactory->setForeignCurrency($foreignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
         try {
-            $negative = $transactionFactory->createNegative((string)$row['amount'], (string)$row['foreign_amount']);
+            $negative = $transactionFactory->createNegative((string) $row['amount'], (string) $row['foreign_amount']);
         } catch (FireflyException $e) {
             Log::error('Exception creating negative transaction.');
             Log::error($e->getMessage());
@@ -256,7 +256,7 @@ class TransactionJournalFactory
         $transactionFactory->setForeignCurrency($foreignCurrency);
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
         try {
-            $transactionFactory->createPositive((string)$row['amount'], (string)$row['foreign_amount']);
+            $transactionFactory->createPositive((string) $row['amount'], (string) $row['foreign_amount']);
         } catch (FireflyException $e) {
             Log::error('Exception creating positive transaction.');
             Log::error($e->getMessage());
@@ -307,7 +307,7 @@ class TransactionJournalFactory
         $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
         if (false === $json) {
 
-            $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR);
+            $json = json_encode((string) microtime(), JSON_THROW_ON_ERROR);
             Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
 
         }
@@ -366,10 +366,10 @@ class TransactionJournalFactory
 
         // validate source account.
         $array       = [
-            'id'     => $data['source_id'] ? (int)$data['source_id'] : null,
-            'name'   => $data['source_name'] ? (string)$data['source_name'] : null,
-            'iban'   => $data['source_iban'] ? (string)$data['source_iban'] : null,
-            'number' => $data['source_number'] ? (string)$data['source_number'] : null,
+            'id'     => $data['source_id'] ? (int) $data['source_id'] : null,
+            'name'   => $data['source_name'] ? (string) $data['source_name'] : null,
+            'iban'   => $data['source_iban'] ? (string) $data['source_iban'] : null,
+            'number' => $data['source_number'] ? (string) $data['source_number'] : null,
         ];
         $validSource = $this->accountValidator->validateSource($array);
 
@@ -381,10 +381,10 @@ class TransactionJournalFactory
 
         // validate destination account
         $array = [
-            'id'     => $data['destination_id'] ? (int)$data['destination_id'] : null,
-            'name'   => $data['destination_name'] ? (string)$data['destination_name'] : null,
-            'iban'   => $data['destination_iban'] ? (string)$data['destination_iban'] : null,
-            'number' => $data['destination_number'] ? (string)$data['destination_number'] : null,
+            'id'     => $data['destination_id'] ? (int) $data['destination_id'] : null,
+            'name'   => $data['destination_name'] ? (string) $data['destination_name'] : null,
+            'iban'   => $data['destination_iban'] ? (string) $data['destination_iban'] : null,
+            'number' => $data['destination_number'] ? (string) $data['destination_number'] : null,
         ];
 
         $validDestination = $this->accountValidator->validateDestination($array);
@@ -417,6 +417,8 @@ class TransactionJournalFactory
      * @param Account                  $account
      *
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
@@ -526,7 +528,7 @@ class TransactionJournalFactory
             return;
         }
 
-        $piggyBank = $this->piggyRepository->findPiggyBank((int)$data['piggy_bank_id'], $data['piggy_bank_name']);
+        $piggyBank = $this->piggyRepository->findPiggyBank((int) $data['piggy_bank_id'], $data['piggy_bank_name']);
 
         if (null !== $piggyBank) {
             $this->piggyEventFactory->create($journal, $piggyBank);
@@ -558,7 +560,7 @@ class TransactionJournalFactory
         $set = [
             'journal' => $journal,
             'name'    => $field,
-            'data'    => (string)($data[$field] ?? ''),
+            'data'    => (string) ($data[$field] ?? ''),
         ];
 
         //Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));

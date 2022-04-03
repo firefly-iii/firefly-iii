@@ -77,6 +77,7 @@ return [
     'type'                    => 'Tür',
     'completed'               => 'Tamamlandı',
     'iban'                    => 'IBAN numarası',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Bu dönemde ödenen',
     'email'                   => 'E-posta',
     'registered_at'           => 'Şurada kayıtlı',

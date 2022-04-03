@@ -28,7 +28,7 @@
                 </td>
                 <td colspan="3">
                     <span class="label label-default">
-                        {{ trans('firefly.start_of_reconcile_period', {period: start.formatLocalized(monthAndDayFormat) }) }}
+                        {{ trans('firefly.start_of_reconcile_period', {period: start.isoFormat(monthAndDayFormat) }) }}
                     </span>
                 </td>
                 <td colspan="2">
@@ -49,7 +49,7 @@
                 </td>
                 <td colspan="3">
                     <span class="label label-default">
-                        {{ trans('firefly.end_of_reconcile_period', {period: end.formatLocalized(monthAndDayFormat) }) }}
+                        {{ trans('firefly.end_of_reconcile_period', {period: end.isoFormat(monthAndDayFormat) }) }}
                     </span>
                 </td>
                 <td colspan="2">
@@ -133,7 +133,7 @@
             </td>
 
             <td class="hidden-sm hidden-xs">
-                {{ journal.date.formatLocalized(monthAndDayFormat) }}
+                {{ journal.date.isoFormat(monthAndDayFormat) }}
             </td>
 
             <td class="hidden-xs hidden-sm hidden-md">
@@ -163,7 +163,7 @@
             </td>
             <td colspan="3">
                 <span class="label label-default">
-                    {{ trans('firefly.start_of_reconcile_period', {period: start.formatLocalized(monthAndDayFormat) }) }}
+                    {{ trans('firefly.start_of_reconcile_period', {period: start.isoFormat(monthAndDayFormat) }) }}
                 </span>
             </td>
             <td colspan="2">

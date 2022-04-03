@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -71,8 +72,8 @@ class BillTransformer extends AbstractTransformer
         /** @var ObjectGroup $objectGroup */
         $objectGroup = $bill->objectGroups->first();
         if (null !== $objectGroup) {
-            $objectGroupId    = (int)$objectGroup->id;
-            $objectGroupOrder = (int)$objectGroup->order;
+            $objectGroupId    = (int) $objectGroup->id;
+            $objectGroupOrder = (int) $objectGroup->order;
             $objectGroupTitle = $objectGroup->title;
         }
 
@@ -101,30 +102,30 @@ class BillTransformer extends AbstractTransformer
         $current = $payDatesFormatted[0] ?? null;
         if (null !== $current && !$temp->isToday()) {
             $temp2                 = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
-            $nextExpectedMatchDiff = $temp2->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
+            $nextExpectedMatchDiff = $temp2->diffForHumans(today(), CarbonInterface::DIFF_RELATIVE_TO_NOW);
         }
         unset($temp, $temp2);
 
         return [
-            'id'                       => (int)$bill->id,
+            'id'                       => (int) $bill->id,
             'created_at'               => $bill->created_at->toAtomString(),
             'updated_at'               => $bill->updated_at->toAtomString(),
-            'currency_id'              => (string)$bill->transaction_currency_id,
+            'currency_id'              => (string) $bill->transaction_currency_id,
             'currency_code'            => $currency->code,
             'currency_symbol'          => $currency->symbol,
-            'currency_decimal_places'  => (int)$currency->decimal_places,
+            'currency_decimal_places'  => (int) $currency->decimal_places,
             'name'                     => $bill->name,
-            'amount_min'               => number_format((float)$bill->amount_min, $currency->decimal_places, '.', ''),
-            'amount_max'               => number_format((float)$bill->amount_max, $currency->decimal_places, '.', ''),
+            'amount_min'               => number_format((float) $bill->amount_min, $currency->decimal_places, '.', ''),
+            'amount_max'               => number_format((float) $bill->amount_max, $currency->decimal_places, '.', ''),
             'date'                     => $bill->date->toAtomString(),
             'end_date'                 => $bill->end_date?->toAtomString(),
             'extension_date'           => $bill->extension_date?->toAtomString(),
             'repeat_freq'              => $bill->repeat_freq,
-            'skip'                     => (int)$bill->skip,
+            'skip'                     => (int) $bill->skip,
             'active'                   => $bill->active,
-            'order'                    => (int)$bill->order,
+            'order'                    => (int) $bill->order,
             'notes'                    => $notes,
-            'object_group_id'          => $objectGroupId ? (string)$objectGroupId : null,
+            'object_group_id'          => $objectGroupId ? (string) $objectGroupId : null,
             'object_group_order'       => $objectGroupOrder,
             'object_group_title'       => $objectGroupTitle,
 
@@ -202,8 +203,8 @@ class BillTransformer extends AbstractTransformer
         $result = [];
         foreach ($set as $entry) {
             $result[] = [
-                'transaction_group_id'   => (int)$entry->transaction_group_id,
-                'transaction_journal_id' => (int)$entry->id,
+                'transaction_group_id'   => (int) $entry->transaction_group_id,
+                'transaction_journal_id' => (int) $entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
             ];
         }
@@ -267,7 +268,7 @@ class BillTransformer extends AbstractTransformer
             $nextExpectedMatch->addDay();
             $currentStart = clone $nextExpectedMatch;
             $loop++;
-            if($loop > 4) {
+            if ($loop > 4) {
                 break;
             }
         }

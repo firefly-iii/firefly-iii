@@ -76,6 +76,7 @@ return [
     'type'                    => 'Typ',
     'completed'               => 'Dokončené',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Zaplatené v tomto období',
     'email'                   => 'E-mail',
     'registered_at'           => 'Registrované',

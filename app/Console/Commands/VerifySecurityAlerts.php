@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Log;
 use Storage;
 
@@ -51,7 +50,7 @@ class VerifySecurityAlerts extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws FileNotFoundException
+     * @throws \League\Flysystem\FilesystemException
      */
     public function handle(): int
     {

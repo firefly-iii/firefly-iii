@@ -44,7 +44,7 @@ class IsDateOrTime implements Rule
      */
     public function message()
     {
-        return (string)trans('validation.date_or_time');
+        return (string) trans('validation.date_or_time');
     }
 
     /**
@@ -57,7 +57,7 @@ class IsDateOrTime implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        $value = (string)$value;
+        $value = (string) $value;
         if ('' === $value) {
             return false;
         }

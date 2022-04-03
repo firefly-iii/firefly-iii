@@ -43,6 +43,7 @@ class GroupUpdateService
      * @param array            $data
      *
      * @return TransactionGroup
+     * @throws DuplicateTransactionException
      * @throws FireflyException
      */
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
@@ -191,8 +192,9 @@ class GroupUpdateService
      *
      * @return TransactionJournal|null
      *
-     * @throws FireflyException
      * @throws DuplicateTransactionException
+     * @throws FireflyException
+     * @throws \JsonException
      */
     private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
     {

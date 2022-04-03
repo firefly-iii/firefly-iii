@@ -333,6 +333,7 @@ class Navigation
      * @param Carbon $end
      *
      * @return array
+     * @throws FireflyException
      */
     public function listOfPeriods(Carbon $start, Carbon $end): array
     {
@@ -340,23 +341,23 @@ class Navigation
         // define period to increment
         $increment     = 'addDay';
         $format        = $this->preferredCarbonFormat($start, $end);
-        $displayFormat = (string)trans('config.month_and_day', [], $locale);
+        $displayFormat = (string) trans('config.month_and_day_js', [], $locale);
         // increment by month (for year)
         if ($start->diffInMonths($end) > 1) {
             $increment     = 'addMonth';
-            $displayFormat = (string)trans('config.month');
+            $displayFormat = (string) trans('config.month_js');
         }
 
         // increment by year (for multi year)
         if ($start->diffInMonths($end) > 12) {
             $increment     = 'addYear';
-            $displayFormat = (string)trans('config.year');
+            $displayFormat = (string) trans('config.year_js');
         }
         $begin   = clone $start;
         $entries = [];
         while ($begin < $end) {
             $formatted           = $begin->format($format);
-            $displayed           = $begin->formatLocalized($displayFormat);
+            $displayed           = $begin->isoFormat($displayFormat);
             $entries[$formatted] = $displayed;
             $begin->$increment();
         }
@@ -397,23 +398,23 @@ class Navigation
     {
         $date      = clone $theDate;
         $formatMap = [
-            '1D'      => (string)trans('config.specific_day'),
-            'daily'   => (string)trans('config.specific_day'),
-            'custom'  => (string)trans('config.specific_day'),
-            '1W'      => (string)trans('config.week_in_year'),
-            'week'    => (string)trans('config.week_in_year'),
-            'weekly'  => (string)trans('config.week_in_year'),
-            '1M'      => (string)trans('config.month'),
-            'month'   => (string)trans('config.month'),
-            'monthly' => (string)trans('config.month'),
-            '1Y'      => (string)trans('config.year'),
-            'year'    => (string)trans('config.year'),
-            'yearly'  => (string)trans('config.year'),
-            '6M'      => (string)trans('config.half_year'),
+            '1D'      => (string) trans('config.specific_day_js'),
+            'daily'   => (string) trans('config.specific_day_js'),
+            'custom'  => (string) trans('config.specific_day_js'),
+            '1W'      => (string) trans('config.week_in_year_js'),
+            'week'    => (string) trans('config.week_in_year_js'),
+            'weekly'  => (string) trans('config.week_in_year_js'),
+            '1M'      => (string) trans('config.month_js'),
+            'month'   => (string) trans('config.month_js'),
+            'monthly' => (string) trans('config.month_js'),
+            '1Y'      => (string) trans('config.year_js'),
+            'year'    => (string) trans('config.year_js'),
+            'yearly'  => (string) trans('config.year_js'),
+            '6M'      => (string) trans('config.half_year_js'),
         ];
 
         if (array_key_exists($repeatFrequency, $formatMap)) {
-            return $date->formatLocalized((string)$formatMap[$repeatFrequency]);
+            return $date->isoFormat((string) $formatMap[$repeatFrequency]);
         }
         if ('3M' === $repeatFrequency || 'quarter' === $repeatFrequency) {
             $quarter = ceil($theDate->month / 3);
@@ -436,17 +437,18 @@ class Navigation
      * @param Carbon $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {
         $locale = app('steam')->getLocale();
-        $format = (string)trans('config.month_and_day', [], $locale);
+        $format = (string) trans('config.month_and_day_js', [], $locale);
         if ($start->diffInMonths($end) > 1) {
-            $format = (string)trans('config.month', [], $locale);
+            $format = (string) trans('config.month_js', [], $locale);
         }
 
         if ($start->diffInMonths($end) > 12) {
-            $format = (string)trans('config.year', [], $locale);
+            $format = (string) trans('config.year_js', [], $locale);
         }
 
         return $format;

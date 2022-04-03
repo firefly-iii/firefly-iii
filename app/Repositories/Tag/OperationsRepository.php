@@ -70,7 +70,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array          = [];
         $listedJournals = [];
         foreach ($journals as $journal) {
-            $currencyId         = (int)$journal['currency_id'];
+            $currencyId         = (int) $journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [
                     'tags'                    => [],
                     'currency_id'             => $currencyId,
@@ -82,9 +82,9 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId     = (int)$tag['id'];
-                $tagName   = (string)$tag['name'];
-                $journalId = (int)$journal['transaction_journal_id'];
+                $tagId     = (int) $tag['id'];
+                $tagName   = (string) $tag['name'];
+                $journalId = (int) $journal['transaction_journal_id'];
 
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
@@ -112,6 +112,18 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $array;
+    }
+
+    /**
+     * @return Collection
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    private function getTags(): Collection
+    {
+        $repository = app(TagRepositoryInterface::class);
+
+        return $repository->get();
     }
 
     /**
@@ -146,7 +158,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $listedJournals = [];
 
         foreach ($journals as $journal) {
-            $currencyId         = (int)$journal['currency_id'];
+            $currencyId         = (int) $journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [
                     'tags'                    => [],
                     'currency_id'             => $currencyId,
@@ -158,9 +170,9 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId     = (int)$tag['id'];
-                $tagName   = (string)$tag['name'];
-                $journalId = (int)$journal['transaction_journal_id'];
+                $tagId     = (int) $tag['id'];
+                $tagName   = (string) $tag['name'];
+                $journalId = (int) $journal['transaction_journal_id'];
 
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
@@ -172,7 +184,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                         'name'                 => $tagName,
                         'transaction_journals' => [],
                     ];
-                $journalId                                                              = (int)$journal['transaction_journal_id'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => app('steam')->positive($journal['amount']),
                     'date'                     => $journal['date'],
@@ -228,15 +240,5 @@ class OperationsRepository implements OperationsRepositoryInterface
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getTags(): Collection
-    {
-        $repository = app(TagRepositoryInterface::class);
-
-        return $repository->get();
     }
 }

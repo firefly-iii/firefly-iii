@@ -87,7 +87,7 @@ class TransactionJournalLink extends Model
     public static function routeBinder(string $value): TransactionJournalLink
     {
         if (auth()->check()) {
-            $linkId = (int)$value;
+            $linkId = (int) $value;
             $link   = self::where('journal_links.id', $linkId)
                           ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
                           ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')

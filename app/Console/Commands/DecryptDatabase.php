@@ -109,6 +109,8 @@ class DecryptDatabase extends Command
      * @param string $table
      *
      * @return bool
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isDecrypted(string $table): bool
     {
@@ -120,7 +122,7 @@ class DecryptDatabase extends Command
             Log::error($e->getMessage());
         }
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -150,7 +152,7 @@ class DecryptDatabase extends Command
         if (null === $original) {
             return;
         }
-        $id    = (int)$row->id;
+        $id    = (int) $row->id;
         $value = '';
 
         try {
@@ -215,7 +217,7 @@ class DecryptDatabase extends Command
         }
 
         /** @var Preference $object */
-        $object = Preference::find((int)$id);
+        $object = Preference::find((int) $id);
         if (null !== $object) {
             $object->data = $newValue;
             $object->save();

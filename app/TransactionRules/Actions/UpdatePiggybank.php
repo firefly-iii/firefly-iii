@@ -61,7 +61,7 @@ class UpdatePiggybank implements ActionInterface
         // refresh the transaction type.
         $user                             = User::find($journal['user_id']);
         $journalObj                       = $user->transactionJournals()->find($journal['transaction_journal_id']);
-        $type                             = TransactionType::find((int)$journalObj->transaction_type_id);
+        $type                             = TransactionType::find((int) $journalObj->transaction_type_id);
         $journal['transaction_type_type'] = $type->type;
 
         if (TransactionType::TRANSFER !== $journal['transaction_type_type']) {
@@ -86,13 +86,13 @@ class UpdatePiggybank implements ActionInterface
         /** @var Transaction $destination */
         $destination = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '>', 0)->first();
 
-        if ((int)$source->account_id === (int)$piggyBank->account_id) {
+        if ((int) $source->account_id === (int) $piggyBank->account_id) {
             Log::debug('Piggy bank account is linked to source, so remove amount.');
             $this->removeAmount($journal, $piggyBank, $destination->amount);
 
             return true;
         }
-        if ((int)$destination->account_id === (int)$piggyBank->account_id) {
+        if ((int) $destination->account_id === (int) $piggyBank->account_id) {
             Log::debug('Piggy bank account is linked to source, so add amount.');
             $this->addAmount($journal, $piggyBank, $destination->amount);
 

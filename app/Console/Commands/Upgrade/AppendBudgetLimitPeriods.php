@@ -72,12 +72,14 @@ class AppendBudgetLimitPeriods extends Command
     /**
      * @return bool
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar->data;
+        return (bool) $configVar->data;
     }
 
     /**

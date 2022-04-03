@@ -40,10 +40,8 @@ class RequestedReportOnJournals
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var Collection The transaction groups to report on. */
-    public $groups;
-    /** @var int The ID of the user. */
-    public $userId;
+    public Collection $groups;
+    public int        $userId;
 
     /**
      * Create a new event instance.

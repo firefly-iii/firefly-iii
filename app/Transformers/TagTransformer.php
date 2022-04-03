@@ -52,11 +52,11 @@ class TagTransformer extends AbstractTransformer
         if (null !== $location) {
             $latitude  = $location->latitude;
             $longitude = $location->longitude;
-            $zoomLevel = (int)$location->zoom_level;
+            $zoomLevel = (int) $location->zoom_level;
         }
 
         return [
-            'id'          => (int)$tag->id,
+            'id'          => (int) $tag->id,
             'created_at'  => $tag->created_at->toAtomString(),
             'updated_at'  => $tag->updated_at->toAtomString(),
             'tag'         => $tag->tag,

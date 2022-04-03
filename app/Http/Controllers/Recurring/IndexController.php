@@ -58,7 +58,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string)trans('firefly.recurrences'));
+                app('view')->share('title', (string) trans('firefly.recurrences'));
 
                 $this->recurringRepos = app(RecurringRepositoryInterface::class);
 
@@ -75,12 +75,13 @@ class IndexController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
-     *
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(Request $request)
     {
-        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurringRepos->get();
         $today      = today(config('app.timezone'));
         $year       = today(config('app.timezone'));

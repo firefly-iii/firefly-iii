@@ -58,15 +58,14 @@ class SetSourceAccount implements ActionInterface
         $user = User::find($journal['user_id']);
         $type = $journal['transaction_type_type'];
         /** @var TransactionJournal|null $object */
-        $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
+        $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
-
         if (null === $object) {
             Log::error('Could not find journal.');
 
             return false;
         }
-
+        $type = $object->transactionType->type;
         $this->repository->setUser($user);
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
@@ -93,7 +92,7 @@ class SetSourceAccount implements ActionInterface
 
             return false;
         }
-        if (null !== $newAccount && (int)$newAccount->id === (int)$destination->account_id) {
+        if (null !== $newAccount && (int) $newAccount->id === (int) $destination->account_id) {
             Log::error(
                 sprintf(
                     'New source account ID #%d and current destination account ID #%d are the same. Do nothing.', $newAccount->id,

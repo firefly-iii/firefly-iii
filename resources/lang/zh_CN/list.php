@@ -76,6 +76,7 @@ return [
     'type'                    => '类型',
     'completed'               => '已完成',
     'iban'                    => '国际银行账户号码（IBAN）',
+    'account_number'              => 'Account number',
     'paid_current_period'     => '当前周期支付',
     'email'                   => '电子邮件',
     'registered_at'           => '注册于',
@@ -133,8 +134,8 @@ return [
     'interest_period'         => 'Interest period',
     'liability_type'          => '债务类型',
     'liability_direction'     => 'Liability in/out',
-    'end_date'                => 'End date',
+    'end_date'                => '截止日期',
     'payment_info'            => 'Payment information',
     'expected_info'           => 'Next expected transaction',
-    'start_date'              => 'Start date',
+    'start_date'              => '起始日期',
 ];

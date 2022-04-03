@@ -25,9 +25,11 @@ namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Closure;
 use Exception;
 use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
 use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
+use FireflyIII\Helpers\Collector\Extensions\AttachmentCollection;
 use FireflyIII\Helpers\Collector\Extensions\CollectorProperties;
 use FireflyIII\Helpers\Collector\Extensions\MetaCollection;
 use FireflyIII\Helpers\Collector\Extensions\TimeCollection;
@@ -48,13 +50,18 @@ use Log;
  */
 class GroupCollector implements GroupCollectorInterface
 {
-    use CollectorProperties, AccountCollection, AmountCollection, TimeCollection, MetaCollection;
+    use CollectorProperties, AccountCollection, AmountCollection, TimeCollection, MetaCollection, AttachmentCollection;
 
     /**
      * Group collector constructor.
      */
     public function __construct()
     {
+        $this->postFilters = [];
+        $this->user        = null;
+        $this->limit       = null;
+        $this->page        = null;
+
         $this->hasAccountInfo       = false;
         $this->hasCatInformation    = false;
         $this->hasBudgetInformation = false;
@@ -199,6 +206,26 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     *
+     */
+    public function dumpQuery(): void
+    {
+        echo $this->query->select($this->fields)->toSql();
+        echo '<pre>';
+        print_r($this->query->getBindings());
+        echo '</pre>';
+    }
+
+    /**
+     *
+     */
+    public function dumpQueryInLogs(): void
+    {
+        Log::debug($this->query->select($this->fields)->toSql());
+        Log::debug('Bindings', $this->query->getBindings());
+    }
+
+    /**
      * @inheritDoc
      */
     public function findNothing(): GroupCollectorInterface
@@ -240,7 +267,12 @@ class GroupCollector implements GroupCollectorInterface
         $result = $this->query->get($this->fields);
 
         // now to parse this into an array.
-        $collection  = $this->parseArray($result);
+        $collection = $this->parseArray($result);
+
+        // filter the array using all available post filters:
+        $collection = $this->postFilterCollection($collection);
+
+        // count it and continue:
         $this->total = $collection->count();
 
         // now filter the array according to the page and the limit (if necessary)
@@ -251,6 +283,285 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         return $collection;
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return Collection
+     */
+    private function parseArray(Collection $collection): Collection
+    {
+        $groups = [];
+        /** @var TransactionJournal $augumentedJournal */
+        foreach ($collection as $augumentedJournal) {
+            $groupId = $augumentedJournal->transaction_group_id;
+
+            if (!array_key_exists($groupId, $groups)) {
+                // make new array
+                $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
+                $groupArray                             = [
+                    'id'               => (int) $augumentedJournal->transaction_group_id,
+                    'user_id'          => (int) $augumentedJournal->user_id,
+                    'title'            => $augumentedJournal->transaction_group_title,
+                    'transaction_type' => $parsedGroup['transaction_type_type'],
+                    'count'            => 1,
+                    'sums'             => [],
+                    'transactions'     => [],
+                ];
+                $journalId                              = (int) $augumentedJournal->transaction_journal_id;
+                $groupArray['transactions'][$journalId] = $parsedGroup;
+                $groups[$groupId]                       = $groupArray;
+                continue;
+            }
+            // or parse the rest.
+            $journalId = (int) $augumentedJournal->transaction_journal_id;
+            if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
+                // append data to existing group + journal (for multiple tags or multiple attachments)
+                $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
+                $groups[$groupId]['transactions'][$journalId] = $this->mergeAttachments($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
+            }
+
+            if (!array_key_exists($journalId, $groups[$groupId]['transactions'])) {
+                // create second, third, fourth split:
+                $groups[$groupId]['count']++;
+                $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedJournal($augumentedJournal);
+            }
+        }
+
+        $groups = $this->parseSums($groups);
+
+        return new Collection($groups);
+    }
+
+    /**
+     * @param TransactionJournal $augumentedJournal
+     *
+     * @return array
+     */
+    private function parseAugmentedJournal(TransactionJournal $augumentedJournal): array
+    {
+        $result                  = $augumentedJournal->toArray();
+        $result['tags']          = [];
+        $result['attachments']   = [];
+        $result['interest_date'] = null;
+        $result['payment_date']  = null;
+        $result['invoice_date']  = null;
+        $result['book_date']     = null;
+        $result['due_date']      = null;
+        $result['process_date']  = null;
+        try {
+            $result['date']       = new Carbon($result['date'], 'UTC');
+            $result['created_at'] = new Carbon($result['created_at'], 'UTC');
+            $result['updated_at'] = new Carbon($result['updated_at'], 'UTC');
+
+            // this is going to happen a lot:
+            $result['date']->setTimezone(config('app.timezone'));
+            $result['created_at']->setTimezone(config('app.timezone'));
+            $result['updated_at']->setTimezone(config('app.timezone'));
+        } catch (Exception $e) { // @phpstan-ignore-line
+            Log::error($e->getMessage());
+        }
+
+        // try to process meta date value (if present)
+        $dates = ['interest_date', 'payment_date', 'invoice_date', 'book_date', 'due_date', 'process_date'];
+        if (array_key_exists('meta_name', $result) && in_array($result['meta_name'], $dates, true)) {
+            $name = $result['meta_name'];
+            if (array_key_exists('meta_data', $result) && '' !== (string) $result['meta_data']) {
+                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr(json_decode($result['meta_data']), 0, 10));
+            }
+        }
+
+        // convert values to integers:
+        $result = $this->convertToInteger($result);
+
+        $result['reconciled'] = 1 === (int) $result['reconciled'];
+        if (array_key_exists('tag_id', $result) && null !== $result['tag_id']) { // assume the other fields are present as well.
+            $tagId   = (int) $augumentedJournal['tag_id'];
+            $tagDate = null;
+            try {
+                $tagDate = Carbon::parse($augumentedJournal['tag_date']);
+            } catch (InvalidDateException $e) {
+                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
+            }
+
+            $result['tags'][$tagId] = [
+                'id'          => (int) $result['tag_id'],
+                'name'        => $result['tag_name'],
+                'date'        => $tagDate,
+                'description' => $result['tag_description'],
+            ];
+        }
+
+        // also merge attachments:
+        if (array_key_exists('attachment_id', $result)) {
+            $uploaded     = 1 === (int) $result['attachment_uploaded'];
+            $attachmentId = (int) $augumentedJournal['attachment_id'];
+            if (0 !== $attachmentId && $uploaded) {
+                $result['attachments'][$attachmentId] = [
+                    'id'       => $attachmentId,
+                    'filename' => $augumentedJournal['attachment_filename'],
+                    'title'    => $augumentedJournal['attachment_title'],
+                ];
+            }
+        }
+        // unset various fields:
+        unset($result['tag_id'], $result['meta_data'], $result['meta_name'],
+            $result['tag_name'], $result['tag_date'], $result['tag_description'],
+            $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level'],
+            $result['attachment_filename'], $result['attachment_id']
+
+        );
+
+        return $result;
+    }
+
+    /**
+     * Convert a selected set of fields to arrays.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    private function convertToInteger(array $array): array
+    {
+        foreach ($this->integerFields as $field) {
+            $array[$field] = array_key_exists($field, $array) ? (int) $array[$field] : null;
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param array              $existingJournal
+     * @param TransactionJournal $newJournal
+     *
+     * @return array
+     */
+    private function mergeTags(array $existingJournal, TransactionJournal $newJournal): array
+    {
+        $newArray = $newJournal->toArray();
+        if (array_key_exists('tag_id', $newArray)) { // assume the other fields are present as well.
+            $tagId = (int) $newJournal['tag_id'];
+
+            $tagDate = null;
+            try {
+                $tagDate = Carbon::parse($newArray['tag_date']);
+            } catch (InvalidDateException $e) {
+                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
+            }
+
+            $existingJournal['tags'][$tagId] = [
+                'id'          => (int) $newArray['tag_id'],
+                'name'        => $newArray['tag_name'],
+                'date'        => $tagDate,
+                'description' => $newArray['tag_description'],
+            ];
+        }
+
+        return $existingJournal;
+    }
+
+    /**
+     * @param array              $existingJournal
+     * @param TransactionJournal $newJournal
+     *
+     * @return array
+     */
+    private function mergeAttachments(array $existingJournal, TransactionJournal $newJournal): array
+    {
+        $newArray = $newJournal->toArray();
+        if (array_key_exists('attachment_id', $newArray)) {
+            $attachmentId = (int) $newJournal['attachment_id'];
+
+            $existingJournal['attachments'][$attachmentId] = [
+                'id' => $attachmentId,
+            ];
+        }
+
+        return $existingJournal;
+    }
+
+    /**
+     * @param array $groups
+     *
+     * @return array
+     */
+    private function parseSums(array $groups): array
+    {
+        /**
+         * @var int   $groudId
+         * @var array $group
+         */
+        foreach ($groups as $groudId => $group) {
+            /** @var array $transaction */
+            foreach ($group['transactions'] as $transaction) {
+                $currencyId = (int) $transaction['currency_id'];
+
+                // set default:
+                if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
+                    $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
+                    $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['currency_code'];
+                    $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
+                    $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
+                    $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
+                }
+                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount'] ?? '0');
+
+                if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
+                    $currencyId = (int) $transaction['foreign_currency_id'];
+
+                    // set default:
+                    if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
+                        $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
+                        $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['foreign_currency_code'];
+                        $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
+                        $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
+                        $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
+                    }
+                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd(
+                        $groups[$groudId]['sums'][$currencyId]['amount'],
+                        $transaction['foreign_amount'] ?? '0'
+                    );
+                }
+            }
+        }
+
+        return $groups;
+    }
+
+    /**
+     * @param Collection $collection
+     * @return Collection
+     */
+    private function postFilterCollection(Collection $collection): Collection
+    {
+        $currentCollection = $collection;
+        /**
+         * @var int     $i
+         * @var Closure $function
+         */
+        foreach ($this->postFilters as $function) {
+
+            $nextCollection = new Collection;
+            // loop everything in the current collection
+            // and save it (or not) in the new collection.
+            // that new collection is the next current collection
+            /**
+             * @var int   $index
+             * @var array $item
+             */
+            foreach ($currentCollection as $ii => $item) {
+                $result = $function($ii, $item);
+                if (false === $result) {
+                    // skip other filters, continue to next item.
+                    continue;
+                }
+                $nextCollection->push($item);
+            }
+            $currentCollection = $nextCollection;
+        }
+        return $currentCollection;
     }
 
     /**
@@ -269,18 +580,20 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Has attachments
+     * Limit the number of returned entries.
+     *
+     * @param int $limit
      *
      * @return GroupCollectorInterface
      */
-    public function hasAttachments(): GroupCollectorInterface
+    public function setLimit(int $limit): GroupCollectorInterface
     {
-        Log::debug('Add filter on attachment ID.');
-        $this->joinAttachmentTables();
-        $this->query->whereNotNull('attachments.attachable_id');
+        $this->limit = $limit;
+        app('log')->debug(sprintf('GroupCollector: The limit is now %d', $limit));
 
         return $this;
     }
+
 
     /**
      * Limit results to a specific currency, either foreign or normal one.
@@ -342,21 +655,6 @@ class GroupCollector implements GroupCollectorInterface
 
             $this->query->whereIn('transaction_journals.id', $integerIDs);
         }
-
-        return $this;
-    }
-
-    /**
-     * Limit the number of returned entries.
-     *
-     * @param int $limit
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setLimit(int $limit): GroupCollectorInterface
-    {
-        $this->limit = $limit;
-        app('log')->debug(sprintf('GroupCollector: The limit is now %d', $limit));
 
         return $this;
     }
@@ -457,56 +755,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Automatically include all stuff required to make API calls work.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withAPIInformation(): GroupCollectorInterface
-    {
-        // include source + destination account name and type.
-        $this->withAccountInformation()
-            // include category ID + name (if any)
-             ->withCategoryInformation()
-            // include budget ID + name (if any)
-             ->withBudgetInformation()
-            // include bill ID + name (if any)
-             ->withBillInformation();
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withAttachmentInformation(): GroupCollectorInterface
-    {
-        $this->fields[] = 'attachments.id as attachment_id';
-        $this->fields[] = 'attachments.uploaded as attachment_uploaded';
-        $this->joinAttachmentTables();
-
-        return $this;
-    }
-
-    /**
-     * Join table to get attachment information.
-     */
-    private function joinAttachmentTables(): void
-    {
-        if (false === $this->hasJoinedAttTables) {
-            // join some extra tables:
-            $this->hasJoinedAttTables = true;
-            $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
-                        ->where(
-                            static function (EloquentBuilder $q1) {
-                                $q1->where('attachments.attachable_type', TransactionJournal::class);
-                                //$q1->where('attachments.uploaded', true);
-                                $q1->orWhereNull('attachments.attachable_type');
-                            }
-                        );
-        }
-    }
-
-    /**
      * Build the query.
      */
     private function startQuery(): void
@@ -550,243 +798,21 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Automatically include all stuff required to make API calls work.
      *
+     * @return GroupCollectorInterface
      */
-    public function dumpQuery(): void
+    public function withAPIInformation(): GroupCollectorInterface
     {
-        echo $this->query->select($this->fields)->toSql();
-        echo '<pre>';
-        print_r($this->query->getBindings());
-        echo '</pre>';
-    }
+        // include source + destination account name and type.
+        $this->withAccountInformation()
+            // include category ID + name (if any)
+             ->withCategoryInformation()
+            // include budget ID + name (if any)
+             ->withBudgetInformation()
+            // include bill ID + name (if any)
+             ->withBillInformation();
 
-    /**
-     *
-     */
-    public function dumpQueryInLogs(): void
-    {
-        Log::debug($this->query->select($this->fields)->toSql());
-        Log::debug('Bindings', $this->query->getBindings());
-    }
-
-    /**
-     * Convert a selected set of fields to arrays.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    private function convertToInteger(array $array): array
-    {
-        foreach ($this->integerFields as $field) {
-            $array[$field] = array_key_exists($field, $array) ? (int) $array[$field] : null;
-        }
-
-        return $array;
-    }
-
-    /**
-     * @param array              $existingJournal
-     * @param TransactionJournal $newJournal
-     *
-     * @return array
-     */
-    private function mergeAttachments(array $existingJournal, TransactionJournal $newJournal): array
-    {
-        $newArray = $newJournal->toArray();
-        if (array_key_exists('attachment_id', $newArray)) {
-            $attachmentId = (int) $newJournal['attachment_id'];
-
-            $existingJournal['attachments'][$attachmentId] = [
-                'id' => $attachmentId,
-            ];
-        }
-
-        return $existingJournal;
-    }
-
-    /**
-     * @param array              $existingJournal
-     * @param TransactionJournal $newJournal
-     *
-     * @return array
-     */
-    private function mergeTags(array $existingJournal, TransactionJournal $newJournal): array
-    {
-        $newArray = $newJournal->toArray();
-        if (array_key_exists('tag_id', $newArray)) { // assume the other fields are present as well.
-            $tagId = (int) $newJournal['tag_id'];
-
-            $tagDate = null;
-            try {
-                $tagDate = Carbon::parse($newArray['tag_date']);
-            } catch (InvalidDateException $e) {
-                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
-            }
-
-            $existingJournal['tags'][$tagId] = [
-                'id'          => (int) $newArray['tag_id'],
-                'name'        => $newArray['tag_name'],
-                'date'        => $tagDate,
-                'description' => $newArray['tag_description'],
-            ];
-        }
-
-        return $existingJournal;
-    }
-
-    /**
-     * @param Collection $collection
-     *
-     * @return Collection
-     */
-    private function parseArray(Collection $collection): Collection
-    {
-        $groups = [];
-        /** @var TransactionJournal $augumentedJournal */
-        foreach ($collection as $augumentedJournal) {
-            $groupId = $augumentedJournal->transaction_group_id;
-
-            if (!array_key_exists($groupId, $groups)) {
-                // make new array
-                $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
-                $groupArray                             = [
-                    'id'               => (int) $augumentedJournal->transaction_group_id,
-                    'user_id'          => (int) $augumentedJournal->user_id,
-                    'title'            => $augumentedJournal->transaction_group_title,
-                    'transaction_type' => $parsedGroup['transaction_type_type'],
-                    'count'            => 1,
-                    'sums'             => [],
-                    'transactions'     => [],
-                ];
-                $journalId                              = (int) $augumentedJournal->transaction_journal_id;
-                $groupArray['transactions'][$journalId] = $parsedGroup;
-                $groups[$groupId]                       = $groupArray;
-                continue;
-            }
-            // or parse the rest.
-            $journalId = (int) $augumentedJournal->transaction_journal_id;
-            if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
-                // append data to existing group + journal (for multiple tags or multiple attachments)
-                $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
-                $groups[$groupId]['transactions'][$journalId] = $this->mergeAttachments($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
-            }
-
-            if (!array_key_exists($journalId, $groups[$groupId]['transactions'])) {
-                // create second, third, fourth split:
-                $groups[$groupId]['count']++;
-                $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedJournal($augumentedJournal);
-            }
-        }
-
-        $groups = $this->parseSums($groups);
-
-        return new Collection($groups);
-    }
-
-    /**
-     * @param TransactionJournal $augumentedJournal
-     *
-     * @return array
-     */
-    private function parseAugmentedJournal(TransactionJournal $augumentedJournal): array
-    {
-        $result                = $augumentedJournal->toArray();
-        $result['tags']        = [];
-        $result['attachments'] = [];
-        try {
-            $result['date']       = new Carbon($result['date'], 'UTC');
-            $result['created_at'] = new Carbon($result['created_at'], 'UTC');
-            $result['updated_at'] = new Carbon($result['updated_at'], 'UTC');
-
-            // this is going to happen a lot:
-            $result['date']->setTimezone(config('app.timezone'));
-            $result['created_at']->setTimezone(config('app.timezone'));
-            $result['updated_at']->setTimezone(config('app.timezone'));
-        } catch (Exception $e) { // @phpstan-ignore-line
-            Log::error($e->getMessage());
-        }
-
-        // convert values to integers:
-        $result = $this->convertToInteger($result);
-
-        $result['reconciled'] = 1 === (int) $result['reconciled'];
-        if (array_key_exists('tag_id', $result) && null !== $result['tag_id']) { // assume the other fields are present as well.
-            $tagId   = (int) $augumentedJournal['tag_id'];
-            $tagDate = null;
-            try {
-                $tagDate = Carbon::parse($augumentedJournal['tag_date']);
-            } catch (InvalidDateException $e) {
-                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
-            }
-
-            $result['tags'][$tagId] = [
-                'id'          => (int) $result['tag_id'],
-                'name'        => $result['tag_name'],
-                'date'        => $tagDate,
-                'description' => $result['tag_description'],
-            ];
-        }
-
-        // also merge attachments:
-        if (array_key_exists('attachment_id', $result)) {
-            $uploaded = 1 === (int)$result['attachment_uploaded'];
-            $attachmentId = (int) $augumentedJournal['attachment_id'];
-            if (0 !== $attachmentId && $uploaded) {
-                $result['attachments'][$attachmentId] = [
-                    'id' => $attachmentId,
-                ];
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $groups
-     *
-     * @return array
-     */
-    private function parseSums(array $groups): array
-    {
-        /**
-         * @var int   $groudId
-         * @var array $group
-         */
-        foreach ($groups as $groudId => $group) {
-            /** @var array $transaction */
-            foreach ($group['transactions'] as $transaction) {
-                $currencyId = (int) $transaction['currency_id'];
-
-                // set default:
-                if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
-                    $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
-                    $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['currency_code'];
-                    $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
-                    $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
-                    $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                }
-                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount'] ?? '0');
-
-                if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId = (int) $transaction['foreign_currency_id'];
-
-                    // set default:
-                    if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
-                        $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
-                        $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['foreign_currency_code'];
-                        $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
-                        $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
-                        $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                    }
-                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd(
-                        $groups[$groudId]['sums'][$currencyId]['amount'],
-                        $transaction['foreign_amount'] ?? '0'
-                    );
-                }
-            }
-        }
-
-        return $groups;
+        return $this;
     }
 }

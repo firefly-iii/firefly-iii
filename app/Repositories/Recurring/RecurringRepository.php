@@ -108,6 +108,22 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getBillId(RecurrenceTransaction $recTransaction): ?int
+    {
+        $return = null;
+        /** @var RecurrenceTransactionMeta $meta */
+        foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
+            if ('bill_id' === $meta->name) {
+                $return = (int) $meta->value;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * Get the budget ID from a recurring transaction transaction.
      *
      * @param RecurrenceTransaction $recTransaction
@@ -120,7 +136,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var RecurrenceTransactionMeta $meta */
         foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
             if ('budget_id' === $meta->name) {
-                $return = (int)$meta->value;
+                $return = (int) $meta->value;
             }
         }
 
@@ -140,7 +156,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var RecurrenceTransactionMeta $meta */
         foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
             if ('category_id' === $meta->name) {
-                $return = (int)$meta->value;
+                $return = (int) $meta->value;
             }
         }
 
@@ -160,7 +176,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var RecurrenceTransactionMeta $meta */
         foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
             if ('category_name' === $meta->name) {
-                $return = (string)$meta->value;
+                $return = (string) $meta->value;
             }
         }
 
@@ -206,7 +222,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         return TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
                                      ->where('transaction_journals.user_id', $this->user->id)
                                      ->where('journal_meta.name', '=', 'recurrence_id')
-                                     ->where('journal_meta.data', '=', json_encode((string)$recurrence->id))
+                                     ->where('journal_meta.data', '=', json_encode((string) $recurrence->id))
                                      ->get(['journal_meta.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
     }
 
@@ -222,49 +238,10 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var Note $note */
         $note = $recurrence->notes()->first();
         if (null !== $note) {
-            return (string)$note->text;
+            return (string) $note->text;
         }
 
         return '';
-    }
-
-    /**
-     * Generate events in the date range.
-     *
-     * @param RecurrenceRepetition $repetition
-     * @param Carbon               $start
-     * @param Carbon               $end
-     *
-     * @return array
-     *
-     */
-    public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
-    {
-        $occurrences = [];
-        $mutator     = clone $start;
-        $mutator->startOfDay();
-        $skipMod = $repetition->repetition_skip + 1;
-        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
-        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
-
-        if ('daily' === $repetition->repetition_type) {
-            $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);
-        }
-        if ('weekly' === $repetition->repetition_type) {
-            $occurrences = $this->getWeeklyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('monthly' === $repetition->repetition_type) {
-            $occurrences = $this->getMonthlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('ndom' === $repetition->repetition_type) {
-            $occurrences = $this->getNdomInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('yearly' === $repetition->repetition_type) {
-            $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-
-        // filter out all the weekend days:
-        return $this->filterWeekends($repetition, $occurrences);
     }
 
     /**
@@ -278,7 +255,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var RecurrenceTransactionMeta $metaEntry */
         foreach ($meta as $metaEntry) {
             if ('piggy_bank_id' === $metaEntry->name) {
-                return (int)$metaEntry->value;
+                return (int) $metaEntry->value;
             }
         }
 
@@ -320,11 +297,11 @@ class RecurringRepository implements RecurringRepositoryInterface
             ->whereNull('transaction_journals.deleted_at')
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('name', 'recurrence_id')
-            ->where('data', json_encode((string)$recurrence->id))
+            ->where('data', json_encode((string) $recurrence->id))
             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
         foreach ($journalMeta as $journalId) {
-            $search[] = (int)$journalId;
+            $search[] = (int) $journalId;
         }
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -349,12 +326,12 @@ class RecurringRepository implements RecurringRepositoryInterface
             ->whereNull('transaction_journals.deleted_at')
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('name', 'recurrence_id')
-            ->where('data', json_encode((string)$recurrence->id))
+            ->where('data', json_encode((string) $recurrence->id))
             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
 
         foreach ($journalMeta as $journalId) {
-            $search[] = (int)$journalId;
+            $search[] = (int) $journalId;
         }
         if (empty($search)) {
 
@@ -450,6 +427,27 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
+     * @param Carbon|null $max
+     * @param array       $occurrences
+     *
+     * @return array
+     */
+    private function filterMaxDate(?Carbon $max, array $occurrences): array
+    {
+        if (null === $max) {
+            return $occurrences;
+        }
+        $filtered = [];
+        foreach ($occurrences as $date) {
+            if ($date->lte($max)) {
+                $filtered[] = $date;
+            }
+        }
+
+        return $filtered;
+    }
+
+    /**
      * Parse the repetition in a string that is user readable.
      *
      * @param RecurrenceRepetition $repetition
@@ -464,25 +462,25 @@ class RecurringRepository implements RecurringRepositoryInterface
         $pref     = app('preferences')->getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
         $language = $pref->data;
         if ('daily' === $repetition->repetition_type) {
-            return (string)trans('firefly.recurring_daily', [], $language);
+            return (string) trans('firefly.recurring_daily', [], $language);
         }
         if ('weekly' === $repetition->repetition_type) {
 
             $dayOfWeek = trans(sprintf('config.dow_%s', $repetition->repetition_moment), [], $language);
             if ($repetition->repetition_skip > 0) {
-                return (string)trans('firefly.recurring_weekly_skip', ['weekday' => $dayOfWeek, 'skip' => $repetition->repetition_skip + 1], $language);
+                return (string) trans('firefly.recurring_weekly_skip', ['weekday' => $dayOfWeek, 'skip' => $repetition->repetition_skip + 1], $language);
             }
 
-            return (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $language);
+            return (string) trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $language);
         }
         if ('monthly' === $repetition->repetition_type) {
             if ($repetition->repetition_skip > 0) {
-                return (string)trans(
+                return (string) trans(
                     'firefly.recurring_monthly_skip', ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip + 1], $language
                 );
             }
 
-            return (string)trans(
+            return (string) trans(
                 'firefly.recurring_monthly', ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip - 1], $language
             );
         }
@@ -491,7 +489,7 @@ class RecurringRepository implements RecurringRepositoryInterface
             // first part is number of week, second is weekday.
             $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $language);
 
-            return (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
+            return (string) trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
         }
         if ('yearly' === $repetition->repetition_type) {
             //
@@ -499,9 +497,9 @@ class RecurringRepository implements RecurringRepositoryInterface
             $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
             $diffInYears = $today->diffInYears($repDate);
             $repDate->addYears($diffInYears); // technically not necessary.
-            $string = $repDate->formatLocalized((string)trans('config.month_and_day_no_year'));
+            $string = $repDate->isoFormat((string) trans('config.month_and_day_no_year_js'));
 
-            return (string)trans('firefly.recurring_yearly', ['date' => $string], $language);
+            return (string) trans('firefly.recurring_yearly', ['date' => $string], $language);
         }
 
         return '';
@@ -558,22 +556,61 @@ class RecurringRepository implements RecurringRepositoryInterface
     public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int
     {
         // if repeat = null just return 0.
-        if (null === $recurrence->repeat_until && 0 === (int)$recurrence->repetitions) {
+        if (null === $recurrence->repeat_until && 0 === (int) $recurrence->repetitions) {
             return 0;
         }
         // expect X transactions then stop. Return that number
-        if (null === $recurrence->repeat_until && 0 !== (int)$recurrence->repetitions) {
-            return (int)$recurrence->repetitions;
+        if (null === $recurrence->repeat_until && 0 !== (int) $recurrence->repetitions) {
+            return (int) $recurrence->repetitions;
         }
 
         // need to calculate, this depends on the repetition:
-        if (null !== $recurrence->repeat_until && 0 === (int)$recurrence->repetitions) {
+        if (null !== $recurrence->repeat_until && 0 === (int) $recurrence->repetitions) {
             $occurrences = $this->getOccurrencesInRange($repetition, $recurrence->first_date ?? today(), $recurrence->repeat_until);
 
             return count($occurrences);
         }
 
         return 0;
+    }
+
+    /**
+     * Generate events in the date range.
+     *
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $start
+     * @param Carbon               $end
+     *
+     * @return array
+     *
+     */
+    public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
+    {
+        $occurrences = [];
+        $mutator     = clone $start;
+        $mutator->startOfDay();
+        $skipMod = $repetition->repetition_skip + 1;
+        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
+        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
+
+        if ('daily' === $repetition->repetition_type) {
+            $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);
+        }
+        if ('weekly' === $repetition->repetition_type) {
+            $occurrences = $this->getWeeklyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('monthly' === $repetition->repetition_type) {
+            $occurrences = $this->getMonthlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('ndom' === $repetition->repetition_type) {
+            $occurrences = $this->getNdomInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('yearly' === $repetition->repetition_type) {
+            $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+
+        // filter out all the weekend days:
+        return $this->filterWeekends($repetition, $occurrences);
     }
 
     /**
@@ -591,42 +628,5 @@ class RecurringRepository implements RecurringRepositoryInterface
         $service = app(RecurrenceUpdateService::class);
 
         return $service->update($recurrence, $data);
-    }
-
-    /**
-     * @param Carbon|null $max
-     * @param array       $occurrences
-     *
-     * @return array
-     */
-    private function filterMaxDate(?Carbon $max, array $occurrences): array
-    {
-        if (null === $max) {
-            return $occurrences;
-        }
-        $filtered = [];
-        foreach ($occurrences as $date) {
-            if ($date->lte($max)) {
-                $filtered[] = $date;
-            }
-        }
-
-        return $filtered;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getBillId(RecurrenceTransaction $recTransaction): ?int
-    {
-        $return = null;
-        /** @var RecurrenceTransactionMeta $meta */
-        foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
-            if ('bill_id' === $meta->name) {
-                $return = (int)$meta->value;
-            }
-        }
-
-        return $return;
     }
 }

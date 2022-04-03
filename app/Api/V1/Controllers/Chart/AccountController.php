@@ -35,6 +35,9 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use JsonException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountController
@@ -77,6 +80,9 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function overview(DateRequest $request): JsonResponse
     {
@@ -109,7 +115,7 @@ class AccountController extends Controller
             }
             $currentSet   = [
                 'label'                   => $account->name,
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -121,11 +127,11 @@ class AccountController extends Controller
             ];
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
-            $previous     = round((float)array_values($range)[0], 12);
+            $previous     = round((float) array_values($range)[0], 12);
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
                 $label    = $currentStart->toAtomString();
-                $balance  = array_key_exists($format, $range) ? round((float)$range[$format], 12) : $previous;
+                $balance  = array_key_exists($format, $range) ? round((float) $range[$format], 12) : $previous;
                 $previous = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;

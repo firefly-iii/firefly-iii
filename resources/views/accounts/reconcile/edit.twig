@@ -39,7 +39,7 @@
                         {{ ExpandedForm.nonSelectableAmount('amount',data.amount, {'currency' : data.currency}) }}
 
                         {# ALWAYS SHOW DATE #}
-                        {{ ExpandedForm.staticText('date',journal.date.formatLocalized(monthAndDayFormat)) }}
+                        {{ ExpandedForm.staticText('date',journal.date.isoFormat(monthAndDayFormat)) }}
                     </div>
                 </div>
 

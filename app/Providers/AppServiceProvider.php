@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use Adldap\Laravel\Middleware\WindowsAuthenticate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
@@ -45,9 +44,6 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         if ('heroku' === config('app.env')) {
             URL::forceScheme('https');
-        }
-        if (config('ldap_auth.identifiers.windows.enabled', false)) {
-            $this->app['router']->pushMiddlewareToGroup('web', WindowsAuthenticate::class);
         }
         Sanctum::ignoreMigrations();
     }

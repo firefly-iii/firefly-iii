@@ -265,7 +265,7 @@ class CategoryReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string)trans('firefly.spent_in_specific_category', ['category' => $category->name]),
+                        (string) trans('firefly.spent_in_specific_category', ['category' => $category->name]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -277,7 +277,7 @@ class CategoryReportController extends Controller
 
             foreach ($currency['categories'] as $currentCategory) {
                 foreach ($currentCategory['transaction_journals'] as $journal) {
-                    $key                                   = $journal['date']->formatLocalized($format);
+                    $key                                   = $journal['date']->isoFormat($format);
                     $amount                                = app('steam')->positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] = $chartData[$spentKey]['entries'][$key] ?? '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
@@ -292,7 +292,7 @@ class CategoryReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string)trans('firefly.earned_in_specific_category', ['category' => $category->name]),
+                        (string) trans('firefly.earned_in_specific_category', ['category' => $category->name]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -304,7 +304,7 @@ class CategoryReportController extends Controller
 
             foreach ($currency['categories'] as $currentCategory) {
                 foreach ($currentCategory['transaction_journals'] as $journal) {
-                    $key                                   = $journal['date']->formatLocalized($format);
+                    $key                                   = $journal['date']->isoFormat($format);
                     $amount                                = app('steam')->positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] = $chartData[$spentKey]['entries'][$key] ?? '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
@@ -333,7 +333,7 @@ class CategoryReportController extends Controller
         $currentStart   = clone $start;
         while ($currentStart <= $end) {
             $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->formatLocalized($format);
+            $key          = $currentStart->isoFormat($format);
             $return[$key] = '0';
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();

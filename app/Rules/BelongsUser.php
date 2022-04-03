@@ -58,7 +58,7 @@ class BelongsUser implements Rule
      */
     public function message(): string
     {
-        return (string)trans('validation.belongs_user');
+        return (string) trans('validation.belongs_user');
     }
 
     /**
@@ -77,19 +77,19 @@ class BelongsUser implements Rule
         if (!auth()->check()) {
             return true;
         }
-        $attribute = (string)$attribute;
+        $attribute = (string) $attribute;
         Log::debug(sprintf('Going to validate %s', $attribute));
 
         return match ($attribute) {
-            'piggy_bank_id' => $this->validatePiggyBankId((int)$value),
+            'piggy_bank_id' => $this->validatePiggyBankId((int) $value),
             'piggy_bank_name' => $this->validatePiggyBankName($value),
-            'bill_id' => $this->validateBillId((int)$value),
-            'transaction_journal_id' => $this->validateJournalId((int)$value),
+            'bill_id' => $this->validateBillId((int) $value),
+            'transaction_journal_id' => $this->validateJournalId((int) $value),
             'bill_name' => $this->validateBillName($value),
-            'budget_id' => $this->validateBudgetId((int)$value),
-            'category_id' => $this->validateCategoryId((int)$value),
+            'budget_id' => $this->validateBudgetId((int) $value),
+            'category_id' => $this->validateCategoryId((int) $value),
             'budget_name' => $this->validateBudgetName($value),
-            'source_id', 'destination_id' => $this->validateAccountId((int)$value),
+            'source_id', 'destination_id' => $this->validateAccountId((int) $value),
             default => throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute)),
         };
     }
@@ -161,7 +161,7 @@ class BelongsUser implements Rule
         }
         $count = 0;
         foreach ($objects as $object) {
-            $objectValue = trim((string)$object->$field);
+            $objectValue = trim((string) $object->$field);
             Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 $count++;

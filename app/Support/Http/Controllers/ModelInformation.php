@@ -83,9 +83,9 @@ trait ModelInformation
         $mortgage = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         /** @noinspection NullPointerExceptionInspection */
         $liabilityTypes = [
-            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
-            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
-            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
+            $debt->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
+            $loan->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
+            $mortgage->id => (string) trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
         ];
         asort($liabilityTypes);
 
@@ -100,7 +100,7 @@ trait ModelInformation
     {
         $roles = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
+            $roles[$role] = (string) trans(sprintf('firefly.account_role_%s', $role));
         }
 
         return $roles;
@@ -116,12 +116,12 @@ trait ModelInformation
     protected function getTriggersForBill(Bill $bill): array // get info and augument
     {
         // See reference nr. 39
-        $operators = config('firefly.search.operators');
+        $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
 
-                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
@@ -130,8 +130,8 @@ trait ModelInformation
         $billTriggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
         $values       = [
             $bill->transactionCurrency()->first()->name,
-            round((float)$bill->amount_min, 24),
-            round((float)$bill->amount_max, 24),
+            round((float) $bill->amount_min, 24),
+            round((float) $bill->amount_max, 24),
             $bill->name,
         ];
         foreach ($billTriggers as $index => $trigger) {
@@ -168,12 +168,12 @@ trait ModelInformation
     private function getTriggersForJournal(TransactionJournal $journal): array
     {
         // See reference nr. 40
-        $operators = config('firefly.search.operators');
+        $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
 
-                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);

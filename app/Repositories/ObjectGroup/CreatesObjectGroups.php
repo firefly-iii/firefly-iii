@@ -67,7 +67,7 @@ trait CreatesObjectGroups
      */
     protected function getObjectGroupMaxOrder(): int
     {
-        return (int)$this->user->objectGroups()->max('order');
+        return (int) $this->user->objectGroups()->max('order');
     }
 
     /**

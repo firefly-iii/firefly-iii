@@ -26,7 +26,7 @@ use FireflyIII\Enums\ClauseType;
 
 return [
     ClauseType::TRANSACTION => [
-        ClauseType::WHERE => [
+        ClauseType::WHERE  => [
             'source_account_id' => 'required|numeric|belongsToUser:accounts,id',
         ],
         ClauseType::UPDATE => [

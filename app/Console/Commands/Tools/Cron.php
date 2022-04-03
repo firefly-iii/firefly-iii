@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Tools;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
+use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
@@ -66,7 +67,7 @@ class Cron extends Command
         } catch (InvalidArgumentException $e) {
             $this->error(sprintf('"%s" is not a valid date', $this->option('date')));
         }
-        $force = (bool)$this->option('force');
+        $force = (bool) $this->option('force');
 
         /*
          * Fire recurring transaction cron job.
@@ -84,6 +85,17 @@ class Cron extends Command
          */
         try {
             $this->autoBudgetCronJob($force, $date);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->error($e->getMessage());
+        }
+
+        /*
+         * Fire bill warning cron job
+         */
+        try {
+            $this->billWarningCronJob($force, $date);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -147,6 +159,34 @@ class Cron extends Command
         }
         if ($autoBudget->jobSucceeded) {
             $this->error(sprintf('"Create auto budgets" cron ran with success: %s', $autoBudget->message));
+        }
+
+    }
+
+    /**
+     * @param bool        $force
+     * @param Carbon|null $date
+     * @throws FireflyException
+     */
+    private function billWarningCronJob(bool $force, ?Carbon $date): void
+    {
+        $autoBudget = new BillWarningCronjob;
+        $autoBudget->setForce($force);
+        // set date in cron job:
+        if (null !== $date) {
+            $autoBudget->setDate($date);
+        }
+
+        $autoBudget->fire();
+
+        if ($autoBudget->jobErrored) {
+            $this->error(sprintf('Error in "bill warnings" cron: %s', $autoBudget->message));
+        }
+        if ($autoBudget->jobFired) {
+            $this->error(sprintf('"Send bill warnings" cron fired: %s', $autoBudget->message));
+        }
+        if ($autoBudget->jobSucceeded) {
+            $this->error(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
         }
 
     }

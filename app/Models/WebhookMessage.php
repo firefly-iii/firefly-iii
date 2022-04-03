@@ -89,7 +89,7 @@ class WebhookMessage extends Model
     public static function routeBinder(string $value): WebhookMessage
     {
         if (auth()->check()) {
-            $messageId = (int)$value;
+            $messageId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var WebhookMessage $message */

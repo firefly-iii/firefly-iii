@@ -71,9 +71,11 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
                 return parent::render($request, $e);
             case 'accounts.show':
+            case 'accounts.edit':
             case 'accounts.show.all':
                 return $this->handleAccount($request, $e);
             case 'transactions.show':
+            case 'transactions.edit':
                 return $this->handleGroup($request, $e);
             case 'attachments.show':
             case 'attachments.edit':
@@ -119,7 +121,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 $request->session()->reflash();
 
                 return redirect(route('rules.index'));
-            case 'transactions.edit':
             case 'transactions.mass.edit':
             case 'transactions.mass.delete':
             case 'transactions.bulk.edit':
@@ -147,7 +148,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var User $user */
         $user      = auth()->user();
         $route     = $request->route();
-        $accountId = (int)$route->parameter('account');
+        $accountId = (int) $route->parameter('account');
         /** @var Account $account */
         $account = $user->accounts()->with(['accountType'])->withTrashed()->find($accountId);
         if (null === $account) {
@@ -175,7 +176,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var User $user */
         $user    = auth()->user();
         $route   = $request->route();
-        $groupId = (int)$route->parameter('transactionGroup');
+        $groupId = (int) $route->parameter('transactionGroup');
 
         /** @var TransactionGroup $group */
         $group = $user->transactionGroups()->withTrashed()->find($groupId);
@@ -215,7 +216,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var User $user */
         $user         = auth()->user();
         $route        = $request->route();
-        $attachmentId = (int)$route->parameter('attachment');
+        $attachmentId = (int) $route->parameter('attachment');
         /** @var Attachment $attachment */
         $attachment = $user->attachments()->withTrashed()->find($attachmentId);
         if (null === $attachment) {

@@ -49,7 +49,7 @@
   "support": {
     "email": "james@firefly-iii.org",
     "issues": "https://github.com/firefly-iii/firefly-iii/issues",
-    "forum": "https://reddit.com/r/FireflyIII",
+    "forum": "https://gitter.im/firefly-iii/firefly-iii",
     "wiki": "https://github.com/firefly-iii/help/wiki",
     "source": "https://github.com/firefly-iii/firefly-iii",
     "docs": "https://docs.firefly-iii.org/"
@@ -62,10 +62,6 @@
     {
       "type": "github",
       "url": "https://github.com/sponsors/JC5"
-    },
-    {
-      "type": "paypal",
-      "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L62W7DVD5ETPC&source=url"
     }
   ],
   "require": {
@@ -73,7 +69,6 @@
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-fileinfo": "*",
-    "ext-gd": "*",
     "ext-iconv": "*",
     "ext-intl": "*",
     "ext-json": "*",
@@ -89,12 +84,11 @@
     "bacon/bacon-qr-code": "2.*",
     "diglactic/laravel-breadcrumbs": "^7.1",
     "doctrine/dbal": "3.*",
-    "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
     "guzzlehttp/guzzle": "^7.4",
-    "jc5/google2fa-laravel": "2.0.6",
+    "jc5/google2fa-laravel": "^2.0",
     "jc5/recovery": "^2",
-    "laravel/framework": "^8.83",
+    "laravel/framework": "^9",
     "laravel/passport": "10.*",
     "laravel/sanctum": "^2.14",
     "laravel/ui": "^3.4",
@@ -102,12 +96,16 @@
     "league/commonmark": "2.*",
     "league/csv": "^9.7",
     "league/fractal": "0.*",
+    "nunomaduro/collision": "^6.1",
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^1.1",
     "psr/log": "<3",
-    "ramsey/uuid": "^4.2",
-    "rcrowe/twigbridge": "^0.13",
-    "spatie/data-transfer-object": "^3.7"
+    "ramsey/uuid": "^4.3",
+    "rcrowe/twigbridge": "^0.14",
+    "spatie/data-transfer-object": "^3.7",
+    "spatie/laravel-ignition": "^1.0",
+    "symfony/http-client": "^6.0",
+    "symfony/mailgun-mailer": "^6.0"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.6",
@@ -118,8 +116,6 @@
     "phpunit/phpunit": "^9.5"
   },
   "suggest": {
-    "directorytree/ldaprecord-laravel": "If you want to login using LDAP.",
-    "ext-ldap": "Needed to support LDAP."
   },
   "autoload": {
     "psr-4": {

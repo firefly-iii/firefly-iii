@@ -72,8 +72,8 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data = $request->getAll();
-        $bill = $this->repository->store($data);
+        $data    = $request->getAll();
+        $bill    = $this->repository->store($data);
         $manager = $this->getManager();
 
         /** @var BillTransformer $transformer */

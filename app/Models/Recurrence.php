@@ -130,7 +130,7 @@ class Recurrence extends Model
     public static function routeBinder(string $value): Recurrence
     {
         if (auth()->check()) {
-            $recurrenceId = (int)$value;
+            $recurrenceId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Recurrence $recurrence */

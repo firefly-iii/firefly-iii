@@ -36,14 +36,9 @@ class UserChangedEmail extends Event
 {
     use SerializesModels;
 
-    /** @var string The user's IP address */
-    public $ipAddress;
-    /** @var string The user's new email address */
-    public $newEmail;
-    /** @var string The user's old email address */
-    public $oldEmail;
-    /** @var User The user itself */
-    public $user;
+    public string $newEmail;
+    public string $oldEmail;
+    public User   $user;
 
     /**
      * UserChangedEmail constructor.
@@ -51,13 +46,11 @@ class UserChangedEmail extends Event
      * @param User   $user
      * @param string $newEmail
      * @param string $oldEmail
-     * @param string $ipAddress
      */
-    public function __construct(User $user, string $newEmail, string $oldEmail, string $ipAddress)
+    public function __construct(User $user, string $newEmail, string $oldEmail)
     {
-        $this->user      = $user;
-        $this->ipAddress = $ipAddress;
-        $this->oldEmail  = $oldEmail;
-        $this->newEmail  = $newEmail;
+        $this->user     = $user;
+        $this->oldEmail = $oldEmail;
+        $this->newEmail = $newEmail;
     }
 }

@@ -205,7 +205,7 @@ class CreditRecalculateService
         $factory->crud($account, 'start_of_debt', $startOfDebt);
 
         // get direction of liability:
-        $direction = (string)$this->repository->getMetaValue($account, 'liability_direction');
+        $direction = (string) $this->repository->getMetaValue($account, 'liability_direction');
 
         // now loop all transactions (except opening balance and credit thing)
         $transactions = $account->transactions()->get();
@@ -246,7 +246,7 @@ class CreditRecalculateService
         // to a credit-liability doesn't increase the amount (yet)
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$transaction->account_id
+            && (int) $account->id === (int) $transaction->account_id
             && 1 === bccomp($transaction->amount, '0')
             && 'credit' === $direction
         ) {
@@ -258,7 +258,7 @@ class CreditRecalculateService
         // likewise deposit into a credit debt does not change the amount
         if (
             $type === TransactionType::DEPOSIT
-            && (int)$account->id === (int)$transaction->account_id
+            && (int) $account->id === (int) $transaction->account_id
             && -1 === bccomp($transaction->amount, '0')
             && 'credit' === $direction
         ) {

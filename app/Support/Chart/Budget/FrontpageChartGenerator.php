@@ -64,9 +64,9 @@ class FrontpageChartGenerator
     {
         $budgets = $this->budgetRepository->getActiveBudgets();
         $data    = [
-            ['label' => (string)trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string)trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string)trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string) trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string) trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string) trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
         ];
 
         // loop al budgets:
@@ -158,7 +158,7 @@ class FrontpageChartGenerator
         /** @var array $entry */
         foreach ($spent as $entry) {
             // only spent the entry where the entry's currency matches the budget limit's currency
-            if ($entry['currency_id'] === (int)$limit->transaction_currency_id) {
+            if ($entry['currency_id'] === (int) $limit->transaction_currency_id) {
                 $data = $this->processRow($data, $budget, $limit, $entry);
             }
         }
@@ -187,8 +187,8 @@ class FrontpageChartGenerator
                 '%s (%s) (%s - %s)',
                 $budget->name,
                 $entry['currency_name'],
-                $limit->start_date->formatLocalized($this->monthAndDayFormat),
-                $limit->end_date->formatLocalized($this->monthAndDayFormat)
+                $limit->start_date->isoFormat($this->monthAndDayFormat),
+                $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
         $sumSpent = bcmul($entry['sum'], '-1'); // spent
@@ -220,6 +220,7 @@ class FrontpageChartGenerator
      * A basic setter for the user. Also updates the repositories with the right user.
      *
      * @param User $user
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function setUser(User $user): void
     {
@@ -229,6 +230,6 @@ class FrontpageChartGenerator
         $this->opsRepository->setUser($user);
 
         $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string)trans('config.month_and_day', [], $locale);
+        $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
     }
 }

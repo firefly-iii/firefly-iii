@@ -51,7 +51,7 @@ class Amount
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        return $this->formatFlat($format->symbol, (int)$format->decimal_places, $amount, $coloured);
+        return $this->formatFlat($format->symbol, (int) $format->decimal_places, $amount, $coloured);
     }
 
     /**
@@ -65,6 +65,7 @@ class Amount
      *
      * @return string
      *
+     * @throws FireflyException
      * @noinspection MoreThanThreeArgumentsInspection
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
@@ -77,7 +78,7 @@ class Amount
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = $fmt->format((float)$amount);
+        $result = $fmt->format((float) $amount);
 
         if (true === $coloured) {
             if ($amount > 0) {
@@ -112,7 +113,8 @@ class Amount
     /**
      * @return string
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function getCurrencyCode(): string
     {
@@ -131,11 +133,13 @@ class Amount
         }
         $cache->store(config('firefly.default_currency', 'EUR'));
 
-        return (string)config('firefly.default_currency', 'EUR');
+        return (string) config('firefly.default_currency', 'EUR');
     }
 
     /**
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
@@ -150,7 +154,6 @@ class Amount
      *
      * @return TransactionCurrency
      * @throws FireflyException
-     * @throws JsonException
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
@@ -164,7 +167,7 @@ class Amount
         $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';
 
         // at this point the currency preference could be encrypted, if coming from an old version.
-        $currencyCode = $this->tryDecrypt((string)$currencyPrefStr);
+        $currencyCode = $this->tryDecrypt((string) $currencyPrefStr);
 
         // could still be json encoded:
         /** @var TransactionCurrency|null $currency */
@@ -221,6 +224,7 @@ class Amount
 
     /**
      * @return array
+     * @throws FireflyException
      */
     private function getLocaleInfo(): array
     {

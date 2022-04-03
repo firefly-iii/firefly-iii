@@ -94,7 +94,7 @@ class TransactionGroup extends Model
     public static function routeBinder(string $value): TransactionGroup
     {
         if (auth()->check()) {
-            $groupId = (int)$value;
+            $groupId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionGroup $group */

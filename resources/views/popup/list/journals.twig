@@ -95,7 +95,7 @@
             </td>
 
             <td class="hidden-sm hidden-xs">
-                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+                {{ transaction.date.isoFormat(monthAndDayFormat) }}
             </td>
 
             {% if not hideSource %}

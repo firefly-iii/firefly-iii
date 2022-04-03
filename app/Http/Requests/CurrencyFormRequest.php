@@ -59,9 +59,9 @@ class CurrencyFormRequest extends FormRequest
     {
         // fixed
         $rules = [
-            'name'           => 'required|max:48|min:1|unique:transaction_currencies,name',
-            'code'           => 'required|min:3|max:51|unique:transaction_currencies,code',
-            'symbol'         => 'required|min:1|max:51|unique:transaction_currencies,symbol',
+            'name'           => 'required|max:48|min:1|uniqueCurrencyName',
+            'code'           => 'required|min:3|max:51|uniqueCurrencyCode',
+            'symbol'         => 'required|min:1|max:51|uniqueCurrencySymbol',
             'decimal_places' => 'required|min:0|max:12|numeric',
             'enabled'        => 'in:0,1',
         ];

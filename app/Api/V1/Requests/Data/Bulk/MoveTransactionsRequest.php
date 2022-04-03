@@ -74,32 +74,45 @@ class MoveTransactionsRequest extends FormRequest
                 // validate start before end only if both are there.
                 $data = $validator->getData();
                 if (array_key_exists('original_account', $data) && array_key_exists('destination_account', $data)) {
-                    $repository = app(AccountRepositoryInterface::class);
-                    $repository->setUser(auth()->user());
-                    $original    = $repository->find((int)$data['original_account']);
-                    $destination = $repository->find((int)$data['destination_account']);
-                    if ($original->accountType->type !== $destination->accountType->type) {
-                        $validator->errors()->add('title', (string)trans('validation.same_account_type'));
-
-                        return;
-                    }
-                    // get currency pref:
-                    $originalCurrency    = $repository->getAccountCurrency($original);
-                    $destinationCurrency = $repository->getAccountCurrency($destination);
-                    if (null === $originalCurrency xor null === $destinationCurrency) {
-                        $validator->errors()->add('title', (string)trans('validation.same_account_currency'));
-
-                        return;
-                    }
-                    if (null === $originalCurrency && null === $destinationCurrency) {
-                        // this is OK
-                        return;
-                    }
-                    if ($originalCurrency->code !== $destinationCurrency->code) {
-                        $validator->errors()->add('title', (string)trans('validation.same_account_currency'));
-                    }
+                    $this->validateMove($validator);
                 }
             }
         );
+    }
+
+    /**
+     * @param Validator $validator
+     * @return void
+     */
+    private function validateMove(Validator $validator): void {
+        $data = $validator->getData();
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+        $original    = $repository->find((int) $data['original_account']);
+        $destination = $repository->find((int) $data['destination_account']);
+
+        // not the same type:
+        if ($original->accountType->type !== $destination->accountType->type) {
+            $validator->errors()->add('title', (string) trans('validation.same_account_type'));
+
+            return;
+        }
+        // get currency pref:
+        $originalCurrency    = $repository->getAccountCurrency($original);
+        $destinationCurrency = $repository->getAccountCurrency($destination);
+
+        // check different scenario's.
+        if (null === $originalCurrency xor null === $destinationCurrency) {
+            $validator->errors()->add('title', (string) trans('validation.same_account_currency'));
+
+            return;
+        }
+        if (null === $originalCurrency && null === $destinationCurrency) {
+            // this is OK
+            return;
+        }
+        if ($originalCurrency->code !== $destinationCurrency->code) {
+            $validator->errors()->add('title', (string) trans('validation.same_account_currency'));
+        }
     }
 }

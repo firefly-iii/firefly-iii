@@ -54,7 +54,7 @@ trait UserNavigation
     final protected function getPreviousUri(string $identifier): string
     {
         Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
-        $url = (string)session($identifier);
+        $url = (string) session($identifier);
         Log::debug(sprintf('The URL is %s', $url));
 
         return app('steam')->getSafeUrl($url, route('index'));

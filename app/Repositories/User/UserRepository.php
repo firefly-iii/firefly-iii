@@ -40,39 +40,6 @@ use Str;
 class UserRepository implements UserRepositoryInterface
 {
     /**
-     * @return Collection
-     */
-    public function all(): Collection
-    {
-        return User::orderBy('id', 'DESC')->get(['users.*']);
-    }
-
-    /**
-     * @param User   $user
-     * @param string $role
-     *
-     * @return bool
-     */
-    public function attachRole(User $user, string $role): bool
-    {
-        $roleObject = Role::where('name', $role)->first();
-        if (null === $roleObject) {
-            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
-
-            return false;
-        }
-
-        try {
-            $user->roles()->attach($roleObject);
-        } catch (QueryException $e) {
-            // don't care
-            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
-        }
-
-        return true;
-    }
-
-    /**
      * This updates the users email address and records some things so it can be confirmed or undone later.
      * The user is blocked until the change is confirmed.
      *
@@ -145,6 +112,14 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        return User::orderBy('id', 'DESC')->get(['users.*']);
+    }
+
+    /**
      * @param string $name
      * @param string $displayName
      * @param string $description
@@ -171,6 +146,22 @@ class UserRepository implements UserRepositoryInterface
         $this->deleteEmptyGroups();
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteEmptyGroups(): void
+    {
+        $groups = UserGroup::get();
+        /** @var UserGroup $group */
+        foreach ($groups as $group) {
+            $count = $group->groupMemberships()->count();
+            if (0 === $count) {
+                Log::info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
+                $group->delete();
+            }
+        }
     }
 
     /**
@@ -204,16 +195,6 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param string $role
-     *
-     * @return Role|null
-     */
-    public function getRole(string $role): ?Role
-    {
-        return Role::where('name', $role)->first();
-    }
-
-    /**
      * @param User $user
      *
      * @return string|null
@@ -243,7 +224,7 @@ class UserRepository implements UserRepositoryInterface
         // two factor:
         $return['has_2fa']             = $user->mfa_secret !== null;
         $return['is_admin']            = $this->hasRole($user, 'owner');
-        $return['blocked']             = 1 === (int)$user->blocked;
+        $return['blocked']             = 1 === (int) $user->blocked;
         $return['blocked_code']        = $user->blocked_code;
         $return['accounts']            = $user->accounts()->count();
         $return['journals']            = $user->transactionJournals()->count();
@@ -285,21 +266,6 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Remove any role the user has.
-     *
-     * @param User   $user
-     * @param string $role
-     */
-    public function removeRole(User $user, string $role): void
-    {
-        $roleObj = $this->getRole($role);
-        if (null === $roleObj) {
-            return;
-        }
-        $user->roles()->detach($roleObj->id);
-    }
-
-    /**
      * Set MFA code.
      *
      * @param User        $user
@@ -332,6 +298,31 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return $user;
+    }
+
+    /**
+     * @param User   $user
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function attachRole(User $user, string $role): bool
+    {
+        $roleObject = Role::where('name', $role)->first();
+        if (null === $roleObject) {
+            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
+
+            return false;
+        }
+
+        try {
+            $user->roles()->attach($roleObject);
+        } catch (QueryException $e) {
+            // don't care
+            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
+        }
+
+        return true;
     }
 
     /**
@@ -402,18 +393,27 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @inheritDoc
+     * Remove any role the user has.
+     *
+     * @param User   $user
+     * @param string $role
      */
-    public function deleteEmptyGroups(): void
+    public function removeRole(User $user, string $role): void
     {
-        $groups = UserGroup::get();
-        /** @var UserGroup $group */
-        foreach ($groups as $group) {
-            $count = $group->groupMemberships()->count();
-            if (0 === $count) {
-                Log::info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
-                $group->delete();
-            }
+        $roleObj = $this->getRole($role);
+        if (null === $roleObj) {
+            return;
         }
+        $user->roles()->detach($roleObj->id);
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return Role|null
+     */
+    public function getRole(string $role): ?Role
+    {
+        return Role::where('name', $role)->first();
     }
 }

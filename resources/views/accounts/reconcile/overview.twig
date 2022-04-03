@@ -21,7 +21,7 @@
 
                 <table class="table table-striped table-bordered">
                     <tr>
-                        <td>{{ 'submitted_start_balance'|_ }} ({{ start.formatLocalized(monthAndDayFormat) }})</td>
+                        <td>{{ 'submitted_start_balance'|_ }} ({{ start.isoFormat(monthAndDayFormat) }})</td>
                         <td>{{ formatAmountByAccount(account, startBalance) }}</td>
                     </tr>
                     <tr>
@@ -33,7 +33,7 @@
                         <td>{{ formatAmountByAccount(account, clearedAmount) }}</td>
                     </tr>
                     <tr>
-                        <td>{{ 'submitted_end_balance'|_ }} ({{ end.formatLocalized(monthAndDayFormat) }})</td>
+                        <td>{{ 'submitted_end_balance'|_ }} ({{ end.isoFormat(monthAndDayFormat) }})</td>
                         <td>{{ formatAmountByAccount(account, endBalance) }}</td>
                     </tr>
                     <tr>

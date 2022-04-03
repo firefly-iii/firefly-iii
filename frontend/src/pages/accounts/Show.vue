@@ -95,7 +95,7 @@ export default {
       const parser = new Parser;
       this.rows = [];
 
-      get.transactions(this.id, this.page, this.getCacheKey).then(
+      get.transactions(this.id, this.page).then(
         (response) => {
           let resp = parser.parseResponse(response);
 

@@ -11,7 +11,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         {% if budgetLimit %}
-                            {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.formatLocalized(monthAndDayFormat), end: budgetLimit.end_date.formatLocalized(monthAndDayFormat),currency: budgetLimit.transactionCurrency.name }) }}
+                            {{ trans('firefly.chart_budget_in_period', {name: budget.name, start: budgetLimit.start_date.isoFormat(monthAndDayFormat), end: budgetLimit.end_date.isoFormat(monthAndDayFormat),currency: budgetLimit.transactionCurrency.name }) }}
                         {% else %}
                             {{ trans('firefly.chart_all_journals_for_budget', {name:budget.name}) }}
                         {% endif %}
@@ -147,8 +147,8 @@
                     <div class="box-header with-border">
                         <h3 class="box-title"><a
                                     href="{{ route('budgets.show.limit',[budget.id,limit.id]) }}">
-                                {{ limit.start_date.formatLocalized(monthAndDayFormat) }} &mdash;
-                                {{ limit.end_date.formatLocalized(monthAndDayFormat) }}
+                                {{ limit.start_date.isoFormat(monthAndDayFormat) }} &mdash;
+                                {{ limit.end_date.isoFormat(monthAndDayFormat) }}
                             </a>
                         </h3>
                     </div>

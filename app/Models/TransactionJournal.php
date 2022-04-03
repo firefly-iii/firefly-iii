@@ -160,7 +160,7 @@ class TransactionJournal extends Model
     public static function routeBinder(string $value): TransactionJournal
     {
         if (auth()->check()) {
-            $journalId = (int)$value;
+            $journalId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionJournal $journal */

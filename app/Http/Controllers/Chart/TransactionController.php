@@ -57,7 +57,6 @@ class TransactionController extends Controller
      * @param Carbon $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function budgets(Carbon $start, Carbon $end)
     {
@@ -80,7 +79,7 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
-            $budget                 = $journal['budget_name'] ?? (string)trans('firefly.no_budget');
+            $budget                 = $journal['budget_name'] ?? (string) trans('firefly.no_budget');
             $title                  = sprintf('%s (%s)', $budget, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
@@ -102,7 +101,6 @@ class TransactionController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
      */
     public function categories(string $objectType, Carbon $start, Carbon $end)
     {
@@ -138,7 +136,7 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
-            $category               = $journal['category_name'] ?? (string)trans('firefly.no_category');
+            $category               = $journal['category_name'] ?? (string) trans('firefly.no_category');
             $title                  = sprintf('%s (%s)', $category, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
@@ -161,7 +159,6 @@ class TransactionController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
      */
     public function destinationAccounts(string $objectType, Carbon $start, Carbon $end)
     {
@@ -219,7 +216,6 @@ class TransactionController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
      */
     public function sourceAccounts(string $objectType, Carbon $start, Carbon $end)
     {

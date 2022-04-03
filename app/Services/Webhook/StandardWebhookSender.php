@@ -59,7 +59,7 @@ class StandardWebhookSender implements WebhookSenderInterface
 
         try {
             $signature = $signatureGenerator->generate($this->message);
-        } catch(FireflyException $e) {
+        } catch (FireflyException $e) {
             Log::error('Did not send message because of a Firefly III Exception.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

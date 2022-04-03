@@ -44,8 +44,8 @@
                         {
                             account_name: account.name|escape,
                             url: url,
-                            start: start.formatLocalized(monthAndDayFormat),
-                            end: end.formatLocalized(monthAndDayFormat),
+                            start: start.isoFormat(monthAndDayFormat),
+                            end: end.isoFormat(monthAndDayFormat),
                         })|raw }}
 
                 </em>

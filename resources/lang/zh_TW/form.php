@@ -181,6 +181,7 @@ return [
     'login_name'                  => '登入',
     'is_owner'                    => 'Is admin?',
     'url'                         => 'URL',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => '套用規則',

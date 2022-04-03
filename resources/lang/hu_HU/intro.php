@@ -24,46 +24,46 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => 'Ez a Firefly III kezdőoldala. Érdemes némi időt szánni ennek a bemutatónak a megtekintésére a Firefly III alapjainak megismeréséhez.',
-    'index_accounts-chart'                            => 'Ezen a grafikon az eszközszámlák aktuális egyenlege látható. A grafikonon megjelenő bankszámlákat a beállításokban lehet kiválasztani.',
-    'index_box_out_holder'                            => 'Ez a kis doboz és a mellette láthatóak gyors áttekintést nyújtanak a pénzügyi helyzetről.',
-    'index_help'                                      => 'Ezt a gombot megnyomva lehet segítséget kérni egy oldal vagy egy űrlap használatához.',
-    'index_outro'                                     => 'A Firefly III legtöbb oldala egy ilyen rövid bemutatóval kezdődik. Kérdés vagy észrevét esetén szívesen állok rendelkezésre. Kellemes használatot!',
-    'index_sidebar-toggle'                            => 'Az ez alatt az ikon alatt megnyíló menü használható új tranzakciók, bankszámlák vagy egyéb dolgok létrehozásához.',
-    'index_cash_account'                              => 'Ezek az eddig létrehozott számlák. A készpénzszámla használható a készpénzes költések követésére, de ez természetesen nem kötelező.',
+    'index_intro'                           => 'Ez a Firefly III kezdőoldala. Érdemes némi időt szánni ennek a bemutatónak a megtekintésére a Firefly III alapjainak megismeréséhez.',
+    'index_accounts-chart'                  => 'Ezen a grafikon az eszközszámlák aktuális egyenlege látható. A grafikonon megjelenő bankszámlákat a beállításokban lehet kiválasztani.',
+    'index_box_out_holder'                  => 'Ez a kis doboz és a mellette láthatóak gyors áttekintést nyújtanak a pénzügyi helyzetről.',
+    'index_help'                            => 'Ezt a gombot megnyomva lehet segítséget kérni egy oldal vagy egy űrlap használatához.',
+    'index_outro'                           => 'A Firefly III legtöbb oldala egy ilyen rövid bemutatóval kezdődik. Kérdés vagy észrevét esetén szívesen állok rendelkezésre. Kellemes használatot!',
+    'index_sidebar-toggle'                  => 'Az ez alatt az ikon alatt megnyíló menü használható új tranzakciók, bankszámlák vagy egyéb dolgok létrehozásához.',
+    'index_cash_account'                    => 'Ezek az eddig létrehozott számlák. A készpénzszámla használható a készpénzes költések követésére, de ez természetesen nem kötelező.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'A tranzakció alap adatait töltheted ki. Forrás- és célszámla, dátum és leírás.',
-    'transactions_create_amount_info'                 => 'Adja meg a tranzakció összegét. Szükség esetén a mezők automatikusan frissülnek a külföldi összeggel.',
-    'transactions_create_optional_info'               => 'Ezek a mezők opcionálisak. Kitöltésük a tranzakciók rendszerezését segíti.',
-    'transactions_create_split'                       => 'A tranzakció további szétválasztásához használja ezt a gombot',
+    'transactions_create_basic_info'        => 'A tranzakció alap adatait töltheted ki. Forrás- és célszámla, dátum és leírás.',
+    'transactions_create_amount_info'       => 'Adja meg a tranzakció összegét. Szükség esetén a mezők automatikusan frissülnek a külföldi összeggel.',
+    'transactions_create_optional_info'     => 'Ezek a mezők opcionálisak. Kitöltésük a tranzakciók rendszerezését segíti.',
+    'transactions_create_split'             => 'A tranzakció további szétválasztásához használja ezt a gombot',
 
     // create account:
-    'accounts_create_iban'                            => 'Érvényes IBAN hozzáadása a számlához. Ez a jövőben nagyon egyszerűvé teheti az adatok importálását.',
-    'accounts_create_asset_opening_balance'           => 'Az eszközszámlák rendelkezhetnek egy „nyitó egyenleggel” ami a számla történetének kezdetét jelzi a Firefly III-ban.',
-    'accounts_create_asset_currency'                  => 'A Firefly III több pénznemet támogat. Az eszközszámláknak van egy fő pénzneme, amelyet itt kell beállítani.',
-    'accounts_create_asset_virtual'                   => 'Időnként segíthet egy virtuális egyenleget adni a bankszámlához: ez egy további összeg ami az aktuális egyenleghez mindig hozzáadódik vagy kivonásra kerül.',
+    'accounts_create_iban'                  => 'Érvényes IBAN hozzáadása a számlához. Ez a jövőben nagyon egyszerűvé teheti az adatok importálását.',
+    'accounts_create_asset_opening_balance' => 'Az eszközszámlák rendelkezhetnek egy „nyitó egyenleggel” ami a számla történetének kezdetét jelzi a Firefly III-ban.',
+    'accounts_create_asset_currency'        => 'A Firefly III több pénznemet támogat. Az eszközszámláknak van egy fő pénzneme, amelyet itt kell beállítani.',
+    'accounts_create_asset_virtual'         => 'Időnként segíthet egy virtuális egyenleget adni a bankszámlához: ez egy további összeg ami az aktuális egyenleghez mindig hozzáadódik vagy kivonásra kerül.',
 
     // budgets index
-    'budgets_index_intro'                             => 'A költségkeretek a pénzügyek kezelésére szolgálnak, és a Firefly III egyik alapvető funkcióját képezik.',
-    'budgets_index_set_budget'                        => 'Ha a teljes költségkeret minden időszakra be van állítva, a Firefly III megmondhatja, ha az összes rendelkezésre álló pénz fel lett használva.',
-    'budgets_index_see_expenses_bar'                  => 'A pénzköltés lassan fel fogja tölteni ezt a sávot.',
-    'budgets_index_navigate_periods'                  => 'Az időszakokon átnavigálva könnyedén, még idő előtt be lehet állítani a költségkereteket.',
-    'budgets_index_new_budget'                        => 'Új költségkeretet létrehozása.',
-    'budgets_index_list_of_budgets'                   => 'Ezen a táblán lehet beállítani a költségkeretek összegeit és áttekinteni, hogy hogyan állnak.',
-    'budgets_index_outro'                             => 'A költségkeretek használatáról további információk a jobb felső sarokban található súgó ikon alatt találhatóak.',
+    'budgets_index_intro'                   => 'A költségkeretek a pénzügyek kezelésére szolgálnak, és a Firefly III egyik alapvető funkcióját képezik.',
+    'budgets_index_set_budget'              => 'Ha a teljes költségkeret minden időszakra be van állítva, a Firefly III megmondhatja, ha az összes rendelkezésre álló pénz fel lett használva.',
+    'budgets_index_see_expenses_bar'        => 'A pénzköltés lassan fel fogja tölteni ezt a sávot.',
+    'budgets_index_navigate_periods'        => 'Az időszakokon átnavigálva könnyedén, még idő előtt be lehet állítani a költségkereteket.',
+    'budgets_index_new_budget'              => 'Új költségkeretet létrehozása.',
+    'budgets_index_list_of_budgets'         => 'Ezen a táblán lehet beállítani a költségkeretek összegeit és áttekinteni, hogy hogyan állnak.',
+    'budgets_index_outro'                   => 'A költségkeretek használatáról további információk a jobb felső sarokban található súgó ikon alatt találhatóak.',
 
     // reports (index)
-    'reports_index_intro'                             => 'Ezek a jelentések részletes betekintést biztosítanak a pénzügyekbe.',
-    'reports_index_inputReportType'                   => 'Jelentéstípus kiválasztása. A súgóoldalakon megtalálható, hogy az egyes jelentések mit mutatnak meg.',
-    'reports_index_inputAccountsSelect'               => 'Szükség szerint lehet kizárni vagy hozzáadni eszközfiókokat.',
-    'reports_index_inputDateRange'                    => 'Tetszőleges dátumtartományt lehet választani, egy naptól 10 évig.',
-    'reports_index_extra-options-box'                 => 'A kiválasztott jelentéstől függően további szűrők és beállítások választhatóak. Ezek ebben a dobozban fognak megjelenni.',
+    'reports_index_intro'                   => 'Ezek a jelentések részletes betekintést biztosítanak a pénzügyekbe.',
+    'reports_index_inputReportType'         => 'Jelentéstípus kiválasztása. A súgóoldalakon megtalálható, hogy az egyes jelentések mit mutatnak meg.',
+    'reports_index_inputAccountsSelect'     => 'Szükség szerint lehet kizárni vagy hozzáadni eszközfiókokat.',
+    'reports_index_inputDateRange'          => 'Tetszőleges dátumtartományt lehet választani, egy naptól 10 évig.',
+    'reports_index_extra-options-box'       => 'A kiválasztott jelentéstől függően további szűrők és beállítások választhatóak. Ezek ebben a dobozban fognak megjelenni.',
 
     // reports (reports)
-    'reports_report_default_intro'                    => 'Ez a jelentés egy gyors és átfogó képet ad a pénzügyekről. Ha bármi másnak szerepelni kéne rajta vedd fel velem a kapcsolatot!',
-    'reports_report_audit_intro'                      => 'Ez a jelentés részletes betekintést nyújt az eszközszámlákba.',
-    'reports_report_audit_optionsBox'                 => 'A jelölőnégyzetek használatával lehet megjeleníteni vagy elrejteni az egyes oszlopokat.',
+    'reports_report_default_intro'          => 'Ez a jelentés egy gyors és átfogó képet ad a pénzügyekről. Ha bármi másnak szerepelni kéne rajta vedd fel velem a kapcsolatot!',
+    'reports_report_audit_intro'            => 'Ez a jelentés részletes betekintést nyújt az eszközszámlákba.',
+    'reports_report_audit_optionsBox'       => 'A jelölőnégyzetek használatával lehet megjeleníteni vagy elrejteni az egyes oszlopokat.',
 
     'reports_report_category_intro'                  => 'Ez a jelentés egy vagy több kategóriában nyújt betekintést.',
     'reports_report_category_pieCharts'              => 'Ezek a diagramok áttekintést nyújtanak a költségekről és a bevételekről, kategóriánként vagy bankszámlákként.',

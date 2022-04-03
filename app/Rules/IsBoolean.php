@@ -39,7 +39,7 @@ class IsBoolean implements Rule
      */
     public function message(): string
     {
-        return (string)trans('validation.boolean');
+        return (string) trans('validation.boolean');
     }
 
     /**

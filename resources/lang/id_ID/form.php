@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Masuk',
     'is_owner'                    => 'Apakah admin?',
     'url'                         => 'URL',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Terapkan aturan',

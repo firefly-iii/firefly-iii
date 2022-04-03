@@ -37,11 +37,11 @@
                                 <td data-value="{{ user.email }}">
                                     <a href="{{ route('admin.users.show',user.id) }}">{{ user.email }}</a></td>
                                 <td class="hidden-xs" data-value="{{ user.created_at.format('Y-m-d H-i-s') }}">
-                                    {{ user.created_at.formatLocalized(monthAndDayFormat) }}
+                                    {{ user.created_at.isoFormat(monthAndDayFormat) }}
                                     {{ user.created_at.format('H:i') }}
                                 </td>
                                 <td class="hidden-xs" data-value="{{ user.updated_at.format('Y-m-d H-i-s') }}">
-                                    {{ user.updated_at.formatLocalized(monthAndDayFormat) }}
+                                    {{ user.updated_at.isoFormat(monthAndDayFormat) }}
                                     {{ user.updated_at.format('H:i') }}
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.isAdmin %}1{% else %}0{% endif %}">

@@ -35,6 +35,22 @@ use Illuminate\Support\Collection;
 interface BudgetRepositoryInterface
 {
     /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function budgetEndsWith(string $query, int $limit): Collection;
+
+    /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function budgetStartsWith(string $query, int $limit): Collection;
+
+    /**
      * @return bool
      */
     public function cleanupBudgets(): bool;
@@ -135,6 +151,12 @@ interface BudgetRepositoryInterface
     public function getMaxOrder(): int;
 
     /**
+     * @param Budget $budget
+     * @return string|null
+     */
+    public function getNoteText(Budget $budget): ?string;
+
+    /**
      * @param string $query
      * @param int    $limit
      *
@@ -168,4 +190,5 @@ interface BudgetRepositoryInterface
      * @return Budget
      */
     public function update(Budget $budget, array $data): Budget;
+
 }

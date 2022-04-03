@@ -43,7 +43,6 @@ class BillController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws JsonException
      */
     public function overview(Collection $accounts, Carbon $start, Carbon $end)
     {   // chart properties for cache:

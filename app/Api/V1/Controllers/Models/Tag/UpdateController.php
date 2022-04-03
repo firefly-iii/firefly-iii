@@ -73,7 +73,7 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Tag $tag): JsonResponse
     {
-        $rule = $this->repository->update($tag, $request->getAll());
+        $rule    = $this->repository->update($tag, $request->getAll());
         $manager = $this->getManager();
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);

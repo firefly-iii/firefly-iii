@@ -46,7 +46,7 @@ class AccountTypeSeeder extends Seeder
             AccountType::RECONCILIATION,
             AccountType::DEBT,
             AccountType::MORTGAGE,
-            AccountType::LIABILITY_CREDIT
+            AccountType::LIABILITY_CREDIT,
         ];
         foreach ($types as $type) {
             try {

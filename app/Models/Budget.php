@@ -38,26 +38,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Budget
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property int                                  $user_id
- * @property string                               $name
- * @property bool                                 $active
- * @property bool                                 $encrypted
- * @property int                                  $order
- * @property-read Collection|Attachment[]         $attachments
- * @property-read int|null                        $attachments_count
- * @property-read Collection|AutoBudget[]         $autoBudgets
- * @property-read int|null                        $auto_budgets_count
- * @property-read Collection|BudgetLimit[]        $budgetlimits
- * @property-read int|null                        $budgetlimits_count
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
- * @property-read Collection|Transaction[]        $transactions
- * @property-read int|null                        $transactions_count
- * @property-read User                            $user
+ * @property int                                       $id
+ * @property Carbon|null                               $created_at
+ * @property Carbon|null                               $updated_at
+ * @property Carbon|null                               $deleted_at
+ * @property int                                       $user_id
+ * @property string                                    $name
+ * @property bool                                      $active
+ * @property bool                                      $encrypted
+ * @property int                                       $order
+ * @property-read Collection|Attachment[]              $attachments
+ * @property-read int|null                             $attachments_count
+ * @property-read Collection|AutoBudget[]              $autoBudgets
+ * @property-read int|null                             $auto_budgets_count
+ * @property-read Collection|BudgetLimit[]             $budgetlimits
+ * @property-read int|null                             $budgetlimits_count
+ * @property-read Collection|TransactionJournal[]      $transactionJournals
+ * @property-read int|null                             $transaction_journals_count
+ * @property-read Collection|Transaction[]             $transactions
+ * @property-read int|null                             $transactions_count
+ * @property-read User                                 $user
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newQuery()
  * @method static Builder|Budget onlyTrashed()
@@ -74,9 +74,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
  * @mixin Eloquent
- * @property string                               $email
- * @property int|null                             $user_group_id
+ * @property string                 $email
+ * @property int|null               $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserGroupId($value)
+ * @property-read Collection|Note[] $notes
+ * @property-read int|null          $notes_count
  */
 class Budget extends Model
 {
@@ -111,7 +113,7 @@ class Budget extends Model
     public static function routeBinder(string $value): Budget
     {
         if (auth()->check()) {
-            $budgetId = (int)$value;
+            $budgetId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Budget $budget */
@@ -148,6 +150,15 @@ class Budget extends Model
     public function budgetlimits(): HasMany
     {
         return $this->hasMany(BudgetLimit::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Get all of the notes.
+     */
+    public function notes(): MorphMany
+    {
+        return $this->morphMany(Note::class, 'noteable');
     }
 
     /**

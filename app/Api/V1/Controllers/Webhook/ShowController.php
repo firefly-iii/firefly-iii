@@ -70,11 +70,11 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager    = $this->getManager();
         $collection = $this->repository->all();
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $count = $collection->count();
-        $webhooks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $count      = $collection->count();
+        $webhooks   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));

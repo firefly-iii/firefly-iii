@@ -69,9 +69,9 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {
-                $notes = $attachment->notes()->first();
+                $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes = $notes ? $notes->text : '';
+                $attachment->notes       = $notes ? $notes->text : '';
 
                 return $attachment;
             }

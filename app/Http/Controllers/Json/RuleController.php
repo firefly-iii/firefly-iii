@@ -43,11 +43,11 @@ class RuleController extends Controller
      */
     public function action(Request $request): JsonResponse
     {
-        $count   = (int)$request->get('count') > 0 ? (int)$request->get('count') : 1;
+        $count   = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
-            $actions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
+            $actions[$key] = (string) trans('firefly.rule_action_' . $key . '_choice');
         }
         try {
             $view = view('rules.partials.action', compact('actions', 'count'))->render();
@@ -69,13 +69,13 @@ class RuleController extends Controller
      */
     public function trigger(Request $request): JsonResponse
     {
-        $count     = (int)$request->get('count') > 0 ? (int)$request->get('count') : 1;
-        $operators = config('firefly.search.operators');
+        $count     = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
+        $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
 
-                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);

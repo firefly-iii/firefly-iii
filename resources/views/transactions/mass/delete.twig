@@ -83,7 +83,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {{ journal.date.formatLocalized(monthAndDayFormat) }}
+                                        {{ journal.date.isoFormat(monthAndDayFormat) }}
                                     </td>
                                     <td>
                                         <a href="{{ route('accounts.show', [journal.source_account_id]) }}"

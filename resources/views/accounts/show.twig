@@ -13,7 +13,7 @@
                     <h3 class="box-title">
                         {{ trans('firefly.chart_account_in_period', {
                             balance: formatAmountBySymbol(balance, currency.symbol, currency.decimal_places, true),
-                            name: account.name|escape, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) })|raw }}
+                            name: account.name|escape, start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) })|raw }}
                     </h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
@@ -193,7 +193,7 @@
         var drawVerticalLine = '';
         {# render vertical line with text "today"  #}
         {% if start.lte(today) and end.gte(today) %}
-        drawVerticalLine = '{{ today.formatLocalized(monthAndDayFormat) }}';
+        drawVerticalLine = '{{ today.isoFormat(monthAndDayFormat) }}';
         {% endif %}
         {% endif %}
 

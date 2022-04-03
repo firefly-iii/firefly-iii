@@ -79,7 +79,8 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
@@ -93,7 +94,7 @@ trait PeriodOverview
         $cache->addProperty('account-show-period-entries');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return $cache->get();
+            // return $cache->get();
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -183,7 +184,7 @@ trait PeriodOverview
         $return = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['source_account_id']) {
+            if ($account->id === (int) $journal['source_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -205,7 +206,7 @@ trait PeriodOverview
         $return = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['destination_account_id']) {
+            if ($account->id === (int) $journal['destination_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -224,7 +225,7 @@ trait PeriodOverview
         $return = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
+            $currencyId        = (int) $journal['currency_id'];
             $foreignCurrencyId = $journal['foreign_currency_id'];
             if (!array_key_exists($currencyId, $return)) {
                 $return[$currencyId] = [
@@ -245,7 +246,7 @@ trait PeriodOverview
                     $return[$foreignCurrencyId] = [
                         'amount'                  => '0',
                         'count'                   => 0,
-                        'currency_id'             => (int)$foreignCurrencyId,
+                        'currency_id'             => (int) $foreignCurrencyId,
                         'currency_name'           => $journal['foreign_currency_name'],
                         'currency_code'           => $journal['foreign_currency_code'],
                         'currency_symbol'         => $journal['foreign_currency_symbol'],
@@ -271,7 +272,8 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
@@ -350,7 +352,8 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function getNoBudgetPeriodOverview(Carbon $start, Carbon $end): array
     {
@@ -404,7 +407,8 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
@@ -485,7 +489,8 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
@@ -560,7 +565,8 @@ trait PeriodOverview
      *
      * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {

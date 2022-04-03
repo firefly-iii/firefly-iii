@@ -40,6 +40,8 @@ trait UpdateTrait
      *
      * @return array
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function getLatestRelease(): array
     {

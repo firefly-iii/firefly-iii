@@ -138,7 +138,7 @@ class Account extends Model
     public static function routeBinder(string $value): Account
     {
         if (auth()->check()) {
-            $accountId = (int)$value;
+            $accountId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Account $account */
@@ -266,7 +266,7 @@ class Account extends Model
      */
     public function setVirtualBalanceAttribute($value): void
     {
-        $value = (string)$value;
+        $value = (string) $value;
         if ('' === $value) {
             $value = null;
         }

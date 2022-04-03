@@ -59,7 +59,7 @@ class ShowController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.categories'));
+                app('view')->share('title', (string) trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bookmark');
                 $this->repository = app(CategoryRepositoryInterface::class);
 
@@ -78,6 +78,9 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
@@ -86,16 +89,16 @@ class ShowController extends Controller
         /** @var Carbon $end */
         $end          = $end ?? session('end', Carbon::now()->endOfMonth());
         $subTitleIcon = 'fa-bookmark';
-        $page         = (int)$request->get('page');
+        $page         = (int) $request->get('page');
         $attachments  = $this->repository->getAttachments($category);
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $oldest       = $this->repository->firstUseDate($category) ?? Carbon::now()->startOfYear();
         $periods      = $this->getCategoryPeriodOverview($category, $oldest, $end);
         $path         = route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $subTitle     = trans(
             'firefly.journals_in_period_for_category',
-            ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-             'end'  => $end->formatLocalized($this->monthAndDayFormat),]
+            ['name' => $category->name, 'start' => $start->isoFormat($this->monthAndDayFormat),
+             'end'  => $end->isoFormat($this->monthAndDayFormat),]
         );
 
         /** @var GroupCollectorInterface $collector */
@@ -118,18 +121,20 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function showAll(Request $request, Category $category)
     {
         // default values:
         $subTitleIcon = 'fa-bookmark';
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $start        = null;
         $end          = null;
         $periods      = new Collection;
 
-        $subTitle = (string)trans('firefly.all_journals_for_category', ['name' => $category->name]);
+        $subTitle = (string) trans('firefly.all_journals_for_category', ['name' => $category->name]);
         $first    = $this->repository->firstUseDate($category);
         /** @var Carbon $start */
         $start       = $first ?? today(config('app.timezone'));

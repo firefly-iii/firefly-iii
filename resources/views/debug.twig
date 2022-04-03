@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="{{ trans('config.html_language') }}">
 <head>
     <title>{{ trans('firefly.debug_page') }}</title>
 </head>
@@ -17,15 +18,13 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | --- | --- |
 | Firefly III | {{ FF_VERSION }} |
 | Firefly III API | {{ config('firefly.api_version') }} |
-| Build | {{ buildNr}}, {{ buildDate }} |
-| PHP | {{ phpVersion }} |
-| Host | {{ phpOs }} |
+| Build | {{ buildNr }}, {{ buildDate }} |
+| DB version | {{ foundDBversion }} (exp. {{ expectedDBversion}}) |
+| PHP | `{{ phpVersion }}` |
+| Host | `{{ phpOs }}` |
 
 | System info | Value |
 | --- | --- |
-| Installation ID | {{ installationId }} |
-| Using docker? | {% if isDocker %}true{% else %}false{% endif %} |
-| Layout | {{ layout }} |
 | System TZ | {{ tz }} |
 | Browser TZ | [BrowserTZ] |
 | App environment | {{ appEnv }} |
@@ -40,12 +39,14 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | BCscale | {{ bcscale }} |
 | DB drivers | {{ drivers }} |
 | Current driver | {{ currentDriver }} |
-| DB version | {{ foundDBversion }} (exp. {{ expectedDBversion}}) |
-| Login provider | {{ loginProvider }}  |
-| Trusted proxies (.env) | {{ trustedProxies }} |
+| Trusted proxies (.env) | `{{ trustedProxies }}` |
 
 | User info | Value |
 | --- | --- |
+| Login provider | {{ loginProvider }}  |
+| User guard | {{ userGuard }}  |
+| Headers | {{ remoteHeader }}, {{ remoteMailHeader }}  |
+| Stateful domains | {{ stateful  }} |
 | Session start | {{ session('start') }} |
 | Session end | {{ session('end') }} |
 | Session first | {{ session('first') }} |

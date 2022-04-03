@@ -153,6 +153,12 @@ class Handler extends ExceptionHandler
             $userData['id']    = auth()->user()->id;
             $userData['email'] = auth()->user()->email;
         }
+
+        $headers = [];
+        if (request()->headers) {
+            $headers = request()->headers->all();
+        }
+
         $data = [
             'class'        => get_class($e),
             'errorMessage' => $e->getMessage(),
@@ -165,11 +171,12 @@ class Handler extends ExceptionHandler
             'url'          => request()->fullUrl(),
             'userAgent'    => request()->userAgent(),
             'json'         => request()->acceptsJson(),
+            'headers'      => $headers,
         ];
 
         // create job that will mail.
         $ipAddress = request()->ip() ?? '0.0.0.0';
-        $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
+        $job       = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);

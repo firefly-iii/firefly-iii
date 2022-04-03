@@ -43,7 +43,6 @@ class AutomationHandler
      * @param RequestedReportOnJournals $event
      *
      * @return bool
-     * @throws FireflyException
      */
     public function reportJournals(RequestedReportOnJournals $event): bool
     {
@@ -58,23 +57,9 @@ class AutomationHandler
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($event->userId);
         if (null !== $user && 0 !== $event->groups->count()) {
-
-            $email = $user->email;
-
-            // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
-            if (null !== $pref) {
-                $email = $pref->data;
-            }
-
-            // if user is demo user, send to owner:
-            if ($user->hasRole('demo')) {
-                $email = config('firefly.site_owner');
-            }
-
             try {
                 Log::debug('Trying to mail...');
-                Mail::to($user->email)->send(new ReportNewJournalsMail($email, '127.0.0.1', $event->groups));
+                Mail::to($user->email)->send(new ReportNewJournalsMail($event->groups));
 
             } catch (Exception $e) { // @phpstan-ignore-line
                 Log::debug('Send message failed! :(');

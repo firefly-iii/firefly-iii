@@ -37,21 +37,16 @@ class RequestedNewPassword extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var string IP address of user */
-    public $ipAddress;
-    /** @var string URI of password change link */
-    public $url;
+    public string $url;
 
     /**
      * RequestedNewPassword constructor.
      *
      * @param string $url
-     * @param string $ipAddress
      */
-    public function __construct(string $url, string $ipAddress)
+    public function __construct(string $url)
     {
-        $this->url       = $url;
-        $this->ipAddress = $ipAddress;
+        $this->url = $url;
     }
 
     /**
@@ -61,6 +56,8 @@ class RequestedNewPassword extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.password-html')->text('emails.password-text')->subject((string)trans('email.reset_pw_subject'));
+        return $this
+            ->markdown('emails.password')
+            ->subject((string) trans('email.reset_pw_subject'));
     }
 }

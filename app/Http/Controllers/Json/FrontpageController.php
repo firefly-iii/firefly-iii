@@ -50,7 +50,10 @@ class FrontpageController extends Controller
             $amount = $repository->getCurrentAmount($piggyBank);
             if (1 === bccomp($amount, '0')) {
                 // percentage!
-                $pct = round(($amount / $piggyBank->targetamount) * 100);
+                $pct = 0;
+                if (0.0 !== (float) $piggyBank->targetamount) {
+                    $pct = round(($amount / $piggyBank->targetamount) * 100);
+                }
 
                 $entry = [
                     'id'         => $piggyBank->id,

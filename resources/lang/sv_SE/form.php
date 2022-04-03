@@ -180,7 +180,8 @@ return [
     'blocked_code'                => 'Anledning för blockering',
     'login_name'                  => 'Logga in',
     'is_owner'                    => 'Admin?',
-    'url'                         => 'URL',
+    'url'                         => 'Länk',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Tillämpa regler',

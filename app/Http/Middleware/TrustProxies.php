@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Fideloper\Proxy\TrustProxies as Middleware;
-use Illuminate\Contracts\Config\Repository;
+use Illuminate\Http\Middleware\TrustProxies as Middleware;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class TrustProxies
@@ -32,14 +32,19 @@ use Illuminate\Contracts\Config\Repository;
  */
 class TrustProxies extends Middleware
 {
+    // After...
+    protected $headers =
+        Request::HEADER_X_FORWARDED_FOR |
+        Request::HEADER_X_FORWARDED_HOST |
+        Request::HEADER_X_FORWARDED_PORT |
+        Request::HEADER_X_FORWARDED_PROTO |
+        Request::HEADER_X_FORWARDED_AWS_ELB;
+
     /**
      * TrustProxies constructor.
-     *
-     * @param Repository $config
      */
-    public function __construct(Repository $config)
+    public function __construct()
     {
-        $this->proxies = (string)config('firefly.trusted_proxies');
-        parent::__construct($config);
+        $this->proxies = (string) config('firefly.trusted_proxies');
     }
 }

@@ -71,7 +71,8 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function all(Category $category): JsonResponse
     {
@@ -118,7 +119,6 @@ class CategoryController extends Controller
      * See reference nr. 60
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function frontPage(): JsonResponse
     {
@@ -151,7 +151,6 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -198,7 +197,7 @@ class CategoryController extends Controller
         if (null !== $category) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
-            $categoryId    = (int)$category->id;
+            $categoryId    = (int) $category->id;
             // this gives us all currencies
             $collection = new Collection([$category]);
             $expenses   = $opsRepository->listExpenses($start, $end, null, $collection);
@@ -217,7 +216,7 @@ class CategoryController extends Controller
             $inKey        = sprintf('%d-in', $currencyId);
             $chartData[$outKey]
                           = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
@@ -225,7 +224,7 @@ class CategoryController extends Controller
 
             $chartData[$inKey]
                 = [
-                'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
@@ -240,7 +239,7 @@ class CategoryController extends Controller
             $outSet = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
                 $amount                               = app('steam')->positive($journal['amount']);
-                $date                                 = $journal['date']->formatLocalized($format);
+                $date                                 = $journal['date']->isoFormat($format);
                 $chartData[$outKey]['entries'][$date] = $chartData[$outKey]['entries'][$date] ?? '0';
 
                 $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
@@ -249,7 +248,7 @@ class CategoryController extends Controller
             $inSet = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
                 $amount                              = app('steam')->positive($journal['amount']);
-                $date                                = $journal['date']->formatLocalized($format);
+                $date                                = $journal['date']->isoFormat($format);
                 $chartData[$inKey]['entries'][$date] = $chartData[$inKey]['entries'][$date] ?? '0';
                 $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
             }
@@ -267,7 +266,6 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -295,7 +293,8 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {

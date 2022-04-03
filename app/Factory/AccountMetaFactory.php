@@ -58,11 +58,9 @@ class AccountMetaFactory
             }
 
             // if $data has field and $entry is not null, update $entry:
-            if (null !== $entry) {
-                $entry->data = $value;
-                $entry->save();
-                Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $value, $account->id, $account->name));
-            }
+            $entry->data = $value;
+            $entry->save();
+            Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $value, $account->id, $account->name));
         }
         if ('' === $value && null !== $entry) {
             try {

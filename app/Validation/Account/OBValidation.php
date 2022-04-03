@@ -57,7 +57,7 @@ trait OBValidation
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
-            $this->destError = (string)trans('validation.ob_dest_need_data');
+            $this->destError = (string) trans('validation.ob_dest_need_data');
             Log::error('Both values are NULL, cant create OB destination.');
             $result = false;
         }
@@ -72,7 +72,7 @@ trait OBValidation
             $search = $this->findExistingAccount($validTypes, $array);
             if (null === $search) {
                 Log::debug('findExistingAccount() returned NULL, so the result is false.', $validTypes);
-                $this->destError = (string)trans('validation.ob_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+                $this->destError = (string) trans('validation.ob_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
                 $result          = false;
             }
             if (null !== $search) {
@@ -108,7 +108,7 @@ trait OBValidation
             // if both values are NULL return false,
             // because the source of a deposit can't be created.
             // (this never happens).
-            $this->sourceError = (string)trans('validation.ob_source_need_data');
+            $this->sourceError = (string) trans('validation.ob_source_need_data');
             $result            = false;
         }
 

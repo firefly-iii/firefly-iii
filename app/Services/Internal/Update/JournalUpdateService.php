@@ -215,7 +215,7 @@ class JournalUpdateService
         $validator->setTransactionType($expectedType);
         $validator->setUser($this->transactionJournal->user);
 
-        $result = $validator->validateSource(['id' =>$sourceId]);
+        $result = $validator->validateSource(['id' => $sourceId]);
         Log::debug(sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true)));
 
         // See reference nr. 95
@@ -359,7 +359,7 @@ class JournalUpdateService
         }
 
         $sourceInfo = [
-            'id'     => (int)($this->data['source_id'] ?? null),
+            'id'     => (int) ($this->data['source_id'] ?? null),
             'name'   => $this->data['source_name'] ?? null,
             'iban'   => $this->data['source_iban'] ?? null,
             'number' => $this->data['source_number'] ?? null,
@@ -424,7 +424,7 @@ class JournalUpdateService
         }
 
         $destInfo = [
-            'id'     => (int)($this->data['destination_id'] ?? null),
+            'id'     => (int) ($this->data['destination_id'] ?? null),
             'name'   => $this->data['destination_name'] ?? null,
             'iban'   => $this->data['destination_iban'] ?? null,
             'number' => $this->data['destination_number'] ?? null,
@@ -487,8 +487,8 @@ class JournalUpdateService
             )
             && TransactionType::WITHDRAWAL === $type
         ) {
-            $billId                            = (int)($this->data['bill_id'] ?? 0);
-            $billName                          = (string)($this->data['bill_name'] ?? '');
+            $billId                            = (int) ($this->data['bill_id'] ?? 0);
+            $billName                          = (string) ($this->data['bill_name'] ?? '');
             $bill                              = $this->billRepository->findBill($billId, $billName);
             $this->transactionJournal->bill_id = $bill?->id;
             Log::debug('Updated bill ID');
@@ -502,7 +502,7 @@ class JournalUpdateService
      */
     private function updateField(string $fieldName): void
     {
-        if (array_key_exists($fieldName, $this->data) && '' !== (string)$this->data[$fieldName]) {
+        if (array_key_exists($fieldName, $this->data) && '' !== (string) $this->data[$fieldName]) {
             $value = $this->data[$fieldName];
 
             if ('date' === $fieldName) {
@@ -579,7 +579,7 @@ class JournalUpdateService
     {
         // update notes.
         if ($this->hasFields(['notes'])) {
-            $notes = '' === (string)$this->data['notes'] ? null : $this->data['notes'];
+            $notes = '' === (string) $this->data['notes'] ? null : $this->data['notes'];
             $this->storeNotes($this->transactionJournal, $notes);
         }
     }
@@ -636,7 +636,7 @@ class JournalUpdateService
         foreach ($this->metaDate as $field) {
             if ($this->hasFields([$field])) {
                 try {
-                    $value = '' === (string)$this->data[$field] ? null : new Carbon($this->data[$field]);
+                    $value = '' === (string) $this->data[$field] ? null : new Carbon($this->data[$field]);
                 } catch (Exception $e) { // @phpstan-ignore-line
                     Log::debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
 

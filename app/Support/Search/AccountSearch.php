@@ -37,14 +37,13 @@ class AccountSearch implements GenericSearchInterface
     /** @var string */
     public const SEARCH_ALL = 'all';
     /** @var string */
-    public const SEARCH_NAME = 'name';
-    /** @var string */
     public const SEARCH_IBAN = 'iban';
     /** @var string */
-    public const SEARCH_NUMBER = 'number';
-    /** @var string */
     public const SEARCH_ID = 'id';
-
+    /** @var string */
+    public const SEARCH_NAME = 'name';
+    /** @var string */
+    public const SEARCH_NUMBER = 'number';
     private string $field;
     private string $query;
     private array  $types;
@@ -57,16 +56,15 @@ class AccountSearch implements GenericSearchInterface
 
     /**
      * @return Collection
-     * @throws JsonException
      */
     public function search(): Collection
     {
 
-        $searchQuery = $this->user->accounts()
-                                  ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
-                                  ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
-                                  ->whereIn('account_types.type', $this->types);
-        $like = sprintf('%%%s%%', $this->query);
+        $searchQuery   = $this->user->accounts()
+                                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
+                                    ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+                                    ->whereIn('account_types.type', $this->types);
+        $like          = sprintf('%%%s%%', $this->query);
         $originalQuery = $this->query;
         switch ($this->field) {
             default:
@@ -88,7 +86,7 @@ class AccountSearch implements GenericSearchInterface
                 );
                 break;
             case self::SEARCH_ID:
-                $searchQuery->where('accounts.id', '=', (int)$originalQuery);
+                $searchQuery->where('accounts.id', '=', (int) $originalQuery);
                 break;
             case self::SEARCH_NAME:
                 $searchQuery->where('accounts.name', 'LIKE', $like);

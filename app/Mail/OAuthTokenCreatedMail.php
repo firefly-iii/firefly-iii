@@ -37,25 +37,16 @@ class OAuthTokenCreatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var Client The client */
-    public $client;
-    /** @var string Email address of admin */
-    public $email;
-    /** @var string IP address of admin */
-    public $ipAddress;
+    public Client $client;
 
     /**
      * OAuthTokenCreatedMail constructor.
      *
-     * @param string $email
-     * @param string $ipAddress
      * @param Client $client
      */
-    public function __construct(string $email, string $ipAddress, Client $client)
+    public function __construct(Client $client)
     {
-        $this->email     = $email;
-        $this->ipAddress = $ipAddress;
-        $this->client    = $client;
+        $this->client = $client;
     }
 
     /**
@@ -65,7 +56,8 @@ class OAuthTokenCreatedMail extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.oauth-client-created-html')->text('emails.oauth-client-created-text')
-                    ->subject((string)trans('email.oauth_created_subject'));
+        return $this
+            ->markdown('emails.oauth-client-created')
+            ->subject((string) trans('email.oauth_created_subject'));
     }
 }

@@ -69,7 +69,7 @@ class FireflyConfig
         try {
             /** @var Configuration|null $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (QueryException | Exception $e) { // @phpstan-ignore-line
+        } catch (QueryException|Exception $e) { // @phpstan-ignore-line
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()));
         }
 
@@ -96,7 +96,7 @@ class FireflyConfig
     {
         try {
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
-        } catch (QueryException | Exception $e) { // @phpstan-ignore-line
+        } catch (QueryException|Exception $e) { // @phpstan-ignore-line
             $item       = new Configuration;
             $item->name = $name;
             $item->data = $value;

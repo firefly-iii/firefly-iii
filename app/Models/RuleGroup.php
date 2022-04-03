@@ -102,7 +102,7 @@ class RuleGroup extends Model
     public static function routeBinder(string $value): RuleGroup
     {
         if (auth()->check()) {
-            $ruleGroupId = (int)$value;
+            $ruleGroupId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var RuleGroup $ruleGroup */

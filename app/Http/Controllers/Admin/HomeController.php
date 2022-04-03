@@ -55,11 +55,13 @@ class HomeController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index()
     {
         Log::channel('audit')->info('User visits admin index.');
-        $title         = (string)trans('firefly.administration');
+        $title         = (string) trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
         $email         = auth()->user()->email;
         $pref          = app('preferences')->get('remote_guard_alt_email');
@@ -82,11 +84,10 @@ class HomeController extends Controller
     {
         Log::channel('audit')->info('User sends test message.');
         /** @var User $user */
-        $user      = auth()->user();
-        $ipAddress = $request->ip();
-        Log::debug(sprintf('Now in testMessage() controller. IP is %s', $ipAddress));
-        event(new AdminRequestedTestMessage($user, $ipAddress));
-        session()->flash('info', (string)trans('firefly.send_test_triggered'));
+        $user = auth()->user();
+        Log::debug('Now in testMessage() controller.');
+        event(new AdminRequestedTestMessage($user));
+        session()->flash('info', (string) trans('firefly.send_test_triggered'));
 
         return redirect(route('admin.index'));
     }

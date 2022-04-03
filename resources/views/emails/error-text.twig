@@ -24,4 +24,14 @@
 {{ trans('email.error_stacktrace_below')|raw }}
 
 {{ stackTrace|raw }}
+
+{{ trans('email.error_headers') }}
+
+{% for key, header in headers %}
+{% if (key != 'cookie') and header[0] != '' %}
+- {{ key }}: {{ header[0] }}
+{% endif %}
+{% endfor %}
+
+
 {% include 'emails.footer-text' %}

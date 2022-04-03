@@ -39,6 +39,7 @@ use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -47,19 +48,6 @@ use Log;
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
     private User $user;
-
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return int
-     */
-    public function countJournals(TransactionCurrency $currency): int
-    {
-        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
-
-        // also count foreign:
-        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
-    }
 
     /**
      * @param TransactionCurrency $currency
@@ -98,7 +86,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is being used in accounts:
-        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string)$currency->id))->count();
+        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string) $currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -127,7 +115,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $meta = AccountMeta
             ::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->whereNull('accounts.deleted_at')
-            ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode((int)$currency->id))->count();
+            ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode((int) $currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -166,6 +154,27 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * @param TransactionCurrency $currency
      *
+     * @return int
+     */
+    public function countJournals(TransactionCurrency $currency): int
+    {
+        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
+
+        // also count foreign:
+        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAll(): Collection
+    {
+        return TransactionCurrency::orderBy('code', 'ASC')->get();
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
      * @return bool
      */
     public function destroy(TransactionCurrency $currency): bool
@@ -193,37 +202,22 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * Enables a currency
+     * @inheritDoc
      */
-    public function enable(TransactionCurrency $currency): void
+    public function ensureMinimalEnabledCurrencies(): void
     {
-        $currency->enabled = true;
-        $currency->save();
-    }
-
-    /**
-     * Find by ID, return NULL if not found.
-     *
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency|null
-     */
-    public function find(int $currencyId): ?TransactionCurrency
-    {
-        return TransactionCurrency::find($currencyId);
-    }
-
-    /**
-     * Find by currency code, return NULL if unfound.
-     *
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findByCode(string $currencyCode): ?TransactionCurrency
-    {
-        return TransactionCurrency::where('code', $currencyCode)->first();
+        // if no currencies are enabled, enable the first one in the DB (usually the EUR)
+        if (0 === $this->get()->count()) {
+            /** @var TransactionCurrency $first */
+            $first = $this->getAll()->first();
+            if (null === $first) {
+                throw new FireflyException('No currencies found. You broke Firefly III');
+            }
+            Log::channel('audit')->info(sprintf('Auto-enabled currency %s.', $first->code));
+            $this->enable($first);
+            app('preferences')->set('currencyPreference', $first->code);
+            app('preferences')->mark();
+        }
     }
 
     /**
@@ -299,6 +293,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @param string|null $currencyCode
      *
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {
@@ -333,10 +329,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
         Log::debug('Now in findCurrencyNull()');
-        $result = $this->find((int)$currencyId);
+        $result = $this->find((int) $currencyId);
         if (null === $result) {
             Log::debug(sprintf('Searching for currency with code %s...', $currencyCode));
-            $result = $this->findByCode((string)$currencyCode);
+            $result = $this->findByCode((string) $currencyCode);
         }
         if (null !== $result && false === $result->enabled) {
             Log::debug(sprintf('Also enabled currency %s', $result->code));
@@ -347,19 +343,45 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @return Collection
+     * Find by ID, return NULL if not found.
+     *
+     * @param int $currencyId
+     *
+     * @return TransactionCurrency|null
      */
-    public function get(): Collection
+    public function find(int $currencyId): ?TransactionCurrency
     {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+        return TransactionCurrency::find($currencyId);
+    }
+
+    /**
+     * Find by currency code, return NULL if unfound.
+     *
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findByCode(string $currencyCode): ?TransactionCurrency
+    {
+        return TransactionCurrency::where('code', $currencyCode)->first();
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     * Enables a currency
+     */
+    public function enable(TransactionCurrency $currency): void
+    {
+        $currency->enabled = true;
+        $currency->save();
     }
 
     /**
      * @return Collection
      */
-    public function getAll(): Collection
+    public function get(): Collection
     {
-        return TransactionCurrency::orderBy('code', 'ASC')->get();
+        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
     }
 
     /**

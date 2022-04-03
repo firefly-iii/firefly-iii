@@ -58,7 +58,7 @@ class SetDestinationAccount implements ActionInterface
         $user = User::find($journal['user_id']);
         $type = $journal['transaction_type_type'];
         /** @var TransactionJournal|null $object */
-        $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
+        $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
 
         if (null === $object) {
@@ -66,7 +66,7 @@ class SetDestinationAccount implements ActionInterface
 
             return false;
         }
-
+        $type = $object->transactionType->type;
         $this->repository->setUser($user);
 
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
@@ -95,7 +95,7 @@ class SetDestinationAccount implements ActionInterface
 
             return false;
         }
-        if (null !== $newAccount && (int)$newAccount->id === (int)$source->account_id) {
+        if (null !== $newAccount && (int) $newAccount->id === (int) $source->account_id) {
             Log::error(
                 sprintf(
                     'New destination account ID #%d and current source account ID #%d are the same. Do nothing.', $newAccount->id,

@@ -24,46 +24,46 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => 'Vítejte na titulní stránce Firefly III. Věnujte čas projití se tímto úvodem, abyste se dozvěděli, jak Firefly III funguje.',
-    'index_accounts-chart'                            => 'Tento graf zobrazuje stávající zůstatky vašich majetkových účtů. Jaké účty se zde mají zobrazovat lze nastavit v předvolbách.',
-    'index_box_out_holder'                            => 'Tato malá oblast a ty další vedle něho podávají rychlý přehled vaší finanční situace.',
-    'index_help'                                      => 'Pokud budete potřebovat nápovědu ke stránce nebo formuláři, klikněte na toto tlačítko.',
-    'index_outro'                                     => 'Většina stránek Firefly III začíná krátkou prohlídkou, jako je tato. Obraťte se na mně, pokud máte dotazy nebo komentáře. Ať poslouží!',
-    'index_sidebar-toggle'                            => 'Nabídku pod touto ikonou použijte pro vytváření nových transakcí, účtů a ostatní věcí.',
-    'index_cash_account'                              => 'Toto jsou doposud vytvořené účty. Hotovostní účet můžete použít pro sledování výdajů v hotovosti, ale není to pochopitelně povinné.',
+    'index_intro'                           => 'Vítejte na titulní stránce Firefly III. Věnujte čas projití se tímto úvodem, abyste se dozvěděli, jak Firefly III funguje.',
+    'index_accounts-chart'                  => 'Tento graf zobrazuje stávající zůstatky vašich majetkových účtů. Jaké účty se zde mají zobrazovat lze nastavit v předvolbách.',
+    'index_box_out_holder'                  => 'Tato malá oblast a ty další vedle něho podávají rychlý přehled vaší finanční situace.',
+    'index_help'                            => 'Pokud budete potřebovat nápovědu ke stránce nebo formuláři, klikněte na toto tlačítko.',
+    'index_outro'                           => 'Většina stránek Firefly III začíná krátkou prohlídkou, jako je tato. Obraťte se na mně, pokud máte dotazy nebo komentáře. Ať poslouží!',
+    'index_sidebar-toggle'                  => 'Nabídku pod touto ikonou použijte pro vytváření nových transakcí, účtů a ostatní věcí.',
+    'index_cash_account'                    => 'Toto jsou doposud vytvořené účty. Hotovostní účet můžete použít pro sledování výdajů v hotovosti, ale není to pochopitelně povinné.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Zadejte základní informace o vaší transakci. Zdroj, destinace, datum a popis.',
-    'transactions_create_amount_info'                 => 'Zadejte částku transakce. V případě potřeby budou pole automaticky aktualizována pro informace o zahraniční měně.',
-    'transactions_create_optional_info'               => 'Všechna tato pole jsou nepovinná. Přidáním metadat se ale vaše transakce lépe organizují.',
-    'transactions_create_split'                       => 'Pokud chcete transakci rozdělit, přidejte další rozdělení s tímto tlačítkem',
+    'transactions_create_basic_info'        => 'Zadejte základní informace o vaší transakci. Zdroj, destinace, datum a popis.',
+    'transactions_create_amount_info'       => 'Zadejte částku transakce. V případě potřeby budou pole automaticky aktualizována pro informace o zahraniční měně.',
+    'transactions_create_optional_info'     => 'Všechna tato pole jsou nepovinná. Přidáním metadat se ale vaše transakce lépe organizují.',
+    'transactions_create_split'             => 'Pokud chcete transakci rozdělit, přidejte další rozdělení s tímto tlačítkem',
 
     // create account:
-    'accounts_create_iban'                            => 'Zadejte u svých účtů platný IBAN identifikátor. To by v budoucnu mohlo velmi ulehčit import dat.',
-    'accounts_create_asset_opening_balance'           => 'Majetkové účty mohou mít „počáteční zůstatek“, označující začátek historie tohoto účtu ve Firefly III.',
-    'accounts_create_asset_currency'                  => 'Firefly III podporuje vícero měn. Majetkové účty mají jednu hlavní měnu, kterou je třeba nastavit zde.',
-    'accounts_create_asset_virtual'                   => 'Někdy se může hodit dát svému účtu virtuální zůstatek: extra částku, vždy přičítanou nebo odečítanou od stávajícího zůstatku.',
+    'accounts_create_iban'                  => 'Zadejte u svých účtů platný IBAN identifikátor. To by v budoucnu mohlo velmi ulehčit import dat.',
+    'accounts_create_asset_opening_balance' => 'Majetkové účty mohou mít „počáteční zůstatek“, označující začátek historie tohoto účtu ve Firefly III.',
+    'accounts_create_asset_currency'        => 'Firefly III podporuje vícero měn. Majetkové účty mají jednu hlavní měnu, kterou je třeba nastavit zde.',
+    'accounts_create_asset_virtual'         => 'Někdy se může hodit dát svému účtu virtuální zůstatek: extra částku, vždy přičítanou nebo odečítanou od stávajícího zůstatku.',
 
     // budgets index
-    'budgets_index_intro'                             => 'Rozpočty slouží ke správě vašich financí a tvoří jednu z hlavních funkcí Firefly III.',
-    'budgets_index_set_budget'                        => 'Nastavte celkový rozpočet pro každé z období a Firefly III vám sdělí, pokud jste vyčerpali všechny dostupné peníze.',
-    'budgets_index_see_expenses_bar'                  => 'Utracené peníze budou zvolna plnit tento pruh.',
-    'budgets_index_navigate_periods'                  => 'Procházejte obdobími a jednoduše nastavujte rozpočty dopředu.',
-    'budgets_index_new_budget'                        => 'Vytvářejte nové rozpočty, jak uznáte za vhodné.',
-    'budgets_index_list_of_budgets'                   => 'Použijte tuto tabulku k nastavení částek pro každý rozpočet a zjistěte, jak na tom jste.',
-    'budgets_index_outro'                             => 'Pokud se chcete dozvědět více o tvorbě rozpočtů, klikněte na ikonu nápovědy v pravém horním rohu.',
+    'budgets_index_intro'                   => 'Rozpočty slouží ke správě vašich financí a tvoří jednu z hlavních funkcí Firefly III.',
+    'budgets_index_set_budget'              => 'Nastavte celkový rozpočet pro každé z období a Firefly III vám sdělí, pokud jste vyčerpali všechny dostupné peníze.',
+    'budgets_index_see_expenses_bar'        => 'Utracené peníze budou zvolna plnit tento pruh.',
+    'budgets_index_navigate_periods'        => 'Procházejte obdobími a jednoduše nastavujte rozpočty dopředu.',
+    'budgets_index_new_budget'              => 'Vytvářejte nové rozpočty, jak uznáte za vhodné.',
+    'budgets_index_list_of_budgets'         => 'Použijte tuto tabulku k nastavení částek pro každý rozpočet a zjistěte, jak na tom jste.',
+    'budgets_index_outro'                   => 'Pokud se chcete dozvědět více o tvorbě rozpočtů, klikněte na ikonu nápovědy v pravém horním rohu.',
 
     // reports (index)
-    'reports_index_intro'                             => 'Pomocí těchto přehledů získáte podrobné informace o svých financích.',
-    'reports_index_inputReportType'                   => 'Vyberte typ přehledu. Podívejte se na stránky nápovědy a zjistěte, co vám každý přehled ukazuje.',
-    'reports_index_inputAccountsSelect'               => 'Můžete vynechávat nebo zahrnovat majetkové účty, jak potřebujete.',
-    'reports_index_inputDateRange'                    => 'Vybrané časové období je zcela na vás: od jednoho dne do deseti let.',
-    'reports_index_extra-options-box'                 => 'Podle toho, jaký výkaz jste vybrali, je zde možné vybrat další filtry a volby. Při změně typu výkazu sledujte tuto oblast.',
+    'reports_index_intro'                   => 'Pomocí těchto přehledů získáte podrobné informace o svých financích.',
+    'reports_index_inputReportType'         => 'Vyberte typ přehledu. Podívejte se na stránky nápovědy a zjistěte, co vám každý přehled ukazuje.',
+    'reports_index_inputAccountsSelect'     => 'Můžete vynechávat nebo zahrnovat majetkové účty, jak potřebujete.',
+    'reports_index_inputDateRange'          => 'Vybrané časové období je zcela na vás: od jednoho dne do deseti let.',
+    'reports_index_extra-options-box'       => 'Podle toho, jaký výkaz jste vybrali, je zde možné vybrat další filtry a volby. Při změně typu výkazu sledujte tuto oblast.',
 
     // reports (reports)
-    'reports_report_default_intro'                    => 'Tento výkaz vám podá rychlý a podrobný přehled vašich financí. Pokud chcete vidět něco jiného, neváhejte se na mne obrátit!',
-    'reports_report_audit_intro'                      => 'Tento výkaz vám podá podrobný vhled do vašich majetkových účtů.',
-    'reports_report_audit_optionsBox'                 => 'Pomocí těchto zaškrtávacích kolonek zobrazujte nebo skrývejte sloupce, které vás (ne)zajímají.',
+    'reports_report_default_intro'          => 'Tento výkaz vám podá rychlý a podrobný přehled vašich financí. Pokud chcete vidět něco jiného, neváhejte se na mne obrátit!',
+    'reports_report_audit_intro'            => 'Tento výkaz vám podá podrobný vhled do vašich majetkových účtů.',
+    'reports_report_audit_optionsBox'       => 'Pomocí těchto zaškrtávacích kolonek zobrazujte nebo skrývejte sloupce, které vás (ne)zajímají.',
 
     'reports_report_category_intro'                  => 'Tato sestava vám podá vhled do jedné nebo více kategorií.',
     'reports_report_category_pieCharts'              => 'Tyto grafy vám podají vhled do výdajů a příjmů pro jednotlivé kategorie nebo účty.',

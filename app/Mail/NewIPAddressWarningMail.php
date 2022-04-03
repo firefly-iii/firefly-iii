@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Mail;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -56,15 +57,19 @@ class NewIPAddressWarningMail extends Mailable
      */
     public function build(): self
     {
-        // time
-        $this->time = now()->formatLocalized((string)trans('config.date_time'));
+        $this->time = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
         $this->host = '';
-        $hostName   = gethostbyaddr($this->ipAddress);
+        try {
+            $hostName = gethostbyaddr($this->ipAddress);
+        } catch (Exception $e) {
+            $hostName = $this->ipAddress;
+        }
         if ($hostName !== $this->ipAddress) {
             $this->host = $hostName;
         }
 
-        return $this->view('emails.new-ip-html')->text('emails.new-ip-text')
-                    ->subject((string)trans('email.login_from_new_ip'));
+        return $this
+            ->markdown('emails.new-ip')
+            ->subject((string) trans('email.login_from_new_ip'));
     }
 }

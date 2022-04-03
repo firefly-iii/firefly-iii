@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Logare',
     'is_owner'                    => 'Este administrator?',
     'url'                         => 'URL',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Aplică reguli',

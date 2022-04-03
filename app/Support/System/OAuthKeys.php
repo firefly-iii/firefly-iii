@@ -72,9 +72,9 @@ class OAuthKeys
         // better check if keys are in the database:
         if (app('fireflyconfig')->has(self::PRIVATE_KEY) && app('fireflyconfig')->has(self::PUBLIC_KEY)) {
             try {
-                $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
-                $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
-            } catch (ContainerExceptionInterface | NotFoundExceptionInterface | FireflyException $e) {
+                $privateKey = (string) app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
+                $publicKey  = (string) app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+            } catch (ContainerExceptionInterface|NotFoundExceptionInterface|FireflyException $e) {
                 Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
@@ -119,15 +119,18 @@ class OAuthKeys
 
     /**
      * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public static function restoreKeysFromDB(): bool
     {
-        $privateKey     = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
-        $publicKey      = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+        $privateKey = (string) app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
+        $publicKey  = (string) app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
         try {
             $privateContent = Crypt::decrypt($privateKey);
             $publicContent  = Crypt::decrypt($publicKey);
-        } catch(DecryptException $e) {
+        } catch (DecryptException $e) {
             Log::error('Could not decrypt pub/private keypair.');
             Log::error($e->getMessage());
 
@@ -137,8 +140,8 @@ class OAuthKeys
 
             return false;
         }
-        $private        = storage_path('oauth-private.key');
-        $public         = storage_path('oauth-public.key');
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
         return true;

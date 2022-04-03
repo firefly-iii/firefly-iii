@@ -52,7 +52,7 @@ class IndexController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.categories'));
+                app('view')->share('title', (string) trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bookmark');
                 $this->repository = app(CategoryRepositoryInterface::class);
 
@@ -68,11 +68,13 @@ class IndexController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function index(Request $request)
     {
-        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
+        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->getCategories();
         $total      = $collection->count();
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);

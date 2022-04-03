@@ -37,21 +37,16 @@ class AdminRequestedTestMessage extends Event
 {
     use SerializesModels;
 
-    /** @var string The users IP address */
-    public $ipAddress;
-    /** @var User The user */
-    public $user;
+    public User $user;
 
     /**
      * Create a new event instance.
      *
-     * @param User   $user
-     * @param string $ipAddress
+     * @param User $user
      */
-    public function __construct(User $user, string $ipAddress)
+    public function __construct(User $user)
     {
-        Log::debug(sprintf('Triggered AdminRequestedTestMessage for user #%d (%s) and IP %s!', $user->id, $user->email, $ipAddress));
-        $this->user      = $user;
-        $this->ipAddress = $ipAddress;
+        Log::debug(sprintf('Triggered AdminRequestedTestMessage for user #%d (%s)', $user->id, $user->email));
+        $this->user = $user;
     }
 }

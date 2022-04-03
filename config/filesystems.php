@@ -33,21 +33,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'local'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Cloud Filesystem Disk
-    |--------------------------------------------------------------------------
-    |
-    | Many applications store files both locally and in the cloud. For this
-    | reason, you may specify a default "cloud" driver here. This driver
-    | will be bound as the Cloud disk implementation in the container.
-    |
-    */
-
-    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
-
+    'default' => env('FILESYSTEM_DISK', 'local'),
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -66,35 +52,35 @@ return [
     */
 
     'disks' => [
-        'local'    => [
+        'local'     => [
             'driver' => 'local',
             'root'   => storage_path('app'),
         ],
 
         // local storage configuration for upload and export:
-        'upload'   => [
+        'upload'    => [
             'driver' => 'local',
             'root'   => storage_path('upload'),
         ],
-        'export'   => [
+        'export'    => [
             'driver' => 'local',
             'root'   => storage_path('export'),
         ],
 
         // various other paths:
-        'database' => [
+        'database'  => [
             'driver' => 'local',
             'root'   => storage_path('database'),
         ],
-        'seeds'    => [
+        'seeds'     => [
             'driver' => 'local',
             'root'   => base_path('resources/seeds'),
         ],
-        'stubs'    => [
+        'stubs'     => [
             'driver' => 'local',
             'root'   => base_path('resources/stubs'),
         ],
-        'resources'    => [
+        'resources' => [
             'driver' => 'local',
             'root'   => base_path('resources'),
         ],

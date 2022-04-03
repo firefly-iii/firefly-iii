@@ -30,6 +30,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
@@ -47,8 +48,37 @@ use Storage;
  */
 class BudgetRepository implements BudgetRepositoryInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
+
+    /**
+     * @inheritDoc
+     */
+    public function budgetEndsWith(string $query, int $limit): Collection
+    {
+        $search = $this->user->budgets();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%%%s', $query));
+        }
+        $search->orderBy('order', 'ASC')
+               ->orderBy('name', 'ASC')->where('active', true);
+
+        return $search->take($limit)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function budgetStartsWith(string $query, int $limit): Collection
+    {
+        $search = $this->user->budgets();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%s%%', $query));
+        }
+        $search->orderBy('order', 'ASC')
+               ->orderBy('name', 'ASC')->where('active', true);
+
+        return $search->take($limit)->get();
+    }
 
     /**
      * @return bool
@@ -77,6 +107,17 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function getActiveBudgets(): Collection
+    {
+        return $this->user->budgets()->where('active', true)
+                          ->orderBy('order', 'ASC')
+                          ->orderBy('name', 'ASC')
+                          ->get();
+    }
+
+    /**
      * @param Budget $budget
      *
      * @return bool
@@ -98,12 +139,21 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budgets = $this->getBudgets();
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
-            DB::table('budget_transaction_journal')->where('budget_id', (int)$budget->id)->delete();
-            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string)$budget->id)->delete();
-            RuleAction::where('action_type', 'set_budget')->where('action_value', (string)$budget->id)->delete();
+            DB::table('budget_transaction')->where('budget_id', (int) $budget->id)->delete();
+            DB::table('budget_transaction_journal')->where('budget_id', (int) $budget->id)->delete();
+            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string) $budget->id)->delete();
+            RuleAction::where('action_type', 'set_budget')->where('action_value', (string) $budget->id)->delete();
             $budget->delete();
         }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getBudgets(): Collection
+    {
+        return $this->user->budgets()->orderBy('order', 'ASC')
+                          ->orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -118,18 +168,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * Find a budget or return NULL
-     *
-     * @param int|null $budgetId |null
-     *
-     * @return Budget|null
-     */
-    public function find(int $budgetId = null): ?Budget
-    {
-        return $this->user->budgets()->find($budgetId);
-    }
-
-    /**
      * @param int|null    $budgetId
      * @param string|null $budgetName
      *
@@ -139,10 +177,10 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         Log::debug('Now in findBudget()');
         Log::debug(sprintf('Searching for budget with ID #%d...', $budgetId));
-        $result = $this->find((int)$budgetId);
+        $result = $this->find((int) $budgetId);
         if (null === $result && null !== $budgetName && '' !== $budgetName) {
             Log::debug(sprintf('Searching for budget with name %s...', $budgetName));
-            $result = $this->findByName((string)$budgetName);
+            $result = $this->findByName((string) $budgetName);
         }
         if (null !== $result) {
             Log::debug(sprintf('Found budget #%d: %s', $result->id, $result->name));
@@ -150,6 +188,18 @@ class BudgetRepository implements BudgetRepositoryInterface
         Log::debug(sprintf('Found result is null? %s', var_export(null === $result, true)));
 
         return $result;
+    }
+
+    /**
+     * Find a budget or return NULL
+     *
+     * @param int|null $budgetId |null
+     *
+     * @return Budget|null
+     */
+    public function find(int $budgetId = null): ?Budget
+    {
+        return $this->user->budgets()->find($budgetId);
     }
 
     /**
@@ -188,17 +238,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @return Collection
-     */
-    public function getActiveBudgets(): Collection
-    {
-        return $this->user->budgets()->where('active', true)
-                          ->orderBy('order', 'ASC')
-                          ->orderBy('name', 'ASC')
-                          ->get();
-    }
-
-    /**
      * @inheritDoc
      */
     public function getAttachments(Budget $budget): Collection
@@ -217,23 +256,6 @@ class BudgetRepository implements BudgetRepositoryInterface
                 return $attachment;
             }
         );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAutoBudget(Budget $budget): ?AutoBudget
-    {
-        return $budget->autoBudgets()->first();
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getBudgets(): Collection
-    {
-        return $this->user->budgets()->orderBy('order', 'ASC')
-                          ->orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -258,9 +280,17 @@ class BudgetRepository implements BudgetRepositoryInterface
                           ->orderBy('name', 'ASC')->where('active', 0)->get();
     }
 
-    public function getMaxOrder(): int
+    /**
+     * @inheritDoc
+     */
+    public function getNoteText(Budget $budget): ?string
     {
-        return (int)$this->user->budgets()->max('order');
+        $note = $budget->notes()->first();
+        if (null === $note) {
+            return null;
+        }
+
+        return $note->text;
     }
 
     /**
@@ -305,6 +335,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return Budget
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function store(array $data): Budget
     {
@@ -323,6 +354,12 @@ class BudgetRepository implements BudgetRepositoryInterface
             Log::error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.', 0, $e);
         }
+
+        // set notes
+        if (array_key_exists('notes', $data)) {
+            $this->setNoteText($newBudget, (string) $data['notes']);
+        }
+
         if (!array_key_exists('auto_budget_type', $data) || !array_key_exists('auto_budget_amount', $data) || !array_key_exists('auto_budget_period', $data)) {
             return $newBudget;
         }
@@ -344,10 +381,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         $repos    = app(CurrencyRepositoryInterface::class);
         $currency = null;
         if (array_key_exists('currency_id', $data)) {
-            $currency = $repos->find((int)$data['currency_id']);
+            $currency = $repos->find((int) $data['currency_id']);
         }
         if (array_key_exists('currency_code', $data)) {
-            $currency = $repos->findByCode((string)$data['currency_code']);
+            $currency = $repos->findByCode((string) $data['currency_code']);
         }
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
@@ -381,6 +418,38 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $newBudget;
     }
 
+    public function getMaxOrder(): int
+    {
+        return (int) $this->user->budgets()->max('order');
+    }
+
+    /**
+     * @param Budget $budget
+     * @param string $text
+     * @return void
+     */
+    private function setNoteText(Budget $budget, string $text): void
+    {
+        $dbNote = $budget->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note;
+                $dbNote->noteable()->associate($budget);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        if (null !== $dbNote) {
+            try {
+                $dbNote->delete();
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
+            }
+        }
+    }
+
     /**
      * @param Budget $budget
      * @param array  $data
@@ -399,6 +468,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
         if (array_key_exists('active', $data)) {
             $budget->active = $data['active'];
+        }
+        if (array_key_exists('notes', $data)) {
+            $this->setNoteText($budget, (string) $data['notes']);
         }
         $budget->save();
 
@@ -468,8 +540,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getAutoBudget(Budget $budget): ?AutoBudget
+    {
+        return $budget->autoBudgets()->first();
+    }
+
+    /**
      * @param Budget $budget
      * @param array  $data
+     * @throws FireflyException
+     * @throws \JsonException
      */
     private function updateAutoBudget(Budget $budget, array $data): void
     {
@@ -490,8 +572,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         // set or update the currency.
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             $repos        = app(CurrencyRepositoryInterface::class);
-            $currencyId   = (int)($data['currency_id'] ?? 0);
-            $currencyCode = (string)($data['currency_code'] ?? '');
+            $currencyId   = (int) ($data['currency_id'] ?? 0);
+            $currencyCode = (string) ($data['currency_code'] ?? '');
             $currency     = $repos->find($currencyId);
             if (null === $currency) {
                 $currency = $repos->findByCodeNull($currencyCode);

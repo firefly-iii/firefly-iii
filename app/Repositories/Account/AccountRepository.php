@@ -199,21 +199,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param Account $account
-     *
-     * @return TransactionCurrency|null
-     */
-    public function getAccountCurrency(Account $account): ?TransactionCurrency
-    {
-        $currencyId = (int)$this->getMetaValue($account, 'currency_id');
-        if ($currencyId > 0) {
-            return TransactionCurrency::find($currencyId);
-        }
-
-        return null;
-    }
-
-    /**
      * Return account type or null if not found.
      *
      * @param string $type
@@ -240,38 +225,6 @@ class AccountRepository implements AccountRepositoryInterface
         $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.active', 'DESC');
         $query->orderBy('accounts.name', 'ASC');
-
-        return $query->get(['accounts.*']);
-    }
-
-    /**
-     * @param array      $types
-     * @param array|null $sort
-     *
-     * @return Collection
-     */
-    public function getAccountsByType(array $types, ?array $sort = []): Collection
-    {
-        $res   = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
-        $query = $this->user->accounts();
-        if (!empty($types)) {
-            $query->accountTypeIn($types);
-        }
-
-        // add sort parameters. At this point they're filtered to allowed fields to sort by:
-        if (!empty($sort)) {
-            foreach ($sort as $param) {
-                $query->orderBy($param[0], $param[1]);
-            }
-        }
-
-        if (empty($sort)) {
-            if (!empty($res)) {
-                $query->orderBy('accounts.order', 'ASC');
-            }
-            $query->orderBy('accounts.active', 'DESC');
-            $query->orderBy('accounts.name', 'ASC');
-        }
 
         return $query->get(['accounts.*']);
     }
@@ -385,31 +338,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * Return meta value for account. Null if not found.
-     *
-     * @param Account $account
-     * @param string  $field
-     *
-     * @return null|string
-     */
-    public function getMetaValue(Account $account, string $field): ?string
-    {
-        $result = $account->accountMeta->filter(
-            function (AccountMeta $meta) use ($field) {
-                return strtolower($meta->name) === strtolower($field);
-            }
-        );
-        if (0 === $result->count()) {
-            return null;
-        }
-        if (1 === $result->count()) {
-            return (string)$result->first()->data;
-        }
-
-        return null;
-    }
-
-    /**
      * Get note text or null.
      *
      * @param Account $account
@@ -425,20 +353,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $note->text;
-    }
-
-    /**
-     * @param Account $account
-     *
-     * @return TransactionJournal|null
-     */
-    public function getOpeningBalance(Account $account): ?TransactionJournal
-    {
-        return TransactionJournal
-            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionType::OPENING_BALANCE])
-            ->first(['transaction_journals.*']);
     }
 
     /**
@@ -463,7 +377,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
 
-        return (string)$transaction->amount;
+        return (string) $transaction->amount;
     }
 
     /**
@@ -501,6 +415,20 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      *
+     * @return TransactionJournal|null
+     */
+    public function getOpeningBalance(Account $account): ?TransactionJournal
+    {
+        return TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
+    }
+
+    /**
+     * @param Account $account
+     *
      * @return Collection
      */
     public function getPiggyBanks(Account $account): Collection
@@ -514,6 +442,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @return Account|null
      *
      * @throws FireflyException
+     * @throws JsonException
      */
     public function getReconciliation(Account $account): ?Account
     {
@@ -551,6 +480,46 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Account $account
+     *
+     * @return TransactionCurrency|null
+     */
+    public function getAccountCurrency(Account $account): ?TransactionCurrency
+    {
+        $currencyId = (int) $this->getMetaValue($account, 'currency_id');
+        if ($currencyId > 0) {
+            return TransactionCurrency::find($currencyId);
+        }
+
+        return null;
+    }
+
+    /**
+     * Return meta value for account. Null if not found.
+     *
+     * @param Account $account
+     * @param string  $field
+     *
+     * @return null|string
+     */
+    public function getMetaValue(Account $account, string $field): ?string
+    {
+        $result = $account->accountMeta->filter(
+            function (AccountMeta $meta) use ($field) {
+                return strtolower($meta->name) === strtolower($field);
+            }
+        );
+        if (0 === $result->count()) {
+            return null;
+        }
+        if (1 === $result->count()) {
+            return (string) $result->first()->data;
+        }
+
+        return null;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getUsedCurrencies(Account $account): Collection
@@ -558,8 +527,8 @@ class AccountRepository implements AccountRepositoryInterface
         $info        = $account->transactions()->get(['transaction_currency_id', 'foreign_currency_id'])->toArray();
         $currencyIds = [];
         foreach ($info as $entry) {
-            $currencyIds[] = (int)$entry['transaction_currency_id'];
-            $currencyIds[] = (int)$entry['foreign_currency_id'];
+            $currencyIds[] = (int) $entry['transaction_currency_id'];
+            $currencyIds[] = (int) $entry['foreign_currency_id'];
         }
         $currencyIds = array_unique($currencyIds);
 
@@ -590,17 +559,63 @@ class AccountRepository implements AccountRepositoryInterface
             AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
         ];
         if (array_key_exists(ucfirst($type), $sets)) {
-            $order = (int)$this->getAccountsByType($sets[ucfirst($type)])->max('order');
+            $order = (int) $this->getAccountsByType($sets[ucfirst($type)])->max('order');
             Log::debug(sprintf('Return max order of "%s" set: %d', $type, $order));
 
             return $order;
         }
         $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
 
-        $order = (int)$this->getAccountsByType($specials)->max('order');
+        $order = (int) $this->getAccountsByType($specials)->max('order');
         Log::debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
 
         return $order;
+    }
+
+    /**
+     * @param array      $types
+     * @param array|null $sort
+     *
+     * @return Collection
+     */
+    public function getAccountsByType(array $types, ?array $sort = []): Collection
+    {
+        $res   = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
+        $query = $this->user->accounts();
+        if (!empty($types)) {
+            $query->accountTypeIn($types);
+        }
+
+        // add sort parameters. At this point they're filtered to allowed fields to sort by:
+        if (!empty($sort)) {
+            foreach ($sort as $param) {
+                $query->orderBy($param[0], $param[1]);
+            }
+        }
+
+        if (empty($sort)) {
+            if (!empty($res)) {
+                $query->orderBy('accounts.order', 'ASC');
+            }
+            $query->orderBy('accounts.active', 'DESC');
+            $query->orderBy('accounts.name', 'ASC');
+        }
+
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon|null
+     */
+    public function oldestJournalDate(Account $account): ?Carbon
+    {
+        $journal = $this->oldestJournal($account);
+
+        return $journal?->date;
     }
 
     /**
@@ -620,24 +635,10 @@ class AccountRepository implements AccountRepositoryInterface
                          ->orderBy('transaction_journals.id', 'ASC')
                          ->first(['transaction_journals.id']);
         if (null !== $first) {
-            return TransactionJournal::find((int)$first->id);
+            return TransactionJournal::find((int) $first->id);
         }
 
         return null;
-    }
-
-    /**
-     * Returns the date of the very first transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return Carbon|null
-     */
-    public function oldestJournalDate(Account $account): ?Carbon
-    {
-        $journal = $this->oldestJournal($account);
-
-        return $journal?->date;
     }
 
     /**
@@ -661,7 +662,7 @@ class AccountRepository implements AccountRepositoryInterface
                     $account->order = 0;
                     continue;
                 }
-                if ($index !== (int)$account->order) {
+                if ($index !== (int) $account->order) {
                     Log::debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
                     $account->order = $index;
                     $account->save();
@@ -754,6 +755,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      * @throws FireflyException
+     * @throws JsonException
      */
     public function store(array $data): Account
     {
@@ -770,7 +772,6 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      * @throws FireflyException
-     * @throws JsonException
      */
     public function update(Account $account, array $data): Account
     {

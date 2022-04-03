@@ -48,7 +48,7 @@ trait LiabilityValidation
         $validTypes = config('firefly.valid_liabilities');
 
         if (null === $accountId) {
-            $this->sourceError = (string)trans('validation.lc_destination_need_data');
+            $this->sourceError = (string) trans('validation.lc_destination_need_data');
             $result            = false;
         }
 
@@ -82,7 +82,7 @@ trait LiabilityValidation
     protected function validateLCSource(array $array): bool
     {
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
-        $result = true;
+        $result      = true;
         Log::debug('Now in validateLCDestination', $array);
         if ('' === $accountName || null === $accountName) {
             $result = false;

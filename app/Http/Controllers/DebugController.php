@@ -120,50 +120,53 @@ class DebugController extends Controller
      */
     public function index(Request $request)
     {
-        $search  = ['~', '#'];
-        $replace = ['\~', '# '];
-
-        $now                  = Carbon::now()->format('Y-m-d H:i:s e');
-        $installationIdConfig = app('fireflyconfig')->get('installation_id', '');
-        $installationId       = $installationIdConfig ? $installationIdConfig->data : '';
-        $phpVersion           = str_replace($search, $replace, PHP_VERSION);
-        $phpOs                = str_replace($search, $replace, PHP_OS);
-        $interface            = PHP_SAPI;
-        $drivers              = implode(', ', DB::availableDrivers());
-        $currentDriver        = DB::getDriverName();
-        $userAgent            = $request->header('user-agent');
-        $trustedProxies       = config('firefly.trusted_proxies');
-        $displayErrors        = ini_get('display_errors');
-        $errorReporting       = $this->errorReporting((int)ini_get('error_reporting'));
-        $appEnv               = config('app.env');
-        $appDebug             = var_export(config('app.debug'), true);
-        $logChannel           = config('logging.default');
-        $appLogLevel          = config('logging.level');
-        $cacheDriver          = config('cache.default');
-        $loginProvider        = config('auth.providers.users.driver');
-        $bcscale              = bcscale();
-        $layout               = env('FIREFLY_III_LAYOUT');
-        $tz                   = env('TZ');
-        $buildNr              = '(unknown)';
-        $buildDate            = '(unknown)';
-
+        // basic scope information:
+        $now               = Carbon::now()->format('Y-m-d H:i:s e');
+        $buildNr           = '(unknown)';
+        $buildDate         = '(unknown)';
+        $expectedDBversion = config('firefly.db_version');
+        $foundDBversion    = FireflyConfig::get('db_version', 1)->data;
         if (file_exists('/var/www/counter-main.txt')) {
             $buildNr = trim(file_get_contents('/var/www/counter-main.txt'));
         }
         if (file_exists('/var/www/build-date-main.txt')) {
             $buildDate = trim(file_get_contents('/var/www/build-date-main.txt'));
         }
+        $phpVersion = PHP_VERSION;
+        $phpOs      = PHP_OS;
+
+        // system information
+        $tz              = env('TZ');
+        $appEnv          = config('app.env');
+        $appDebug        = var_export(config('app.debug'), true);
+        $cacheDriver     = config('cache.default');
+        $logChannel      = config('logging.default');
+        $appLogLevel     = config('logging.level');
+        $displayErrors   = ini_get('display_errors');
+        $errorReporting  = $this->errorReporting((int) ini_get('error_reporting'));
+        $interface       = PHP_SAPI;
+        $defaultLanguage = (string) config('firefly.default_language');
+        $defaultLocale   = (string) config('firefly.default_locale');
+        $bcscale         = bcscale();
+        $drivers         = implode(', ', DB::availableDrivers());
+        $currentDriver   = DB::getDriverName();
+        $trustedProxies  = config('firefly.trusted_proxies');
+
+        // user info
+        $loginProvider    = config('auth.providers.users.driver');
+        $userGuard        = config('auth.defaults.guard');
+        $remoteHeader     = $userGuard === 'remote_user_guard' ? config('auth.guard_header') : 'N/A';
+        $remoteMailHeader = $userGuard === 'remote_user_guard' ? config('auth.guard_email') : 'N/A';
+        $userLanguage     = app('steam')->getLanguage();
+        $userLocale       = app('steam')->getLocale();
+        $userAgent        = $request->header('user-agent');
+        $stateful         = join(', ', config('sanctum.stateful'));
+
 
         // expected + found DB version:
-        $expectedDBversion = config('firefly.db_version');
-        $foundDBversion    = FireflyConfig::get('db_version', 1)->data;
 
         // some new vars.
-        $defaultLanguage = (string)config('firefly.default_language');
-        $defaultLocale   = (string)config('firefly.default_locale');
-        $userLanguage    = app('steam')->getLanguage();
-        $userLocale      = app('steam')->getLocale();
-        $isDocker        = env('IS_DOCKER', false);
+        $isDocker = env('IS_DOCKER', false);
 
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, 0);
@@ -209,19 +212,21 @@ class DebugController extends Controller
                 'appEnv',
                 'appDebug',
                 'logChannel',
+                'stateful',
                 'tz',
                 'appLogLevel',
+                'remoteHeader',
+                'remoteMailHeader',
                 'now',
                 'drivers',
                 'currentDriver',
+                'userGuard',
                 'loginProvider',
                 'buildNr',
                 'buildDate',
                 'bcscale',
-                'layout',
                 'userAgent',
                 'displayErrors',
-                'installationId',
                 'errorReporting',
                 'phpOs',
                 'interface',
@@ -260,7 +265,7 @@ class DebugController extends Controller
         $return = '&nbsp;';
         /** @var Route $route */
         foreach ($set as $route) {
-            $name = (string)$route->getName();
+            $name = (string) $route->getName();
             if (in_array('GET', $route->methods(), true)) {
                 $found = false;
                 foreach ($ignore as $string) {

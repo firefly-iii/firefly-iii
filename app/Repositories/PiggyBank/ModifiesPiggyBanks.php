@@ -90,11 +90,16 @@ trait ModifiesPiggyBanks
     {
         $today         = today(config('app.timezone'));
         $leftOnAccount = $this->leftOnAccount($piggyBank, $today);
-        $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
-        $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
-        $compare       = bccomp($amount, $maxAmount);
-        $result        = $compare <= 0;
+        $savedSoFar    = (string) $this->getRepetition($piggyBank)->currentamount;
+        $maxAmount     = $leftOnAccount;
+        $leftToSave    = null;
+        if (0.0 !== (float) $piggyBank->targetamount) {
+            $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
+            $maxAmount  = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
+        }
+
+        $compare = bccomp($amount, $maxAmount);
+        $result  = $compare <= 0;
 
         Log::debug(sprintf('Left on account: %s on %s', $leftOnAccount, $today->format('Y-m-d')));
         Log::debug(sprintf('Saved so far: %s', $savedSoFar));
@@ -120,21 +125,6 @@ trait ModifiesPiggyBanks
         $savedSoFar = $repetition->currentamount;
 
         return bccomp($amount, $savedSoFar) <= 0;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
-     * @return PiggyBankEvent
-     */
-    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
-    {
-        if (0 === bccomp('0', $amount)) {
-            return new PiggyBankEvent;
-        }
-
-        return PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
     }
 
     /**
@@ -191,6 +181,21 @@ trait ModifiesPiggyBanks
     }
 
     /**
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
+     *
+     * @return PiggyBankEvent
+     */
+    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
+    {
+        if (0 === bccomp('0', $amount)) {
+            return new PiggyBankEvent;
+        }
+
+        return PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
+    }
+
+    /**
      * @inheritDoc
      */
     public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank
@@ -198,23 +203,6 @@ trait ModifiesPiggyBanks
         $piggyBank->objectGroups()->sync([]);
 
         return $piggyBank;
-    }
-
-    /**
-     * Correct order of piggies in case of issues.
-     */
-    public function resetOrder(): void
-    {
-        $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
-        $current = 1;
-        foreach ($set as $piggyBank) {
-            if ((int)$piggyBank->order !== $current) {
-                Log::debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
-                $piggyBank->order = $current;
-                $piggyBank->save();
-            }
-            $current++;
-        }
     }
 
     /**
@@ -255,34 +243,6 @@ trait ModifiesPiggyBanks
 
         return $piggyBank;
 
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
-    {
-        $oldOrder = (int)$piggyBank->order;
-        Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
-        if ($newOrder > $oldOrder) {
-            $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
-                       ->where('piggy_banks.id', '!=', $piggyBank->id)
-                       ->decrement('piggy_banks.order');
-            $piggyBank->order = $newOrder;
-            Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
-            $piggyBank->save();
-
-            return true;
-        }
-
-        $this->user->piggyBanks()->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
-                   ->where('piggy_banks.id', '!=', $piggyBank->id)
-                   ->increment('piggy_banks.order');
-        $piggyBank->order = $newOrder;
-        Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
-        $piggyBank->save();
-
-        return true;
     }
 
     /**
@@ -332,7 +292,7 @@ trait ModifiesPiggyBanks
 
         }
         // try also with ID
-        $objectGroupId = (int)($data['object_group_id'] ?? 0);
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
@@ -345,70 +305,48 @@ trait ModifiesPiggyBanks
     }
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param array     $data
-     *
-     * @return PiggyBank
+     * Correct order of piggies in case of issues.
      */
-    public function update(PiggyBank $piggyBank, array $data): PiggyBank
+    public function resetOrder(): void
     {
-        $piggyBank = $this->updateProperties($piggyBank, $data);
-        if (array_key_exists('notes', $data)) {
-            $this->updateNote($piggyBank, (string)$data['notes']);
-        }
-
-        // update the order of the piggy bank:
-        $oldOrder = (int)$piggyBank->order;
-        $newOrder = (int)($data['order'] ?? $oldOrder);
-        if ($oldOrder !== $newOrder) {
-            $this->setOrder($piggyBank, $newOrder);
-        }
-
-        // if the piggy bank is now smaller than the current relevant rep,
-        // remove money from the rep.
-        $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount) {
-            $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
-            $this->createEvent($piggyBank, $diff);
-
-            $repetition->currentamount = $piggyBank->targetamount;
-            $repetition->save();
-        }
-
-        // update using name:
-        if (array_key_exists('object_group_title', $data)) {
-            $objectGroupTitle = (string)$data['object_group_title'];
-            if ('' !== $objectGroupTitle) {
-                $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-                if (null !== $objectGroup) {
-                    $piggyBank->objectGroups()->sync([$objectGroup->id]);
-                    $piggyBank->save();
-                }
-
-                return $piggyBank;
-            }
-            // remove if name is empty. Should be overruled by ID.
-            if ('' === $objectGroupTitle) {
-                $piggyBank->objectGroups()->sync([]);
+        $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
+        $current = 1;
+        foreach ($set as $piggyBank) {
+            if ((int) $piggyBank->order !== $current) {
+                Log::debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
+                $piggyBank->order = $current;
                 $piggyBank->save();
             }
+            $current++;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
+    {
+        $oldOrder = (int) $piggyBank->order;
+        Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
+        if ($newOrder > $oldOrder) {
+            $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
+                       ->where('piggy_banks.id', '!=', $piggyBank->id)
+                       ->decrement('piggy_banks.order');
+            $piggyBank->order = $newOrder;
+            Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
+            $piggyBank->save();
+
+            return true;
         }
 
-        // try also with ID:
-        if (array_key_exists('object_group_id', $data)) {
-            $objectGroupId = (int)($data['object_group_id'] ?? 0);
-            if (0 !== $objectGroupId) {
-                $objectGroup = $this->findObjectGroupById($objectGroupId);
-                if (null !== $objectGroup) {
-                    $piggyBank->objectGroups()->sync([$objectGroup->id]);
-                    $piggyBank->save();
-                }
+        $this->user->piggyBanks()->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
+                   ->where('piggy_banks.id', '!=', $piggyBank->id)
+                   ->increment('piggy_banks.order');
+        $piggyBank->order = $newOrder;
+        Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
+        $piggyBank->save();
 
-                return $piggyBank;
-            }
-        }
-
-        return $piggyBank;
+        return true;
     }
 
     /**
@@ -448,13 +386,80 @@ trait ModifiesPiggyBanks
      *
      * @return PiggyBank
      */
+    public function update(PiggyBank $piggyBank, array $data): PiggyBank
+    {
+        $piggyBank = $this->updateProperties($piggyBank, $data);
+        if (array_key_exists('notes', $data)) {
+            $this->updateNote($piggyBank, (string) $data['notes']);
+        }
+
+        // update the order of the piggy bank:
+        $oldOrder = (int) $piggyBank->order;
+        $newOrder = (int) ($data['order'] ?? $oldOrder);
+        if ($oldOrder !== $newOrder) {
+            $this->setOrder($piggyBank, $newOrder);
+        }
+
+        // if the piggy bank is now smaller than the current relevant rep,
+        // remove money from the rep.
+        $repetition = $this->getRepetition($piggyBank);
+        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount) {
+            $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
+            $this->createEvent($piggyBank, $diff);
+
+            $repetition->currentamount = $piggyBank->targetamount;
+            $repetition->save();
+        }
+
+        // update using name:
+        if (array_key_exists('object_group_title', $data)) {
+            $objectGroupTitle = (string) $data['object_group_title'];
+            if ('' !== $objectGroupTitle) {
+                $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+                if (null !== $objectGroup) {
+                    $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                    $piggyBank->save();
+                }
+
+                return $piggyBank;
+            }
+            // remove if name is empty. Should be overruled by ID.
+            if ('' === $objectGroupTitle) {
+                $piggyBank->objectGroups()->sync([]);
+                $piggyBank->save();
+            }
+        }
+
+        // try also with ID:
+        if (array_key_exists('object_group_id', $data)) {
+            $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+            if (0 !== $objectGroupId) {
+                $objectGroup = $this->findObjectGroupById($objectGroupId);
+                if (null !== $objectGroup) {
+                    $piggyBank->objectGroups()->sync([$objectGroup->id]);
+                    $piggyBank->save();
+                }
+
+                return $piggyBank;
+            }
+        }
+
+        return $piggyBank;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param array     $data
+     *
+     * @return PiggyBank
+     */
     private function updateProperties(PiggyBank $piggyBank, array $data): PiggyBank
     {
         if (array_key_exists('name', $data) && '' !== $data['name']) {
             $piggyBank->name = $data['name'];
         }
         if (array_key_exists('account_id', $data) && 0 !== $data['account_id']) {
-            $piggyBank->account_id = (int)$data['account_id'];
+            $piggyBank->account_id = (int) $data['account_id'];
         }
         if (array_key_exists('targetamount', $data) && '' !== $data['targetamount']) {
             $piggyBank->targetamount = $data['targetamount'];

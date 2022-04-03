@@ -31,6 +31,15 @@ use Log;
 trait AppendsLocationData
 {
     /**
+     * Abstract method.
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    abstract public function has($key);
+
+    /**
      * Read the submitted Request data and add new or updated Location data to the array.
      *
      * @param array       $data
@@ -149,25 +158,6 @@ trait AppendsLocationData
     }
 
     /**
-     * Abstract method stolen from "InteractsWithInput".
-     *
-     * @param null $key
-     * @param bool $default
-     *
-     * @return mixed
-     */
-    abstract public function boolean($key = null, $default = false);
-
-    /**
-     * Abstract method.
-     *
-     * @param $key
-     *
-     * @return bool
-     */
-    abstract public function has($key);
-
-    /**
      * Abstract method.
      *
      * @return string
@@ -182,6 +172,16 @@ trait AppendsLocationData
      * @return mixed
      */
     abstract public function routeIs(...$patterns);
+
+    /**
+     * Abstract method stolen from "InteractsWithInput".
+     *
+     * @param null $key
+     * @param bool $default
+     *
+     * @return mixed
+     */
+    abstract public function boolean($key = null, $default = false);
 
     /**
      * @param string|null $prefix

@@ -33,8 +33,9 @@ use Log;
  */
 trait ReconciliationValidation
 {
-    public ?Account                    $destination;
-    public ?Account                    $source;
+    public ?Account $destination;
+    public ?Account $source;
+
     /**
      * @param array $array
      *
@@ -42,7 +43,7 @@ trait ReconciliationValidation
      */
     protected function validateReconciliationDestination(array $array): bool
     {
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountId = array_key_exists('id', $array) ? $array['id'] : null;
         Log::debug('Now in validateReconciliationDestination', $array);
         if (null === $accountId) {
             Log::debug('Return FALSE');
@@ -51,7 +52,7 @@ trait ReconciliationValidation
         }
         $result = $this->accountRepository->find($accountId);
         if (null === $result) {
-            $this->destError = (string)trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => '']);
+            $this->destError = (string) trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => '']);
             Log::debug('Return FALSE');
 
             return false;
@@ -76,7 +77,7 @@ trait ReconciliationValidation
 
             return true;
         }
-        $this->destError = (string)trans('validation.deposit_dest_wrong_type');
+        $this->destError = (string) trans('validation.deposit_dest_wrong_type');
         Log::debug('Return FALSE');
 
         return false;
@@ -89,7 +90,7 @@ trait ReconciliationValidation
      */
     protected function validateReconciliationSource(array $array): bool
     {
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountId = array_key_exists('id', $array) ? $array['id'] : null;
         Log::debug('In validateReconciliationSource', $array);
         if (null === $accountId) {
             Log::debug('Return FALSE');

@@ -72,7 +72,7 @@ class CurrencyController extends Controller
         /** @var TransactionCurrency $currency */
         foreach ($collection as $currency) {
             $result[] = [
-                'id'             => (string)$currency->id,
+                'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'code'           => $currency->code,
                 'symbol'         => $currency->symbol,
@@ -101,7 +101,7 @@ class CurrencyController extends Controller
         /** @var TransactionCurrency $currency */
         foreach ($collection as $currency) {
             $result[] = [
-                'id'             => (string)$currency->id,
+                'id'             => (string) $currency->id,
                 'name'           => sprintf('%s (%s)', $currency->name, $currency->code),
                 'code'           => $currency->code,
                 'symbol'         => $currency->symbol,

@@ -69,7 +69,7 @@ class TagList implements BinderInterface
                     if (in_array(strtolower($tag->tag), $list, true)) {
                         return true;
                     }
-                    if (in_array((string)$tag->id, $list, true)) {
+                    if (in_array((string) $tag->id, $list, true)) {
                         return true;
                     }
 

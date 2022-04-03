@@ -37,6 +37,7 @@ use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
+use FireflyIII\Events\WarnUserAboutBill;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -45,10 +46,8 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Client;
 use Laravel\Passport\Events\AccessTokenCreated;
-use LdapRecord\Laravel\Events\Import\Imported;
 use Log;
 use Mail;
-use Request;
 use Session;
 
 /**
@@ -76,7 +75,7 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
             ],
-            ActuallyLoggedIn::class => [
+            ActuallyLoggedIn::class             => [
                 'FireflyIII\Handlers\Events\UserEventHandler@storeUserIPAddress',
             ],
             DetectedNewIPAddress::class         => [
@@ -136,9 +135,9 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit',
             ],
 
-            // LDAP related events:
-            Imported::class                     => [
-                'FireflyIII\Handlers\Events\LDAPEventHandler@importedUser',
+            // bill related events:
+            WarnUserAboutBill::class            => [
+                'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
             ],
         ];
 
@@ -171,15 +170,14 @@ class EventServiceProvider extends ServiceProvider
             static function (Client $oauthClient) {
                 /** @var UserRepositoryInterface $repository */
                 $repository = app(UserRepositoryInterface::class);
-                $user       = $repository->find((int)$oauthClient->user_id);
+                $user       = $repository->find((int) $oauthClient->user_id);
                 if (null === $user) {
                     Log::info('OAuth client generated but no user associated.');
 
                     return;
                 }
 
-                $email     = $user->email;
-                $ipAddress = Request::ip();
+                $email = $user->email;
 
                 // see if user has alternative email address:
                 $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
@@ -187,10 +185,10 @@ class EventServiceProvider extends ServiceProvider
                     $email = $pref->data;
                 }
 
-                Log::debug(sprintf('Now in EventServiceProvider::registerCreateEvents. Email is %s, IP is %s', $email, $ipAddress));
+                Log::debug(sprintf('Now in EventServiceProvider::registerCreateEvents. Email is %s', $email));
                 try {
                     Log::debug('Trying to send message...');
-                    Mail::to($email)->send(new OAuthTokenCreatedMail($email, $ipAddress, $oauthClient));
+                    Mail::to($email)->send(new OAuthTokenCreatedMail($oauthClient));
                 } catch (Exception $e) { // @phpstan-ignore-line
                     Log::debug('Send message failed! :(');
                     Log::error($e->getMessage());

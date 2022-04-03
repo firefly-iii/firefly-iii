@@ -42,29 +42,33 @@
                             <td>{{ piggy.object_group_title }}</a></td>
                         </tr>
                         {% endif %}
+                        {% if null != piggy.target_amount %}
                         <tr>
                             <td>{{ 'target_amount'|_ }}</td>
                             <td>
                                 {{ formatAmountBySymbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
                         </tr>
+                        {% endif %}
                         <tr>
                             <td>{{ 'saved_so_far'|_ }}</td>
                             <td>
                                 {{ formatAmountBySymbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
                         </tr>
+                        {% if null != piggy.left_to_save %}
                         <tr>
                             <td>{{ 'left_to_save'|_ }}</td>
                             <td>
                                 {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
                         </tr>
+                        {% endif %}
                         <tr>
                             <td>{{ 'start_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.startdate %}
-                                    {{ piggyBank.startdate.formatLocalized(monthAndDayFormat) }}
+                                    {{ piggyBank.startdate.isoFormat(monthAndDayFormat) }}
                                 {% else %}
                                     <em>{{ 'no_start_date'|_ }}</em>
                                 {% endif %}
@@ -74,7 +78,7 @@
                             <td>{{ 'target_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.targetdate %}
-                                    {{ piggyBank.targetdate.formatLocalized(monthAndDayFormat) }}
+                                    {{ piggyBank.targetdate.isoFormat(monthAndDayFormat) }}
                                 {% else %}
                                     <em>{{ 'no_target_date'|_ }}</em>
                                 {% endif %}

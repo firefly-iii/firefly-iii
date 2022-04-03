@@ -180,7 +180,8 @@ return [
     'blocked_code'                => 'Eston syy',
     'login_name'                  => 'Käyttäjätunnus',
     'is_owner'                    => 'On ylläpitäjä?',
-    'url'                         => 'URL',
+    'url'                         => 'URL-osoite',
+    'bill_end_date'               => 'End date',
 
     // import
     'apply_rules'                 => 'Aja säännöt',

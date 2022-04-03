@@ -46,7 +46,7 @@ class UpdateRequest implements UpdateRequestInterface
         Log::debug(sprintf('Now in getUpdateInformation(%s)', $channel));
         $information = [
             'level'   => 'error',
-            'message' => (string)trans('firefly.unknown_error'),
+            'message' => (string) trans('firefly.unknown_error'),
         ];
 
         // try get array from update server:
@@ -76,7 +76,7 @@ class UpdateRequest implements UpdateRequestInterface
             'version' => config('firefly.version'),
             'date'    => Carbon::today()->startOfDay(),
             'level'   => 'error',
-            'message' => (string)trans('firefly.unknown_error'),
+            'message' => (string) trans('firefly.unknown_error'),
         ];
 
         $uri = config('firefly.update_endpoint');
@@ -101,12 +101,12 @@ class UpdateRequest implements UpdateRequestInterface
 
         if (200 !== $res->getStatusCode()) {
             Log::error(sprintf('Response status from server is %d.', $res->getStatusCode()));
-            Log::error((string)$res->getBody());
+            Log::error((string) $res->getBody());
             $return['message'] = sprintf('Error: %d', $res->getStatusCode());
 
             return $return;
         }
-        $body = (string)$res->getBody();
+        $body = (string) $res->getBody();
         try {
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
@@ -144,7 +144,7 @@ class UpdateRequest implements UpdateRequestInterface
         Log::debug('Now in parseResult()', $information);
         $return  = [
             'level'   => 'error',
-            'message' => (string)trans('firefly.unknown_error'),
+            'message' => (string) trans('firefly.unknown_error'),
         ];
         $current = config('firefly.version');
         $latest  = $information['version'];
@@ -155,7 +155,7 @@ class UpdateRequest implements UpdateRequestInterface
         // -1: you're running a newer version:
         if (-1 === $compare) {
             $return['level']   = 'info';
-            $return['message'] = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]);
+            $return['message'] = (string) trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]);
             Log::debug('User is running a newer version', $return);
 
             return $return;
@@ -163,7 +163,7 @@ class UpdateRequest implements UpdateRequestInterface
         // running the current version:
         if (0 === $compare) {
             $return['level']   = 'info';
-            $return['message'] = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
+            $return['message'] = (string) trans('firefly.update_current_version_alert', ['version' => $current]);
             Log::debug('User is the current version.', $return);
 
             return $return;
@@ -177,10 +177,10 @@ class UpdateRequest implements UpdateRequestInterface
         // it's still very fresh, and user wants a stable release:
         if ($diff <= $expectedDiff) {
             $return['level']   = 'info';
-            $return['message'] = (string)trans(
+            $return['message'] = (string) trans(
                 'firefly.just_new_release',
                 ['version' => $latest,
-                 'date'    => $released->formatLocalized((string)trans('config.month_and_day')),
+                 'date'    => $released->isoFormat((string) trans('config.month_and_day_js')),
                  'days'    => $expectedDiff,
                 ]
             );
@@ -191,14 +191,12 @@ class UpdateRequest implements UpdateRequestInterface
 
         // its been around for a while:
         $return['level']   = 'success';
-        $return['message'] = (string)trans(
+        $return['message'] = (string) trans(
             'firefly.update_new_version_alert',
             [
                 'your_version' => $current,
                 'new_version'  => $latest,
-                'date'         => $released->formatLocalized(
-                    (string)trans('config.month_and_day')
-                )]
+                'date'         => $released->isoFormat((string) trans('config.month_and_day_js'))]
         );
         Log::debug('New release is old enough.');
 

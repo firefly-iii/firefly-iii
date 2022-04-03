@@ -90,7 +90,7 @@
                                     <td>
                                         {% if null != rt.repeat_until and today > rt.repeat_until %}
                                         <span class="text-danger">
-                                            {{ trans('firefly.repeat_until_in_past', {date: rt.repeat_until.formatLocalized(monthAndDayFormat) }) }}
+                                            {{ trans('firefly.repeat_until_in_past', {date: rt.repeat_until.isoFormat(monthAndDayFormat) }) }}
                                         </span>
                                         {% endif %}
                                         <ul>
@@ -119,7 +119,7 @@
                                                 {{ 'recurring_repeats_forever'|_ }}.
                                             {% endif %}
                                             {% if null != rt.repeat_until and rt.repetitions == 0 %}
-                                                {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.formatLocalized(monthAndDayFormat)}) }}.
+                                                {{ trans('firefly.recurring_repeats_until', {date: rt.repeat_until.isoFormat(monthAndDayFormat)}) }}.
                                             {% endif %}
                                             {% if null == rt.repeat_until and rt.nr_of_repetitions != 0 %}
                                                 {{ trans_choice('firefly.recurring_repeats_x_times', rt.nr_of_repetitions) }}.
@@ -131,7 +131,7 @@
                                             {% for rep in rt.repetitions %}
                                                 {% for occ in rep.occurrences %}
                                                     {% if loop.index0 < 2 %}
-                                                    <li>{{ occ.formatLocalized(monthAndDayFormat) }}</li>
+                                                    <li>{{ occ.isoFormat(monthAndDayFormat) }}</li>
                                                     {% endif %}
                                                 {% endfor %}
                                             {% endfor %}

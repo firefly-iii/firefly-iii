@@ -86,23 +86,27 @@ class BackToJournals extends Command
     /**
      * @return bool
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isMigrated(): bool
     {
         $configVar = app('fireflyconfig')->get(MigrateToGroups::CONFIG_NAME, false);
 
-        return (bool)$configVar->data;
+        return (bool) $configVar->data;
     }
 
     /**
      * @return bool
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar->data;
+        return (bool) $configVar->data;
     }
 
     /**
@@ -179,7 +183,7 @@ class BackToJournals extends Command
         // both have a budget, but they don't match.
         if (null !== $budget && null !== $journalBudget && $budget->id !== $journalBudget->id) {
             // sync to journal:
-            $journal->budgets()->sync([(int)$budget->id]);
+            $journal->budgets()->sync([(int) $budget->id]);
 
             return;
         }
@@ -187,7 +191,7 @@ class BackToJournals extends Command
         // transaction has a budget, but the journal doesn't.
         if (null !== $budget && null === $journalBudget) {
             // sync to journal:
-            $journal->budgets()->sync([(int)$budget->id]);
+            $journal->budgets()->sync([(int) $budget->id]);
         }
     }
 
@@ -258,12 +262,12 @@ class BackToJournals extends Command
         // both have a category, but they don't match.
         if (null !== $category && null !== $journalCategory && $category->id !== $journalCategory->id) {
             // sync to journal:
-            $journal->categories()->sync([(int)$category->id]);
+            $journal->categories()->sync([(int) $category->id]);
         }
 
         // transaction has a category, but the journal doesn't.
         if (null !== $category && null === $journalCategory) {
-            $journal->categories()->sync([(int)$category->id]);
+            $journal->categories()->sync([(int) $category->id]);
         }
     }
 

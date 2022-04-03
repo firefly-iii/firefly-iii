@@ -24,46 +24,46 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                                     => '欢迎来到 Firefly III 首页，请跟随系统引导，了解 Firefly III 的运作方式。',
-    'index_accounts-chart'                            => '此图表显示您资产账户的当前余额，您可以在偏好设定中选择此处可见的账户。',
-    'index_box_out_holder'                            => '此区块与旁侧区块提供您财务状况的快速概览。',
-    'index_help'                                      => '如果您需要有关页面或表单的说明，请点击此按钮。',
-    'index_outro'                                     => 'Firefly III 的大多数页面都有类似的引导流程，如果您有任何问题或意见，请与开发者联系。感谢您选择 Firefly III。',
-    'index_sidebar-toggle'                            => '若要创建新的交易、账户或其他内容，请使用此图标下的菜单。',
-    'index_cash_account'                              => '这些是迄今创建的账户。您可以使用现金账户追踪现金支出，但当然不是强制性的。',
+    'index_intro'                           => '欢迎来到 Firefly III 首页，请跟随系统引导，了解 Firefly III 的运作方式。',
+    'index_accounts-chart'                  => '此图表显示您资产账户的当前余额，您可以在偏好设定中选择此处可见的账户。',
+    'index_box_out_holder'                  => '此区块与旁侧区块提供您财务状况的快速概览。',
+    'index_help'                            => '如果您需要有关页面或表单的说明，请点击此按钮。',
+    'index_outro'                           => 'Firefly III 的大多数页面都有类似的引导流程，如果您有任何问题或意见，请与开发者联系。感谢您选择 Firefly III。',
+    'index_sidebar-toggle'                  => '若要创建新的交易、账户或其他内容，请使用此图标下的菜单。',
+    'index_cash_account'                    => '这些是迄今创建的账户。您可以使用现金账户追踪现金支出，但当然不是强制性的。',
 
     // transactions
-    'transactions_create_basic_info'                  => '输入您交易的基本信息，包括来源账户、目标账户、日期和描述。',
-    'transactions_create_amount_info'                 => '输入交易金额。如有必要，这些字段会自动更新以获取外币信息。',
-    'transactions_create_optional_info'               => '这些字段都是可选项，在此处添加元数据会使您的交易更有条理。',
-    'transactions_create_split'                       => '如果您要拆分一笔交易，点击此按钮即可',
+    'transactions_create_basic_info'        => '输入您交易的基本信息，包括来源账户、目标账户、日期和描述。',
+    'transactions_create_amount_info'       => '输入交易金额。如有必要，这些字段会自动更新以获取外币信息。',
+    'transactions_create_optional_info'     => '这些字段都是可选项，在此处添加元数据会使您的交易更有条理。',
+    'transactions_create_split'             => '如果您要拆分一笔交易，点击此按钮即可',
 
     // create account:
-    'accounts_create_iban'                            => '为您的账户添加一个有效的 IBAN，将来可以更轻松地导入资料。',
-    'accounts_create_asset_opening_balance'           => '资产账户可以使用“初始余额”表示此账户在 Firefly III 中的初始状态。',
-    'accounts_create_asset_currency'                  => 'Firefly III 支持多种货币，您必须在此设定资产账户的主要货币。',
-    'accounts_create_asset_virtual'                   => '它有时可以协助赋予您的账户一个虚拟额度：一个总是增加/减少实际余额的额外金额。',
+    'accounts_create_iban'                  => '为您的账户添加一个有效的 IBAN，将来可以更轻松地导入资料。',
+    'accounts_create_asset_opening_balance' => '资产账户可以使用“初始余额”表示此账户在 Firefly III 中的初始状态。',
+    'accounts_create_asset_currency'        => 'Firefly III 支持多种货币，您必须在此设定资产账户的主要货币。',
+    'accounts_create_asset_virtual'         => '它有时可以协助赋予您的账户一个虚拟额度：一个总是增加/减少实际余额的额外金额。',
 
     // budgets index
-    'budgets_index_intro'                             => '预算可以用来管理您的财务，是 Firefly III 的核心功能之一。',
-    'budgets_index_set_budget'                        => '设定每个周期的总预算，让 Firefly III 来判断您是否已经将所有可用钱财加入预算。',
-    'budgets_index_see_expenses_bar'                  => '进行消费会慢慢地填满这个横条。',
-    'budgets_index_navigate_periods'                  => '前往不同的周期，可以方便地提前设定预算。',
-    'budgets_index_new_budget'                        => '根据需要创建新预算。',
-    'budgets_index_list_of_budgets'                   => '使用此表格可以设定每个预算的金额，并查看您的使用情况。',
-    'budgets_index_outro'                             => '要了解更多有关预算的信息，请查看右上角的帮助图标。',
+    'budgets_index_intro'                   => '预算可以用来管理您的财务，是 Firefly III 的核心功能之一。',
+    'budgets_index_set_budget'              => '设定每个周期的总预算，让 Firefly III 来判断您是否已经将所有可用钱财加入预算。',
+    'budgets_index_see_expenses_bar'        => '进行消费会慢慢地填满这个横条。',
+    'budgets_index_navigate_periods'        => '前往不同的周期，可以方便地提前设定预算。',
+    'budgets_index_new_budget'              => '根据需要创建新预算。',
+    'budgets_index_list_of_budgets'         => '使用此表格可以设定每个预算的金额，并查看您的使用情况。',
+    'budgets_index_outro'                   => '要了解更多有关预算的信息，请查看右上角的帮助图标。',
 
     // reports (index)
-    'reports_index_intro'                             => '使用这些报表可以详细地了解您的财务状况。',
-    'reports_index_inputReportType'                   => '选择报表类型，查看帮助页面以了解每个报表向您显示的内容。',
-    'reports_index_inputAccountsSelect'               => '您可以根据需要排除或包括资产账户。',
-    'reports_index_inputDateRange'                    => '所选日期范围完全由您决定：从1天到10年不等。',
-    'reports_index_extra-options-box'                 => '根据您选择的报表，您可以在此处选择额外的筛选标准和选项。更改报表类型时，请留意此区块。',
+    'reports_index_intro'                   => '使用这些报表可以详细地了解您的财务状况。',
+    'reports_index_inputReportType'         => '选择报表类型，查看帮助页面以了解每个报表向您显示的内容。',
+    'reports_index_inputAccountsSelect'     => '您可以根据需要排除或包括资产账户。',
+    'reports_index_inputDateRange'          => '所选日期范围完全由您决定：从1天到10年不等。',
+    'reports_index_extra-options-box'       => '根据您选择的报表，您可以在此处选择额外的筛选标准和选项。更改报表类型时，请留意此区块。',
 
     // reports (reports)
-    'reports_report_default_intro'                    => '这份报表将为您提供一个快速和全面的个人财务概览。如果您想看到更多的内容，欢迎联系开发者！',
-    'reports_report_audit_intro'                      => '此报表可以让您详细地了解您的资产账户的情况。',
-    'reports_report_audit_optionsBox'                 => '使用这些复选框可以显示或隐藏您感兴趣的列。',
+    'reports_report_default_intro'          => '这份报表将为您提供一个快速和全面的个人财务概览。如果您想看到更多的内容，欢迎联系开发者！',
+    'reports_report_audit_intro'            => '此报表可以让您详细地了解您的资产账户的情况。',
+    'reports_report_audit_optionsBox'       => '使用这些复选框可以显示或隐藏您感兴趣的列。',
 
     'reports_report_category_intro'                  => '此报表可以让您详细地了解一个或多个分类的情况。',
     'reports_report_category_pieCharts'              => '这些图表可以让您详细地了解每个分类或每个账户中的支出和收入情况。',

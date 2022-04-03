@@ -181,6 +181,7 @@ return [
     'login_name'                  => 'Login',
     'is_owner'                    => 'È amministratore?',
     'url'                         => 'URL',
+    'bill_end_date'               => 'Scadenza',
 
     // import
     'apply_rules'                 => 'Applica regole',

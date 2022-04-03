@@ -64,7 +64,7 @@ class PiggyBankController extends Controller
      * @param PiggyBank                    $piggyBank
      *
      * @return JsonResponse
-     * @throws JsonException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {
@@ -100,7 +100,7 @@ class PiggyBankController extends Controller
                 }
             );
             $currentSum        = $filtered->sum('amount');
-            $label             = $oldest->formatLocalized((string)trans('config.month_and_day', [], $locale));
+            $label             = $oldest->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[$label] = $currentSum;
             $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
         }
@@ -110,7 +110,7 @@ class PiggyBankController extends Controller
             }
         );
         $finalSum               = $finalFiltered->sum('amount');
-        $finalLabel             = $today->formatLocalized((string)trans('config.month_and_day', [], $locale));
+        $finalLabel             = $today->isoFormat((string) trans('config.month_and_day_js', [], $locale));
         $chartData[$finalLabel] = $finalSum;
 
         $data = $this->generator->singleSet($piggyBank->name, $chartData);

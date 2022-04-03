@@ -96,7 +96,7 @@ class AvailableBudget extends Model
     public static function routeBinder(string $value): AvailableBudget
     {
         if (auth()->check()) {
-            $availableBudgetId = (int)$value;
+            $availableBudgetId = (int) $value;
             /** @var User $user */
             $user = auth()->user();
             /** @var AvailableBudget $availableBudget */

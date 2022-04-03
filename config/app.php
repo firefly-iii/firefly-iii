@@ -144,9 +144,9 @@ return [
         'Google2FA'     => PragmaRX\Google2FALaravel\Facade::class,
         'Twig'          => TwigBridge\Facade\Twig::class,
 
-        'Arr' => Illuminate\Support\Arr::class,
+        'Arr'  => Illuminate\Support\Arr::class,
         'Http' => Illuminate\Support\Facades\Http::class,
-        'Str' => Illuminate\Support\Str::class,
+        'Str'  => Illuminate\Support\Str::class,
     ],
 
     'asset_url' => env('ASSET_URL', null),

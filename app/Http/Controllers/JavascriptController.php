@@ -48,6 +48,8 @@ class JavascriptController extends Controller
      *
      * @return Response
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
@@ -56,14 +58,14 @@ class JavascriptController extends Controller
         );
         $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
         /** @noinspection NullPointerExceptionInspection */
-        $default = $currencyRepository->findByCodeNull((string)$preference->data);
+        $default = $currencyRepository->findByCodeNull((string) $preference->data);
 
         $data = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $currency  = (int)$repository->getMetaValue($account, 'currency_id');
+            $currency  = (int) $repository->getMetaValue($account, 'currency_id');
             /** @noinspection NullPointerExceptionInspection */
             $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
@@ -107,10 +109,13 @@ class JavascriptController extends Controller
      *
      * @return Response
      * @throws FireflyException
+     * @throws \JsonException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
-        $account  = $repository->find((int)$request->get('account'));
+        $account  = $repository->find((int) $request->get('account'));
         $currency = app('amount')->getDefaultCurrency();
         if (null !== $account) {
             $currency = $repository->getAccountCurrency($account) ?? $currency;
@@ -122,7 +127,7 @@ class JavascriptController extends Controller
         /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
         $dateRange = $this->getDateRangeConfig();
-        $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string)config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
+        $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
 
         $data = [
             'currencyCode'         => $currency->code,

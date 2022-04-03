@@ -32,33 +32,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 trait CollectorProperties
 {
-    /** @var array The standard fields to select. */
-    private $fields;
-    /** @var bool Will be set to true if query result contains account information. (see function withAccountInformation). */
-    private $hasAccountInfo;
-    /** @var bool Will be true if query result includes bill information. */
-    private $hasBillInformation;
-    /** @var bool Will be true if query result contains budget info. */
-    private $hasBudgetInformation;
-    /** @var bool Will be true if query result contains category info. */
-    private $hasCatInformation;
-    /** @var bool Will be true for attachments */
-    private      $hasJoinedAttTables;
-    private bool $hasJoinedMetaTables;
-    /** @var bool Will be true of the query has the tag info tables joined. */
-    private $hasJoinedTagTables;
-    /** @var bool */
-    private $hasNotesInformation;
-    /** @var array */
-    private $integerFields;
-    /** @var int The maximum number of results. */
-    private $limit;
-    /** @var int The page to return. */
-    private $page;
-    /** @var HasMany The query object. */
-    private $query;
-    /** @var int Total number of results. */
-    private $total;
-    /** @var User The user object. */
-    private $user;
+    private array   $fields;
+    private bool    $hasAccountInfo;
+    private bool    $hasBillInformation;
+    private bool    $hasBudgetInformation;
+    private bool    $hasCatInformation;
+    private bool    $hasJoinedAttTables;
+    private bool    $hasJoinedMetaTables;
+    private bool    $hasJoinedTagTables;
+    private bool    $hasNotesInformation;
+    private array   $integerFields;
+    private ?int    $limit;
+    private ?int    $page;
+    private array   $postFilters;
+    private HasMany $query;
+    private int     $total;
+    private ?User   $user;
 }

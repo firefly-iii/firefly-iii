@@ -22,6 +22,7 @@
                         {{ ExpandedForm.amountNoCurrency('amount_max') }}
                         {{ ExpandedForm.date('date',phpdate('Y-m-d')) }}
                         {{ ExpandedForm.select('repeat_freq',periods,'monthly') }}
+                        {{ ExpandedForm.integer('skip',0) }}
                     </div>
                 </div>
 
@@ -32,9 +33,12 @@
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
+                        {{ ExpandedForm.date('bill_end_date',null, {'helpText': trans('firefly.bill_end_date_help')}) }}
+                        {{ ExpandedForm.date('extension_date',null,{'helpText': trans('firefly.bill_extension_date_help')} ) }}
+
+
                         {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
-                        {{ ExpandedForm.integer('skip',0) }}
                         {{ ExpandedForm.objectGroup() }}
                     </div>
                 </div>

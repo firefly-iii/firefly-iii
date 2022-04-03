@@ -200,7 +200,7 @@ class User extends Authenticatable
     public static function routeBinder(string $value): User
     {
         if (auth()->check()) {
-            $userId = (int)$value;
+            $userId = (int) $value;
             $user   = self::find($userId);
             if (null !== $user) {
                 return $user;
@@ -302,8 +302,9 @@ class User extends Authenticatable
 
     /**
      * Get the models LDAP domain.
-     *
      * @return string
+     * @deprecated
+     *
      */
     public function getLdapDomain()
     {
@@ -312,8 +313,9 @@ class User extends Authenticatable
 
     /**
      * Get the database column name of the domain.
-     *
      * @return string
+     * @deprecated
+     *
      */
     public function getLdapDomainColumn()
     {
@@ -322,8 +324,9 @@ class User extends Authenticatable
 
     /**
      * Get the models LDAP GUID.
-     *
      * @return string
+     * @deprecated
+     *
      */
     public function getLdapGuid()
     {
@@ -332,8 +335,9 @@ class User extends Authenticatable
 
     /**
      * Get the models LDAP GUID database column name.
-     *
      * @return string
+     * @deprecated
+     *
      */
     public function getLdapGuidColumn()
     {
@@ -452,10 +456,11 @@ class User extends Authenticatable
 
     /**
      * Set the models LDAP domain.
-     *
      * @param string $domain
      *
      * @return void
+     * @deprecated
+     *
      */
     public function setLdapDomain($domain)
     {
@@ -464,10 +469,10 @@ class User extends Authenticatable
 
     /**
      * Set the models LDAP GUID.
-     *
      * @param string $guid
      *
      * @return void
+     * @deprecated
      */
     public function setLdapGuid($guid)
     {

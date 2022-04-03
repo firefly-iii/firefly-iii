@@ -76,6 +76,7 @@ return [
     'type'                    => 'Tyyppi',
     'completed'               => 'Suoritettu',
     'iban'                    => 'IBAN',
+    'account_number'              => 'Account number',
     'paid_current_period'     => 'Maksettu tällä kaudella',
     'email'                   => 'Sähköposti',
     'registered_at'           => 'Rekisteröity',

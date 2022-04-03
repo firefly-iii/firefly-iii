@@ -47,7 +47,7 @@ class UserGroups extends Migration
         foreach ($this->tables as $tableName) {
             Schema::table(
                 $tableName, function (Blueprint $table) use ($tableName) {
-                
+
                 $table->dropForeign(sprintf('%s_to_ugi', $tableName));
                 if (Schema::hasColumn($tableName, 'user_group_id')) {
                     $table->dropColumn('user_group_id');

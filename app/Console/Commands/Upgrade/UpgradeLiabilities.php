@@ -81,12 +81,14 @@ class UpgradeLiabilities extends Command
     /**
      * @return bool
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -159,10 +161,10 @@ class UpgradeLiabilities extends Command
             return;
         }
         // source MUST be the liability.
-        if ((int)$destination->account_id === (int)$account->id) {
+        if ((int) $destination->account_id === (int) $account->id) {
             Log::debug(sprintf('Must switch around, because account #%d is the destination.', $destination->account_id));
             // so if not, switch things around:
-            $sourceAccountId         = (int)$source->account_id;
+            $sourceAccountId         = (int) $source->account_id;
             $source->account_id      = $destination->account_id;
             $destination->account_id = $sourceAccountId;
             $source->save();

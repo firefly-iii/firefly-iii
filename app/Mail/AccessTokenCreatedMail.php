@@ -37,21 +37,11 @@ class AccessTokenCreatedMail extends Mailable
 
     use Queueable, SerializesModels;
 
-    /** @var string Email address of admin */
-    public $email;
-    /** @var string IP address of admin */
-    public $ipAddress;
-
     /**
      * AccessTokenCreatedMail constructor.
-     *
-     * @param string $email
-     * @param string $ipAddress
      */
-    public function __construct(string $email, string $ipAddress)
+    public function __construct()
     {
-        $this->email     = $email;
-        $this->ipAddress = $ipAddress;
     }
 
     /**
@@ -61,7 +51,8 @@ class AccessTokenCreatedMail extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.access-token-created-html')->text('emails.access-token-created-text')
-                    ->subject((string)trans('email.access_token_created_subject'));
+        return $this
+            ->markdown('emails.token-created')
+            ->subject((string) trans('email.access_token_created_subject'));
     }
 }

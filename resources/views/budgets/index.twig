@@ -27,7 +27,7 @@
                             <div class="btn btn-group btn-group-lg" style="padding-top:0;">
                                 <a href="{{ route('budgets.index', [prevLoop[0].start.format('Y-m-d'), prevLoop[0].end.format('Y-m-d')]) }}"
                                    class="btn btn-default" title="{{ prevLoop[0].title }}">&larr;</a>
-                                <a title="{{ start.formatLocalized(monthAndDayFormat) }} - {{ end.formatLocalized(monthAndDayFormat) }}"
+                                <a title="{{ start.isoFormat(monthAndDayFormat) }} - {{ end.isoFormat(monthAndDayFormat) }}"
                                    href="{{ route('budgets.index', [start.format('Y-m-d'), end.format('Y-m-d')]) }}"
                                    class="btn btn-default">{{ periodTitle }}</a>
                                 <a href="{{ route('budgets.index', [nextLoop[0].start.format('Y-m-d'), nextLoop[0].end.format('Y-m-d')]) }}"
@@ -57,7 +57,7 @@
                         <h3 class="box-title">
                             {{ trans('firefly.total_available_budget_in_currency', {currency: defaultCurrency.name}) }}
                             <br>
-                            <small>{{ trans('firefly.between_dates_breadcrumb', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}</small>
+                            <small>{{ trans('firefly.between_dates_breadcrumb', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat)}) }}</small>
                         </h3>
                     </div>
                     <div class="box-body">
@@ -73,7 +73,7 @@
                             {# info about the amount spent #}
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
                                 <small class="available_bar"
-                                       data-id="0">{{ trans('firefly.available_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
+                                       data-id="0">{{ trans('firefly.available_between', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat) }) }}
                                     :
                                     <span class="available_amount" data-id="0" data-value="0" data-currency="{{ defaultCurrency.id }}"
                                           data-value="0">{{ formatAmountBySymbol(0, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }}</span>
@@ -84,7 +84,7 @@
                         {# info text to show how much is spent (in currency). #}
                         <div class="row spentInfo" data-id="0" data-value="{{ spent }}">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <small>{{ trans('firefly.spent_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+                                <small>{{ trans('firefly.spent_between', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat)}) }}
                                     : {{ formatAmountBySymbol(spent, defaultCurrency.symbol, defaultCurrency.decimal_places) }} </small>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                             <h3 class="box-title">
                                 {{ trans('firefly.total_available_budget_in_currency', {currency: budget.transaction_currency.name}) }}
                                 <br>
-                                <small>{{ trans('firefly.between_dates_breadcrumb', {start: budget.start_date.formatLocalized(monthAndDayFormat), end: budget.end_date.formatLocalized(monthAndDayFormat)}) }}</small>
+                                <small>{{ trans('firefly.between_dates_breadcrumb', {start: budget.start_date.isoFormat(monthAndDayFormat), end: budget.end_date.isoFormat(monthAndDayFormat)}) }}</small>
                             </h3>
                         </div>
                         <div class="box-body">
@@ -132,7 +132,7 @@
                                 {# info about the amount spent #}
                                 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
                                     <small class="available_bar"
-                                           data-id="{{ budget.id }}">{{ trans('firefly.available_between', {start: budget.start_date.formatLocalized(monthAndDayFormat), end: budget.end_date.formatLocalized(monthAndDayFormat) }) }}
+                                           data-id="{{ budget.id }}">{{ trans('firefly.available_between', {start: budget.start_date.isoFormat(monthAndDayFormat), end: budget.end_date.isoFormat(monthAndDayFormat) }) }}
                                         :
                                         <span class="available_amount" data-id="{{ budget.id }}"
                                               data-value="{{ budget.amount }}">{{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}</span>
@@ -166,7 +166,7 @@
                             {# info text to show how much is spent (in currency). #}
                             <div class="row spentInfo" data-id="{{ budget.id }}">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <small>{{ trans('firefly.spent_between', {start: budget.start_date.formatLocalized(monthAndDayFormat), end: budget.end_date.formatLocalized(monthAndDayFormat)}) }}
+                                    <small>{{ trans('firefly.spent_between', {start: budget.start_date.isoFormat(monthAndDayFormat), end: budget.end_date.isoFormat(monthAndDayFormat)}) }}
                                         : {{ formatAmountBySymbol(budget.spent, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places) }} </small>
                                 </div>
                             </div>
@@ -408,7 +408,7 @@
                     <div class="box-body">
                         <p>
                             <a href="{{ route('budgets.no-budget', [start.format('Y-m-d'), end.format('Y-m-d')]) }}">
-                                {{ trans('firefly.transactions_no_budget', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+                                {{ trans('firefly.transactions_no_budget', {start: start.isoFormat(monthAndDayFormat), end: end.isoFormat(monthAndDayFormat)}) }}
                             </a>
                         </p>
                     </div>

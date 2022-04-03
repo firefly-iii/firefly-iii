@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Middleware;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
-use Log;
 
 /**
  * Class StartFireflySession.

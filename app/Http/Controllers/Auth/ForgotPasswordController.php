@@ -86,14 +86,14 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {
-            return back()->withErrors(['email' => (string)trans('firefly.cannot_reset_demo_user')]);
+            return back()->withErrors(['email' => (string) trans('firefly.cannot_reset_demo_user')]);
         }
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
         $result = $this->broker()->sendResetLink($request->only('email'));
-        if('passwords.throttled' === $result) {
+        if ('passwords.throttled' === $result) {
             Log::error(sprintf('Cowardly refuse to send a password reset message to user #%d because the reset button has been throttled.', $user->id));
         }
 
@@ -110,6 +110,8 @@ class ForgotPasswordController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function showLinkRequestForm()
     {
@@ -124,7 +126,7 @@ class ForgotPasswordController extends Controller
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
-        $pageTitle         = (string)trans('firefly.forgot_pw_page_title');
+        $pageTitle         = (string) trans('firefly.forgot_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }

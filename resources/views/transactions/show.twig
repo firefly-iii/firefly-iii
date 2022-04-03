@@ -62,7 +62,7 @@
                         <tr>
                             <td style="width:30%;">{{ trans('list.date') }}</td>
                             <td>
-                                {{ first.date.formatLocalized(dateTimeFormat) }}
+                                {{ first.date.isoFormat(dateTimeFormat) }}
                             </td>
                         </tr>
                         </tbody>
@@ -285,7 +285,7 @@
                                 {% if journalHasMeta(journal.transaction_journal_id, dateField) %}
                                     <tr>
                                         <td>{{ trans('list.'~dateField) }}</td>
-                                        <td>{{ journalGetMetaDate(journal.transaction_journal_id, dateField).formatLocalized(monthAndDayFormat) }}</td>
+                                        <td>{{ journalGetMetaDate(journal.transaction_journal_id, dateField).isoFormat(monthAndDayFormat) }}</td>
                                     </tr>
                                 {% endif %}
                             {% endfor %}

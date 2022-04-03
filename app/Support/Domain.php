@@ -50,6 +50,6 @@ class Domain
      */
     public static function getRuleTriggers(): array
     {
-        return array_keys(config('firefly.search.operators'));
+        return array_keys(config('search.operators'));
     }
 }
