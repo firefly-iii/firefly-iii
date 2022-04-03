@@ -93,7 +93,7 @@
                         {% endif %}
                     </td>
                     <td class="hidden-sm hidden-xs" style="text-align:right;">
-                        {% if piggy.target_date %}
+                        {% if piggy.target_date and piggy.save_per_month %}
                             {{ formatAmountBySymbol(piggy.save_per_month, piggy.currency_symbol, piggy.currency_decimal_places) }}
                         {% endif %}
                     </td>
