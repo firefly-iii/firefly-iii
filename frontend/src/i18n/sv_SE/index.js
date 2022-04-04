@@ -18,7 +18,7 @@ export default {
     },
     "list": {
         "name": "Namn",
-        "account_number": "Account number",
+        "account_number": "Kontonummer",
         "currentBalance": "Nuvarande saldo",
         "lastActivity": "Senaste aktivitet",
         "active": "\u00c4r aktiv?"
@@ -45,7 +45,7 @@ export default {
         "delete": "Ta bort",
         "reconcile": "Avst\u00e4mning",
         "create_new_asset": "Skapa ett nytt tillg\u00e5ngskonto",
-        "confirm_action": "Confirm action",
+        "confirm_action": "Bekr\u00e4fta \u00e5tg\u00e4rd",
         "rule_trigger_source_account_starts_choice": "K\u00e4llkontonamn b\u00f6rjar med..",
         "rule_trigger_source_account_ends_choice": "K\u00e4llkontonamn slutar med..",
         "rule_trigger_source_account_is_choice": "K\u00e4llkontonamn \u00e4r..",

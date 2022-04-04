@@ -18,7 +18,7 @@ export default {
     },
     "list": {
         "name": "Nazwa",
-        "account_number": "Account number",
+        "account_number": "Numer konta",
         "currentBalance": "Bie\u017c\u0105ce saldo",
         "lastActivity": "Ostatnia aktywno\u015b\u0107",
         "active": "Jest aktywny?"
@@ -45,7 +45,7 @@ export default {
         "delete": "Usu\u0144",
         "reconcile": "Uzgodnij",
         "create_new_asset": "Utw\u00f3rz nowe konto aktyw\u00f3w",
-        "confirm_action": "Confirm action",
+        "confirm_action": "Potwierd\u017a akcj\u0119",
         "rule_trigger_source_account_starts_choice": "Konto \u017ar\u00f3d\u0142owe si\u0119 zaczyna od..",
         "rule_trigger_source_account_ends_choice": "Konto \u017ar\u00f3d\u0142owe ko\u0144czy si\u0119 na..",
         "rule_trigger_source_account_is_choice": "Kontem \u017ar\u00f3d\u0142owym jest..",
