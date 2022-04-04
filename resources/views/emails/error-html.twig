@@ -26,7 +26,7 @@
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{ trans('email.error_ip', { ip: ip }) }} (<a href="https://ipinfo.io/{{ ip }}/json?token={{ token }}">info</a>)<br />
-    {{ trans('email.error_url', {url :url }) }}<br />
+    {{ method }} {{ trans('email.error_url', {url :url }) }}<br />
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
@@ -47,7 +47,7 @@
 </p>
 <p style="font-family: monospace;font-size:11px;color:#aaa">
 {% for key, header in headers %}
-{% if (key != 'cookie') and header[0] != '' %}
+{% if (key != 'cookie') and header[0] != '' and key != 'x-xsrf-token' %}
 - {{ key }}: {{ header[0] }}<br>
 {% endif %}
 {% endfor %}

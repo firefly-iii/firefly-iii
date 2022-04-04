@@ -57,8 +57,8 @@ class ObjectGroupTransformer extends AbstractTransformer
 
         return [
             'id'         => (string) $objectGroup->id,
-            'created_at' => $objectGroup->created_at->toAtomString(),
-            'updated_at' => $objectGroup->updated_at->toAtomString(),
+            'created_at' => $objectGroup->created_at?->toAtomString(),
+            'updated_at' => $objectGroup->updated_at?->toAtomString(),
             'title'      => $objectGroup->title,
             'order'      => (int) $objectGroup->order,
             'links'      => [

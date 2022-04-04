@@ -44,8 +44,8 @@ return [
     // access token created
     'access_token_created_subject'            => 'En ny åtkomsttoken skapades',
     'access_token_created_body'               => 'Någon (förhoppningsvis du) har just skapat en ny Firefly III API Access-token för ditt användarkonto.',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'Med denna token, kan de få tillgång till <strong>alla</strong> dina finansiella poster genom Firefly III API.',
+    'access_token_created_revoke'             => 'Om detta inte var du, vänligen återkalla denna token så snart som möjligt på :url',
 
     // registered
     'registered_subject'                      => 'Välkommen till Firefly III!',
@@ -108,9 +108,9 @@ return [
     'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
     'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
     'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
+    'bill_warning_end_date'                   => 'Din räkning **":name"** förfaller :date. Detta ögonblick kommer att passera om cirka **:diff dagar**.',
+    'bill_warning_extension_date'             => 'Din räkning **":name"** kommer att förlängas eller avbrytas den :date. Detta ögonblick kommer att passera om cirka **:diff dagar**.',
+    'bill_warning_end_date_zero'              => 'Din räkning **":name"** förfaller :date. Detta ögonblick kommer att passera **IDAG!**',
     'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
     'bill_warning_please_action'              => 'Please take the appropriate action.',
 

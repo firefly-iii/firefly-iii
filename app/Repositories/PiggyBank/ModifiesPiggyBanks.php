@@ -403,7 +403,7 @@ trait ModifiesPiggyBanks
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
         $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount) {
+        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount && 0.0 !== (float)$piggyBank->targetamount) {
             $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
             $this->createEvent($piggyBank, $diff);
 

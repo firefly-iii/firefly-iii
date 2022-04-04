@@ -45,15 +45,15 @@ return [
     'access_token_created_subject'            => '创建了一个新的访问令牌',
     'access_token_created_body'               => '有人（希望是您）刚刚为您的帐户创建了一个新的 Firefly III API 访问令牌。',
     'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_revoke'             => '如果这不是您的操作，请尽快访问链接撤销该令牌：:url。',
 
     // registered
     'registered_subject'                      => '欢迎使用 Firefly III！',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
+    'registered_welcome'                      => '欢迎来到 [Firefly III](:address)。收到这封电子邮件即确认您的注册已经完成。耶！',
+    'registered_pw'                           => '如果您忘记了您的密码，请使用 [密码重置工具] (:address/password/reset) 重置密码。',
     'registered_help'                         => '每个页面右上角都有一个帮助图标。如果您需要帮助，请点击它！',
-    'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',
+    'registered_doc_html'                     => '如果您尚未阅读过，请阅读一下[设计理念](https://docs.firefly-iii.org/about-firefly-iii/personal-finances)。',
+    'registered_doc_text'                     => '我们推荐您阅读新用户使用指南和完整说明。',
     'registered_closing'                      => '祝您使用愉快！',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => '密码已重置',
@@ -62,25 +62,25 @@ return [
     // email change
     'email_change_subject'                    => '您的 Firefly III 电子邮件地址已更改',
     'email_change_body_to_new'                => '您或有人访问您的 Firefly III 帐户已更改您的电子邮件地址。 如果不是您操作的，请忽略并删除。',
-    'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
+    'email_change_body_to_old'                => '您或拥有您帐户访问权限的人修改了您的电子邮件地址。如果您没有进行该操作，您**必须**点击下方的“撤销操作”链接来保护您的帐户！',
     'email_change_ignore'                     => '如果该操作由您本人进行，您可以安全地忽略此消息。',
     'email_change_old'                        => '旧的电子邮件地址为：:email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => '旧电子邮件地址为：**:email**',
     'email_change_new'                        => '新的电子邮件地址为：:email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => '新电子邮件地址是：**:email**',
     'email_change_instructions'               => '在您确认该项更改前，您无法使用 Firefly III。请点击下方链接进行操作。',
     'email_change_undo_link'                  => '若要撤销改动，请点击此链接：',
 
     // OAuth token created
     'oauth_created_subject'                   => '新的 OAuth 客户端完成创建',
-    'oauth_created_body'                      => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_body'                      => '有人（希望是您）刚刚使用您的账户创建了一个新的 Firefly III API OAuth 客户端。客户端标签是“:name”，回调地址是 `:url`。',
+    'oauth_created_explanation'               => '通过该客户端，您的**所有**财务信息都可以通过 Firefly III API 来获取。',
+    'oauth_created_undo'                      => '如果这不是您的操作，请尽快访问链接撤销该客户端授权：`:url`',
 
     // reset password
     'reset_pw_subject'                        => '您的密码重置请求',
     'reset_pw_instructions'                   => '有人尝试重置您的密码。如果是您本人的操作，请点击下方链接进行重置。',
-    'reset_pw_warning'                        => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_warning'                        => '请您**务必**确认打开的链接为真正的 Firefly III 站点。',
 
     // error
     'error_subject'                           => 'Firefly III 发生了错误',
@@ -104,14 +104,14 @@ return [
     'new_journals_header'                     => 'Firefly III 为您创建了一笔交易，您可以在您的 Firefly III 站点中查看：|Firefly III 为您创建了 :count 笔交易，您可以在您的 Firefly III 站点中查看：',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
+    'bill_warning_subject_end_date'           => '您的账单“:name”将于 :diff 天后到期',
+    'bill_warning_subject_now_end_date'       => '您的账单“:name”将于今天到期',
     'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
     'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
     'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
     'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
     'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
     'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_please_action'              => '请采取适当的行动。',
 
 ];

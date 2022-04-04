@@ -45,7 +45,7 @@ export default {
         "delete": "L\u00f6schen",
         "reconcile": "Abgleichen",
         "create_new_asset": "Neues Bestandskonto erstellen",
-        "confirm_action": "Confirm action",
+        "confirm_action": "Aktion best\u00e4tigen",
         "rule_trigger_source_account_starts_choice": "Name des Quellkontos beginnt mit..",
         "rule_trigger_source_account_ends_choice": "Quellkonto-Name endet mit..",
         "rule_trigger_source_account_is_choice": "Quellkonto-Name lautet..",

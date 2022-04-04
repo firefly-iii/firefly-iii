@@ -309,7 +309,6 @@ class UserEventHandler
             // get the email address
             $email     = $event->user->email;
             $uri       = route('index');
-            $ipAddress = $event->ipAddress;
 
             // see if user has alternative email address:
             $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email');
@@ -319,7 +318,7 @@ class UserEventHandler
 
             // send email.
             try {
-                Mail::to($email)->send(new RegisteredUserMail($uri, $ipAddress));
+                Mail::to($email)->send(new RegisteredUserMail($uri));
 
             } catch (Exception $e) { // @phpstan-ignore-line
                 Log::error($e->getMessage());

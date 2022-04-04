@@ -36,20 +36,14 @@ class RegisteredUser extends Event
 {
     use SerializesModels;
 
-    /** @var string The users IP address */
-    public $ipAddress;
-    /** @var User The user */
-    public $user;
+    public User $user;
 
     /**
      * Create a new event instance. This event is triggered when a new user registers.
-     *
-     * @param User   $user
-     * @param string $ipAddress
+     * @param User $user
      */
-    public function __construct(User $user, string $ipAddress)
+    public function __construct(User $user)
     {
-        $this->user      = $user;
-        $this->ipAddress = $ipAddress;
+        $this->user = $user;
     }
 }

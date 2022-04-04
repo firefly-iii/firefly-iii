@@ -18,7 +18,7 @@ export default {
     },
     "list": {
         "name": "Nome",
-        "account_number": "Account number",
+        "account_number": "Numero conto",
         "currentBalance": "Saldo corrente",
         "lastActivity": "Ultima attivit\u00e0",
         "active": "Attivo"

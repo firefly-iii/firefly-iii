@@ -14,7 +14,7 @@
 {% endif %}
 
 {{ trans('email.error_ip', { ip: ip }) }}
-{{ trans('email.error_url', {url :url}) }}
+{{ method }} {{ trans('email.error_url', {url :url}) }}
 {{ trans('email.error_user_agent', {userAgent: userAgent } ) }}
 
 {{ trans('email.error_stacktrace')|striptags|raw }}
@@ -28,7 +28,7 @@
 {{ trans('email.error_headers') }}
 
 {% for key, header in headers %}
-{% if (key != 'cookie') and header[0] != '' %}
+{% if (key != 'cookie') and header[0] != '' and key != 'x-xsrf-token'  %}
 - {{ key }}: {{ header[0] }}
 {% endif %}
 {% endfor %}

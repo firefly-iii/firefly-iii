@@ -18,7 +18,7 @@ export default {
     },
     "list": {
         "name": "\u540d\u79f0",
-        "account_number": "Account number",
+        "account_number": "\u8d26\u6237\u53f7\u7801",
         "currentBalance": "\u76ee\u524d\u4f59\u989d",
         "lastActivity": "\u4e0a\u6b21\u6d3b\u52a8",
         "active": "\u662f\u5426\u542f\u7528\uff1f"
@@ -37,7 +37,7 @@ export default {
         "asset_accounts": "\u8d44\u4ea7\u8d26\u6237",
         "expense_accounts": "\u652f\u51fa\u8d26\u6237",
         "revenue_accounts": "\u6536\u5165\u8d26\u6237",
-        "liabilities_accounts": "Liabilities"
+        "liabilities_accounts": "\u503a\u52a1"
     },
     "firefly": {
         "actions": "\u64cd\u4f5c",

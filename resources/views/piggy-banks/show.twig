@@ -84,7 +84,7 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        {% if piggyBank.targetdate %}
+                        {% if piggyBank.targetdate and piggy.save_per_month %}
                             <tr>
                                 <td>{{ 'suggested_amount'|_ }}</td>
                                 <td>
