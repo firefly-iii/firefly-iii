@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.1 - 2022-04-05
+
+### Fixed
+- Fixes an issue with showing piggy banks
+- [Issue 5961](https://github.com/firefly-iii/firefly-iii/issues/5961) Fixes an issue registering new users
+
 ## 5.7.0 - 2022-04-04
 
 - ⚠️ This release no longer supports LDAP.

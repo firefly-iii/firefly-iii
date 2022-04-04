@@ -73,6 +73,6 @@ return [
     'asset_accounts'         => '资产账户',
     'expense_accounts'       => '支出账户',
     'revenue_accounts'       => '收入账户',
-    'liabilities_accounts'   => 'Liabilities',
+    'liabilities_accounts'   => '债务',
     'placeholder'            => '[Placeholder][占位符]',
 ];
