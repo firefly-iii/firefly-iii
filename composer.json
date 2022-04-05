@@ -99,7 +99,7 @@
     "nunomaduro/collision": "^6.1",
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^1.1",
-    "psr/log": "<3",
+    "psr/log": "<4",
     "ramsey/uuid": "^4.3",
     "rcrowe/twigbridge": "^0.14",
     "spatie/data-transfer-object": "^3.7",
