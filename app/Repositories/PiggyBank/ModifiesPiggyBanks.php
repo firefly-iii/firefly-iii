@@ -261,6 +261,12 @@ trait ModifiesPiggyBanks
         $piggyData     = $data;
         // unset fields just in case.
         unset($piggyData['object_group_title'], $piggyData['object_group_id'], $piggyData['notes'], $piggyData['current_amount']);
+
+        // validate amount:
+        if (array_key_exists('targetamount', $data) && '' === (string) $data['targetamount']) {
+            $data['targetamount'] = '0';
+        }
+
         try {
             /** @var PiggyBank $piggyBank */
             $piggyBank = PiggyBank::create($piggyData);
@@ -403,7 +409,7 @@ trait ModifiesPiggyBanks
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
         $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount && 0.0 !== (float)$piggyBank->targetamount) {
+        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount && 0.0 !== (float) $piggyBank->targetamount) {
             $diff = bcsub($piggyBank->targetamount, $repetition->currentamount);
             $this->createEvent($piggyBank, $diff);
 
