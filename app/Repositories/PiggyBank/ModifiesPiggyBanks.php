@@ -263,8 +263,8 @@ trait ModifiesPiggyBanks
         unset($piggyData['object_group_title'], $piggyData['object_group_id'], $piggyData['notes'], $piggyData['current_amount']);
 
         // validate amount:
-        if (array_key_exists('targetamount', $data) && '' === (string) $data['targetamount']) {
-            $data['targetamount'] = '0';
+        if (array_key_exists('targetamount', $piggyData) && '' === (string) $piggyData['targetamount']) {
+            $piggyData['targetamount'] = '0';
         }
 
         try {
