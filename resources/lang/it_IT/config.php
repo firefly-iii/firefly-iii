@@ -26,12 +26,12 @@ return [
     'html_language'            => 'it',
     'locale'                   => 'it, Italiano, it_IT.utf8, it_IT.UTF-8',
     //'month'                   => '%B %Y',
-    'month_js'                 => 'MMMM AAAA',
+    'month_js'                 => 'MMMM YYYY',
 
     //'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js'  => 'D MMM YYYY',
     'month_and_day_fns'        => 'd MMMM y',
-    'month_and_day_js'         => 'Do MMMM YYYY',
+    'month_and_day_js'         => 'D MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
     'month_and_date_day_js'    => 'dddd D MMMM YYYY',
@@ -40,23 +40,23 @@ return [
     'month_and_day_no_year_js' => 'D MMMM',
 
     //'date_time'               => '%B %e, %Y, @ %T',
-    'date_time_js'             => 'Do MMMM YYYY, @ HH:mm:ss',
+    'date_time_js'             => 'D MMMM YYYY, HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
-    'specific_day_js'          => 'G MMMM AAAA',
+    'specific_day_js'          => 'D MMMM YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'          => '[Week] s, AAAA',
-    'week_in_year_fns'         => "'Settimana' w, yyyy",
+    'week_in_year_js'          => '[Settimana] w YYYY',
+    'week_in_year_fns'         => "'Settimana' w yyyy",
 
     //'year'                    => '%Y',
-    'year_js'                  => 'AAAA',
+    'year_js'                  => 'YYYY',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'             => 'T AAAA',
+    'half_year_js'             => 'Q YYYY',
 
-    'quarter_fns'   => "'Q'Q, yyyy",
-    'half_year_fns' => "'H{half}', yyyy",
+    'quarter_fns'   => "'T'Q yyyy",
+    'half_year_fns' => "'S{half}' yyyy",
     'dow_1'         => 'Lunedì',
     'dow_2'         => 'Martedì',
     'dow_3'         => 'Mercoledì',

@@ -174,7 +174,7 @@ return [
     'liability_direction'         => '債務の出入',
     'delete_object_group'         => 'グループ「:title」を削除',
     'email'                       => 'メールアドレス',
-    'password'                    => 'パスワードがリセットされました！',
+    'password'                    => 'パスワード',
     'password_confirmation'       => 'パスワードを変更する',
     'blocked'                     => 'あなたはログアウトしました。ブロックされたアカウントはこのサイトを使うことが出来ません。有効なメールアドレスで登録しましたか？',
     'blocked_code'                => 'ブロック',

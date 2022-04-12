@@ -181,7 +181,7 @@ return [
     'login_name'                  => 'Käyttäjätunnus',
     'is_owner'                    => 'On ylläpitäjä?',
     'url'                         => 'URL-osoite',
-    'bill_end_date'               => 'End date',
+    'bill_end_date'               => 'Päättymispäivä',
 
     // import
     'apply_rules'                 => 'Aja säännöt',

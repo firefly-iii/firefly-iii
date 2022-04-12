@@ -44,13 +44,13 @@ return [
     // access token created
     'access_token_created_subject'            => 'È stato creato un nuovo token di accesso',
     'access_token_created_body'               => 'Qualcuno (si spera tu) ha appena creato un nuovo token di accesso personale per le API di Firefly III per il tuo account utente.',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'Con questo token è possibile accedere a **tutte** le tue informazioni finanziarie tramite le API di Firefly III.',
+    'access_token_created_revoke'             => 'Se non sei stato tu, revoca questo token il prima possibile all\'indirizzo :url',
 
     // registered
     'registered_subject'                      => 'Benvenuto in Firefly III!',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
+    'registered_welcome'                      => 'Benvenuto in [Firefly III](:address). La tua registrazione è stata completata, e questa è una email di conferma. Olè!',
+    'registered_pw'                           => 'Se hai dimenticato la tua password, reimpostala usando [lo strumento di reimpostazione della password](:address/password/reset).',
     'registered_help'                         => 'C\'è un\'icona di aiuto nell\'angolo in alto a destra di ogni pagina. Se hai bisogno di aiuto, clicca su di essa!',
     'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
     'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',
@@ -65,22 +65,22 @@ return [
     'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
     'email_change_ignore'                     => 'Se hai effettuato tu questa modifica, puoi ignorare questo messaggio.',
     'email_change_old'                        => 'Il vecchio indirizzo email era: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => 'Il vecchio indirizzo email era: **:email**',
     'email_change_new'                        => 'Il nuovo indirizzo email è: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => 'Il nuovo indirizzo email è: **:email**',
     'email_change_instructions'               => 'Non puoi usare Firefly III finché non confermi questa modifica. Per favore, segui il link qui sotto per farlo.',
     'email_change_undo_link'                  => 'Per annullare la modifica, segui questo link:',
 
     // OAuth token created
     'oauth_created_subject'                   => 'È stato creato un nuovo client OAuth',
-    'oauth_created_body'                      => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_body'                      => 'Qualcuno (si spera tu) ha appena creato un nuovo client OAuth per le API di Firefly III per il tuo account utente. È etichettato ":name" e ha come URL di callback `:url`.',
+    'oauth_created_explanation'               => 'Con questo token è possibile accedere a **tutte** le tue informazioni finanziarie tramite le API di Firefly III.',
+    'oauth_created_undo'                      => 'Se non sei stato tu, revoca questo client il prima possibile all\'indirizzo `:url`',
 
     // reset password
     'reset_pw_subject'                        => 'La tua richiesta di reimpostazione password',
     'reset_pw_instructions'                   => 'Qualcuno ha provato a reimpostare la password. Se è stato tu, segui il link qui sotto per farlo.',
-    'reset_pw_warning'                        => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_warning'                        => '**PER FAVORE** controlla che il link vada effettivamente al Firefly III che ti aspetti!',
 
     // error
     'error_subject'                           => 'Incontrato un errore in Firefly III',
@@ -104,14 +104,14 @@ return [
     'new_journals_header'                     => 'Firefly III ha creato una transazione per te. Puoi trovarla nella tua installazione di Firefly III:|Firefly III ha creato :count transazioni per te. Puoi trovarle nella tua installazione di Firefly III:',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
-    'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_subject_end_date'           => 'La tua bolletta ":name" terminerà tra :diff giorni',
+    'bill_warning_subject_now_end_date'       => 'La tua bolletta ":name" termina OGGI',
+    'bill_warning_subject_extension_date'     => 'La tua bolletta ":name" dovrebbe essere estesa o annullata in :diff giorni',
+    'bill_warning_subject_now_extension_date' => 'La tua bolletta ":name" dovrebbe essere estesa o annullata OGGI',
+    'bill_warning_end_date'                   => 'La tua bolletta **":name"** terminerà il :date, ovvero tra circa **:diff giorni**.',
+    'bill_warning_extension_date'             => 'La tua bolletta **":name"** dovrebbe essere estesa o annullata il :date, ovvero tra circa **:diff giorni**.',
+    'bill_warning_end_date_zero'              => 'La tua bolletta **":name"** terminerà il :date, ovvero **OGGI!**',
+    'bill_warning_extension_date_zero'        => 'La tua bolletta **":name"** dovrebbe essere estesa o annullata il :date, ovvero **OGGI!**',
+    'bill_warning_please_action'              => 'Si prega di adottare le misure appropriate.',
 
 ];

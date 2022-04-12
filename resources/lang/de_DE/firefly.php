@@ -108,7 +108,7 @@ return [
     'warning_much_data'                    => ':days Tage Daten können eine Weile zum Laden benötigen.',
     'registered'                           => 'Sie haben sich erfolgreich registriert!',
     'Default asset account'                => 'Standard-Bestandskonto',
-    'no_budget_pointer'                    => 'Sie scheinen noch keine Kostenrahmen festgelegt zu haben. Sie sollten einige davon auf der Seite <a href="budgets">Kostenrahmen</a>- anlegen. Kostenrahmen können Ihnen dabei helfen, den Überblick über die Ausgaben zu behalten.',
+    'no_budget_pointer'                    => 'Sie scheinen noch keine Budgets festgelegt zu haben. Sie sollten einige davon auf der Seite <a href="budgets">Budgets</a> anlegen. Budgets können Ihnen dabei helfen, den Überblick über die Ausgaben zu behalten.',
     'no_bill_pointer'                      => 'Sie scheinen noch keine Rechnungen zu haben. Sie sollten einige auf der Seite <a href="bills">Rechnungen</a> erstellen. Anhand der Rechnungen können Sie den Überblick über Ihre Ausgaben behalten.',
     'Savings account'                      => 'Sparkonto',
     'Credit card'                          => 'Kreditkarte',
@@ -1193,9 +1193,9 @@ return [
     'convert_to_transfer'                       => 'In eine Umbuchung umwandeln',
 
     // create new stuff:
-    'create_new_withdrawal'                     => 'Erstelle eine neue Ausgabe',
-    'create_new_deposit'                        => 'Erstelle eine neue Einnahme',
-    'create_new_transfer'                       => 'Eine neue Umbuchung erstellen',
+    'create_new_withdrawal'                     => 'Neue Ausgabe erstellen',
+    'create_new_deposit'                        => 'Neue Einnahme erstellen',
+    'create_new_transfer'                       => 'Neue Umbuchung erstellen',
     'create_new_asset'                          => 'Neues Bestandskonto erstellen',
     'create_new_liabilities'                    => 'Neue Verbindlichkeit anlegen',
     'create_new_expense'                        => 'Neues Ausgabenkonto erstellen',
@@ -1479,7 +1479,7 @@ return [
 
     // categories:
     'new_category'                              => 'Neue Kategorie',
-    'create_new_category'                       => 'Eine neue Kategorie herstellen',
+    'create_new_category'                       => 'Eine neue Kategorie erstellen',
     'without_category'                          => 'Ohne Kategorie',
     'update_category'                           => 'Kategorie aktualisieren',
     'updated_category'                          => 'Kategorie „:name” aktualisiert',
@@ -2051,7 +2051,7 @@ return [
     'no_accounts_create_liabilities'        => 'Verbindlichkeit erstellen',
     'no_budgets_title_default'              => 'Lassen Sie uns jetzt ein Budget erstellen',
     'no_rules_title_default'                => 'Lassen Sie uns eine Regel erstellen',
-    'no_budgets_intro_default'              => 'Sie verfügen noch über keinen Kostenrahmen. Kostenrahmen werden verwendet, um Ihre Ausgaben in logische Gruppen zu gliedern, die Sie mit einem weichem Limit versehen können, um Ihre Ausgaben zu begrenzen.',
+    'no_budgets_intro_default'              => 'Sie verfügen noch über keinen Budgets. Budgets werden verwendet, um Ihre Ausgaben in logische Gruppen zu gliedern, die Sie mit einem weichen Limit versehen können, um Ihre Ausgaben zu begrenzen.',
     'no_rules_intro_default'                => 'Sie haben noch keine Regeln. Regeln sind mächtige Automatisierungen, die Transaktionen für Sie verarbeiten können.',
     'no_rules_imperative_default'           => 'Regeln können sehr nützlich sein, wenn Sie Transaktionen verwalten. Lassen Sie uns jetzt eine erstellen:',
     'no_budgets_imperative_default'         => 'Budgets sind die grundlegenden Instrumente des Finanzmanagements. Lassen Sie uns jetzt eines erstellen:',
@@ -2082,7 +2082,7 @@ return [
     'no_piggies_imperative_default'         => 'Haben Sie Dinge, auf die Sie sparen? Erstellen Sie ein Sparschwein und behalten Sie den Überblick:',
     'no_piggies_create_default'             => 'Ein neues Sparschwein erstellen',
     'no_bills_title_default'                => 'Lassen Sie uns nun eine Rechnung erstellen!',
-    'no_bills_intro_default'                => 'Du hast noch keine Rechnungen. Sie können Rechnungen erstellen, um die laufenden Ausgaben, wie zum Beispiel Ihre Versicherung oder Miete, nachzuverfolgen.',
+    'no_bills_intro_default'                => 'Sie haben noch keine Rechnungen. Sie können Rechnungen erstellen, um laufende Ausgaben, wie zum Beispiel Ihre Versicherung oder Miete, nachzuverfolgen.',
     'no_bills_imperative_default'           => 'Haben Sie regelmäßige Rechnungen? Erstellen Sie eine Rechnung und verfolgen Sie Ihre Zahlungen:',
     'no_bills_create_default'               => 'Eine Rechnung erstellen',
 
