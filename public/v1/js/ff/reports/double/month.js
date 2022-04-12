@@ -20,24 +20,24 @@
 $(function () {
     "use strict";
 
-    loadAjaxPartial('opsAccounts', opsAccountsUri);
-    loadAjaxPartial('opsAccountsAsset', opsAccountsAssetUri);
+    loadAjaxPartial('opsAccounts', opsAccountsUrl);
+    loadAjaxPartial('opsAccountsAsset', opsAccountsAssetUrl);
 
-    multiCurrencyPieChart(categoryOutUri, 'category-out-pie-chart');
-    multiCurrencyPieChart(categoryInUri, 'category-in-pie-chart');
-    multiCurrencyPieChart(budgetsOutUri, 'budgets-out-pie-chart');
-    multiCurrencyPieChart(tagOutUri, 'tag-out-pie-chart');
-    multiCurrencyPieChart(tagInUri, 'tag-in-pie-chart');
+    multiCurrencyPieChart(categoryOutUrl, 'category-out-pie-chart');
+    multiCurrencyPieChart(categoryInUrl, 'category-in-pie-chart');
+    multiCurrencyPieChart(budgetsOutUrl, 'budgets-out-pie-chart');
+    multiCurrencyPieChart(tagOutUrl, 'tag-out-pie-chart');
+    multiCurrencyPieChart(tagInUrl, 'tag-in-pie-chart');
 
     $.each($('.main_double_canvas'), function (i, v) {
         var canvas = $(v);
         columnChart(canvas.data('url'), canvas.attr('id'));
     });
 
-    loadAjaxPartial('topExpensesHolder', topExpensesUri);
-    loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
-    loadAjaxPartial('topIncomeHolder', topIncomeUri);
-    loadAjaxPartial('avgIncomeHolder', avgIncomeUri);
+    loadAjaxPartial('topExpensesHolder', topExpensesUrl);
+    loadAjaxPartial('avgExpensesHolder', avgExpensesUrl);
+    loadAjaxPartial('topIncomeHolder', topIncomeUrl);
+    loadAjaxPartial('avgIncomeHolder', avgIncomeUrl);
 
 });
 

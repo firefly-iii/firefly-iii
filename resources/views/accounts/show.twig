@@ -182,14 +182,14 @@
         var showAll = true;
         currencySymbol = "{{ currency.symbol }}";
         var accountID = {{ account.id }};
-        var chartUri = '{{ chartUri }}';
+        var chartUrl = '{{ chartUrl }}';
         {% if not showAll %}
         showAll = false;
-        // uri's for charts:
+        // url's for charts:
 
-        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incomeCategoryUrl = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseCategoryUrl = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseBudgetUrl = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
         var drawVerticalLine = '';
         {# render vertical line with text "today"  #}
         {% if start.lte(today) and end.gte(today) %}

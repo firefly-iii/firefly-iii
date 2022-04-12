@@ -65,19 +65,19 @@ $(document).ready(function () {
 function showRepCalendar() {
 
     // pre-append URL with repetition info:
-    var newEventsUri = eventsUri + '?type=' + $('#ffInput_repetition_type').val();
-    newEventsUri += '&skip=' + $('#ffInput_skip').val();
-    newEventsUri += '&ends=' + $('#ffInput_repetition_end').val();
-    newEventsUri += '&end_date=' + $('#ffInput_repeat_until').val();
-    newEventsUri += '&reps=' + $('#ffInput_repetitions').val();
-    newEventsUri += '&first_date=' + $('#ffInput_first_date').val();
-    newEventsUri += '&weekend=' + $('#ffInput_weekend').val();
+    var newEventsUrl = eventsUrl + '?type=' + $('#ffInput_repetition_type').val();
+    newEventsUrl += '&skip=' + $('#ffInput_skip').val();
+    newEventsUrl += '&ends=' + $('#ffInput_repetition_end').val();
+    newEventsUrl += '&end_date=' + $('#ffInput_repeat_until').val();
+    newEventsUrl += '&reps=' + $('#ffInput_repetitions').val();
+    newEventsUrl += '&first_date=' + $('#ffInput_first_date').val();
+    newEventsUrl += '&weekend=' + $('#ffInput_weekend').val();
 
     // remove all event sources from calendar:
     calendar.fullCalendar('removeEventSources');
 
     // add a new one:
-    calendar.fullCalendar('addEventSource', newEventsUri);
+    calendar.fullCalendar('addEventSource', newEventsUrl);
     $('#calendarModal').modal('show');
 
     return false;
@@ -116,7 +116,7 @@ function respondToFirstDateChange() {
         preSelected = select.val();
     }
 
-    $.getJSON(suggestUri, {date: date,pre_select: preSelected}).fail(function () {
+    $.getJSON(suggestUrl, {date: date,pre_select: preSelected}).fail(function () {
         console.error('Could not load repetition suggestions');
         alert('Could not load repetition suggestions');
     }).done(parseRepetitionSuggestions);

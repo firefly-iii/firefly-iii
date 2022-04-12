@@ -76,25 +76,25 @@ function colorizeData(data) {
 
 /**
  * Function to draw a line chart:
- * @param URI
+ * @param URL
  * @param container
  */
-function lineChart(URI, container) {
+function lineChart(URL, container) {
     "use strict";
 
     var colorData = true;
     var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'line';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 }
 
 /**
  * Function to draw a line chart that doesn't start at ZERO.
- * @param URI
+ * @param URL
  * @param container
  */
-function lineNoStartZeroChart(URI, container) {
+function lineNoStartZeroChart(URL, container) {
     "use strict";
 
     var colorData = true;
@@ -102,16 +102,16 @@ function lineNoStartZeroChart(URI, container) {
     var chartType = 'line';
     options.scales.yAxes[0].ticks.beginAtZero = false;
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 }
 
 /**
  * Overrules the currency the line chart is drawn in.
  *
- * @param URI
+ * @param URL
  * @param container
  */
-function otherCurrencyLineChart(URI, container, currencySymbol) {
+function otherCurrencyLineChart(URL, container, currencySymbol) {
     "use strict";
 
     var colorData = true;
@@ -153,16 +153,16 @@ function otherCurrencyLineChart(URI, container, currencySymbol) {
     console.log(options);
     var chartType = 'line';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 }
 
 /**
  * Function to draw a chart with double Y Axes and stacked columns.
  *
- * @param URI
+ * @param URL
  * @param container
  */
-function doubleYChart(URI, container) {
+function doubleYChart(URL, container) {
     "use strict";
 
     var colorData = true;
@@ -203,16 +203,16 @@ function doubleYChart(URI, container) {
 
     var chartType = 'bar';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 }
 
 /**
  * Function to draw a chart with double Y Axes and non stacked columns.
  *
- * @param URI
+ * @param URL
  * @param container
  */
-function doubleYNonStackedChart(URI, container) {
+function doubleYNonStackedChart(URL, container) {
     "use strict";
 
     var colorData = true;
@@ -250,47 +250,47 @@ function doubleYNonStackedChart(URI, container) {
     ];
     var chartType = 'bar';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 }
 
 
 /**
  *
- * @param URI
+ * @param URL
  * @param container
  */
-function columnChart(URI, container) {
+function columnChart(URL, container) {
     "use strict";
     var colorData = true;
     var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'bar';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 }
 
 
 
 /**
  *
- * @param URI
+ * @param URL
  * @param container
  */
-function columnChartCustomColours(URI, container) {
+function columnChartCustomColours(URL, container) {
     "use strict";
     var colorData = false;
     var options = $.extend(true, {}, defaultChartOptions);
     var chartType = 'bar';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 
 }
 
 /**
  *
- * @param URI
+ * @param URL
  * @param container
  */
-function stackedColumnChart(URI, container) {
+function stackedColumnChart(URL, container) {
     "use strict";
 
     var colorData = true;
@@ -302,60 +302,60 @@ function stackedColumnChart(URI, container) {
 
     var chartType = 'bar';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 }
 
 /**
  *
- * @param URI
+ * @param URL
  * @param container
  */
-function pieChart(URI, container) {
+function pieChart(URL, container) {
     "use strict";
 
     var colorData = false;
     var options = $.extend(true, {}, defaultPieOptions);
     var chartType = 'pie';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 
 }
 
 /**
  *
- * @param URI
+ * @param URL
  * @param container
  */
-function multiCurrencyPieChart(URI, container) {
+function multiCurrencyPieChart(URL, container) {
     "use strict";
 
     var colorData = false;
     var options = $.extend(true, {}, pieOptionsWithCurrency);
     var chartType = 'pie';
 
-    drawAChart(URI, container, chartType, options, colorData);
+    drawAChart(URL, container, chartType, options, colorData);
 
 }
 
 /**
- * @param URI
+ * @param URL
  * @param container
  * @param chartType
  * @param options
  * @param colorData
  * @param today
  */
-function drawAChart(URI, container, chartType, options, colorData) {
+function drawAChart(URL, container, chartType, options, colorData) {
     var containerObj = $('#' + container);
     if (containerObj.length === 0) {
         return;
     }
 
-    $.getJSON(URI).done(function (data) {
+    $.getJSON(URL).done(function (data) {
         containerObj.removeClass('general-chart-error');
 
         // if result is empty array, or the labels array is empty, show error.
-        // console.log(URI);
+        // console.log(URL);
         // console.log(data.length);
         // console.log(typeof data.labels);
         // console.log(data.labels.length);

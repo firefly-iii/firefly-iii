@@ -73,7 +73,7 @@ class DeleteController extends Controller
     {
         $subTitle = (string) trans('firefly.delete_recurring', ['title' => $recurrence->title]);
         // put previous url in session
-        $this->rememberPreviousUri('recurrences.delete.uri');
+        $this->rememberPreviousUrl('recurrences.delete.url');
 
         $journalsCreated = $this->recurring->getTransactions($recurrence)->count();
 
@@ -95,7 +95,7 @@ class DeleteController extends Controller
         $request->session()->flash('success', (string) trans('firefly.' . 'recurrence_deleted', ['title' => $recurrence->title]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('recurrences.delete.uri'));
+        return redirect($this->getPreviousUrl('recurrences.delete.url'));
     }
 
 }

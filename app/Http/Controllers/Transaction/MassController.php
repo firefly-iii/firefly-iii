@@ -82,7 +82,7 @@ class MassController extends Controller
         $subTitle = (string) trans('firefly.mass_delete_journals');
 
         // put previous url in session
-        $this->rememberPreviousUri('transactions.mass-delete.uri');
+        $this->rememberPreviousUrl('transactions.mass-delete.url');
 
         return view('transactions.mass.delete', compact('journals', 'subTitle'));
     }
@@ -115,7 +115,7 @@ class MassController extends Controller
         session()->flash('success', (string) trans_choice('firefly.mass_deleted_transactions_success', $count));
 
         // redirect to previous URL:
-        return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
+        return redirect($this->getPreviousUrl('transactions.mass-delete.url'));
     }
 
     /**
@@ -151,7 +151,7 @@ class MassController extends Controller
                 null : app('steam')->positive($journal['foreign_amount']);
         }
 
-        $this->rememberPreviousUri('transactions.mass-edit.uri');
+        $this->rememberPreviousUrl('transactions.mass-edit.url');
 
         return view('transactions.mass.edit', compact('journals', 'subTitle', 'withdrawalSources', 'depositDestinations', 'budgets'));
     }
@@ -187,7 +187,7 @@ class MassController extends Controller
         session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
-        return redirect($this->getPreviousUri('transactions.mass-edit.uri'));
+        return redirect($this->getPreviousUrl('transactions.mass-edit.url'));
     }
 
     /**

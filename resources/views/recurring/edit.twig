@@ -205,8 +205,8 @@
     <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var transactionType = "{{ preFilled.transaction_type }}";
-        var suggestUri = "{{ route('recurring.suggest') }}";
-        var eventsUri = "{{ route('recurring.events') }}";
+        var suggestUrl = "{{ route('recurring.suggest') }}";
+        var eventsUrl = "{{ route('recurring.events') }}";
         var currentRepType = "{{ currentRepType }}";
     </script>
     <script type="text/javascript" src="v1/js/ff/recurring/edit.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

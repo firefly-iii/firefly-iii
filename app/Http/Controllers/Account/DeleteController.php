@@ -82,7 +82,7 @@ class DeleteController extends Controller
         unset($accountList[$account->id]);
 
         // put previous url in session
-        $this->rememberPreviousUri('accounts.delete.uri');
+        $this->rememberPreviousUrl('accounts.delete.url');
 
         return view('accounts.delete', compact('account', 'subTitle', 'accountList', 'objectType'));
     }
@@ -111,7 +111,7 @@ class DeleteController extends Controller
         $request->session()->flash('success', (string) trans(sprintf('firefly.%s_deleted', $typeName), ['name' => $name]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('accounts.delete.uri'));
+        return redirect($this->getPreviousUrl('accounts.delete.url'));
     }
 
 }

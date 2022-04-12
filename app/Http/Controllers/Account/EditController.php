@@ -118,7 +118,7 @@ class EditController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('accounts.edit.fromUpdate')) {
-            $this->rememberPreviousUri('accounts.edit.uri');
+            $this->rememberPreviousUrl('accounts.edit.url');
         }
         $request->session()->forget('accounts.edit.fromUpdate');
 
@@ -211,7 +211,7 @@ class EditController extends Controller
         }
 
         // redirect
-        $redirect = redirect($this->getPreviousUri('accounts.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('accounts.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);

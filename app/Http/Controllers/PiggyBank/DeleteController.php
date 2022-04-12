@@ -72,7 +72,7 @@ class DeleteController extends Controller
         $subTitle = (string) trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
 
         // put previous url in session
-        $this->rememberPreviousUri('piggy-banks.delete.uri');
+        $this->rememberPreviousUrl('piggy-banks.delete.url');
 
         return view('piggy-banks.delete', compact('piggyBank', 'subTitle'));
     }
@@ -90,6 +90,6 @@ class DeleteController extends Controller
         app('preferences')->mark();
         $this->piggyRepos->destroy($piggyBank);
 
-        return redirect($this->getPreviousUri('piggy-banks.delete.uri'));
+        return redirect($this->getPreviousUrl('piggy-banks.delete.url'));
     }
 }

@@ -76,7 +76,7 @@ class LinkController extends Controller
     {
         $subTitleIcon = 'fa-link';
         $subTitle     = (string) trans('breadcrumbs.delete_journal_link');
-        $this->rememberPreviousUri('journal_links.delete.uri');
+        $this->rememberPreviousUrl('journal_links.delete.url');
 
         return view('transactions.links.delete', compact('link', 'subTitle', 'subTitleIcon'));
     }
@@ -95,7 +95,7 @@ class LinkController extends Controller
         session()->flash('success', (string) trans('firefly.deleted_link'));
         app('preferences')->mark();
 
-        return redirect((string) session('journal_links.delete.uri'));
+        return redirect((string) session('journal_links.delete.url'));
     }
 
     /**

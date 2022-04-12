@@ -117,7 +117,7 @@ class UserController extends Controller
         }
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('users.edit.fromUpdate')) {
-            $this->rememberPreviousUri('users.edit.uri');
+            $this->rememberPreviousUrl('users.edit.url');
         }
         session()->forget('users.edit.fromUpdate');
 
@@ -217,7 +217,7 @@ class UserController extends Controller
 
         session()->flash('success', (string) trans('firefly.updated_user', ['email' => $user->email]));
         app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUri('users.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('users.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
 
             session()->put('users.edit.fromUpdate', true);

@@ -72,7 +72,7 @@ class DeleteController extends Controller
         $subTitle = (string) trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
-        $this->rememberPreviousUri('categories.delete.uri');
+        $this->rememberPreviousUrl('categories.delete.url');
 
         return view('categories.delete', compact('category', 'subTitle'));
     }
@@ -93,6 +93,6 @@ class DeleteController extends Controller
         $request->session()->flash('success', (string) trans('firefly.deleted_category', ['name' => $name]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('categories.delete.uri'));
+        return redirect($this->getPreviousUrl('categories.delete.url'));
     }
 }

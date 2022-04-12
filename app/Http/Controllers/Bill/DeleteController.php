@@ -72,7 +72,7 @@ class DeleteController extends Controller
     public function delete(Bill $bill)
     {
         // put previous url in session
-        $this->rememberPreviousUri('bills.delete.uri');
+        $this->rememberPreviousUrl('bills.delete.url');
         $subTitle = (string) trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
@@ -94,6 +94,6 @@ class DeleteController extends Controller
         $request->session()->flash('success', (string) trans('firefly.deleted_bill', ['name' => $name]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('bills.delete.uri'));
+        return redirect($this->getPreviousUrl('bills.delete.url'));
     }
 }

@@ -71,7 +71,7 @@ class DeleteController extends Controller
         $subTitle = (string) trans('firefly.delete_rule', ['title' => $rule->title]);
 
         // put previous url in session
-        $this->rememberPreviousUri('rules.delete.uri');
+        $this->rememberPreviousUrl('rules.delete.url');
 
         return view('rules.rule.delete', compact('rule', 'subTitle'));
     }
@@ -91,7 +91,7 @@ class DeleteController extends Controller
         session()->flash('success', (string) trans('firefly.deleted_rule', ['title' => $title]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('rules.delete.uri'));
+        return redirect($this->getPreviousUrl('rules.delete.url'));
     }
 
 }

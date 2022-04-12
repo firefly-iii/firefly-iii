@@ -76,7 +76,7 @@ class BulkController extends Controller
     {
         $subTitle = (string) trans('firefly.mass_bulk_journals');
 
-        $this->rememberPreviousUri('transactions.bulk-edit.uri');
+        $this->rememberPreviousUrl('transactions.bulk-edit.url');
 
         // make amounts positive.
 
@@ -121,7 +121,7 @@ class BulkController extends Controller
         $request->session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
-        return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));
+        return redirect($this->getPreviousUrl('transactions.bulk-edit.url'));
     }
 
     /**

@@ -18,16 +18,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** global: startDate, endDate, accountIds */
-function loadAjaxPartial(holder, uri) {
+function loadAjaxPartial(holder, url) {
     "use strict";
-    $.get(uri).done(function (data) {
+    $.get(url).done(function (data) {
         displayAjaxPartial(data, holder);
     }).fail(function () {
-        failAjaxPartial(uri, holder);
+        failAjaxPartial(url, holder);
     });
 }
 
-function failAjaxPartial(uri, holder) {
+function failAjaxPartial(url, holder) {
     "use strict";
     var holderObject = $('#' + holder);
     holderObject.parent().find('.overlay').remove();

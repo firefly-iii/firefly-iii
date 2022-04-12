@@ -103,7 +103,7 @@ class ListController extends Controller
     {
         $manager = $this->getManager();
 
-        // read type from URI
+        // read type from URL
         $type = $request->get('type') ?? 'all';
         $this->parameters->set('type', $type);
 

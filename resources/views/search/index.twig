@@ -143,7 +143,7 @@
         var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
 
         var searchQuery = "{{ fullQuery|escape('js') }}";
-        var searchUri = "{{ route('search.search') }}?page={{ page }}";
+        var searchUrl = "{{ route('search.search') }}?page={{ page }}";
         var searchPage = {{ page }};
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
     </script>

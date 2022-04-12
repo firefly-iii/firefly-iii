@@ -88,7 +88,7 @@ class CurrencyController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('currencies.create.fromStore')) {
-            $this->rememberPreviousUri('currencies.create.uri');
+            $this->rememberPreviousUrl('currencies.create.url');
         }
         $request->session()->forget('currencies.create.fromStore');
 
@@ -157,7 +157,7 @@ class CurrencyController extends Controller
         }
 
         // put previous url in session
-        $this->rememberPreviousUri('currencies.delete.uri');
+        $this->rememberPreviousUrl('currencies.delete.url');
         $subTitle = (string) trans('form.delete_currency', ['name' => $currency->name]);
         Log::channel('audit')->info(sprintf('Visit page to delete currency %s.', $currency->code));
 
@@ -204,7 +204,7 @@ class CurrencyController extends Controller
 
         $request->session()->flash('success', (string) trans('firefly.deleted_currency', ['name' => $currency->name]));
 
-        return redirect($this->getPreviousUri('currencies.delete.uri'));
+        return redirect($this->getPreviousUrl('currencies.delete.url'));
     }
 
     /**
@@ -297,7 +297,7 @@ class CurrencyController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('currencies.edit.fromUpdate')) {
-            $this->rememberPreviousUri('currencies.edit.uri');
+            $this->rememberPreviousUrl('currencies.edit.url');
         }
         $request->session()->forget('currencies.edit.fromUpdate');
 
@@ -375,7 +375,7 @@ class CurrencyController extends Controller
             Log::error('User ' . auth()->user()->id . ' is not admin, but tried to store a currency.');
             Log::channel('audit')->info('Tried to create (POST) currency without admin rights.', $data);
 
-            return redirect($this->getPreviousUri('currencies.create.uri'));
+            return redirect($this->getPreviousUrl('currencies.create.url'));
 
         }
 
@@ -388,7 +388,7 @@ class CurrencyController extends Controller
             $request->session()->flash('error', (string) trans('firefly.could_not_store_currency'));
             $currency = null;
         }
-        $redirect = redirect($this->getPreviousUri('currencies.create.uri'));
+        $redirect = redirect($this->getPreviousUrl('currencies.create.url'));
 
         if (null !== $currency) {
             $request->session()->flash('success', (string) trans('firefly.created_currency', ['name' => $currency->name]));
@@ -443,6 +443,6 @@ class CurrencyController extends Controller
 
         }
 
-        return redirect($this->getPreviousUri('currencies.edit.uri'));
+        return redirect($this->getPreviousUrl('currencies.edit.url'));
     }
 }

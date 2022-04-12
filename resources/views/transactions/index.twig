@@ -125,10 +125,10 @@
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var showAll = {% if periods|length > 0 %}false{% else %}true{% endif %};
 
-        var categoryChartUri = '{{ route('chart.transactions.categories', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
-        var budgetChartUri = '{{ route('chart.transactions.budgets', [start.format('Y-m-d'), end.format('Y-m-d')]) }}';
-        var destinationChartUri = '{{ route('chart.transactions.destinationAccounts', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
-        var sourceChartUri = '{{ route('chart.transactions.sourceAccounts', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
+        var categoryChartUrl = '{{ route('chart.transactions.categories', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
+        var budgetChartUrl = '{{ route('chart.transactions.budgets', [start.format('Y-m-d'), end.format('Y-m-d')]) }}';
+        var destinationChartUrl = '{{ route('chart.transactions.destinationAccounts', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
+        var sourceChartUrl = '{{ route('chart.transactions.sourceAccounts', [objectType, start.format('Y-m-d'), end.format('Y-m-d')]) }}';
 
     </script>
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

@@ -18,19 +18,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: accountReportUri, incomeReportUri, expenseReportUri, incExpReportUri, startDate, endDate, accountIds */
-
 $(function () {
     "use strict";
 
 
     // load the account report, which this report shows:
-    loadAjaxPartial('accountReport', accountReportUri);
+    loadAjaxPartial('accountReport', accountReportUrl);
 
     // load income and expense reports:
-    loadAjaxPartial('incomeReport', incomeReportUri);
-    loadAjaxPartial('expenseReport', expenseReportUri);
-    loadAjaxPartial('incomeVsExpenseReport', incExpReportUri);
-    loadAjaxPartial('billReport', billReportUri);
+    loadAjaxPartial('incomeReport', incomeReportUrl);
+    loadAjaxPartial('expenseReport', expenseReportUrl);
+    loadAjaxPartial('incomeVsExpenseReport', incExpReportUrl);
+    loadAjaxPartial('billReport', billReportUrl);
 
 });

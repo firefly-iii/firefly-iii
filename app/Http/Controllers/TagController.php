@@ -52,7 +52,7 @@ class TagController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->redirectUri = route('tags.index');
+        $this->redirectUrl = route('tags.index');
 
         $this->middleware(
             function ($request, $next) {
@@ -90,7 +90,7 @@ class TagController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('tags.create.fromStore')) {
-            $this->rememberPreviousUri('tags.create.uri');
+            $this->rememberPreviousUrl('tags.create.url');
         }
         session()->forget('tags.create.fromStore');
 
@@ -109,7 +109,7 @@ class TagController extends Controller
         $subTitle = (string) trans('breadcrumbs.delete_tag', ['tag' => $tag->tag]);
 
         // put previous url in session
-        $this->rememberPreviousUri('tags.delete.uri');
+        $this->rememberPreviousUrl('tags.delete.url');
 
         return view('tags.delete', compact('tag', 'subTitle'));
     }
@@ -129,7 +129,7 @@ class TagController extends Controller
         session()->flash('success', (string) trans('firefly.deleted_tag', ['tag' => $tagName]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('tags.delete.uri'));
+        return redirect($this->getPreviousUrl('tags.delete.url'));
     }
 
     /**
@@ -160,7 +160,7 @@ class TagController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('tags.edit.fromUpdate')) {
-            $this->rememberPreviousUri('tags.edit.uri');
+            $this->rememberPreviousUrl('tags.edit.url');
         }
         session()->forget('tags.edit.fromUpdate');
 
@@ -333,7 +333,7 @@ class TagController extends Controller
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUri('tags.create.uri'));
+        $redirect = redirect($this->getPreviousUrl('tags.create.url'));
         if (1 === (int) $request->get('create_another')) {
 
             session()->put('tags.create.fromStore', true);
@@ -374,7 +374,7 @@ class TagController extends Controller
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUri('tags.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('tags.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
 
             session()->put('tags.edit.fromUpdate', true);

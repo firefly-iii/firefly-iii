@@ -72,7 +72,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('rule-groups.create.fromStore')) {
-            $this->rememberPreviousUri('rule-groups.create.uri');
+            $this->rememberPreviousUrl('rule-groups.create.url');
         }
         session()->forget('rule-groups.create.fromStore');
 
@@ -94,7 +94,7 @@ class CreateController extends Controller
         session()->flash('success', (string) trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
         app('preferences')->mark();
 
-        $redirect = redirect($this->getPreviousUri('rule-groups.create.uri'));
+        $redirect = redirect($this->getPreviousUrl('rule-groups.create.url'));
         if (1 === (int) $request->get('create_another')) {
 
             session()->put('rule-groups.create.fromStore', true);

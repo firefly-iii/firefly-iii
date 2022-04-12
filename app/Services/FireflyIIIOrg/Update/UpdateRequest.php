@@ -79,8 +79,8 @@ class UpdateRequest implements UpdateRequestInterface
             'message' => (string) trans('firefly.unknown_error'),
         ];
 
-        $uri = config('firefly.update_endpoint');
-        Log::debug(sprintf('Going to call %s', $uri));
+        $url = config('firefly.update_endpoint');
+        Log::debug(sprintf('Going to call %s', $url));
         try {
             $client  = new Client;
             $options = [
@@ -89,7 +89,7 @@ class UpdateRequest implements UpdateRequestInterface
                 ],
                 'timeout' => 3.1415,
             ];
-            $res     = $client->request('GET', $uri, $options);
+            $res     = $client->request('GET', $url, $options);
         } catch (GuzzleException $e) {
             Log::error('Ran into Guzzle error.');
             Log::error($e->getMessage());

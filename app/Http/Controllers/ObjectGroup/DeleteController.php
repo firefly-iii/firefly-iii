@@ -72,7 +72,7 @@ class DeleteController extends Controller
         $piggyBanks = $objectGroup->piggyBanks()->count();
 
         // put previous url in session
-        $this->rememberPreviousUri('object-groups.delete.uri');
+        $this->rememberPreviousUrl('object-groups.delete.url');
 
         return view('object-groups.delete', compact('objectGroup', 'subTitle', 'piggyBanks'));
     }
@@ -90,7 +90,7 @@ class DeleteController extends Controller
         app('preferences')->mark();
         $this->repository->destroy($objectGroup);
 
-        return redirect($this->getPreviousUri('object-groups.delete.uri'));
+        return redirect($this->getPreviousUrl('object-groups.delete.url'));
     }
 
 }

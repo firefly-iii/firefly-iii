@@ -73,7 +73,7 @@ class DeleteController extends Controller
         $subTitle = (string) trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
 
         // put previous url in session
-        $this->rememberPreviousUri('rule-groups.delete.uri');
+        $this->rememberPreviousUrl('rule-groups.delete.url');
 
         return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle'));
     }
@@ -97,7 +97,7 @@ class DeleteController extends Controller
         session()->flash('success', (string) trans('firefly.deleted_rule_group', ['title' => $title]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('rule-groups.delete.uri'));
+        return redirect($this->getPreviousUrl('rule-groups.delete.url'));
     }
 
 }

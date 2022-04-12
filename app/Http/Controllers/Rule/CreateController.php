@@ -122,7 +122,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('rules.create.fromStore')) {
-            $this->rememberPreviousUri('rules.create.uri');
+            $this->rememberPreviousUrl('rules.create.url');
         }
         session()->forget('rules.create.fromStore');
 
@@ -175,7 +175,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('rules.create.fromStore')) {
-            $this->rememberPreviousUri('rules.create.uri');
+            $this->rememberPreviousUrl('rules.create.url');
         }
         session()->forget('rules.create.fromStore');
 
@@ -225,7 +225,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('rules.create.fromStore')) {
-            $this->rememberPreviousUri('rules.create.uri');
+            $this->rememberPreviousUrl('rules.create.url');
         }
         session()->forget('rules.create.fromStore');
 
@@ -272,10 +272,10 @@ class CreateController extends Controller
 
         // redirect to new bill creation.
         if ((int) $request->get('bill_id') > 0) {
-            return redirect($this->getPreviousUri('bills.create.uri'));
+            return redirect($this->getPreviousUrl('bills.create.url'));
         }
 
-        $redirect = redirect($this->getPreviousUri('rules.create.uri'));
+        $redirect = redirect($this->getPreviousUrl('rules.create.url'));
 
         if (1 === (int) $request->get('create_another')) {
 

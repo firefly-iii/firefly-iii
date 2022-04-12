@@ -377,7 +377,7 @@ class ReportController extends Controller
             return view('error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
 
-        $uri = match ($reportType) {
+        $url = match ($reportType) {
             default => route('reports.report.default', [$accounts, $start, $end]),
             'category' => route('reports.report.category', [$accounts, $categories, $start, $end]),
             'audit' => route('reports.report.audit', [$accounts, $start, $end]),
@@ -386,7 +386,7 @@ class ReportController extends Controller
             'double' => route('reports.report.double', [$accounts, $double, $start, $end]),
         };
 
-        return redirect($uri);
+        return redirect($url);
     }
 
     /**

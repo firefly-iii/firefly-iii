@@ -108,7 +108,7 @@ class EditController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('budgets.edit.fromUpdate')) {
-            $this->rememberPreviousUri('budgets.edit.uri');
+            $this->rememberPreviousUrl('budgets.edit.url');
         }
         $request->session()->forget('budgets.edit.fromUpdate');
         $request->session()->flash('preFilled', $preFilled);
@@ -133,7 +133,7 @@ class EditController extends Controller
         $this->repository->cleanupBudgets();
         app('preferences')->mark();
 
-        $redirect = redirect($this->getPreviousUri('budgets.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('budgets.edit.url'));
 
         // store new attachment(s):
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;

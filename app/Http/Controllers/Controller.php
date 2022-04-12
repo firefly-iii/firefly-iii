@@ -41,7 +41,7 @@ abstract class Controller extends BaseController
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;
     protected string $monthFormat;
-    protected string $redirectUri = '/';
+    protected string $redirectUrl = '/';
 
     /**
      * Controller constructor.
@@ -63,10 +63,10 @@ abstract class Controller extends BaseController
 
         // share custom auth guard info.
         $authGuard = config('firefly.authentication_guard');
-        $logoutUri = config('firefly.custom_logout_url');
+        $logoutUrl = config('firefly.custom_logout_url');
 
         app('view')->share('authGuard', $authGuard);
-        app('view')->share('logoutUri', $logoutUri);
+        app('view')->share('logoutUrl', $logoutUrl);
 
         // upload size
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));

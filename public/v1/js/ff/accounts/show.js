@@ -18,8 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: chartUri, incomeCategoryUri, showAll, expenseCategoryUri, expenseBudgetUri, token */
-
 var fixHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
@@ -33,12 +31,12 @@ var fixHelper = function (e, tr) {
 
 $(function () {
     "use strict";
-    //lineChart(chartUri, 'overview-chart');
-    lineNoStartZeroChart(chartUri, 'overview-chart');
+    //lineChart(chartUrl, 'overview-chart');
+    lineNoStartZeroChart(chartUrl, 'overview-chart');
     if (!showAll) {
-        multiCurrencyPieChart(incomeCategoryUri, 'account-cat-in');
-        multiCurrencyPieChart(expenseCategoryUri, 'account-cat-out');
-        multiCurrencyPieChart(expenseBudgetUri, 'account-budget-out');
+        multiCurrencyPieChart(incomeCategoryUrl, 'account-cat-in');
+        multiCurrencyPieChart(expenseCategoryUrl, 'account-cat-out');
+        multiCurrencyPieChart(expenseBudgetUrl, 'account-budget-out');
     }
 
     // sortable!

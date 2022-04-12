@@ -18,15 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: budgetPeriodReportUri, categoryExpenseUri, categoryIncomeUri, netWorthUri, opChartUri */
-
 $(function () {
     "use strict";
-    lineChart(netWorthUri, 'net-worth');
-    columnChartCustomColours(opChartUri, 'income-expenses-chart');
+    lineChart(netWorthUrl, 'net-worth');
+    columnChartCustomColours(opChartUrl, 'income-expenses-chart');
 
-    loadAjaxPartial('budgetPeriodReport', budgetPeriodReportUri);
-    loadAjaxPartial('categoryExpense', categoryExpenseUri);
-    loadAjaxPartial('categoryIncome', categoryIncomeUri);
+    loadAjaxPartial('budgetPeriodReport', budgetPeriodReportUrl);
+    loadAjaxPartial('categoryExpense', categoryExpenseUrl);
+    loadAjaxPartial('categoryIncome', categoryIncomeUrl);
 });
 

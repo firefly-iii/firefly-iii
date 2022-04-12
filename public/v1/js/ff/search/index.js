@@ -18,8 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: searchQuery,searchUri,token */
-
 
 
 $(function () {
@@ -29,7 +27,7 @@ $(function () {
 });
 
 function startSearch(query) {
-    $.post(searchUri, {query: query, _token: token}).done(presentSearchResults).fail(searchFailure);
+    $.post(searchUrl, {query: query, _token: token}).done(presentSearchResults).fail(searchFailure);
 }
 
 function searchFailure() {

@@ -376,14 +376,14 @@ function updateTriggerInput(selectList) {
 /**
  * Create actual autocomplete
  * @param input
- * @param URI
+ * @param URL
  */
-function createAutoComplete(input, URI) {
-    console.log('Now in createAutoComplete("' + URI + '").');
+function createAutoComplete(input, URL) {
+    console.log('Now in createAutoComplete("' + URL + '").');
     input.typeahead('destroy');
 
-    // append URI:
-    var lastChar = URI[URI.length -1];
+    // append URL:
+    var lastChar = URL[URL.length -1];
     var urlParamSplit = '?';
     if('&' === lastChar) {
         urlParamSplit = '';
@@ -392,7 +392,7 @@ function createAutoComplete(input, URI) {
                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                                     prefetch: {
-                                        url: URI + urlParamSplit + 'uid=' + uid,
+                                        url: URL + urlParamSplit + 'uid=' + uid,
                                         filter: function (list) {
                                             return $.map(list, function (item) {
                                                 return {name: item.name};
@@ -400,7 +400,7 @@ function createAutoComplete(input, URI) {
                                         }
                                     },
                                     remote: {
-                                        url: URI + urlParamSplit + 'query=%QUERY&uid=' + uid,
+                                        url: URL + urlParamSplit + 'query=%QUERY&uid=' + uid,
                                         wildcard: '%QUERY',
                                         filter: function (list) {
                                             return $.map(list, function (item) {

@@ -18,20 +18,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: budgetChartUri, expenseCategoryUri, expenseAssetUri, expenseExpenseUri, budgetLimitID */
-
 $(function () {
     "use strict";
     if (budgetLimitID > 0) {
-        otherCurrencyLineChart(budgetChartUri, 'budgetOverview', currencySymbol);
-        multiCurrencyPieChart(expenseCategoryUri, 'budget-cat-out');
-        multiCurrencyPieChart(expenseAssetUri, 'budget-asset-out');
-        multiCurrencyPieChart(expenseExpenseUri, 'budget-expense-out');
+        otherCurrencyLineChart(budgetChartUrl, 'budgetOverview', currencySymbol);
+        multiCurrencyPieChart(expenseCategoryUrl, 'budget-cat-out');
+        multiCurrencyPieChart(expenseAssetUrl, 'budget-asset-out');
+        multiCurrencyPieChart(expenseExpenseUrl, 'budget-expense-out');
     }
     if (budgetLimitID === 0) {
-        columnChart(budgetChartUri, 'budgetOverview');
-        multiCurrencyPieChart(expenseCategoryUri, 'budget-cat-out');
-        multiCurrencyPieChart(expenseAssetUri, 'budget-asset-out');
-        multiCurrencyPieChart(expenseExpenseUri, 'budget-expense-out');
+        columnChart(budgetChartUrl, 'budgetOverview');
+        multiCurrencyPieChart(expenseCategoryUrl, 'budget-cat-out');
+        multiCurrencyPieChart(expenseAssetUrl, 'budget-asset-out');
+        multiCurrencyPieChart(expenseExpenseUrl, 'budget-expense-out');
     }
 });
