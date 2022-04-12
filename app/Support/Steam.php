@@ -474,7 +474,6 @@ class Steam
         return [
             sprintf('%s.utf8', $locale),
             sprintf('%s.UTF-8', $locale),
-            sprintf('%s.UTF8', $locale),
         ];
     }
 
