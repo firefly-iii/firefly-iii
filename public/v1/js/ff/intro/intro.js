@@ -18,11 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: nextLabel, prevLabel,skipLabel,doneLabel routeForTour, token, routeStepsUri, routeForFinishedTour, forceDemoOff */
 $(function () {
     "use strict";
     if (!forceDemoOff) {
-        $.getJSON(routeStepsUri).done(setupIntro)
+        $.getJSON(routeStepsUrl).done(setupIntro)
     }
 });
 

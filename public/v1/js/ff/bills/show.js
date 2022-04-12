@@ -18,11 +18,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: billUri */
-
 $(function () {
       "use strict";
       configAccounting(billCurrencySymbol);
-      columnChart(billUri, 'bill-overview');
+      columnChart(billUrl, 'bill-overview');
   }
 );

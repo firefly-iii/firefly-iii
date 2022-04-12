@@ -44,8 +44,8 @@ $(function () {
     $('.selectPeriod').change(function (e) {
         var selected = $(e.currentTarget);
         if (selected.find(":selected").val() !== "x") {
-            var newUri = budgetIndexUri.replace("START", selected.find(":selected").data('start')).replace('END', selected.find(":selected").data('end'));
-            window.location.assign(newUri);
+            var newUrl = budgetIndexUrl.replace("START", selected.find(":selected").data('start')).replace('END', selected.find(":selected").data('end'));
+            window.location.assign(newUrl);
         }
     });
 
@@ -85,7 +85,7 @@ function updateBudgetedAmount(e) {
     var currencyId = parseInt(input.data('currency'));
     input.prop('disabled', true);
     if (0 === budgetLimitId) {
-        $.post(storeBudgetLimitUri, {
+        $.post(storeBudgetLimitUrl, {
             _token: token,
             budget_id: budgetId,
             transaction_currency_id: currencyId,
@@ -108,7 +108,7 @@ function updateBudgetedAmount(e) {
             console.error('I failed :(');
         });
     } else {
-        $.post(updateBudgetLimitUri.replace('REPLACEME', budgetLimitId.toString()), {
+        $.post(updateBudgetLimitUrl.replace('REPLACEME', budgetLimitId.toString()), {
             _token: token,
             amount: input.val(),
         }).done(function (data) {
@@ -134,7 +134,7 @@ function updateTotalBudgetedAmount(currencyId) {
         });
 
     // get new amount:
-    $.get(totalBudgetedUri.replace('REPLACEME', currencyId)).done(function (data) {
+    $.get(totalBudgetedUrl.replace('REPLACEME', currencyId)).done(function (data) {
         // set thing:
         $('span.budgeted_amount[data-currency="' + currencyId + '"]')
             .html(data.budgeted_formatted)
@@ -201,7 +201,7 @@ function sortStop(event, ui) {
 function createBudgetLimit(e) {
     var button = $(e.currentTarget);
     var budgetId = button.data('id');
-    $('#defaultModal').empty().load(createBudgetLimitUri.replace('REPLACEME', budgetId.toString()), function () {
+    $('#defaultModal').empty().load(createBudgetLimitUrl.replace('REPLACEME', budgetId.toString()), function () {
         $('#defaultModal').modal('show');
     });
     return false;
@@ -220,7 +220,7 @@ function deleteBudgetLimit(e) {
 }
 
 function createAltAvailableBudget(e) {
-    $('#defaultModal').empty().load(createAltAvailableBudgetUri, function () {
+    $('#defaultModal').empty().load(createAltAvailableBudgetUrl, function () {
         $('#defaultModal').modal('show');
     });
     return false;
@@ -230,13 +230,13 @@ function updateAvailableBudget(e) {
     var button = $(e.currentTarget);
     var abId = parseInt(button.data('id'));
     if (0 === abId) {
-        $('#defaultModal').empty().load(createAvailableBudgetUri, function () {
+        $('#defaultModal').empty().load(createAvailableBudgetUrl, function () {
             $('#defaultModal').modal('show');
         });
     }
     if (abId > 0) {
         // edit URL.
-        $('#defaultModal').empty().load(editAvailableBudgetUri.replace('REPLACEME', abId), function () {
+        $('#defaultModal').empty().load(editAvailableBudgetUrl.replace('REPLACEME', abId), function () {
             $('#defaultModal').modal('show');
         });
     }

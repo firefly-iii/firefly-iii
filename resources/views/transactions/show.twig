@@ -295,12 +295,12 @@
                                         <td>{{ trans('list.'~metaField) }}</td>
                                         <td>
                                             {% if 'external_url' == metaField  %}
-                                                {% set uri = journalGetMetaField(journal.transaction_journal_id, metaField) %}
-                                                <a href="{{ uri }}" rel="noopener noreferrer nofollow" target="_blank">
-                                                    {% if uri|length > 60 %}
-                                                        {{ uri|slice(0, 60) ~ '...' }}
+                                                {% set url = journalGetMetaField(journal.transaction_journal_id, metaField) %}
+                                                <a href="{{ url }}" rel="noopener noreferrer nofollow" target="_blank">
+                                                    {% if url|length > 60 %}
+                                                        {{ url|slice(0, 60) ~ '...' }}
                                                     {% else %}
-                                                        {{ uri }}
+                                                        {{ url }}
                                                     {% endif %}
                                                 </a>
                                             {% endif %}
@@ -425,9 +425,9 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
-        var acURI = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
-        var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
+        var modalDialogURL = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
+        var acURL = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
+        var groupURL = '{{ route('transactions.show',['%GROUP%']) }}';
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
 
         $('.switch-link').on('click', switchLink);

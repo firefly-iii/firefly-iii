@@ -53,7 +53,7 @@ class Installer
      */
     public function handle($request, Closure $next)
     {
-        Log::debug(sprintf('Installer middleware for URI %s', $request->url()));
+        Log::debug(sprintf('Installer middleware for URL %s', $request->url()));
         // ignore installer in test environment.
         if ('testing' === config('app.env')) {
             return $next($request);

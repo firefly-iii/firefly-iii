@@ -85,8 +85,8 @@ class DeleteController extends Controller
         $subTitle   = (string) trans('firefly.delete_' . $objectType, ['description' => $group->title ?? $journal->description]);
         $previous   = app('steam')->getSafePreviousUrl(route('index'));
         // put previous url in session
-        Log::debug('Will try to remember previous URI');
-        $this->rememberPreviousUri('transactions.delete.uri');
+        Log::debug('Will try to remember previous URL');
+        $this->rememberPreviousUrl('transactions.delete.url');
 
         return view('transactions.delete', compact('group', 'journal', 'subTitle', 'objectType', 'previous'));
     }
@@ -115,6 +115,6 @@ class DeleteController extends Controller
 
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('transactions.delete.uri'));
+        return redirect($this->getPreviousUrl('transactions.delete.url'));
     }
 }

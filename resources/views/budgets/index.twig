@@ -458,20 +458,20 @@
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
 
         // index route.
-        var budgetIndexUri = "{{ route('budgets.index',['START','END']) }}";
+        var budgetIndexUrl = "{{ route('budgets.index',['START','END']) }}";
 
         // create available budgets / edit
-        var createAvailableBudgetUri = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
-        var createAltAvailableBudgetUri = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
-        var editAvailableBudgetUri = "{{ route('available-budgets.edit', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var createAvailableBudgetUrl = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var createAltAvailableBudgetUrl = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var editAvailableBudgetUrl = "{{ route('available-budgets.edit', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var deleteABUrl = "{{ route('available-budgets.delete') }}";
 
         // budget limit create form.
-        var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
-        var storeBudgetLimitUri = "{{ route('budget-limits.store') }}";
-        var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
+        var createBudgetLimitUrl = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var storeBudgetLimitUrl = "{{ route('budget-limits.store') }}";
+        var updateBudgetLimitUrl = "{{ route('budget-limits.update', ['REPLACEME']) }}";
         var deleteBudgetLimitUrl = "{{ route('budget-limits.delete', ['REPLACEME']) }}";
-        var totalBudgetedUri = "{{ route('json.budget.total-budgeted', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var totalBudgetedUrl = "{{ route('json.budget.total-budgeted', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
 
         // period thing:
         var periodStart = "{{ start.format('Y-m-d') }}";

@@ -20,29 +20,29 @@
 
 $(function () {
     "use strict";
-    loadAjaxPartial('accountsHolder', accountsUri);
-    loadAjaxPartial('tagsHolder', tagsUri);
-    loadAjaxPartial('accountPerTagHolder', accountPerTagUri);
+    loadAjaxPartial('accountsHolder', accountsUrl);
+    loadAjaxPartial('tagsHolder', tagsUrl);
+    loadAjaxPartial('accountPerTagHolder', accountPerTagUrl);
 
     $.each($('.main_tag_canvas'), function (i, v) {
         var canvas = $(v);
         columnChart(canvas.data('url'), canvas.attr('id'));
     });
 
-    multiCurrencyPieChart(tagOutUri, 'tag-out-pie-chart');
-    multiCurrencyPieChart(tagInUri, 'tag-in-pie-chart');
-    multiCurrencyPieChart(categoryOutUri, 'category-out-pie-chart');
-    multiCurrencyPieChart(categoryInUri, 'category-in-pie-chart');
-    multiCurrencyPieChart(budgetsOutUri, 'budgets-out-pie-chart');
-    multiCurrencyPieChart(sourceOutUri, 'source-out-pie-chart');
-    multiCurrencyPieChart(sourceInUri, 'source-in-pie-chart');
-    multiCurrencyPieChart(destOutUri, 'dest-out-pie-chart');
-    multiCurrencyPieChart(destInUri, 'dest-in-pie-chart');
+    multiCurrencyPieChart(tagOutUrl, 'tag-out-pie-chart');
+    multiCurrencyPieChart(tagInUrl, 'tag-in-pie-chart');
+    multiCurrencyPieChart(categoryOutUrl, 'category-out-pie-chart');
+    multiCurrencyPieChart(categoryInUrl, 'category-in-pie-chart');
+    multiCurrencyPieChart(budgetsOutUrl, 'budgets-out-pie-chart');
+    multiCurrencyPieChart(sourceOutUrl, 'source-out-pie-chart');
+    multiCurrencyPieChart(sourceInUrl, 'source-in-pie-chart');
+    multiCurrencyPieChart(destOutUrl, 'dest-out-pie-chart');
+    multiCurrencyPieChart(destInUrl, 'dest-in-pie-chart');
 
-    loadAjaxPartial('topExpensesHolder', topExpensesUri);
-    loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
-    loadAjaxPartial('topIncomeHolder', topIncomeUri);
-    loadAjaxPartial('avgIncomeHolder', avgIncomeUri);
+    loadAjaxPartial('topExpensesHolder', topExpensesUrl);
+    loadAjaxPartial('avgExpensesHolder', avgExpensesUrl);
+    loadAjaxPartial('topIncomeHolder', topIncomeUrl);
+    loadAjaxPartial('avgIncomeHolder', avgIncomeUrl);
 
 });
 

@@ -127,7 +127,7 @@ class EditController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rules.edit.fromUpdate')) {
-            $this->rememberPreviousUri('rules.edit.uri');
+            $this->rememberPreviousUrl('rules.edit.url');
         }
         session()->forget('rules.edit.fromUpdate');
 
@@ -193,7 +193,7 @@ class EditController extends Controller
 
         session()->flash('success', (string) trans('firefly.updated_rule', ['title' => $rule->title]));
         app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUri('rules.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
 
             session()->put('rules.edit.fromUpdate', true);

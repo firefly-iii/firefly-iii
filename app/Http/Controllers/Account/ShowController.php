@@ -114,7 +114,7 @@ class ShowController extends Controller
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
         $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-        $chartUri         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
@@ -152,7 +152,7 @@ class ShowController extends Controller
                 'subTitle',
                 'start',
                 'end',
-                'chartUri',
+                'chartUrl',
                 'location',
                 'balance'
             )
@@ -194,7 +194,7 @@ class ShowController extends Controller
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show.all', [$account->id]));
-        $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $chartUrl = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $showAll  = true;
         $balance  = app('steam')->balance($account, $end);
 
@@ -209,7 +209,7 @@ class ShowController extends Controller
                 'attachments',
                 'currency',
                 'today',
-                'chartUri',
+                'chartUrl',
                 'periods',
                 'subTitleIcon',
                 'groups',

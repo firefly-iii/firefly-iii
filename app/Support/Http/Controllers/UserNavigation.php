@@ -43,15 +43,15 @@ trait UserNavigation
     /**
      * Functionality:.
      *
-     * - If the $identifier contains the word "delete" then a remembered uri with the text "/show/" in it will not be returned but instead the index (/)
+     * - If the $identifier contains the word "delete" then a remembered url with the text "/show/" in it will not be returned but instead the index (/)
      *   will be returned.
-     * - If the remembered uri contains "jscript/" the remembered uri will not be returned but instead the index (/) will be returned.
+     * - If the remembered url contains "jscript/" the remembered url will not be returned but instead the index (/) will be returned.
      *
      * @param string $identifier
      *
      * @return string
      */
-    final protected function getPreviousUri(string $identifier): string
+    final protected function getPreviousUrl(string $identifier): string
     {
         Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         $url = (string) session($identifier);
@@ -161,7 +161,7 @@ trait UserNavigation
      *
      * @return string|null
      */
-    final protected function rememberPreviousUri(string $identifier): ?string
+    final protected function rememberPreviousUrl(string $identifier): ?string
     {
         $return = app('steam')->getSafePreviousUrl();
         session()->put($identifier, $return);

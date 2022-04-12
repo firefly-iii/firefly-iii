@@ -18,7 +18,7 @@ export default {
     },
     "list": {
         "name": "Nombre",
-        "account_number": "Account number",
+        "account_number": "N\u00famero de cuenta",
         "currentBalance": "Balance actual",
         "lastActivity": "Actividad m\u00e1s reciente",
         "active": "\u00bfEst\u00e1 Activo?"
@@ -45,7 +45,7 @@ export default {
         "delete": "Eliminar",
         "reconcile": "Reconciliar",
         "create_new_asset": "Crear nueva cuenta de activos",
-        "confirm_action": "Confirm action",
+        "confirm_action": "Confirmar acci\u00f3n",
         "rule_trigger_source_account_starts_choice": "El nombre de la cuenta de origen comienza con..",
         "rule_trigger_source_account_ends_choice": "El nombre de la cuenta de origen termina con..",
         "rule_trigger_source_account_is_choice": "El nombre de la cuenta origen es..",

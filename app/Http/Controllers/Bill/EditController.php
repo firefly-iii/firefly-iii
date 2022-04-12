@@ -85,7 +85,7 @@ class EditController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
-            $this->rememberPreviousUri('bills.edit.uri');
+            $this->rememberPreviousUrl('bills.edit.url');
         }
 
         $currency         = app('amount')->getDefaultCurrency();
@@ -141,7 +141,7 @@ class EditController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUri('bills.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('bills.edit.url'));
 
         if (1 === (int) $request->get('return_to_edit')) {
 

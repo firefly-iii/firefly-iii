@@ -34,7 +34,7 @@ function startRunningCommands() {
 }
 
 function runCommand(index) {
-    $.post(runCommandUri, {_token: token, index: index}).done(function (data) {
+    $.post(runCommandUrl, {_token: token, index: index}).done(function (data) {
         if (data.error === false) {
             // increase index
             index++;
@@ -60,7 +60,7 @@ function runCommand(index) {
 
 function startMigration() {
 
-    $.post(migrateUri, {_token: token}).done(function (data) {
+    $.post(migrateUrl, {_token: token}).done(function (data) {
         if (data.error === false) {
             // move to decrypt routine.
             startDecryption();
@@ -75,7 +75,7 @@ function startMigration() {
 
 function startDecryption() {
     $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Setting up DB #2...');
-    $.post(decryptUri, {_token: token}).done(function (data) {
+    $.post(decryptUrl, {_token: token}).done(function (data) {
         if (data.error === false) {
             // move to decrypt routine.
             startPassport();
@@ -93,7 +93,7 @@ function startDecryption() {
  */
 function startPassport() {
     $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Setting up OAuth2...');
-    $.post(keysUri, {_token: token}).done(function (data) {
+    $.post(keysUrl, {_token: token}).done(function (data) {
         if (data.error === false) {
             startUpgrade();
         } else {
@@ -110,7 +110,7 @@ function startPassport() {
  */
 function startUpgrade() {
     $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Upgrading database...');
-    $.post(upgradeUri, {_token: token}).done(function (data) {
+    $.post(upgradeUrl, {_token: token}).done(function (data) {
         if (data.error === false) {
             startVerify();
         } else {
@@ -126,7 +126,7 @@ function startUpgrade() {
  */
 function startVerify() {
     $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Verify database integrity...');
-    $.post(verifyUri, {_token: token}).done(function (data) {
+    $.post(verifyUrl, {_token: token}).done(function (data) {
         if (data.error === false) {
             completeDone();
         } else {
@@ -143,7 +143,7 @@ function startVerify() {
 function completeDone() {
     $('#status-box').html('<span class="fa fa-thumbs-up"></span> Installation + upgrade complete! Wait to be redirected...');
     setTimeout(function () {
-        window.location = homeUri;
+        window.location = homeUrl;
     }, 3000);
 }
 

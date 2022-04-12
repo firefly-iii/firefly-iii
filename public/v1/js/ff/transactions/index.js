@@ -21,9 +21,9 @@
 $(function () {
     "use strict";
     if (!showAll) {
-        multiCurrencyPieChart(categoryChartUri, 'category_chart');
-        multiCurrencyPieChart(budgetChartUri, 'budget_chart');
-        multiCurrencyPieChart(destinationChartUri, 'destination_chart');
-        multiCurrencyPieChart(sourceChartUri, 'source_chart');
+        multiCurrencyPieChart(categoryChartUrl, 'category_chart');
+        multiCurrencyPieChart(budgetChartUrl, 'budget_chart');
+        multiCurrencyPieChart(destinationChartUrl, 'destination_chart');
+        multiCurrencyPieChart(sourceChartUrl, 'source_chart');
     }
 });

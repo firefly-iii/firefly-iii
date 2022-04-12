@@ -160,18 +160,16 @@
         var reportType = '{{ reportType }}';
         var accountIds = '{{ accountIds }}';
 
-        // uri's for data
-        var accountReportUri = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoryReportUri = '{{ route('report-data.category.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var budgetReportUri = '{{ route('report-data.budget.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var balanceReportUri = '{{ route('report-data.balance.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var incomeReportUri = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var expenseReportUri = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var incExpReportUri = '{{ route('report-data.operations.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var billReportUri = '{{ route('report-data.bills.overview', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var accountReportUrl = '{{ route('report-data.account.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryReportUrl = '{{ route('report-data.category.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetReportUrl = '{{ route('report-data.budget.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var balanceReportUrl = '{{ route('report-data.balance.general', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incomeReportUrl = '{{ route('report-data.operations.income', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseReportUrl = '{{ route('report-data.operations.expenses', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var incExpReportUrl = '{{ route('report-data.operations.operations', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var billReportUrl = '{{ route('report-data.bills.overview', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
-        // uri's for charts:
-        var accountChartUri = '{{ route('chart.account.report', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var accountChartUrl = '{{ route('chart.account.report', [accountIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
     </script>
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

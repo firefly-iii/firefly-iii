@@ -168,7 +168,7 @@ class ReconcileController extends Controller
         }
 
         $return = [
-            'post_uri' => $route,
+            'post_url' => $route,
             'html'     => $view,
         ];
 

@@ -73,7 +73,7 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Method to grab all parameters from the URI.
+     * Method to grab all parameters from the URL.
      *
      * @return ParameterBag
      * @throws ContainerExceptionInterface
@@ -148,7 +148,7 @@ abstract class Controller extends BaseController
 
 
     /**
-     * Method to help build URI's.
+     * Method to help build URL's.
      *
      * @return string
      */

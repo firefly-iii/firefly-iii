@@ -134,9 +134,9 @@ class ReconcileController extends Controller
         $subTitle     = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
 
         // various links
-        $transactionsUri = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
-        $overviewUri     = route('accounts.reconcile.overview', [$account->id, '%start%', '%end%']);
-        $indexUri        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
+        $transactionsUrl = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
+        $overviewUrl     = route('accounts.reconcile.overview', [$account->id, '%start%', '%end%']);
+        $indexUrl        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
         $objectType      = 'asset';
 
         return view(
@@ -151,9 +151,9 @@ class ReconcileController extends Controller
                 'subTitle',
                 'startBalance',
                 'endBalance',
-                'transactionsUri',
-                'overviewUri',
-                'indexUri'
+                'transactionsUrl',
+                'overviewUrl',
+                'indexUrl'
             )
         );
     }

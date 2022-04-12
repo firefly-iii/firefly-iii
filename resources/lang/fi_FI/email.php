@@ -65,9 +65,9 @@ return [
     'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
     'email_change_ignore'                     => 'Jos teit itse tämän muutoksen, voit turvallisesti ohittaa tämän viestin.',
     'email_change_old'                        => 'Vanha sähköpostiosoite oli: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => 'Vanha sähköpostiosoite oli: **:email**',
     'email_change_new'                        => 'Uusi sähköpostiosoite on: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => 'Uusi sähköpostiosoite on: **:email**',
     'email_change_instructions'               => 'Et voi käyttää Firefly III:a ennen kuin vahvistat tämän muutoksen. Ole hyvä ja seuraa alla olevaa linkkiä.',
     'email_change_undo_link'                  => 'Kumoa muutos seuraamalla linkkiä:',
 

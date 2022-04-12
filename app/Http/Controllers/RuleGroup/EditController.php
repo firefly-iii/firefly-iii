@@ -80,7 +80,7 @@ class EditController extends Controller
         ];
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rule-groups.edit.fromUpdate')) {
-            $this->rememberPreviousUri('rule-groups.edit.uri');
+            $this->rememberPreviousUrl('rule-groups.edit.url');
         }
         session()->forget('rule-groups.edit.fromUpdate');
         session()->flash('preFilled', $preFilled);
@@ -140,7 +140,7 @@ class EditController extends Controller
 
         session()->flash('success', (string) trans('firefly.updated_rule_group', ['title' => $ruleGroup->title]));
         app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUri('rule-groups.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('rule-groups.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
 
             session()->put('rule-groups.edit.fromUpdate', true);

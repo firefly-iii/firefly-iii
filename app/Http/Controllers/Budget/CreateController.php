@@ -98,7 +98,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('budgets.create.fromStore')) {
-            $this->rememberPreviousUri('budgets.create.uri');
+            $this->rememberPreviousUrl('budgets.create.url');
         }
         $request->session()->forget('budgets.create.fromStore');
         $subTitle = (string) trans('firefly.create_new_budget');
@@ -136,7 +136,7 @@ class CreateController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        $redirect = redirect($this->getPreviousUri('budgets.create.uri'));
+        $redirect = redirect($this->getPreviousUrl('budgets.create.url'));
 
         if (1 === (int) $request->get('create_another')) {
 

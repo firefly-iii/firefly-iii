@@ -18,14 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: categoryReportUri, budgetReportUri, balanceReportUri, accountChartUri */
-
 $(function () {
     "use strict";
-    lineChart(accountChartUri, 'account-balances-chart');
+    lineChart(accountChartUrl, 'account-balances-chart');
 
-    loadAjaxPartial('categoryReport', categoryReportUri);
-    loadAjaxPartial('budgetReport', budgetReportUri);
-    loadAjaxPartial('balanceReport', balanceReportUri);
+    loadAjaxPartial('categoryReport', categoryReportUrl);
+    loadAjaxPartial('budgetReport', budgetReportUrl);
+    loadAjaxPartial('balanceReport', balanceReportUrl);
 });
 

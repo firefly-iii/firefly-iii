@@ -84,7 +84,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('bills.create.fromStore')) {
-            $this->rememberPreviousUri('bills.create.uri');
+            $this->rememberPreviousUrl('bills.create.url');
         }
         $request->session()->forget('bills.create.fromStore');
 

@@ -169,11 +169,11 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $authGuard = config('firefly.authentication_guard');
-        $logoutUri = config('firefly.custom_logout_url');
-        if ('remote_user_guard' === $authGuard && '' !== $logoutUri) {
-            return redirect($logoutUri);
+        $logoutUrl = config('firefly.custom_logout_url');
+        if ('remote_user_guard' === $authGuard && '' !== $logoutUrl) {
+            return redirect($logoutUrl);
         }
-        if ('remote_user_guard' === $authGuard && '' === $logoutUri) {
+        if ('remote_user_guard' === $authGuard && '' === $logoutUrl) {
             session()->flash('error', trans('firefly.cant_logout_guard'));
         }
 

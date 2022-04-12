@@ -73,7 +73,7 @@ class CreateController extends Controller
     public function create(Request $request)
     {
         if (true !== session('categories.create.fromStore')) {
-            $this->rememberPreviousUri('categories.create.uri');
+            $this->rememberPreviousUrl('categories.create.url');
         }
         $request->session()->forget('categories.create.fromStore');
         $subTitle = (string) trans('firefly.create_new_category');

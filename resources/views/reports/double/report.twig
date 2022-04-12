@@ -204,24 +204,22 @@
         var accountIds = '{{ accountIds }}';
         var doubleIds = '{{ doubleIds }}';
 
-        // chart uri's
-        {#var mainUri = '{{ route('chart.expense.main', [accountIds, expenseIds, start.format('Ymd'), end.format('Ymd')]) }}';#}
 
         // html blocks.
-        var opsAccountsUri = '{{ route('report-data.double.operations', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var opsAccountsAssetUri = '{{ route('report-data.double.ops-asset', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var opsAccountsUrl = '{{ route('report-data.double.operations', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var opsAccountsAssetUrl = '{{ route('report-data.double.ops-asset', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
         // pie charts:
-        var categoryOutUri = '{{ route('chart.double.category-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoryInUri = '{{ route('chart.double.category-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var budgetsOutUri = '{{ route('chart.double.budget-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var tagOutUri = '{{ route('chart.double.tag-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var tagInUri = '{{ route('chart.double.tag-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryOutUrl = '{{ route('chart.double.category-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryInUrl = '{{ route('chart.double.category-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetsOutUrl = '{{ route('chart.double.budget-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var tagOutUrl = '{{ route('chart.double.tag-expense', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var tagInUrl = '{{ route('chart.double.tag-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
-        var avgExpensesUri = '{{ route('report-data.double.avg-expenses', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var topExpensesUri = '{{ route('report-data.double.top-expenses', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var avgIncomeUri = '{{ route('report-data.double.avg-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var topIncomeUri = '{{ route('report-data.double.top-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var avgExpensesUrl = '{{ route('report-data.double.avg-expenses', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var topExpensesUrl = '{{ route('report-data.double.top-expenses', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var avgIncomeUrl = '{{ route('report-data.double.avg-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var topIncomeUrl = '{{ route('report-data.double.top-income', [accountIds, doubleIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
     </script>
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

@@ -230,9 +230,9 @@ class UserEventHandler
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
         $token    = app('preferences')->getForUser($user, 'email_change_confirm_token', 'invalid');
-        $uri      = route('profile.confirm-email-change', [$token->data]);
+        $url      = route('profile.confirm-email-change', [$token->data]);
         try {
-            Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $uri));
+            Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
 
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
@@ -256,9 +256,9 @@ class UserEventHandler
         $user     = $event->user;
         $token    = app('preferences')->getForUser($user, 'email_change_undo_token', 'invalid');
         $hashed   = hash('sha256', sprintf('%s%s', (string) config('app.key'), $oldEmail));
-        $uri      = route('profile.undo-email-change', [$token->data, $hashed]);
+        $url      = route('profile.undo-email-change', [$token->data, $hashed]);
         try {
-            Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $uri));
+            Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
 
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
@@ -308,7 +308,7 @@ class UserEventHandler
         if ($sendMail) {
             // get the email address
             $email     = $event->user->email;
-            $uri       = route('index');
+            $url       = route('index');
 
             // see if user has alternative email address:
             $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email');
@@ -318,7 +318,7 @@ class UserEventHandler
 
             // send email.
             try {
-                Mail::to($email)->send(new RegisteredUserMail($uri));
+                Mail::to($email)->send(new RegisteredUserMail($url));
 
             } catch (Exception $e) { // @phpstan-ignore-line
                 Log::error($e->getMessage());

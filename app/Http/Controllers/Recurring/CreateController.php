@@ -94,7 +94,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('recurring.create.fromStore')) {
-            $this->rememberPreviousUri('recurring.create.uri');
+            $this->rememberPreviousUrl('recurring.create.url');
         }
         $request->session()->forget('recurring.create.fromStore');
         $repetitionEnds   = [
@@ -139,7 +139,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('recurring.create.fromStore')) {
-            $this->rememberPreviousUri('recurring.create.uri');
+            $this->rememberPreviousUrl('recurring.create.url');
         }
         $request->session()->forget('recurring.create.fromStore');
         $repetitionEnds   = [
@@ -253,7 +253,7 @@ class CreateController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        $redirect = redirect($this->getPreviousUri('recurring.create.uri'));
+        $redirect = redirect($this->getPreviousUrl('recurring.create.url'));
         if (1 === (int) $request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('recurring.create.fromStore', true);

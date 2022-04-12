@@ -77,7 +77,7 @@ class AttachmentController extends Controller
         $subTitle = (string) trans('firefly.delete_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session
-        $this->rememberPreviousUri('attachments.delete.uri');
+        $this->rememberPreviousUrl('attachments.delete.url');
 
         return view('attachments.delete', compact('attachment', 'subTitle'));
     }
@@ -99,7 +99,7 @@ class AttachmentController extends Controller
         $request->session()->flash('success', (string) trans('firefly.attachment_deleted', ['name' => $name]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('attachments.delete.uri'));
+        return redirect($this->getPreviousUrl('attachments.delete.url'));
     }
 
     /**
@@ -150,7 +150,7 @@ class AttachmentController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('attachments.edit.fromUpdate')) {
-            $this->rememberPreviousUri('attachments.edit.uri');
+            $this->rememberPreviousUrl('attachments.edit.url');
         }
         $request->session()->forget('attachments.edit.fromUpdate');
         $preFilled = [
@@ -196,7 +196,7 @@ class AttachmentController extends Controller
         $request->session()->flash('success', (string) trans('firefly.attachment_updated', ['name' => $attachment->filename]));
         app('preferences')->mark();
 
-        $redirect = redirect($this->getPreviousUri('attachments.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('attachments.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
 
             $request->session()->put('attachments.edit.fromUpdate', true);

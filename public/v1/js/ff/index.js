@@ -18,7 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: accountFrontpageUri, today, piggyInfoUri, token, billCount, accountExpenseUri, accountRevenueUri */
 
 $(function () {
     "use strict";
@@ -29,15 +28,15 @@ $(function () {
 
 function drawChart() {
     "use strict";
-    lineChart(accountFrontpageUri, 'accounts-chart');
+    lineChart(accountFrontpageUrl, 'accounts-chart');
 
     if (billCount > 0) {
         multiCurrencyPieChart('chart/bill/frontpage', 'bills-chart');
     }
     stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
     columnChart('chart/category/frontpage', 'categories-chart');
-    columnChart(accountExpenseUri, 'expense-accounts-chart');
-    columnChart(accountRevenueUri, 'revenue-accounts-chart');
+    columnChart(accountExpenseUrl, 'expense-accounts-chart');
+    columnChart(accountRevenueUrl, 'revenue-accounts-chart');
 
     // get balance box:
     getBalanceBox();
@@ -53,7 +52,7 @@ function drawChart() {
  *
  */
 function getPiggyBanks() {
-    $.getJSON(piggyInfoUri).done(function (data) {
+    $.getJSON(piggyInfoUrl).done(function (data) {
         if (data.html.length > 0) {
             $('#piggy_bank_overview').html(data.html);
         }

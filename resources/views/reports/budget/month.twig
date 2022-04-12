@@ -161,18 +161,17 @@
         var accountIds = '{{ accountIds }}';
         var budgetIds = '{{ budgetIds }}';
 
-        // html block URI's:
-        var accountsUri = '{{ route('report-data.budget.accounts', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var budgetsUri = '{{ route('report-data.budget.budgets', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var accountPerBudgetUri = '{{ route('report-data.budget.account-per-budget', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var avgExpensesUri = '{{ route('report-data.budget.avg-expenses', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var topExpensesUri = '{{ route('report-data.budget.top-expenses', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        // html block URL's:
+        var accountsUrl = '{{ route('report-data.budget.accounts', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetsUrl = '{{ route('report-data.budget.budgets', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var accountPerBudgetUrl = '{{ route('report-data.budget.account-per-budget', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var avgExpensesUrl = '{{ route('report-data.budget.avg-expenses', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var topExpensesUrl = '{{ route('report-data.budget.top-expenses', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
 
-        // chart uri's
-        var budgetExpenseUri = '{{ route('chart.budget.budget-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var categoryExpenseUri = '{{ route('chart.budget.category-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var sourceExpenseUri = '{{ route('chart.budget.source-account-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
-        var destinationExpenseUri = '{{ route('chart.budget.destination-account-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var budgetExpenseUrl = '{{ route('chart.budget.budget-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var categoryExpenseUrl = '{{ route('chart.budget.category-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var sourceExpenseUrl = '{{ route('chart.budget.source-account-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var destinationExpenseUrl = '{{ route('chart.budget.destination-account-expense', [accountIds, budgetIds, start.format('Ymd'), end.format('Ymd')]) }}';
     </script>
 
 

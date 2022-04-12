@@ -157,7 +157,7 @@ trait RequestInformation
     }
 
     /**
-     * Parses attributes from URI.
+     * Parses attributes from URL
      *
      * @param array $attributes
      *

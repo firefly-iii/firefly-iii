@@ -76,7 +76,7 @@ class LinkController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('link-types.create.fromStore')) {
-            $this->rememberPreviousUri('link-types.create.uri');
+            $this->rememberPreviousUrl('link-types.create.url');
         }
 
         return view('admin.link.create', compact('subTitle', 'subTitleIcon'));
@@ -113,7 +113,7 @@ class LinkController extends Controller
         }
 
         // put previous url in session
-        $this->rememberPreviousUri('link-types.delete.uri');
+        $this->rememberPreviousUrl('link-types.delete.url');
 
         return view('admin.link.delete', compact('linkType', 'subTitle', 'moveTo', 'count'));
     }
@@ -136,7 +136,7 @@ class LinkController extends Controller
         $request->session()->flash('success', (string) trans('firefly.deleted_link_type', ['name' => $name]));
         app('preferences')->mark();
 
-        return redirect($this->getPreviousUri('link-types.delete.uri'));
+        return redirect($this->getPreviousUrl('link-types.delete.url'));
     }
 
     /**
@@ -161,7 +161,7 @@ class LinkController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('link-types.edit.fromUpdate')) {
-            $this->rememberPreviousUri('link-types.edit.uri');
+            $this->rememberPreviousUrl('link-types.edit.url');
         }
         $request->session()->forget('link-types.edit.fromUpdate');
 
@@ -226,7 +226,7 @@ class LinkController extends Controller
         Log::channel('audit')->info('User stored new link type.', $linkType->toArray());
 
         $request->session()->flash('success', (string) trans('firefly.stored_new_link_type', ['name' => $linkType->name]));
-        $redirect = redirect($this->getPreviousUri('link-types.create.uri'));
+        $redirect = redirect($this->getPreviousUrl('link-types.create.url'));
         if (1 === (int) $request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('link-types.create.fromStore', true);
@@ -265,7 +265,7 @@ class LinkController extends Controller
 
         $request->session()->flash('success', (string) trans('firefly.updated_link_type', ['name' => $linkType->name]));
         app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUri('link-types.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('link-types.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('link-types.edit.fromUpdate', true);

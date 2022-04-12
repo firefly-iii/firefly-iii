@@ -102,7 +102,7 @@ class EditController extends Controller
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('piggy-banks.edit.fromUpdate')) {
-            $this->rememberPreviousUri('piggy-banks.edit.uri');
+            $this->rememberPreviousUrl('piggy-banks.edit.url');
         }
         session()->forget('piggy-banks.edit.fromUpdate');
 
@@ -138,7 +138,7 @@ class EditController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUri('piggy-banks.edit.uri'));
+        $redirect = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
 
         if (1 === (int) $request->get('return_to_edit')) {
 

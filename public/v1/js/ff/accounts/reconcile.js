@@ -18,8 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: overviewUri, transactionsUri, indexUri,accounting */
-
 var balanceDifference = 0;
 var difference = 0;
 var selectedAmount = 0;
@@ -142,10 +140,10 @@ function storeReconcile() {
         journals: ids,
         cleared: cleared,
     };
-    var uri = overviewUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
+    var url = overviewUrl.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
 
 
-    $.getJSON(uri, variables).done(function (data) {
+    $.getJSON(url, variables).done(function (data) {
         $('#defaultModal').empty().html(data.html).modal('show');
     });
 }
@@ -197,11 +195,11 @@ function getTransactionsForRange() {
     console.log('in getTransactionsForRange()');
     // clear out the box:
     $('#transactions_holder').empty().append($('<p>').addClass('text-center').html('<span class="fa fa-fw fa-spin fa-spinner"></span>'));
-    var uri = transactionsUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
-    var index = indexUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
+    var url = transactionsUrl.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
+    var index = indexUrl.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
     window.history.pushState('object or string', "Reconcile account", index);
 
-    $.getJSON(uri).done(placeTransactions).catch(exceptionHandling)
+    $.getJSON(url).done(placeTransactions).catch(exceptionHandling)
 }
 function exceptionHandling() {
     $('#transactions_holder').empty().append($('<p>').addClass('text-center lead').html(selectRangeAndBalance));

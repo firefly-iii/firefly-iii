@@ -22,12 +22,12 @@ $(function () {
     "use strict";
     drawChart();
 
-    loadAjaxPartial('accountsHolder', accountsUri);
-    loadAjaxPartial('budgetsHolder', budgetsUri);
-    loadAjaxPartial('accountPerbudgetHolder', accountPerBudgetUri);
+    loadAjaxPartial('accountsHolder', accountsUrl);
+    loadAjaxPartial('budgetsHolder', budgetsUrl);
+    loadAjaxPartial('accountPerbudgetHolder', accountPerBudgetUrl);
 
-    loadAjaxPartial('topExpensesHolder', topExpensesUri);
-    loadAjaxPartial('avgExpensesHolder', avgExpensesUri);
+    loadAjaxPartial('topExpensesHolder', topExpensesUrl);
+    loadAjaxPartial('avgExpensesHolder', avgExpensesUrl);
 
 
 });
@@ -42,15 +42,15 @@ function drawChart() {
     });
 
     // draw pie chart of income, depending on "show other transactions too":
-    redrawPieChart('budgets-out-pie-chart', budgetExpenseUri);
-    redrawPieChart('categories-out-pie-chart', categoryExpenseUri);
-    redrawPieChart('source-accounts-pie-chart', sourceExpenseUri);
-    redrawPieChart('dest-accounts-pie-chart', destinationExpenseUri);
+    redrawPieChart('budgets-out-pie-chart', budgetExpenseUrl);
+    redrawPieChart('categories-out-pie-chart', categoryExpenseUrl);
+    redrawPieChart('source-accounts-pie-chart', sourceExpenseUrl);
+    redrawPieChart('dest-accounts-pie-chart', destinationExpenseUrl);
 
 
 }
 
-function redrawPieChart(container, uri) {
+function redrawPieChart(container, url) {
     "use strict";
-    multiCurrencyPieChart(uri, container);
+    multiCurrencyPieChart(url, container);
 }

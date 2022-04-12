@@ -69,7 +69,7 @@ $(function () {
         function (start, end, label) {
 
             // send post.
-            $.post(dateRangeMeta.uri, {
+            $.post(dateRangeMeta.url, {
                 start: start.format('YYYY-MM-DD'),
                 end: end.format('YYYY-MM-DD'),
                 label: label,

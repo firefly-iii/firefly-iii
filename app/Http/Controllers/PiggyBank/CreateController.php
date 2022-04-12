@@ -76,7 +76,7 @@ class CreateController extends Controller
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('piggy-banks.create.fromStore')) {
-            $this->rememberPreviousUri('piggy-banks.create.uri');
+            $this->rememberPreviousUrl('piggy-banks.create.url');
         }
         session()->forget('piggy-banks.create.fromStore');
 
@@ -115,7 +115,7 @@ class CreateController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUri('piggy-banks.create.uri'));
+        $redirect = redirect($this->getPreviousUrl('piggy-banks.create.url'));
 
         if (1 === (int) $request->get('create_another')) {
 

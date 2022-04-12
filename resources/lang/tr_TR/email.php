@@ -44,16 +44,16 @@ return [
     // access token created
     'access_token_created_subject'            => 'Yeni bir erişim belirteci oluşturuldu',
     'access_token_created_body'               => 'Birisi (umarız sensindir) hesabın için yeni bir Firefly III API Erişim Anahtarı oluşturdu.',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'Bu belirteçle, Firefly III API\'sı aracılığıyla tüm finansal kayıtlarınıza erişebilirler.',
+    'access_token_created_revoke'             => 'Bu siz değilseniz, lütfen bu belirteci mümkün olan en kısa sürede iptal edin :url',
 
     // registered
     'registered_subject'                      => 'Firefly III\'e hoşgeldiniz!',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
+    'registered_welcome'                      => '[Firefly III] \'e hoş geldiniz(:address). Kaydınız yapıldı ve bu e-posta onaylamak için burada. Yay!',
+    'registered_pw'                           => 'Parolanızı zaten unuttuysanız, lütfen [parola sıfırlama aracı] (:adres/parola/sıfırla) kullanarak sıfırlayın.',
     'registered_help'                         => 'Her sayfanın sağ üst köşesinde bir yardım simgesi bulunur. Yardıma ihtiyacınız olursa, tıklayın!',
-    'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',
+    'registered_doc_html'                     => 'Henüz yapmadıysanız, lütfen [büyük teori] \'yi okuyun (https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
+    'registered_doc_text'                     => 'Henüz yapmadıysanız, lütfen ilk kullanım kılavuzunu ve tam açıklamayı da okuyun.',
     'registered_closing'                      => 'Tadını çıkarın!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Şifre sıfırlama:',
@@ -62,25 +62,25 @@ return [
     // email change
     'email_change_subject'                    => 'Firefly III e-posta adresiniz değişti',
     'email_change_body_to_new'                => 'Siz veya Firefly III hesabınıza erişimi olan biri e-posta adresinizi değiştirdi. Bu iletiyi beklemediyseniz, lütfen yoksayın ve silin.',
-    'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
+    'email_change_body_to_old'                => 'Siz veya Firefly III hesabınıza erişimi olan biri e-posta adresinizi değiştirdi. Bunun olmasını beklemediyseniz, hesabınızı korumak için aşağıdaki "geri al" bağlantısını takip etmeniz gerekir!',
     'email_change_ignore'                     => 'Bu değişikliği başlattıysanız, bu iletiyi güvenle yoksayabilirsiniz.',
     'email_change_old'                        => 'Önceki e-posta adresi: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => 'Eski e-posta adresi: **: e-posta**',
     'email_change_new'                        => 'Yeni e-posta adresi: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => 'Yeni e-posta adresi: **: e-posta**',
     'email_change_instructions'               => 'Bu değişikliği onaylayana kadar Firefly Iıı\'ü kullanamazsınız. Lütfen bunu yapmak için aşağıdaki bağlantıyı takip edin.',
     'email_change_undo_link'                  => 'Değişikliği geri almak için bu bağlantıyı takip edin:',
 
     // OAuth token created
     'oauth_created_subject'                   => 'Yeni bir OAuth istemcisi oluşturuldu',
-    'oauth_created_body'                      => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_body'                      => 'Birisi (umarım siz) kullanıcı hesabınız için yeni bir Firefly III API OAuth İstemcisi oluşturmuştur. ":name" etiketli ve `:url\' geri arama URL\'sine sahip.',
+    'oauth_created_explanation'               => 'Bu müşteri ile Firefly III API\'sı aracılığıyla **tüm ** finansal kayıtlarınıza erişebilirler.',
+    'oauth_created_undo'                      => 'Bu siz değilseniz, lütfen bu istemciyi mümkün olan en kısa sürede `:url\' adresinden iptal edin',
 
     // reset password
     'reset_pw_subject'                        => 'Parola sıfırlama isteğin',
     'reset_pw_instructions'                   => 'Birisi şifrenizi sıfırlamaya çalıştı. Siz olsaydınız, bunu yapmak için lütfen aşağıdaki bağlantıyı takip edin.',
-    'reset_pw_warning'                        => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_warning'                        => '** LÜTFEN ** bağlantının gerçekten gitmesini beklediğiniz Firefly III\'e gittiğinden emin olun!',
 
     // error
     'error_subject'                           => 'Firefly III\'te bir hata yakalandı',
@@ -104,11 +104,11 @@ return [
     'new_journals_header'                     => 'Firefly III sizin için bir anlaşma yaptı. Firefly III kurulumunuzda bulabilirsiniz: / Firefly III sizin için :count sayım işlemleri. Bunları Firefly III kurulumunuzda bulabilirsiniz:',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
+    'bill_warning_subject_end_date'           => 'Faturanız ":name" is due to end in :diff days',
+    'bill_warning_subject_now_end_date'       => 'Faturanız ":name" BUGÜN sona erecek',
+    'bill_warning_subject_extension_date'     => 'Faturanız ":name" farklı :diff günlerde uzatılacak veya iptal edilecektir',
+    'bill_warning_subject_now_extension_date' => 'Faturanız ":name" BUGÜN uzatılacak veya iptal edilecek',
+    'bill_warning_end_date'                   => 'Faturanız ** ":name"** tarihinde sona ermelidir :date. Bu an yaklaşık **:diff** içinde geçecek.',
     'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
     'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
     'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
