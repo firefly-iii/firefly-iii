@@ -64,11 +64,6 @@ use Illuminate\Support\Carbon;
  */
 class AutoBudget extends Model
 {
-    /** @var int When the auto-budget resets every period automatically. */
-    public const AUTO_BUDGET_RESET = 1;
-    /** @var int When the auto-budget adds an amount every period automatically */
-    public const AUTO_BUDGET_ROLLOVER = 2;
-
     use SoftDeletes;
 
     /**
