@@ -555,7 +555,9 @@ trait TimeCollection
      */
     public function setObjectBefore(Carbon $date, string $field): GroupCollectorInterface
     {
-        die('a');
+        $afterStr = $date->format('Y-m-d 00:00:00');
+        $this->query->where(sprintf('transaction_journals.%s', $field), '<=', $afterStr);
+        return $this;
     }
 
     /**
