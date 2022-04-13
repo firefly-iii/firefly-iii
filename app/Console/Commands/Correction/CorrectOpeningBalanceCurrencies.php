@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -125,7 +124,7 @@ class CorrectOpeningBalanceCurrencies extends Command
         foreach ($transactions as $transaction) {
             /** @var Account $account */
             $account = $transaction->account()->first();
-            if (null !== $account && AccountTypeEnum::INITIAL_BALANCE !== $account->accountType()->first()->type) {
+            if (null !== $account && AccountType::INITIAL_BALANCE !== $account->accountType()->first()->type) {
                 return $account;
             }
         }

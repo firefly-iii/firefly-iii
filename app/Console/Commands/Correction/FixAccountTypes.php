@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\AccountType;
@@ -178,11 +176,11 @@ class FixAccountTypes extends Command
         $combination = sprintf('%s%s%s', $type, $source->account->accountType->type, $dest->account->accountType->type);
 
         switch ($combination) {
-            case sprintf('%s%s%s', TransactionTypeEnum::TRANSFER, AccountTypeEnum::ASSET, AccountTypeEnum::LOAN):
-            case sprintf('%s%s%s', TransactionTypeEnum::TRANSFER, AccountTypeEnum::ASSET, AccountTypeEnum::DEBT):
-            case sprintf('%s%s%s', TransactionTypeEnum::TRANSFER, AccountTypeEnum::ASSET, AccountTypeEnum::MORTGAGE):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::LOAN):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::DEBT):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::MORTGAGE):
                 // from an asset to a liability should be a withdrawal:
-                $withdrawal = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL)->first();
+                $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
                 $journal->transactionType()->associate($withdrawal);
                 $journal->save();
                 $message = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
@@ -191,11 +189,11 @@ class FixAccountTypes extends Command
                 // check it again:
                 $this->inspectJournal($journal);
                 break;
-            case sprintf('%s%s%s', TransactionTypeEnum::TRANSFER, AccountTypeEnum::LOAN, AccountTypeEnum::ASSET):
-            case sprintf('%s%s%s', TransactionTypeEnum::TRANSFER, AccountTypeEnum::DEBT, AccountTypeEnum::ASSET):
-            case sprintf('%s%s%s', TransactionTypeEnum::TRANSFER, AccountTypeEnum::MORTGAGE, AccountTypeEnum::ASSET):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::LOAN, AccountType::ASSET):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::DEBT, AccountType::ASSET):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::MORTGAGE, AccountType::ASSET):
                 // from a liability to an asset should be a deposit.
-                $deposit = TransactionType::whereType(TransactionTypeEnum::DEPOSIT)->first();
+                $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
                 $journal->transactionType()->associate($deposit);
                 $journal->save();
                 $message = sprintf('Converted transaction #%d from a transfer to a deposit.', $journal->id);
@@ -205,11 +203,11 @@ class FixAccountTypes extends Command
                 $this->inspectJournal($journal);
 
                 break;
-            case sprintf('%s%s%s', TransactionTypeEnum::WITHDRAWAL, AccountTypeEnum::ASSET, AccountTypeEnum::REVENUE):
+            case sprintf('%s%s%s', TransactionType::WITHDRAWAL, AccountType::ASSET, AccountType::REVENUE):
                 // withdrawals with a revenue account as destination instead of an expense account.
                 $this->factory->setUser($journal->user);
                 $oldDest = $dest->account;
-                $result  = $this->factory->findOrCreate($dest->account->name, AccountTypeEnum::EXPENSE);
+                $result  = $this->factory->findOrCreate($dest->account->name, AccountType::EXPENSE);
                 $dest->account()->associate($result);
                 $dest->save();
                 $message = sprintf(
@@ -220,11 +218,11 @@ class FixAccountTypes extends Command
                 Log::debug($message);
                 $this->inspectJournal($journal);
                 break;
-            case sprintf('%s%s%s', TransactionTypeEnum::DEPOSIT, AccountTypeEnum::EXPENSE, AccountTypeEnum::ASSET):
+            case sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET):
                 // deposits with an expense account as source instead of a revenue account.
                 // find revenue account.
                 $this->factory->setUser($journal->user);
-                $result    = $this->factory->findOrCreate($source->account->name, AccountTypeEnum::REVENUE);
+                $result    = $this->factory->findOrCreate($source->account->name, AccountType::REVENUE);
                 $oldSource = $dest->account;
                 $source->account()->associate($result);
                 $source->save();

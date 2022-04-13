@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -61,7 +60,7 @@ class AccountController extends Controller
                 return $next($request);
             }
         );
-        $this->balanceTypes = [AccountTypeEnum::ASSET, AccountTypeEnum::LOAN, AccountTypeEnum::DEBT, AccountTypeEnum::MORTGAGE,];
+        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
     }
 
     /**
@@ -110,7 +109,7 @@ class AccountController extends Controller
         }
 
         // custom order.
-        $order = [AccountTypeEnum::ASSET, AccountTypeEnum::REVENUE, AccountTypeEnum::EXPENSE];
+        $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
         usort(
             $return, function ($a, $b) use ($order) {
             $pos_a = array_search($a['type'], $order);

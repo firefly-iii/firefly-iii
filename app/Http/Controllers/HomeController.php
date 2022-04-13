@@ -24,10 +24,10 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use Exception;
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
@@ -115,7 +115,7 @@ class HomeController extends Controller
         }
         $subTitle     = (string) trans('firefly.welcome_back');
         $transactions = [];
-        $frontPage    = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountTypeEnum::ASSET])->pluck('id')->toArray());
+        $frontPage    = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */

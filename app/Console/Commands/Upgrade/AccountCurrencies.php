@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -145,7 +146,7 @@ class AccountCurrencies extends Command
     {
         Log::debug(sprintf('Now in updateCurrenciesForUser(%s, %s)', $user->email, $systemCurrencyCode));
         $this->accountRepos->setUser($user);
-        $accounts = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT, AccountTypeEnum::ASSET]);
+        $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
         // get user's currency preference:
         $defaultCurrencyCode = app('preferences')->getForUser($user, 'currencyPreference', $systemCurrencyCode)->data;

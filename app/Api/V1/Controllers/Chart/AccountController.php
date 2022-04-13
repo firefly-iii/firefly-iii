@@ -27,9 +27,9 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
@@ -94,7 +94,7 @@ class AccountController extends Controller
         $end = $dates['end'];
 
         // user's preferences
-        $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET])->pluck('id')->toArray();
+        $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default    = app('amount')->getDefaultCurrency();
 

@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorFactory;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Requests\ReportFormRequest;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
@@ -272,7 +272,7 @@ class ReportController extends Controller
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = app('preferences')->get('customFiscalYear', 0)->data;
         $accounts         = $repository->getAccountsByType(
-            [AccountTypeEnum::DEFAULT, AccountTypeEnum::ASSET, AccountTypeEnum::DEBT, AccountTypeEnum::LOAN, AccountTypeEnum::MORTGAGE]
+            [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]
         );
 
         // group accounts by role:
@@ -282,7 +282,7 @@ class ReportController extends Controller
             $type = $account->accountType->type;
             $role = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
-            if (in_array($type, [AccountTypeEnum::MORTGAGE, AccountTypeEnum::DEBT, AccountTypeEnum::LOAN], true)) {
+            if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
                 $role = sprintf('opt_group_l_%s', $type);
             }
 

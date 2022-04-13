@@ -25,8 +25,6 @@ namespace FireflyIII\Api\V1\Controllers\Data;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DestroyRequest;
-use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -96,70 +94,70 @@ class DestroyController extends Controller
             case 'accounts':
                 $this->destroyAccounts(
                     [
-                        AccountTypeEnum::ASSET, AccountTypeEnum::DEFAULT,
-                        AccountTypeEnum::BENEFICIARY, AccountTypeEnum::EXPENSE,
-                        AccountTypeEnum::REVENUE, AccountTypeEnum::INITIAL_BALANCE,
-                        AccountTypeEnum::DEBT, AccountTypeEnum::LOAN, AccountTypeEnum::MORTGAGE, AccountTypeEnum::CREDITCARD,
+                        AccountType::ASSET, AccountType::DEFAULT,
+                        AccountType::BENEFICIARY, AccountType::EXPENSE,
+                        AccountType::REVENUE, AccountType::INITIAL_BALANCE,
+                        AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD,
                     ]
                 );
                 break;
             case 'asset_accounts':
                 $this->destroyAccounts(
                     [
-                        AccountTypeEnum::ASSET, AccountTypeEnum::DEFAULT,
+                        AccountType::ASSET, AccountType::DEFAULT,
                     ]
                 );
                 break;
             case 'expense_accounts':
                 $this->destroyAccounts(
                     [
-                        AccountTypeEnum::BENEFICIARY, AccountTypeEnum::EXPENSE,
+                        AccountType::BENEFICIARY, AccountType::EXPENSE,
                     ]
                 );
                 break;
             case 'revenue_accounts':
                 $this->destroyAccounts(
                     [
-                        AccountTypeEnum::REVENUE,
+                        AccountType::REVENUE,
                     ]
                 );
                 break;
             case 'liabilities':
                 $this->destroyAccounts(
                     [
-                        AccountTypeEnum::DEBT, AccountTypeEnum::LOAN, AccountTypeEnum::MORTGAGE, AccountTypeEnum::CREDITCARD,
+                        AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD,
                     ]
                 );
                 break;
             case 'transactions':
                 $this->destroyTransactions(
                     [
-                        TransactionTypeEnum::WITHDRAWAL,
-                        TransactionTypeEnum::DEPOSIT,
-                        TransactionTypeEnum::TRANSFER,
-                        TransactionTypeEnum::RECONCILIATION,
-                        TransactionTypeEnum::OPENING_BALANCE,
+                        TransactionType::WITHDRAWAL,
+                        TransactionType::DEPOSIT,
+                        TransactionType::TRANSFER,
+                        TransactionType::RECONCILIATION,
+                        TransactionType::OPENING_BALANCE,
                     ]
                 );
                 break;
             case 'withdrawals':
                 $this->destroyTransactions(
                     [
-                        TransactionTypeEnum::WITHDRAWAL,
+                        TransactionType::WITHDRAWAL,
                     ]
                 );
                 break;
             case 'deposits':
                 $this->destroyTransactions(
                     [
-                        TransactionTypeEnum::DEPOSIT,
+                        TransactionType::DEPOSIT,
                     ]
                 );
                 break;
             case 'transfers':
                 $this->destroyTransactions(
                     [
-                        TransactionTypeEnum::TRANSFER,
+                        TransactionType::TRANSFER,
                     ]
                 );
                 break;

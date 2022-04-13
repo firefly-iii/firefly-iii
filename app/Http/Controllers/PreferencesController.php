@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
@@ -71,7 +71,7 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts = $repository->getAccountsByType([AccountTypeEnum::DEFAULT, AccountTypeEnum::ASSET, AccountTypeEnum::LOAN, AccountTypeEnum::DEBT, AccountTypeEnum::MORTGAGE]);
+        $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
         $isDocker = env('IS_DOCKER', false);
 
         // group accounts
@@ -81,7 +81,7 @@ class PreferencesController extends Controller
             $type = $account->accountType->type;
             $role = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
-            if (in_array($type, [AccountTypeEnum::MORTGAGE, AccountTypeEnum::DEBT, AccountTypeEnum::LOAN], true)) {
+            if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
                 $role = sprintf('opt_group_l_%s', $type);
             }
 
