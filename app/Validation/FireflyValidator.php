@@ -807,9 +807,6 @@ class FireflyValidator extends Validator
                                 ->where('response', $response)
                                 ->where('delivery', $delivery)
                                 ->where('url', $url)->count();
-            // find similar webhook for user:
-            //= var_dump($this->data);
-            //exit;
         }
 
         return false;

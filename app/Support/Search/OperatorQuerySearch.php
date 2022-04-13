@@ -1374,7 +1374,7 @@ class OperatorQuerySearch implements SearchInterface
         foreach ($range as $key => $value) {
             switch ($key) {
                 default:
-                    throw new FireflyException(sprintf('Cannot handle key "%s" in setDateAfterParams()', $key));
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setObjectDateBeforeParams()', $key));
                 case 'exact':
                     $this->collector->setObjectBefore($value, $field);
                     $this->operators->push(['type' => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d'),]);
@@ -1413,7 +1413,7 @@ class OperatorQuerySearch implements SearchInterface
         foreach ($range as $key => $value) {
             switch ($key) {
                 default:
-                    throw new FireflyException(sprintf('Cannot handle key "%s" in setDateAfterParams()', $key));
+                    throw new FireflyException(sprintf('Cannot handle key "%s" in setObjectDateAfterParams()', $key));
                 case 'exact':
                     $this->collector->setObjectAfter($value, $field);
                     $this->operators->push(['type' => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d'),]);
