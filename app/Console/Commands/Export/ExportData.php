@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Export;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -233,7 +234,7 @@ class ExportData extends Command
         $final       = new Collection;
         $accounts    = new Collection;
         $accountList = $this->option('accounts');
-        $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        $types       = [AccountTypeEnum::ASSET, AccountTypeEnum::LOAN, AccountTypeEnum::DEBT, AccountTypeEnum::MORTGAGE];
         if (null !== $accountList && '' !== (string) $accountList) {
             $accountIds = explode(',', $accountList);
             $accounts   = $this->accountRepository->getAccountsById($accountIds);

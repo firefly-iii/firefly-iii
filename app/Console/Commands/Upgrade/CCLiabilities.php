@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -66,8 +67,8 @@ class CCLiabilities extends Command
         }
 
 
-        $ccType   = AccountType::where('type', AccountType::CREDITCARD)->first();
-        $debtType = AccountType::where('type', AccountType::DEBT)->first();
+        $ccType   = AccountType::where('type', AccountTypeEnum::CREDITCARD)->first();
+        $debtType = AccountType::where('type', AccountTypeEnum::DEBT)->first();
         if (null === $ccType || null === $debtType) {
             $this->info('No incorrectly stored credit card liabilities.');
 

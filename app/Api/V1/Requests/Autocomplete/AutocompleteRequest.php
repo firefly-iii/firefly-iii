@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Autocomplete;
 
+use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -49,7 +50,7 @@ class AutocompleteRequest extends FormRequest
         $limit = 0 === $limit ? 10 : $limit;
 
         // remove 'initial balance' from allowed types. its internal
-        $array = array_diff($array, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION]);
+        $array = array_diff($array, [AccountTypeEnum::INITIAL_BALANCE, AccountTypeEnum::RECONCILIATION]);
 
         return [
             'types' => $array,

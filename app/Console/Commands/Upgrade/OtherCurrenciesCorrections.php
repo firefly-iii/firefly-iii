@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -218,23 +220,23 @@ class OtherCurrenciesCorrections extends Command
         switch ($journal->transactionType->type) {
             default:
                 break;
-            case TransactionType::WITHDRAWAL:
+            case TransactionTypeEnum::WITHDRAWAL:
                 $lead = $journal->transactions()->where('amount', '<', 0)->first();
                 break;
-            case TransactionType::DEPOSIT:
+            case TransactionTypeEnum::DEPOSIT:
                 $lead = $journal->transactions()->where('amount', '>', 0)->first();
                 break;
-            case TransactionType::OPENING_BALANCE:
+            case TransactionTypeEnum::OPENING_BALANCE:
                 // whichever isn't an initial balance account:
                 $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
                     'account_types', 'accounts.account_type_id', '=', 'account_types.id'
-                )->where('account_types.type', '!=', AccountType::INITIAL_BALANCE)->first(['transactions.*']);
+                )->where('account_types.type', '!=', AccountTypeEnum::INITIAL_BALANCE)->first(['transactions.*']);
                 break;
-            case TransactionType::RECONCILIATION:
+            case TransactionTypeEnum::RECONCILIATION:
                 // whichever isn't the reconciliation account:
                 $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
                     'account_types', 'accounts.account_type_id', '=', 'account_types.id'
-                )->where('account_types.type', '!=', AccountType::RECONCILIATION)->first(['transactions.*']);
+                )->where('account_types.type', '!=', AccountTypeEnum::RECONCILIATION)->first(['transactions.*']);
                 break;
         }
 

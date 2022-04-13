@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -260,7 +262,7 @@ class AccountFactory
         $currency     = $this->getCurrency($currencyId, $currencyCode);
 
         // only asset account may have a role:
-        if ($account->accountType->type !== AccountType::ASSET) {
+        if ($account->accountType->type !== AccountTypeEnum::ASSET) {
             $accountRole = '';
         }
         // only liability may have direction:
@@ -281,10 +283,10 @@ class AccountFactory
     {
 
         $fields = $this->validFields;
-        if ($account->accountType->type === AccountType::ASSET) {
+        if ($account->accountType->type === AccountTypeEnum::ASSET) {
             $fields = $this->validAssetFields;
         }
-        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
+        if ($account->accountType->type === AccountTypeEnum::ASSET && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields;
         }
 
