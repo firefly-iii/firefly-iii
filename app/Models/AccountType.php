@@ -49,6 +49,22 @@ use Illuminate\Support\Carbon;
  */
 class AccountType extends Model
 {
+    public const ASSET            = 'Asset account';
+    public const BENEFICIARY      = 'Beneficiary account';
+    public const CASH             = 'Cash account';
+    public const CREDITCARD       = 'Credit card';
+    public const DEBT             = 'Debt';
+    public const DEFAULT          = 'Default account';
+    public const EXPENSE          = 'Expense account';
+    public const IMPORT           = 'Import account';
+    public const INITIAL_BALANCE  = 'Initial balance account';
+    public const LIABILITY_CREDIT = 'Liability credit account';
+    public const LOAN             = 'Loan';
+    public const MORTGAGE         = 'Mortgage';
+    public const RECONCILIATION   = 'Reconciliation account';
+    public const REVENUE          = 'Revenue account';
+
+
     /**
      * The attributes that should be casted to native types.
      *

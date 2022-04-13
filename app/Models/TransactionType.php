@@ -56,10 +56,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionType extends Model
 {
+    public const DEPOSIT          = 'Deposit';
+    public const INVALID          = 'Invalid';
+    public const LIABILITY_CREDIT = 'Liability credit';
+    public const OPENING_BALANCE  = 'Opening balance';
+    public const RECONCILIATION   = 'Reconciliation';
+    public const TRANSFER         = 'Transfer';
+    public const WITHDRAWAL       = 'Withdrawal';
     use SoftDeletes;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

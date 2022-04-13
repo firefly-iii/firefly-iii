@@ -76,7 +76,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Webhook extends Model
 {
+
+    // dont forget to update the config in firefly.php
+    public const DELIVERY_JSON               = 300;
+    public const RESPONSE_ACCOUNTS           = 210;
+    public const RESPONSE_NONE               = 220;
+    public const RESPONSE_TRANSACTIONS       = 200;
+    public const TRIGGER_DESTROY_TRANSACTION = 120;
+    public const TRIGGER_STORE_TRANSACTION   = 100;
+    public const TRIGGER_UPDATE_TRANSACTION  = 110;
+
+
     use SoftDeletes;
+
     protected $casts
                         = [
             'active'   => 'boolean',
