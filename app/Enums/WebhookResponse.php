@@ -23,7 +23,7 @@ namespace FireflyIII\Enums;
 
 enum WebhookResponse: int
 {
-    case RESPONSE_TRANSACTIONS = 200;
-    case RESPONSE_ACCOUNTS = 210;
-    case RESPONSE_NONE = 220;
+    case TRANSACTIONS = 200;
+    case ACCOUNTS = 210;
+    case NONE = 220;
 }

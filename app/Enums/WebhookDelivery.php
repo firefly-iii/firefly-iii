@@ -23,5 +23,5 @@ namespace FireflyIII\Enums;
 
 enum WebhookDelivery: int
 {
-    case DELIVERY_JSON = 300;
+    case JSON = 300;
 }

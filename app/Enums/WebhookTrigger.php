@@ -23,7 +23,7 @@ namespace FireflyIII\Enums;
 
 enum WebhookTrigger: int
 {
-    case TRIGGER_STORE_TRANSACTION = 100;
-    case TRIGGER_UPDATE_TRANSACTION = 110;
-    case TRIGGER_DESTROY_TRANSACTION = 120;
+    case STORE_TRANSACTION = 100;
+    case UPDATE_TRANSACTION = 110;
+    case DESTROY_TRANSACTION = 120;
 }
