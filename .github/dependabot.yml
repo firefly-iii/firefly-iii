@@ -19,3 +19,10 @@ updates:
     schedule:
       interval: "weekly"
 
+  - package-ecosystem: "github-actions"
+    directory: "/" 
+    target-branch: develop
+    labels: ["bug"]
+    versioning-strategy: increase
+    schedule:
+      interval: "weekly"
