@@ -45,7 +45,6 @@ class AppServiceProvider extends ServiceProvider
         if ('heroku' === config('app.env')) {
             URL::forceScheme('https');
         }
-        Sanctum::ignoreMigrations();
     }
 
     /**
@@ -56,5 +55,6 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         Passport::ignoreMigrations();
+        Sanctum::ignoreMigrations();
     }
 }
