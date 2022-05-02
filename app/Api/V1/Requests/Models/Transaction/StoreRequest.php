@@ -55,7 +55,7 @@ class StoreRequest extends FormRequest
         Log::debug('get all data in TransactionStoreRequest');
 
         return [
-            'group_title'             => $this->string('group_title'),
+            'group_title'             => $this->convertString('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
             'apply_rules'             => $this->boolean('apply_rules', true),
             'fire_webhooks'           => $this->boolean('fire_webhooks', true),

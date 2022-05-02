@@ -107,9 +107,9 @@ class UpdateRequest extends FormRequest
         $rules = [
             'name'                 => sprintf('min:1|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
-            'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->string('type'))],
+            'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->convertString('type'))],
             'bic'                  => 'bic|nullable',
-            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber($account, $this->string('type'))],
+            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber($account, $this->convertString('type'))],
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',

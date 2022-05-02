@@ -66,7 +66,7 @@ class UpdateRequest extends FormRequest
         }
         $return['secret'] = null !== $this->get('secret');
         if (null !== $this->get('title')) {
-            $return['title'] = $this->string('title');
+            $return['title'] = $this->convertString('title');
         }
 
         return $return;

@@ -56,35 +56,35 @@ class StoreRequest extends FormRequest
             $includeNetWorth = $this->boolean('include_net_worth');
         }
         $data = [
-            'name'                    => $this->string('name'),
+            'name'                    => $this->convertString('name'),
             'active'                  => $active,
             'include_net_worth'       => $includeNetWorth,
-            'account_type_name'       => $this->string('type'),
+            'account_type_name'       => $this->convertString('type'),
             'account_type_id'         => null,
             'currency_id'             => $this->integer('currency_id'),
             'order'                   => $this->integer('order'),
-            'currency_code'           => $this->string('currency_code'),
-            'virtual_balance'         => $this->string('virtual_balance'),
-            'iban'                    => $this->string('iban'),
-            'BIC'                     => $this->string('bic'),
-            'account_number'          => $this->string('account_number'),
-            'account_role'            => $this->string('account_role'),
-            'opening_balance'         => $this->string('opening_balance'),
+            'currency_code'           => $this->convertString('currency_code'),
+            'virtual_balance'         => $this->convertString('virtual_balance'),
+            'iban'                    => $this->convertString('iban'),
+            'BIC'                     => $this->convertString('bic'),
+            'account_number'          => $this->convertString('account_number'),
+            'account_role'            => $this->convertString('account_role'),
+            'opening_balance'         => $this->convertString('opening_balance'),
             'opening_balance_date'    => $this->getCarbonDate('opening_balance_date'),
-            'cc_type'                 => $this->string('credit_card_type'),
-            'cc_monthly_payment_date' => $this->string('monthly_payment_date'),
+            'cc_type'                 => $this->convertString('credit_card_type'),
+            'cc_monthly_payment_date' => $this->convertString('monthly_payment_date'),
             'notes'                   => $this->stringWithNewlines('notes'),
-            'interest'                => $this->string('interest'),
-            'interest_period'         => $this->string('interest_period'),
+            'interest'                => $this->convertString('interest'),
+            'interest_period'         => $this->convertString('interest_period'),
         ];
         // append location information.
         $data = $this->appendLocationData($data, null);
 
         if ('liability' === $data['account_type_name'] || 'liabilities' === $data['account_type_name']) {
-            $data['opening_balance']      = app('steam')->negative($this->string('liability_amount'));
+            $data['opening_balance']      = app('steam')->negative($this->convertString('liability_amount'));
             $data['opening_balance_date'] = $this->getCarbonDate('liability_start_date');
-            $data['account_type_name']    = $this->string('liability_type');
-            $data['liability_direction']  = $this->string('liability_direction');
+            $data['account_type_name']    = $this->convertString('liability_type');
+            $data['liability_direction']  = $this->convertString('liability_direction');
             $data['account_type_id']      = null;
         }
 
@@ -101,7 +101,7 @@ class StoreRequest extends FormRequest
         $accountRoles   = implode(',', config('firefly.accountRoles'));
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
-        $type           = $this->string('type');
+        $type           = $this->convertString('type');
         $rules          = [
             'name'                 => 'required|min:1|uniqueAccountForUser',
             'type'                 => 'required|' . sprintf('in:%s', $types),

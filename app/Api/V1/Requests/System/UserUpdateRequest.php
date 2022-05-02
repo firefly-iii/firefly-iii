@@ -60,10 +60,10 @@ class UserUpdateRequest extends FormRequest
         }
 
         return [
-            'email'        => $this->string('email'),
+            'email'        => $this->convertString('email'),
             'blocked'      => $blocked,
-            'blocked_code' => $this->string('blocked_code'),
-            'role'         => $this->string('role'),
+            'blocked_code' => $this->convertString('blocked_code'),
+            'role'         => $this->convertString('role'),
         ];
     }
 

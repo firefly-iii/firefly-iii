@@ -410,7 +410,7 @@ class ProfileController extends Controller
 
         /** @var User $user */
         $user     = auth()->user();
-        $newEmail = $request->string('email');
+        $newEmail = $request->convertString('email');
         $oldEmail = $user->email;
         if ($newEmail === $user->email) {
             session()->flash('error', (string) trans('firefly.email_not_changed'));

@@ -69,18 +69,18 @@ trait AppendsLocationData
         if ($isValidPOST) {
             Log::debug('Method is POST and all fields present and not NULL.');
             $data['store_location'] = true;
-            $data['longitude']      = $this->string($longitudeKey);
-            $data['latitude']       = $this->string($latitudeKey);
-            $data['zoom_level']     = $this->string($zoomLevelKey);
+            $data['longitude']      = $this->convertString($longitudeKey);
+            $data['latitude']       = $this->convertString($latitudeKey);
+            $data['zoom_level']     = $this->convertString($zoomLevelKey);
         }
 
         // for a PUT (api update) or POST update (UI)
         if ($isValidPUT) {
             Log::debug('Method is PUT and all fields present and not NULL.');
             $data['update_location'] = true;
-            $data['longitude']       = $this->string($longitudeKey);
-            $data['latitude']        = $this->string($latitudeKey);
-            $data['zoom_level']      = $this->string($zoomLevelKey);
+            $data['longitude']       = $this->convertString($longitudeKey);
+            $data['latitude']        = $this->convertString($latitudeKey);
+            $data['zoom_level']      = $this->convertString($zoomLevelKey);
         }
         if ($isValidEmptyPUT) {
             Log::debug('Method is PUT and all fields present and NULL.');

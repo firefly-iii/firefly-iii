@@ -47,7 +47,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'link_type_id'   => $this->integer('link_type_id'),
-            'link_type_name' => $this->string('link_type_name'),
+            'link_type_name' => $this->convertString('link_type_name'),
             'inward_id'      => $this->integer('inward_id'),
             'outward_id'     => $this->integer('outward_id'),
             'notes'          => $this->stringWithNewlines('notes'),

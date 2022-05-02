@@ -45,7 +45,7 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'name'  => $this->string('name'),
+            'name'  => $this->convertString('name'),
             'notes' => $this->stringWithNewlines('notes'),
         ];
     }

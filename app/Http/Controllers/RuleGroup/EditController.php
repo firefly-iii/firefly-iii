@@ -131,7 +131,7 @@ class EditController extends Controller
     public function update(RuleGroupFormRequest $request, RuleGroup $ruleGroup)
     {
         $data = [
-            'title'       => $request->string('title'),
+            'title'       => $request->convertString('title'),
             'description' => $request->stringWithNewlines('description'),
             'active'      => 1 === (int) $request->input('active'),
         ];

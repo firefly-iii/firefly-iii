@@ -45,10 +45,10 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'filename'        => $this->string('filename'),
-            'title'           => $this->string('title'),
+            'filename'        => $this->convertString('filename'),
+            'title'           => $this->convertString('title'),
             'notes'           => $this->stringWithNewlines('notes'),
-            'attachable_type' => $this->string('attachable_type'),
+            'attachable_type' => $this->convertString('attachable_type'),
             'attachable_id'   => $this->integer('attachable_id'),
         ];
     }
@@ -68,7 +68,7 @@ class StoreRequest extends FormRequest
             }, $models
         );
         $models = implode(',', $models);
-        $model  = $this->string('attachable_type');
+        $model  = $this->convertString('attachable_type');
 
         return [
             'filename'        => 'required|between:1,255',
