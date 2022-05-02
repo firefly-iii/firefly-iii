@@ -1,7 +1,7 @@
 export default {
     "config": {
         "html_language": "pt",
-        "month_and_day_fns": "d MMMM, y"
+        "month_and_day_fns": "d MMMM y"
     },
     "form": {
         "name": "Nome",

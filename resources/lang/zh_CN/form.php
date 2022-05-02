@@ -139,7 +139,7 @@ return [
     'user_areYouSure'             => '如果您删除用户“:email”，此用户的所有数据都会被删除，且无法恢复。如果您删除自己，您将无法进入此 Firefly III 站点。',
     'attachment_areYouSure'       => '您确定要删除附件“:name”吗？',
     'account_areYouSure'          => '您确定要删除账户“:name”吗？',
-    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
+    'account_areYouSure_js'       => '确定要删除名称为"{name}"的账户吗？',
     'bill_areYouSure'             => '您确定要删除账单“:name”吗？',
     'rule_areYouSure'             => '您确定要删除规则“:title”吗？',
     'object_group_areYouSure'     => '您确定要删除组“:title”吗？',
@@ -171,7 +171,7 @@ return [
     'recurring_keep_transactions' => '由此定期交易建立的唯一一笔交易不会被删除。|由此定期交易建立的 :count 笔交易不会被删除。',
     'tag_keep_transactions'       => '与此标签关联的唯一一笔交易不会被删除。|与此标签关联的 :count 笔交易不会被删除。',
     'check_for_updates'           => '检查更新',
-    'liability_direction'         => 'Liability in/out',
+    'liability_direction'         => '债务',
     'delete_object_group'         => '删除组“:title”',
     'email'                       => '电子邮件地址',
     'password'                    => '密码',
@@ -180,7 +180,7 @@ return [
     'blocked_code'                => '封禁原因',
     'login_name'                  => '登录',
     'is_owner'                    => '是管理员？',
-    'url'                         => 'URL',
+    'url'                         => '网址',
     'bill_end_date'               => '结束日期',
 
     // import

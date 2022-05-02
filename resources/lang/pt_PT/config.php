@@ -29,24 +29,24 @@ return [
     'month_js'                 => 'MMMM YYYY',
 
     //'month_and_day'           => '%B %e, %Y',
-    'month_and_day_moment_js'  => 'MMM D, YYYY',
-    'month_and_day_fns'        => 'd MMMM, y',
-    'month_and_day_js'         => 'MMMM Do, YYYY',
+    'month_and_day_moment_js'  => 'D MMM YYYY',
+    'month_and_day_fns'        => 'd MMMM y',
+    'month_and_day_js'         => 'Do MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'    => 'dddd MMMM Do, YYYY',
+    'month_and_date_day_js'    => 'dddd, Do MMMM YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
-    'month_and_day_no_year_js' => 'MMMM Do',
+    'month_and_day_no_year_js' => 'Do MMMM',
 
     //'date_time'               => '%B %e, %Y, @ %T',
-    'date_time_js'             => 'MMMM Do, YYYY, @ HH:mm:ss',
+    'date_time_js'             => 'Do MMMM YYYY, @ HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'D MMMM YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'          => '[Week] w, YYYY',
+    'week_in_year_js'          => '[Semana] w, YYYY',
     'week_in_year_fns'         => "'Semana' w, yyyy",
 
     //'year'                    => '%Y',

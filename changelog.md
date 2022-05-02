@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.3 - 2022-05-03
+
+### Fixed
+- Searching for `updated_at_before` and `created_at_before` works again.
+- [Issue 6000](https://github.com/firefly-iii/firefly-iii/issues/6000) Bad math when dealing with multi-currency reconciliation.
+- Remove unused CSS
+- Fix bad migration.
+
+### API
+- Add error code to error message.
+
 ## 5.7.2 - 2022-04-13
 
 ### Fixed

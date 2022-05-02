@@ -44,13 +44,13 @@ return [
     // access token created
     'access_token_created_subject'            => 'Создан новый токен доступа',
     'access_token_created_body'               => 'Кто-то (надеемся, что вы) только что создал новый токен доступа к Firefly III API для вашей учетной записи.',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'С помощью этого токена, они смогут получить доступ ко **всем** вашим финансовым записям через Firefly III API.',
+    'access_token_created_revoke'             => 'Если это были не вы, пожалуйста отзовите токен как можно скорее по адресу :url',
 
     // registered
     'registered_subject'                      => 'Добро пожаловать в Firefly III!',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
+    'registered_welcome'                      => 'Добро пожаловать в [Firefly III](:address). Подтверждаем вашу регистрацию этим e-mail. Ура!',
+    'registered_pw'                           => 'Если вы забыли ваш пароль, пожалуйста, создайте его повторно используя [оснастку по сбросу пароля](:address/password/reset).',
     'registered_help'                         => 'В верхнем правом углу страницы есть иконка справки. Если вам нужна помощь, нажмите её!',
     'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
     'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',
