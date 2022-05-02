@@ -82,12 +82,13 @@
 
 <script>
 import Basic from "src/api/summary/basic";
-import {mapGetters, useStore} from "vuex";
+//import {mapGetters, useStore} from "vuex";
+import {useFireflyIIIStore} from '../../stores/fireflyiii'
 
 export default {
   name: 'Boxes',
   computed: {
-    ...mapGetters('fireflyiii', ['getCurrencyCode', 'getCurrencyId', 'getRange','getCacheKey']),
+    //...mapGetters('fireflyiii', ['getCurrencyCode', 'getCurrencyId', 'getRange','getCacheKey']),
     prefBillsUnpaid: function () {
       return this.filterOnCurrency(this.billsUnpaid);
     },
@@ -119,36 +120,43 @@ export default {
       range: {
         start: null,
         end: null,
-      }
+      },
+      store: null
     }
   },
   mounted() {
+    this.store = useFireflyIIIStore();
 
     if (null === this.range.start || null === this.range.end) {
       // subscribe, then update:
-      const $store = useStore();
-      $store.subscribe((mutation) => {
-        if ('fireflyiii/setRange' === mutation.type) {
-          this.range = mutation.payload;
-          this.triggerUpdate();
+
+      this.store.$onAction(
+        ({name, $store, args, after, onError,}) => {
+          after((result) => {
+            if (name === 'setRange') {
+              this.range = result;
+              this.triggerUpdate();
+            }
+          })
         }
-      });
+      )
     }
-    if (null !== this.getRange.start && null !== this.getRange.end) {
-      this.start = this.getRange.start;
-      this.end = this.getRange.end;
+
+    if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
+      this.start = this.store.getRange.start;
+      this.end = this.store.getRange.end;
       this.triggerUpdate();
     }
   },
   methods: {
-    triggerForcedUpgrade: function() {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+    triggerForcedUpgrade: function () {
+      this.store.refreshCacheKey();
       this.triggerUpdate();
     },
     triggerUpdate: function () {
-      if (null !== this.getRange.start && null !== this.getRange.end) {
+      if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
         const basic = new Basic;
-        basic.list({start: this.getRange.start, end: this.getRange.end}, this.getCacheKey).then(data => {
+        basic.list({start: this.store.getRange.start, end: this.store.getRange.end}, this.store.getCacheKey).then(data => {
           this.netWorth = this.getKeyedEntries(data.data, 'net-worth-in-');
           this.leftToSpend = this.getKeyedEntries(data.data, 'left-to-spend-in-');
           this.billsPaid = this.getKeyedEntries(data.data, 'bills-paid-in-');
@@ -171,7 +179,7 @@ export default {
       let ret = [];
       for (const key in array) {
         if (array.hasOwnProperty(key)) {
-          if (array[key].currency_id === this.getCurrencyId) {
+          if (array[key].currency_id === this.store.getCurrencyId) {
             ret.push(array[key]);
           }
         }
@@ -186,7 +194,7 @@ export default {
       let ret = [];
       for (const key in array) {
         if (array.hasOwnProperty(key)) {
-          if (array[key].currency_id !== this.getCurrencyId) {
+          if (array[key].currency_id !== this.store.getCurrencyId) {
             ret.push(array[key]);
           }
         }
@@ -196,7 +204,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

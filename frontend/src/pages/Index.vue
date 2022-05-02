@@ -22,7 +22,7 @@
   <q-page>
     <div class="q-ma-md" v-if="0 === assetCount">
       <NewUser
-      v-on:created-accounts="refreshThenCount"
+        v-on:created-accounts="refreshThenCount"
       ></NewUser>
     </div>
     <div class="q-ma-md" v-if="assetCount > 0">
@@ -114,7 +114,8 @@
 <script>
 import {defineAsyncComponent, defineComponent} from "vue";
 import List from "../api/accounts/list";
-import {mapGetters} from "vuex";
+//import {mapGetters} from "vuex";
+import {useFireflyIIIStore} from '../stores/fireflyiii'
 
 export default defineComponent(
   {
@@ -130,19 +131,21 @@ export default defineComponent(
       }
     },
     computed: {
-      ...mapGetters('fireflyiii', ['getCacheKey']),
+      //...mapGetters('fireflyiii', ['getCacheKey']),
     },
     mounted() {
       this.countAssetAccounts();
     },
     methods: {
-      refreshThenCount: function() {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+      refreshThenCount: function () {
+        const store = useFireflyIIIStore();
+        store.refreshCacheKey();
+        //this.$store.dispatch('fireflyiii/refreshCacheKey');
         this.countAssetAccounts();
       },
       countAssetAccounts: function () {
         let list = new List;
-        list.list('asset',1, this.getCacheKey).then((response) => {
+        list.list('asset', 1, this.getCacheKey).then((response) => {
           this.assetCount = parseInt(response.data.meta.pagination.total);
         });
       }

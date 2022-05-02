@@ -28,14 +28,15 @@
 
 import {defineAsyncComponent} from "vue";
 import Overview from '../../api/chart/account/overview';
-import {mapGetters, useStore} from "vuex";
+//import {mapGetters, useStore} from "vuex";
 import format from "date-fns/format";
 import {useQuasar} from "quasar";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "HomeChart",
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
+    //...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
   },
   data() {
     return {
@@ -79,6 +80,7 @@ export default {
       series: [],
       locale: 'en-US',
       dateFormat: 'MMMM d, y',
+      store: null,
     }
   },
   created() {
@@ -89,17 +91,22 @@ export default {
   mounted() {
     const $q = useQuasar();
     this.options.theme.mode = $q.dark.isActive ? 'dark' : 'light';
+    this.store = useFireflyIIIStore();
     if (null === this.range.start || null === this.range.end) {
       // subscribe, then update:
-      const $store = useStore();
-      $store.subscribe((mutation, state) => {
-        if ('fireflyiii/setRange' === mutation.type) {
-          this.range = mutation.payload;
-          this.buildChart();
+
+      this.store.$onAction(
+        ({name, $store, args, after, onError,}) => {
+          after((result) => {
+            if (name === 'setRange') {
+              this.range = result;
+              this.buildChart();
+            }
+          })
         }
-      });
+      )
     }
-    if (null !== this.getRange.start && null !== this.getRange.end) {
+    if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
       this.buildChart();
     }
   },
@@ -109,9 +116,9 @@ export default {
       return Intl.NumberFormat(this.locale, {style: 'currency', currency: currencyCode}).format(value);
     },
     buildChart: function () {
-      if (null !== this.getRange.start && null !== this.getRange.end) {
-        let start = this.getRange.start;
-        let end = this.getRange.end;
+      if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
+        let start = this.store.getRange.start;
+        let end = this.store.getRange.end;
         if (false === this.loading) {
           this.loading = true;
           const overview = new Overview();

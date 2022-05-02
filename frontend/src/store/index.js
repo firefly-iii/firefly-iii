@@ -33,7 +33,7 @@ import fireflyiii from './fireflyiii'
  */
 
 export default store(function (/* { ssrContext } */) {
-  const Store = createStore({
+  return createStore({
     modules: {
       // example
       fireflyiii
@@ -43,6 +43,4 @@ export default store(function (/* { ssrContext } */) {
     // for dev mode and --debug builds only
     strict: process.env.DEBUGGING
   })
-
-  return Store
 })
