@@ -125,7 +125,7 @@ class StoreController extends Controller
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw new FireflyException('Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
+            throw new FireflyException('200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
