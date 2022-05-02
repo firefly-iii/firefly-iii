@@ -40,7 +40,7 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'あなたのアカウントには有効なIBANを設定してください。これは将来のデータインポートをとても簡単にします。',
-    'accounts_create_asset_opening_balance' => '経費勘定はFirefly IIIでのこのアカウントの始まりを示す"期首残高"を持っているかもしれません。',
+    'accounts_create_asset_opening_balance' => '資産口座には Firefly III のアカウントの履歴の開始を示す「開始残高」があります。',
     'accounts_create_asset_currency'        => 'Firefly IIIは複数の通貨をサポートしています。経費勘定は一つの主通貨を持っており、あなたはここでそれを選択する必要があります。',
     'accounts_create_asset_virtual'         => 'あなたのアカウントに仮想の残高を与えることはしばしば助けになるかもしれません: 余剰は常に実際の残高から差し引かれます。',
 
@@ -88,7 +88,7 @@ return [
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'この項目は、それぞれの貯金箱にどれだけ貯めたかを示しています。',
     'piggy-banks_index_button'                                => 'このプログレスバーの隣には、それぞれの貯金箱からお金を追加または削除する、2つのボタン(+と-) があります。',
-    'piggy-banks_index_accountStatus'                         => 'この表には、ひとつ以上の貯金箱をもつ資産口座の状況が表示されています。',
+    'piggy-banks_index_accountStatus'                         => 'この表には、ひとつ以上の貯金箱をもつ資産勘定の状況が表示されています。',
 
     // create piggy
     'piggy-banks_create_name'                                 => 'あなたの目標は何ですか？ 新しいソファ、カメラ、もしもの時のお金ですか？',
@@ -107,7 +107,7 @@ return [
     // show bill
     'bills_show_billInfo'                                     => 'この表はこの請求に関する一般情報を示しています。',
     'bills_show_billButtons'                                  => 'このボタンで、これまでの取引を再スキャンし、この請求にマッチさせます。',
-    'bills_show_billChart'                                    => 'このチャートは、この請求書に紐づく取引を示しています。',
+    'bills_show_billChart'                                    => 'このチャートは、この請求に紐づく取引を示しています。',
 
     // create bill
     'bills_create_intro'                                      => '請求を使って期間ごとに支払うべき金額を追跡します。家賃や保険、住宅ローンのような支出です。',

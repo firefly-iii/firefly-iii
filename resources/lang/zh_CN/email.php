@@ -44,7 +44,7 @@ return [
     // access token created
     'access_token_created_subject'            => '创建了一个新的访问令牌',
     'access_token_created_body'               => '有人（希望是您）刚刚为您的帐户创建了一个新的 Firefly III API 访问令牌。',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
+    'access_token_created_explanation'        => '使用这个令牌，任何人都可以通过Firefly III API访问您的所有财务记录。',
     'access_token_created_revoke'             => '如果这不是您的操作，请尽快访问链接撤销该令牌：:url。',
 
     // registered

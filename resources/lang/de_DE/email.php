@@ -44,13 +44,13 @@ return [
     // access token created
     'access_token_created_subject'            => 'Ein neuer Zugriffstoken wurde erstellt',
     'access_token_created_body'               => 'Jemand (hoffentlich Sie) hat gerade einen neuen Firefly III API Zugangstoken für Ihr Benutzerkonto erstellt.',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'Mit diesem Token haben Sie, mittels der Firefly III API, Zugriff auf **alle** Ihrer Finanzdaten.',
+    'access_token_created_revoke'             => 'Wenn Sie das nicht waren, widerrufen Sie dieses Token bitte so schnell wie möglich unter :url',
 
     // registered
     'registered_subject'                      => 'Willkommen bei Firefly III!',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
+    'registered_welcome'                      => 'Willkommen bei [Firefly III](:address). Ihre Registrierung ist abgeschlossen und diese E-Mail erhalten Sie zur Bestätigung. Hurra!',
+    'registered_pw'                           => 'Wenn Sie Ihr Passwort bereits vergessen haben, setzen Sie es bitte mit dem [Tool zum Zurücksetzen des Passworts](:address/password/reset) zurück.',
     'registered_help'                         => 'Es gibt ein Hilfe-Icon in der oberen rechten Ecke jeder Seite. Wenn Sie Hilfe benötigen, klicken Sie dort drauf!',
     'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
     'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',

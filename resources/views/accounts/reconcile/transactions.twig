@@ -118,7 +118,9 @@
                         <input type="checkbox" name="reconciled[]"
                                data-younger="{% if journal.date < start %}true{% else %}false{% endif %}"
                         data-inrange="{% if journal.date >= start and journal.date <= end  %}true{% else %}false"{% endif %}"
-                        value="{{ journal.amount }}" data-id="{{ journal.transaction_journal_id }}" disabled class="reconcile_checkbox">
+                        {% if currency.id == journal.currency_id %}value="{{ journal.amount }}"{% endif %}
+                        {% if currency.id == journal.foreign_currency_id %}value="{{ journal.foreign_amount }}"{% endif %}
+                         data-id="{{ journal.transaction_journal_id }}" disabled class="reconcile_checkbox">
                     {% endif %}
                 {% else %}
                     <!-- if not in range, just show reconciliation status -->
