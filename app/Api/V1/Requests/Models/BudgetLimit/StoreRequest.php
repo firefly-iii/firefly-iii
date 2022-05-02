@@ -46,9 +46,9 @@ class StoreRequest extends FormRequest
         return [
             'start'         => $this->getCarbonDate('start'),
             'end'           => $this->getCarbonDate('end'),
-            'amount'        => $this->string('amount'),
+            'amount'        => $this->convertString('amount'),
             'currency_id'   => $this->integer('currency_id'),
-            'currency_code' => $this->string('currency_code'),
+            'currency_code' => $this->convertString('currency_code'),
         ];
     }
 

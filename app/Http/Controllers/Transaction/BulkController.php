@@ -110,8 +110,8 @@ class BulkController extends Controller
             $journal   = $this->repository->find($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
-                $resultB = $this->updateJournalTags($journal, $tagsAction, explode(',', $request->string('tags')));
-                $resultC = $this->updateJournalCategory($journal, $ignoreCategory, $request->string('category'));
+                $resultB = $this->updateJournalTags($journal, $tagsAction, explode(',', $request->convertString('tags')));
+                $resultC = $this->updateJournalCategory($journal, $ignoreCategory, $request->convertString('category'));
                 if ($resultA || $resultB || $resultC) {
                     $count++;
                 }

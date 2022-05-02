@@ -42,7 +42,7 @@ class ObjectGroupFormRequest extends FormRequest
     public function getObjectGroupData(): array
     {
         return [
-            'title' => $this->string('title'),
+            'title' => $this->convertString('title'),
         ];
     }
 

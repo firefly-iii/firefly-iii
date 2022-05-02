@@ -42,9 +42,9 @@ class CurrencyFormRequest extends FormRequest
     public function getCurrencyData(): array
     {
         return [
-            'name'           => $this->string('name'),
-            'code'           => $this->string('code'),
-            'symbol'         => $this->string('symbol'),
+            'name'           => $this->convertString('name'),
+            'code'           => $this->convertString('code'),
+            'symbol'         => $this->convertString('symbol'),
             'decimal_places' => $this->integer('decimal_places'),
             'enabled'        => $this->boolean('enabled'),
         ];

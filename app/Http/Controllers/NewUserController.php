@@ -92,7 +92,7 @@ class NewUserController extends Controller
      */
     public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository)
     {
-        $language = $request->string('language');
+        $language = $request->convertString('language');
         if (!array_key_exists($language, config('firefly.languages'))) {
             $language = 'en_US';
 

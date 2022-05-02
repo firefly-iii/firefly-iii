@@ -70,7 +70,7 @@ class UpdateRequest extends FormRequest
             }, $models
         );
         $models = implode(',', $models);
-        $model  = $this->string('attachable_type');
+        $model  = $this->convertString('attachable_type');
 
         return [
             'filename'        => 'between:1,255',

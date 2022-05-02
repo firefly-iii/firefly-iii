@@ -57,7 +57,7 @@ class UpdateRequest extends FormRequest
                 return ['value' => $this->integer('value')];
         }
 
-        return ['value' => $this->string('value')];
+        return ['value' => $this->convertString('value')];
     }
 
     /**

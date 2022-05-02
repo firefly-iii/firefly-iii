@@ -84,7 +84,7 @@ class UpdateRequest extends FormRequest
             'notes',
         ];
 
-        $this->stringFields  = [
+        $this->convertStringFields  = [
             'type',
             'currency_code',
             'foreign_currency_code',
@@ -133,7 +133,7 @@ class UpdateRequest extends FormRequest
             $data['fire_webhooks'] = $this->boolean('fire_webhooks', true);
         }
         if ($this->has('group_title')) {
-            $data['group_title'] = $this->string('group_title');
+            $data['group_title'] = $this->convertString('group_title');
         }
 
         return $data;
@@ -196,7 +196,7 @@ class UpdateRequest extends FormRequest
      */
     private function getStringData(array $current, array $transaction): array
     {
-        foreach ($this->stringFields as $fieldName) {
+        foreach ($this->convertStringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
                 $current[$fieldName] = $this->clearString((string) $transaction[$fieldName], false);
             }

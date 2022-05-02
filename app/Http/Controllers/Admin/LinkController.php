@@ -217,9 +217,9 @@ class LinkController extends Controller
     public function store(LinkTypeFormRequest $request)
     {
         $data     = [
-            'name'    => $request->string('name'),
-            'inward'  => $request->string('inward'),
-            'outward' => $request->string('outward'),
+            'name'    => $request->convertString('name'),
+            'inward'  => $request->convertString('inward'),
+            'outward' => $request->convertString('outward'),
         ];
         $linkType = $this->repository->store($data);
 
@@ -255,9 +255,9 @@ class LinkController extends Controller
         }
 
         $data = [
-            'name'    => $request->string('name'),
-            'inward'  => $request->string('inward'),
-            'outward' => $request->string('outward'),
+            'name'    => $request->convertString('name'),
+            'inward'  => $request->convertString('inward'),
+            'outward' => $request->convertString('outward'),
         ];
         $this->repository->update($linkType, $data);
 

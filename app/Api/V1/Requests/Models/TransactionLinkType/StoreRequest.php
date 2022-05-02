@@ -44,9 +44,9 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'name'    => $this->string('name'),
-            'outward' => $this->string('outward'),
-            'inward'  => $this->string('inward'),
+            'name'    => $this->convertString('name'),
+            'outward' => $this->convertString('outward'),
+            'inward'  => $this->convertString('inward'),
         ];
     }
 

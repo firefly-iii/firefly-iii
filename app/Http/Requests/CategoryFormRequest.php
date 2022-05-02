@@ -42,7 +42,7 @@ class CategoryFormRequest extends FormRequest
     public function getCategoryData(): array
     {
         return [
-            'name'  => $this->string('name'),
+            'name'  => $this->convertString('name'),
             'notes' => $this->stringWithNewlines('notes'),
         ];
     }

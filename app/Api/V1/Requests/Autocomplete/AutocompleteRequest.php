@@ -40,7 +40,7 @@ class AutocompleteRequest extends FormRequest
      */
     public function getData(): array
     {
-        $types = $this->string('types');
+        $types = $this->convertString('types');
         $array = [];
         if ('' !== $types) {
             $array = explode(',', $types);
@@ -53,7 +53,7 @@ class AutocompleteRequest extends FormRequest
 
         return [
             'types' => $array,
-            'query' => $this->string('query'),
+            'query' => $this->convertString('query'),
             'date'  => $this->getCarbonDate('date'),
             'limit' => $limit,
         ];
