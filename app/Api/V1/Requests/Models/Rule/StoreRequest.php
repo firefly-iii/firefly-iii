@@ -46,12 +46,12 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         $fields = [
-            'title'            => ['title', 'string'],
-            'description'      => ['description', 'string'],
+            'title'            => ['title', 'convertString'],
+            'description'      => ['description', 'convertString'],
             'rule_group_id'    => ['rule_group_id', 'integer'],
             'order'            => ['order', 'integer'],
-            'rule_group_title' => ['rule_group_title', 'string'],
-            'trigger'          => ['trigger', 'string'],
+            'rule_group_title' => ['rule_group_title', 'convertString'],
+            'trigger'          => ['trigger', 'convertString'],
             'strict'           => ['strict', 'boolean'],
             'stop_processing'  => ['stop_processing', 'boolean'],
             'active'           => ['active', 'boolean'],

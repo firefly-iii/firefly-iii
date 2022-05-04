@@ -51,14 +51,14 @@ class UpdateRequest extends FormRequest
     {
         // this is the way:
         $fields       = [
-            'title'             => ['title', 'string'],
-            'description'       => ['description', 'string'],
+            'title'             => ['title', 'convertString'],
+            'description'       => ['description', 'convertString'],
             'first_date'        => ['first_date', 'date'],
             'repeat_until'      => ['repeat_until', 'date'],
             'nr_of_repetitions' => ['nr_of_repetitions', 'integer'],
             'apply_rules'       => ['apply_rules', 'boolean'],
             'active'            => ['active', 'boolean'],
-            'notes'             => ['notes', 'string'],
+            'notes'             => ['notes', 'convertString'],
         ];
         $reps         = $this->getRepetitionData();
         $transactions = $this->getTransactionData();

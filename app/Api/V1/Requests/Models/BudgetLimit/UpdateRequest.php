@@ -48,9 +48,9 @@ class UpdateRequest extends FormRequest
         $fields = [
             'start'         => ['start', 'date'],
             'end'           => ['end', 'date'],
-            'amount'        => ['amount', 'string'],
+            'amount'        => ['amount', 'convertString'],
             'currency_id'   => ['currency_id', 'integer'],
-            'currency_code' => ['currency_code', 'string'],
+            'currency_code' => ['currency_code', 'convertString'],
         ];
 
         return $this->getAllData($fields);

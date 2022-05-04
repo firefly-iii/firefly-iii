@@ -49,9 +49,9 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         $fields     = [
-            'type'              => ['type', 'string'],
-            'title'             => ['title', 'string'],
-            'description'       => ['description', 'string'],
+            'type'              => ['type', 'convertString'],
+            'title'             => ['title', 'convertString'],
+            'description'       => ['description', 'convertString'],
             'first_date'        => ['first_date', 'date'],
             'repeat_until'      => ['repeat_until', 'date'],
             'nr_of_repetitions' => ['nr_of_repetitions', 'integer'],
