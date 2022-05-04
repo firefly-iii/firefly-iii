@@ -26,11 +26,11 @@ return [
     // index
     'index_intro'                           => 'Firefly IIIのインデックスページへようこそ。このイントロダクションでは、Firefly IIIがどのように機能するのかをご紹介します。',
     'index_accounts-chart'                  => 'このチャートは、お客様の資産口座の現在の残高を表示しています。お客様のご希望でここに表示するかどうか選択できます。',
-    'index_box_out_holder'                  => 'この小さな吹き出しとこの横にある吹き出しは収支状況の概要を表示しています。',
+    'index_box_out_holder'                  => 'この小さな吹き出しとこの横にある吹き出しは、財務状況の概要を表示しています。',
     'index_help'                            => 'ページや入力欄について助けが必要なら、このボタンを押して下さい。',
     'index_outro'                           => 'Firefly IIIの多くのページはこのような小さなツアーから始まります。もし質問やコメントがある場合は、私に連絡して下さい。楽しんで！',
     'index_sidebar-toggle'                  => '新しい取引やアカウントなどを作成するには、このアイコン下のメニューを使用して下さい。',
-    'index_cash_account'                    => 'これらは今までに作られたアカウントです。現金支出を管理するため現金アカウントを使うこともできますが、もちろん強制ではありません。',
+    'index_cash_account'                    => 'これらは今までに作られた口座です。現金支出を管理するため現金口座を使うこともできますが、もちろん強制ではありません。',
 
     // transactions
     'transactions_create_basic_info'        => '貸方、借方、日付、説明など、取引の基本情報を入力します。',
@@ -39,15 +39,15 @@ return [
     'transactions_create_split'             => '取引を分割する場合は、このボタンでさらに分割を追加します',
 
     // create account:
-    'accounts_create_iban'                  => 'あなたのアカウントには有効なIBANを設定してください。これは将来のデータインポートをとても簡単にします。',
+    'accounts_create_iban'                  => '口座の有効な IBAN を設定してください。これは将来のデータインポートをとても簡単にします。',
     'accounts_create_asset_opening_balance' => '資産口座には Firefly III のアカウントの履歴の開始を示す「開始残高」があります。',
-    'accounts_create_asset_currency'        => 'Firefly IIIは複数の通貨をサポートしています。経費勘定は一つの主通貨を持っており、あなたはここでそれを選択する必要があります。',
-    'accounts_create_asset_virtual'         => 'あなたのアカウントに仮想の残高を与えることはしばしば助けになるかもしれません: 余剰は常に実際の残高から差し引かれます。',
+    'accounts_create_asset_currency'        => 'Firefly IIIは複数の通貨をサポートしています。資産口座は一つのメイン通貨を持っており、ここで選択する必要があります。',
+    'accounts_create_asset_virtual'         => '口座に仮想の残高を与えることはしばしば助けになるかもしれません: 余剰は常に実際の残高から差し引かれます。',
 
     // budgets index
-    'budgets_index_intro'                   => '予算はあなたの財源を管理するために使用され、Firefly IIIの一つの主要機能を構成します。',
+    'budgets_index_intro'                   => '予算はあなたの財務を管理するために使用され、Firefly III の一つの主要機能を構成します。',
     'budgets_index_set_budget'              => 'Firefly IIIがあなたが割り当て可能なすべての金額を予算計上したかどうか伝えられるように。あなたの毎期間の合計予算を設定してください。',
-    'budgets_index_see_expenses_bar'        => '消費した金額が少しずつこのバーを埋めます。',
+    'budgets_index_see_expenses_bar'        => '支出金額が少しずつこのバーを満たします。',
     'budgets_index_navigate_periods'        => '期間を操作することで、予算を事前に簡単に設定できます。',
     'budgets_index_new_budget'              => 'あなたが妥当だと考える新しい予算を設定してください。',
     'budgets_index_list_of_budgets'         => '各予算の金額を設定したり自分の行っていることを確認するためにこの表を使ってください。',
@@ -80,7 +80,7 @@ return [
     // create transaction
     'transactions_create_switch_box'                          => 'これらのボタンを使用して、保存したい取引の種類をすばやく切り替えます。',
     'transactions_create_ffInput_category'                    => 'このフィールドでは自由に入力できます。以前に作成したカテゴリが推奨されます。',
-    'transactions_create_withdrawal_ffInput_budget'           => 'より良い財務管理のために、出金に予算を紐付けます。',
+    'transactions_create_withdrawal_ffInput_budget'           => 'より良い財務管理のために、出金を予算に紐付けます。',
     'transactions_create_withdrawal_currency_dropdown_amount' => '出金が別の通貨の場合は、このドロップダウンを使用してください。',
     'transactions_create_deposit_currency_dropdown_amount'    => '入金が別の通貨である場合は、このドロップダウンを使用してください。',
     'transactions_create_transfer_ffInput_piggy_bank_id'      => '貯金箱を選択し、この送金をその貯金とします。',
@@ -127,7 +127,7 @@ return [
     'rules_index_outro'                                       => '右上の (?) アイコンからヘルプページを確認してください。',
 
     // create rule:
-    'rules_create_mandatory'                                  => '説明的なタイトルを入力し、ルールが実行されるタイミングを設定します。',
+    'rules_create_mandatory'                                  => 'わかりやすいタイトルを入力し、ルールが実行されるタイミングを設定します。',
     'rules_create_ruletriggerholder'                          => '好きなだけトリガーを追加してください。アクションが実行されるには全てトリガーが一致しなければならないことを覚えておいてください。',
     'rules_create_test_rule_triggers'                         => 'ルールに一致する取引を確認するには、このボタンを使用します。',
     'rules_create_actions'                                    => '好きなだけアクションを設定します。',
@@ -137,8 +137,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III は複数の通貨をサポートしており、このページで変更できます。',
-    'currencies_index_default'                                => 'Firefly IIIにはデフォルト通貨が1つあります。',
-    'currencies_index_buttons'                                => 'これらのボタンを使用して、デフォルトの通貨を変更したり、他の通貨を有効にします。',
+    'currencies_index_default'                                => 'Firefly III にはデフォルト通貨が1つあります。',
+    'currencies_index_buttons'                                => 'これらのボタンで、デフォルト通貨を変更したり、他の通貨を有効にします。',
 
     // create currency
     'currencies_create_code'                                  => 'このコードはISOに準拠している必要があります(新しい通貨はググってください)。',
