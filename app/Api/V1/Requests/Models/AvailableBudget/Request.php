@@ -48,8 +48,8 @@ class Request extends FormRequest
         // this is the way:
         $fields = [
             'currency_id'   => ['currency_id', 'integer'],
-            'currency_code' => ['currency_code', 'string'],
-            'amount'        => ['amount', 'string'],
+            'currency_code' => ['currency_code', 'convertString'],
+            'amount'        => ['amount', 'convertString'],
             'start'         => ['start', 'date'],
             'end'           => ['end', 'date'],
         ];

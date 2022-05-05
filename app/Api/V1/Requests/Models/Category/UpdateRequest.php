@@ -44,7 +44,7 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         $fields = [
-            'name'  => ['name', 'string'],
+            'name'  => ['name', 'convertString'],
             'notes' => ['notes', 'stringWithNewlines'],
         ];
 

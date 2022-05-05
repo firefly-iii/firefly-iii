@@ -48,9 +48,9 @@ class UpdateRequest extends FormRequest
     {
         // This is the way.
         $fields = [
-            'tag'         => ['tag', 'string'],
+            'tag'         => ['tag', 'convertString'],
             'date'        => ['date', 'date'],
-            'description' => ['description', 'string'],
+            'description' => ['description', 'convertString'],
         ];
         $data   = $this->getAllData($fields);
 

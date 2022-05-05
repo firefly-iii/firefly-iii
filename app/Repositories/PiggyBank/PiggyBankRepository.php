@@ -238,6 +238,13 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         Log::debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
         $room    = bcsub((string) $piggyBank->targetamount, (string) $repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
+
+        if(bccomp((string) $piggyBank->targetamount,'0') === 0) {
+            // amount is zero? then the "room" is positive amount of we wish to add or remove.
+            $room = app('steam')->positive($amount);
+            Log::debug(sprintf('Room is now %s', $room));
+        }
+
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if the amount is positive, make sure it fits in piggy bank:

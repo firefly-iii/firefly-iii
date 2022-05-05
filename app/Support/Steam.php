@@ -34,6 +34,7 @@ use JsonException;
 use Log;
 use stdClass;
 use Str;
+use ValueError;
 
 /**
  * Class Steam.
@@ -627,8 +628,14 @@ class Steam
         if ('' === $amount) {
             return '0';
         }
-        if (bccomp($amount, '0') === -1) {
-            $amount = bcmul($amount, '-1');
+        try {
+            if (bccomp($amount, '0') === -1) {
+                $amount = bcmul($amount, '-1');
+            }
+        } catch (ValueError $e) {
+            Log::error(sprintf('ValueError in Steam::positive("%s"): %s', $amount, $e->getMessage()));
+            Log::error($e->getTraceAsString());
+            return '0';
         }
 
         return $amount;

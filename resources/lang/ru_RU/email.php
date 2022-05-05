@@ -52,8 +52,8 @@ return [
     'registered_welcome'                      => 'Добро пожаловать в [Firefly III](:address). Подтверждаем вашу регистрацию этим e-mail. Ура!',
     'registered_pw'                           => 'Если вы забыли ваш пароль, пожалуйста, создайте его повторно используя [оснастку по сбросу пароля](:address/password/reset).',
     'registered_help'                         => 'В верхнем правом углу страницы есть иконка справки. Если вам нужна помощь, нажмите её!',
-    'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',
+    'registered_doc_html'                     => 'Если вы еще этого не сделали, прочтите [великую теорию](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
+    'registered_doc_text'                     => 'Если вы еще этого не сделали, прочтите краткое руководство по использованию и полное описание.',
     'registered_closing'                      => 'Наслаждайтесь!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Сбросить пароль:',
@@ -112,6 +112,6 @@ return [
     'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
     'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
     'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_please_action'              => 'Просим принять соответствующие меры.',
 
 ];

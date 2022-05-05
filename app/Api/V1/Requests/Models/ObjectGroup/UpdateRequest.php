@@ -43,7 +43,7 @@ class UpdateRequest extends FormRequest
     public function getUpdateData(): array
     {
         $fields = [
-            'title' => ['title', 'string'],
+            'title' => ['title', 'convertString'],
             'order' => ['order', 'integer'],
         ];
 

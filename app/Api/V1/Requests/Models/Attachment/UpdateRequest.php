@@ -45,10 +45,10 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         $fields = [
-            'filename'        => ['filename', 'string'],
-            'title'           => ['title', 'string'],
+            'filename'        => ['filename', 'convertString'],
+            'title'           => ['title', 'convertString'],
             'notes'           => ['notes', 'stringWithNewlines'],
-            'attachable_type' => ['attachable_type', 'string'],
+            'attachable_type' => ['attachable_type', 'convertString'],
             'attachable_id'   => ['attachable_id', 'integer'],
         ];
 

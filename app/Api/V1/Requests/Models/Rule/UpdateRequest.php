@@ -46,10 +46,10 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         $fields = [
-            'title'           => ['title', 'string'],
+            'title'           => ['title', 'convertString'],
             'description'     => ['description', 'stringWithNewlines'],
             'rule_group_id'   => ['rule_group_id', 'integer'],
-            'trigger'         => ['trigger', 'string'],
+            'trigger'         => ['trigger', 'convertString'],
             'strict'          => ['strict', 'boolean'],
             'stop_processing' => ['stop_processing', 'boolean'],
             'active'          => ['active', 'boolean'],
