@@ -84,7 +84,7 @@ return [
     'liability_type'              => '债务类型',
     'interest'                    => '利息',
     'interest_period'             => '利息期',
-    'extension_date'              => 'Extension date',
+    'extension_date'              => '延续日期',
     'type'                        => '类型',
     'convert_Withdrawal'          => '转换支出',
     'convert_Deposit'             => '转换收入',

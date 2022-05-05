@@ -2,10 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.7.5 - 2022-05-05
+## 5.7.5 - 2022-05-06
 
 ### Fixed
-- Fixed an issue where missing method names would break the import.
+- Fixed an issue where missing method names would break the API.
+- [Issue 6040](https://github.com/firefly-iii/firefly-iii/issues/6040) Could not add or remove money from piggy banks without a target.
+- [Issue 6009](https://github.com/firefly-iii/firefly-iii/issues/6009) `has_no_attachments:true` would not return transactions with *deleted* transactions.
+- [Issue 6050](https://github.com/firefly-iii/firefly-iii/issues/6050) ja_JP is part of the Docker image
 
 ## 5.7.4 - 2022-05-03
 
