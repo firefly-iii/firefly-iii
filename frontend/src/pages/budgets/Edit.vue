@@ -77,6 +77,7 @@
 <script>
 import Get from "../../api/budgets/get";
 import Put from "../../api/budgets/put";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -92,6 +93,7 @@ export default {
       // budget fields:
       id: 0,
       name: '',
+      store: null,
     }
   },
   computed: {
@@ -145,7 +147,8 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store = useFireflyIIIStore();
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

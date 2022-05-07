@@ -232,7 +232,7 @@
 
 <script>
 import Post from "../../api/rules/post";
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 import {getCacheKey} from "../../store/fireflyiii/getters";
 import Configuration from "../../api/system/configuration";
 import List from "../../api/rule-groups/list";
@@ -270,7 +270,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
     disabledInput: function () {
       return this.submitting;
     }

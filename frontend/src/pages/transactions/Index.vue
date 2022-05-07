@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import List from "../../api/transactions/list";
 import LargeTable from "../../components/transactions/LargeTable";
 import Parser from "../../api/transactions/parser";
@@ -113,7 +113,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
   },
   created() {
     this.rowsPerPage = this.getListPageSize;

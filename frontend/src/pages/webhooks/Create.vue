@@ -132,7 +132,7 @@
 
 <script>
 import Post from "../../api/webhooks/post";
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 import {getCacheKey} from "../../store/fireflyiii/getters";
 
 export default {
@@ -174,7 +174,7 @@ export default {
   },
   watch: {},
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
     disabledInput: function () {
       return this.submitting;
     }

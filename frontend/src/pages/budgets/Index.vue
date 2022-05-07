@@ -80,16 +80,18 @@
         icon="fas fa-chevron-up"
         direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'budgets.create'}" icon="fas fa-exchange-alt" label="New budget"/>
+        <q-fab-action color="primary" square :to="{ name: 'budgets.create'}" icon="fas fa-exchange-alt"
+                      label="New budget"/>
       </q-fab>
     </q-page-sticky>
   </q-page>
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import Destroy from "../../api/generic/destroy";
 import List from "../../api/budgets/list";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Index',
@@ -118,28 +120,38 @@ export default {
         {name: 'name', label: 'Name', field: 'name', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
+      store: null,
+
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
   },
   created() {
+    this.store = useFireflyIIIStore();
     this.pagination.rowsPerPage = this.getListPageSize;
   },
   mounted() {
     this.type = this.$route.params.type;
-    if (null === this.getRange.start || null === this.getRange.end) {
+
+    // subscribe to range.
+    if (null === this.store.getRange.start || null === this.store.getRange.end) {
       // subscribe, then update:
-      const $store = useStore();
-      $store.subscribe((mutation, state) => {
-        if ('fireflyiii/setRange' === mutation.type) {
-          this.range = {start: mutation.payload.start, end: mutation.payload.end};
-          this.triggerUpdate();
+
+      this.store.$onAction(
+        ({name, store, args, after, onError,}) => {
+          after((result) => {
+            if (name === 'setRange') {
+              this.range = result;
+              this.triggerUpdate();
+
+            }
+          })
         }
-      });
+      )
     }
-    if (null !== this.getRange.start && null !== this.getRange.end) {
-      this.range = {start: this.getRange.start, end: this.getRange.end};
+    if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
+      this.range = {start: this.store.getRange.start, end: this.store.getRange.end};
       this.triggerUpdate();
     }
   },
@@ -156,7 +168,7 @@ export default {
     },
     destroyBudget: function (id) {
       (new Destroy('budgets')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.dispatch('fireflyiii/refreshCacheKey');
         this.triggerUpdate();
       });
     },

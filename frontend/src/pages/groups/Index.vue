@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import Destroy from "../../api/generic/destroy";
 import List from "../../api/groups/list";
 
@@ -105,7 +105,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
   },
   created() {
     this.pagination.rowsPerPage = this.getListPageSize;

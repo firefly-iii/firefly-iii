@@ -75,7 +75,7 @@
 
 <script>
 import Post from "../../api/rule-groups/post";
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 import {getCacheKey} from "../../store/fireflyiii/getters";
 
 export default {
@@ -94,7 +94,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
     disabledInput: function () {
       return this.submitting;
     }

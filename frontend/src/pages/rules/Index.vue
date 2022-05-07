@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 import List from "../../api/rule-groups/list";
 import Get from "../../api/rule-groups/get";
 import Destroy from "../../api/generic/destroy";
@@ -129,7 +129,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
   },
   methods: {
     triggerUpdate: function () {

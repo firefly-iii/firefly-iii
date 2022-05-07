@@ -28,7 +28,6 @@
 
 import {defineAsyncComponent} from "vue";
 import Overview from '../../api/chart/account/overview';
-//import {mapGetters, useStore} from "vuex";
 import format from "date-fns/format";
 import {useQuasar} from "quasar";
 import {useFireflyIIIStore} from "../../stores/fireflyiii";
@@ -36,7 +35,6 @@ import {useFireflyIIIStore} from "../../stores/fireflyiii";
 export default {
   name: "HomeChart",
   computed: {
-    //...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
   },
   data() {
     return {
@@ -89,14 +87,14 @@ export default {
     this.dateFormat = this.$t('config.month_and_day_fns');
   },
   mounted() {
+    this.store = useFireflyIIIStore();
     const $q = useQuasar();
     this.options.theme.mode = $q.dark.isActive ? 'dark' : 'light';
-    this.store = useFireflyIIIStore();
     if (null === this.range.start || null === this.range.end) {
-      // subscribe, then update:
+      // subscribe to date range update:
 
       this.store.$onAction(
-        ({name, $store, args, after, onError,}) => {
+        ({name, store, args, after, onError,}) => {
           after((result) => {
             if (name === 'setRange') {
               this.range = result;

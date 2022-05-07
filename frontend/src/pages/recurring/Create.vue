@@ -223,7 +223,7 @@
 
 <script>
 import Post from "../../api/recurring/post";
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 import {getCacheKey} from "../../store/fireflyiii/getters";
 import format from "date-fns/format";
 import List from "../../api/accounts/list";
@@ -275,7 +275,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
     disabledInput: function () {
       return this.submitting;
     }

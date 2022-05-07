@@ -86,6 +86,7 @@
 <script>
 import Get from '../../api/accounts/get';
 import Put from '../../api/accounts/put';
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -103,6 +104,7 @@ export default {
       id: 0,
       name: '',
       iban: '',
+      store: null,
     }
   },
   computed: {
@@ -161,7 +163,8 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store = useFireflyIIIStore();
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

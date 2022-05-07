@@ -84,7 +84,8 @@
                   <q-item-label>Edit</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click="deleteTransaction(props.row.group_id, props.row.description, props.row.group_title)">
+              <q-item clickable v-close-popup
+                      @click="deleteTransaction(props.row.group_id, props.row.description, props.row.group_title)">
                 <q-item-section>
                   <q-item-label>Delete</q-item-label>
                 </q-item-section>
@@ -128,6 +129,7 @@
 <script>
 import format from "date-fns/format";
 import Destroy from "../../api/generic/destroy";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "LargeTable",
@@ -164,6 +166,7 @@ export default {
         {name: 'budget', label: 'Budget', field: 'budget', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'left'},
       ],
+      store: null,
     }
   },
   mounted() {
@@ -194,9 +197,9 @@ export default {
       //this.page = props.pagination.page;
       // this.triggerUpdate();
     },
-    deleteTransaction: function(identifier, description, groupTitle) {
-      let  title  = description;
-      if('' !== groupTitle) {
+    deleteTransaction: function (identifier, description, groupTitle) {
+      let title = description;
+      if ('' !== groupTitle) {
         title = groupTitle;
       }
       this.$q.dialog({
@@ -211,8 +214,8 @@ export default {
     destroyTransaction: function (id) {
 
       (new Destroy('transactions')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
-        //this.triggerUpdate();
+        this.store = useFireflyIIIStore();
+        this.store.refreshCacheKey();
       });
     },
   },

@@ -127,7 +127,8 @@ export default defineComponent(
     },
     data() {
       return {
-        assetCount: 1
+        assetCount: 1,
+        $store: null
       }
     },
     computed: {
@@ -138,9 +139,8 @@ export default defineComponent(
     },
     methods: {
       refreshThenCount: function () {
-        const store = useFireflyIIIStore();
-        store.refreshCacheKey();
-        //this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.$store = useFireflyIIIStore();
+        this.$store.refreshCacheKey();
         this.countAssetAccounts();
       },
       countAssetAccounts: function () {

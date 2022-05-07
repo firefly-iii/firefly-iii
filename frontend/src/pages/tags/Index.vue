@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import List from "../../api/tags/list";
 
 export default {
@@ -71,7 +71,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
   },
   created() {
   },

@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 import Destroy from "../../api/generic/destroy";
 import List from "../../api/webhooks/list";
 
@@ -119,7 +119,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getCacheKey', 'getListPageSize']),
   },
   created() {
     this.pagination.rowsPerPage = this.getListPageSize;

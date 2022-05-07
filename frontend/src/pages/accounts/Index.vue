@@ -109,9 +109,10 @@
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import List from "../../api/accounts/list";
 import Destroy from "../../api/generic/destroy";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Index',
@@ -146,12 +147,14 @@ export default {
         {name: 'last_activity', label: this.$t('list.lastActivity'), field: 'last_activity', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
+      store: null,
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
   },
   created() {
+    this.store = useFireflyIIIStore();
     this.pagination.rowsPerPage = this.getListPageSize;
   },
   mounted() {
@@ -185,7 +188,7 @@ export default {
     destroyAccount: function (id) {
       (new Destroy('accounts')).destroy(id).then(() => {
         this.rows=  [];
-        this.$store.dispatch('fireflyiii/refreshCacheKey').then(() => {
+        this.store.refreshCacheKey().then(() => {
           this.triggerUpdate();
         });
       });

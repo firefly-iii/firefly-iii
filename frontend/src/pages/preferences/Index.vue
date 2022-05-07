@@ -147,7 +147,7 @@ import Configuration from "../../api/system/configuration";
 import Put from "../../api/preferences/put";
 import Preferences from "../../api/preferences";
 import List from "../../api/accounts/list";
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 
 export default {
   name: 'Index',
@@ -292,7 +292,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
   },
   methods: {
     getAssetAccounts: function () {

@@ -85,14 +85,14 @@
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import List from "../../api/subscriptions/list";
 import Destroy from "../../api/generic/destroy";
 
 export default {
   name: 'Index',
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
   },
   created() {
     this.pagination.rowsPerPage = this.getListPageSize;

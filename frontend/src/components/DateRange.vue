@@ -40,60 +40,17 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from "vuex";
+// import {mapGetters, mapMutations} from "vuex";
 import {useQuasar} from 'quasar'
 import Preferences from "../api/preferences";
 import format from 'date-fns/format';
+import {useFireflyIIIStore} from "../stores/fireflyiii";
 
 export default {
   name: "DateRange",
   computed: {
-    ...mapGetters('fireflyiii', ['getRange']),
-    ...mapMutations('fireflyiii', ['setRange'])
-  },
-  created() {
-    // set dark mode:
-    const $q = useQuasar();
-    this.darkMode = $q.dark.isActive;
-
-    this.localRange = {
-      from: format(this.getRange.start, 'yyyy-MM-dd'),
-      to: format(this.getRange.end, 'yyyy-MM-dd')
-    };
-  },
-  watch: {
-    localRange: function (value) {
-      if (null !== value) {
-        const updatedRange = {
-          start: Date.parse(value.from),
-          end: Date.parse(value.to)
-        };
-        this.$store.commit('fireflyiii/setRange', updatedRange);
-      }
-    },
-  },
-  mounted() {
-
-  },
-  methods: {
-    resetRange: function () {
-      this.$store.dispatch('fireflyiii/resetRange').then(() => {
-        this.localRange = {
-          from: format(this.getRange.start, 'yyyy-MM-dd'),
-          to: format(this.getRange.end, 'yyyy-MM-dd')
-        };
-      });
-
-    },
-    setViewRange: function (value) {
-      let submission = value.value;
-      let preferences = new Preferences();
-      preferences.postByName('viewRange', submission);
-      this.$store.commit('fireflyiii/updateViewRange', submission);
-      this.$store.dispatch('fireflyiii/setDatesFromViewRange');
-    },
-    updateViewRange: function () {
-    }
+    // ...mapGetters('fireflyiii', ['getRange']),
+    // ...mapMutations('fireflyiii', ['setRange'])
   },
   data() {
     return {
@@ -122,6 +79,54 @@ export default {
           timeAdjust: '23:59:59',
         },
       },
+      store: null
+    }
+  },
+  created() {
+    this.store = useFireflyIIIStore();
+    const $q = useQuasar();
+    this.darkMode = $q.dark.isActive;
+
+    this.localRange = {
+      from: format(this.store.getRange.start, 'yyyy-MM-dd'),
+      to: format(this.store.getRange.end, 'yyyy-MM-dd')
+    };
+  },
+  watch: {
+    localRange: function (value) {
+      if (null !== value) {
+        const updatedRange = {
+          start: Date.parse(value.from),
+          end: Date.parse(value.to)
+        };
+        // FIXME new store
+        this.store.setRange(updatedRange);
+      }
+    },
+  },
+  mounted() {
+
+  },
+  methods: {
+    resetRange: function () {
+      // FIXME new store
+      this.store.resetRange().then(() => {
+        this.localRange = {
+          from: format(this.store.getRange.start, 'yyyy-MM-dd'),
+          to: format(this.store.getRange.end, 'yyyy-MM-dd')
+        };
+      });
+
+    },
+    setViewRange: function (value) {
+      let submission = value.value;
+      let preferences = new Preferences();
+      preferences.postByName('viewRange', submission);
+      // FIXME new store
+      this.store.updateViewRange(submission);
+      this.store.setDatesFromViewRange();
+    },
+    updateViewRange: function () {
     }
   },
   components: {},
