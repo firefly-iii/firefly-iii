@@ -42,13 +42,13 @@ class PiggyBankUpdateRequest extends FormRequest
     public function getPiggyBankData(): array
     {
         return [
-            'name'               => $this->string('name'),
+            'name'               => $this->convertString('name'),
             'startdate'          => $this->getCarbonDate('startdate'),
             'account_id'         => $this->integer('account_id'),
-            'targetamount'       => $this->string('targetamount'),
+            'targetamount'       => $this->convertString('targetamount'),
             'targetdate'         => $this->getCarbonDate('targetdate'),
             'notes'              => $this->stringWithNewlines('notes'),
-            'object_group_title' => $this->string('object_group'),
+            'object_group_title' => $this->convertString('object_group'),
         ];
     }
 

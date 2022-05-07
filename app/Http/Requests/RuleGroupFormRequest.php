@@ -48,7 +48,7 @@ class RuleGroupFormRequest extends FormRequest
         }
 
         return [
-            'title'       => $this->string('title'),
+            'title'       => $this->convertString('title'),
             'description' => $this->stringWithNewlines('description'),
             'active'      => $active,
         ];

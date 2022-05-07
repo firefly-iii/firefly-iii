@@ -50,11 +50,11 @@ class ReconciliationStoreRequest extends FormRequest
         $data = [
             'start'         => $this->getCarbonDate('start'),
             'end'           => $this->getCarbonDate('end'),
-            'start_balance' => $this->string('startBalance'),
-            'end_balance'   => $this->string('endBalance'),
-            'difference'    => $this->string('difference'),
+            'start_balance' => $this->convertString('startBalance'),
+            'end_balance'   => $this->convertString('endBalance'),
+            'difference'    => $this->convertString('difference'),
             'journals'      => $transactions,
-            'reconcile'     => $this->string('reconcile'),
+            'reconcile'     => $this->convertString('reconcile'),
         ];
         Log::debug('In ReconciliationStoreRequest::getAll(). Will now return data.');
 

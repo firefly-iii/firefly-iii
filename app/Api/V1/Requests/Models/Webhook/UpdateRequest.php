@@ -45,12 +45,12 @@ class UpdateRequest extends FormRequest
         $deliveries = array_flip(config('firefly.webhooks.deliveries'));
 
         $fields = [
-            'title'    => ['title', 'string'],
+            'title'    => ['title', 'convertString'],
             'active'   => ['active', 'boolean'],
-            'trigger'  => ['trigger', 'string'],
-            'response' => ['response', 'string'],
-            'delivery' => ['delivery', 'string'],
-            'url'      => ['url', 'string'],
+            'trigger'  => ['trigger', 'convertString'],
+            'response' => ['response', 'convertString'],
+            'delivery' => ['delivery', 'convertString'],
+            'url'      => ['url', 'convertString'],
         ];
 
         // this is the way.
@@ -66,7 +66,7 @@ class UpdateRequest extends FormRequest
         }
         $return['secret'] = null !== $this->get('secret');
         if (null !== $this->get('title')) {
-            $return['title'] = $this->string('title');
+            $return['title'] = $this->convertString('title');
         }
 
         return $return;

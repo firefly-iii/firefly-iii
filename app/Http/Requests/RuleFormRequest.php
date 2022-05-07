@@ -44,10 +44,10 @@ class RuleFormRequest extends FormRequest
     public function getRuleData(): array
     {
         return [
-            'title'           => $this->string('title'),
+            'title'           => $this->convertString('title'),
             'rule_group_id'   => $this->integer('rule_group_id'),
             'active'          => $this->boolean('active'),
-            'trigger'         => $this->string('trigger'),
+            'trigger'         => $this->convertString('trigger'),
             'description'     => $this->stringWithNewlines('description'),
             'stop_processing' => $this->boolean('stop_processing'),
             'strict'          => $this->boolean('strict'),

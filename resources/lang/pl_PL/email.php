@@ -112,6 +112,6 @@ return [
     'bill_warning_extension_date'             => 'Twój rachunek **":name"** ma być przedłużony lub anulowany dnia :date. Ten moment minie za około **:diff dni**.',
     'bill_warning_end_date_zero'              => 'Twój rachunek **":name"** ma datę końcową :date. Ten moment minie **DZIŚ!**',
     'bill_warning_extension_date_zero'        => 'Twój rachunek **":name"** ma być przedłużony lub anulowany dnia :date. Ten moment minie **DZIŚ!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_please_action'              => 'Proszę podejmij odpowiednie działania.',
 
 ];

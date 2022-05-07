@@ -46,9 +46,9 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         $data = [
-            'tag'          => $this->string('tag'),
+            'tag'          => $this->convertString('tag'),
             'date'         => $this->getCarbonDate('date'),
-            'description'  => $this->string('description'),
+            'description'  => $this->convertString('description'),
             'has_location' => true,
         ];
 

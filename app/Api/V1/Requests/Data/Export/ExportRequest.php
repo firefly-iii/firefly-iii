@@ -43,9 +43,9 @@ class ExportRequest extends FormRequest
         $result     = [
             'start' => $this->getCarbonDate('start') ?? Carbon::now()->subYear(),
             'end'   => $this->getCarbonDate('end') ?? Carbon::now(),
-            'type'  => $this->string('type'),
+            'type'  => $this->convertString('type'),
         ];
-        $parts      = explode(',', $this->string('accounts'));
+        $parts      = explode(',', $this->convertString('accounts'));
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
 

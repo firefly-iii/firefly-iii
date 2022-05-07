@@ -51,7 +51,7 @@ trait ConvertsDataTypes
      *
      * @return string
      */
-    public function string(string $field): string
+    public function convertString(string $field): string
     {
         return $this->clearString((string) ($this->get($field) ?? ''), false);
     }

@@ -53,8 +53,8 @@ class StoreRequest extends FormRequest
         }
 
         return [
-            'title'       => $this->string('title'),
-            'description' => $this->string('description'),
+            'title'       => $this->convertString('title'),
+            'description' => $this->convertString('description'),
             'active'      => $active,
             'order'       => $order,
         ];

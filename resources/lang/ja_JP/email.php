@@ -36,7 +36,7 @@ return [
     // new IP
     'login_from_new_ip'                       => 'Firefly III に新しいログイン',
     'new_ip_body'                             => 'Firefly III が未知のIPアドレスからあなたのアカウントへの新しいログインを検出しました。 以下のIPアドレスからログインしたことがないか、ログインから6ヶ月以上経過している場合、Firefly IIIは警告します。',
-    'new_ip_warning'                          => 'このIPアドレスまたはログインに覚えがある場合は、このメッセージを無視できます。 ログインしていないか、これが何であるかがわからない場合、 パスワードのセキュリティを確認、変更し、すべてのセッションをログアウトしてください。 これはあなたのプロフィールページから行えます。もちろん、あなたはすでに2FAが有効になっていますよね?',
+    'new_ip_warning'                          => 'この IP アドレスまたはログインに覚えがある場合は、このメッセージを無視してください。 ログインしていないか、これが何であるかがわからない場合、 パスワードの安全性を確認、変更し、すべてのセッションをログアウトしてください。 これはプロフィールページからできます。もちろん、すでに2要素認証は有効にしていますよね？ご安全に！',
     'ip_address'                              => 'IPアドレス',
     'host_name'                               => 'ホスト',
     'date_time'                               => '日付と時刻',
@@ -44,16 +44,16 @@ return [
     // access token created
     'access_token_created_subject'            => '新しいアクセストークンが作成されました。',
     'access_token_created_body'               => 'あなたのユーザーアカウントの利用するために、新しいアクセストークンを作成した方がいます。',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'このトークンを使用すると、Firefly III API を通してあなたの財務記録の **すべて** にアクセスできます。',
+    'access_token_created_revoke'             => 'これがあなたではない場合、 :url にて即刻このトークンを無効化してください',
 
     // registered
     'registered_subject'                      => 'Firefly III へようこそ！',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
+    'registered_welcome'                      => '[Firefly III](:address) へようこそ。このメールにて登録が完了したことをお知らせします。やった！',
+    'registered_pw'                           => 'パスワードを忘れた場合は、[パスワードリセットツール](:address/password/reset)を使用してリセットしてください。',
     'registered_help'                         => '各ページの右上にヘルプアイコンがあります。ヘルプが必要な場合は、クリックしてください。',
-    'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',
+    'registered_doc_html'                     => 'まだ読んでいない場合、[基本的な考え](https://docs.firefly-iii.org/about-firefly-iii/personal-finances)を読んでください。',
+    'registered_doc_text'                     => 'まだ読んでいない場合は、はじめての使用ガイドと詳細説明も読んでください。',
     'registered_closing'                      => 'では！',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'パスワードのリセット:',
@@ -62,25 +62,25 @@ return [
     // email change
     'email_change_subject'                    => 'Firefly III のメールアドレスが変更されました',
     'email_change_body_to_new'                => 'あなた、もしくはあなたのFirefly IIIアカウントにアクセスできるユーザーが、メールアドレスを変更しました。 このメッセージに覚えがない場合は、無視して削除してください。',
-    'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
+    'email_change_body_to_old'                => 'あなた、もしくはあなたの Firefly III アカウントにアクセスできるユーザーが、メールアドレスを変更しました。 このメッセージに覚えがない場合は、 **必ず**以下の「元に戻す」リンクに従いアカウントを保護してください！',
     'email_change_ignore'                     => 'あなたがこの変更を開始した場合は、このメッセージを無視してください。',
     'email_change_old'                        => '古いメールアドレス: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => '古いメールアドレス: **:email**',
     'email_change_new'                        => '新しいメールアドレス: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => '新しいメールアドレス: **:email**',
     'email_change_instructions'               => 'この変更を確認するまで Firefly III を使用できません。以下のリンクに従ってください。',
     'email_change_undo_link'                  => '変更を元に戻すには、次のリンクに従ってください:',
 
     // OAuth token created
     'oauth_created_subject'                   => '新しいOAuthクライアントが作成されました',
-    'oauth_created_body'                      => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_body'                      => '誰か（おそらくあなた）があなたのユーザーアカウント用の新しい Firefly III API OAuth クライアントを作成しました。「:name」というラベルが付けられており、コールバック URL は「:url」です。',
+    'oauth_created_explanation'               => 'このトークンがあれば、Firefly III API を通してあなたの財務記録の **すべて** にアクセスできます。',
+    'oauth_created_undo'                      => 'これがあなたではない場合、:url にて即刻このトークンを無効化してください',
 
     // reset password
     'reset_pw_subject'                        => 'パスワードリセットのリクエスト',
     'reset_pw_instructions'                   => '誰かがあなたのパスワードをリセットしようとしました。もしあなたであれば、以下のリンクに従ってください。',
-    'reset_pw_warning'                        => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_warning'                        => '**必ず** リンクが実際に Firefly III にリンクされていることを確認してください！',
 
     // error
     'error_subject'                           => 'Firefly III でエラーが発生しました',
@@ -97,21 +97,21 @@ return [
     'error_github_html'                       => 'ご希望の場合は、<a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>で新しいissueを作ることもできます。',
     'error_github_text'                       => 'ご希望の場合は、https://github.com/fofoflifly-iii/firelify-ii/issuesで新しいissueを作ることもできます。',
     'error_stacktrace_below'                  => '完全なスタックトレースは以下の通りです:',
-    'error_headers'                           => 'The following headers may also be relevant:',
+    'error_headers'                           => '「headers」は技術用語「HTTP headers」を参照します',
 
     // report new journals
     'new_journals_subject'                    => 'Firefly III が取引を作成しました|Firefly III が:count件の取引を作成しました',
     'new_journals_header'                     => 'Firefly III が取引を作成しました。Firefly III で参照できます:|Firefly III が:count件の取引を作成しました。 Firefly III でそれらを参照できます。',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
-    'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_subject_end_date'           => 'あなたの請求「:name」は :diff 日後に終了する予定です',
+    'bill_warning_subject_now_end_date'       => 'あなたの請求「:name」は本日終了する予定です',
+    'bill_warning_subject_extension_date'     => 'あなたの請求「:name」は :diff 日後に延長またはキャンセルされます',
+    'bill_warning_subject_now_extension_date' => 'あなたの請求書「:name」は、本日延長またはキャンセルされます',
+    'bill_warning_end_date'                   => 'あなたの請求「**":name"**」は :date に終了します。その時まで約 **:diff 日間**です。',
+    'bill_warning_extension_date'             => 'あなたの請求「**":name"**」が :date に延長またはキャンセルされます。その時まで約**:diff 日間**です。',
+    'bill_warning_end_date_zero'              => 'あなたの請求「**":name"**」は :date に終了します。 本日がその時です。',
+    'bill_warning_extension_date_zero'        => 'あなたの請求「**":name"**」が :date に延長またはキャンセルされます。 本日がその時です。',
+    'bill_warning_please_action'              => '適切に対処してください。',
 
 ];

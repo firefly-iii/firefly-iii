@@ -37,7 +37,7 @@ class PreferenceStoreRequest extends FormRequest
     public function getAll(): array
     {
         $array = [
-            'name' => $this->string('name'),
+            'name' => $this->convertString('name'),
             'data' => $this->get('data'),
         ];
         if ('true' === $array['data']) {

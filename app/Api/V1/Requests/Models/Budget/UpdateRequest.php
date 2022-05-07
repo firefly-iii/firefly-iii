@@ -48,15 +48,15 @@ class UpdateRequest extends FormRequest
     {
         // this is the way:
         $fields  = [
-            'name'               => ['name', 'string'],
+            'name'               => ['name', 'convertString'],
             'active'             => ['active', 'boolean'],
             'order'              => ['order', 'integer'],
-            'notes'              => ['notes', 'string'],
+            'notes'              => ['notes', 'convertString'],
             'currency_id'        => ['auto_budget_currency_id', 'integer'],
-            'currency_code'      => ['auto_budget_currency_code', 'string'],
-            'auto_budget_type'   => ['auto_budget_type', 'string'],
-            'auto_budget_amount' => ['auto_budget_amount', 'string'],
-            'auto_budget_period' => ['auto_budget_period', 'string'],
+            'currency_code'      => ['auto_budget_currency_code', 'convertString'],
+            'auto_budget_type'   => ['auto_budget_type', 'convertString'],
+            'auto_budget_amount' => ['auto_budget_amount', 'convertString'],
+            'auto_budget_period' => ['auto_budget_period', 'convertString'],
         ];
         $allData = $this->getAllData($fields);
         if (array_key_exists('auto_budget_type', $allData)) {

@@ -46,9 +46,9 @@ class UpdateRequest extends FormRequest
     {
         // return nothing that isn't explicitely in the array:
         $fields = [
-            'name'           => ['name', 'string'],
-            'code'           => ['code', 'string'],
-            'symbol'         => ['symbol', 'string'],
+            'name'           => ['name', 'convertString'],
+            'code'           => ['code', 'convertString'],
+            'symbol'         => ['symbol', 'convertString'],
             'decimal_places' => ['decimal_places', 'integer'],
             'default'        => ['default', 'boolean'],
             'enabled'        => ['enabled', 'boolean'],

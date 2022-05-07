@@ -27,6 +27,7 @@ namespace FireflyIII\Helpers\Collector\Extensions;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Log;
 
@@ -299,7 +300,19 @@ trait AttachmentCollection
     {
         Log::debug('Add filter on no attachments.');
         $this->joinAttachmentTables();
-        $this->query->whereNull('attachments.attachable_id');
+
+        $this->query->where(function (Builder $q1) {
+            $q1
+                ->whereNull('attachments.attachable_id')
+                ->orWhere(function (Builder $q2) {
+                    $q2
+                        ->whereNotNull('attachments.attachable_id')
+                        ->whereNotNull('attachments.deleted_at');
+                    // id is not null
+                    // deleted at is not null.
+                });
+        });
+
 
         return $this;
     }

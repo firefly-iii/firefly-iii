@@ -92,7 +92,7 @@ return [
     'error_no_user'                           => 'Нямаше регистриран потребител при тази грешка или не бе открит потребителя.',
     'error_ip'                                => 'IP адресът, свързан с тази грешка, е: :ip',
     'error_url'                               => 'URL адресът е: :url',
-    'error_user_agent'                        => 'Броузър агент: :userAgent',
+    'error_user_agent'                        => 'Брaузър агент: :userAgent',
     'error_stacktrace'                        => 'Пълният стак на грешката е отдолу. Ако смятате, че това е грешка в Firefly III, можете да препратите това съобщение до <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. Това може да помогне за отстраняване на грешката, която току-що срещнахте.',
     'error_github_html'                       => 'Ако предпочитате, можете също да отворите нов проблем на <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Ако предпочитате, можете също да отворите нов проблем на https://github.com/firefly-iii/firefly-iii/issues.',

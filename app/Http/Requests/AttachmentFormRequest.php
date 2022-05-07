@@ -43,8 +43,8 @@ class AttachmentFormRequest extends FormRequest
     public function getAttachmentData(): array
     {
         return [
-            'title' => $this->string('title'),
-            'notes' => $this->string('notes'),
+            'title' => $this->convertString('title'),
+            'notes' => $this->convertString('notes'),
         ];
     }
 
