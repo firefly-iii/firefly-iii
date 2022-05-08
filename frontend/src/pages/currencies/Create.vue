@@ -97,6 +97,7 @@
 
 <script>
 import Post from "../../api/currencies/post";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Create',
@@ -113,6 +114,7 @@ export default {
       name: '',
       code: '',
       symbol: '',
+      store: null,
     }
   },
   computed: {
@@ -123,6 +125,7 @@ export default {
   created() {
     this.resetForm();
     this.type = this.$route.params.type;
+    this.store = useFireflyIIIStore();
   },
   methods: {
     resetForm: function () {
@@ -175,7 +178,7 @@ export default {
       if (!response) {
         return;
       }
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       this.submitting = false;
       let message = {
         level: 'success',

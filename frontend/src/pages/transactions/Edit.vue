@@ -120,6 +120,7 @@ import formatISO from 'date-fns/formatISO';
 import Put from "../../api/transactions/put";
 import { useQuasar } from 'quasar';
 import Get from "../../api/transactions/get";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Edit',
@@ -134,7 +135,8 @@ export default {
       index: 0,
       doResetForm: false,
       group_title: '',
-      errorMessage: ''
+      errorMessage: '',
+      store: null
     }
   },
   computed: {
@@ -144,6 +146,7 @@ export default {
   },
   created() {
     this.id = parseInt(this.$route.params.id);
+    this.store = useFireflyIIIStore();
     this.resetForm();
     this.collectTransaction();
   },
@@ -212,7 +215,7 @@ export default {
     },
     processSuccess: function (response) {
       this.submitting = false;
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       let message = {
         level: 'success',
         text: 'Updated transaction',

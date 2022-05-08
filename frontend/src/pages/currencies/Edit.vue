@@ -96,6 +96,7 @@
 <script>
 import Get from "../../api/currencies/get";
 import Put from "../../api/currencies/put";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -112,6 +113,7 @@ export default {
       code: '',
       name: '',
       symbol: '',
+      store: null,
     }
   },
   computed: {
@@ -122,6 +124,7 @@ export default {
   created() {
     this.code = this.$route.params.code;
     this.collectCurrency();
+    this.store = useFireflyIIIStore();
   },
   methods: {
     collectCurrency: function() {
@@ -172,7 +175,7 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

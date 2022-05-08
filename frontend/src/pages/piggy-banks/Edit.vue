@@ -76,6 +76,7 @@
 <script>
 import Get from "../../api/piggy-banks/get";
 import Put from "../../api/piggy-banks/put";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -91,6 +92,7 @@ export default {
       // piggy bank fields:
       id: 0,
       name: '',
+      store: null,
     }
   },
   computed: {
@@ -101,6 +103,7 @@ export default {
   created() {
     this.id = parseInt(this.$route.params.id);
     this.collectPiggyBank();
+    this.store = useFireflyIIIStore();
   },
   methods: {
     collectPiggyBank: function() {
@@ -143,7 +146,7 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

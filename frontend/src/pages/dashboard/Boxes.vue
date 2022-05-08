@@ -128,8 +128,8 @@ export default {
     this.store = useFireflyIIIStore();
 
     if (null === this.range.start || null === this.range.end) {
-      // subscribe, then update:
 
+      // subscribe, then update:
       this.store.$onAction(
         ({name, $store, args, after, onError,}) => {
           after((result) => {

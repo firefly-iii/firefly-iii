@@ -233,7 +233,7 @@
 <script>
 import Post from "../../api/rules/post";
 // import {mapGetters} from "vuex";
-import {getCacheKey} from "../../store/fireflyiii/getters";
+// import {getCacheKey} from "../../store/fireflyiii/getters";
 import Configuration from "../../api/system/configuration";
 import List from "../../api/rule-groups/list";
 

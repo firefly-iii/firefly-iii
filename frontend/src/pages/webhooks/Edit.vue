@@ -130,6 +130,7 @@
 <script>
 import Get from "../../api/webhooks/get";
 import Put from "../../api/webhooks/put";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -165,6 +166,7 @@ export default {
       response: '',
       delivery: '',
       trigger: '',
+      store: null,
     }
   },
   computed: {
@@ -174,6 +176,7 @@ export default {
   },
   created() {
     this.id = parseInt(this.$route.params.id);
+    this.store = useFireflyIIIStore();
     this.collectWebhook();
   },
   methods: {
@@ -233,7 +236,7 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

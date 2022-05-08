@@ -76,6 +76,7 @@
 <script>
 import Get from "../../api/categories/get";
 import Put from "../../api/categories/put";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -91,6 +92,7 @@ export default {
       // category fields:
       id: 0,
       name: '',
+      store: null
     }
   },
   computed: {
@@ -101,6 +103,7 @@ export default {
   created() {
     this.id = parseInt(this.$route.params.id);
     this.collectCategory();
+    this.store = useFireflyIIIStore();
   },
   methods: {
     collectCategory: function() {
@@ -144,7 +147,7 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

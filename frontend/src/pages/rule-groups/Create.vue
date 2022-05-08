@@ -76,7 +76,7 @@
 <script>
 import Post from "../../api/rule-groups/post";
 // import {mapGetters} from "vuex";
-import {getCacheKey} from "../../store/fireflyiii/getters";
+// import {getCacheKey} from "../../store/fireflyiii/getters";
 
 export default {
   name: 'Create',

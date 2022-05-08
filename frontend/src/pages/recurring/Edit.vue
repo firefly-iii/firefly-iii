@@ -228,6 +228,7 @@ import Put from "../../api/recurring/put";
 import {parseISO} from "date-fns";
 import format from "date-fns/format";
 import List from "../../api/accounts/list";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -267,7 +268,8 @@ export default {
       nr_of_repetitions: 0,
       repeat_until: '',
       repetitions: {},
-      transactions: {}
+      transactions: {},
+      store: null,
     }
   },
   watch: {
@@ -284,6 +286,7 @@ export default {
   // TODO some forms use 'loading' others use 'submitting' or 'disabledInput', needs to be the same.
   created() {
     this.loading = true;
+    this.store = useFireflyIIIStore();
     this.resetErrors();
     this.resetForm();
     this.getAccounts().then(() => {
@@ -520,7 +523,7 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

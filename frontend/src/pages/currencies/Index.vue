@@ -90,6 +90,7 @@
 // import {mapGetters, useStore} from "vuex";
 import Destroy from "../../api/generic/destroy";
 import List from "../../api/currencies/list";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Index',
@@ -119,6 +120,7 @@ export default {
         {name: 'name', label: 'Code', field: 'code', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
+      store: null,
     }
   },
   computed: {
@@ -126,21 +128,27 @@ export default {
   },
   created() {
     this.pagination.rowsPerPage = this.getListPageSize;
+    this.store = useFireflyIIIStore();
   },
   mounted() {
     this.type = this.$route.params.type;
-    if (null === this.getRange.start || null === this.getRange.end) {
+    if (null === this.store.getRange.start || null === this.store.getRange.end) {
+
       // subscribe, then update:
-      const $store = useStore();
-      $store.subscribe((mutation, state) => {
-        if ('fireflyiii/setRange' === mutation.type) {
-          this.range = {start: mutation.payload.start, end: mutation.payload.end};
-          this.triggerUpdate();
+      this.store.$onAction(
+        ({name, $store, args, after, onError,}) => {
+          after((result) => {
+            if (name === 'setRange') {
+              this.range = result;
+              this.triggerUpdate();
+            }
+          })
         }
-      });
+      )
+
     }
-    if (null !== this.getRange.start && null !== this.getRange.end) {
-      this.range = {start: this.getRange.start, end: this.getRange.end};
+    if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
+      this.range = {start: this.store.getRange.start, end: this.store.getRange.end};
       this.triggerUpdate();
     }
   },
@@ -158,7 +166,7 @@ export default {
     },
     destroyCurrency: function (code) {
       (new Destroy('currencies')).destroy(code).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },

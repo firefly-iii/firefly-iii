@@ -168,7 +168,7 @@ export default {
     },
     destroyBudget: function (id) {
       (new Destroy('budgets')).destroy(id).then(() => {
-        this.store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },

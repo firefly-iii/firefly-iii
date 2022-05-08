@@ -76,6 +76,7 @@
 <script>
 import Get from "../../api/rules/get";
 import Put from "../../api/rules/put";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -91,6 +92,7 @@ export default {
       // rule fields:
       id: 0,
       title: '',
+      store: null
     }
   },
   computed: {
@@ -100,6 +102,7 @@ export default {
   },
   created() {
     this.id = parseInt(this.$route.params.id);
+    this.store = useFireflyIIIStore();
     this.collectRule();
   },
   methods: {
@@ -143,7 +146,7 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

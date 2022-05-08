@@ -147,11 +147,13 @@ import Configuration from "../../api/system/configuration";
 import Put from "../../api/preferences/put";
 import Preferences from "../../api/preferences";
 import List from "../../api/accounts/list";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 // import {mapGetters} from "vuex";
 
 export default {
   name: 'Index',
   mounted() {
+    this.store = useFireflyIIIStore();
     this.isOk = {
       language: true,
       accounts: true,
@@ -225,7 +227,8 @@ export default {
         date: [],
         meta: [],
         ref: []
-      }
+      },
+      store: null,
     }
   },
   watch: {
@@ -233,7 +236,7 @@ export default {
       this.isOk.language = false;
       this.isLoading.language = true;
       (new Put).put('listPageSize', value).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.isOk.pageSize = true;
         this.isLoading.pageSize = false;
         this.isFailure.pageSize = false;
@@ -256,7 +259,7 @@ export default {
       this.isOk.language = false;
       this.isLoading.language = true;
       (new Put).put('language', value).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.isOk.language = true;
         this.isLoading.language = false;
         this.isFailure.language = false;
@@ -268,7 +271,7 @@ export default {
     },
     accounts: function (value) {
       (new Put).put('frontpageAccounts', value).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.isOk.accounts = true;
         this.isLoading.accounts = false;
         this.isFailure.accounts = false;
@@ -280,7 +283,7 @@ export default {
     },
     viewRange: function (value) {
       (new Put).put('viewRange', value).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.isOk.pageSize = true;
         this.isLoading.pageSize = false;
         this.isFailure.pageSize = false;
@@ -328,7 +331,7 @@ export default {
         }
       }
       (new Put).put('transaction_journal_optional_fields', submission).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.isOk.transactionFields = true;
         this.isLoading.transactionFields = false;
         this.isFailure.transactionFields = false;

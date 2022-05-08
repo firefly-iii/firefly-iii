@@ -101,6 +101,7 @@
 import List from "../../api/rule-groups/list";
 import Get from "../../api/rule-groups/get";
 import Destroy from "../../api/generic/destroy";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Index',
@@ -113,6 +114,7 @@ export default {
     }
   },
   mounted() {
+    this.store = useFireflyIIIStore();
     this.triggerUpdate();
   },
   data() {
@@ -126,6 +128,7 @@ export default {
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
       ruleGroups: {},
+      store: null
     }
   },
   computed: {
@@ -162,13 +165,13 @@ export default {
     },
     destroyRuleGroup: function (id) {
       (new Destroy('rule_groups')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },
     destroyRule: function (id) {
       (new Destroy('rules')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },

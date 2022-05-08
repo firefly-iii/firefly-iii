@@ -88,6 +88,7 @@
 // import {mapGetters} from "vuex";
 import Destroy from "../../api/generic/destroy";
 import List from "../../api/webhooks/list";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Index',
@@ -116,6 +117,7 @@ export default {
         {name: 'title', label: 'Title', field: 'title', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
+      store: null,
     }
   },
   computed: {
@@ -123,6 +125,7 @@ export default {
   },
   created() {
     this.pagination.rowsPerPage = this.getListPageSize;
+    this.store = useFireflyIIIStore();
   },
   mounted() {
     this.triggerUpdate();
@@ -140,7 +143,7 @@ export default {
     },
     destroyWebhook: function (id) {
       (new Destroy('webhooks')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },
