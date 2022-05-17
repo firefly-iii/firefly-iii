@@ -132,6 +132,7 @@ class CreateController extends Controller
     public function createFromJournal(Request $request, TransactionJournal $journal)
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
+        $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
         $defaultCurrency   = app('amount')->getDefaultCurrency();
         $tomorrow          = today(config('app.timezone'));
         $oldRepetitionType = $request->old('repetition_type');
@@ -213,7 +214,7 @@ class CreateController extends Controller
 
         return view(
             'recurring.create',
-            compact('tomorrow', 'oldRepetitionType', 'weekendResponses', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets')
+            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets')
         );
     }
 
