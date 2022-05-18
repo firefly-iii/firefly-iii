@@ -101,7 +101,7 @@ return [
         'webhooks'     => false,
         'handle_debts' => true,
     ],
-    'version'                      => '5.7.5',
+    'version'                      => '5.7.6',
     'api_version'                  => '1.5.6',
     'db_version'                   => 18,
 
@@ -606,7 +606,10 @@ return [
             AccountType::RECONCILIATION  => TransactionTypeModel::RECONCILIATION,
         ],
         AccountType::CASH             => [
-            AccountType::ASSET => TransactionTypeModel::DEPOSIT,
+            AccountType::ASSET    => TransactionTypeModel::DEPOSIT,
+            AccountType::LOAN     => TransactionTypeModel::DEPOSIT,
+            AccountType::DEBT     => TransactionTypeModel::DEPOSIT,
+            AccountType::MORTGAGE => TransactionTypeModel::DEPOSIT,
         ],
         AccountType::DEBT             => [
             AccountType::ASSET           => TransactionTypeModel::DEPOSIT,
@@ -688,9 +691,10 @@ return [
             AccountType::ASSET          => [AccountType::RECONCILIATION],
         ],
         TransactionTypeModel::LIABILITY_CREDIT => [
-            AccountType::LOAN     => [AccountType::LIABILITY_CREDIT],
-            AccountType::DEBT     => [AccountType::LIABILITY_CREDIT],
-            AccountType::MORTGAGE => [AccountType::LIABILITY_CREDIT],
+            AccountType::LOAN             => [AccountType::LIABILITY_CREDIT],
+            AccountType::DEBT             => [AccountType::LIABILITY_CREDIT],
+            AccountType::MORTGAGE         => [AccountType::LIABILITY_CREDIT],
+            AccountType::LIABILITY_CREDIT => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
         ],
     ],
     // if you add fields to this array, dont forget to update the export routine (ExportDataGenerator).

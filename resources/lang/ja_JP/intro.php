@@ -50,7 +50,7 @@ return [
     'budgets_index_see_expenses_bar'        => '支出金額が少しずつこのバーを満たします。',
     'budgets_index_navigate_periods'        => '期間を操作することで、予算を事前に簡単に設定できます。',
     'budgets_index_new_budget'              => 'あなたが妥当だと考える新しい予算を設定してください。',
-    'budgets_index_list_of_budgets'         => '各予算の金額を設定したり自分の行っていることを確認するためにこの表を使ってください。',
+    'budgets_index_list_of_budgets'         => '各予算の金額を設定したり、状況を確認するにはこの表を使ってください。',
     'budgets_index_outro'                   => '予算計上についてもっと知るには、右上のヘルプアイコンを確認してください。',
 
     // reports (index)
@@ -73,8 +73,8 @@ return [
     'reports_report_tag_pieCharts'              => 'これらのチャートはタグ、勘定、カテゴリ、予算ごとのあなたの支出と収入を表示しています。',
     'reports_report_tag_incomeAndExpensesChart' => 'このチャートはタグごとのあなたの支出と収入を表示しています。',
 
-    'reports_report_budget_intro'                             => 'このレポートは、1つまたは複数の予算についての洞察を提供します。',
-    'reports_report_budget_pieCharts'                         => 'これらのチャートは、予算ごとまたはアカウントごとの費用に関する洞察を提供します。',
+    'reports_report_budget_intro'                             => 'このレポートは、1つまたは複数の予算の見通しを示します。',
+    'reports_report_budget_pieCharts'                         => 'これらのチャートは、予算ごとまたは口座ごとの支出に関する見通しを示します。',
     'reports_report_budget_incomeAndExpensesChart'            => 'このグラフは予算あたりの支出を示しています。',
 
     // create transaction
@@ -88,7 +88,7 @@ return [
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'この項目は、それぞれの貯金箱にどれだけ貯めたかを示しています。',
     'piggy-banks_index_button'                                => 'このプログレスバーの隣には、それぞれの貯金箱からお金を追加または削除する、2つのボタン(+と-) があります。',
-    'piggy-banks_index_accountStatus'                         => 'この表には、ひとつ以上の貯金箱をもつ資産勘定の状況が表示されています。',
+    'piggy-banks_index_accountStatus'                         => 'この表には、1つ以上の貯金箱をもつ資産口座の状況が表示されています。',
 
     // create piggy
     'piggy-banks_create_name'                                 => 'あなたの目標は何ですか？ 新しいソファ、カメラ、もしもの時のお金ですか？',
