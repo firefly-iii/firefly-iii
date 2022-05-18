@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.6 - 2022-05-19
+
+### Fixed
+- [Issue 6058](https://github.com/firefly-iii/firefly-iii/issues/6058) Bad type-casting could break Firefly III on Home Assistant.
+- [Issue 6059](https://github.com/firefly-iii/firefly-iii/issues/6059) Fix issue with missing list of bills when creating a recurring transaction from a transaction.
+- Added missing DB integrity checks.
+
+### Security
+- Updated various packages
+
 ## 5.7.5 - 2022-05-06
 
 ### Fixed

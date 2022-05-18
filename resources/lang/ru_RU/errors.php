@@ -47,8 +47,8 @@ return [
     'tell_more'               => 'Я хочу знать больше, чем просто "Упс!"',
     'include_logs'            => 'Прикрепить журналы ошибок (см. выше).',
     'what_did_you_do'         => 'Расскажите нам, что именно вы делали.',
-    'offline_header'          => 'You are probably offline',
-    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
-    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'offline_header'          => 'Вы возможно офлайн',
+    'offline_unreachable'     => 'Firefly III не доступен. Ваше устройство сейчас не в сети или сервер выключен.',
+    'offline_github'          => 'Если вы уверены что ваше устройство и сервер в сети то откройте заявку <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];
