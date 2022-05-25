@@ -283,6 +283,12 @@ return [
         'application/vnd.oasis.opendocument.formula',
         'application/vnd.oasis.opendocument.database',
         'application/vnd.oasis.opendocument.image',
+
+        /* EML */
+        'message/rfc822',
+
+        /* JSON */
+        'application/json',
     ],
     'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
     'valid_liabilities'            => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
