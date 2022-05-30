@@ -99,7 +99,9 @@ class Steam
         $sum = '0';
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
-            $sum = bcadd($sum, $transaction[$key] ?? '0');
+            $value = (string) ($transaction[$key] ?? '0');
+            $value = '' === $value ? '0' : $value;
+            $sum   = bcadd($sum, $value);
         }
 
         return $sum;
