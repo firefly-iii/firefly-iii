@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.9 - 2022-06-01
+
+### Fixed
+- Symfony 6.1 requires PHP 8.1, so back to 6.0 for the time being.
+
 ## 5.7.8 - 2022-06-01
 
 ### Fixed
