@@ -101,7 +101,7 @@ return [
         'webhooks'     => false,
         'handle_debts' => true,
     ],
-    'version'                      => '5.7.6',
+    'version'                      => '5.7.7',
     'api_version'                  => '1.5.6',
     'db_version'                   => 18,
 
@@ -283,6 +283,12 @@ return [
         'application/vnd.oasis.opendocument.formula',
         'application/vnd.oasis.opendocument.database',
         'application/vnd.oasis.opendocument.image',
+
+        /* EML */
+        'message/rfc822',
+
+        /* JSON */
+        'application/json',
     ],
     'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
     'valid_liabilities'            => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],

@@ -1394,7 +1394,7 @@ return [
     'make_new_revenue_account'                  => 'Δημιουργία νέου λογαριασμού εσόδων',
     'make_new_liabilities_account'              => 'Δημιουργία νέας υποχρέωσης',
     'asset_accounts'                            => 'Κεφάλαια',
-    'undefined_accounts'                        => 'Accounts',
+    'undefined_accounts'                        => 'Λογαριασμοί',
     'asset_accounts_inactive'                   => 'Λογαριασμοί κεφαλαίου (ανενεργοί)',
     'expense_accounts'                          => 'Δαπάνες',
     'expense_accounts_inactive'                 => 'Λογαριασμοί δαπανών (ανενεργοί)',

@@ -44,12 +44,12 @@ return [
     // access token created
     'access_token_created_subject'            => 'Se ha creado un nuevo token de acceso',
     'access_token_created_body'               => 'Alguien (esperemos que usted) acaba de crear un nuevo token de acceso a la API de Firefly III para tu cuenta de usuario.',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'Con este token, pueden acceder a **todos** sus registros financieros a través de la API de Firefly III.',
+    'access_token_created_revoke'             => 'Si no era usted, por favor, revoque este token tan pronto como sea posible, en :url',
 
     // registered
     'registered_subject'                      => 'Bienvenido a Firefly III!',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
+    'registered_welcome'                      => 'Bienvenido/a a [Firefly III](:address). Su registro se ha realizado correctamente, y este correo electrónico está aquí para confirmarlo. ¡Yeah!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'Hay un icono de ayuda en la esquina superior derecha de cada página. Si necesita ayuda, ¡Haga clic en él!',
     'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
