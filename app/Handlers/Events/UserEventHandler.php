@@ -338,6 +338,12 @@ class UserEventHandler
         Log::debug('Now in storeUserIPAddress');
         $user = $event->user;
         /** @var array $preference */
+
+        if($user->hasRole('demo')) {
+            Log::debug('Do not log demo user logins');
+            return;
+        }
+
         try {
             $preference = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
         } catch (FireflyException $e) {
