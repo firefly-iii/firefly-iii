@@ -104,8 +104,8 @@
     "rcrowe/twigbridge": "^0.14",
     "spatie/data-transfer-object": "^3.7",
     "spatie/laravel-ignition": "^1.2",
-    "symfony/http-client": "6.0.*",
-    "symfony/mailgun-mailer": "6.0.*"
+    "symfony/http-client": "^6.0",
+    "symfony/mailgun-mailer": "^6.0"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "2.*",
@@ -203,6 +203,9 @@
     ]
   },
   "config": {
+    "platform": {
+      "php": "8.0.19"
+    },
     "preferred-install": "dist",
     "sort-packages": true,
     "optimize-autoloader": true,
