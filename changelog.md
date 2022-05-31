@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.7 - 2022-06-01
+
+### Fixed
+- Fixed an issue where the login form would overflow a database field.
+- [Issue 6113](https://github.com/firefly-iii/firefly-iii/issues/6113) Fix issue with number formatting.
+- [Issue 5996](https://github.com/firefly-iii/firefly-iii/issues/5996) Catch bad library
+
+### Added
+- @turrisxyz added a dependency review, thanks!
+
 ## 5.7.6 - 2022-05-19
 
 ### Fixed

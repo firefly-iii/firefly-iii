@@ -50,7 +50,7 @@ export default {
         "rule_trigger_source_account_ends_choice": "\u6765\u6e90\u8d26\u6237\u7ed3\u5c3e\u4e3a\u2026",
         "rule_trigger_source_account_is_choice": "\u6765\u6e90\u8d26\u6237\u540d\u79f0\u4e3a...",
         "rule_trigger_source_account_contains_choice": "\u6765\u6e90\u8d26\u6237\u540d\u79f0\u5305\u542b...",
-        "rule_trigger_account_id_choice": "\u4efb\u4f55\u4e00\u4e2a\u8d26\u6237ID\u4e3a",
+        "rule_trigger_account_id_choice": "\u5176\u4e2d\u4e00\u4e2a\u8d26\u6237ID\u4e3a...",
         "rule_trigger_source_account_id_choice": "\u6765\u6e90\u8d26\u6237 ID \u4e3a...",
         "rule_trigger_destination_account_id_choice": "\u76ee\u6807\u8d26\u6237 ID \u4e3a...",
         "rule_trigger_account_is_cash_choice": "\u5176\u4e2d\u4e00\u4e2a\u8d26\u6237\u662f\u73b0\u91d1\u8d26\u6237",
