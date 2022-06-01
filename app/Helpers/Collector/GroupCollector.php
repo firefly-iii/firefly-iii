@@ -87,6 +87,7 @@ class GroupCollector implements GroupCollectorInterface
             'category_id',
             'budget_id',
         ];
+        $this->stringFields         = ['amount', 'foreign_amount'];
         $this->total                = 0;
         $this->fields               = [
             # group
@@ -375,6 +376,9 @@ class GroupCollector implements GroupCollectorInterface
         // convert values to integers:
         $result = $this->convertToInteger($result);
 
+        // convert back to strings because SQLite is dumb like that.
+        $result = $this->convertToStrings($result);
+
         $result['reconciled'] = 1 === (int) $result['reconciled'];
         if (array_key_exists('tag_id', $result) && null !== $result['tag_id']) { // assume the other fields are present as well.
             $tagId   = (int) $augumentedJournal['tag_id'];
@@ -506,7 +510,7 @@ class GroupCollector implements GroupCollectorInterface
                     $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
                     $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                 }
-                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], (string)($transaction['amount'] ?? '0'));
+                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
                     $currencyId = (int) $transaction['foreign_currency_id'];
@@ -814,5 +818,18 @@ class GroupCollector implements GroupCollectorInterface
              ->withBillInformation();
 
         return $this;
+    }
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    private function convertToStrings(array $array): array
+    {
+        foreach ($this->stringFields as $field) {
+            $array[$field] = array_key_exists($field, $array) ? (string) $array[$field] : '0';
+        }
+
+        return $array;
     }
 }
