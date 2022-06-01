@@ -238,7 +238,7 @@ trait PeriodOverview
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
             }
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
+            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], (string) $journal['amount'] ?? '0');
             $return[$currencyId]['count']++;
 
             if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
