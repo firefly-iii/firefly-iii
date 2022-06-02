@@ -827,7 +827,7 @@ class GroupCollector implements GroupCollectorInterface
     private function convertToStrings(array $array): array
     {
         foreach ($this->stringFields as $field) {
-            $array[$field] = array_key_exists($field, $array) ? (string) $array[$field] : '0';
+            $array[$field] = array_key_exists($field, $array) && null !== $array[$field] ? (string) $array[$field] : null;
         }
 
         return $array;
