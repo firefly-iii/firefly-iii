@@ -180,8 +180,8 @@ return [
     'blocked_code'                => 'Αιτία αποκλεισμού',
     'login_name'                  => 'Είσοδος',
     'is_owner'                    => 'Είναι διαχειριστής;',
-    'url'                         => 'URL',
-    'bill_end_date'               => 'End date',
+    'url'                         => 'Διεύθυνση URL',
+    'bill_end_date'               => 'Ημερομηνία λήξης',
 
     // import
     'apply_rules'                 => 'Εφαρμογή κανόνων',

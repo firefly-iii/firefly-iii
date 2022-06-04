@@ -30,8 +30,8 @@ return [
     'footer_ps'                               => ':ipAddressにリクエストされたので、このメール送信されました。',
 
     // admin test
-    'admin_test_subject'                      => 'Firefly-iiiのテストメッセージ',
-    'admin_test_body'                         => 'Firefly-iiiのテストメッセージ。:emailに送信しました。',
+    'admin_test_subject'                      => 'あなたの Firefly III からのテストメッセージ',
+    'admin_test_body'                         => 'これはあなたの Firefly III からのテストメッセージです。:email 宛に送信しました。',
 
     // new IP
     'login_from_new_ip'                       => 'Firefly III に新しいログイン',

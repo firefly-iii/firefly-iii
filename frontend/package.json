@@ -11,14 +11,22 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.2",
+<<<<<<< HEAD
     "@quasar/extras": "^1.13.6",
+=======
+    "@quasar/extras": "^1.14.0",
+>>>>>>> develop
     "apexcharts": "^3.32.1",
     "axios": "^0.21.1",
     "axios-cache-adapter": "^2.7.3",
     "core-js": "^3.6.5",
     "date-fns": "^2.28.0",
+<<<<<<< HEAD
     "pinia": "^2.0.13",
     "quasar": "^2.6.6",
+=======
+    "quasar": "^2.7.1",
+>>>>>>> develop
     "vue": "3",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0",
@@ -27,7 +35,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
-    "@quasar/app-webpack": "^3.5.1",
+    "@quasar/app-webpack": "^3.5.3",
     "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",

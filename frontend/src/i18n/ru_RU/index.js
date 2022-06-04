@@ -18,7 +18,7 @@ export default {
     },
     "list": {
         "name": "\u0418\u043c\u044f",
-        "account_number": "Account number",
+        "account_number": "\u041d\u043e\u043c\u0435\u0440 \u0441\u0447\u0451\u0442\u0430",
         "currentBalance": "\u0422\u0435\u043a\u0443\u0449\u0438\u0439 \u0431\u0430\u043b\u0430\u043d\u0441",
         "lastActivity": "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u044f\u044f \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c",
         "active": "\u0410\u043a\u0442\u0438\u0432\u0435\u043d?"

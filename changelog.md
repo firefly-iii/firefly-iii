@@ -2,6 +2,36 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.9 - 2022-06-01
+
+### Fixed
+- Symfony 6.1 requires PHP 8.1, so back to 6.0 for the time being.
+
+## 5.7.8 - 2022-06-01
+
+### Fixed
+- Symfony 6.1 requires PHP 8.1, so back to 6.0 for the time being.
+
+## 5.7.7 - 2022-06-01
+
+### Fixed
+- Fixed an issue where the login form would overflow a database field.
+- [Issue 6113](https://github.com/firefly-iii/firefly-iii/issues/6113) Fix issue with number formatting.
+- [Issue 5996](https://github.com/firefly-iii/firefly-iii/issues/5996) Catch bad library
+
+### Added
+- @turrisxyz added a dependency review, thanks!
+
+## 5.7.6 - 2022-05-19
+
+### Fixed
+- [Issue 6058](https://github.com/firefly-iii/firefly-iii/issues/6058) Bad type-casting could break Firefly III on Home Assistant.
+- [Issue 6059](https://github.com/firefly-iii/firefly-iii/issues/6059) Fix issue with missing list of bills when creating a recurring transaction from a transaction.
+- Added missing DB integrity checks.
+
+### Security
+- Updated various packages
+
 ## 5.7.5 - 2022-05-06
 
 ### Fixed
