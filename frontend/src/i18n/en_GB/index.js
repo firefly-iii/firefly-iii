@@ -51,6 +51,7 @@ export default {
         "newTransfer": "New transfer",
         "newDeposit": "New deposit",
         "newWithdrawal": "New expense",
+        "bills_paid": "Bills paid",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",

@@ -51,6 +51,7 @@ export default {
         "newTransfer": "Neue Umbuchung",
         "newDeposit": "Neue Einnahme",
         "newWithdrawal": "Neue Ausgabe",
+        "bills_paid": "Rechnungen bezahlt",
         "rule_trigger_source_account_starts_choice": "Name des Quellkontos beginnt mit..",
         "rule_trigger_source_account_ends_choice": "Quellkonto-Name endet mit..",
         "rule_trigger_source_account_is_choice": "Quellkonto-Name lautet..",

@@ -51,6 +51,7 @@ export default {
         "newTransfer": "\u65b0\u3057\u3044\u9001\u91d1",
         "newDeposit": "\u65b0\u3057\u3044\u5165\u91d1",
         "newWithdrawal": "\u65b0\u3057\u3044\u652f\u51fa",
+        "bills_paid": "\u652f\u6255\u3044\u6e08\u307f\u8acb\u6c42",
         "rule_trigger_source_account_starts_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u540d\u304c...\u3067\u59cb\u307e\u308b",
         "rule_trigger_source_account_ends_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u540d\u304c\u2026\u3067\u7d42\u308f\u308b",
         "rule_trigger_source_account_is_choice": "\u51fa\u91d1\u5143\u53e3\u5ea7\u540d\u304c...",

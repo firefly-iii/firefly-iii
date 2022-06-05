@@ -51,6 +51,7 @@ export default {
         "newTransfer": "Chuy\u1ec3n kho\u1ea3n m\u1edbi",
         "newDeposit": "Ti\u1ec1n g\u1eedi m\u1edbi",
         "newWithdrawal": "Chi ph\u00ed m\u1edbi",
+        "bills_paid": "H\u00f3a \u0111\u01a1n thanh to\u00e1n",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",

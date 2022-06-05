@@ -51,6 +51,7 @@ export default {
         "newTransfer": "Ny \u00f6verf\u00f6ring",
         "newDeposit": "Ny ins\u00e4ttning",
         "newWithdrawal": "Ny utgift",
+        "bills_paid": "Notor betalda",
         "rule_trigger_source_account_starts_choice": "K\u00e4llkontonamn b\u00f6rjar med..",
         "rule_trigger_source_account_ends_choice": "K\u00e4llkontonamn slutar med..",
         "rule_trigger_source_account_is_choice": "K\u00e4llkontonamn \u00e4r..",

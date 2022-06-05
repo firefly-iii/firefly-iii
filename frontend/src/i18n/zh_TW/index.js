@@ -51,6 +51,7 @@ export default {
         "newTransfer": "\u65b0\u8f49\u5e33",
         "newDeposit": "\u65b0\u5b58\u6b3e",
         "newWithdrawal": "\u65b0\u652f\u51fa",
+        "bills_paid": "\u5df2\u7e73\u5e33\u55ae",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",

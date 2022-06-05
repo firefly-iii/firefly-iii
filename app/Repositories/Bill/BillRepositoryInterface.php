@@ -44,12 +44,40 @@ interface BillRepositoryInterface
     public function billEndsWith(string $query, int $limit): Collection;
 
     /**
+     * Collect multi-currency of sum of bills yet to pay.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return array
+     */
+    public function sumUnpaidInRange(Carbon $start, Carbon $end): array;
+
+    /**
+     * Collect multi-currency of sum of bills already paid.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return array
+     */
+    public function sumPaidInRange(Carbon $start, Carbon $end): array;
+
+    /**
      * @param string $query
      * @param int    $limit
      *
      * @return Collection
      */
     public function billStartsWith(string $query, int $limit): Collection;
+
+    /**
+     * Get the total amount of money due for the users active bills in the date range given.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @deprecated
+     * @return Collection
+     */
+    public function collectBillsUnpaidInRange(Carbon $start, Carbon $end): Collection;
 
     /**
      * Add correct order to bills.
@@ -126,42 +154,42 @@ interface BillRepositoryInterface
 
     /**
      * Get the total amount of money paid for the users active bills in the date range given.
-     *
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return string
+     * @deprecated
      */
     public function getBillsPaidInRange(Carbon $start, Carbon $end): string;
 
     /**
      * Get the total amount of money paid for the users active bills in the date range given,
      * grouped per currency.
-     *
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return array
+     * @deprecated
      */
     public function getBillsPaidInRangePerCurrency(Carbon $start, Carbon $end): array;
 
     /**
      * Get the total amount of money due for the users active bills in the date range given.
-     *
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return string
+     * @deprecated
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
 
     /**
      * Get the total amount of money due for the users active bills in the date range given.
-     *
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return array
+     * @deprecated
      */
     public function getBillsUnpaidInRangePerCurrency(Carbon $start, Carbon $end): array;
 

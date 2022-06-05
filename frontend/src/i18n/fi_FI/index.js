@@ -51,6 +51,7 @@ export default {
         "newTransfer": "Uusi siirto",
         "newDeposit": "Uusi talletus",
         "newWithdrawal": "Uusi kustannus",
+        "bills_paid": "Maksetut laskut",
         "rule_trigger_source_account_starts_choice": "L\u00e4hdetilin nimi alkaa ...",
         "rule_trigger_source_account_ends_choice": "L\u00e4hdetilin nimi p\u00e4\u00e4ttyy..",
         "rule_trigger_source_account_is_choice": "L\u00e4hdetilin nimi on..",

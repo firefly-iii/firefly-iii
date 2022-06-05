@@ -51,6 +51,7 @@ export default {
         "newTransfer": "Nieuwe overschrijving",
         "newDeposit": "Nieuwe inkomsten",
         "newWithdrawal": "Nieuwe uitgave",
+        "bills_paid": "Betaalde contracten",
         "rule_trigger_source_account_starts_choice": "Bronrekeningnaam begint met..",
         "rule_trigger_source_account_ends_choice": "Bronrekeningnaam eindigt op..",
         "rule_trigger_source_account_is_choice": "Bronrekeningnaam is..",

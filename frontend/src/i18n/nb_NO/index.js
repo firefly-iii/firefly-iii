@@ -51,6 +51,7 @@ export default {
         "newTransfer": "Ny overf\u00f8ring",
         "newDeposit": "Nytt innskudd",
         "newWithdrawal": "Ny utgift",
+        "bills_paid": "Regninger betalt",
         "rule_trigger_source_account_starts_choice": "Source account name starts with..",
         "rule_trigger_source_account_ends_choice": "Source account name ends with..",
         "rule_trigger_source_account_is_choice": "Source account name is..",

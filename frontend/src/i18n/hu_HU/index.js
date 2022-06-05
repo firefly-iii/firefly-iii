@@ -51,6 +51,7 @@ export default {
         "newTransfer": "\u00daj \u00e1tvezet\u00e9s",
         "newDeposit": "\u00daj bev\u00e9tel",
         "newWithdrawal": "\u00daj k\u00f6lts\u00e9g",
+        "bills_paid": "Befizetett sz\u00e1ml\u00e1k",
         "rule_trigger_source_account_starts_choice": "Forr\u00e1ssz\u00e1mla nev\u00e9nek eleje..",
         "rule_trigger_source_account_ends_choice": "Forr\u00e1ssz\u00e1mla nev\u00e9nek v\u00e9ge..",
         "rule_trigger_source_account_is_choice": "A forr\u00e1ssz\u00e1mla neve..",

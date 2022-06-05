@@ -51,6 +51,7 @@ export default {
         "newTransfer": "Nuovo trasferimento",
         "newDeposit": "Nuova entrata",
         "newWithdrawal": "Nuova uscita",
+        "bills_paid": "Bollette pagate",
         "rule_trigger_source_account_starts_choice": "Il nome del conto di origine inizia con..",
         "rule_trigger_source_account_ends_choice": "Il nome del conto di origine termina con..",
         "rule_trigger_source_account_is_choice": "Il nome del conto di origine \u00e8..",

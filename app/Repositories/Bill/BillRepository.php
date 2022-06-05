@@ -86,6 +86,27 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     * @deprecated
+     */
+    public function collectBillsUnpaidInRange(Carbon $start, Carbon $end): Collection
+    {
+        $bills  = $this->getActiveBills();
+        $return = new Collection;
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $dates = $this->getPayDatesInRange($bill, $start, $end);
+            $count = $bill->transactionJournals()->after($start)->before($end)->count();
+            $total = $dates->count() - $count;
+            if ($total > 0) {
+                $return->push($bill);
+            }
+        }
+
+        return $bills;
+    }
+
+    /**
      * Correct order of piggies in case of issues.
      */
     public function correctOrder(): void
@@ -255,8 +276,8 @@ class BillRepository implements BillRepositoryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     *
      * @return string
+     * @deprecated
      */
     public function getBillsPaidInRange(Carbon $start, Carbon $end): string
     {
@@ -291,11 +312,11 @@ class BillRepository implements BillRepositoryInterface
     /**
      * Get the total amount of money paid for the users active bills in the date range given,
      * grouped per currency.
-     *
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return array
+     * @deprecated
      */
     public function getBillsPaidInRangePerCurrency(Carbon $start, Carbon $end): array
     {
@@ -323,8 +344,8 @@ class BillRepository implements BillRepositoryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     *
      * @return string
+     * @deprecated
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string
     {
@@ -358,7 +379,6 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
-     * @throws JsonException
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
@@ -420,8 +440,8 @@ class BillRepository implements BillRepositoryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     *
      * @return array
+     * @deprecated
      */
     public function getBillsUnpaidInRangePerCurrency(Carbon $start, Carbon $end): array
     {
@@ -446,6 +466,66 @@ class BillRepository implements BillRepositoryInterface
             }
         }
 
+        return $return;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumUnpaidInRange(Carbon $start, Carbon $end): array
+    {
+        $bills  = $this->getActiveBills();
+        $return = [];
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $dates = $this->getPayDatesInRange($bill, $start, $end);
+            $count = $bill->transactionJournals()->after($start)->before($end)->count();
+            $total = $dates->count() - $count;
+
+            if ($total > 0) {
+                $currency                     = $bill->transactionCurrency;
+                $average                      = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
+                $return[$currency->id]        = $return[$currency->id] ?? [
+                        'id'             => (string) $currency->id,
+                        'name'           => $currency->name,
+                        'symbol'         => $currency->symbol,
+                        'code'           => $currency->code,
+                        'decimal_places' => $currency->decimal_places,
+                        'sum'            => '0',
+                    ];
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], bcmul($average, (string) $total));
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumPaidInRange(Carbon $start, Carbon $end): array
+    {
+        $bills  = $this->getActiveBills();
+        $return = [];
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            /** @var Collection $set */
+            $set      = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
+            $currency = $bill->transactionCurrency;
+            if ($set->count() > 0) {
+                $journalIds                   = $set->pluck('id')->toArray();
+                $amount                       = (string) Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
+                $return[$currency->id]        = $return[$currency->id] ?? [
+                        'id'             => (string) $currency->id,
+                        'name'           => $currency->name,
+                        'symbol'         => $currency->symbol,
+                        'code'           => $currency->code,
+                        'decimal_places' => $currency->decimal_places,
+                        'sum'            => '0',
+                    ];
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
+            }
+        }
         return $return;
     }
 

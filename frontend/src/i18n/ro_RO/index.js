@@ -51,6 +51,7 @@ export default {
         "newTransfer": "Transfer nou",
         "newDeposit": "Depozit nou",
         "newWithdrawal": "Cheltuieli noi",
+        "bills_paid": "Facturile pl\u0103tite",
         "rule_trigger_source_account_starts_choice": "Numele contului surs\u0103 \u00eencepe cu..",
         "rule_trigger_source_account_ends_choice": "Numele contului surs\u0103 se termin\u0103 cu..",
         "rule_trigger_source_account_is_choice": "Numele contului surs\u0103 este..",
