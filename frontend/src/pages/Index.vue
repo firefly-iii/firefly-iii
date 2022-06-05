@@ -20,109 +20,30 @@
 
 <template>
   <q-page>
-    <div class="q-ma-md" v-if="0 === assetCount">
+    <div v-if="0 === assetCount">
       <NewUser
         v-on:created-accounts="refreshThenCount"
       ></NewUser>
     </div>
-    <div class="q-ma-md" v-if="assetCount > 0">
-      <Boxes></Boxes>
+    <div v-if="assetCount > 0">
+      <Dashboard/>
     </div>
-    <div class="row q-ma-md" v-if="assetCount > 0">
-      <div class="col-12">
-        <q-card bordered>
-          <q-card-section>
-            <div class="text-h6">Firefly III</div>
-            <div class="text-subtitle2">What's playing?</div>
-          </q-card-section>
-          <q-card-section>
-            <HomeChart></HomeChart>
-          </q-card-section>
-        </q-card>
-
-      </div>
-    </div>
-    <!--
-    <div class="row q-ma-md">
-      <div class="col-6 q-pr-sm">
-        <q-card bordered>
-          <q-card-section>
-            <div class="text-h6">Budgets</div>
-            <div class="text-subtitle2">Subheader</div>
-          </q-card-section>
-          <q-card-section>
-            Content
-          </q-card-section>
-        </q-card>
-
-
-      </div>
-      <div class="col-6 q-pl-sm">
-        <q-card bordered>
-          <q-card-section>
-            <div class="text-h6">Categories</div>
-            <div class="text-subtitle2">Subheader</div>
-          </q-card-section>
-          <q-card-section>
-            Content
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">Expenses</div>
-      <div class="col-6">Income</div>
-    </div>
-    <div class="row">
-      <div class="col-4">Account X</div>
-      <div class="col-4">Account X</div>
-      <div class="col-4">Account X</div>
-    </div>
-    <div class="row">
-      <div class="col-6">Piggies</div>
-      <div class="col-6">Bills</div>
-    </div>
-    -->
-    <q-page-sticky position="bottom-right" :offset="[18, 18]" v-if="assetCount > 0">
-      <q-fab
-        label="Actions"
-        square
-        vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
-      >
-        <!-- <q-fab-action color="primary" square icon="fas fa-bullseye" label="New piggy bank"/> -->
-        <q-fab-action color="primary" square icon="fas fa-chart-pie" label="New budget"
-                      :to="{ name: 'budgets.create' }"/>
-        <!-- <q-fab-action color="primary" square icon="fas fa-home" label="New liability"/> -->
-        <q-fab-action color="primary" square icon="far fa-money-bill-alt" label="New asset account"
-                      :to="{ name: 'accounts.create', params: {type: 'asset'} }"/>
-        <q-fab-action color="primary" square icon="fas fa-exchange-alt" label="New transfer"
-                      :to="{ name: 'transactions.create', params: {type: 'transfer'} }"/>
-        <q-fab-action color="primary" square icon="fas fa-long-arrow-alt-right" label="New deposit"
-                      :to="{ name: 'transactions.create', params: {type: 'deposit'} }"/>
-        <q-fab-action color="primary" square icon="fas fa-long-arrow-alt-left" label="New withdrawal"
-                      :to="{ name: 'transactions.create', params: {type: 'withdrawal'} }"/>
-
-      </q-fab>
-    </q-page-sticky>
   </q-page>
 </template>
 
 <script>
+
 import {defineAsyncComponent, defineComponent} from "vue";
 import List from "../api/accounts/list";
 //import {mapGetters} from "vuex";
 import {useFireflyIIIStore} from '../stores/fireflyiii'
+import Dashboard from "./dashboard/Dashboard";
 
 export default defineComponent(
   {
     name: 'PageIndex',
     components: {
-      Boxes: defineAsyncComponent(() => import('./dashboard/Boxes.vue')),
-      HomeChart: defineAsyncComponent(() => import('./dashboard/HomeChart')),
+      Dashboard,
       NewUser: defineAsyncComponent(() => import('../components/dashboard/NewUser')),
     },
     data() {
@@ -130,9 +51,6 @@ export default defineComponent(
         assetCount: 1,
         $store: null
       }
-    },
-    computed: {
-      //...mapGetters('fireflyiii', ['getCacheKey']),
     },
     mounted() {
       this.countAssetAccounts();

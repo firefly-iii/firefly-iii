@@ -82,13 +82,11 @@
 
 <script>
 import Basic from "src/api/summary/basic";
-//import {mapGetters, useStore} from "vuex";
 import {useFireflyIIIStore} from '../../stores/fireflyiii'
 
 export default {
   name: 'Boxes',
   computed: {
-    //...mapGetters('fireflyiii', ['getCurrencyCode', 'getCurrencyId', 'getRange','getCacheKey']),
     prefBillsUnpaid: function () {
       return this.filterOnCurrency(this.billsUnpaid);
     },

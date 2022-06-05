@@ -74,7 +74,6 @@
 
         <!-- TODO notifications -->
 
-
         <!-- date range -->
         <q-btn v-if="$q.screen.gt.xs && $route.meta.dateSelector" flat class="q-mx-xs">
           <div class="row items-center no-wrap">
