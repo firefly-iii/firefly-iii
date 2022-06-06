@@ -22,11 +22,11 @@
   <!-- TODO most left? q-mr-sm -->
   <!-- TODO middle? dan q-mx-sm -->
   <!-- TODO right? dan q-ml-sm -->
-  <div class="q-mr-sm">
+  <div class="q-mx-sm">
     <q-card bordered>
       <q-item>
         <q-item-section>
-          <q-item-label><strong>{{ $t('firefly.bills_to_pay') }}</strong></q-item-label>
+          <q-item-label><strong>Spend</strong></q-item-label>
         </q-item-section>
       </q-item>
       <q-separator/>
@@ -41,20 +41,13 @@
           />
         </q-card-section>
         <q-separator vertical/>
-        <q-card-section v-if="0 === unpaid.length && 0 === paid.length">
-          You have no bills
+        <q-card-section v-if="0 === budgeted.length && 0 === spent.length">
+          You have no budgets set
         </q-card-section>
-        <q-card-section v-if="unpaid.length > 0 || paid.length > 0">
-          <span :title="formatAmount(this.currency, this.unpaidAmount)">{{ $t('firefly.bills_to_pay') }}</span>:
-          <span v-for="(bill, index) in unpaid">
-            <span v-if="bill.native">(</span>{{ formatAmount(bill.code, bill.sum) }}<span
-            v-if="bill.native">)</span><span v-if="index+1 !== unpaid.length">, </span></span>
-          <br/>
-          <span :title="formatAmount(this.currency, this.paidAmount)">{{ $t('firefly.bills_paid') }}</span>:
-          <span v-for="(bill, index) in paid"><span v-if="bill.native">(</span>{{
-              formatAmount(bill.code, bill.sum)
-            }}<span v-if="bill.native">)</span><span
-              v-if="index+1 !== paid.length">, </span></span>
+        <q-card-section v-if="budgeted.length > 0 || spent.length > 0">
+          <span :title="formatAmount(this.currency, this.budgetedAmount)">Budgeted</span>:
+          <span v-for="(budget, index) in budgeted"><span v-if="budget.native">(</span>{{ formatAmount(budget.code, budget.sum) }}<span v-if="budget.native">)</span><span
+            v-if="index+1 !== budgeted.length">, </span></span>
         </q-card-section>
       </q-card-section>
     </q-card>
@@ -63,33 +56,34 @@
 
 <script>
 import {useFireflyIIIStore} from "../../stores/fireflyiii";
-import Sum from "../../api/v2/bills/sum";
+import Sum from "../../api/v2/budgets/sum";
 
 export default {
   data() {
     return {
       store: null,
-      unpaid: [],
-      paid: [],
+      budgeted: [],
+      spent: [],
       currency: 'EUR',
-      unpaidAmount: 0.0,
-      paidAmount: 0.0,
+      //percentage: 0,
+      budgetedAmount: 0.0,
+      spentAmount: 0.0,
       range: {
         start: null,
         end: null,
       },
     }
   },
-  name: "BillInsightBox",
+  name: "SpendInsightBox",
   computed: {
     percentage: function () {
-      if (0 === this.unpaidAmount) {
+      if (0 === this.budgetedAmount) {
         return 100;
       }
-      if (0.0 === this.paidAmount) {
+      if (0.0 === this.spentAmount) {
         return 0;
       }
-      const pct = (this.paidAmount / this.unpaidAmount) * 100;
+      const pct = (this.spentAmount / this.budgetedAmount) * 100;
       if (pct > 100) {
         return 100;
       }
@@ -98,6 +92,7 @@ export default {
   },
   mounted() {
     this.store = useFireflyIIIStore();
+
     // TODO this code snippet is recycled a lot.
     if (null === this.range.start || null === this.range.end) {
       // subscribe, then update:
@@ -117,55 +112,41 @@ export default {
   methods: {
     triggerUpdate: function () {
       if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
-        this.unpaid = [];
+        this.budgeted = [];
         const start = new Date(this.store.getRange.start);
         const end = new Date(this.store.getRange.end);
         const sum = new Sum;
         this.currency = this.store.getCurrencyCode;
-        sum.unpaid(start, end).then((response) => this.parseUnpaidResponse(response.data));
-        sum.paid(start, end).then((response) => this.parsePaidResponse(response.data));
+        sum.budgeted(start, end).then((response) => this.parseBudgetedResponse(response.data));
+        //sum.paid(start, end).then((response) => this.parsePaidResponse(response.data));
       }
     },
     // TODO this method is recycled a lot.
     formatAmount: function (currencyCode, amount) {
       return Intl.NumberFormat(this.store.getLocale, {style: 'currency', currency: currencyCode}).format(amount);
     },
-    parseUnpaidResponse: function (data) {
-      for (let i in data) {
-        if (data.hasOwnProperty(i)) {
-          const current = data[i];
-          const hasNative = current.native_id !== current.id && current.native_sum !== '0';
-          this.unpaid.push(
-            {
-              sum: current.sum,
-              code: current.code,
-              native: hasNative,
-            }
-          );
-          if (hasNative || current.native_id === current.id) {
-            this.unpaidAmount = this.unpaidAmount + parseFloat(current.native_sum);
-          }
-        }
-      }
-    },
-    parsePaidResponse: function (data) {
+    parseBudgetedResponse: function (data) {
       for (let i in data) {
         if (data.hasOwnProperty(i)) {
           const current = data[i];
           const hasNative = current.native_id !== current.id && parseFloat(current.native_sum) !== 0.0;
-          this.paid.push(
+          this.budgeted.push(
             {
               sum: current.sum,
               code: current.code,
-              native: hasNative,
+              native: hasNative
             }
           );
           if (hasNative || current.native_id === current.id) {
-            this.paidAmount = this.paidAmount + (parseFloat(current.native_sum) * -1);
+            this.budgetedAmount = this.budgetedAmount + parseFloat(current.native_sum);
           }
         }
       }
-    }
+    },
   }
 }
 </script>
+
+<style scoped>
+
+</style>

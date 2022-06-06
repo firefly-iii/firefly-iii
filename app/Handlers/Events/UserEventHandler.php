@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use Carbon\Carbon;
+use Database\Seeders\ExchangeRateSeeder;
 use Exception;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\DetectedNewIPAddress;
@@ -71,6 +72,17 @@ class UserEventHandler
             Log::debug('User count is one, attach role.');
             $repository->attachRole($event->user, 'owner');
         }
+
+        return true;
+    }
+
+    /**
+     * @param RegisteredUser $event
+     * @return bool
+     */
+    public function createExchangeRates(RegisteredUser $event): bool {
+        $seeder = new ExchangeRateSeeder;
+        $seeder->run();
 
         return true;
     }

@@ -12,18 +12,30 @@ import {
   subDays
 } from "date-fns";
 
-export const useFireflyIIIStore = defineStore('counter', {
+export const useFireflyIIIStore = defineStore('firefly-iii', {
   state: () => ({
-    drawerState: true, viewRange: '1M', listPageSize: 10, range: {
+    drawerState: true,
+    viewRange: '1M',
+    listPageSize: 10,
+    locale: 'en-US',
+    range: {
       start: null, end: null
-    }, defaultRange: {
-      start: null, end: null
-    }, currencyCode: 'AAA', currencyId: '0', cacheKey: 'initial'
+    },
+    defaultRange: {
+      start: null,
+      end: null
+    },
+    currencyCode: 'AAA',
+    currencyId: '0',
+    cacheKey: 'initial'
   }),
 
   getters: {
     getViewRange(state) {
       return state.viewRange;
+    },
+    getLocale(state) {
+      return state.locale;
     },
 
     getListPageSize(state) {
@@ -156,15 +168,15 @@ export const useFireflyIIIStore = defineStore('counter', {
 
     // mutators
 
-    increment() {
-      this.counter++
-    },
     updateViewRange(viewRange) {
       this.viewRange = viewRange;
     },
 
     updateListPageSize(value) {
       this.listPageSize = value;
+    },
+    setLocale(value) {
+      this.locale = value;
     },
 
     setRange(value) {

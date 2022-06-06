@@ -7,19 +7,21 @@
     <title>{{ 'login_page_title'|_  }}</title>
 
     <!-- fonts and styles -->
-    <link rel="stylesheet" href="/v3-local/css/fonts.css">
-    <link rel="stylesheet" href="/v3-local/lib/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="/v3-local/lib/icheck-bootstrap/icheck-bootstrap.min.css">
-    <link rel="stylesheet" href="/v3-local/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/v3-local/css/fonts.css?v={{ FF_VERSION }}">
+    <link rel="stylesheet" href="/v3-local/lib/fontawesome-free/css/all.min.css?v={{ FF_VERSION }}">
+    <link rel="stylesheet" href="/v3-local/lib/icheck-bootstrap/icheck-bootstrap.min.css?v={{ FF_VERSION }}">
+    <link rel="stylesheet" href="/v3-local/dist/css/adminlte.min.css?v={{ FF_VERSION }}">
 </head>
 <body class="hold-transition login-page dark-mode">
 {% block content %}{% endblock %}
 
 <!-- jQuery -->
-<script src="v3-local/lib/jquery/jquery.min.js"></script>
+<script src="v3-local/lib/jquery/jquery.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 <!-- Bootstrap 4 -->
-<script src="v3-local/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="v3-local/lib/bootstrap/js/bootstrap.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 <!-- AdminLTE App -->
-<script src="v3-local/dist/js/adminlte.min.js"></script>
+<script src="v3-local/dist/js/adminlte.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+{% block scripts %}
+{% endblock %}
 </body>
 </html>

@@ -83,6 +83,9 @@ class Preference extends Model
             $user = auth()->user();
             /** @var Preference|null $preference */
             $preference = $user->preferences()->where('name', $value)->first();
+            if (null === $preference) {
+                $preference = $user->preferences()->where('id', (int) $value)->first();
+            }
             if (null !== $preference) {
                 return $preference;
             }

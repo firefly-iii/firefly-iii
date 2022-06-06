@@ -39,6 +39,7 @@ use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 use Storage;
 
@@ -78,6 +79,60 @@ class BudgetRepository implements BudgetRepositoryInterface
                ->orderBy('name', 'ASC')->where('active', true);
 
         return $search->take($limit)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function budgetedInPeriod(Carbon $start, Carbon $end): array
+    {
+        Log::debug(sprintf('Now in budgetedInPeriod("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        $return = [];
+        /** @var BudgetLimitRepository $limitRepository */
+        $limitRepository = app(BudgetLimitRepository::class);
+        $limitRepository->setUser($this->user);
+        $budgets = $this->getActiveBudgets();
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            Log::debug(sprintf('Budget #%d: "%s"', $budget->id, $budget->name));
+            $limits = $limitRepository->getBudgetLimits($budget, $start, $end);
+            /** @var BudgetLimit $limit */
+            foreach ($limits as $limit) {
+                Log::debug(sprintf('Budget limit #%d', $limit->id));
+                $currency              = $limit->transactionCurrency;
+                $return[$currency->id] = $return[$currency->id] ?? [
+                        'id'             => (string) $currency->id,
+                        'name'           => $currency->name,
+                        'symbol'         => $currency->symbol,
+                        'code'           => $currency->code,
+                        'decimal_places' => $currency->decimal_places,
+                        'sum'            => '0',
+                    ];
+                // same period
+                if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
+                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string) $limit->amount);
+                    Log::debug(sprintf('Add full amount [1]: %s', $limit->amount));
+                    continue;
+                }
+                // limit is inside of date range
+                if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
+                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string) $limit->amount);
+                    Log::debug(sprintf('Add full amount [2]: %s', $limit->amount));
+                    continue;
+                }
+                $total                        = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
+                $days                         = $this->daysInOverlap($limit, $start, $end);
+                $amount                       = bcmul(bcdiv((string) $limit->amount, (string) $total), (string) $days);
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
+                Log::debug(sprintf('Amount per day: %s (%s over %d days). Total amount for %d days: %s',
+                                   bcdiv((string) $limit->amount, (string) $total),
+                    $limit->amount,
+                    $total,
+                    $days,
+                    $amount));
+            }
+        }
+        return $return;
     }
 
     /**
@@ -335,7 +390,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return Budget
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function store(array $data): Budget
     {
@@ -551,7 +606,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      * @param array  $data
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function updateAutoBudget(Budget $budget, array $data): void
     {
@@ -596,5 +651,43 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         $autoBudget->save();
+    }
+
+    /**
+     * How many days of this budget limit are between start and end?
+     *
+     * @param BudgetLimit $limit
+     * @param Carbon      $start
+     * @param Carbon      $end
+     * @return int
+     */
+    private function daysInOverlap(BudgetLimit $limit, Carbon $start, Carbon $end): int
+    {
+        // start1 = $start
+        // start2 = $limit->start_date
+        // start1 = $end
+        // start2 = $limit->end_date
+
+        // limit is larger than start and end (inclusive)
+        //    |-----------|
+        //  |----------------|
+        if ($start->gte($limit->start_date) && $end->lte($limit->end_date)) {
+            return $start->diffInDays($end) + 1; // add one day
+        }
+        // limit starts earlier and limit ends first:
+        //    |-----------|
+        // |-------|
+        if ($limit->start_date->lte($start) && $limit->end_date->lte($end)) {
+            // return days in the range $start-$limit_end
+            return $start->diffInDays($limit->end_date) + 1; // add one day, the day itself
+        }
+        // limit starts later and limit ends earlier
+        //    |-----------|
+        //           |-------|
+        if ($limit->start_date->gte($start) && $limit->end_date->gte($end)) {
+            // return days in the range $limit_start - $end
+            return $limit->start_date->diffInDays($end) + 1; // add one day, the day itself
+        }
+        return 0;
     }
 }

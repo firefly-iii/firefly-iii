@@ -46,6 +46,29 @@ Route::group(
 );
 
 /**
+ * V2 API route for bills.
+ */
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V2\Controllers\Model\Budget', 'prefix' => 'v2/budgets',
+     'as'        => 'api.v2.budgets',],
+    static function () {
+        Route::get('sum/budgeted', ['uses' => 'SumController@budgeted', 'as' => 'sum.budgeted']);
+        Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
+    }
+);
+
+/**
+ * V2 API route for system
+ */
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V2\Controllers\System', 'prefix' => 'v2',
+     'as'        => 'api.v2.system.',],
+    static function () {
+        Route::get('preferences/{preference}', ['uses' => 'PreferencesController@get', 'as' => 'preferences.get']);
+    }
+);
+
+/**
  * Autocomplete controllers
  */
 Route::group(

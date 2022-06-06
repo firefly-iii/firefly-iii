@@ -1,7 +1,6 @@
-<?php
-/**
- * DatabaseSeeder.php
- * Copyright (c) 2019 james@firefly-iii.org.
+/*
+ * basic.js
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,29 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace Database\Seeders;
+import {api} from "boot/axios";
 
-use Illuminate\Database\Seeder;
-
-/**
- * Class DatabaseSeeder.
- */
-class DatabaseSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     */
-    public function run()
-    {
-        $this->call(AccountTypeSeeder::class);
-        $this->call(TransactionCurrencySeeder::class);
-        $this->call(TransactionTypeSeeder::class);
-        $this->call(PermissionSeeder::class);
-        $this->call(LinkTypeSeeder::class);
-        $this->call(ConfigSeeder::class);
-        $this->call(UserRoleSeeder::class);
-        $this->call(ExchangeRateSeeder::class);
-    }
+export default class Preferences {
+  get(name) {
+    return api.get('/api/v2/preferences/' + name);
+  }
+  // postByName(name, value) {
+  //   return api.post('/api/v1/preferences', {name: name, data: value});
+  // }
 }

@@ -1,7 +1,6 @@
-<?php
-/**
- * DatabaseSeeder.php
- * Copyright (c) 2019 james@firefly-iii.org.
+/*
+ * list.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,29 +17,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace Database\Seeders;
+import {api} from "boot/axios";
+import {format} from "date-fns";
 
-use Illuminate\Database\Seeder;
+export default class Sum {
+  budgeted(start, end) {
+    let url = 'api/v2/budgets/sum/budgeted';
+    let startStr = format(start, 'y-MM-dd');
+    let endStr = format(end, 'y-MM-dd');
+    return api.get(url, {params: {start: startStr, end: endStr}});
+  }
 
-/**
- * Class DatabaseSeeder.
- */
-class DatabaseSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     */
-    public function run()
-    {
-        $this->call(AccountTypeSeeder::class);
-        $this->call(TransactionCurrencySeeder::class);
-        $this->call(TransactionTypeSeeder::class);
-        $this->call(PermissionSeeder::class);
-        $this->call(LinkTypeSeeder::class);
-        $this->call(ConfigSeeder::class);
-        $this->call(UserRoleSeeder::class);
-        $this->call(ExchangeRateSeeder::class);
-    }
+  // /*paid(start, end) {
+  //   let url = 'api/v2/bills/sum/paid';
+  //   let startStr = format(start, 'y-MM-dd');
+  //   let endStr = format(end, 'y-MM-dd');
+  //   return api.get(url, {params: {start: startStr, end: endStr}});
+  // }*/
 }

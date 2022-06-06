@@ -27,7 +27,7 @@
         <BillInsightBox />
       </div>
       <div class="col">
-        TODO spend insight
+        <SpendInsightBox />
       </div>
       <div class="col">
         TODO net worth insight
@@ -94,6 +94,7 @@ export default {
   name: "Dashboard",
   components: {
     BillInsightBox: defineAsyncComponent(() => import('../../components/dashboard/BillInsightBox.vue')),
+    SpendInsightBox: defineAsyncComponent(() => import('../../components/dashboard/SpendInsightBox.vue')),
   }
 }
 </script>

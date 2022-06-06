@@ -24,6 +24,7 @@
 <script>
 import {defineComponent} from 'vue';
 import Preferences from "./api/preferences";
+import Prefs from "./api/v2/preferences";
 import Currencies from "./api/currencies";
 import {useFireflyIIIStore} from 'stores/fireflyiii'
 
@@ -74,10 +75,22 @@ export default defineComponent(
         });
       };
 
+      const getLocale = function () {
+        return (new Prefs).get('locale').then(data => {
+          const locale = data.data.data.attributes.data.replace('_','-');
+
+          ffStore.setLocale(locale);
+        }).catch((err) => {
+          console.error('Could not load locale.')
+          console.log(err);
+        });
+      };
+
 
       getDefaultCurrency().then(() => {
         getViewRange();
         getListPageSize();
+        getLocale();
       });
     }
   })

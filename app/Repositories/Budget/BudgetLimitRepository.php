@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -304,7 +305,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      *
      * @return BudgetLimit
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function store(array $data): BudgetLimit
     {
@@ -354,7 +355,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      *
      * @return BudgetLimit
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {
