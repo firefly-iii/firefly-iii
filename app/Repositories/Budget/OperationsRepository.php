@@ -288,7 +288,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param Collection|null          $accounts
      * @param Collection|null          $budgets
      * @param TransactionCurrency|null $currency
-     *
+     * @deprecated
      * @return array
      */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null

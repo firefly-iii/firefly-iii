@@ -26,7 +26,7 @@
     <q-card bordered>
       <q-item>
         <q-item-section>
-          <q-item-label><strong>Spend</strong></q-item-label>
+          <q-item-label><strong>To spend and left</strong></q-item-label>
         </q-item-section>
       </q-item>
       <q-separator/>
@@ -47,6 +47,10 @@
         <q-card-section v-if="budgeted.length > 0 || spent.length > 0">
           <span :title="formatAmount(this.currency, this.budgetedAmount)">Budgeted</span>:
           <span v-for="(budget, index) in budgeted"><span v-if="budget.native">(</span>{{ formatAmount(budget.code, budget.sum) }}<span v-if="budget.native">)</span><span
+            v-if="index+1 !== budgeted.length">, </span></span>
+          <br>
+          <span :title="formatAmount(this.currency, this.spentAmount)">Spent</span>:
+          <span v-for="(budget, index) in spent"><span v-if="budget.native">(</span>{{ formatAmount(budget.code, budget.sum) }}<span v-if="budget.native">)</span><span
             v-if="index+1 !== budgeted.length">, </span></span>
         </q-card-section>
       </q-card-section>
@@ -118,7 +122,7 @@ export default {
         const sum = new Sum;
         this.currency = this.store.getCurrencyCode;
         sum.budgeted(start, end).then((response) => this.parseBudgetedResponse(response.data));
-        //sum.paid(start, end).then((response) => this.parsePaidResponse(response.data));
+        sum.spent(start, end).then((response) => this.parseSpentResponse(response.data));
       }
     },
     // TODO this method is recycled a lot.
@@ -139,6 +143,24 @@ export default {
           );
           if (hasNative || current.native_id === current.id) {
             this.budgetedAmount = this.budgetedAmount + parseFloat(current.native_sum);
+          }
+        }
+      }
+    },
+    parseSpentResponse: function (data) {
+      for (let i in data) {
+        if (data.hasOwnProperty(i)) {
+          const current = data[i];
+          const hasNative = current.native_id !== current.id && parseFloat(current.native_sum) !== 0.0;
+          this.spent.push(
+            {
+              sum: current.sum,
+              code: current.code,
+              native: hasNative
+            }
+          );
+          if (hasNative || current.native_id === current.id) {
+            this.spentAmount = this.spentAmount + (parseFloat(current.native_sum) * -1);
           }
         }
       }

@@ -90,6 +90,7 @@ interface OperationsRepositoryInterface
     public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
+     * @deprecated
      * @param Carbon                   $start
      * @param Carbon                   $end
      * @param Collection|null          $accounts
@@ -100,5 +101,6 @@ interface OperationsRepositoryInterface
      */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null
     ): array;
+
 
 }

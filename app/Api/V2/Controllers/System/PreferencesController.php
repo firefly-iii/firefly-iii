@@ -1,5 +1,6 @@
+<?php
 /*
- * list.js
+ * PreferencesController.php
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,21 +19,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "boot/axios";
-import {format} from "date-fns";
+namespace FireflyIII\Api\V2\Controllers\System;
 
-export default class Sum {
-  budgeted(start, end) {
-    let url = 'api/v2/budgets/sum/budgeted';
-    let startStr = format(start, 'y-MM-dd');
-    let endStr = format(end, 'y-MM-dd');
-    return api.get(url, {params: {start: startStr, end: endStr}});
-  }
+use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Models\Preference;
+use FireflyIII\Transformers\PreferenceTransformer;
+use Illuminate\Http\JsonResponse;
 
-  spent(start, end) {
-    let url = 'api/v2/budgets/sum/spent';
-    let startStr = format(start, 'y-MM-dd');
-    let endStr = format(end, 'y-MM-dd');
-    return api.get(url, {params: {start: startStr, end: endStr}});
-  }
+/**
+ * Class PreferencesController
+ */
+class PreferencesController extends Controller
+{
+
+    /**
+     * @param Preference $preference
+     * @return JsonResponse
+     */
+    public function get(Preference $preference): JsonResponse
+    {
+        return response()
+            ->json($this->jsonApiObject('preferences', $preference, new PreferenceTransformer))
+            ->header('Content-Type', self::CONTENT_TYPE);
+    }
+
 }

@@ -46,14 +46,14 @@ Route::group(
 );
 
 /**
- * V2 API route for bills.
+ * V2 API route for budgets.
  */
 Route::group(
     ['namespace' => 'FireflyIII\Api\V2\Controllers\Model\Budget', 'prefix' => 'v2/budgets',
      'as'        => 'api.v2.budgets',],
     static function () {
         Route::get('sum/budgeted', ['uses' => 'SumController@budgeted', 'as' => 'sum.budgeted']);
-        Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
+        Route::get('sum/spent', ['uses' => 'SumController@spent', 'as' => 'sum.spent']);
     }
 );
 

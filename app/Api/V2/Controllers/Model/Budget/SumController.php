@@ -62,4 +62,17 @@ class SumController extends Controller
         return response()->json($converted);
     }
 
+    /**
+     * @param DateRequest $request
+     * @return JsonResponse
+     */
+    public function spent(DateRequest $request): JsonResponse
+    {
+        $data      = $request->getAll();
+        $result    = $this->repository->spentInPeriod($data['start'], $data['end']);
+        $converted = $this->cerSum(array_values($result));
+
+        return response()->json($converted);
+    }
+
 }

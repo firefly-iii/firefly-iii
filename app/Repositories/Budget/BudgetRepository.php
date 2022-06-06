@@ -26,6 +26,8 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
@@ -34,6 +36,8 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
@@ -126,13 +130,62 @@ class BudgetRepository implements BudgetRepositoryInterface
                 $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
                 Log::debug(sprintf('Amount per day: %s (%s over %d days). Total amount for %d days: %s',
                                    bcdiv((string) $limit->amount, (string) $total),
-                    $limit->amount,
-                    $total,
-                    $days,
-                    $amount));
+                                   $limit->amount,
+                                   $total,
+                                   $days,
+                                   $amount));
             }
         }
         return $return;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getActiveBudgets(): Collection
+    {
+        return $this->user->budgets()->where('active', true)
+                          ->orderBy('order', 'ASC')
+                          ->orderBy('name', 'ASC')
+                          ->get();
+    }
+
+    /**
+     * How many days of this budget limit are between start and end?
+     *
+     * @param BudgetLimit $limit
+     * @param Carbon      $start
+     * @param Carbon      $end
+     * @return int
+     */
+    private function daysInOverlap(BudgetLimit $limit, Carbon $start, Carbon $end): int
+    {
+        // start1 = $start
+        // start2 = $limit->start_date
+        // start1 = $end
+        // start2 = $limit->end_date
+
+        // limit is larger than start and end (inclusive)
+        //    |-----------|
+        //  |----------------|
+        if ($start->gte($limit->start_date) && $end->lte($limit->end_date)) {
+            return $start->diffInDays($end) + 1; // add one day
+        }
+        // limit starts earlier and limit ends first:
+        //    |-----------|
+        // |-------|
+        if ($limit->start_date->lte($start) && $limit->end_date->lte($end)) {
+            // return days in the range $start-$limit_end
+            return $start->diffInDays($limit->end_date) + 1; // add one day, the day itself
+        }
+        // limit starts later and limit ends earlier
+        //    |-----------|
+        //           |-------|
+        if ($limit->start_date->gte($start) && $limit->end_date->gte($end)) {
+            // return days in the range $limit_start - $end
+            return $limit->start_date->diffInDays($end) + 1; // add one day, the day itself
+        }
+        return 0;
     }
 
     /**
@@ -159,17 +212,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         $this->user->budgets()->where('active', 0)->update(['order' => 0]);
 
         return true;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getActiveBudgets(): Collection
-    {
-        return $this->user->budgets()->where('active', true)
-                          ->orderBy('order', 'ASC')
-                          ->orderBy('name', 'ASC')
-                          ->get();
     }
 
     /**
@@ -383,6 +425,69 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function spentInPeriod(Carbon $start, Carbon $end): array
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        $start->startOfDay();
+        $end->endOfDay();
+
+        // exclude specific liabilities
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
+        $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection = new Collection;
+        /** @var Account $account */
+        foreach ($subset as $account) {
+            if ('credit' === $repository->getMetaValue($account, 'liability_direction')) {
+                $selection->push($account);
+            }
+        }
+
+        // start collecting:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)
+                  ->setRange($start, $end)
+                  ->excludeDestinationAccounts($selection)
+                  ->setTypes([TransactionType::WITHDRAWAL])
+                  ->setBudgets($this->getActiveBudgets());
+
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int) $journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'id'             => (string) $currencyId,
+                    'name'           => $journal['currency_name'],
+                    'symbol'         => $journal['currency_symbol'],
+                    'code'           => $journal['currency_code'],
+                    'decimal_places' => $journal['currency_decimal_places'],
+                    'sum'            => '0',
+                ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
+
+            // also do foreign amount:
+            $foreignId = (int) $journal['foreign_currency_id'];
+            if (0 !== $foreignId) {
+                $array[$foreignId]        = $array[$foreignId] ?? [
+                        'id'             => (string) $foreignId,
+                        'name'           => $journal['foreign_currency_name'],
+                        'symbol'         => $journal['foreign_currency_symbol'],
+                        'code'           => $journal['foreign_currency_code'],
+                        'decimal_places' => $journal['foreign_currency_decimal_places'],
+                        'sum'            => '0',
+                    ];
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->negative($journal['foreign_amount']));
+            }
+        }
+
+        return $array;
     }
 
     /**
@@ -651,43 +756,5 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         $autoBudget->save();
-    }
-
-    /**
-     * How many days of this budget limit are between start and end?
-     *
-     * @param BudgetLimit $limit
-     * @param Carbon      $start
-     * @param Carbon      $end
-     * @return int
-     */
-    private function daysInOverlap(BudgetLimit $limit, Carbon $start, Carbon $end): int
-    {
-        // start1 = $start
-        // start2 = $limit->start_date
-        // start1 = $end
-        // start2 = $limit->end_date
-
-        // limit is larger than start and end (inclusive)
-        //    |-----------|
-        //  |----------------|
-        if ($start->gte($limit->start_date) && $end->lte($limit->end_date)) {
-            return $start->diffInDays($end) + 1; // add one day
-        }
-        // limit starts earlier and limit ends first:
-        //    |-----------|
-        // |-------|
-        if ($limit->start_date->lte($start) && $limit->end_date->lte($end)) {
-            // return days in the range $start-$limit_end
-            return $start->diffInDays($limit->end_date) + 1; // add one day, the day itself
-        }
-        // limit starts later and limit ends earlier
-        //    |-----------|
-        //           |-------|
-        if ($limit->start_date->gte($start) && $limit->end_date->gte($end)) {
-            // return days in the range $limit_start - $end
-            return $limit->start_date->diffInDays($end) + 1; // add one day, the day itself
-        }
-        return 0;
     }
 }

@@ -186,6 +186,16 @@ interface BudgetRepositoryInterface
     public function setUser(User $user);
 
     /**
+     * Used in the v2 API to calculate the amount of money spent in all active budgets.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function spentInPeriod(Carbon $start, Carbon $end): array;
+
+    /**
      * @param array $data
      *
      * @return Budget
