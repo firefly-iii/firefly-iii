@@ -36,25 +36,28 @@
             :value="percentage"
             size="50px"
             :thickness="0.22"
-            color="green"
-            track-color="grey-3"
+            color="positive"
+            track-color="negative"
           />
         </q-card-section>
         <q-separator vertical/>
         <q-card-section v-if="0 === unpaid.length && 0 === paid.length">
-          You have no bills
+          {{ $t('firefly.no_bill') }}
         </q-card-section>
         <q-card-section v-if="unpaid.length > 0 || paid.length > 0">
           <span :title="formatAmount(this.currency, this.unpaidAmount)">{{ $t('firefly.bills_to_pay') }}</span>:
-          <span v-for="(bill, index) in unpaid">
-            <span v-if="bill.native">(</span>{{ formatAmount(bill.code, bill.sum) }}<span
-            v-if="bill.native">)</span><span v-if="index+1 !== unpaid.length">, </span></span>
+          <!-- loop bills to pay -->
+          <span v-for="(item, index) in unpaid">
+            <span :title="formatAmount(item.native_code, item.native_sum)">
+              {{ formatAmount(item.code, item.sum) }}<span v-if="index+1 !== unpaid.length"> + </span></span>
+          </span>
           <br/>
-          <span :title="formatAmount(this.currency, this.paidAmount)">{{ $t('firefly.bills_paid') }}</span>:
-          <span v-for="(bill, index) in paid"><span v-if="bill.native">(</span>{{
-              formatAmount(bill.code, bill.sum)
-            }}<span v-if="bill.native">)</span><span
-              v-if="index+1 !== paid.length">, </span></span>
+          <span v-if="paid.length > 0" :title="formatAmount(this.currency, this.paidAmount)">{{ $t('firefly.bills_paid') }}:</span>
+          <span v-for="(item, index) in paid">
+            <span :title="formatAmount(item.native_code, item.native_sum)">
+              {{formatAmount(item.code, item.sum) }}
+            </span>
+            <span v-if="index+1 !== paid.length"> + </span></span>
         </q-card-section>
       </q-card-section>
     </q-card>
@@ -74,10 +77,6 @@ export default {
       currency: 'EUR',
       unpaidAmount: 0.0,
       paidAmount: 0.0,
-      range: {
-        start: null,
-        end: null,
-      },
     }
   },
   name: "BillInsightBox",
@@ -99,19 +98,16 @@ export default {
   mounted() {
     this.store = useFireflyIIIStore();
     // TODO this code snippet is recycled a lot.
-    if (null === this.range.start || null === this.range.end) {
-      // subscribe, then update:
-      this.store.$onAction(
-        ({name, $store, args, after, onError,}) => {
-          after((result) => {
-            if (name === 'setRange') {
-              this.range = result;
-              this.triggerUpdate();
-            }
-          })
-        }
-      )
-    }
+    // subscribe, then update:
+    this.store.$onAction(
+      ({name, $store, args, after, onError,}) => {
+        after((result) => {
+          if (name === 'setRange') {
+            this.triggerUpdate();
+          }
+        })
+      }
+    )
     this.triggerUpdate();
   },
   methods: {
@@ -139,6 +135,8 @@ export default {
             {
               sum: current.sum,
               code: current.code,
+              native_sum: current.native_sum,
+              native_code: current.native_code,
               native: hasNative,
             }
           );
@@ -157,6 +155,8 @@ export default {
             {
               sum: current.sum,
               code: current.code,
+              native_sum: current.native_sum,
+              native_code: current.native_code,
               native: hasNative,
             }
           );

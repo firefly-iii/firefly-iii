@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -38,9 +40,7 @@ use JsonException;
  */
 class NetWorth implements NetWorthInterface
 {
-
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
+    private AccountRepositoryInterface $accountRepository;
 
     /** @var CurrencyRepositoryInterface */
     private $currencyRepos;
@@ -63,11 +63,10 @@ class NetWorth implements NetWorthInterface
      *
      * @return array
      * @throws JsonException
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array
     {
-
         // start in the past, end in the future? use $date
         $cache = new CacheProperties;
         $cache->addProperty($date);
@@ -143,5 +142,56 @@ class NetWorth implements NetWorthInterface
 
         $this->currencyRepos = app(CurrencyRepositoryInterface::class);
         $this->currencyRepos->setUser($this->user);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumNetWorthByCurrency(Carbon $date): array
+    {
+        /**
+         * Collect accounts
+         */
+        $accounts = $this->getAccounts();
+        $return   = [];
+        $balances = app('steam')->balancesByAccounts($accounts, $date);
+        foreach ($accounts as $account) {
+            $currency = $this->accountRepository->getAccountCurrency($account);
+            $balance  = $balances[$account->id] ?? '0';
+
+            // always subtract virtual balance.
+            $virtualBalance = (string) $account->virtual_balance;
+            if ('' !== $virtualBalance) {
+                $balance = bcsub($balance, $virtualBalance);
+            }
+
+            $return[$currency->id]        = $return[$currency->id] ?? [
+                    'id'             => (string) $currency->id,
+                    'name'           => $currency->name,
+                    'symbol'         => $currency->symbol,
+                    'code'           => $currency->code,
+                    'decimal_places' => $currency->decimal_places,
+                    'sum'            => '0',
+                ];
+            $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $balance);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getAccounts(): Collection
+    {
+        $accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::DEFAULT, AccountType::CREDITCARD]);
+        $filtered = new Collection;
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if (1 === (int) $this->accountRepository->getMetaValue($account, 'include_net_worth')) {
+                $filtered->push($account);
+            }
+        }
+        return $filtered;
     }
 }

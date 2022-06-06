@@ -26,7 +26,7 @@
     <q-card bordered>
       <q-item>
         <q-item-section>
-          <q-item-label><strong>To spend and left</strong></q-item-label>
+          <q-item-label><strong>{{ $t('firefly.left_to_spend') }}</strong></q-item-label>
         </q-item-section>
       </q-item>
       <q-separator/>
@@ -36,22 +36,27 @@
             :value="percentage"
             size="50px"
             :thickness="0.22"
-            color="green"
-            track-color="grey-3"
+            color="negative"
+            track-color="positive"
           />
         </q-card-section>
         <q-separator vertical/>
         <q-card-section v-if="0 === budgeted.length && 0 === spent.length">
-          You have no budgets set
+          {{ $t('firefly.no_budget') }}
         </q-card-section>
         <q-card-section v-if="budgeted.length > 0 || spent.length > 0">
-          <span :title="formatAmount(this.currency, this.budgetedAmount)">Budgeted</span>:
-          <span v-for="(budget, index) in budgeted"><span v-if="budget.native">(</span>{{ formatAmount(budget.code, budget.sum) }}<span v-if="budget.native">)</span><span
-            v-if="index+1 !== budgeted.length">, </span></span>
-          <br>
-          <span :title="formatAmount(this.currency, this.spentAmount)">Spent</span>:
-          <span v-for="(budget, index) in spent"><span v-if="budget.native">(</span>{{ formatAmount(budget.code, budget.sum) }}<span v-if="budget.native">)</span><span
-            v-if="index+1 !== budgeted.length">, </span></span>
+          <span :title="formatAmount(this.currency, this.budgetedAmount)">{{ $t('firefly.budgeted') }}</span>:
+          <!-- list budgeted -->
+          <span v-for="(item, index) in budgeted">
+            <span :title="formatAmount(item.native_code, item.native_sum)">{{ formatAmount(item.code, item.sum) }}</span>
+            <span v-if="index+1 !== budgeted.length"> + </span>
+          </span>
+          <br />
+          <span v-if="spent.length > 0" :title="formatAmount(this.currency, this.spentAmount)">{{ $t('firefly.spent') }}: </span>
+          <!-- list spent -->
+          <span v-for="(item, index) in spent">
+            <span :title="formatAmount(item.native_code, item.native_sum)">{{ formatAmount(item.code, item.sum) }}</span>
+            <span v-if="index+1 !== spent.length"> + </span></span>
         </q-card-section>
       </q-card-section>
     </q-card>
@@ -72,10 +77,6 @@ export default {
       //percentage: 0,
       budgetedAmount: 0.0,
       spentAmount: 0.0,
-      range: {
-        start: null,
-        end: null,
-      },
     }
   },
   name: "SpendInsightBox",
@@ -98,19 +99,16 @@ export default {
     this.store = useFireflyIIIStore();
 
     // TODO this code snippet is recycled a lot.
-    if (null === this.range.start || null === this.range.end) {
-      // subscribe, then update:
-      this.store.$onAction(
-        ({name, $store, args, after, onError,}) => {
-          after((result) => {
-            if (name === 'setRange') {
-              this.range = result;
-              this.triggerUpdate();
-            }
-          })
-        }
-      )
-    }
+    // subscribe, then update:
+    this.store.$onAction(
+      ({name, $store, args, after, onError,}) => {
+        after((result) => {
+          if (name === 'setRange') {
+            this.triggerUpdate();
+          }
+        })
+      }
+    )
     this.triggerUpdate();
   },
   methods: {
@@ -138,6 +136,8 @@ export default {
             {
               sum: current.sum,
               code: current.code,
+              native_sum: current.native_sum,
+              native_code: current.native_code,
               native: hasNative
             }
           );
@@ -156,6 +156,8 @@ export default {
             {
               sum: current.sum,
               code: current.code,
+              native_sum: current.native_sum,
+              native_code: current.native_code,
               native: hasNative
             }
           );

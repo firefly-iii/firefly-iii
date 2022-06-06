@@ -30,7 +30,7 @@
         <SpendInsightBox />
       </div>
       <div class="col">
-        TODO net worth insight
+        <NetWorthInsightBox />
       </div>
     </div>
     <div class="row q-mb-sm">
@@ -89,10 +89,12 @@
 
 <script>
 import {defineAsyncComponent} from "vue";
+import NetWorthInsightBox from "../../components/dashboard/NetWorthInsightBox";
 
 export default {
   name: "Dashboard",
   components: {
+    NetWorthInsightBox,
     BillInsightBox: defineAsyncComponent(() => import('../../components/dashboard/BillInsightBox.vue')),
     SpendInsightBox: defineAsyncComponent(() => import('../../components/dashboard/SpendInsightBox.vue')),
   }

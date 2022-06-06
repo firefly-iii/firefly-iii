@@ -46,8 +46,8 @@ interface NetWorthInterface
      *
      * @param Collection $accounts
      * @param Carbon     $date
-     *
      * @return array
+     * @deprecated
      */
     public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array;
 
@@ -55,5 +55,16 @@ interface NetWorthInterface
      * @param User $user
      */
     public function setUser(User $user): void;
+
+    /**
+     * TODO move to repository
+     *
+     * Same as above but cleaner function with less dependencies.
+     *
+     * @param Carbon $date
+     *
+     * @return array
+     */
+    public function sumNetWorthByCurrency(Carbon $date): array;
 
 }

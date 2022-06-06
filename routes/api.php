@@ -34,6 +34,17 @@ Route::group(
 );
 
 /**
+ * V2 API route for net worth endpoint(s);
+ */
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V2\Controllers', 'prefix' => 'v2/net-worth',
+     'as'        => 'api.v2.net-worth.',],
+    static function () {
+        Route::get('', ['uses' => 'NetWorthController@get', 'as' => 'index']);
+    }
+);
+
+/**
  * V2 API route for bills.
  */
 Route::group(
@@ -44,6 +55,8 @@ Route::group(
         Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
     }
 );
+
+
 
 /**
  * V2 API route for budgets.
