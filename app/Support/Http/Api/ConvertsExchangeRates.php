@@ -22,6 +22,7 @@
 namespace FireflyIII\Support\Http\Api;
 
 use Carbon\Carbon;
+use DateTimeInterface;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use Log;
@@ -31,6 +32,8 @@ use Log;
  */
 trait ConvertsExchangeRates
 {
+    private ?bool $enabled = null;
+
     /**
      * For a sum of entries, get the exchange rate to the native currency of
      * the user.
@@ -39,12 +42,29 @@ trait ConvertsExchangeRates
      */
     public function cerSum(array $entries): array
     {
+        if (null === $this->enabled) {
+            $this->getPreference();
+        }
+
+        // if false, return the same array without conversion info
+        if (false === $this->enabled) {
+            $return = [];
+            /** @var array $entry */
+            foreach ($entries as $entry) {
+                $entry['converted'] = false;
+                $return[]           = $entry;
+            }
+            return $return;
+        }
+
+
         /** @var TransactionCurrency $native */
         $native = app('amount')->getDefaultCurrency();
         $return = [];
         /** @var array $entry */
         foreach ($entries as $entry) {
-            $currency = $this->getCurrency((int) $entry['id']);
+            $currency           = $this->getCurrency((int) $entry['id']);
+            $entry['converted'] = true;
             if ($currency->id !== $native->id) {
                 $amount                         = $this->convertAmount($entry['sum'], $currency, $native);
                 $entry['native_sum']            = $amount;
@@ -66,6 +86,42 @@ trait ConvertsExchangeRates
 
         }
         return $return;
+    }
+
+    /**
+     * @param array $set
+     * @return array
+     */
+    public function cerChartSet(array $set): array
+    {
+        if (null === $this->enabled) {
+            $this->getPreference();
+        }
+
+        // if not enabled, return the same array but without conversion:
+        if (false === $this->enabled) {
+            $set['converted'] = false;
+            return $set;
+        }
+
+        $set['converted'] = true;
+        /** @var TransactionCurrency $native */
+        $native   = app('amount')->getDefaultCurrency();
+        $currency = $this->getCurrency((int) $set['currency_id']);
+        if ($native->id === $currency->id) {
+            $set['native_id']             = (string) $currency->id;
+            $set['native_code']           = $currency->code;
+            $set['native_symbol']         = $currency->symbol;
+            $set['native_decimal_places'] = $currency->decimal_places;
+            return $set;
+        }
+        foreach ($set['entries'] as $date => $entry) {
+            $carbon                = Carbon::createFromFormat(DateTimeInterface::ATOM, $date);
+            $rate                  = $this->getRate($currency, $native, $carbon);
+            $rate                  = '0' === $rate ? '1' : $rate;
+            $set['entries'][$date] = (float) bcmul((string) $entry, $rate);
+        }
+        return $set;
     }
 
     /**
@@ -197,6 +253,14 @@ trait ConvertsExchangeRates
 
         Log::debug(sprintf('No rate for %s to EUR.', $currency->code));
         return '0';
+    }
+
+    /**
+     * @return void
+     */
+    private function getPreference(): void
+    {
+        $this->enabled = false;
     }
 
 }

@@ -45,6 +45,17 @@ Route::group(
 );
 
 /**
+ * V2 API routes for charts
+ */
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V2\Controllers\Chart', 'prefix' => 'v2/chart',
+     'as'        => 'api.v1.chart.',],
+    static function () {
+        Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'dashboard']);
+    }
+);
+
+/**
  * V2 API route for bills.
  */
 Route::group(

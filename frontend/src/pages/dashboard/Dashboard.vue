@@ -35,7 +35,7 @@
     </div>
     <div class="row q-mb-sm">
       <div class="col">
-        Account chart box
+        <AccountChart />
       </div>
     </div>
     <div class="row q-mb-sm">
@@ -89,12 +89,12 @@
 
 <script>
 import {defineAsyncComponent} from "vue";
-import NetWorthInsightBox from "../../components/dashboard/NetWorthInsightBox";
 
 export default {
   name: "Dashboard",
   components: {
-    NetWorthInsightBox,
+    AccountChart: defineAsyncComponent(() => import('../../components/dashboard/AccountChart.vue')),
+    NetWorthInsightBox: defineAsyncComponent(() => import('../../components/dashboard/BillInsightBox.vue')),
     BillInsightBox: defineAsyncComponent(() => import('../../components/dashboard/BillInsightBox.vue')),
     SpendInsightBox: defineAsyncComponent(() => import('../../components/dashboard/SpendInsightBox.vue')),
   }

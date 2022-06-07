@@ -96,10 +96,16 @@ export default {
       for (let i in data) {
         if (data.hasOwnProperty(i)) {
           const current = data[i];
+
+          if(parseFloat(current.sum) <= 0) {
+            continue;
+          }
+
           const hasNative = current.native_id !== current.id && current.native_sum !== '0';
           if (hasNative || current.native_id === current.id) {
             this.primary = this.primary + parseFloat(current.native_sum);
           }
+
           this.netWorth.push(
             {
               sum: current.sum,
