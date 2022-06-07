@@ -131,18 +131,21 @@ export default {
       for (let i in data) {
         if (data.hasOwnProperty(i)) {
           const current = data[i];
-          const hasNative = current.native_id !== current.id && parseFloat(current.native_sum) !== 0.0;
+          const hasNative = current.converted && current.native_id !== current.id && parseFloat(current.native_sum) !== 0.0;
           this.budgeted.push(
             {
               sum: current.sum,
               code: current.code,
-              native_sum: current.native_sum,
-              native_code: current.native_code,
+              native_sum: current.converted ? current.native_sum : current.sum,
+              native_code: current.converted ? current.native_code : current.code,
               native: hasNative
             }
           );
-          if (hasNative || current.native_id === current.id) {
+          if (current.converted && (hasNative || current.native_id === current.id)) {
             this.budgetedAmount = this.budgetedAmount + parseFloat(current.native_sum);
+          }
+          if (!current.converted) {
+            this.budgetedAmount = this.budgetedAmount + parseFloat(current.sum);
           }
         }
       }
@@ -151,18 +154,21 @@ export default {
       for (let i in data) {
         if (data.hasOwnProperty(i)) {
           const current = data[i];
-          const hasNative = current.native_id !== current.id && parseFloat(current.native_sum) !== 0.0;
+          const hasNative = current.converted && current.native_id !== current.id && parseFloat(current.native_sum) !== 0.0;
           this.spent.push(
             {
               sum: current.sum,
               code: current.code,
-              native_sum: current.native_sum,
-              native_code: current.native_code,
+              native_sum: current.converted ? current.native_sum : current.sum,
+              native_code: current.converted ? current.native_code : current.code,
               native: hasNative
             }
           );
-          if (hasNative || current.native_id === current.id) {
+          if (current.converted && (hasNative || current.native_id === current.id)) {
             this.spentAmount = this.spentAmount + (parseFloat(current.native_sum) * -1);
+          }
+          if (!current.converted) {
+            this.spentAmount = this.spentAmount + (parseFloat(current.sum) * -1);
           }
         }
       }

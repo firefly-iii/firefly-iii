@@ -101,17 +101,20 @@ export default {
             continue;
           }
 
-          const hasNative = current.native_id !== current.id && current.native_sum !== '0';
-          if (hasNative || current.native_id === current.id) {
+          const hasNative = current.converted && current.native_id !== current.id && parseFloat(current.native_sum) !== 0.0;
+          if (current.converted && (hasNative || current.native_id === current.id)) {
             this.primary = this.primary + parseFloat(current.native_sum);
+          }
+          if (!current.converted) {
+            this.primary = this.primary + parseFloat(current.sum);
           }
 
           this.netWorth.push(
             {
               sum: current.sum,
               code: current.code,
-              native_sum: current.native_sum,
-              native_code: current.native_code,
+              native_sum: current.converted ? current.native_sum : current.sum,
+              native_code: current.converted ? current.native_code : current.code,
               native: hasNative,
             }
           );

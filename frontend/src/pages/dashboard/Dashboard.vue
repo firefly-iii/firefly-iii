@@ -94,7 +94,7 @@ export default {
   name: "Dashboard",
   components: {
     AccountChart: defineAsyncComponent(() => import('../../components/dashboard/AccountChart.vue')),
-    NetWorthInsightBox: defineAsyncComponent(() => import('../../components/dashboard/BillInsightBox.vue')),
+    NetWorthInsightBox: defineAsyncComponent(() => import('../../components/dashboard/NetWorthInsightBox.vue')),
     BillInsightBox: defineAsyncComponent(() => import('../../components/dashboard/BillInsightBox.vue')),
     SpendInsightBox: defineAsyncComponent(() => import('../../components/dashboard/SpendInsightBox.vue')),
   }

@@ -19,7 +19,6 @@
   -->
 
 <template>
-  <!--  -->
   <div class="q-mt-sm q-mr-sm">
     <q-card bordered>
       <q-item>
@@ -31,9 +30,7 @@
       <ApexChart ref="chart" height="350" type="line" :options="options" :series="series"></ApexChart>
     </q-card>
   </div>
-
   <div>
-
   </div>
 </template>
 
@@ -110,8 +107,15 @@ export default {
   },
   methods: {
     numberFormatter: function (value, index) {
-      let currencyCode = this.currencies[index] ?? 'EUR';
-      return Intl.NumberFormat(this.locale, {style: 'currency', currency: currencyCode}).format(value);
+      if(index instanceof Object) {
+        let currencyCode = this.currencies[index.seriesIndex] ?? 'EUR';
+        return Intl.NumberFormat(this.locale, {style: 'currency', currency: currencyCode}).format(value);
+      }
+      if(Number.isInteger(index)) {
+        let currencyCode = this.currencies[index] ?? 'EUR';
+        return Intl.NumberFormat(this.locale, {style: 'currency', currency: currencyCode}).format(value);
+      }
+      return 'x';
     },
     buildChart: function () {
       console.log('buildChart');
@@ -130,6 +134,7 @@ export default {
       }
     },
     generateSeries: function (data) {
+      console.log('generateSeries');
       this.series = [];
       let series;
       for (let i in data) {
@@ -137,7 +142,12 @@ export default {
           series = {};
           series.name = data[i].label;
           series.data = [];
-          this.currencies.push(data[i].currency_code);
+          if(!data[i].converted) {
+            this.currencies.push(data[i].currency_code);
+          }
+          if(data[i].converted) {
+            this.currencies.push(data[i].native_code);
+          }
           for (let ii in data[i].entries) {
             series.data.push(data[i].entries[ii]);
           }

@@ -260,7 +260,7 @@ trait ConvertsExchangeRates
      */
     private function getPreference(): void
     {
-        $this->enabled = false;
+        $this->enabled = true;
     }
 
 }
