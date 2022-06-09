@@ -281,13 +281,18 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $spentAmount = $spent[$currencyId]['sum'] ?? '0';
         Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
 
-        // previous budget limit + this period + spent
-        $totalAmount = bcadd(bcadd($budgetLimit->amount, $autoBudget->amount), $spentAmount);
-        Log::debug(sprintf('Total amount for current budget period will be %s', $totalAmount));
+        // if you spent more in previous budget period, than whatever you had previous budget period, the amount resets
+        // previous budget limit + spent
+        $budgetLeft  = bcadd($budgetLimit->amount, $spentAmount);
+        $totalAmount = $autoBudget->amount;
+        Log::debug(sprintf('Total amount left for previous budget period is %s', $budgetLeft));
 
-        if (1 !== bccomp($totalAmount, '0')) {
-            Log::info(sprintf('The total amount is negative, so it will be reset to %s.', $totalAmount));
-            $totalAmount = $autoBudget->amount;
+        if (-1 !== bccomp('0', $budgetLeft)) {
+            Log::info(sprintf('The amount left is negative, so it will be reset to %s.', $totalAmount));
+        }
+        if (1 !== bccomp('0', $budgetLeft)) {
+            $totalAmount = bcadd($budgetLeft, $budgetLimit->amount);
+            Log::info(sprintf('The amount left is positive, so the new amount will be %s.', $totalAmount));
         }
 
         // create budget limit:
