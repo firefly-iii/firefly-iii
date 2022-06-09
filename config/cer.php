@@ -21,11 +21,14 @@
 
 
 return [
+
+    'url'     => 'https://ff3exchangerates.z6.web.core.windows.net',
+    'enabled' => env('ENABLE_EXTERNAL_RATES', false),
     // if currencies are added, default rates must be added as well!
     // last exchange rate update: 6-6-2022
     // source: https://www.xe.com/currencyconverter/
-    'date'  => '2022-06-06',
-    'rates' => [
+    'date'    => '2022-06-06',
+    'rates'   => [
         // europa
         ['EUR', 'HUF', 387.9629],
         ['EUR', 'GBP', 0.85420754],

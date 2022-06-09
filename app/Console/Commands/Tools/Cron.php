@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
+use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
@@ -68,6 +69,19 @@ class Cron extends Command
             $this->error(sprintf('"%s" is not a valid date', $this->option('date')));
         }
         $force = (bool) $this->option('force');
+
+        /*
+         * Fire recurring transaction cron job.
+         */
+        if (true === config('cer.enabled')) {
+            try {
+                $this->exchangeRatesCronJob($force, $date);
+            } catch (FireflyException $e) {
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+                $this->error($e->getMessage());
+            }
+        }
 
         /*
          * Fire recurring transaction cron job.
@@ -187,6 +201,34 @@ class Cron extends Command
         }
         if ($autoBudget->jobSucceeded) {
             $this->error(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
+        }
+
+    }
+
+    /**
+     * @param bool        $force
+     * @param Carbon|null $date
+     * @throws FireflyException
+     */
+    private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
+    {
+        $exchangeRates = new ExchangeRatesCronjob;
+        $exchangeRates->setForce($force);
+        // set date in cron job:
+        if (null !== $date) {
+            $exchangeRates->setDate($date);
+        }
+
+        $exchangeRates->fire();
+
+        if ($exchangeRates->jobErrored) {
+            $this->error(sprintf('Error in "exchange rates" cron: %s', $exchangeRates->message));
+        }
+        if ($exchangeRates->jobFired) {
+            $this->error(sprintf('"Exchange rates" cron fired: %s', $exchangeRates->message));
+        }
+        if ($exchangeRates->jobSucceeded) {
+            $this->error(sprintf('"Exchange rates" cron ran with success: %s', $exchangeRates->message));
         }
 
     }

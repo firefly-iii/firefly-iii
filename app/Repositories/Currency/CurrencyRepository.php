@@ -442,6 +442,27 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * TODO must be a factory
+     * @param TransactionCurrency $fromCurrency
+     * @param TransactionCurrency $toCurrency
+     * @param Carbon              $date
+     * @param float               $rate
+     * @return CurrencyExchangeRate
+     */
+    public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate
+    {
+        return CurrencyExchangeRate::create(
+            [
+                'user_id'          => $this->user->id,
+                'from_currency_id' => $fromCurrency->id,
+                'to_currency_id'   => $toCurrency->id,
+                'date'             => $date,
+                'rate'             => $rate,
+            ]
+        );
+    }
+
+    /**
      * @inheritDoc
      */
     public function isFallbackCurrency(TransactionCurrency $currency): bool

@@ -203,6 +203,16 @@ interface CurrencyRepositoryInterface
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
 
     /**
+     * TODO must be a factory
+     * @param TransactionCurrency $fromCurrency
+     * @param TransactionCurrency $toCurrency
+     * @param Carbon              $date
+     * @param float               $rate
+     * @return CurrencyExchangeRate
+     */
+    public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate;
+
+    /**
      * @param TransactionCurrency $currency
      *
      * @return bool
