@@ -88,7 +88,8 @@ export default {
       if (0.0 === this.paidAmount) {
         return 0;
       }
-      const pct = (this.paidAmount / this.unpaidAmount) * 100;
+      const total = this.paidAmount + this.unpaidAmount;
+      const pct = (this.paidAmount / total) * 100;
       if (pct > 100) {
         return 100;
       }
