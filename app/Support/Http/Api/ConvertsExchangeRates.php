@@ -63,10 +63,10 @@ trait ConvertsExchangeRates
         $return = [];
         /** @var array $entry */
         foreach ($entries as $entry) {
-            $currency           = $this->getCurrency((int) $entry['id']);
-            $entry['converted'] = true;
+            $currency = $this->getCurrency((int) $entry['id']);
             if ($currency->id !== $native->id) {
                 $amount                         = $this->convertAmount($entry['sum'], $currency, $native);
+                $entry['converted']             = true;
                 $entry['native_sum']            = $amount;
                 $entry['native_id']             = (string) $native->id;
                 $entry['native_name']           = $native->name;
@@ -75,6 +75,7 @@ trait ConvertsExchangeRates
                 $entry['native_decimal_places'] = $native->decimal_places;
             }
             if ($currency->id === $native->id) {
+                $entry['converted']             = false;
                 $entry['native_sum']            = $entry['sum'];
                 $entry['native_id']             = (string) $native->id;
                 $entry['native_name']           = $native->name;
