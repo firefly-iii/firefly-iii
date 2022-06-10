@@ -30,6 +30,7 @@ use ErrorException;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -124,6 +125,14 @@ class Handler extends ExceptionHandler
 
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
+        // special view for database errors with extra instructions
+        if($e instanceof QueryException) {
+            $isDebug = config('app.debug');
+
+            return response()->view('errors.DatabaseException', ['exception' => $e, 'debug' => $isDebug], 500);
+        }
+
+        //var_dump($e);exit;
 
         return parent::render($request, $e);
     }
