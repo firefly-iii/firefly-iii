@@ -97,10 +97,6 @@ export default {
         if (data.hasOwnProperty(i)) {
           const current = data[i];
 
-          if(parseFloat(current.sum) <= 0) {
-            continue;
-          }
-
           const hasNative = current.converted && current.native_id !== current.id && parseFloat(current.native_sum) !== 0.0;
           if (current.converted && (hasNative || current.native_id === current.id)) {
             this.primary = this.primary + parseFloat(current.native_sum);
