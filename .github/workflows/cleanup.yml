@@ -1,0 +1,95 @@
+# This workflow prunes old workflow runs for an entire repository.
+
+name: Prune old builds
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Prune cancelled/skipped runs
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GH_ACTIONS_PERSONAL_ACCESS_TOKEN }}
+          script: |
+            const cancelled = await github.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              per_page: 100,
+              repo: context.repo.repo,
+              status: 'cancelled',
+            });
+            
+            const skipped = await github.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              per_page: 100,
+              repo: context.repo.repo,
+              status: 'skipped',
+            });
+            
+            for (const response of [cancelled, skipped]) {
+              for (const run of response.data.workflow_runs) {
+                console.log(`Run id ${run.id} of '${run.name}' is a cancelled/skipped run. Deleting...`);
+                await github.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id
+                });
+              }
+            }
+
+      - name: Prune runs older than 3 days
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GH_ACTIONS_PERSONAL_ACCESS_TOKEN }}
+          script: |
+            const days_to_expiration = 3;
+            const ms_in_day = 86400000;
+            const now = Date.now();
+            const pages = 5;
+            
+            // we don't want to prune old runs from test.yml
+            // because we track the duration of runs over time
+            
+            const workflows = [
+              'b.yml',
+              'cleanup.yml',
+            ]
+            
+            let runs_to_delete = [];
+            
+            for (const workflow of workflows) {
+              for (let page = 0; page < pages; page += 1) {
+                let response = await github.actions.listWorkflowRuns({
+                  owner: context.repo.owner,
+                  page: page,
+                  per_page: 100,
+                  repo: context.repo.repo,
+                  workflow_id: workflow
+                });
+            
+                if (response.data.workflow_runs.length > 0) {
+                  for (const run of response.data.workflow_runs) {
+                    if (now - Date.parse(run.created_at) > ms_in_day * days_to_expiration) {
+                      runs_to_delete.push([run.id, run.name]);
+                    }
+                  }
+                }
+              }
+            }
+            
+            for (const run of runs_to_delete) {
+              console.log(`Run id ${run[0]} of '${run[1]}' is older than ${days_to_expiration} days. Deleting...`);
+              try {
+                await github.actions.deleteWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run[0]
+                });
+              } catch (error) {
+                // ignore errors
+              }
+            }
