@@ -103,7 +103,7 @@
     "ramsey/uuid": "^4.3",
     "rcrowe/twigbridge": "^0.14",
     "spatie/data-transfer-object": "^3.8",
-    "spatie/laravel-ignition": "^1.2",
+    "spatie/laravel-ignition": "^1.3",
     "symfony/http-client": "^6.0",
     "symfony/mailgun-mailer": "^6.0"
   },
