@@ -59,7 +59,7 @@ class SumController extends Controller
         $converted = $this->cerSum($result);
 
         // convert to JSON response:
-        return response()->json($converted);
+        return response()->api($converted);
     }
 
     /**
@@ -73,6 +73,6 @@ class SumController extends Controller
         $converted = $this->cerSum($result);
 
         // convert to JSON response:
-        return response()->json($converted);
+        return response()->api($converted);
     }
 }

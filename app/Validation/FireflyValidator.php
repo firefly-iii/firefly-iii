@@ -427,7 +427,7 @@ class FireflyValidator extends Validator
             return $this->validateByAccountTypeString($value, $parameters, $this->data['objectType']);
         }
         if (array_key_exists('type', $this->data)) {
-            return $this->validateByAccountTypeString($value, $parameters, $this->data['type']);
+            return $this->validateByAccountTypeString($value, $parameters, (string) $this->data['type']);
         }
         if (array_key_exists('account_type_id', $this->data)) {
             return $this->validateByAccountTypeId($value, $parameters);

@@ -119,6 +119,9 @@ trait ConvertsDataTypes
         $secondSearch = $keepNewlines ? ["\r"] : ["\r", "\n", "\t", "\036", "\025"];
         $string       = str_replace($secondSearch, '', $string);
 
+        // clear zalgo text (TODO also in API v2)
+        $string = preg_replace('/\pM/u', '', $string);
+
         return trim($string);
     }
 

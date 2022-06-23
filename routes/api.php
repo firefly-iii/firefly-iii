@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 /**
  * V2 API route for TransactionSum API endpoints
+ * TODO what to do with these routes
  */
 Route::group(
     ['namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\Sum', 'prefix' => 'v2/transaction/sum',

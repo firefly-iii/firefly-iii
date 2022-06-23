@@ -40,7 +40,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -94,8 +96,19 @@ class Handler extends ExceptionHandler
             // somehow Laravel handler does not catch this:
             return response()->json(['message' => $e->getMessage(), 'exception' => 'OAuthServerException'], 401);
         }
+        if($e instanceof BadRequestHttpException) {
+            return response()->json(['message' => $e->getMessage(), 'exception' => 'BadRequestHttpException'], 400);
+        }
+
+        if ($e instanceof BadHttpHeaderException) {
+            // is always API exception.
+            return response()->json(['message' => $e->getMessage(), 'exception' => 'BadHttpHeaderException'], $e->statusCode);
+        }
 
         if ($request->expectsJson()) {
+            $errorCode = 500;
+            $errorCode = $e instanceof MethodNotAllowedHttpException ? 405: $errorCode;
+
             $isDebug = config('app.debug', false);
             if ($isDebug) {
                 return response()->json(
@@ -106,12 +119,13 @@ class Handler extends ExceptionHandler
                         'file'      => $e->getFile(),
                         'trace'     => $e->getTrace(),
                     ],
-                    500
+                    $errorCode
                 );
             }
 
             return response()->json(
-                ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => get_class($e)], 500
+                ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => get_class($e)],
+                $errorCode
             );
         }
 
