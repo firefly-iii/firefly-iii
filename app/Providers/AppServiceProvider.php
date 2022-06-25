@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        Response::macro('api', function ($value) {
+        Response::macro('api', function (array $value) {
             $headers = [
                 'Cache-Control' => 'no-store'
             ];
