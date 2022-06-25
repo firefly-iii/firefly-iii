@@ -27,6 +27,7 @@ use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
@@ -55,6 +56,13 @@ class ConvertToTransfer implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        if($groupCount > 1) {
+            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
+            return false;
+        }
+
+
         $type = $journal['transaction_type_type'];
         $user = User::find($journal['user_id']);
         if (TransactionType::TRANSFER === $type) {

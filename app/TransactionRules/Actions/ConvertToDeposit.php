@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Log;
@@ -56,6 +57,12 @@ class ConvertToDeposit implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        if($groupCount > 1) {
+            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to deposit.', $journal['transaction_group_id']));
+            return false;
+        }
+
         Log::debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
         $type = $journal['transaction_type_type'];
         if (TransactionType::DEPOSIT === $type) {

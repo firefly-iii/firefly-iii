@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Log;
@@ -55,6 +56,12 @@ class ConvertToWithdrawal implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        if($groupCount > 1) {
+            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
+            return false;
+        }
+
         $type = $journal['transaction_type_type'];
         if (TransactionType::WITHDRAWAL === $type) {
             Log::error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
