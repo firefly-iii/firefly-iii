@@ -1,6 +1,5 @@
-<?php
 /*
- * PreferencesController.php
+ * get.js
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,28 +18,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V2\Controllers\System;
+import Api from "src/api/v2/root/api";
 
-use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Models\Preference;
-use FireflyIII\Transformers\V2\PreferenceTransformer;
-use Illuminate\Http\JsonResponse;
+export default class Get extends Api {
+  constructor() {
+    super('accounts'); // call the super class constructor and pass in the name parameter
+  }
 
-/**
- * Class PreferencesController
- */
-class PreferencesController extends Controller
-{
-
-    /**
-     * @param Preference $preference
-     * @return JsonResponse
-     */
-    public function get(Preference $preference): JsonResponse
-    {
-        return response()
-            ->json($this->jsonApiObject('preferences', $preference, new PreferenceTransformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+  /**
+   *
+   * @param identifier
+   * @param date
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  get(identifier, date) {
+    let params = {date: date};
+    if(!date) {
+      return this.apiGet(identifier);
     }
-
+    return this.apiGet(identifier, params);
+  }
+  transactions(identifier, params) {
+    if(!params) {
+      return this.apiGetTransactions(identifier);
+    }
+    return this.apiGetTransactions(identifier, params);
+  }
 }

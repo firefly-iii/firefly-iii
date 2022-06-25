@@ -123,9 +123,8 @@ class Account extends Model
     /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array Hidden from view */
-    protected $hidden = ['encrypted'];
-    /** @var bool */
-    private $joinedAccountTypes;
+    protected    $hidden = ['encrypted'];
+    private bool $joinedAccountTypes = false;
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -142,7 +141,7 @@ class Account extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Account $account */
-            $account = $user->accounts()->find($accountId);
+            $account = $user->accounts()->with(['accountType'])->find($accountId);
             if (null !== $account) {
                 return $account;
             }
@@ -250,7 +249,7 @@ class Account extends Model
      */
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types): void
     {
-        if (null === $this->joinedAccountTypes) {
+        if (false === $this->joinedAccountTypes) {
             $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
             $this->joinedAccountTypes = true;
         }

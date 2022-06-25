@@ -21,10 +21,13 @@
 
 namespace FireflyIII\Api\V2\Controllers;
 
-use FireflyIII\Transformers\AbstractTransformer;
+use FireflyIII\Transformers\V2\AbstractTransformer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Manager;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
@@ -34,6 +37,19 @@ use League\Fractal\Serializer\JsonApiSerializer;
 class Controller extends BaseController
 {
     protected const CONTENT_TYPE = 'application/vnd.api+json';
+    protected int $pageSize;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->pageSize = 50;
+        if (auth()->check()) {
+            $this->pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        }
+    }
+
     /**
      * Returns a JSON API object and returns it.
      *
@@ -50,6 +66,25 @@ class Controller extends BaseController
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $resource = new Item($object, $transformer, $key);
+        return $manager->createData($resource)->toArray();
+    }
+
+    /**
+     * @param string               $key
+     * @param LengthAwarePaginator $paginator
+     * @param AbstractTransformer  $transformer
+     * @return array
+     */
+    final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
+    {
+        $manager = new Manager;
+        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $objects  = $paginator->getCollection();
+        $resource = new FractalCollection($objects, $transformer, $key);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
         return $manager->createData($resource)->toArray();
     }
 

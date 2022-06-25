@@ -42,10 +42,8 @@ class NetWorth implements NetWorthInterface
 {
     private AccountRepositoryInterface $accountRepository;
 
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepos;
-    /** @var User */
-    private $user;
+    private CurrencyRepositoryInterface $currencyRepos;
+    private User $user;
 
     /**
      * Returns the user's net worth in an array with the following layout:

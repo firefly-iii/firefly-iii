@@ -19,15 +19,42 @@
   -->
 
 <template>
-
+  <div class="row">
+    <div class="col q-mr-sm" v-for="(account, index) in accounts">
+      <TransactionList :account-id="account" />
+    </div>
+  </div>
 </template>
 
 <script>
+import Preferences from "../../api/v2/preferences";
+import {defineAsyncComponent} from "vue";
+
 export default {
-  name: "TransactionLists"
+  name: "TransactionLists",
+  components: {
+    TransactionList: defineAsyncComponent(() => import('./TransactionList.vue')),
+  },
+  data() {
+    return {
+      accounts: [],
+    }
+  },
+  mounted() {
+    this.getAccounts();
+  },
+  methods: {
+    getAccounts: function() {
+      (new Preferences).get('frontpageAccounts').then((response) => this.parseAccounts(response.data));
+    },
+    parseAccounts: function(data) {
+      const content = data.data.attributes.data;
+      for(let i in content) {
+        if(content.hasOwnProperty(i)) {
+          this.accounts.push(content[i]);
+        }
+      }
+    }
+  },
 }
 </script>
-
-<style scoped>
-
-</style>

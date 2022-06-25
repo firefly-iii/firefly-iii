@@ -34,6 +34,17 @@ Route::group(
 );
 
 /**
+ * V2 API route for TransactionList API endpoints
+ */
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\List', 'prefix' => 'v2',
+     'as'        => 'api.v2.',],
+    static function () {
+        Route::get('accounts/{account}/transactions', ['uses' => 'AccountController@listTransactions', 'as' => 'accounts.transactions']);
+    }
+);
+
+/**
  * V2 API route for net worth endpoint(s);
  */
 Route::group(
@@ -52,6 +63,17 @@ Route::group(
      'as'        => 'api.v1.chart.',],
     static function () {
         Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'dashboard']);
+    }
+);
+
+/**
+ * V2 API route for accounts.
+ */
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V2\Controllers\Model\Account', 'prefix' => 'v2/accounts',
+     'as'        => 'api.v2.accounts.',],
+    static function () {
+        Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
     }
 );
 

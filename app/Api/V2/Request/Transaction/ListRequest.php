@@ -1,6 +1,6 @@
 <?php
 /*
- * PreferencesController.php
+ * ListRequest.php
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,28 +19,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V2\Controllers\System;
+namespace FireflyIII\Api\V2\Request\Transaction;
 
-use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Models\Preference;
-use FireflyIII\Transformers\V2\PreferenceTransformer;
-use Illuminate\Http\JsonResponse;
+use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class PreferencesController
+ * Class ListRequest
  */
-class PreferencesController extends Controller
+class ListRequest extends FormRequest
 {
+    use ChecksLogin;
 
     /**
-     * @param Preference $preference
-     * @return JsonResponse
+     * @return array
      */
-    public function get(Preference $preference): JsonResponse
+    public function rules(): array
     {
-        return response()
-            ->json($this->jsonApiObject('preferences', $preference, new PreferenceTransformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+        return [
+            'start' => 'date',
+            'end'   => 'date|after:start',
+        ];
     }
-
 }

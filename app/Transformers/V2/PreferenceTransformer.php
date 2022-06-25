@@ -1,7 +1,7 @@
 <?php
-/*
- * PreferencesController.php
- * Copyright (c) 2022 james@firefly-iii.org
+/**
+ * PreferenceTransformer.php
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,28 +19,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V2\Controllers\System;
+declare(strict_types=1);
 
-use FireflyIII\Api\V2\Controllers\Controller;
+namespace FireflyIII\Transformers\V2;
+
 use FireflyIII\Models\Preference;
-use FireflyIII\Transformers\V2\PreferenceTransformer;
-use Illuminate\Http\JsonResponse;
 
 /**
- * Class PreferencesController
+ * Class PreferenceTransformer
  */
-class PreferencesController extends Controller
+class PreferenceTransformer extends AbstractTransformer
 {
-
     /**
+     * Transform the preference
+     *
      * @param Preference $preference
-     * @return JsonResponse
+     *
+     * @return array
      */
-    public function get(Preference $preference): JsonResponse
+    public function transform(Preference $preference): array
     {
-        return response()
-            ->json($this->jsonApiObject('preferences', $preference, new PreferenceTransformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+        return [
+            'id'         => (int) $preference->id,
+            'created_at' => $preference->created_at->toAtomString(),
+            'updated_at' => $preference->updated_at->toAtomString(),
+            'name'       => $preference->name,
+            'data'       => $preference->data,
+        ];
+
     }
 
 }
