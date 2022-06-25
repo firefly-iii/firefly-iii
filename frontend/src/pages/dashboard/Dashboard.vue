@@ -89,12 +89,11 @@
 
 <script>
 import {defineAsyncComponent} from "vue";
-import TransactionLists from "../../components/dashboard/TransactionLists";
 
 export default {
   name: "Dashboard",
   components: {
-    TransactionLists,
+    TransactionLists: defineAsyncComponent(() => import("../../components/dashboard/TransactionLists.vue")),
     AccountChart: defineAsyncComponent(() => import('../../components/dashboard/AccountChart.vue')),
     NetWorthInsightBox: defineAsyncComponent(() => import('../../components/dashboard/NetWorthInsightBox.vue')),
     BillInsightBox: defineAsyncComponent(() => import('../../components/dashboard/BillInsightBox.vue')),

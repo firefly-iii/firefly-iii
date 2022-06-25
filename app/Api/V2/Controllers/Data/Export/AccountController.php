@@ -1,6 +1,6 @@
 <?php
 /*
- * PreferencesController.php
+ * AccountController.php
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,28 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V2\Controllers\System;
+namespace FireflyIII\Api\V2\Controllers\Data\Export;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Models\Preference;
-use FireflyIII\Transformers\V2\PreferenceTransformer;
-use Illuminate\Http\JsonResponse;
 
 /**
- * Class PreferencesController
+ * Class AccountController
  */
-class PreferencesController extends Controller
+class AccountController extends Controller
 {
-
-    /**
-     * @param Preference $preference
-     * @return JsonResponse
-     */
-    public function get(Preference $preference): JsonResponse
-    {
-        return response()
-            ->json($this->jsonApiObject('preferences', $preference, new PreferenceTransformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
-    }
 
 }

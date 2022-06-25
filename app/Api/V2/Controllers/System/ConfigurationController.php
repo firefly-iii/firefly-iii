@@ -1,6 +1,6 @@
 <?php
 /*
- * PreferencesController.php
+ * ConfigurationController.php
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,26 +21,7 @@
 
 namespace FireflyIII\Api\V2\Controllers\System;
 
-use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Models\Preference;
-use FireflyIII\Transformers\V2\PreferenceTransformer;
-use Illuminate\Http\JsonResponse;
-
-/**
- * Class PreferencesController
- */
-class PreferencesController extends Controller
+class ConfigurationController
 {
-
-    /**
-     * @param Preference $preference
-     * @return JsonResponse
-     */
-    public function get(Preference $preference): JsonResponse
-    {
-        return response()
-            ->json($this->jsonApiObject('preferences', $preference, new PreferenceTransformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
-    }
 
 }
