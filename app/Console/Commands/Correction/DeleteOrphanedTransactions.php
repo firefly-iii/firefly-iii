@@ -152,7 +152,12 @@ class DeleteOrphanedTransactions extends Command
             $this->info('No orphaned journals.');
         }
         if($count > 0) {
-            $this->info('Found %d orphaned journal(s).', $count);
+            $this->info(sprintf('Found %d orphaned journal(s).', $count));
+            TransactionJournal
+                ::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+                ->whereNotNull('transaction_groups.deleted_at')
+                ->whereNull('transaction_journals.deleted_at')
+                ->update(['transaction_journals.deleted_at', now()]);
         }
     }
 }
