@@ -26,13 +26,13 @@ declare(strict_types=1);
  * V2 API route for TransactionSum API endpoints
  * TODO what to do with these routes
  */
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\Sum', 'prefix' => 'v2/transaction/sum',
-     'as'        => 'api.v2.transaction.sum.',],
-    static function () {
-        Route::get('bills/paid', ['uses' => 'BillController@paid', 'as' => 'bills.paid']);
-    }
-);
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\Sum', 'prefix' => 'v2/transaction/sum',
+//     'as'        => 'api.v2.transaction.sum.',],
+//    static function () {
+//        Route::get('bills/paid', ['uses' => 'BillController@paid', 'as' => 'bills.paid']);
+//    }
+//);
 
 /**
  * V2 API route for TransactionList API endpoints

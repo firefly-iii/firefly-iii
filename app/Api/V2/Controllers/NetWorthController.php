@@ -42,6 +42,7 @@ class NetWorthController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
@@ -52,13 +53,17 @@ class NetWorthController extends Controller
         );
     }
 
+    /**
+     * @param SingleDateRequest $request
+     * @return JsonResponse
+     */
     public function get(SingleDateRequest $request): JsonResponse
     {
         $date      = $request->getDate();
         $result    = $this->netWorth->sumNetWorthByCurrency($date);
         $converted = $this->cerSum($result);
 
-        return response()->json($converted);
+        return response()->api($converted);
     }
 
 }

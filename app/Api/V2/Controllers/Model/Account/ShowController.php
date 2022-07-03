@@ -39,6 +39,8 @@ class ShowController extends Controller
     public function show(Account $account): JsonResponse
     {
         $transformer = new AccountTransformer;
-        return response()->json($this->jsonApiObject('accounts', $account, $transformer));
+        return response()
+            ->api($this->jsonApiObject('accounts', $account, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

@@ -22,6 +22,7 @@
 namespace FireflyIII\Transformers\V2;
 
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\NullArrayObject;
 
 /**
  * Class TransactionGroupTransformer
@@ -35,7 +36,6 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     public function transform(array $group): array
     {
-        //$data  = new NullArrayObject($group);
         $first = reset($group['transactions']);
 
         return [
@@ -48,7 +48,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => '/transactions/' . 1,
+                    'uri' => sprintf('/transactions/%d', $group['id']),
                 ],
             ],
         ];
@@ -70,13 +70,12 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function transformTransaction(array $transaction): array
     {
-        $type = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-
-        // amount:
+        $transaction   = new NullArrayObject($transaction);
+        $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
         $amount        = app('steam')->positive((string) ($row['amount'] ?? '0'));
         $foreignAmount = null;
-        if (null !== $row['foreign_amount']) {
-            $foreignAmount = app('steam')->positive($row['foreign_amount']);
+        if (null !== $transaction['foreign_amount']) {
+            $foreignAmount = app('steam')->positive($transaction['foreign_amount']);
         }
 
         return [
@@ -154,23 +153,23 @@ class TransactionGroupTransformer extends AbstractTransformer
     /**
      * TODO also in the old transformer.
      *
-     * @param array       $array
-     * @param string      $key
-     * @param string|null $default
+     * @param NullArrayObject $array
+     * @param string          $key
+     * @param string|null     $default
      *
      * @return string|null
      */
-    private function stringFromArray(array $array, string $key, ?string $default): ?string
+    private function stringFromArray(NullArrayObject $array, string $key, ?string $default): ?string
     {
-        if (array_key_exists($key, $array) && null === $array[$key]) {
+        if (null === $array[$key] && null === $default) {
             return null;
         }
-        if (array_key_exists($key, $array) && null !== $array[$key]) {
+        if (null !== $array[$key]) {
             return (string) $array[$key];
         }
 
         if (null !== $default) {
-            return (string) $default;
+            return $default;
         }
 
         return null;
