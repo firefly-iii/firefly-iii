@@ -59,6 +59,7 @@ class DeleteOrphanedTransactions extends Command
         $start = microtime(true);
         $this->deleteOrphanedTransactions();
         $this->deleteFromOrphanedAccounts();
+        $this->deleteOrphanedJournals();
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified orphans in %s seconds', $end));
 
@@ -136,6 +137,22 @@ class DeleteOrphanedTransactions extends Command
         }
         if (0 === $count) {
             $this->info('No orphaned accounts.');
+        }
+    }
+
+    private function deleteOrphanedJournals(): void
+    {
+        $set   = TransactionJournal
+            ::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+            ->whereNotNull('transaction_groups.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->get(['transaction_journals.id']);
+        $count = $set->count();
+        if (0 === $count) {
+            $this->info('No orphaned journals.');
+        }
+        if($count > 0) {
+            $this->info('Found %d orphaned journal(s).', $count);
         }
     }
 }
