@@ -116,7 +116,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $row = new NullArrayObject($transaction);
 
         // amount:
-        $amount        = app('steam')->positive((string)($row['amount'] ?? '0'));
+        $amount        = app('steam')->positive((string) ($row['amount'] ?? '0'));
         $foreignAmount = null;
         if (null !== $row['foreign_amount']) {
             $foreignAmount = app('steam')->positive($row['foreign_amount']);
@@ -124,7 +124,9 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         $metaFieldData = $this->groupRepos->getMetaFields((int) $row['transaction_journal_id'], $this->metaFields);
         $metaDateData  = $this->groupRepos->getMetaDateFields((int) $row['transaction_journal_id'], $this->metaDateFields);
+        $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
 
+        
         $longitude = null;
         $latitude  = null;
         $zoomLevel = null;
