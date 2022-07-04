@@ -96,7 +96,7 @@
     "league/commonmark": "2.*",
     "league/csv": "^9.7",
     "league/fractal": "0.*",
-    "nunomaduro/collision": "^6.1",
+    "nunomaduro/collision": "^6.2",
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^2.0",
     "psr/log": "<4",
