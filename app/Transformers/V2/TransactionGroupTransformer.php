@@ -37,13 +37,12 @@ class TransactionGroupTransformer extends AbstractTransformer
     public function transform(array $group): array
     {
         $first = reset($group['transactions']);
-
         return [
             'id'           => (string) $group['id'],
             'created_at'   => $first['created_at']->toAtomString(),
             'updated_at'   => $first['updated_at']->toAtomString(),
             'user'         => (string) $first['user_id'],
-            'group_title'  => $group['group_title'] ?? null,
+            'group_title'  => $group['title'] ?? null,
             'transactions' => $this->transformTransactions($group['transactions'] ?? []),
             'links'        => [
                 [

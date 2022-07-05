@@ -20,7 +20,7 @@
 
 <template>
   <div class="row">
-    <div class="col q-mr-sm" v-for="(account, index) in accounts">
+    <div class="col q-mr-sm" v-for="(account) in accounts">
       <TransactionList :account-id="account" />
     </div>
   </div>

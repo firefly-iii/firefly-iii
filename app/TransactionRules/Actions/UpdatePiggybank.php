@@ -104,7 +104,7 @@ class UpdatePiggybank implements ActionInterface
             )
         );
 
-        return true;
+        return false;
     }
 
     /**

@@ -39,8 +39,8 @@
           <strong>{{ formatAmount(currency, primary) }}</strong><br/>
           <small>
              <span v-for="(item, index) in netWorth">
-               <span :title="formatAmount(item.native_code, item.native_sum)">{{ formatAmount(item.code, item.sum) }}</span>
-               <span v-if="index+1 !== netWorth.length"> + </span></span>
+                <span :title="formatAmount(item.native_code, item.native_sum)">{{ formatAmount(item.code, item.sum) }}</span>
+                <span v-if="index+1 !== netWorth.length"> + </span></span>
           </small>
         </q-card-section>
       </q-card-section>
@@ -104,16 +104,17 @@ export default {
           if (!current.converted) {
             this.primary = this.primary + parseFloat(current.sum);
           }
-
-          this.netWorth.push(
-            {
-              sum: current.sum,
-              code: current.code,
-              native_sum: current.converted ? current.native_sum : current.sum,
-              native_code: current.converted ? current.native_code : current.code,
-              native: hasNative,
-            }
-          );
+          if(parseFloat(current.sum) !== 0.0) {
+            this.netWorth.push(
+              {
+                sum: current.sum,
+                code: current.code,
+                native_sum: current.converted ? current.native_sum : current.sum,
+                native_code: current.converted ? current.native_code : current.code,
+                native: hasNative,
+              }
+            );
+          }
         }
       }
     },

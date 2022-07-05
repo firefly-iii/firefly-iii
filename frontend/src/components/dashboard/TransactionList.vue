@@ -23,18 +23,41 @@
     <q-card bordered>
       <q-item>
         <q-item-section>
-          <q-item-label><strong>{{ accountName }}</strong></q-item-label>
+          <q-item-label><strong>{{ accountName }}</strong> (balance)</q-item-label>
         </q-item-section>
       </q-item>
       <q-separator/>
-      <q-item>
-        <q-card-section horizontal>
-          Content
-        </q-card-section>
-      </q-item>
-
-
-      <!-- X:  {{ accountId }} -->
+          <q-markup-table>
+            <thead>
+            <tr>
+              <th class="text-left">Description</th>
+              <th class="text-right">Opposing account</th>
+              <th class="text-right">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="transaction in transactions">
+              <td class="text-left">
+                <router-link :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }">
+                <strong v-if="transaction.transactions.length > 1">
+                  {{ transaction.transactionGroupTitle }}<br />
+                </strong>
+                </router-link>
+                <span v-for="tr in transaction.transactions">
+                  <span v-if="transaction.transactions.length > 1">
+                    {{tr.description}}
+                  <br />
+                  </span>
+                  <router-link :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }" v-if="transaction.transactions.length === 1">
+                    {{tr.description}}
+                  </router-link>
+                </span>
+              </td>
+              <td class="text-right">159</td>
+              <td class="text-right">6</td>
+            </tr>
+            </tbody>
+          </q-markup-table>
     </q-card>
   </div>
 </template>
@@ -52,7 +75,8 @@ export default {
   data() {
     return {
       store: null,
-      accountName: ''
+      accountName: '',
+      transactions: [],
     }
   },
   mounted() {
@@ -86,20 +110,42 @@ export default {
         const end = new Date(this.store.getRange.end);
         let startStr = format(start, 'y-MM-dd');
         let endStr = format(end, 'y-MM-dd');
-        (new Get).transactions(this.accountId, {
-          start: startStr,
-          end: endStr
-        }).then((response) => this.parseTransactions(response.data));
+        (new Get).transactions(this.accountId,
+          {
+            start: startStr,
+            end: endStr,
+            limit: 10
+          }).then((response) => this.parseTransactions(response.data));
       }
     },
-    parseTransactions: function () {
-
+    parseTransactions: function (data) {
+      for (let i in data.data) {
+        if (data.data.hasOwnProperty(i)) {
+          let group = data.data[i];
+          let ic = {
+            transactionGroupId: group.id,
+            transactionGroupTitle: group.attributes.group_title,
+            transactions: [],
+          };
+          for (let ii in group.attributes.transactions) {
+            if (group.attributes.transactions.hasOwnProperty(ii)) {
+              let transaction = group.attributes.transactions[ii];
+              let iic = {
+                journalId: transaction.transaction_journal_id,
+                description: transaction.description,
+                amount: transaction.amount,
+                currency_code: transaction.currency_code,
+                destination_name: transaction.destination_name,
+                destination_id: transaction.destination_id,
+                type: transaction.type,
+              };
+              ic.transactions.push(iic);
+            }
+          }
+          this.transactions.push(ic);
+        }
+      }
     }
   },
-
 }
 </script>
-
-<style scoped>
-
-</style>
