@@ -22,8 +22,7 @@
     "vue": "3",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0",
-    "vue3-apexcharts": "^1.4.1",
-    "vuex": "^4.0.1"
+    "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
