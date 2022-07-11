@@ -1265,10 +1265,10 @@
     "@vue/compiler-core" "3.2.37"
     "@vue/shared" "3.2.37"
 
-"@vue/compiler-sfc@2.7.2":
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-2.7.2.tgz#15ec0a39c81dad831add7da45d28de37e75fa577"
-  integrity sha512-khG5m63A4DSeHEOe5yyjHQY2TAE0pUXqKqxgauNUcFaa8M4+J55OWhagy8Bk8O6cO4GhKbQf2NDYzceijmOy8A==
+"@vue/compiler-sfc@2.7.4":
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-2.7.4.tgz#41cb520a3ea65f7081194e79c0de412c75bda236"
+  integrity sha512-WCaF33mlKLSvHDKvOD6FzTa5CI2FlMTeJf3MxJsNP0KDgRoI6RdXhHo9dtvCqV4Sywf9Owm17wTLT1Ymu/WsOQ==
   dependencies:
     "@babel/parser" "^7.18.4"
     postcss "^8.4.14"
@@ -5171,10 +5171,10 @@ vue-style-loader@^4.1.0, vue-style-loader@^4.1.3:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-template-compiler@^2.6:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.7.2.tgz#656c2ccfd53696c52a9740645b7a9fda421d84e6"
-  integrity sha512-3PDLIPankm7b1YZHk6/mTz9kMZaDSd1Vhp1tFPITot5uW9WjnIyv6zRax3+j1kwF0DHmvfIVXMX8G+Rn/BHfaQ==
+vue-template-compiler@^2.7:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.7.4.tgz#5c21ff12dbd8f53ac14b42a6d89e77b55a1c5dd7"
+  integrity sha512-FgaeXI80FzhtDEsixq3WBrHLWpU2gzLb2DFusm62TrmCQyETsnUp0kTLpbExrTUw7g5YOnRf+xkh73nuEX+jGQ==
   dependencies:
     de-indent "^1.0.2"
     he "^1.2.0"
@@ -5184,12 +5184,12 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6, vue@^2.6.10:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-2.7.2.tgz#d42aba8d03c4e82d4b127f7b764a822cf19f9cdc"
-  integrity sha512-fQPKEfdiUP4bDlrGEjI5MOTkC5s/XIbnfKAx0B3MxJHI4qwh8FPLSo8/9tFkgFiRH3HwvcHjZQ1tCTifOUH0tg==
+vue@^2.6.10, vue@^2.7:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.7.4.tgz#f5578bd47f0cef8d4f3eb4c6bbebad47341d11fb"
+  integrity sha512-8KGyyzFSj/FrKj1y7jyEpv8J4osgZx6Lk1lVzh1aP4BqsXZhATH1r0gdJNz00MMyBhK0/m2cNoPuOZ1NzeiUEw==
   dependencies:
-    "@vue/compiler-sfc" "2.7.2"
+    "@vue/compiler-sfc" "2.7.4"
     csstype "^3.1.0"
 
 watchpack@^2.3.1:
