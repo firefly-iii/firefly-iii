@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * DownloadExchangeRates.php
  * Copyright (c) 2022 james@firefly-iii.org
@@ -77,6 +78,7 @@ class DownloadExchangeRates implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::debug('Now in handle()');
         $currencies = $this->repository->get();
 
         /** @var TransactionCurrency $currency */
@@ -108,7 +110,7 @@ class DownloadExchangeRates implements ShouldQueue
         $res        = $client->get($url);
         $statusCode = $res->getStatusCode();
         if (200 !== $statusCode) {
-            Log::warning(sprintf('Trying to grab "%s" resulted in %d.', $url, $statusCode));
+            Log::warning(sprintf('Trying to grab "%s" resulted in status code %d.', $url, $statusCode));
             return;
         }
         $body = (string) $res->getBody();

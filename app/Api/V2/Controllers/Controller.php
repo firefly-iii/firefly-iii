@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Controller.php
  * Copyright (c) 2022 james@firefly-iii.org
@@ -82,6 +83,11 @@ class Controller extends BaseController
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $objects  = $paginator->getCollection();
+
+        // the transformer, at this point, needs to collect information that ALL items in the collection
+        // require, like meta data and stuff like that, and save it for later.
+        $transformer->collectMetaData($objects);
+
         $resource = new FractalCollection($objects, $transformer, $key);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 

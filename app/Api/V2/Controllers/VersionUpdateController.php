@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * VersionUpdateController.php
  * Copyright (c) 2022 james@firefly-iii.org

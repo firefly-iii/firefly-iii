@@ -142,10 +142,10 @@ class Cron extends Command
             $this->error(sprintf('Error in "create recurring transactions" cron: %s', $recurring->message));
         }
         if ($recurring->jobFired) {
-            $this->error(sprintf('"Create recurring transactions" cron fired: %s', $recurring->message));
+            $this->line(sprintf('"Create recurring transactions" cron fired: %s', $recurring->message));
         }
         if ($recurring->jobSucceeded) {
-            $this->error(sprintf('"Create recurring transactions" cron ran with success: %s', $recurring->message));
+            $this->info(sprintf('"Create recurring transactions" cron ran with success: %s', $recurring->message));
         }
     }
 
@@ -169,10 +169,10 @@ class Cron extends Command
             $this->error(sprintf('Error in "create auto budgets" cron: %s', $autoBudget->message));
         }
         if ($autoBudget->jobFired) {
-            $this->error(sprintf('"Create auto budgets" cron fired: %s', $autoBudget->message));
+            $this->line(sprintf('"Create auto budgets" cron fired: %s', $autoBudget->message));
         }
         if ($autoBudget->jobSucceeded) {
-            $this->error(sprintf('"Create auto budgets" cron ran with success: %s', $autoBudget->message));
+            $this->info(sprintf('"Create auto budgets" cron ran with success: %s', $autoBudget->message));
         }
 
     }
@@ -197,10 +197,10 @@ class Cron extends Command
             $this->error(sprintf('Error in "bill warnings" cron: %s', $autoBudget->message));
         }
         if ($autoBudget->jobFired) {
-            $this->error(sprintf('"Send bill warnings" cron fired: %s', $autoBudget->message));
+            $this->line(sprintf('"Send bill warnings" cron fired: %s', $autoBudget->message));
         }
         if ($autoBudget->jobSucceeded) {
-            $this->error(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
+            $this->info(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
         }
 
     }
@@ -225,10 +225,10 @@ class Cron extends Command
             $this->error(sprintf('Error in "exchange rates" cron: %s', $exchangeRates->message));
         }
         if ($exchangeRates->jobFired) {
-            $this->error(sprintf('"Exchange rates" cron fired: %s', $exchangeRates->message));
+            $this->line(sprintf('"Exchange rates" cron fired: %s', $exchangeRates->message));
         }
         if ($exchangeRates->jobSucceeded) {
-            $this->error(sprintf('"Exchange rates" cron ran with success: %s', $exchangeRates->message));
+            $this->info(sprintf('"Exchange rates" cron ran with success: %s', $exchangeRates->message));
         }
 
     }

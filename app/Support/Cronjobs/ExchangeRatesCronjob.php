@@ -68,14 +68,14 @@ class ExchangeRatesCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the exchange rates cron-job has fired. It will fire now!', $diffForHumans));
         }
 
-        $this->fireAutoBudget();
+        $this->fireExchangeRateJob();
         app('preferences')->mark();
     }
 
     /**
      *
      */
-    private function fireAutoBudget(): void
+    private function fireExchangeRateJob(): void
     {
         Log::info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
         /** @var DownloadExchangeRates $job */

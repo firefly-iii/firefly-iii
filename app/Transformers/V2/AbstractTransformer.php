@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * AbstractTransformer.php
  * Copyright (c) 2022 james@firefly-iii.org
@@ -21,6 +22,7 @@
 
 namespace FireflyIII\Transformers\V2;
 
+use Illuminate\Support\Collection;
 use League\Fractal\TransformerAbstract;
 
 /**
@@ -29,4 +31,9 @@ use League\Fractal\TransformerAbstract;
 abstract class AbstractTransformer extends TransformerAbstract
 {
 
+    /**
+     * @param Collection $objects
+     * @return void
+     */
+    abstract public function collectMetaData(Collection $objects): void;
 }
