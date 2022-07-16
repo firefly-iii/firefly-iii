@@ -31,7 +31,7 @@ return [
     'split'                                => 'Splitsen',
     'single_split'                         => 'Split',
     'clone'                                => 'Dupliceren',
-    'confirm_action'                       => 'Confirm action',
+    'confirm_action'                       => 'Actie bevestigen',
     'last_seven_days'                      => 'Laatste zeven dagen',
     'last_thirty_days'                     => 'Laatste dertig dagen',
     'last_180_days'                        => 'Laatste 180 dagen',
