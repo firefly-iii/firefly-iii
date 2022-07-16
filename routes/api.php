@@ -89,9 +89,6 @@ Route::group(
         Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
     }
 );
-
-
-
 /**
  * V2 API route for budgets.
  */
