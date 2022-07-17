@@ -105,7 +105,7 @@ class NoCategoryController extends Controller
                   ->withAccountInformation()->withBudgetInformation()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $groups = $collector->getPaginatedGroups();
-        $groups->setPath(route('categories.no-category'));
+        $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
 
         return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }

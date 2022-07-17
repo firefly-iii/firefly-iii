@@ -24,9 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Update;
 
 use Carbon\Carbon;
+use FireflyIII\Factory\PiggyBankEventFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
@@ -103,6 +105,14 @@ class GroupCloneService
         // add note saying "cloned".
 
         // add relation.
+        // clone linked piggy banks
+        /** @var PiggyBankEvent $event */
+        $event =  $journal->piggyBankEvents()->first();
+        if(null !== $event) {
+            $piggyBank = $event->piggyBank;
+            $factory = app(PiggyBankEventFactory::class);
+            $factory->create($newJournal, $piggyBank);
+        }
     }
 
     /**

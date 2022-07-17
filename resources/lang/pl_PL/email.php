@@ -104,10 +104,10 @@ return [
     'new_journals_header'                     => 'Firefly III stworzył dla Ciebie transakcję. Możesz znaleźć ją w Firefly III:|Firefly III stworzył dla Ciebie transakcje :count. Możesz je znaleźć w Firefly III:',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
+    'bill_warning_subject_end_date'           => 'Twój rachunek ":name" kończy się za :diff dni',
+    'bill_warning_subject_now_end_date'       => 'Twój rachunek ":name" kończy się DZIŚ',
+    'bill_warning_subject_extension_date'     => 'Twój rachunek ":name" ma zostać przedłużony lub anulowany w ciągu :diff dni',
+    'bill_warning_subject_now_extension_date' => 'Twój rachunek ":name" ma zostać przedłużony lub anulowany DZIŚ',
     'bill_warning_end_date'                   => 'Twój rachunek **":name"** ma datę końcową :date. Ten moment minie za około **:diff dni**.',
     'bill_warning_extension_date'             => 'Twój rachunek **":name"** ma być przedłużony lub anulowany dnia :date. Ten moment minie za około **:diff dni**.',
     'bill_warning_end_date_zero'              => 'Twój rachunek **":name"** ma datę końcową :date. Ten moment minie **DZIŚ!**',

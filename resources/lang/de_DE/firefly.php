@@ -1772,7 +1772,7 @@ return [
     'reports_submit'                            => 'Zeige Bericht',
     'end_after_start_date'                      => 'Enddatum des Berichts muss nach dem Startdatum liegen.',
     'select_category'                           => 'Kategorie(n) auswählen',
-    'select_budget'                             => 'Kostenpläne auswählen',
+    'select_budget'                             => 'Budget(s) auswählen.',
     'select_tag'                                => 'Schlagworte wählen.',
     'income_per_category'                       => 'Einnahmen pro Kategorie',
     'expense_per_category'                      => 'Ausgaben pro Kategorie',

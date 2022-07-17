@@ -74,8 +74,8 @@ return [
     // OAuth token created
     'oauth_created_subject'                   => 'Un nouveau client OAuth a été créé',
     'oauth_created_body'                      => 'Quelqu\'un (espérons vous) vient de créer un nouveau client OAuth API Firefly III pour votre compte utilisateur. Il se nomme ":name" et a pour URL de callback `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_explanation'               => 'Avec ce client, cette personne peut accéder à **toutes** vos transactions financières via l\'API Firefly III.',
+    'oauth_created_undo'                      => 'Si ce n\'était pas vous, veuillez révoquer ce jeton dès que possible à :url',
 
     // reset password
     'reset_pw_subject'                        => 'Votre demande de réinitialisation de mot de passe',
@@ -104,14 +104,14 @@ return [
     'new_journals_header'                     => 'Firefly III a créé une opération pour vous. Vous pouvez la trouver dans votre installation de Firefly III :|Firefly III a créé :count opérations pour vous. Vous pouvez les trouver dans votre installation de Firefly III :',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
+    'bill_warning_subject_end_date'           => 'Votre facture «:name» arrive à échéance dans :diff jours',
+    'bill_warning_subject_now_end_date'       => 'Votre facture «:name» arrive à échéance AUJOURD\'HUI',
+    'bill_warning_subject_extension_date'     => 'Votre facture «:name» doit être prolongée ou annulée dans :diff jours',
+    'bill_warning_subject_now_extension_date' => 'Votre facture «:name» doit être prolongée ou annulée AUJOURD\'HUI',
     'bill_warning_end_date'                   => 'Votre facture **":name"** doit se terminer le :date, soit dans environ **:diff jours**.',
     'bill_warning_extension_date'             => 'Votre facture **":name"** doit être prolongée ou annulée le :date, soit dans environ **:diff jours**.',
     'bill_warning_end_date_zero'              => 'Votre facture **":name"** doit se terminer le :date, soit **AUJOURD\'HUI !**',
     'bill_warning_extension_date_zero'        => 'Votre facture **":name"** doit être prolongée ou annulée le :date, soit **AUJOURD\'HUI !**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_please_action'              => 'Merci de prendre les mesures appropriées.',
 
 ];

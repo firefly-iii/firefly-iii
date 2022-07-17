@@ -33,10 +33,10 @@ return [
     'index_cash_account'                    => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
 
     // transactions
-    'transactions_create_basic_info'        => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'       => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
+    'transactions_create_basic_info'        => 'Skriv inn grunnleggende informasjon om din transaksjon. Kilde, destinasjon, dato og beskrivelse.',
+    'transactions_create_amount_info'       => 'Angi mengde for transaksjonen. Hvis nødvendig vil feltene auto-oppdatere for utenlansk beløp info.',
     'transactions_create_optional_info'     => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'             => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_split'             => 'Hvis du vil dele en transaksjon, kan du legge til flere deler med denne knappen',
 
     // create account:
     'accounts_create_iban'                  => 'Gi kontoene dine en gyldig IBAN. Dette gjør dataimport lettere i fremtiden.',

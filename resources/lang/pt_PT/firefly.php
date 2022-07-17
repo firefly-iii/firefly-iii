@@ -1312,7 +1312,7 @@ return [
     'repeats'                                   => 'Repete',
     'bill_end_date_help'                        => 'Optional field. The bill is expected to end on this date.',
     'bill_extension_date_help'                  => 'Optional field. The bill must be extended (or cancelled) on or before this date.',
-    'bill_end_index_line'                       => 'This bill ends on :date',
+    'bill_end_index_line'                       => 'Esta fatura termina em :date',
     'bill_extension_index_line'                 => 'This bill must be extended or cancelled on :date',
     'connected_journals'                        => 'Transações ligadas entre si',
     'auto_match_on'                             => 'Correspondido automaticamente pelo Firefly III',
