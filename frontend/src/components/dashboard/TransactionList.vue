@@ -27,37 +27,70 @@
         </q-item-section>
       </q-item>
       <q-separator/>
-          <q-markup-table>
-            <thead>
-            <tr>
-              <th class="text-left">Description</th>
-              <th class="text-right">Opposing account</th>
-              <th class="text-right">Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="transaction in transactions">
-              <td class="text-left">
-                <router-link :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }">
-                <strong v-if="transaction.transactions.length > 1">
-                  {{ transaction.transactionGroupTitle }}<br />
-                </strong>
-                </router-link>
-                <span v-for="tr in transaction.transactions">
+      <q-markup-table>
+        <thead>
+        <tr>
+          <th class="text-left">Description</th>
+          <th class="text-right">Opposing account</th>
+          <th class="text-right">Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="transaction in transactions">
+          <td class="text-left">
+            <router-link :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }">
+              <strong v-if="transaction.transactions.length > 1">
+                {{ transaction.transactionGroupTitle }}<br/>
+              </strong>
+            </router-link>
+            <span v-for="tr in transaction.transactions">
                   <span v-if="transaction.transactions.length > 1">
-                    {{tr.description}}
-                  <br />
+                    {{ tr.description }}
+                  <br/>
                   </span>
-                  <router-link :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }" v-if="transaction.transactions.length === 1">
-                    {{tr.description}}
+                  <router-link :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }"
+                               v-if="transaction.transactions.length === 1">
+                    {{ tr.description }}
                   </router-link>
                 </span>
-              </td>
-              <td class="text-right">159</td>
-              <td class="text-right">6</td>
-            </tr>
-            </tbody>
-          </q-markup-table>
+          </td>
+          <td class="text-right">
+            <!-- withdrawal -->
+            <!-- deposit -->
+            <!-- transfer -->
+            <!-- other -->
+            <span v-if="transaction.transactions.length > 1"><br></span>
+            <span v-for="tr in transaction.transactions">
+
+                      <router-link :to="{ name: 'accounts.show', params: {id: tr.destination_id} }">
+                      {{ tr.destination_name }}
+                    </router-link>
+              <br v-if="transaction.transactions.length > 1"/>
+                </span>
+          </td>
+          <td class="text-right">
+            <span v-if="transaction.transactions.length > 1"><br></span>
+            <!-- per transaction -->
+            <span v-for="tr in transaction.transactions">
+              <!-- simply show the amount -->
+              <span v-if="false === tr.native_currency_converted">{{ formatAmount(tr.currency_code, tr.amount) }}</span>
+
+              <!-- show amount with original in the title -->
+              <span v-if="true === tr.native_currency_converted" :title="formatAmount(tr.currency_code, tr.amount)">{{
+                  formatAmount(tr.native_currency_code, tr.native_amount)
+                }}</span>
+
+              <!-- show foreign amount if present and not converted (may lead to double amounts) -->
+              <span v-if="null !== tr.foreign_amount">
+                    <span v-if="false === tr.foreign_currency_converted"> ({{ formatAmount(tr.foreign_currency_code, tr.foreign_amount) }})</span>
+                    <span v-if="true === tr.foreign_currency_converted" :title="formatAmount(tr.foreign_currency_code, tr.foreign_amount)"> ({{ formatAmount(tr.native_currency_code, tr.native_foreign_amount) }})</span>
+              </span>
+            <br v-if="transaction.transactions.length > 1"/>
+            </span>
+          </td>
+        </tr>
+        </tbody>
+      </q-markup-table>
     </q-card>
   </div>
 </template>
@@ -118,6 +151,10 @@ export default {
           }).then((response) => this.parseTransactions(response.data));
       }
     },
+    // TODO this method is recycled a lot.
+    formatAmount: function (currencyCode, amount) {
+      return Intl.NumberFormat(this.store.getLocale, {style: 'currency', currency: currencyCode}).format(amount);
+    },
     parseTransactions: function (data) {
       for (let i in data.data) {
         if (data.data.hasOwnProperty(i)) {
@@ -133,11 +170,23 @@ export default {
               let iic = {
                 journalId: transaction.transaction_journal_id,
                 description: transaction.description,
-                amount: transaction.amount,
-                currency_code: transaction.currency_code,
                 destination_name: transaction.destination_name,
                 destination_id: transaction.destination_id,
                 type: transaction.type,
+
+                amount: transaction.amount,
+                native_amount: transaction.native_amount,
+
+                foreign_amount: transaction.foreign_amount,
+                native_foreign_amount: transaction.native_foreign_amount,
+
+                currency_code: transaction.currency_code,
+                native_currency_code: transaction.native_currency_code,
+
+                foreign_currency_code: transaction.foreign_currency_code,
+
+                native_currency_converted: transaction.native_currency_converted,
+                foreign_currency_converted: transaction.foreign_currency_converted,
               };
               ic.transactions.push(iic);
             }

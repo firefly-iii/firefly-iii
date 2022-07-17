@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers\V2;
 
 use FireflyIII\Models\Account;
+use Illuminate\Support\Collection;
 
 /**
  * Class AccountTransformer
@@ -83,4 +84,11 @@ class AccountTransformer extends AbstractTransformer
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function collectMetaData(Collection $objects): void
+    {
+        // TODO: Implement collectMetaData() method.
+    }
 }

@@ -89,13 +89,13 @@ class TransactionGroupTransformer extends AbstractTransformer
         $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
         $amount              = app('steam')->positive((string) ($transaction['amount'] ?? '0'));
         $foreignAmount       = null;
-        $foreignNativeAmount = null;
+        $nativeForeignAmount = null;
         if (null !== $transaction['foreign_amount']) {
             $foreignAmount       = app('steam')->positive($transaction['foreign_amount']);
-            $foreignNativeAmount = $foreignAmount;
+            $nativeForeignAmount = $foreignAmount;
             if ($transaction['foreign_currency_id'] !== $this->default->id) {
                 $rate                = $this->getRate($this->currencies[$transaction['foreign_currency_id']], $this->default, $transaction['date']);
-                $foreignNativeAmount = bcmul($foreignAmount, $rate);
+                $nativeForeignAmount = bcmul($foreignAmount, $rate);
             }
         }
 
@@ -137,7 +137,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'amount'                => $amount,
             'native_amount'         => $nativeAmount,
             'foreign_amount'        => $foreignAmount,
-            'foreign_native_amount' => $foreignNativeAmount,
+            'native_foreign_amount' => $nativeForeignAmount,
             'description'           => $transaction['description'],
             'source_id'             => (string) $transaction['source_account_id'],
             'source_name'           => $transaction['source_account_name'],

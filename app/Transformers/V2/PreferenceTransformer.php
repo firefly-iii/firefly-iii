@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers\V2;
 
 use FireflyIII\Models\Preference;
+use Illuminate\Support\Collection;
 
 /**
  * Class PreferenceTransformer
@@ -49,4 +50,11 @@ class PreferenceTransformer extends AbstractTransformer
 
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function collectMetaData(Collection $objects): void
+    {
+        // TODO: Implement collectMetaData() method.
+    }
 }
