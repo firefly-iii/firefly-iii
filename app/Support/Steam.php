@@ -206,7 +206,6 @@ class Steam
      *
      * @return string
      * @throws FireflyException
-     * @throws JsonException
      */
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
@@ -255,7 +254,6 @@ class Steam
      * @param Carbon     $date
      *
      * @return array
-     * @throws JsonException
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {

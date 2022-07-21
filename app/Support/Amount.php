@@ -139,7 +139,6 @@ class Amount
     /**
      * @return TransactionCurrency
      * @throws FireflyException
-     * @throws JsonException
      */
     public function getDefaultCurrency(): TransactionCurrency
     {

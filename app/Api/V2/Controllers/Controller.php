@@ -22,15 +22,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers;
 
+use Carbon\Carbon;
+use Carbon\Exceptions\InvalidDateException;
+use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Transformers\V2\AbstractTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Controller
@@ -38,14 +45,16 @@ use League\Fractal\Serializer\JsonApiSerializer;
 class Controller extends BaseController
 {
     protected const CONTENT_TYPE = 'application/vnd.api+json';
-    protected int $pageSize;
+    protected int          $pageSize;
+    protected ParameterBag $parameters;
 
     /**
      *
      */
     public function __construct()
     {
-        $this->pageSize = 50;
+        $this->parameters = $this->getParameters();
+        $this->pageSize   = 50;
         if (auth()->check()) {
             $this->pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         }
@@ -66,6 +75,8 @@ class Controller extends BaseController
         $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
+        $transformer->collectMetaData(new Collection([$object]));
+
         $resource = new Item($object, $transformer, $key);
         return $manager->createData($resource)->toArray();
     }
@@ -82,7 +93,7 @@ class Controller extends BaseController
         $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $objects  = $paginator->getCollection();
+        $objects = $paginator->getCollection();
 
         // the transformer, at this point, needs to collect information that ALL items in the collection
         // require, like meta data and stuff like that, and save it for later.
@@ -92,6 +103,61 @@ class Controller extends BaseController
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return $manager->createData($resource)->toArray();
+    }
+
+    /**
+     * TODO duplicate from V1 controller
+     * Method to grab all parameters from the URL.
+     *
+     * @return ParameterBag
+     */
+    private function getParameters(): ParameterBag
+    {
+        $bag      = new ParameterBag;
+        try {
+            $page = (int) request()->get('page');
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
+            $page = 1;
+        }
+
+        $integers = ['limit'];
+        $dates    = ['start', 'end', 'date'];
+
+        if ($page < 1) {
+            $page = 1;
+        }
+        if ($page > (2 ^ 16)) {
+            $page = (2 ^ 16);
+        }
+        $bag->set('page', $page);
+
+        // some date fields:
+        foreach ($dates as $field) {
+            $date = request()->query->get($field);
+            $obj  = null;
+            if (null !== $date) {
+                try {
+                    $obj = Carbon::parse($date);
+                } catch (InvalidDateException|InvalidFormatException $e) {
+                    // don't care
+                    Log::warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', $date, $e->getMessage()));
+                }
+            }
+            $bag->set($field, $obj);
+        }
+
+        // integer fields:
+        foreach ($integers as $integer) {
+            $value = request()->query->get($integer);
+            if (null !== $value) {
+                $bag->set($integer, (int) $value);
+            }
+        }
+
+        // sort fields:
+        //   return $this->getSortParameters($bag);
+
+        return $bag;
     }
 
 }

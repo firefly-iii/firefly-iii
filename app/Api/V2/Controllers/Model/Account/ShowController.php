@@ -26,6 +26,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class ShowController
@@ -37,9 +38,11 @@ class ShowController extends Controller
      * @param Account $account
      * @return JsonResponse
      */
-    public function show(Account $account): JsonResponse
+    public function show(Request $request, Account $account): JsonResponse
     {
         $transformer = new AccountTransformer;
+        $transformer->setParameters($this->parameters);
+
         return response()
             ->api($this->jsonApiObject('accounts', $account, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);

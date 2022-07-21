@@ -22,7 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers\V2;
 
+use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -30,6 +35,11 @@ use Illuminate\Support\Collection;
  */
 class AccountTransformer extends AbstractTransformer
 {
+    private array                $currencies;
+    private array                $accountMeta;
+    private ?TransactionCurrency $currency;
+    private array                $balances;
+
     /**
      * Transform the account.
      *
@@ -39,8 +49,15 @@ class AccountTransformer extends AbstractTransformer
      */
     public function transform(Account $account): array
     {
-        $fullType    = $account->accountType->type;
-        $accountType = (string) config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
+        //$fullType    = $account->accountType->type;
+        //$accountType = (string) config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
+        $id = (int) $account->id;
+
+        // no currency? use default
+        $currency = $this->currency;
+        if (0 !== (int) $this->accountMeta[$id]['currency_id']) {
+            $currency = $this->currencies[(int) $this->accountMeta[$id]['currency_id']];
+        }
 
         return [
             'id'                      => (string) $account->id,
@@ -49,32 +66,32 @@ class AccountTransformer extends AbstractTransformer
             'active'                  => $account->active,
             //'order'                   => $order,
             'name'                    => $account->name,
-            'type'                    => strtolower($accountType),
-//            'account_role'            => $accountRole,
-//            'currency_id'             => $currencyId,
-//            'currency_code'           => $currencyCode,
-//            'currency_symbol'         => $currencySymbol,
-//            'currency_decimal_places' => $decimalPlaces,
-//            'current_balance'         => number_format((float) app('steam')->balance($account, $date), $decimalPlaces, '.', ''),
-//            'current_balance_date'    => $date->toAtomString(),
-//            'notes'                   => $this->repository->getNoteText($account),
-//            'monthly_payment_date'    => $monthlyPaymentDate,
-//            'credit_card_type'        => $creditCardType,
-//            'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
+            //            'type'                    => strtolower($accountType),
+            //            'account_role'            => $accountRole,
+            'currency_id'             => $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+            'current_balance'         => $this->balances[$id] ?? null,
+            'current_balance_date'    => $this->getDate(),
+            //            'notes'                   => $this->repository->getNoteText($account),
+            //            'monthly_payment_date'    => $monthlyPaymentDate,
+            //            'credit_card_type'        => $creditCardType,
+            //            'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
             'iban'                    => '' === $account->iban ? null : $account->iban,
-//            'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
-//            'virtual_balance'         => number_format((float) $account->virtual_balance, $decimalPlaces, '.', ''),
-//            'opening_balance'         => $openingBalance,
-//            'opening_balance_date'    => $openingBalanceDate,
-//            'liability_type'          => $liabilityType,
-//            'liability_direction'     => $liabilityDirection,
-//            'interest'                => $interest,
-//            'interest_period'         => $interestPeriod,
-//            'current_debt'            => $this->repository->getMetaValue($account, 'current_debt'),
-//            'include_net_worth'       => $includeNetWorth,
-//            'longitude'               => $longitude,
-//            'latitude'                => $latitude,
-//            'zoom_level'              => $zoomLevel,
+            //            'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
+            //            'virtual_balance'         => number_format((float) $account->virtual_balance, $decimalPlaces, '.', ''),
+            //            'opening_balance'         => $openingBalance,
+            //            'opening_balance_date'    => $openingBalanceDate,
+            //            'liability_type'          => $liabilityType,
+            //            'liability_direction'     => $liabilityDirection,
+            //            'interest'                => $interest,
+            //            'interest_period'         => $interestPeriod,
+            //            'current_debt'            => $this->repository->getMetaValue($account, 'current_debt'),
+            //            'include_net_worth'       => $includeNetWorth,
+            //            'longitude'               => $longitude,
+            //            'latitude'                => $latitude,
+            //            'zoom_level'              => $zoomLevel,
             'links'                   => [
                 [
                     'rel' => 'self',
@@ -85,10 +102,47 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
+     * @return Carbon
+     */
+    private function getDate(): Carbon
+    {
+        $date = today(config('app.timezone'));
+        if (null !== $this->parameters->get('date')) {
+            $date = $this->parameters->get('date');
+        }
+
+        return $date;
+    }
+
+    /**
      * @inheritDoc
+     * @throws FireflyException
      */
     public function collectMetaData(Collection $objects): void
     {
-        // TODO: Implement collectMetaData() method.
+        $this->currency    = null;
+        $this->currencies  = [];
+        $this->accountMeta = [];
+        $this->balances    = app('steam')->balancesByAccounts($objects, $this->getDate());
+        $repository        = app(CurrencyRepositoryInterface::class);
+        $this->currency    = app('amount')->getDefaultCurrency();
+
+        // get currencies:
+        $accountIds  = $objects->pluck('id')->toArray();
+        $meta        = AccountMeta
+            ::whereIn('account_id', $accountIds)
+            ->where('name', 'currency_id')
+            ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
+        $currencyIds = $meta->pluck('data')->toArray();
+
+        $currencies = $repository->getByIds($currencyIds);
+        foreach ($currencies as $currency) {
+            $id                    = (int) $currency->id;
+            $this->currencies[$id] = $currency;
+        }
+        foreach ($meta as $entry) {
+            $id                                   = (int) $entry->account_id;
+            $this->accountMeta[$id][$entry->name] = $entry->data;
+        }
     }
 }

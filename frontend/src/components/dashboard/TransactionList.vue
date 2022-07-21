@@ -23,7 +23,11 @@
     <q-card bordered>
       <q-item>
         <q-item-section>
-          <q-item-label><strong>{{ accountName }}</strong> (balance)</q-item-label>
+          <q-item-label><strong>{{ accountName }}</strong>
+            <span v-if="accountCurrencyCode !== ''">
+              ({{ formatAmount(accountCurrencyCode,accountBalance) }})
+            </span>
+          </q-item-label>
         </q-item-section>
       </q-item>
       <q-separator/>
@@ -110,6 +114,8 @@ export default {
       store: null,
       accountName: '',
       transactions: [],
+      accountCurrencyCode: '',
+      accountBalance: 0.0
     }
   },
   mounted() {
@@ -135,7 +141,10 @@ export default {
       (new Get).get(this.accountId).then((response) => this.parseAccount(response.data));
     },
     parseAccount: function (data) {
+      console.log(data.data.attributes);
       this.accountName = data.data.attributes.name;
+      this.accountBalance = data.data.attributes.current_balance;
+      this.accountCurrencyCode = data.data.attributes.currency_code;
     },
     getTransactions: function () {
       if (null !== this.store.getRange.start && null !== this.store.getRange.end) {

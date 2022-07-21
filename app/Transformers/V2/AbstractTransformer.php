@@ -24,16 +24,35 @@ namespace FireflyIII\Transformers\V2;
 
 use Illuminate\Support\Collection;
 use League\Fractal\TransformerAbstract;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class AbstractTransformer
  */
 abstract class AbstractTransformer extends TransformerAbstract
 {
+    protected ParameterBag $parameters;
 
     /**
      * @param Collection $objects
      * @return void
      */
     abstract public function collectMetaData(Collection $objects): void;
+
+
+    /**
+     * @return ParameterBag
+     */
+    final public function getParameters(): ParameterBag
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param ParameterBag $parameters
+     */
+    final public function setParameters(ParameterBag $parameters): void
+    {
+        $this->parameters = $parameters;
+    }
 }

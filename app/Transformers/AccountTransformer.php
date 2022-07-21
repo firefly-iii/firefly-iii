@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use JsonException;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class AccountTransformer
@@ -44,6 +45,7 @@ class AccountTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->parameters = new ParameterBag;
         $this->repository = app(AccountRepositoryInterface::class);
     }
 
@@ -154,6 +156,7 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
+     * TODO duplicated in the V2 transformer.
      * @return Carbon
      */
     private function getDate(): Carbon

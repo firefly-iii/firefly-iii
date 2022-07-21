@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.2",
-    "@quasar/extras": "^1.14.2",
+    "@quasar/extras": "^1.14.3",
     "apexcharts": "^3.32.1",
     "axios": "^0.21.1",
     "axios-cache-adapter": "^2.7.3",
