@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 6168](https://github.com/firefly-iii/firefly-iii/issues/6168) Missing date overview in no-category list.
 - [Issue 6165](https://github.com/firefly-iii/firefly-iii/issues/6165) Account numbers could not be shared between expense and revenue accounts.
 - [Issue 6150](https://github.com/firefly-iii/firefly-iii/issues/6150) The first remote user would not get admin.
+- [Issue 6118](https://github.com/firefly-iii/firefly-iii/issues/6118) Piggy bank events would not get copied when transaction was copied.  
 
 ### Security
 - Update packages
