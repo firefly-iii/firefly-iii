@@ -117,7 +117,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // amount:
         $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $amount        = app('steam')->positive($row['amount'] ?? '0');
+        $amount        = app('steam')->positive((string)($row['amount'] ?? '0'));
         $foreignAmount = null;
         if (null !== $row['foreign_amount']) {
             $foreignAmount = app('steam')->positive($row['foreign_amount']);

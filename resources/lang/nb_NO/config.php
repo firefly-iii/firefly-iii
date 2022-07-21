@@ -37,7 +37,8 @@ return [
     'month_and_date_day_js'    => 'dddd MMMM Do, YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
-    'month_and_day_no_year_js' => 'MMMM Do',
+    'month_and_day_no_year_js' => 'MMMM Do
+CONTEXTREQUEST',
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'MMMM Do, YYYY, @ HH:mm:ss',

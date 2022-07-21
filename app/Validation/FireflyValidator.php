@@ -589,22 +589,40 @@ class FireflyValidator extends Validator
         $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
                             ->whereNull('accounts.deleted_at')
                             ->where('accounts.user_id', auth()->user()->id)
-                            ->where('account_meta.name', 'account_number');
+                            ->where('account_meta.name', 'account_number')
+                            ->where('account_meta.data', json_encode($value));
 
         if ($accountId > 0) {
             // exclude current account from check.
             $query->where('account_meta.account_id', '!=', $accountId);
         }
-        $set = $query->get(['account_meta.*']);
-
+        $set   = $query->get(['account_meta.*']);
+        $count = $set->count();
+        if (0 === $count) {
+            return true;
+        }
+        if ($count > 1) {
+            // pretty much impossible but still.
+            return false;
+        }
+        $type = $this->data['objectType'] ?? 'unknown';
+        if ('expense' !== $type && 'revenue' !== $type) {
+            Log::warning(sprintf('Account number "%s" is not unique and account type "%s" cannot share its account number.', $value, $type));
+            return false;
+        }
+        Log::debug(sprintf('Account number "%s" is not unique but account type "%s" may share its account number.', $value, $type));
+        // one other account with this account number.
         /** @var AccountMeta $entry */
         foreach ($set as $entry) {
-            if ($entry->data === $value) {
-                return false;
+            $otherAccount = $entry->account;
+            $otherType    = (string) config(sprintf('firefly.shortNamesByFullName.%s', $otherAccount->accountType->type));
+            if (('expense' === $otherType || 'revenue' === $otherType) && $otherType !== $type) {
+                Log::debug(sprintf('The other account with this account number is a "%s" so return true.', $otherType));
+                return true;
             }
+            Log::debug(sprintf('The other account with this account number is a "%s" so return false.', $otherType));
         }
-
-        return true;
+        return false;
     }
 
     /**

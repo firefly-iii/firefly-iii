@@ -180,8 +180,8 @@ return [
     'blocked_code'                => 'Raison du blocage',
     'login_name'                  => 'Identifiant',
     'is_owner'                    => 'Est administrateur ?',
-    'url'                         => 'URL',
-    'bill_end_date'               => 'End date',
+    'url'                         => 'Liens',
+    'bill_end_date'               => 'Date de fin',
 
     // import
     'apply_rules'                 => 'Appliquer les règles',

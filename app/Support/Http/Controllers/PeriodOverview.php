@@ -422,15 +422,6 @@ trait PeriodOverview
         Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
 
         // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('no-category-period-entries');
-
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
         $entries = [];
 
@@ -475,7 +466,6 @@ trait PeriodOverview
             ];
         }
         Log::debug('End of loops');
-        $cache->store($entries);
 
         return $entries;
     }
