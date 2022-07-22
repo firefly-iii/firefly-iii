@@ -341,7 +341,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
         if (null !== $piggyBank->targetdate && $repetition->currentamount < $piggyBank->targetamount) {
             $now             = Carbon::now();
-            $diffInMonths    = $now->diffInMonths($piggyBank->targetdate, false);
+            $startDate       = null !== $piggyBank->startdate && $piggyBank->startdate->gte($now) ? $piggyBank->startdate : $now;
+            $diffInMonths    = $startDate->diffInMonths($piggyBank->targetdate, false);
             $remainingAmount = bcsub($piggyBank->targetamount, $repetition->currentamount);
 
             // more than 1 month to go and still need money to save:
