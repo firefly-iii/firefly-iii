@@ -458,7 +458,7 @@ class BillRepository implements BillRepositoryInterface
             //Log::debug(sprintf('Dates = %d, journalCount = %d, total = %d', $dates->count(), $count, $total));
 
             if ($total > 0) {
-                $average             = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
+                $average             = bcdiv(bcadd((string) $bill->amount_max, (string) $bill->amount_min), '2');
                 $multi               = bcmul($average, (string) $total);
                 $return[$currencyId] = $return[$currencyId] ?? '0';
                 $return[$currencyId] = bcadd($return[$currencyId], $multi);
