@@ -24,28 +24,28 @@
   <div class="q-ma-md">
     <div class="row q-mb-sm">
       <div class="col">
-        <BillInsightBox />
+        <BillInsightBox/>
       </div>
       <div class="col">
-        <SpendInsightBox />
+        <SpendInsightBox/>
       </div>
       <div class="col">
-        <NetWorthInsightBox />
-      </div>
-    </div>
-    <div class="row q-mb-sm">
-      <div class="col">
-        <AccountChart />
+        <NetWorthInsightBox/>
       </div>
     </div>
     <div class="row q-mb-sm">
       <div class="col">
-        <TransactionLists />
+        <AccountChart/>
       </div>
     </div>
     <div class="row q-mb-sm">
       <div class="col">
-        Budget box
+        <TransactionLists/>
+      </div>
+    </div>
+    <div class="row q-mb-sm">
+      <div class="col">
+        <BudgetBox/>
       </div>
       <div class="col">
         Category box
@@ -77,11 +77,16 @@
         icon="fas fa-chevron-up"
         direction="up"
       >
-        <q-fab-action color="primary" square icon="fas fa-chart-pie" :label="$t('firefly.new_budget')" :to="{ name: 'budgets.create' }"/>
-        <q-fab-action color="primary" square icon="far fa-money-bill-alt" :label="$t('firefly.new_asset_account')" :to="{ name: 'accounts.create', params: {type: 'asset'} }"/>
-        <q-fab-action color="primary" square icon="fas fa-exchange-alt" :label="$t('firefly.newTransfer')" :to="{ name: 'transactions.create', params: {type: 'transfer'} }"/>
-        <q-fab-action color="primary" square icon="fas fa-long-arrow-alt-right" :label="$t('firefly.newDeposit')" :to="{ name: 'transactions.create', params: {type: 'deposit'} }"/>
-        <q-fab-action color="primary" square icon="fas fa-long-arrow-alt-left" :label="$t('firefly.newWithdrawal')" :to="{ name: 'transactions.create', params: {type: 'withdrawal'} }"/>
+        <q-fab-action color="primary" square icon="fas fa-chart-pie" :label="$t('firefly.new_budget')"
+                      :to="{ name: 'budgets.create' }"/>
+        <q-fab-action color="primary" square icon="far fa-money-bill-alt" :label="$t('firefly.new_asset_account')"
+                      :to="{ name: 'accounts.create', params: {type: 'asset'} }"/>
+        <q-fab-action color="primary" square icon="fas fa-exchange-alt" :label="$t('firefly.newTransfer')"
+                      :to="{ name: 'transactions.create', params: {type: 'transfer'} }"/>
+        <q-fab-action color="primary" square icon="fas fa-long-arrow-alt-right" :label="$t('firefly.newDeposit')"
+                      :to="{ name: 'transactions.create', params: {type: 'deposit'} }"/>
+        <q-fab-action color="primary" square icon="fas fa-long-arrow-alt-left" :label="$t('firefly.newWithdrawal')"
+                      :to="{ name: 'transactions.create', params: {type: 'withdrawal'} }"/>
       </q-fab>
     </q-page-sticky>
   </div>
@@ -98,6 +103,7 @@ export default {
     NetWorthInsightBox: defineAsyncComponent(() => import('../../components/dashboard/NetWorthInsightBox.vue')),
     BillInsightBox: defineAsyncComponent(() => import('../../components/dashboard/BillInsightBox.vue')),
     SpendInsightBox: defineAsyncComponent(() => import('../../components/dashboard/SpendInsightBox.vue')),
+    BudgetBox: defineAsyncComponent(() => import('../../components/dashboard/BudgetBox.vue')),
   }
 }
 </script>

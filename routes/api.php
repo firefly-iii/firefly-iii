@@ -96,6 +96,7 @@ Route::group(
     ['namespace' => 'FireflyIII\Api\V2\Controllers\Model\Budget', 'prefix' => 'v2/budgets',
      'as'        => 'api.v2.budgets',],
     static function () {
+        Route::get('', ['uses' => 'ListController@index', 'as' => 'index']);
         Route::get('sum/budgeted', ['uses' => 'SumController@budgeted', 'as' => 'sum.budgeted']);
         Route::get('sum/spent', ['uses' => 'SumController@spent', 'as' => 'sum.spent']);
     }
