@@ -119,7 +119,7 @@ class AccountController extends Controller
 
                 // see if there is an accompanying start amount.
                 // grab the difference and find the currency.
-                $startAmount             = (string) ($startBalances[$accountId][$currencyId] ?? '0')
+                $startAmount             = (string) ($startBalances[$accountId][$currencyId] ?? '0');
                 $diff                    = bcsub((string)$endAmount, $startAmount);
                 $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
                 if (0 !== bccomp($diff, '0')) {
