@@ -352,7 +352,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $source          = $this->getSourceTransaction($journal);
         $destination     = $this->getDestinationTransaction($journal);
         $type            = $journal->transactionType->type;
-        $amount          = $this->getAmount($type, $source->amount);
+        $amount          = $this->getAmount($type, (string) $source->amount);
         $foreignAmount   = $this->getForeignAmount($type, $source->foreign_amount);
         $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
         $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
