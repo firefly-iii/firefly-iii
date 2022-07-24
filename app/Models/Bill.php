@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -222,5 +223,29 @@ class Bill extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the max amount
+     *
+     * @return Attribute
+     */
+    protected function amountMax(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
+    }
+
+    /**
+     * Get the min amount
+     *
+     * @return Attribute
+     */
+    protected function amountMin(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
     }
 }

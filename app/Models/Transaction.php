@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -255,5 +256,29 @@ class Transaction extends Model
     public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
+    }
+
+    /**
+     * Get the amount
+     *
+     * @return Attribute
+     */
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
+    }
+
+    /**
+     * Get the foreign amount
+     *
+     * @return Attribute
+     */
+    protected function foreignAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
     }
 }
