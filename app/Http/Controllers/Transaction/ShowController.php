@@ -32,8 +32,10 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
+
 
 /**
  * Class ShowController
@@ -137,6 +139,7 @@ class ShowController extends Controller
     {
         $amounts = [];
         foreach ($group['transactions'] as $transaction) {
+            Log::debug(sprintf('Currency symbol is "%s"', $transaction['currency_symbol']));
             $symbol = $transaction['currency_symbol'];
             if (!array_key_exists($symbol, $amounts)) {
                 $amounts[$symbol] = [
