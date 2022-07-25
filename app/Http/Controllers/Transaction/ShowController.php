@@ -154,6 +154,7 @@ class ShowController extends Controller
             if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount']) {
                 // same for foreign currency:
                 $foreignSymbol = $transaction['foreign_currency_symbol'];
+                Log::debug(sprintf('Foreign currency symbol is "%s"', $foreignSymbol));
                 if (!array_key_exists($foreignSymbol, $amounts)) {
                     $amounts[$foreignSymbol] = [
                         'amount'         => '0',
@@ -164,6 +165,7 @@ class ShowController extends Controller
                 $amounts[$foreignSymbol]['amount'] = bcadd($amounts[$foreignSymbol]['amount'], $transaction['foreign_amount']);
             }
         }
+        Log::debug('Result', $amounts);
 
         return $amounts;
     }
