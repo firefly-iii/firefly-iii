@@ -30,30 +30,31 @@
       </q-item>
       <q-separator/>
       <q-card-section>
-        <div class="row">
-          <div class="col">
-            I am budget<br/>
+        <div v-for="budget in budgets" :key="budget.id">
+          <div class="row">
+            <div class="col">
+              <router-link :to="{ name: 'budgets.show', params: {id: budget.id} }">
+                {{ budget.name }}
+              </router-link>
+            </div>
+          </div>
+          <div v-for="limit in budget.limits">
+            <div class="row">
+              <div class="col">
+                <small>{{ limit.amount }}</small><br>
+                {{ limit.start }}<br>
+                {{ limit.end }}
+              </div>
+              <div class="col">
+                I am bar
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="row">
           <div class="col">
-            <small>I am range</small>
-          </div>
-          <div class="col">
-            I am bar
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <small>I am range</small>
-          </div>
-          <div class="col">
-            I am bar
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            I am budget<br/>
+            I am no budget<br/>
           </div>
         </div>
       </q-card-section>
@@ -65,6 +66,7 @@
 <script>
 import {useFireflyIIIStore} from "../../stores/fireflyiii";
 import List from '../../api/v2/budgets/list';
+import ListLimit from '../../api/v2/budget-limits/list';
 
 export default {
   name: "BudgetBox",
@@ -72,7 +74,8 @@ export default {
     return {
       budgets: [],
       locale: 'en-US',
-      page: 1
+      page: 1,
+      loadingBudgets: false
     }
   },
   mounted() {
@@ -92,14 +95,64 @@ export default {
     }
   },
   methods: {
-    loadBox: function() {
-
-      (new List).list(1).then((data) => {
-        console.log(data.data);
+    loadBox: function () {
+      this.loadingBudgets = true;
+      (new List).list(this.page).then((data) => {
+        this.parseBudgets(data.data.data);
+        if (data.data.meta.pagination.current_page < data.data.meta.pagination.total_pages) {
+          this.page = data.data.meta.pagination.current_page + 1;
+          this.loadBox();
+          return;
+        }
+        this.loadingBudgets = false;
+        this.processBudgets();
       });
       // todo go to next page as well.
+    },
+    parseBudgets: function (data) {
+      for (let i in data) {
+        if (data.hasOwnProperty(i)) {
+          const current = data[i];
+          this.budgets.push(
+            {
+              id: parseInt(current.id),
+              name: current.attributes.name,
+              limits: [],
+            }
+          );
+        }
+      }
+    },
+    processBudgets: function () {
+      for (let i in this.budgets) {
+        if (this.budgets.hasOwnProperty(i)) {
+          const current = this.budgets[i];
+          // get budget limits in current view range.
 
-      console.log('loadbox');
+          // todo must also be paginated because you never know
+          (new ListLimit).list(current.id, this.store.getRange.start, this.store.getRange.end, 1).then((data) => {
+            this.parseBudgetLimits(data.data.data, current);
+          });
+        }
+      }
+      console.log('Processing...');
+    },
+    parseBudgetLimits: function (data, budget) {
+      console.log('Parse for ' + budget.name);
+      for(let i in data) {
+        if(data.hasOwnProperty(i)) {
+          const current = data[i];
+          budget.limits.push(
+            {
+              amount: current.attributes.amount,
+              start: new Date(current.attributes.start),
+              end: new Date(current.attributes.end),
+            }
+          );
+          console.log('A ' +  new Date(current.attributes.start));
+          console.log('B ' + this.store.getRange.start);
+        }
+      }
     }
   }
 }

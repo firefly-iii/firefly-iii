@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers\V2;
 
 use FireflyIII\Models\Budget;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class BudgetTransformer
@@ -43,7 +44,7 @@ class BudgetTransformer extends AbstractTransformer
     {
         //$this->opsRepository = app(OperationsRepositoryInterface::class);
         //$this->repository    = app(BudgetRepositoryInterface::class);
-        //$this->parameters    = new ParameterBag();
+        $this->parameters    = new ParameterBag();
     }
 
     /**

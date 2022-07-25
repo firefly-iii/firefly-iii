@@ -90,15 +90,17 @@ Route::group(
     }
 );
 /**
- * V2 API route for budgets.
+ * V2 API route for budgets and budget limits:
  */
 Route::group(
-    ['namespace' => 'FireflyIII\Api\V2\Controllers\Model\Budget', 'prefix' => 'v2/budgets',
+    ['namespace' => 'FireflyIII\Api\V2\Controllers\Model', 'prefix' => 'v2/budgets',
      'as'        => 'api.v2.budgets',],
     static function () {
-        Route::get('', ['uses' => 'ListController@index', 'as' => 'index']);
-        Route::get('sum/budgeted', ['uses' => 'SumController@budgeted', 'as' => 'sum.budgeted']);
-        Route::get('sum/spent', ['uses' => 'SumController@spent', 'as' => 'sum.spent']);
+        Route::get('', ['uses' => 'Budget\ListController@index', 'as' => 'index']);
+        Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
+        Route::get('{budget}/limits', ['uses' => 'BudgetLimit\ListController@index', 'as' => 'budget-limits.index']);
+        Route::get('sum/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'sum.budgeted']);
+        Route::get('sum/spent', ['uses' => 'Budget\SumController@spent', 'as' => 'sum.spent']);
     }
 );
 

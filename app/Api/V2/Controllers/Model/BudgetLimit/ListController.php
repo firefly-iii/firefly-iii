@@ -19,26 +19,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V2\Controllers\Model\Budget;
+namespace FireflyIII\Api\V2\Controllers\Model\BudgetLimit;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Transformers\V2\BudgetTransformer;
+use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\Transformers\V2\BudgetLimitTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class ListController extends Controller
 {
-    private BudgetRepositoryInterface $repository;
+    private BudgetLimitRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $this->repository = app(BudgetLimitRepositoryInterface::class);
                 return $next($request);
             }
         );
@@ -47,16 +47,17 @@ class ListController extends Controller
     /**
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(DateRequest $request, Budget $budget): JsonResponse
     {
-        $collection  = $this->repository->getActiveBudgets();
-        $total = $collection->count();
+        $dates      = $request->getAll();
+        $collection = $this->repository->getBudgetLimits($budget,$dates['start'], $dates['end']);
+        $total      = $collection->count();
         $collection->slice($this->pageSize * $this->parameters->get('page'), $this->pageSize);
 
         $paginator   = new LengthAwarePaginator($collection, $total, $this->pageSize, $this->parameters->get('page'));
-        $transformer = new BudgetTransformer();
+        $transformer = new BudgetLimitTransformer();
         return response()
-            ->api($this->jsonApiList('budgets', $paginator, $transformer))
+            ->api($this->jsonApiList('budget_limits', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
 
