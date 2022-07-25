@@ -113,6 +113,8 @@ class ShowController extends Controller
         $attachments = $this->repository->getAttachments($transactionGroup);
         $links       = $this->repository->getLinks($transactionGroup);
 
+        Log::debug('Journal', $groupArray);
+
         return view(
             'transactions.show',
             compact(
