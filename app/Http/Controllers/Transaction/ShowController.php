@@ -149,7 +149,7 @@ class ShowController extends Controller
                 ];
             }
             $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
-            if (null !== $transaction['foreign_amount']) {
+            if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount']) {
                 // same for foreign currency:
                 $foreignSymbol = $transaction['foreign_currency_symbol'];
                 if (!array_key_exists($foreignSymbol, $amounts)) {
