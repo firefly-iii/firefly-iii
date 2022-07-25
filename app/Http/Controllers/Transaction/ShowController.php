@@ -101,7 +101,6 @@ class ShowController extends Controller
         $groupArray = $transformer->transformObject($transactionGroup);
 
         // do some calculations:
-        Log::debug('Now going to getAmounts()');
         $amounts  = $this->getAmounts($groupArray);
         $accounts = $this->getAccounts($groupArray);
 
@@ -112,8 +111,6 @@ class ShowController extends Controller
         $events      = $this->repository->getPiggyEvents($transactionGroup);
         $attachments = $this->repository->getAttachments($transactionGroup);
         $links       = $this->repository->getLinks($transactionGroup);
-
-        Log::debug('Journal', $groupArray);
 
         return view(
             'transactions.show',
@@ -140,10 +137,8 @@ class ShowController extends Controller
      */
     private function getAmounts(array $group): array
     {
-        Log::debug('Now in getAmounts()');
         $amounts = [];
         foreach ($group['transactions'] as $transaction) {
-            Log::debug(sprintf('Currency symbol is "%s"', $transaction['currency_symbol']));
             $symbol = $transaction['currency_symbol'];
             if (!array_key_exists($symbol, $amounts)) {
                 $amounts[$symbol] = [
@@ -156,7 +151,6 @@ class ShowController extends Controller
             if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount'] && bccomp('0', $transaction['foreign_amount']) !== 0) {
                 // same for foreign currency:
                 $foreignSymbol = $transaction['foreign_currency_symbol'];
-                Log::debug(sprintf('Foreign currency symbol is "%s"', $foreignSymbol));
                 if (!array_key_exists($foreignSymbol, $amounts)) {
                     $amounts[$foreignSymbol] = [
                         'amount'         => '0',
@@ -167,7 +161,6 @@ class ShowController extends Controller
                 $amounts[$foreignSymbol]['amount'] = bcadd($amounts[$foreignSymbol]['amount'], $transaction['foreign_amount']);
             }
         }
-        Log::debug('Result', $amounts);
 
         return $amounts;
     }
