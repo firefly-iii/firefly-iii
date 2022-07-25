@@ -101,6 +101,7 @@ class ShowController extends Controller
         $groupArray = $transformer->transformObject($transactionGroup);
 
         // do some calculations:
+        Log::debug('Now going to getAmounts()');
         $amounts  = $this->getAmounts($groupArray);
         $accounts = $this->getAccounts($groupArray);
 
@@ -137,6 +138,7 @@ class ShowController extends Controller
      */
     private function getAmounts(array $group): array
     {
+        Log::debug('Now in getAmounts()');
         $amounts = [];
         foreach ($group['transactions'] as $transaction) {
             Log::debug(sprintf('Currency symbol is "%s"', $transaction['currency_symbol']));
