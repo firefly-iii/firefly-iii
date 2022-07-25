@@ -517,7 +517,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function getForeignAmount(string $type, ?string $foreignAmount): ?string
     {
         $result = null;
-        if (null !== $foreignAmount) {
+        if (null !== $foreignAmount && '' !== $foreignAmount && bccomp('0', $foreignAmount) !== 0) {
             $result = TransactionType::WITHDRAWAL !== $type ? app('steam')->negative($foreignAmount) : app('steam')->positive($foreignAmount);
         }
 
