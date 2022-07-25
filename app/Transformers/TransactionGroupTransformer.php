@@ -122,6 +122,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null !== $row['foreign_amount'] && '' !== $row['foreign_amount'] && bccomp('0', $row['foreign_amount']) !== 0) {
             $foreignAmount = app('steam')->positive($row['foreign_amount']);
         }
+        Log::debug(sprintf('Foreign amount is "%s', $foreignAmount));
 
         $metaFieldData = $this->groupRepos->getMetaFields((int) $row['transaction_journal_id'], $this->metaFields);
         $metaDateData  = $this->groupRepos->getMetaDateFields((int) $row['transaction_journal_id'], $this->metaDateFields);
