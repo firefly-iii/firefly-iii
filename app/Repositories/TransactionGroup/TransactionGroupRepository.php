@@ -277,7 +277,10 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         /** @var Transaction $transaction */
         $transaction = $journal->transactions->first();
-        if (null === $transaction->foreign_amount) {
+        if (null === $transaction->foreign_amount || '' === $transaction->foreign_amount) {
+            return '';
+        }
+        if (0 === bccomp('0', $transaction->foreign_amount)) {
             return '';
         }
         $currency = $transaction->foreignCurrency;
