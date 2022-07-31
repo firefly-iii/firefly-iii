@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Sẽ quay lại ngay!',
     'check_back'              => 'Firefly III ngừng hoạt động để bảo trì. Vui lòng kiểm tra lại sau một giây.',
     'error_occurred'          => 'Rất tiếc! Lỗi xảy ra.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Thật không may, lỗi này không thể phục hồi :(. Firefly III đã bị hỏng. Lỗi là:',
     'error'                   => 'Lỗi',
     'error_location'          => 'Lỗi này xảy ra trong tập tin <span style="font-family: monospace;">:file</span> dòng :line code :code.',

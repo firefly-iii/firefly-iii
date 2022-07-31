@@ -54,7 +54,7 @@ CONTEXTREQUEST',
     'year_js'                  => 'YYYY',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'             => 'Q YYYY',
+    'half_year_js'             => '\QQ YYYY',
 
     'quarter_fns'   => "'Q'Q, yyyy",
     'half_year_fns' => "'H{half}', yyyy",

@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'メンテナンスはすぐに終わります。',
     'check_back'              => '必要なメンテナンスを行っているため、Firefly IIIは一時停止しています。しばらくしてからもう一度確認してください。',
     'error_occurred'          => '申し訳ありません。エラーが発生しました。',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => '残念ながら、このエラーは回復不可能です。Firefly IIIは故障しました。エラーログは以下の通りです:',
     'error'                   => 'エラー',
     'error_location'          => 'このエラーは、ファイル「<span style="font-family: monospace;">:file</span>」 :line 行目のコード :code で発生しました。',

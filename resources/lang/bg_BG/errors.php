@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Веднага се връщам!',
     'check_back'              => 'Firefly III е изключен за някаква необходима поддръжка. Моля, проверете отново след секунда.',
     'error_occurred'          => 'Опаааа! Случи се грешка.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'За съжаление от тази грешка не се възстановява :(. Firefly III се счупи. Грешката е:',
     'error'                   => 'Грешка',
     'error_location'          => 'Тази грешка се появи във файл "<span style="font-family: monospace;">:file</span>" на ред: :line с код: :code.',

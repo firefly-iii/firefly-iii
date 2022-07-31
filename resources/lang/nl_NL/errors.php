@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Zo terug!',
     'check_back'              => 'Firefly III is offline voor onderhoud. Kom later terug.',
     'error_occurred'          => 'Oeps! Er is een fout opgetreden.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Helaas was deze fout niet te herstellen :(. Firefly III is stuk. De fout is:',
     'error'                   => 'Fout',
     'error_location'          => 'De fout is opgetreden in bestand <span style="font-family: monospace;">:file</span> op regel :line met code :code.',

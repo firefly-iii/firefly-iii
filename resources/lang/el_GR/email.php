@@ -65,9 +65,9 @@ return [
     'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
     'email_change_ignore'                     => 'Αν ξεκινήσατε αυτήν την αλλαγή, μπορείτε να αγνοήσετε με ασφάλεια αυτό το μήνυμα.',
     'email_change_old'                        => 'Η παλιά διεύθυνση ηλεκτρονικού ταχυδρομείου ήταν: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => 'Η παλιά διεύθυνση ηλεκτρονικού ταχυδρομείου ήταν: **:email**',
     'email_change_new'                        => 'Η νέα διεύθυνση ηλεκτρονικού ταχυδρομείου είναι: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => 'Η νέα διεύθυνση ηλεκτρονικού ταχυδρομείου είναι: **:email**',
     'email_change_instructions'               => 'Δεν μπορείτε να χρησιμοποιήσετε το Firefly III μέχρι να επιβεβαιώσετε αυτήν την αλλαγή. Ακολουθήστε τον παρακάτω σύνδεσμο για να το κάνετε.',
     'email_change_undo_link'                  => 'Για να αναιρέσετε την αλλαγή, ακολουθήστε αυτόν τον σύνδεσμο:',
 

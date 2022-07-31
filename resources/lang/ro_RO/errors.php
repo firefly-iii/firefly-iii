@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Revin imediat!',
     'check_back'              => 'Firefly III este oprit pentru o întreținere necesară. Vă rugăm să reveniți într-o secundă.',
     'error_occurred'          => 'Ups! A apărut o eroare.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Din păcate, această eroare nu a putut fi recuperată :(. Firefly III s-a stricat. Eroarea este:',
     'error'                   => 'Eroare',
     'error_location'          => 'Această eroare a apărut în fișierul "<span style="font-family: monospace;">:file</span>" pe linia :line cu codul :code.',

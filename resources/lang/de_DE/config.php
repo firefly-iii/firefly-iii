@@ -53,7 +53,7 @@ return [
     'year_js'                  => 'YYYY',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'             => 'Q. Quartal YYYY',
+    'half_year_js'             => '\QQ YYYY',
 
     'quarter_fns'   => "'Q'QQQ, yyyy",
     'half_year_fns' => "'H{half}', yyyy",

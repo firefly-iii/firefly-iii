@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Zaraz wracam!',
     'check_back'              => 'Firefly III jest wyłączony na potrzeby wymaganej konserwacji. Sprawdź ponownie za sekundę.',
     'error_occurred'          => 'Ups! Wystąpił błąd.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Niestety, nie mogliśmy się pozbierać po tym błędzie :(. Firefly III się popsuło. Błąd to:',
     'error'                   => 'Błąd',
     'error_location'          => 'Błąd wystąpił w pliku <span style="font-family: monospace;">:file</span> linia :line z kodem :code.',
