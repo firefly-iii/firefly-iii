@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -96,5 +97,17 @@ class PiggyBankEvent extends Model
     public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
+    }
+
+    /**
+     * Get the amount
+     *
+     * @return Attribute
+     */
+    protected function amount(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
     }
 }
