@@ -90,7 +90,7 @@
     "jc5/recovery": "^2",
     "laravel/framework": "^9",
     "laravel/passport": "10.*",
-    "laravel/sanctum": "^2.14",
+    "laravel/sanctum": "^3.0",
     "laravel/ui": "^4.0",
     "laravelcollective/html": "6.*",
     "league/commonmark": "2.*",
