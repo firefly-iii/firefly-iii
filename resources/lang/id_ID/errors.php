@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Segera kembali!',
     'check_back'              => 'Firefly III tidak dapat diakses untuk pemeliharaan. Silakan cek kembali beberapa saat lagi.',
     'error_occurred'          => 'Ups! Terjadi kesalahan.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Sayangnya, kesalahan ini tidak dapat diperbaiki :(. Firefly III mengalami kerusakan. Kesalahan yang terjadi adalah:',
     'error'                   => 'Kesalahan',
     'error_location'          => 'Kesalahan ini terjadi pada file "<span style="font-family: monospace;">:file</span>" pada baris :line dengan kode :code.',

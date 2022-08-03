@@ -33,6 +33,7 @@ return [
     'be_right_back'           => '敬请期待！',
     'check_back'              => 'Firefly III 正在进行必要的维护，请稍后再试',
     'error_occurred'          => '很抱歉，出现错误',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => '很遗憾，该错误无法恢复 :( Firefly III 已崩溃。错误信息：',
     'error'                   => '错误',
     'error_location'          => '该错误位于文件 <span style="font-family: monospace;">:file</span> 第 :line 行的代码 :code',

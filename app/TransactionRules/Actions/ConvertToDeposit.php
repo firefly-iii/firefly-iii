@@ -126,7 +126,7 @@ class ConvertToDeposit implements ActionInterface
 
         DB::table('transaction_journals')
           ->where('id', '=', $journal['transaction_journal_id'])
-          ->update(['transaction_type_id' => $newType->id]);
+          ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
         Log::debug('Converted withdrawal to deposit.');
 
@@ -168,7 +168,7 @@ class ConvertToDeposit implements ActionInterface
 
         DB::table('transaction_journals')
           ->where('id', '=', $journal['transaction_journal_id'])
-          ->update(['transaction_type_id' => $newType->id]);
+          ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
         Log::debug('Converted transfer to deposit.');
 

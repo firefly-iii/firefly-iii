@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Временно недоступен!',
     'check_back'              => 'Firefly III отключён для необходимого обслуживания. Пожалуйста, зайдите через секунду.',
     'error_occurred'          => 'Упс! Произошла ошибка.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'К сожалению, эта ошибка не была исправлена :(. Firefly III сломался. Ошибка:',
     'error'                   => 'Ошибка',
     'error_location'          => 'Эта ошибка произошла в файле <span style="font-family: monospace;">:file</span> в строке :line с кодом :code.',

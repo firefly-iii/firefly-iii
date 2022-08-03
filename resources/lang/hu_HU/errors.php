@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Rögtön jövök!',
     'check_back'              => 'FireFly III jelenleg karbantartás alatt. Kérem látogasson vissza később.',
     'error_occurred'          => 'Hoppá! Hiba történt.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Sajnos a hiba után nem sikerült visszaállni :(. A futás megszakadt. A hiba:',
     'error'                   => 'Hiba',
     'error_location'          => 'Hiba a <span style="font-family: monospace;">:file</span> fájl :line sorában a :code kódnál.',
