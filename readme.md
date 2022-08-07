@@ -150,6 +150,8 @@ I can always use your help [squashing bugs](https://docs.firefly-iii.org/support
 
 There is also a [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
 
+[![CII Best Practices][bp-badge]][bp-url]
+
 ### Support the development of Firefly III
 
 If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved! :tada:
@@ -192,3 +194,5 @@ The Firefly III logo is made by the excellent Cherie Woo.
 [sc-project-url]: https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii
 [hack-shield]: https://cdn.huntr.dev/huntr_security_badge_mono.svg
 [hack-url]: https://huntr.dev/bounties/disclose
+[bp-badge]: https://bestpractices.coreinfrastructure.org/projects/6335/badge
+[bp-url]: https://bestpractices.coreinfrastructure.org/projects/6335 

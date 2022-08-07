@@ -1,0 +1,22 @@
+name: "Reply to closed issue"
+on: 
+  issues: 
+    types: 
+      - closed
+jobs: 
+  auto_comment: 
+    runs-on: ubuntu-latest
+    steps: 
+      - 
+        uses: aws-actions/closed-issue-message@v1
+        with: 
+          message: |
+              Hi there! This is an automatic reply. `Share and enjoy`
+              
+              This issue is now closed. Please be aware that closed issues are not actively monitored. If you reply, you may get no response.
+                       
+              - If the original bug is not actually fixed, please feel free to open a new ticket. Please refer to this issue for clarity.
+              - Follow-up questions can also be posted in a new [discussion](https://github.com/firefly-iii/firefly-iii/discussions/)
+              
+              Thank you for your consideration.
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
