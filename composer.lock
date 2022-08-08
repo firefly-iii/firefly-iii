@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b44ccd094222acd823fd084702ee7ead",
+    "content-hash": "1acbce75f489fc855903980ad965f679",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -306,16 +306,16 @@
         },
         {
             "name": "diglactic/laravel-breadcrumbs",
-            "version": "v7.2.0",
+            "version": "v8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/diglactic/laravel-breadcrumbs.git",
-                "reference": "309ec597d047b763d1df3c5113a3932cc771500f"
+                "reference": "2d213260343690df192fb042bab2ae585731b49a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/diglactic/laravel-breadcrumbs/zipball/309ec597d047b763d1df3c5113a3932cc771500f",
-                "reference": "309ec597d047b763d1df3c5113a3932cc771500f",
+                "url": "https://api.github.com/repos/diglactic/laravel-breadcrumbs/zipball/2d213260343690df192fb042bab2ae585731b49a",
+                "reference": "2d213260343690df192fb042bab2ae585731b49a",
                 "shasum": ""
             },
             "require": {
@@ -371,9 +371,9 @@
             ],
             "support": {
                 "issues": "https://github.com/diglactic/laravel-breadcrumbs/issues",
-                "source": "https://github.com/diglactic/laravel-breadcrumbs/tree/v7.2.0"
+                "source": "https://github.com/diglactic/laravel-breadcrumbs/tree/v8.0.0"
             },
-            "time": "2022-05-03T05:40:37+00:00"
+            "time": "2022-07-27T06:50:36+00:00"
         },
         {
             "name": "doctrine/cache",
