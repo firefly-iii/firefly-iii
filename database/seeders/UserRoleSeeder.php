@@ -47,6 +47,8 @@ class UserRoleSeeder extends Seeder
             UserRole::CHANGE_PIGGY_BANKS,
             UserRole::CHANGE_REPETITIONS,
             UserRole::VIEW_REPORTS,
+            UserRole::MANAGE_WEBHOOKS,
+            UserRole::MANAGE_CURRENCIES,
             UserRole::FULL,
             UserRole::OWNER,
         ];

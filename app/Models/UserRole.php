@@ -57,6 +57,8 @@ class UserRole extends Model
     public const CHANGE_REPETITIONS  = 'change_reps';
     public const CHANGE_RULES        = 'change_rules';
     public const CHANGE_TRANSACTIONS = 'change_tx';
+    public const MANAGE_WEBHOOKS     = 'manage_webhooks';
+    public const MANAGE_CURRENCIES   = 'manage_currencies';
     public const FULL                = 'full';
     public const OWNER               = 'owner';
     public const READ_ONLY           = 'ro';
