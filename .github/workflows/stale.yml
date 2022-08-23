@@ -26,4 +26,4 @@ jobs:
             for your contributions.
           days-before-stale: 14
           days-before-close: 7
-          exempt-issue-labels: 'enhancement,feature,bug,announcement'
+          exempt-issue-labels: 'enhancement,feature,bug,announcement,layout-v3'
