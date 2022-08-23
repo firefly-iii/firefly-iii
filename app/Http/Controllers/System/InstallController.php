@@ -110,6 +110,7 @@ class InstallController extends Controller
             'firefly-iii:fix-transaction-types'        => [],
             'firefly-iii:fix-frontpage-accounts'       => [],
             'firefly-iii:fix-ibans'                    => [],
+            'firefly-iii:upgrade-group-information'    => [],
 
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
