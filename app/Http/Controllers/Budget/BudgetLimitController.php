@@ -206,6 +206,14 @@ class BudgetLimitController extends Controller
             $amount = '0';
         }
 
+        // sanity check on amount:
+        if ((float) $amount === 0.0) {
+            $amount = '1';
+        }
+        if ((int) $amount > 65536) {
+            $amount = '65536';
+        }
+
         $limit = $this->blRepository->update($budgetLimit, ['amount' => $amount]);
         $array = $limit->toArray();
 
