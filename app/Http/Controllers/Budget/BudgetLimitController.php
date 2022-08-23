@@ -148,6 +148,15 @@ class BudgetLimitController extends Controller
         Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         $limit = $this->blRepository->find($budget, $currency, $start, $end);
+
+        // sanity check on amount:
+        if ((float) $amount === 0.0) {
+            $amount = '1';
+        }
+        if ((int) $amount > 65536) {
+            $amount = '65536';
+        }
+
         if (null !== $limit) {
             $limit->amount = $amount;
             $limit->save();
