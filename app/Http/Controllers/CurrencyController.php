@@ -258,7 +258,7 @@ class CurrencyController extends Controller
         }
 
         session()->flash('success', (string) trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));
-
+        return response()->json([]);
     }
 
     /**
@@ -308,7 +308,7 @@ class CurrencyController extends Controller
      * @param Request $request
      * @return RedirectResponse|Redirector
      */
-    public function enableCurrency(Request $request)
+    public function enableCurrency(Request $request): JsonResponse
     {
         $currencyId = (int) $request->get('id');
         if ($currencyId > 0) {
@@ -323,7 +323,7 @@ class CurrencyController extends Controller
             }
         }
 
-        return redirect(route('currencies.index'));
+        return response()->json([]);
     }
 
     /**
