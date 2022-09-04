@@ -47,16 +47,16 @@ return [
 
     //'week_in_year'            => 'Week %V, %G',
     'week_in_year_js'          => '[Tydzień] w. YYYY',
-    'week_in_year_fns'         => "w 'tydzień' yyyy",
+    'week_in_year_fns'         => "'tydzień' w, yyyy",
 
     //'year'                    => '%Y',
     'year_js'                  => 'YYYY',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'             => '\QQ YYYY',
+    'half_year_js'             => '\k\w Q YYYY',
 
-    'quarter_fns'   => "Q 'kwartał' yyyy",
-    'half_year_fns' => "'{half} połowa' yyyy",
+    'quarter_fns'   => "'kwartał' Q, yyyy",
+    'half_year_fns' => "'{half} półrocze' yyyy",
     'dow_1'         => 'Poniedziałek',
     'dow_2'         => 'Wtorek',
     'dow_3'         => 'Środa',

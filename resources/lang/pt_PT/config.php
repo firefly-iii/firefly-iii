@@ -53,9 +53,9 @@ return [
     'year_js'                  => 'YYYY',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'             => '\QQ YYYY',
+    'half_year_js'             => '\TQ YYYY',
 
-    'quarter_fns'   => "'Trimestre' Q, yyyy",
+    'quarter_fns'   => "'T' Q, yyyy",
     'half_year_fns' => "'H{half}', yyyy",
     'dow_1'         => 'Segunda',
     'dow_2'         => 'Terça',
