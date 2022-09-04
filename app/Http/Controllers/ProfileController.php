@@ -34,6 +34,7 @@ use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Google2FA;
@@ -157,37 +158,36 @@ class ProfileController extends Controller
 
             return redirect(route('profile.index'));
         }
-        $domain = $this->getDomain();
-        $secret = null;
+        $domain           = $this->getDomain();
+        $secretPreference = Preferences::get('temp-mfa-secret');
+        $codesPreference  = Preferences::get('temp-mfa-codes');
 
         // generate secret if not in session
-        if (!session()->has('temp-mfa-secret')) {
+        if (null === $secretPreference) {
             // generate secret + store + flash
             $secret = Google2FA::generateSecretKey();
-            session()->put('temp-mfa-secret', $secret);
-            session()->flash('two-factor-secret', $secret);
-        }
-        // re-use secret if in session
-        if (session()->has('temp-mfa-secret')) {
-            // get secret from session and flash
-            $secret = session()->get('temp-mfa-secret');
-            session()->flash('two-factor-secret', $secret);
+            Preferences::set('temp-mfa-secret', $secret);
         }
 
-        // generate codes if not in session:
+        // re-use secret if in session
+        if (null !== $secretPreference) {
+            // get secret from session and flash
+            $secret = $secretPreference->data;
+        }
+
+        // generate recovery codes if not in session:
         $recoveryCodes = '';
-        if (!session()->has('temp-mfa-codes')) {
+
+        if (null === $codesPreference) {
             // generate codes + store + flash:
             $recovery      = app(Recovery::class);
             $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray();
-            session()->put('temp-mfa-codes', $recoveryCodes);
-            session()->flash('two-factor-codes', $recoveryCodes);
+            Preferences::set('temp-mfa-codes', $recoveryCodes);
         }
 
-        // get codes from session if there already:
-        if (session()->has('temp-mfa-codes')) {
-            $recoveryCodes = session()->get('temp-mfa-codes');
-            session()->flash('two-factor-codes', $recoveryCodes);
+        // get codes from session if present already:
+        if (null !== $codesPreference) {
+            $recoveryCodes = $codesPreference->data;
         }
 
         $codes = implode("\r\n", $recoveryCodes);
@@ -275,7 +275,11 @@ class ProfileController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
+        Preferences::delete('temp-mfa-secret');
+        Preferences::delete('temp-mfa-codes');
         $repository->setMFACode($user, null);
+        app('preferences')->mark();
+
         session()->flash('success', (string) trans('firefly.pref_two_factor_auth_disabled'));
         session()->flash('info', (string) trans('firefly.pref_two_factor_auth_remove_it'));
 
@@ -498,9 +502,12 @@ class ProfileController extends Controller
         $user = auth()->user();
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        /** @var string $secret */
-        $secret = session()->get('two-factor-secret');
+        $secret     = (string) session()->get('temp-mfa-secret');
+
         $repository->setMFACode($user, $secret);
+
+        Preferences::delete('temp-mfa-secret');
+        Preferences::delete('temp-mfa-codes');
 
         session()->flash('success', (string) trans('firefly.saved_preferences'));
         app('preferences')->mark();
