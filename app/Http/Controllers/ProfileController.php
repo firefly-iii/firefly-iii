@@ -502,7 +502,7 @@ class ProfileController extends Controller
         $user = auth()->user();
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $secret     = (string) session()->get('temp-mfa-secret');
+        $secret     = Preferences::get('temp-mfa-secret')?->data;
 
         $repository->setMFACode($user, $secret);
 
