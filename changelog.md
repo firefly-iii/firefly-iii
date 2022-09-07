@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.11 - 2022-09-05
+
+### Added
+- [Issue 6254](https://github.com/firefly-iii/firefly-iii/issues/6254) Use Piggy Bank's start date in monthly suggestion by @rickdoesdev
+- Add best practices badge.
+- Various sanity checks on large amounts.
+
+### Removed
+- Service worker is removed.
+
+### Fixed
+- [Issue 6260](https://github.com/firefly-iii/firefly-iii/issues/6260)
+- [Issue 6271](https://github.com/firefly-iii/firefly-iii/issues/6271) Improve settings for Redis, by @canoine
+- [Issue 6283](https://github.com/firefly-iii/firefly-iii/issues/6283) Convert to deposit means the transaction loses its bill.
+- Fix issue with foreign currencies in transaction form.
+- Fix various issues with SQLite.
+- [Issue 6379](https://github.com/firefly-iii/firefly-iii/issues/6379) Some foreign currencies not list for setting on new transactions
+- Make 2FA code + validation more robust. Thanks to @jtmoss3991, @timaschew and @Ottega.
+
 ## 5.7.10 - 2022-07-16
 
 ### Fixed

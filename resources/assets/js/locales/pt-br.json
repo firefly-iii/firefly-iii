@@ -30,7 +30,7 @@
         "category": "Categoria",
         "attachments": "Anexos",
         "notes": "Notas",
-        "external_url": "External URL",
+        "external_url": "URL externa",
         "update_transaction": "Atualizar transa\u00e7\u00e3o",
         "after_update_create_another": "Depois de atualizar, retorne aqui para continuar editando.",
         "store_as_new": "Armazene como uma nova transa\u00e7\u00e3o em vez de atualizar.",
