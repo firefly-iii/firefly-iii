@@ -209,15 +209,15 @@ return [
     'need_id_in_edit'           => 'Cada divisão deve ter transaction_journal_id (ID válido ou 0).',
 
     'ob_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
+    'lc_source_need_data' => 'É necessário obter um ID de uma conta de origem válida para continuar.',
     'ob_dest_need_data'   => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
     'ob_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
 
     'generic_invalid_source'      => 'Você não pode usar esta conta como conta de origem.',
     'generic_invalid_destination' => 'Você não pode usar esta conta como conta de destino.',
 
-    'generic_no_source'      => 'You must submit source account information.',
-    'generic_no_destination' => 'You must submit destination account information.',
+    'generic_no_source'      => 'Você precisa enviar as informações da conta de origem.',
+    'generic_no_destination' => 'Você precisa enviar as informações da conta de destino.',
 
     'gte.numeric' => ':attribute deve ser maior ou igual a :value.',
     'gt.numeric'  => 'O campo :attribute deve ser maior que :value.',

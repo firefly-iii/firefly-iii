@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Hned jsme zpět!',
     'check_back'              => 'Firefly III je vypnutý kvůli nezbytné údržbě. Zkuste to prosím později.',
     'error_occurred'          => 'Jejda! Došlo k chybě.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Bohužel, tato chyba je neopravitelná :(. Firefly III se pokazil. Chyba je:',
     'error'                   => 'Chyba',
     'error_location'          => 'Došlo k chybě v souboru <span style="font-family: monospace;">:file</span> na řádku :line s kódem :code.',

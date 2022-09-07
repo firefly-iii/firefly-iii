@@ -32,8 +32,10 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
+
 
 /**
  * Class ShowController
@@ -146,7 +148,7 @@ class ShowController extends Controller
                 ];
             }
             $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
-            if (null !== $transaction['foreign_amount']) {
+            if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount'] && bccomp('0', $transaction['foreign_amount']) !== 0) {
                 // same for foreign currency:
                 $foreignSymbol = $transaction['foreign_currency_symbol'];
                 if (!array_key_exists($foreignSymbol, $amounts)) {

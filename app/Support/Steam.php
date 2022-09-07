@@ -338,7 +338,7 @@ class Steam
         $return   = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
-            $return[(int) $entry->transaction_currency_id] = $entry->sum_for_currency;
+            $return[(int) $entry->transaction_currency_id] = (string) $entry->sum_for_currency;
         }
         $cache->store($return);
 

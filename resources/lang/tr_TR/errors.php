@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Hemen dönecek!',
     'check_back'              => 'Firefly III gerekli bakım için hazır. Lütfen bir saniye sonra tekrar kontrol edin.',
     'error_occurred'          => 'Hoppala! Bir hata oluştu.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Ne yazık ki, bu hata kurtarılamadı :(. Ateşböceği III kırıldı. Hata şu şekildedir:',
     'error'                   => 'Hata',
     'error_location'          => 'Bu hata dosyada oluştu<span style="font-family: monospace;">:file</span> on line :line with code :code.',

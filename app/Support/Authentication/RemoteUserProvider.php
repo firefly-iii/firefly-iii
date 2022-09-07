@@ -69,8 +69,6 @@ class RemoteUserProvider implements UserProvider
                 $roleObject = Role::where('name', 'owner')->first();
                 $user->roles()->attach($roleObject);
             }
-
-
         }
         Log::debug(sprintf('Going to return user #%d (%s)', $user->id, $user->email));
 

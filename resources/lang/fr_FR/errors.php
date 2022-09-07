@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Je reviens tout de suite !',
     'check_back'              => 'Firefly III est fermé pour cause de maintenace. Veuillez revenir dans une seconde.',
     'error_occurred'          => 'Oups ! Une erreur est survenue.',
+    'db_error_occurred'       => 'Oups! Une erreur de base de données s\'est produite.',
     'error_not_recoverable'   => 'Malheureusement, cette erreur n\'a pas pu être récupérée :(. Firefly III s\'est cassé. L\'erreur est :',
     'error'                   => 'Erreur',
     'error_location'          => 'Cette erreur est survenue dans le fichier "<span style="font-family: monospace;">:file</span>" à la ligne :line avec le code :code.',

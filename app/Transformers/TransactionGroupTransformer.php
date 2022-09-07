@@ -119,7 +119,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
         $amount        = app('steam')->positive((string)($row['amount'] ?? '0'));
         $foreignAmount = null;
-        if (null !== $row['foreign_amount']) {
+        if (null !== $row['foreign_amount'] && '' !== $row['foreign_amount'] && bccomp('0', $row['foreign_amount']) !== 0) {
             $foreignAmount = app('steam')->positive($row['foreign_amount']);
         }
 
@@ -352,8 +352,8 @@ class TransactionGroupTransformer extends AbstractTransformer
         $source          = $this->getSourceTransaction($journal);
         $destination     = $this->getDestinationTransaction($journal);
         $type            = $journal->transactionType->type;
-        $amount          = $this->getAmount($type, $source->amount);
-        $foreignAmount   = $this->getForeignAmount($type, $source->foreign_amount);
+        $amount          = $this->getAmount($type, (string) $source->amount);
+        $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : (string) $source->foreign_amount);
         $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
         $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
         $currency        = $source->transactionCurrency;
@@ -516,7 +516,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function getForeignAmount(string $type, ?string $foreignAmount): ?string
     {
         $result = null;
-        if (null !== $foreignAmount) {
+        if (null !== $foreignAmount && '' !== $foreignAmount && bccomp('0', $foreignAmount) !== 0) {
             $result = TransactionType::WITHDRAWAL !== $type ? app('steam')->negative($foreignAmount) : app('steam')->positive($foreignAmount);
         }
 

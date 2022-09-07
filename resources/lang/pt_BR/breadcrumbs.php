@@ -66,7 +66,7 @@ return [
     'createTag'              => 'Criar nova etiqueta',
     'edit_tag'               => 'Editar etiqueta ":tag"',
     'delete_tag'             => 'Apagar etiqueta ":tag"',
-    'delete_journal_link'    => 'Eliminar ligação entre transações',
+    'delete_journal_link'    => 'Excluir vínculo entre transações',
     'edit_object_group'      => 'Editar grupo ":title"',
     'delete_object_group'    => 'Excluir grupo ":title"',
     'logout_others'          => 'Sair de outras sessões',

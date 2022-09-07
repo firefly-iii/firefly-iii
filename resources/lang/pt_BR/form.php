@@ -84,7 +84,7 @@ return [
     'liability_type'              => 'Tipo de passivo',
     'interest'                    => 'Juros',
     'interest_period'             => 'Período de juros',
-    'extension_date'              => 'Extension date',
+    'extension_date'              => 'Data de renovação',
     'type'                        => 'Tipo',
     'convert_Withdrawal'          => 'Converter a retirada',
     'convert_Deposit'             => 'Converter o depósito',
@@ -121,7 +121,7 @@ return [
     'stop_processing'             => 'Parar processamento',
     'start_date'                  => 'Início do intervalo',
     'end_date'                    => 'Final do intervalo',
-    'enddate'                     => 'End date',
+    'enddate'                     => 'Data final',
     'start'                       => 'Início do intervalo',
     'end'                         => 'Término do intervalo',
     'delete_account'              => 'Apagar conta ":name"',
@@ -181,7 +181,7 @@ return [
     'login_name'                  => 'Login',
     'is_owner'                    => 'É administrador(a)?',
     'url'                         => 'link',
-    'bill_end_date'               => 'End date',
+    'bill_end_date'               => 'Data final',
 
     // import
     'apply_rules'                 => 'Aplicar Regras',

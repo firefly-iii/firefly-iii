@@ -33,6 +33,7 @@ return [
     'be_right_back'           => '¡Enseguida vuelvo!',
     'check_back'              => 'Firefly III está apagado para el mantenimiento necesario. Por favor, vuelva en un segundo.',
     'error_occurred'          => '¡Uy! un error ha ocurrido.',
+    'db_error_occurred'       => '¡Ups! Se ha producido un error en la base de datos.',
     'error_not_recoverable'   => 'Desafortunadamente, este error no se pudo recuperar :(. Firefly III se rompió. El error es:',
     'error'                   => 'Error',
     'error_location'          => 'Este error ocurrió en el archivo "<span style="font-family: monospace;">:file</span>" en línea :line con código :code.',

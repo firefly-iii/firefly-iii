@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use FireflyIII\User;
@@ -68,8 +69,13 @@ class FireflyValidator extends Validator
         if (null === $value || !is_string($value) || 6 !== strlen($value)) {
             return false;
         }
-
-        $secret = session('two-factor-secret');
+        $user = auth()->user();
+        if (null === $user) {
+            Log::error('No user during validate2faCode');
+            return false;
+        }
+        $secretPreference = Preferences::get('temp-mfa-secret');
+        $secret           = $secretPreference?->data ?? '';
 
         return Google2FA::verifyKey($secret, $value);
     }

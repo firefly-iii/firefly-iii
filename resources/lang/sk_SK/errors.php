@@ -33,6 +33,7 @@ return [
     'be_right_back'           => 'Hneď sme späť!',
     'check_back'              => 'Firefly III je nedostupný kvôli nevyhnutnej údržbe. Prosím, skúste to neskôr.',
     'error_occurred'          => 'Ups! Vyskytla sa chyba.',
+    'db_error_occurred'       => 'Whoops! A database error occurred.',
     'error_not_recoverable'   => 'Nanešťastie, túto chybu nie je možné opraviť :(. Firefly III sa pokazil. Chyba:',
     'error'                   => 'Chyba',
     'error_location'          => 'Chyba nastala v súbore "<span style="font-family: monospace;">:file</span>" na riadku :line s kódom :code.',

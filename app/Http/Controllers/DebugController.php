@@ -88,7 +88,7 @@ class DebugController extends Controller
     public function flush(Request $request)
     {
         app('preferences')->mark();
-        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range']);
+        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range','temp-mfa-secret','temp-mfa-codes']);
         Log::debug('Call cache:clear...');
         Artisan::call('cache:clear');
         Log::debug('Call config:clear...');

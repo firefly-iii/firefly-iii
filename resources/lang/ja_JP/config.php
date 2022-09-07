@@ -53,7 +53,7 @@ return [
     'year_js'                  => 'YYYY年',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'             => 'YYYY年第Q四半期',
+    'half_year_js'             => '\QQ YYYY',
 
     'quarter_fns'   => "yyyy年第Q四半期",
     'half_year_fns' => "yyyy年H[半期]",
