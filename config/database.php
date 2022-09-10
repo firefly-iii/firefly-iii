@@ -150,6 +150,7 @@ return [
             'path'     => envNonEmpty('REDIS_PATH'),
             'host'     => envNonEmpty('REDIS_HOST', '127.0.0.1'),
             'port'     => envNonEmpty('REDIS_PORT', 6379),
+            'username' => env('REDIS_USERNAME'),
             'password' => env('REDIS_PASSWORD', null),
             'database' => env('REDIS_DB', '0'),
         ],
