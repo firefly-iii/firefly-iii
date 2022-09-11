@@ -237,6 +237,9 @@ return [
         /* PDF */
         'application/pdf',
 
+        /* Generic upload */
+        'application/octet-stream',
+
         /* MS word */
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
