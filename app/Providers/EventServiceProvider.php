@@ -49,6 +49,7 @@ use Laravel\Passport\Events\AccessTokenCreated;
 use Log;
 use Mail;
 use Session;
+use TypeError;
 
 /**
  * Class EventServiceProvider.
@@ -189,7 +190,7 @@ class EventServiceProvider extends ServiceProvider
                 try {
                     Log::debug('Trying to send message...');
                     Mail::to($email)->send(new OAuthTokenCreatedMail($oauthClient));
-                } catch (Exception $e) { // @phpstan-ignore-line
+                } catch (TypeError|Exception $e) { // @phpstan-ignore-line
                     Log::debug('Send message failed! :(');
                     Log::error($e->getMessage());
                     Log::error($e->getTraceAsString());

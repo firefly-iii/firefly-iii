@@ -101,7 +101,7 @@ return [
         'webhooks'     => false,
         'handle_debts' => true,
     ],
-    'version'                      => '5.7.11',
+    'version'                      => '5.7.12',
     'api_version'                  => '1.5.6',
     'db_version'                   => 18,
 
@@ -236,6 +236,9 @@ return [
 
         /* PDF */
         'application/pdf',
+
+        /* Generic upload */
+        'application/octet-stream',
 
         /* MS word */
         'application/msword',
