@@ -438,7 +438,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            //return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         $currencies = $this->accountRepository->getUsedCurrencies($account);
 

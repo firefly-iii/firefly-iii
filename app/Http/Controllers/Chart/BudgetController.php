@@ -99,7 +99,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            //return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $step           = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
         $collection     = new Collection([$budget]);
