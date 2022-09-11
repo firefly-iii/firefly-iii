@@ -176,28 +176,34 @@ export default {
       }
     },
     loadCurrencies: function () {
-      //console.log('loadCurrencies');
-      let URI = document.getElementsByTagName('base')[0].href + "api/v1/currencies";
-      axios.get(URI, {}).then((res) => {
-        this.currencies = [
-          {
-            id: 0,
-            attributes: {
-              name: this.no_currency,
-              enabled: true
-            },
-          }
-        ];
+      // reset list of currencies:
+      this.currencies = [
+        {
+          id: 0,
+          attributes: {
+            name: this.no_currency,
+            enabled: true
+          },
+        }
+      ];
 
-        this.enabledCurrencies = [
-          {
-            attributes: {
-              name: this.no_currency,
-              enabled: true
-            },
-            id: 0,
-          }
-        ];
+      this.enabledCurrencies = [
+        {
+          attributes: {
+            name: this.no_currency,
+            enabled: true
+          },
+          id: 0,
+        }
+      ];
+
+      this.getCurrencies(1);
+    },
+    getCurrencies: function(page) {
+      console.log('loadCurrencies on page ' + page);
+      let url = document.getElementsByTagName('base')[0].href + "api/v1/currencies?page=" + page;
+      axios.get(url, {}).then((res) => {
+
         for (const key in res.data.data) {
           if (res.data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
             if (res.data.data[key].attributes.enabled) {
@@ -207,7 +213,9 @@ export default {
             }
           }
         }
-        // console.log(this.enabledCurrencies);
+        if(res.data.meta.pagination.current_page < res.data.meta.pagination.total_pages) {
+          this.getCurrencies(res.data.meta.pagination.current_page + 1);
+        }
       });
     }
   }

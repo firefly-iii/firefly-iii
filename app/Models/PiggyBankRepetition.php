@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -125,5 +126,17 @@ class PiggyBankRepetition extends Model
     public function setCurrentamountAttribute($value): void
     {
         $this->attributes['currentamount'] = (string) $value;
+    }
+
+    /**
+     * Get the amount
+     *
+     * @return Attribute
+     */
+    protected function currentamount(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
     }
 }

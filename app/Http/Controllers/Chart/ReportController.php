@@ -181,28 +181,31 @@ class ReportController extends Controller
             $period                     = $journal['date']->format($format);
             $currencyId                 = (int) $journal['currency_id'];
             $data[$currencyId]          = $data[$currencyId] ?? [
-                    'currency_id'             => $currencyId,
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_decimal_places' => (int) $journal['currency_decimal_places'],
-                ];
+                'currency_id'             => $currencyId,
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_name'           => $journal['currency_name'],
+                'currency_decimal_places' => (int) $journal['currency_decimal_places'],
+            ];
             $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
-                    'period' => $period,
-                    'spent'  => '0',
-                    'earned' => '0',
-                ];
+                'period' => $period,
+                'spent'  => '0',
+                'earned' => '0',
+            ];
             // in our outgoing?
             $key    = 'spent';
             $amount = app('steam')->positive($journal['amount']);
 
+            // deposit = incoming
+            // transfer or reconcile or opening balance, and these accounts are the destination.
             if (
                 TransactionType::DEPOSIT === $journal['transaction_type_type']
-                || // deposit = incoming
-                // transfer or opening balance, and these accounts are the destination.
+                ||
+
                 (
                     (
                         TransactionType::TRANSFER === $journal['transaction_type_type']
+                        || TransactionType::RECONCILIATION === $journal['transaction_type_type']
                         || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
                     )
                     && in_array($journal['destination_account_id'], $ids, true)
