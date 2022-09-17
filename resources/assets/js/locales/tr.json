@@ -96,9 +96,15 @@
         "actions": "Eylemler",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Web kancalar\u0131"
+        "webhooks": "Web kancalar\u0131",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "URL",
+        "active": "Aktif",
         "interest_date": "Faiz tarihi",
         "title": "Ba\u015fl\u0131k",
         "book_date": "Kitap Tarihi",
@@ -107,7 +113,10 @@
         "foreign_amount": "Foreign amount",
         "payment_date": "\u00d6deme Tarihi",
         "invoice_date": "Fatura Tarihi",
-        "internal_reference": "Dahili referans"
+        "internal_reference": "Dahili referans",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "tr"

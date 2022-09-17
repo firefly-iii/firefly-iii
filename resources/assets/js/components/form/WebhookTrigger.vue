@@ -1,6 +1,6 @@
 <!--
-  - TransactionDescription.vue
-  - Copyright (c) 2019 james@firefly-iii.org
+  - WebhookTrigger.vue
+  - Copyright (c) 2022 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -21,29 +21,23 @@
 <template>
   <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
     <label class="col-sm-4 control-label">
-      {{ $t('form.title') }}
+      {{ $t('form.webhook_trigger') }}
     </label>
     <div class="col-sm-8">
-      <div class="input-group">
-        <input
-            ref="title"
-            :title="$t('form.title')"
-            v-model=title
-            autocomplete="off"
-            class="form-control"
-            name="title"
-            type="text"
-            @input="handleInput"
-            v-bind:placeholder="$t('form.title')"
-        >
-        <span class="input-group-btn">
-            <button
-                class="btn btn-default"
-                tabIndex="-1"
-                type="button"
-                v-on:click="clearTitle"><i class="fa fa-trash-o"></i></button>
-        </span>
-      </div>
+      <select
+          ref="bill"
+          v-model="trigger"
+          :title="$t('form.webhook_trigger')"
+          class="form-control"
+          @input="handleInput"
+          name="webhook_trigger"
+      >
+        <option v-for="trigger in this.triggers"
+                :label="trigger.name"
+                :value="trigger.id">{{ trigger.name }}
+        </option>
+      </select>
+      <p class="help-block" v-html="$t('firefly.webhook_trigger_form_help')"></p>
       <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
@@ -53,6 +47,13 @@
 
 <script>
 export default {
+  name: "WebhookTrigger",
+  data() {
+    return {
+      trigger: 0,
+      triggers: [],
+    };
+  },
   props: {
     error: {
       type: Array,
@@ -62,30 +63,25 @@ export default {
       }
     },
     value: {
-      type: String,
+      type: Number,
       required: true,
     }
   },
-  name: "Title",
   mounted() {
-    this.title = this.value;
-  },
-  components: {},
-  data() {
-    return {
-      title: ''
-    }
+    this.trigger = this.value;
+    this.triggers = [
+      {id: 100, name: this.$t('firefly.webhook_trigger_STORE_TRANSACTION')},
+      {id: 110, name: this.$t('firefly.webhook_trigger_UPDATE_TRANSACTION')},
+      {id: 120, name: this.$t('firefly.webhook_trigger_DESTROY_TRANSACTION')},
+    ];
   },
   methods: {
-    hasError: function () {
-      return this.error.length > 0;
-    },
-    clearTitle: function () {
-      this.title = '';
+    hasError() {
+      return this.error?.length > 0;
     },
     handleInput() {
-      this.$emit('input', this.title);
+      this.$emit('input', this.trigger);
     },
-  }
+  },
 }
 </script>

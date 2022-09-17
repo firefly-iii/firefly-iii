@@ -21,27 +21,28 @@
 <template>
   <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
     <label class="col-sm-4 control-label">
-      {{ $t('form.title') }}
+      {{ $t('form.url') }}
     </label>
     <div class="col-sm-8">
       <div class="input-group">
         <input
             ref="title"
-            :title="$t('form.title')"
-            v-model=title
+            :title="$t('form.url')"
+            v-model="url"
             autocomplete="off"
             class="form-control"
-            name="title"
-            type="text"
             @input="handleInput"
-            v-bind:placeholder="$t('form.title')"
+            name="url"
+            type="text"
+            placeholder="https://"
+            v-on:submit.prevent
         >
         <span class="input-group-btn">
             <button
                 class="btn btn-default"
                 tabIndex="-1"
                 type="button"
-                v-on:click="clearTitle"><i class="fa fa-trash-o"></i></button>
+                v-on:click="clearUrl"><i class="fa fa-trash-o"></i></button>
         </span>
       </div>
       <ul v-for="error in this.error" class="list-unstyled">
@@ -66,25 +67,25 @@ export default {
       required: true,
     }
   },
-  name: "Title",
+  name: "URL",
   mounted() {
-    this.title = this.value;
+    this.url = this.value;
   },
   components: {},
   data() {
     return {
-      title: ''
+      url: null,
     }
   },
   methods: {
     hasError: function () {
-      return this.error.length > 0;
+      return this.error?.length > 0;
     },
-    clearTitle: function () {
-      this.title = '';
+    clearUrl: function () {
+      this.url = '';
     },
     handleInput() {
-      this.$emit('input', this.title);
+      this.$emit('input', this.url);
     },
   }
 }

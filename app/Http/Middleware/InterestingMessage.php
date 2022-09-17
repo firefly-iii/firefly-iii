@@ -28,6 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Webhook;
 use Illuminate\Http\Request;
 use Preferences;
 
@@ -62,6 +63,10 @@ class InterestingMessage
         if ($this->billMessage($request)) {
             Preferences::mark();
             $this->handleBillMessage($request);
+        }
+        if ($this->webhookMessage($request)) {
+            Preferences::mark();
+            $this->handleWebhookMessage($request);
         }
 
         return $next($request);
@@ -186,6 +191,19 @@ class InterestingMessage
 
         return null !== $billId && null !== $message;
     }
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function webhookMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $billId  = $request->get('webhook_id');
+        $message = $request->get('message');
+
+        return null !== $billId && null !== $message;
+    }
 
     /**
      * @param Request $request
@@ -208,6 +226,30 @@ class InterestingMessage
         }
         if ('created' === $message) {
             session()->flash('success', (string) trans('firefly.stored_new_bill', ['name' => $bill->name]));
+        }
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function handleWebhookMessage(Request $request): void
+    {
+
+        // get parameters from request.
+        $webhookId  = $request->get('webhook_id');
+        $message = $request->get('message');
+
+        /** @var Webhook $webhook */
+        $webhook = auth()->user()->webhooks()->withTrashed()->find($webhookId);
+
+        if (null === $webhook) {
+            return;
+        }
+        if ('deleted' === $message) {
+            session()->flash('success', (string) trans('firefly.deleted_webhook', ['title' => $webhook->title]));
+        }
+        if ('created' === $message) {
+            session()->flash('success', (string) trans('firefly.stored_new_webhook', ['title' => $webhook->title]));
         }
     }
 }

@@ -96,9 +96,15 @@
         "actions": "\u64cd\u4f5c",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhooks"
+        "webhooks": "Webhooks",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "URL",
+        "active": "\u6709\u52b9",
         "interest_date": "\u5229\u606f\u65e5",
         "title": "\u30bf\u30a4\u30c8\u30eb",
         "book_date": "\u8a18\u5e33\u65e5",
@@ -107,7 +113,10 @@
         "foreign_amount": "\u5916\u8ca8\u91d1\u984d",
         "payment_date": "\u5f15\u304d\u843d\u3068\u3057\u65e5",
         "invoice_date": "\u9818\u53ce\u66f8\u767a\u884c\u65e5",
-        "internal_reference": "\u5185\u90e8\u53c2\u7167"
+        "internal_reference": "\u5185\u90e8\u53c2\u7167",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "ja"

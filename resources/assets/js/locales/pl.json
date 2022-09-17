@@ -96,9 +96,15 @@
         "actions": "Akcje",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhooki"
+        "webhooks": "Webhooki",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "URL",
+        "active": "Aktywny",
         "interest_date": "Data odsetek",
         "title": "Tytu\u0142",
         "book_date": "Data ksi\u0119gowania",
@@ -107,7 +113,10 @@
         "foreign_amount": "Kwota zagraniczna",
         "payment_date": "Data p\u0142atno\u015bci",
         "invoice_date": "Data faktury",
-        "internal_reference": "Wewn\u0119trzny numer"
+        "internal_reference": "Wewn\u0119trzny numer",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "pl"

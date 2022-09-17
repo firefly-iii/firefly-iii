@@ -96,9 +96,15 @@
         "actions": "Actions",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhooks"
+        "webhooks": "Webhooks",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "Liens",
+        "active": "Actif",
         "interest_date": "Date de valeur (int\u00e9r\u00eats)",
         "title": "Titre",
         "book_date": "Date de r\u00e9servation",
@@ -107,7 +113,10 @@
         "foreign_amount": "Montant en devise \u00e9trang\u00e8re",
         "payment_date": "Date de paiement",
         "invoice_date": "Date de facturation",
-        "internal_reference": "R\u00e9f\u00e9rence interne"
+        "internal_reference": "R\u00e9f\u00e9rence interne",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "fr"

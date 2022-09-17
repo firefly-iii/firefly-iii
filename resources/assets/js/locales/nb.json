@@ -96,9 +96,15 @@
         "actions": "Handlinger",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhooks"
+        "webhooks": "Webhooks",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "URL",
+        "active": "Aktiv",
         "interest_date": "Rentedato",
         "title": "Tittel",
         "book_date": "Bokf\u00f8ringsdato",
@@ -107,7 +113,10 @@
         "foreign_amount": "Utenlandske bel\u00f8p",
         "payment_date": "Betalingsdato",
         "invoice_date": "Fakturadato",
-        "internal_reference": "Intern referanse"
+        "internal_reference": "Intern referanse",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "nb"

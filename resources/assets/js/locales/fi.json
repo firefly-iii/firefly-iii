@@ -96,9 +96,15 @@
         "actions": "Toiminnot",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhookit"
+        "webhooks": "Webhookit",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "URL-osoite",
+        "active": "Aktiivinen",
         "interest_date": "Korkop\u00e4iv\u00e4",
         "title": "Otsikko",
         "book_date": "Kirjausp\u00e4iv\u00e4",
@@ -107,7 +113,10 @@
         "foreign_amount": "Ulkomaan summa",
         "payment_date": "Maksup\u00e4iv\u00e4",
         "invoice_date": "Laskun p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
-        "internal_reference": "Sis\u00e4inen viite"
+        "internal_reference": "Sis\u00e4inen viite",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "fi"

@@ -1239,7 +1239,7 @@ try {
     Breadcrumbs::for(
         'webhooks.create',
         static function (Generator $breadcrumbs): void {
-            $breadcrumbs->parent('index');
+            $breadcrumbs->parent('webhooks.index');
             $breadcrumbs->push(trans('firefly.webhooks_create_breadcrumb'), route('webhooks.create'));
         }
     );

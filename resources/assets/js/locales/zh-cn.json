@@ -96,9 +96,15 @@
         "actions": "\u64cd\u4f5c",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhooks"
+        "webhooks": "Webhooks",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "\u7f51\u5740",
+        "active": "\u542f\u7528",
         "interest_date": "\u5229\u606f\u65e5\u671f",
         "title": "\u6807\u9898",
         "book_date": "\u767b\u8bb0\u65e5\u671f",
@@ -107,7 +113,10 @@
         "foreign_amount": "\u5916\u5e01\u91d1\u989d",
         "payment_date": "\u4ed8\u6b3e\u65e5\u671f",
         "invoice_date": "\u53d1\u7968\u65e5\u671f",
-        "internal_reference": "\u5185\u90e8\u5f15\u7528"
+        "internal_reference": "\u5185\u90e8\u5f15\u7528",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "zh-cn"

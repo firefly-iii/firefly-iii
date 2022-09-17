@@ -96,9 +96,15 @@
         "actions": "Acties",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhooks"
+        "webhooks": "Webhooks",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "URL",
+        "active": "Actief",
         "interest_date": "Rentedatum",
         "title": "Titel",
         "book_date": "Boekdatum",
@@ -107,7 +113,10 @@
         "foreign_amount": "Bedrag in vreemde valuta",
         "payment_date": "Betalingsdatum",
         "invoice_date": "Factuurdatum",
-        "internal_reference": "Interne verwijzing"
+        "internal_reference": "Interne verwijzing",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "nl"

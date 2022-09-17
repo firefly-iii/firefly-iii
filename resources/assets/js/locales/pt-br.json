@@ -96,9 +96,15 @@
         "actions": "A\u00e7\u00f5es",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhooks"
+        "webhooks": "Webhooks",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "link",
+        "active": "Ativar",
         "interest_date": "Data de interesse",
         "title": "T\u00edtulo",
         "book_date": "Data reserva",
@@ -107,7 +113,10 @@
         "foreign_amount": "Montante em moeda estrangeira",
         "payment_date": "Data de pagamento",
         "invoice_date": "Data da Fatura",
-        "internal_reference": "Refer\u00eancia interna"
+        "internal_reference": "Refer\u00eancia interna",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "pt-br"

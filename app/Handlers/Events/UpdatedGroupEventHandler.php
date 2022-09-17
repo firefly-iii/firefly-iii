@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
@@ -106,7 +107,7 @@ class UpdatedGroupEventHandler
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
         $engine->setObjects(new Collection([$group]));
-        $engine->setTrigger(Webhook::TRIGGER_UPDATE_TRANSACTION);
+        $engine->setTrigger(WebhookTrigger::UPDATE_TRANSACTION->value);
         $engine->generateMessages();
 
         event(new RequestedSendWebhookMessages);

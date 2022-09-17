@@ -229,9 +229,9 @@ return [
     // Webhooks
     'webhooks'                             => 'Webhooks',
     'webhooks_breadcrumb'                  => 'Webhooks',
-    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
-    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
-    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_trigger_STORE_TRANSACTION'    => 'After transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'After transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'After transaction delete',
     'webhook_response_TRANSACTIONS'        => 'Account details',
     'webhook_response_ACCOUNTS'            => 'Transaction details',
     'webhook_response_none_NONE'           => 'No details',
@@ -239,6 +239,11 @@ return [
     'inspect'                              => 'Inspect',
     'create_new_webhook'                   => 'Create new webhook',
     'webhooks_create_breadcrumb'           => 'Create new webhook',
+    'webhook_trigger_form_help'            => 'Indicate on what event the webhook wil trigger',
+    'webhook_response_form_help'           => 'Indicate what the webhook must submit to the URL.',
+    'webhook_delivery_form_help'           => 'Which format the webhook must deliver data in.',
+    'webhook_active_form_help'             => 'The webhook must be active or it won\'t be called.',
+    'stored_new_webhook'                   => 'Stored new webhook ":title"',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Authorization Request',

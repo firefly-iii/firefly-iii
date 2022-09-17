@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Webhooks;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
@@ -53,18 +51,16 @@ class CreateController extends Controller
             }
         );
     }
+
     /**
      * Show debug info.
      *
-     * @param Request $request
-     *
      * @return Factory|View
-     * @throws FireflyException
      */
-    public function index(Request $request)
+    public function index()
     {
-
-        return view('webhooks.create');
+        $previousUrl = $this->rememberPreviousUrl('webhooks.create.url');
+        return view('webhooks.create', compact('previousUrl'));
     }
 
 }

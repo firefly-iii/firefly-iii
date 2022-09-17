@@ -96,9 +96,15 @@
         "actions": "M\u0171veletek",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhooks"
+        "webhooks": "Webhooks",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "URL",
+        "active": "Akt\u00edv",
         "interest_date": "Kamatfizet\u00e9si id\u0151pont",
         "title": "C\u00edm",
         "book_date": "K\u00f6nyvel\u00e9s d\u00e1tuma",
@@ -107,7 +113,10 @@
         "foreign_amount": "K\u00fclf\u00f6ldi \u00f6sszeg",
         "payment_date": "Fizet\u00e9s d\u00e1tuma",
         "invoice_date": "Sz\u00e1mla d\u00e1tuma",
-        "internal_reference": "Bels\u0151 hivatkoz\u00e1s"
+        "internal_reference": "Bels\u0151 hivatkoz\u00e1s",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "hu"

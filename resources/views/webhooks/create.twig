@@ -8,5 +8,7 @@
     <div id="webhooks_create"></div>
 {% endblock %}
 {% block scripts %}
-
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var previousUrl = '{{ previousUrl }}';
+    </script>
 {% endblock %}

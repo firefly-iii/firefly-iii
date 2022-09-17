@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Webhook;
 
+use FireflyIII\Enums\WebhookResponse;
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
@@ -114,8 +116,8 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $basicMessage = [
             'uuid'     => $uuid->toString(),
             'user_id'  => 0,
-            'trigger'  => config('firefly.webhooks.triggers')[$webhook->trigger],
-            'response' => config('firefly.webhooks.responses')[$webhook->response],
+            'trigger'  => WebhookTrigger::from($webhook->trigger)->name,
+            'response' => WebhookResponse::from($webhook->response)->name,
             'url'      => $webhook->url,
             'version'  => sprintf('v%d', $this->getVersion()),
             'content'  => [],
@@ -141,10 +143,10 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 );
 
                 return;
-            case Webhook::RESPONSE_NONE:
+            case WebhookResponse::NONE->value:
                 $basicMessage['content'] = [];
                 break;
-            case Webhook::RESPONSE_TRANSACTIONS:
+            case WebhookResponse::TRANSACTIONS->value:
                 $transformer = new TransactionGroupTransformer;
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
@@ -156,7 +158,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     return;
                 }
                 break;
-            case Webhook::RESPONSE_ACCOUNTS:
+            case WebhookResponse::ACCOUNTS->value:
                 $accounts = $this->collectAccounts($model);
                 foreach ($accounts as $account) {
                     $transformer = new AccountTransformer;

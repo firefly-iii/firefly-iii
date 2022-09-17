@@ -96,9 +96,15 @@
         "actions": "\u00c5tg\u00e4rder",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
-        "webhooks": "Webhookar"
+        "webhooks": "Webhookar",
+        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
+        "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
+        "webhook_active_form_help": "The webhook must be active or it won't be called."
     },
     "form": {
+        "url": "L\u00e4nk",
+        "active": "Aktiv",
         "interest_date": "R\u00e4ntedatum",
         "title": "Titel",
         "book_date": "Bokf\u00f6ringsdatum",
@@ -107,7 +113,10 @@
         "foreign_amount": "Utl\u00e4ndskt belopp",
         "payment_date": "Betalningsdatum",
         "invoice_date": "Fakturadatum",
-        "internal_reference": "Intern referens"
+        "internal_reference": "Intern referens",
+        "webhook_response": "Response",
+        "webhook_trigger": "Trigger",
+        "webhook_delivery": "Delivery"
     },
     "config": {
         "html_language": "sv"

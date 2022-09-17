@@ -57,9 +57,9 @@ class CreateRequest extends FormRequest
 
         // this is the way.
         $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? 0;
-        $return['response'] = $responses[$return['response']] ?? 0;
-        $return['delivery'] = $deliveries[$return['delivery']] ?? 0;
+        $return['trigger']  = $triggers[$return['trigger']] ?? intval($return['trigger']);
+        $return['response'] = $responses[$return['response']] ?? intval($return['response']);
+        $return['delivery'] = $deliveries[$return['delivery']] ?? intval($return['delivery']);
 
         return $return;
     }
@@ -71,9 +71,9 @@ class CreateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers   = implode(',', Webhook::getTriggers());
-        $responses  = implode(',', Webhook::getResponses());
-        $deliveries = implode(',', Webhook::getDeliveries());
+        $triggers   = implode(',', Webhook::getTriggers() + array_keys(Webhook::getTriggers()));
+        $responses  = implode(',', Webhook::getResponses() + array_keys(Webhook::getResponses()));
+        $deliveries = implode(',', Webhook::getDeliveries() + array_keys(Webhook::getDeliveries()));
 
         return [
             'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
