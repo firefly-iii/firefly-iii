@@ -814,10 +814,10 @@ class FireflyValidator extends Validator
     public function validateUniqueWebhook($value, $parameters): bool
     {
         if (auth()->check()) {
-            // possible values
-            $triggers   = array_flip(config('firefly.webhooks.triggers'));
-            $responses  = array_flip(config('firefly.webhooks.responses'));
-            $deliveries = array_flip(config('firefly.webhooks.deliveries'));
+
+            $triggers   = array_flip(Webhook::getTriggers());
+            $responses  = array_flip(Webhook::getResponses());
+            $deliveries = array_flip(Webhook::getDeliveries());
 
             // integers
             $trigger  = $triggers[$this->data['trigger']] ?? 0;

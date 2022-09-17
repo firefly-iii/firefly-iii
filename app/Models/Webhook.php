@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Eloquent;
+use FireflyIII\Enums\WebhookDelivery;
+use FireflyIII\Enums\WebhookResponse;
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -76,17 +79,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Webhook extends Model
 {
-
-    // dont forget to update the config in firefly.php
-    public const DELIVERY_JSON               = 300;
-    public const RESPONSE_ACCOUNTS           = 210;
-    public const RESPONSE_NONE               = 220;
-    public const RESPONSE_TRANSACTIONS       = 200;
-    public const TRIGGER_DESTROY_TRANSACTION = 120;
-    public const TRIGGER_STORE_TRANSACTION   = 100;
-    public const TRIGGER_UPDATE_TRANSACTION  = 110;
-
-
     use SoftDeletes;
 
     protected $casts
@@ -137,5 +129,43 @@ class Webhook extends Model
     public function webhookMessages(): HasMany
     {
         return $this->hasMany(WebhookMessage::class);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTriggers(): array
+    {
+        $array = [];
+        $set   = WebhookTrigger::cases();
+        foreach ($set as $item) {
+            $array[$item->value] = $item->name;
+        }
+        return $array;
+    }
+    /**
+     * @return array
+     */
+    public static function getResponses(): array
+    {
+        $array = [];
+        $set   = WebhookResponse::cases();
+        foreach ($set as $item) {
+            $array[$item->value] = $item->name;
+        }
+        return $array;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getDeliveries(): array
+    {
+        $array = [];
+        $set   = WebhookDelivery::cases();
+        foreach ($set as $item) {
+            $array[$item->value] = $item->name;
+        }
+        return $array;
     }
 }

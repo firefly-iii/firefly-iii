@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
+use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -40,9 +41,9 @@ class UpdateRequest extends FormRequest
      */
     public function getData(): array
     {
-        $triggers   = array_flip(config('firefly.webhooks.triggers'));
-        $responses  = array_flip(config('firefly.webhooks.responses'));
-        $deliveries = array_flip(config('firefly.webhooks.deliveries'));
+        $triggers   = array_flip(Webhook::getTriggers());
+        $responses  = array_flip(Webhook::getResponses());
+        $deliveries = array_flip(Webhook::getDeliveries());
 
         $fields = [
             'title'    => ['title', 'convertString'],
@@ -79,9 +80,10 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers   = implode(',', array_values(config('firefly.webhooks.triggers')));
-        $responses  = implode(',', array_values(config('firefly.webhooks.responses')));
-        $deliveries = implode(',', array_values(config('firefly.webhooks.deliveries')));
+
+        $triggers   = implode(',', array_values(Webhook::getTriggers()));
+        $responses  = implode(',', array_values(Webhook::getResponses()));
+        $deliveries = implode(',', array_values(Webhook::getDeliveries()));
         $webhook    = $this->route()->parameter('webhook');
 
         return [

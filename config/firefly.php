@@ -82,6 +82,9 @@ use FireflyIII\TransactionRules\Actions\SetNotes;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
 use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\User;
+use FireflyIII\Enums\WebhookResponse as WebhookResponseEnum;
+use FireflyIII\Enums\WebhookDelivery as WebhookDeliveryEnum;
+use FireflyIII\Enums\WebhookTrigger as WebhookTriggerEnum;
 
 
 /*
@@ -727,20 +730,7 @@ return [
         'recurrence_total', 'recurrence_count',
     ],
     'webhooks'                  => [
-        'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
-        'triggers'     => [
-            Webhook::TRIGGER_STORE_TRANSACTION   => 'TRIGGER_STORE_TRANSACTION',
-            Webhook::TRIGGER_UPDATE_TRANSACTION  => 'TRIGGER_UPDATE_TRANSACTION',
-            Webhook::TRIGGER_DESTROY_TRANSACTION => 'TRIGGER_DESTROY_TRANSACTION',
-        ],
-        'responses'    => [
-            Webhook::RESPONSE_TRANSACTIONS => 'RESPONSE_TRANSACTIONS',
-            Webhook::RESPONSE_ACCOUNTS     => 'RESPONSE_ACCOUNTS',
-            Webhook::RESPONSE_NONE         => 'RESPONSE_NONE',
-        ],
-        'deliveries'   => [
-            Webhook::DELIVERY_JSON => 'DELIVERY_JSON',
-        ],
+        'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3)
     ],
     'can_have_virtual_amounts'  => [AccountType::ASSET],
     'can_have_opening_balance'  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],

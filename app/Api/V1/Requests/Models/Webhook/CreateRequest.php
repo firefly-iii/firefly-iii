@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
+use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -40,9 +41,10 @@ class CreateRequest extends FormRequest
      */
     public function getData(): array
     {
-        $triggers   = array_flip(config('firefly.webhooks.triggers'));
-        $responses  = array_flip(config('firefly.webhooks.responses'));
-        $deliveries = array_flip(config('firefly.webhooks.deliveries'));
+
+        $triggers   = array_flip(Webhook::getTriggers());
+        $responses  = array_flip(Webhook::getResponses());
+        $deliveries = array_flip(Webhook::getDeliveries());
 
         $fields = [
             'title'    => ['title', 'convertString'],
@@ -69,9 +71,9 @@ class CreateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers   = implode(',', array_values(config('firefly.webhooks.triggers')));
-        $responses  = implode(',', array_values(config('firefly.webhooks.responses')));
-        $deliveries = implode(',', array_values(config('firefly.webhooks.deliveries')));
+        $triggers   = implode(',', Webhook::getTriggers());
+        $responses  = implode(',', Webhook::getResponses());
+        $deliveries = implode(',', Webhook::getDeliveries());
 
         return [
             'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
@@ -79,7 +81,9 @@ class CreateRequest extends FormRequest
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),
             'delivery' => sprintf('required|in:%s', $deliveries),
-            'url'      => ['required', 'url', 'starts_with:https://', 'uniqueWebhook'],
+            'url'      => ['required', 'url', 'uniqueWebhook'],
         ];
     }
+
+
 }
