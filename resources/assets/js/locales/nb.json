@@ -85,7 +85,18 @@
         "multi_account_warning_unknown": "Avhengig av hvilken type transaksjon du oppretter, Kilden og\/eller destinasjonskonto for etterf\u00f8lgende delinger kan overstyres av det som er definert i transaksjonens f\u00f8rste del.",
         "multi_account_warning_withdrawal": "Husk at kildekontoen for etterf\u00f8lgende oppsplitting skal overlates av hva som defineres i den f\u00f8rste delen av uttrekket.",
         "multi_account_warning_deposit": "Husk at mottakerkontoen for etterf\u00f8lgende oppsplitting skal overstyres av det som er definert i den f\u00f8rste delen av depositumet.",
-        "multi_account_warning_transfer": "Husk at kildens pluss destinasjonskonto med etterf\u00f8lgende oppdeling overstyres av det som er definert i en f\u00f8rste del av overf\u00f8ringen."
+        "multi_account_warning_transfer": "Husk at kildens pluss destinasjonskonto med etterf\u00f8lgende oppdeling overstyres av det som er definert i en f\u00f8rste del av overf\u00f8ringen.",
+        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
+        "webhook_response_TRANSACTIONS": "Account details",
+        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_response_none_NONE": "No details",
+        "webhook_delivery_JSON": "JSON",
+        "actions": "Handlinger",
+        "inspect": "Inspect",
+        "create_new_webhook": "Create new webhook",
+        "webhooks": "Webhooks"
     },
     "form": {
         "interest_date": "Rentedato",

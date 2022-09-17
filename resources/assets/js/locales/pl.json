@@ -85,7 +85,18 @@
         "multi_account_warning_unknown": "W zale\u017cno\u015bci od rodzaju transakcji, kt\u00f3r\u0105 tworzysz, konto \u017ar\u00f3d\u0142owe i\/lub docelowe kolejnych podzia\u0142\u00f3w mo\u017ce zosta\u0107 ustawione na konto zdefiniowane w pierwszym podziale transakcji.",
         "multi_account_warning_withdrawal": "Pami\u0119taj, \u017ce konto \u017ar\u00f3d\u0142owe kolejnych podzia\u0142\u00f3w zostanie ustawione na konto zdefiniowane w pierwszym podziale wyp\u0142aty.",
         "multi_account_warning_deposit": "Pami\u0119taj, \u017ce konto docelowe kolejnych podzia\u0142\u00f3w zostanie ustawione na konto zdefiniowane w pierwszym podziale wp\u0142aty.",
-        "multi_account_warning_transfer": "Pami\u0119taj, \u017ce konta \u017ar\u00f3d\u0142owe i docelowe kolejnych podzia\u0142\u00f3w zostan\u0105 ustawione na konto zdefiniowane w pierwszym podziale transferu."
+        "multi_account_warning_transfer": "Pami\u0119taj, \u017ce konta \u017ar\u00f3d\u0142owe i docelowe kolejnych podzia\u0142\u00f3w zostan\u0105 ustawione na konto zdefiniowane w pierwszym podziale transferu.",
+        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
+        "webhook_response_TRANSACTIONS": "Account details",
+        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_response_none_NONE": "No details",
+        "webhook_delivery_JSON": "JSON",
+        "actions": "Akcje",
+        "inspect": "Inspect",
+        "create_new_webhook": "Create new webhook",
+        "webhooks": "Webhooki"
     },
     "form": {
         "interest_date": "Data odsetek",

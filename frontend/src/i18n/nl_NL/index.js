@@ -18,7 +18,7 @@ export default {
     },
     "list": {
         "name": "Naam",
-        "account_number": "Account number",
+        "account_number": "Rekeningnummer",
         "currentBalance": "Huidig saldo",
         "lastActivity": "Laatste activiteit",
         "active": "Actief?"
@@ -45,7 +45,7 @@ export default {
         "delete": "Verwijder",
         "reconcile": "Afstemmen",
         "create_new_asset": "Nieuwe betaalrekening",
-        "confirm_action": "Confirm action",
+        "confirm_action": "Actie bevestigen",
         "new_budget": "Nieuw budget",
         "new_asset_account": "Nieuwe betaalrekening",
         "newTransfer": "Nieuwe overschrijving",

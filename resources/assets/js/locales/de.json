@@ -85,7 +85,18 @@
         "multi_account_warning_unknown": "Abh\u00e4ngig von der Art der Buchung, die Sie anlegen, kann das Quell- und\/oder Zielkonto nachfolgender Aufteilungen durch das \u00fcberschrieben werden, was in der ersten Aufteilung der Buchung definiert wurde.",
         "multi_account_warning_withdrawal": "Bedenken Sie, dass das Quellkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Abhebung definiert ist, au\u00dfer Kraft gesetzt wird.",
         "multi_account_warning_deposit": "Bedenken Sie, dass das Zielkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Einzahlung definiert ist, au\u00dfer Kraft gesetzt wird.",
-        "multi_account_warning_transfer": "Bedenken Sie, dass das Quell- und Zielkonto nachfolgender Aufteilungen durch das, was in der ersten Aufteilung der \u00dcbertragung definiert ist, au\u00dfer Kraft gesetzt wird."
+        "multi_account_warning_transfer": "Bedenken Sie, dass das Quell- und Zielkonto nachfolgender Aufteilungen durch das, was in der ersten Aufteilung der \u00dcbertragung definiert ist, au\u00dfer Kraft gesetzt wird.",
+        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
+        "webhook_response_TRANSACTIONS": "Account details",
+        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_response_none_NONE": "No details",
+        "webhook_delivery_JSON": "JSON",
+        "actions": "Aktionen",
+        "inspect": "Inspect",
+        "create_new_webhook": "Create new webhook",
+        "webhooks": "Webhooks"
     },
     "form": {
         "interest_date": "Zinstermin",

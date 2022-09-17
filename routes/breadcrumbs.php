@@ -1228,6 +1228,22 @@ try {
         }
     );
 
+    // webhooks
+    Breadcrumbs::for(
+        'webhooks.index',
+        static function (Generator $breadcrumbs): void {
+            $breadcrumbs->parent('index');
+            $breadcrumbs->push(trans('firefly.webhooks_breadcrumb'), route('webhooks.index'));
+        }
+    );
+    Breadcrumbs::for(
+        'webhooks.create',
+        static function (Generator $breadcrumbs): void {
+            $breadcrumbs->parent('index');
+            $breadcrumbs->push(trans('firefly.webhooks_create_breadcrumb'), route('webhooks.create'));
+        }
+    );
+
 } catch (DuplicateBreadcrumbException $e) {
     // @ignoreException
 }

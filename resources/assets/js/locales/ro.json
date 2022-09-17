@@ -85,7 +85,18 @@
         "multi_account_warning_unknown": "\u00cen func\u021bie de tipul de tranzac\u021bie pe care o crea\u021bi, contul sursei \u0219i\/sau destina\u021biei frac\u021bion\u0103rilor ulterioare poate fi dep\u0103\u0219it cu orice se define\u0219te \u00een prima \u00eemp\u0103r\u021bire a tranzac\u021biei.",
         "multi_account_warning_withdrawal": "Re\u0163ine\u0163i faptul c\u0103 sursa scind\u0103rilor ulterioare va fi anulat\u0103 de orice altceva definit \u00een prima \u00eemp\u0103r\u0163ire a retragerii.",
         "multi_account_warning_deposit": "\u021aine\u021bi cont de faptul c\u0103 destina\u021bia scind\u0103rilor ulterioare va fi dep\u0103\u0219it\u0103 cu orice se define\u0219te la prima \u00eemp\u0103r\u021bire a depozitului.",
-        "multi_account_warning_transfer": "Re\u0163ine\u0163i faptul c\u0103 contul sursei + destina\u0163ia frac\u0163ion\u0103rilor ulterioare va fi anulat de orice se define\u015fte \u00een prima \u00eemp\u0103r\u0163ire a transferului."
+        "multi_account_warning_transfer": "Re\u0163ine\u0163i faptul c\u0103 contul sursei + destina\u0163ia frac\u0163ion\u0103rilor ulterioare va fi anulat de orice se define\u015fte \u00een prima \u00eemp\u0103r\u0163ire a transferului.",
+        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
+        "webhook_response_TRANSACTIONS": "Account details",
+        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_response_none_NONE": "No details",
+        "webhook_delivery_JSON": "JSON",
+        "actions": "Ac\u021biuni",
+        "inspect": "Inspect",
+        "create_new_webhook": "Create new webhook",
+        "webhooks": "Webhook-uri"
     },
     "form": {
         "interest_date": "Data de interes",

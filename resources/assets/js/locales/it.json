@@ -85,7 +85,18 @@
         "multi_account_warning_unknown": "A seconda del tipo di transazione che hai creato, il conto di origine e\/o destinazione delle successive suddivisioni pu\u00f2 essere sovrascritto da qualsiasi cosa sia definita nella prima suddivisione della transazione.",
         "multi_account_warning_withdrawal": "Ricorda che il conto di origine delle successive suddivisioni verr\u00e0 sovrascritto da quello definito nella prima suddivisione del prelievo.",
         "multi_account_warning_deposit": "Ricorda che il conto di destinazione delle successive suddivisioni verr\u00e0 sovrascritto da quello definito nella prima suddivisione del deposito.",
-        "multi_account_warning_transfer": "Ricorda che il conto di origine e il conto di destinazione delle successive suddivisioni verranno sovrascritti da quelli definiti nella prima suddivisione del trasferimento."
+        "multi_account_warning_transfer": "Ricorda che il conto di origine e il conto di destinazione delle successive suddivisioni verranno sovrascritti da quelli definiti nella prima suddivisione del trasferimento.",
+        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
+        "webhook_response_TRANSACTIONS": "Account details",
+        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_response_none_NONE": "No details",
+        "webhook_delivery_JSON": "JSON",
+        "actions": "Azioni",
+        "inspect": "Inspect",
+        "create_new_webhook": "Create new webhook",
+        "webhooks": "Webhook"
     },
     "form": {
         "interest_date": "Data di valuta",

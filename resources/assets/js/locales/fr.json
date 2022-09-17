@@ -85,7 +85,18 @@
         "multi_account_warning_unknown": "Selon le type d'op\u00e9ration que vous cr\u00e9ez, le(s) compte(s) source et\/ou de destination des ventilations suivantes peuvent \u00eatre remplac\u00e9s par celui de la premi\u00e8re ventilation de l'op\u00e9ration.",
         "multi_account_warning_withdrawal": "Gardez en t\u00eate que le compte source des ventilations suivantes peut \u00eatre remplac\u00e9 par celui de la premi\u00e8re ventilation de la d\u00e9pense.",
         "multi_account_warning_deposit": "Gardez en t\u00eate que le compte de destination des ventilations suivantes peut \u00eatre remplac\u00e9 par celui de la premi\u00e8re ventilation du d\u00e9p\u00f4t.",
-        "multi_account_warning_transfer": "Gardez en t\u00eate que les comptes source et de destination des ventilations suivantes peuvent \u00eatre remplac\u00e9s par ceux de la premi\u00e8re ventilation du transfert."
+        "multi_account_warning_transfer": "Gardez en t\u00eate que les comptes source et de destination des ventilations suivantes peuvent \u00eatre remplac\u00e9s par ceux de la premi\u00e8re ventilation du transfert.",
+        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
+        "webhook_response_TRANSACTIONS": "Account details",
+        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_response_none_NONE": "No details",
+        "webhook_delivery_JSON": "JSON",
+        "actions": "Actions",
+        "inspect": "Inspect",
+        "create_new_webhook": "Create new webhook",
+        "webhooks": "Webhooks"
     },
     "form": {
         "interest_date": "Date de valeur (int\u00e9r\u00eats)",

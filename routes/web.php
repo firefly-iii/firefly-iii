@@ -1091,6 +1091,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Webhooks', 'prefix' => 'webhooks', 'as' => 'webhooks.'],
     static function () {
         Route::get('index', ['uses' => 'IndexController@index', 'as' => 'index']);
+        Route::get('create', ['uses' => 'CreateController@index', 'as' => 'create']);
     }
 );
 
