@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Название копилки должно быть уникальным.',
     'unique_object_group'            => 'Название группы должно быть уникальным',
     'starts_with'                    => 'Значение должно начинаться с :values.',
-    'unique_webhook'                 => 'У вас уже есть webhook с таким именем.',
-    'unique_existing_webhook'        => 'У вас уже есть другой webhook с таким именем.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 

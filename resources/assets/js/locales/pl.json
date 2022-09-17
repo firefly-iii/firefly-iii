@@ -100,6 +100,7 @@
     },
     "form": {
         "interest_date": "Data odsetek",
+        "title": "Tytu\u0142",
         "book_date": "Data ksi\u0119gowania",
         "process_date": "Data przetworzenia",
         "due_date": "Termin realizacji",

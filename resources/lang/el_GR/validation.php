@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Το όνομα του κουμπαρά πρέπει να είναι μοναδικό.',
     'unique_object_group'            => 'Το όνομα της ομάδας πρέπει να είναι μοναδικό',
     'starts_with'                    => 'Η τιμή πρέπει να ξεκινά με :values.',
-    'unique_webhook'                 => 'Έχετε ήδη ένα webhook με αυτές τις τιμές.',
-    'unique_existing_webhook'        => 'Έχετε ήδη ένα άλλο webhook με αυτές τις τιμές.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Και οι δύο λογαριασμοί πρέπει να έχουν τον ίδιο τύπο λογαριασμού',
     'same_account_currency'          => 'Και οι δύο λογαριασμοί πρέπει να έχουν την ίδια ρύθμιση νομίσματος',
 

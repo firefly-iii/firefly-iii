@@ -228,6 +228,17 @@ return [
 
     // Webhooks
     'webhooks'                             => 'Webhooks',
+    'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_response_TRANSACTIONS'        => 'Account details',
+    'webhook_response_ACCOUNTS'            => 'Transaction details',
+    'webhook_response_none_NONE'           => 'No details',
+    'webhook_delivery_JSON'                => 'JSON',
+    'inspect'                              => 'Inspect',
+    'create_new_webhook'                   => 'Create new webhook',
+    'webhooks_create_breadcrumb'           => 'Create new webhook',
 
     // API access
     'authorization_request'                => 'Firefly III v:version autorisatieverzoek',
@@ -247,7 +258,6 @@ return [
     'all_source_accounts'                  => 'Bronrekeningen',
     'back_to_index'                        => 'Terug naar de index',
     'cant_logout_guard'                    => 'Firefly III kan je niet uitloggen.',
-    'external_url'                         => 'Externe URL',
     'internal_reference'                   => 'Interne referentie',
 
     // check for updates:

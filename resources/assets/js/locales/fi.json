@@ -100,6 +100,7 @@
     },
     "form": {
         "interest_date": "Korkop\u00e4iv\u00e4",
+        "title": "Otsikko",
         "book_date": "Kirjausp\u00e4iv\u00e4",
         "process_date": "K\u00e4sittelyp\u00e4iv\u00e4",
         "due_date": "Er\u00e4p\u00e4iv\u00e4",

@@ -100,6 +100,7 @@
     },
     "form": {
         "interest_date": "Date de valeur (int\u00e9r\u00eats)",
+        "title": "Titre",
         "book_date": "Date de r\u00e9servation",
         "process_date": "Date de traitement",
         "due_date": "\u00c9ch\u00e9ance",

@@ -21,19 +21,19 @@
 <template>
   <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
     <div class="col-sm-12 text-sm">
-      {{ $t('firefly.title') }}
+      {{ $t('form.title') }}
     </div>
     <div class="col-sm-12">
       <div class="input-group">
         <input
             ref="title"
-            :title="$t('firefly.title')"
+            :title="$t('form.title')"
             :value="value"
             autocomplete="off"
             class="form-control"
             name="title"
             type="text"
-            v-bind:placeholder="$t('firefly.title')"
+            v-bind:placeholder="$t('form.title')"
             @input="handleInput"
             v-on:keypress="handleEnter" v-on:submit.prevent
         >

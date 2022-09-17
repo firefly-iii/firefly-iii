@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'En nombre de la hucha debe ser único.',
     'unique_object_group'            => 'El nombre del grupo debe ser único',
     'starts_with'                    => 'El valor debe comenzar con :values.',
-    'unique_webhook'                 => 'Ya tiene un webhook con estos valores.',
-    'unique_existing_webhook'        => 'Ya tiene otro webhook con estos valores.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Ambas cuentas deben ser del mismo tipo de cuenta',
     'same_account_currency'          => 'Ambas cuentas deben tener la misma configuración de moneda',
 

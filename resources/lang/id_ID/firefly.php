@@ -228,6 +228,17 @@ return [
 
     // Webhooks
     'webhooks'                             => 'Webhooks',
+    'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_response_TRANSACTIONS'        => 'Account details',
+    'webhook_response_ACCOUNTS'            => 'Transaction details',
+    'webhook_response_none_NONE'           => 'No details',
+    'webhook_delivery_JSON'                => 'JSON',
+    'inspect'                              => 'Inspect',
+    'create_new_webhook'                   => 'Create new webhook',
+    'webhooks_create_breadcrumb'           => 'Create new webhook',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Permintaan Otorisasi',
@@ -247,7 +258,6 @@ return [
     'all_source_accounts'                  => 'Rekening asal',
     'back_to_index'                        => 'Kembali ke indeks',
     'cant_logout_guard'                    => 'Firefly III tidak dapat mengeluarkan Anda.',
-    'external_url'                         => 'URL luar',
     'internal_reference'                   => 'Referensi internal',
 
     // check for updates:
@@ -1006,7 +1016,7 @@ return [
     'optional_field_meta_business'              => 'Bisnis',
     'optional_field_attachments'                => 'Lampiran',
     'optional_field_meta_data'                  => 'Data meta opsional',
-    'external_url'                              => 'External URL',
+    'external_url'                              => 'URL luar',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',

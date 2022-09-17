@@ -228,6 +228,17 @@ return [
 
     // Webhooks
     'webhooks'                             => 'Webhooky',
+    'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_response_TRANSACTIONS'        => 'Account details',
+    'webhook_response_ACCOUNTS'            => 'Transaction details',
+    'webhook_response_none_NONE'           => 'No details',
+    'webhook_delivery_JSON'                => 'JSON',
+    'inspect'                              => 'Inspect',
+    'create_new_webhook'                   => 'Create new webhook',
+    'webhooks_create_breadcrumb'           => 'Create new webhook',
 
     // API access
     'authorization_request'                => 'Požiadavka na overenie – Firefly III verzia :version',
@@ -247,7 +258,6 @@ return [
     'all_source_accounts'                  => 'Zdrojové účty',
     'back_to_index'                        => 'Späť na zoznam',
     'cant_logout_guard'                    => 'Firefly III sa nepodarilo vás odhlásiť.',
-    'external_url'                         => 'Externá URL',
     'internal_reference'                   => 'Interná referencia',
 
     // check for updates:
@@ -1006,7 +1016,7 @@ return [
     'optional_field_meta_business'              => 'Spoločnosť',
     'optional_field_attachments'                => 'Prílohy',
     'optional_field_meta_data'                  => 'Voliteľné metadata',
-    'external_url'                              => 'External URL',
+    'external_url'                              => 'Externá URL',
 
     // profile:
     'delete_stuff_header'                       => 'Odstrániť údaje',

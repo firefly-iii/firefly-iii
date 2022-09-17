@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => '貯金箱の名前は一意である必要があります。',
     'unique_object_group'            => 'グループ名は一意でなければなりません',
     'starts_with'                    => '値は :values で始まる必要があります。',
-    'unique_webhook'                 => 'すでにこれらの値の Webhook があります。',
-    'unique_existing_webhook'        => 'これらの値を持つ別の Webhook が既にあります。',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'これらの口座は同じ口座種別でなければなりません',
     'same_account_currency'          => 'これらの口座には同じ通貨設定でなければいけません',
 

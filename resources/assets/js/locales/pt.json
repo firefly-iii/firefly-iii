@@ -30,7 +30,7 @@
         "category": "Categoria",
         "attachments": "Anexos",
         "notes": "Notas",
-        "external_url": "External URL",
+        "external_url": "URL Externo",
         "update_transaction": "Actualizar transac\u00e7\u00e3o",
         "after_update_create_another": "Ap\u00f3s a atualiza\u00e7\u00e3o, regresse aqui para continuar a editar.",
         "store_as_new": "Guarde como uma nova transa\u00e7\u00e3o em vez de atualizar.",
@@ -100,6 +100,7 @@
     },
     "form": {
         "interest_date": "Data de juros",
+        "title": "Titulo",
         "book_date": "Data de registo",
         "process_date": "Data de processamento",
         "due_date": "Data de vencimento",

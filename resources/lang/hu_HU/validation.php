@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'A malacpersely nevének egyedinek kell lennie.',
     'unique_object_group'            => 'Csoport neve már foglalt',
     'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 

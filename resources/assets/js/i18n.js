@@ -43,6 +43,7 @@ module.exports = new vuei18n({
         'pt-br': require('./locales/pt-br.json'),
         'pt-pt': require('./locales/pt.json'),
         'ro': require('./locales/ro.json'),
+        'tr': require('./locales/tr.json'),
         'ru': require('./locales/ru.json'),
         //'zh': require('./locales/zh.json'),
         'zh-tw': require('./locales/zh-tw.json'),

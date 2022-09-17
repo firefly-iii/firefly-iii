@@ -30,7 +30,7 @@
         "category": "Kategori",
         "attachments": "Vedlegg",
         "notes": "Notater",
-        "external_url": "External URL",
+        "external_url": "Ekstern URL",
         "update_transaction": "Update transaction",
         "after_update_create_another": "G\u00e5 tilbake hit etter oppdatering, for \u00e5 fortsette \u00e5 redigere.",
         "store_as_new": "Lagre som en ny transaksjon istedenfor \u00e5 oppdatere.",
@@ -100,6 +100,7 @@
     },
     "form": {
         "interest_date": "Rentedato",
+        "title": "Tittel",
         "book_date": "Bokf\u00f8ringsdato",
         "process_date": "Prosesseringsdato",
         "due_date": "Forfallsdato",

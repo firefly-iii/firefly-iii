@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Je třeba, aby se názvy pokladniček neopakovaly.',
     'unique_object_group'            => 'Název skupiny musí být jedinečný',
     'starts_with'                    => 'Hodnota musí začínat :values.',
-    'unique_webhook'                 => 'Webhook s těmito hodnotami již existuje.',
-    'unique_existing_webhook'        => 'Jiný webhook s těmito hodnotami již existuje.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Oba účty musí být stejného typu',
     'same_account_currency'          => 'Oba účty musí mít stejné nastavení měny',
 

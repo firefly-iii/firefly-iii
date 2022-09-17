@@ -228,6 +228,17 @@ return [
 
     // Webhooks
     'webhooks'                             => 'Webhookar',
+    'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_response_TRANSACTIONS'        => 'Account details',
+    'webhook_response_ACCOUNTS'            => 'Transaction details',
+    'webhook_response_none_NONE'           => 'No details',
+    'webhook_delivery_JSON'                => 'JSON',
+    'inspect'                              => 'Inspect',
+    'create_new_webhook'                   => 'Create new webhook',
+    'webhooks_create_breadcrumb'           => 'Create new webhook',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Auktorisationsbegäran',
@@ -247,7 +258,6 @@ return [
     'all_source_accounts'                  => 'Källkonton',
     'back_to_index'                        => 'Åter till index',
     'cant_logout_guard'                    => 'Firefly III kan inte logga ut dig.',
-    'external_url'                         => 'Extern URL',
     'internal_reference'                   => 'Intern referens',
 
     // check for updates:

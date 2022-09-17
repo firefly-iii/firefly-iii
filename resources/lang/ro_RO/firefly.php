@@ -228,6 +228,17 @@ return [
 
     // Webhooks
     'webhooks'                             => 'Webhook-uri',
+    'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_response_TRANSACTIONS'        => 'Account details',
+    'webhook_response_ACCOUNTS'            => 'Transaction details',
+    'webhook_response_none_NONE'           => 'No details',
+    'webhook_delivery_JSON'                => 'JSON',
+    'inspect'                              => 'Inspect',
+    'create_new_webhook'                   => 'Create new webhook',
+    'webhooks_create_breadcrumb'           => 'Create new webhook',
 
     // API access
     'authorization_request'                => 'v: Solicitare de autorizare',
@@ -247,7 +258,6 @@ return [
     'all_source_accounts'                  => 'Conturi sursă',
     'back_to_index'                        => 'Înapoi la index',
     'cant_logout_guard'                    => 'Firefly III nu vă poate deconecta.',
-    'external_url'                         => 'URL extern',
     'internal_reference'                   => 'Referință internă',
 
     // check for updates:
@@ -1006,7 +1016,7 @@ return [
     'optional_field_meta_business'              => 'Afaceri',
     'optional_field_attachments'                => 'Ataşamente',
     'optional_field_meta_data'                  => 'Meta date opționale',
-    'external_url'                              => 'External URL',
+    'external_url'                              => 'URL extern',
 
     // profile:
     'delete_stuff_header'                       => 'Ștergeți datele',

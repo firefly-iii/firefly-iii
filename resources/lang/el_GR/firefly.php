@@ -228,6 +228,17 @@ return [
 
     // Webhooks
     'webhooks'                             => 'Webhooks',
+    'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_response_TRANSACTIONS'        => 'Account details',
+    'webhook_response_ACCOUNTS'            => 'Transaction details',
+    'webhook_response_none_NONE'           => 'No details',
+    'webhook_delivery_JSON'                => 'JSON',
+    'inspect'                              => 'Inspect',
+    'create_new_webhook'                   => 'Create new webhook',
+    'webhooks_create_breadcrumb'           => 'Create new webhook',
 
     // API access
     'authorization_request'                => 'Αίτημα Εξουσιοδότησης Firefly III v:version',
@@ -247,7 +258,6 @@ return [
     'all_source_accounts'                  => 'Λογαριασμοί προέλευσης',
     'back_to_index'                        => 'Επιστροφή στο ευρετήριο',
     'cant_logout_guard'                    => 'Το Firefly III δε μπορεί να σας αποσυνδέσει.',
-    'external_url'                         => 'Εξωτερικό URL',
     'internal_reference'                   => 'Εσωτερική αναφορά',
 
     // check for updates:

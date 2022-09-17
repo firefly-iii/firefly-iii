@@ -100,6 +100,7 @@
     },
     "form": {
         "interest_date": "Kamatfizet\u00e9si id\u0151pont",
+        "title": "C\u00edm",
         "book_date": "K\u00f6nyvel\u00e9s d\u00e1tuma",
         "process_date": "Feldolgoz\u00e1s d\u00e1tuma",
         "due_date": "Lej\u00e1rati id\u0151pont",

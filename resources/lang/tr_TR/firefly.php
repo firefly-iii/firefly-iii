@@ -229,6 +229,17 @@ return [
 
     // Webhooks
     'webhooks'                             => 'Web kancaları',
+    'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_response_TRANSACTIONS'        => 'Account details',
+    'webhook_response_ACCOUNTS'            => 'Transaction details',
+    'webhook_response_none_NONE'           => 'No details',
+    'webhook_delivery_JSON'                => 'JSON',
+    'inspect'                              => 'Inspect',
+    'create_new_webhook'                   => 'Create new webhook',
+    'webhooks_create_breadcrumb'           => 'Create new webhook',
 
     // API access
     'authorization_request'                => 'Firefly III v: version Yetkilendirme İsteği',
@@ -248,7 +259,6 @@ return [
     'all_source_accounts'                  => 'Kaynak Hesap',
     'back_to_index'                        => 'Dizine geri dön',
     'cant_logout_guard'                    => 'Firefly III oturumunuzu kapatamaz.',
-    'external_url'                         => 'Harici URL',
     'internal_reference'                   => 'Dahili referans',
 
     // check for updates:
@@ -1007,7 +1017,7 @@ return [
     'optional_field_meta_business'              => 'İş',
     'optional_field_attachments'                => 'Ekler',
     'optional_field_meta_data'                  => 'İsteğe bağlı meta veriler',
-    'external_url'                              => 'Dış URL',
+    'external_url'                              => 'Harici URL',
 
     // profile:
     'delete_stuff_header'                       => 'Verileri sil',

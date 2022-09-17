@@ -228,6 +228,17 @@ return [
 
     // Webhooks
     'webhooks'                             => 'Веб-хуки',
+    'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhook_trigger_STORE_TRANSACTION'    => 'On transaction creation',
+    'webhook_trigger_UPDATE_TRANSACTION'   => 'On transaction update',
+    'webhook_trigger_DESTROY_TRANSACTION'  => 'On transaction delete',
+    'webhook_response_TRANSACTIONS'        => 'Account details',
+    'webhook_response_ACCOUNTS'            => 'Transaction details',
+    'webhook_response_none_NONE'           => 'No details',
+    'webhook_delivery_JSON'                => 'JSON',
+    'inspect'                              => 'Inspect',
+    'create_new_webhook'                   => 'Create new webhook',
+    'webhooks_create_breadcrumb'           => 'Create new webhook',
 
     // API access
     'authorization_request'                => 'Запрос авторизации Firefly III v:version',
@@ -247,7 +258,6 @@ return [
     'all_source_accounts'                  => 'Счета-источники',
     'back_to_index'                        => 'Вернуться к содержанию',
     'cant_logout_guard'                    => 'Firefly III не может выйти из системы.',
-    'external_url'                         => 'Внешний URL-адрес',
     'internal_reference'                   => 'Внутренняя ссылка',
 
     // check for updates:
@@ -1006,7 +1016,7 @@ return [
     'optional_field_meta_business'              => 'Бизнес',
     'optional_field_attachments'                => 'Вложения',
     'optional_field_meta_data'                  => 'Расширенные данные',
-    'external_url'                              => 'External URL',
+    'external_url'                              => 'Внешний URL-адрес',
 
     // profile:
     'delete_stuff_header'                       => 'Удалить данные',

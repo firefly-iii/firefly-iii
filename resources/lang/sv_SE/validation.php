@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Namnet på spargrisen måste vara unikt.',
     'unique_object_group'            => 'Gruppnamnet måste vara unikt',
     'starts_with'                    => 'Värdet måste börja med :values.',
-    'unique_webhook'                 => 'Du har redan en webhook med dessa värden.',
-    'unique_existing_webhook'        => 'Du har redan en annan webhook med dessa värden.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Båda kontona måste vara samma kontotyp',
     'same_account_currency'          => 'Båda kontona måste ha samma valutainställning',
 

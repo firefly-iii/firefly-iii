@@ -100,6 +100,7 @@
     },
     "form": {
         "interest_date": "\u5229\u606f\u65e5\u671f",
+        "title": "\u6807\u9898",
         "book_date": "\u767b\u8bb0\u65e5\u671f",
         "process_date": "\u5904\u7406\u65e5\u671f",
         "due_date": "\u5230\u671f\u65e5",
