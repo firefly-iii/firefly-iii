@@ -106,6 +106,13 @@ class PreferencesController extends Controller
         $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
         $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
 
+        // notification preferences (single value for each):
+
+        $notifications = [];
+        foreach (config('firefly.available_notifications') as $notification) {
+            $notifications[$notification] = app('preferences')->get(sprintf('notification_%s', $notification), true)->data;
+        }
+
         ksort($languages);
 
         // list of locales also has "equal" which makes it equal to whatever the language is.
@@ -131,6 +138,7 @@ class PreferencesController extends Controller
                 'isDocker',
                 'frontPageAccounts',
                 'languages',
+                'notifications',
                 'locales',
                 'locale',
                 'tjOptionalFields',
@@ -161,6 +169,18 @@ class PreferencesController extends Controller
                 $frontPageAccounts[] = (int) $id;
             }
             app('preferences')->set('frontPageAccounts', $frontPageAccounts);
+        }
+
+        // extract notifications:
+        $all = $request->all();
+        foreach(config('firefly.available_notifications') as $option) {
+            $key = sprintf('notification_%s', $option);
+            if(array_key_exists($key, $all)) {
+                app('preferences')->set($key, true);
+            }
+            if(!array_key_exists($key, $all)) {
+                app('preferences')->set($key, false);
+            }
         }
 
         // view range:

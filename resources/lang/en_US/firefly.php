@@ -1014,6 +1014,7 @@ return [
     'preferences_frontpage'                     => 'Home screen',
     'preferences_security'                      => 'Security',
     'preferences_layout'                        => 'Layout',
+    'preferences_notifications'                 => 'Notifications',
     'pref_home_show_deposits'                   => 'Show deposits on the home screen',
     'pref_home_show_deposits_info'              => 'The home screen already shows your expense accounts. Should it also show your revenue accounts?',
     'pref_home_do_show_deposits'                => 'Yes, show them',
@@ -1044,7 +1045,12 @@ return [
     'optional_field_attachments'                => 'Attachments',
     'optional_field_meta_data'                  => 'Optional meta data',
     'external_url'                              => 'External URL',
-
+    'pref_notification_bill_reminder'           => 'Reminder about expiring bills',
+    'pref_notification_new_access_token'        => 'Alert when a new API access token is created',
+    'pref_notification_transaction_creation'    => 'Alert when a transaction is created automatically',
+    'pref_notification_user_login'              => 'Alert when you login from a new location',
+    'pref_notifications'                        => 'Notifications',
+    'pref_notifications_help'                   => 'Indicate if these are notifications you would like to get. Some notifications may contain sensitive financial information.',
     // profile:
     'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',

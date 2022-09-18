@@ -144,6 +144,9 @@ return [
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'update_minimum_age'           => 7,
 
+    // notifications
+    'available_notifications' => ['bill_reminder', 'new_access_token', 'transaction_creation', 'user_login'],
+
     // enabled languages
     'languages'                    => [
         // currently enabled languages

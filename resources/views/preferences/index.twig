@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('preferences.update') }}" accept-charset="UTF-8" class="form-horizontal" id="preferences">
+    <form method="POST" action="{{ route('preferences.update') }}" accept-charset="UTF-8" class="form-horizontal"
+          id="preferences">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">
@@ -13,9 +14,14 @@
                 {# start of preferences tabs #}
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#general" data-toggle="tab" aria-expanded="true">{{ 'preferences_general'|_ }}</a></li>
-                        <li class=""><a href="#frontpage" data-toggle="tab" aria-expanded="false">{{ 'preferences_frontpage'|_ }}</a></li>
-                        <li class=""><a href="#layout" data-toggle="tab" aria-expanded="false">{{ 'preferences_layout'|_ }}</a></li>
+                        <li class="active"><a href="#general" data-toggle="tab"
+                                              aria-expanded="true">{{ 'preferences_general'|_ }}</a></li>
+                        <li class=""><a href="#frontpage" data-toggle="tab"
+                                        aria-expanded="false">{{ 'preferences_frontpage'|_ }}</a></li>
+                        <li class=""><a href="#layout" data-toggle="tab"
+                                        aria-expanded="false">{{ 'preferences_layout'|_ }}</a></li>
+                        <li class=""><a href="#notifications" data-toggle="tab"
+                                        aria-expanded="false">{{ 'preferences_notifications'|_ }}</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="general">
@@ -31,15 +37,18 @@
                                             <div class="col-sm-12">
                                                 <select class="form-control" id="lang_holder" name="language">
                                                     {% for key, lang in languages %}
-                                                    <option {% if language == key %}
-                                                        selected
-                                                    {% endif %} value="{{ key }}">{{ lang.name_locale }} ({{ lang.name_english }})</option>
+                                                        <option {% if language == key %}
+                                                            selected
+                                                        {% endif %} value="{{ key }}">{{ lang.name_locale }}
+                                                            ({{ lang.name_english }})
+                                                        </option>
 
                                                     {% endfor %}
                                                 </select>
 
 
-                                            </div></div>
+                                            </div>
+                                        </div>
 
 
                                         <p class="text-info">
@@ -50,32 +59,34 @@
 
                                     {# locale #}
                                     {% if not isDocker %}
-                                    <div class="preferences-box">
-                                        <h3>{{ 'pref_locale'|_ }}</h3>
-                                        <p class="text-info">{{ 'pref_locale_help'|_ }}</p>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <select class="form-control" id="locale_holder" name="locale">
-                                                    {% for key, loc in locales %}
-                                                        <option {% if locale == key %}
-                                                            selected
-                                                        {% endif %} value="{{ key }}">
-                                                            {% if key == 'equal' %}
-                                                                {{ 'equal_to_language'|_ }}
-                                                            {% else %}
-                                                                {{ loc }}
-                                                            {% endif %}</option>
+                                        <div class="preferences-box">
+                                            <h3>{{ 'pref_locale'|_ }}</h3>
+                                            <p class="text-info">{{ 'pref_locale_help'|_ }}</p>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <select class="form-control" id="locale_holder" name="locale">
+                                                        {% for key, loc in locales %}
+                                                            <option {% if locale == key %}
+                                                                selected
+                                                            {% endif %} value="{{ key }}">
+                                                                {% if key == 'equal' %}
+                                                                    {{ 'equal_to_language'|_ }}
+                                                                {% else %}
+                                                                    {{ loc }}
+                                                                {% endif %}</option>
 
-                                                    {% endfor %}
-                                                </select>
-                                            </div></div>
-                                        <ul class="text-warning">
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <ul class="text-warning">
 
-                                            {% if IS_DEMO_SITE %}<li class="text-danger">{{ 'pref_locale_no_demo'|_ }}</li>{% endif %}
-                                        </ul>
-                                    </div>
+                                                {% if IS_DEMO_SITE %}
+                                                    <li class="text-danger">{{ 'pref_locale_no_demo'|_ }}</li>{% endif %}
+                                            </ul>
+                                        </div>
                                     {% else %}
-                                    <input type="hidden" name="locale" value="equal" />
+                                        <input type="hidden" name="locale" value="equal"/>
                                     {% endif %}
 
                                     {# fiscal year #}
@@ -131,22 +142,23 @@
                                         {% for type, accounts in groupedAccounts %}
                                             <strong>{{ type }}</strong>
                                             {% for id, name in accounts %}
-                                            <div class="form-group">
-                                                <div class="col-sm-10">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            {% if id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
-                                                                <input type="checkbox" name="frontPageAccounts[]" value="{{ id }}"
-                                                                       checked> {{ name }}
-                                                            {% else %}
-                                                                <input type="checkbox" name="frontPageAccounts[]"
-                                                                       value="{{ id }}"> {{ name }}
-                                                            {% endif %}
-                                                        </label>
+                                                <div class="form-group">
+                                                    <div class="col-sm-10">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                {% if id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
+                                                                    <input type="checkbox" name="frontPageAccounts[]"
+                                                                           value="{{ id }}"
+                                                                           checked> {{ name }}
+                                                                {% else %}
+                                                                    <input type="checkbox" name="frontPageAccounts[]"
+                                                                           value="{{ id }}"> {{ name }}
+                                                                {% endif %}
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        {% endfor %}
+                                            {% endfor %}
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -224,6 +236,32 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane" id="notifications">
+                            {# layout settings here #}
+                            <div class="row">
+                                {# layout settings column A #}
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    {# view range #}
+                                    <div class="preferences-box">
+                                        <h3>{{ 'pref_notifications'|_ }}</h3>
+                                        <p class="text-info">{{ 'pref_notifications_help'|_ }}</p>
+                                        {% for id, enabled in notifications %}
+                                            <div class="form-group">
+                                                <div class="col-sm-10">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                        <input type="checkbox" name="notification_{{ id }}" {{ enabled == true ? 'checked' : '' }} value="1">
+                                                            {{ trans('firefly.pref_notification_' ~ id)  }}
+
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -240,12 +278,16 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/preferences/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/preferences/index.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 
 {% block styles %}
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
 {% endblock %}
