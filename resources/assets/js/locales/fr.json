@@ -100,7 +100,8 @@
         "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
         "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
         "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
-        "webhook_active_form_help": "The webhook must be active or it won't be called."
+        "webhook_active_form_help": "The webhook must be active or it won't be called.",
+        "edit_webhook_js": "Edit webhook \"{title}\""
     },
     "form": {
         "url": "Liens",

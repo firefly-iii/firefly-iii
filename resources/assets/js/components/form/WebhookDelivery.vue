@@ -75,6 +75,11 @@ export default {
       {id: 300, name: this.$t('firefly.webhook_delivery_JSON')},
     ];
   },
+  watch: {
+    value() {
+      this.delivery = this.value;
+    }
+  },
   methods: {
     hasError() {
       return this.error?.length > 0;

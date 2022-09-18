@@ -67,6 +67,11 @@ export default {
       required: true,
     }
   },
+  watch: {
+    value() {
+      this.response = this.value;
+    }
+  },
   mounted() {
     this.response = this.value;
     this.responses = [

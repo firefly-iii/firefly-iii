@@ -1092,6 +1092,9 @@ Route::group(
     static function () {
         Route::get('index', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('create', ['uses' => 'CreateController@index', 'as' => 'create']);
+        Route::get('edit/{webhook}', ['uses' => 'EditController@index', 'as' => 'edit']);
+        Route::get('delete/{webhook}', ['uses' => 'DeleteController@index', 'as' => 'delete']);
+        Route::get('show/{webhook}', ['uses' => 'ShowController@index', 'as' => 'show']);
     }
 );
 

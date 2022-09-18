@@ -1,5 +1,5 @@
 <!--
-  - Create.vue
+  - Edit.vue
   - Copyright (c) 2022 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -47,7 +47,7 @@
         <div class="box box-primary">
           <div class="box-header with-border">
             <h3 class="box-title">
-              {{ $t('firefly.create_new_webhook') }}
+              {{ $t('firefly.edit_webhook_js', {title: this.title}) }}
             </h3>
           </div>
           <div class="box-body">
@@ -61,7 +61,8 @@
                 <WebhookDelivery :value=this.delivery :error="errors.delivery"
                                  v-on:input="delivery = $event"></WebhookDelivery>
                 <URL :value=this.url :error="errors.url" v-on:input="url = $event"></URL>
-                <Checkbox :value=this.active :error="errors.active" help="ACTIVE HELP TODO" :title="$t('form.active')" v-on:input="active = $event"></Checkbox>
+                <Checkbox :value=this.active :error="errors.active" help="ACTIVE HELP TODO" :title="$t('form.active')"
+                          v-on:input="active = $event"></Checkbox>
               </div>
             </div>
           </div>
@@ -89,7 +90,7 @@ import URL from "../form/URL";
 import Checkbox from "../form/Checkbox";
 
 export default {
-  name: "Create",
+  name: "Edit",
   components: {URL, Title, WebhookTrigger, WebhookResponse, WebhookDelivery, Checkbox},
   data() {
     return {
@@ -111,7 +112,51 @@ export default {
       }
     };
   },
+  mounted() {
+    this.getWebhook();
+  },
   methods: {
+    getWebhook: function () {
+      const page = window.location.href.split('/');
+      const webhookId = page[page.length - 1];
+      this.downloadWebhook(webhookId);
+    },
+    downloadWebhook: function (id) {
+      axios.get('./api/v1/webhooks/' + id).then(response => {
+        console.log(response.data.data.attributes);
+        this.title = response.data.data.attributes.title;
+
+        // trigger value on content
+        if('STORE_TRANSACTION' === response.data.data.attributes.trigger) {
+          this.trigger = 100;
+        }
+        if('UPDATE_TRANSACTION' === response.data.data.attributes.trigger) {
+          this.trigger = 110;
+        }
+        if('DESTROY_TRANSACTION' === response.data.data.attributes.trigger) {
+          this.trigger = 120;
+        }
+
+        // response value
+        if('TRANSACTIONS' === response.data.data.attributes.response) {
+          this.response = 200;
+        }
+        if('ACCOUNTS' === response.data.data.attributes.response) {
+          this.response = 210;
+        }
+        if('NONE' === response.data.data.attributes.response) {
+          this.response = 220;
+        }
+        if('JSON' === response.data.data.attributes.delivery) {
+          this.delivery = 300;
+        }
+
+        this.active = response.data.data.attributes.active;
+        this.url = response.data.data.attributes.url;
+      }).catch(error => {
+        this.error_message = error.response.data.message;
+      });
+    },
     submit: function (e) {
       // reset messages
       this.error_message = '';

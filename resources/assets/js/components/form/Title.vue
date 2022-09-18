@@ -70,6 +70,11 @@ export default {
   mounted() {
     this.title = this.value;
   },
+  watch: {
+    value() {
+      this.title = this.value;
+    }
+  },
   components: {},
   data() {
     return {

@@ -244,6 +244,11 @@ return [
     'webhook_delivery_form_help'           => 'Which format the webhook must deliver data in.',
     'webhook_active_form_help'             => 'The webhook must be active or it won\'t be called.',
     'stored_new_webhook'                   => 'Stored new webhook ":title"',
+    'delete_webhook'                       => 'Delete webhook',
+    'deleted_webhook'                      => 'Deleted webhook ":title"',
+    'edit_webhook'                         => 'Edit webhook ":title"',
+    'edit_webhook_js'                      => 'Edit webhook "{title}"',
+    'show_webhook'                         => 'Webhook ":title"',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Authorization Request',

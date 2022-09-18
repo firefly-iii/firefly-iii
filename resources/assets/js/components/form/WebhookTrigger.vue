@@ -75,6 +75,11 @@ export default {
       {id: 120, name: this.$t('firefly.webhook_trigger_DESTROY_TRANSACTION')},
     ];
   },
+  watch: {
+    value() {
+      this.trigger = this.value;
+    }
+  },
   methods: {
     hasError() {
       return this.error?.length > 0;

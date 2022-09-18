@@ -82,9 +82,6 @@ use FireflyIII\TransactionRules\Actions\SetNotes;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
 use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\User;
-use FireflyIII\Enums\WebhookResponse as WebhookResponseEnum;
-use FireflyIII\Enums\WebhookDelivery as WebhookDeliveryEnum;
-use FireflyIII\Enums\WebhookTrigger as WebhookTriggerEnum;
 
 
 /*
@@ -510,7 +507,7 @@ return [
     'expected_source_types'     => [
         'source'      => [
             TransactionTypeModel::WITHDRAWAL       => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeEnum::DEPOSIT->value          => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeEnum::DEPOSIT->value    => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::OPENING_BALANCE  => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
                                                        AccountType::MORTGAGE,],
@@ -529,7 +526,7 @@ return [
         'destination' => [
             TransactionTypeModel::WITHDRAWAL       => [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT,
                                                        AccountType::MORTGAGE,],
-            TransactionTypeEnum::DEPOSIT->value          => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeEnum::DEPOSIT->value    => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::OPENING_BALANCE  => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
                                                        AccountType::MORTGAGE,],
@@ -680,7 +677,7 @@ return [
             AccountType::DEBT     => [AccountType::EXPENSE, AccountType::CASH],
             AccountType::MORTGAGE => [AccountType::EXPENSE, AccountType::CASH],
         ],
-        TransactionTypeEnum::DEPOSIT->value          => [
+        TransactionTypeEnum::DEPOSIT->value    => [
             AccountType::REVENUE  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             AccountType::CASH     => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             AccountType::LOAN     => [AccountType::ASSET],
@@ -730,7 +727,7 @@ return [
         'recurrence_total', 'recurrence_count',
     ],
     'webhooks'                  => [
-        'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3)
+        'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
     ],
     'can_have_virtual_amounts'  => [AccountType::ASSET],
     'can_have_opening_balance'  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],

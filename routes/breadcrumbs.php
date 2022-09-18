@@ -40,6 +40,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
+use FireflyIII\Models\Webhook;
 use FireflyIII\User;
 use Illuminate\Support\Arr;
 
@@ -1241,6 +1242,30 @@ try {
         static function (Generator $breadcrumbs): void {
             $breadcrumbs->parent('webhooks.index');
             $breadcrumbs->push(trans('firefly.webhooks_create_breadcrumb'), route('webhooks.create'));
+        }
+    );
+
+    Breadcrumbs::for(
+        'webhooks.show',
+        static function (Generator $breadcrumbs, Webhook $webhook) {
+            $breadcrumbs->parent('webhooks.index');
+            $breadcrumbs->push(limitStringLength($webhook->title), route('webhooks.show', [$webhook->id]));
+        }
+    );
+
+    Breadcrumbs::for(
+        'webhooks.delete',
+        static function (Generator $breadcrumbs, Webhook $webhook) {
+            $breadcrumbs->parent('webhooks.show', $webhook);
+            $breadcrumbs->push(trans('firefly.delete_webhook', ['title' => limitStringLength($webhook->title)]), route('webhooks.delete', [$webhook->id]));
+        }
+    );
+
+    Breadcrumbs::for(
+        'webhooks.edit',
+        static function (Generator $breadcrumbs, Webhook $webhook) {
+            $breadcrumbs->parent('webhooks.show', $webhook);
+            $breadcrumbs->push(trans('firefly.edit_webhook', ['title' => limitStringLength($webhook->title)]), route('webhooks.edit', [$webhook->id]));
         }
     );
 

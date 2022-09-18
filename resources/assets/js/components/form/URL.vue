@@ -68,6 +68,11 @@ export default {
     }
   },
   name: "URL",
+  watch: {
+    value() {
+      this.url = this.value;
+    }
+  },
   mounted() {
     this.url = this.value;
   },

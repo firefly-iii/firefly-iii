@@ -37,3 +37,5 @@ mix.js('resources/assets/js/profile.js', 'public/v1/js').vue({version: 2});
 // webhooks
 mix.js('resources/assets/js/webhooks/index.js', 'public/v1/js/webhooks').vue({version: 2});
 mix.js('resources/assets/js/webhooks/create.js', 'public/v1/js/webhooks').vue({version: 2});
+mix.js('resources/assets/js/webhooks/edit.js', 'public/v1/js/webhooks').vue({version: 2});
+mix.js('resources/assets/js/webhooks/show.js', 'public/v1/js/webhooks').vue({version: 2});
