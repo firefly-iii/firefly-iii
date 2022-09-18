@@ -832,4 +832,13 @@ class GroupCollector implements GroupCollectorInterface
 
         return $array;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function isReconciled(): GroupCollectorInterface
+    {
+        $this->query->where('source.reconciled', 1)->where('destination.reconciled', 1);
+        return $this;
+    }
 }

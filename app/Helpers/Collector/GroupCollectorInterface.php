@@ -48,6 +48,14 @@ interface GroupCollectorInterface
      */
     public function amountIs(string $amount): GroupCollectorInterface;
 
+
+    /**
+     * Only journals that are reconciled.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function isReconciled(): GroupCollectorInterface;
+
     /**
      * Get transactions where the amount is less than.
      *

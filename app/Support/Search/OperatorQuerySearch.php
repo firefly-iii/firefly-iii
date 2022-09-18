@@ -610,6 +610,9 @@ class OperatorQuerySearch implements SearchInterface
             case 'any_notes':
                 $this->collector->withAnyNotes();
                 break;
+            case 'reconciled':
+                $this->collector->isReconciled();
+                break;
             //
             // amount
             //
