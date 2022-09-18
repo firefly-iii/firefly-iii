@@ -48,7 +48,10 @@
               <td>
                 <a :href="'webhooks/show/' + webhook.id">{{ webhook.title }}</a>
               </td>
-              <td>{{ triggers[webhook.trigger] }}</td>
+              <td>
+                <span v-if="webhook.active">{{ triggers[webhook.trigger] }}</span>
+                <span v-if="!webhook.active" class="text-muted"><s>{{ triggers[webhook.trigger] }}</s> ({{ $t('firefly.inactive') }})</span>
+              </td>
               <td>{{ responses[webhook.response] }} ({{ deliveries[webhook.delivery] }})</td>
               <td>
                 <em style="cursor:pointer"
@@ -127,6 +130,7 @@ export default {
               id: current.id,
               title: current.attributes.title,
               url: current.attributes.url,
+              active: current.attributes.active,
               full_url: current.attributes.url,
               secret: current.attributes.secret,
               trigger: current.attributes.trigger,

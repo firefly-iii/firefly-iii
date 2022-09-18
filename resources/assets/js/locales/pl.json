@@ -94,6 +94,10 @@
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "Akcje",
+        "meta_data": "Metadane",
+        "webhook_messages": "Webhook message",
+        "inactive": "Nieaktywne",
+        "no_webhook_messages": "There are no webhook messages",
         "inspect": "Inspect",
         "create_new_webhook": "Create new webhook",
         "webhooks": "Webhooki",
@@ -101,7 +105,18 @@
         "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
         "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
         "webhook_active_form_help": "The webhook must be active or it won't be called.",
-        "edit_webhook_js": "Edit webhook \"{title}\""
+        "edit_webhook_js": "Edit webhook \"{title}\"",
+        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. You can refresh this page to see the results.",
+        "view_message": "View message",
+        "view_attempts": "View failed attempts",
+        "message_content_title": "Webhook message content",
+        "message_content_help": "This is the content of the message that was sent (or tried) using this webhook.",
+        "attempt_content_title": "Webhook attempts",
+        "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL.",
+        "no_attempts": "There are no unsuccessful attempts. That's a good thing!",
+        "webhook_attempt_at": "Attempt at {moment}",
+        "logs": "Logs",
+        "response": "Response"
     },
     "form": {
         "url": "URL",
@@ -120,6 +135,7 @@
         "webhook_delivery": "Delivery"
     },
     "config": {
-        "html_language": "pl"
+        "html_language": "pl",
+        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
     }
 }

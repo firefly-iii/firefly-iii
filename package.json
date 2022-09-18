@@ -8,6 +8,9 @@
         "production": "mix --production",
         "prod": "mix --production"
     },
+    "dependencies": {
+        "date-fns": "^2.28.0"
+    },
     "devDependencies": {
         "@johmun/vue-tags-input": "^2",
         "@vue/compiler-sfc": "^3.2.37",

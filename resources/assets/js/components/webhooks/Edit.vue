@@ -100,7 +100,8 @@ export default {
       trigger: 100,
       response: 200,
       delivery: 300,
-      active: true,
+      id: 0,
+      active: false,
       url: '',
       errors: {
         title: [],
@@ -125,29 +126,30 @@ export default {
       axios.get('./api/v1/webhooks/' + id).then(response => {
         console.log(response.data.data.attributes);
         this.title = response.data.data.attributes.title;
+        this.id = parseInt(response.data.data.id);
 
         // trigger value on content
-        if('STORE_TRANSACTION' === response.data.data.attributes.trigger) {
+        if ('STORE_TRANSACTION' === response.data.data.attributes.trigger) {
           this.trigger = 100;
         }
-        if('UPDATE_TRANSACTION' === response.data.data.attributes.trigger) {
+        if ('UPDATE_TRANSACTION' === response.data.data.attributes.trigger) {
           this.trigger = 110;
         }
-        if('DESTROY_TRANSACTION' === response.data.data.attributes.trigger) {
+        if ('DESTROY_TRANSACTION' === response.data.data.attributes.trigger) {
           this.trigger = 120;
         }
 
         // response value
-        if('TRANSACTIONS' === response.data.data.attributes.response) {
+        if ('TRANSACTIONS' === response.data.data.attributes.response) {
           this.response = 200;
         }
-        if('ACCOUNTS' === response.data.data.attributes.response) {
+        if ('ACCOUNTS' === response.data.data.attributes.response) {
           this.response = 210;
         }
-        if('NONE' === response.data.data.attributes.response) {
+        if ('NONE' === response.data.data.attributes.response) {
           this.response = 220;
         }
-        if('JSON' === response.data.data.attributes.delivery) {
+        if ('JSON' === response.data.data.attributes.delivery) {
           this.delivery = 300;
         }
 
@@ -180,14 +182,15 @@ export default {
         response: this.response,
         delivery: this.delivery,
         url: this.url,
+        active: this.active,
       };
 
       // post!
-      axios.post('./api/v1/webhooks', data).then((response) => {
+      axios.put('./api/v1/webhooks/' + this.id, data).then((response) => {
         this.success_message = response.data.message;
         // console.log('Will now go to redirectUser()');
         let webhookId = response.data.data.id;
-        window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=created';
+        window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=updated';
       }).catch((error) => {
         this.error_message = error.response.data.message;
         this.errors.title = error.response.data.errors.title;

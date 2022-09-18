@@ -27,7 +27,7 @@
     <div class="col-sm-8">
       <div class="checkbox">
         <label>
-          <input :checked="this.active" :name="this.name" type="checkbox" value="1">
+          <input v-model=active :name="name" @change="handleInput" type="checkbox" value="1">
         </label>
       </div>
       <p class="help-block" v-html="$t('firefly.webhook_active_form_help')"></p>
@@ -44,6 +44,9 @@ export default {
     },
     title: {
       type: String,
+    },
+    value: {
+      type: Boolean,
     }
   },
   data() {
@@ -51,5 +54,20 @@ export default {
       active: true,
     };
   },
+  mounted() {
+    this.active = this.value;
+  },
+  methods: {
+    handleInput() {
+      console.log(this.active);
+      this.$emit('input', this.active);
+    },
+  },
+  watch: {
+    value: function (val) {
+      this.active = val;
+
+    }
+  }
 }
 </script>

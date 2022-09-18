@@ -143,6 +143,49 @@ class Webhook extends Model
         }
         return $array;
     }
+
+    /**
+     * @return array
+     */
+    public static function getTriggersForValidation(): array
+    {
+        $array = [];
+        $set   = WebhookTrigger::cases();
+        foreach ($set as $item) {
+            $array[$item->name] = $item->value;
+            $array[$item->value] = $item->value;
+        }
+        return $array;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getResponsesForValidation(): array
+    {
+        $array = [];
+        $set   = WebhookResponse::cases();
+        foreach ($set as $item) {
+            $array[$item->name] = $item->value;
+            $array[$item->value] = $item->value;
+        }
+        return $array;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getDeliveriesForValidation(): array
+    {
+        $array = [];
+        $set   = WebhookDelivery::cases();
+        foreach ($set as $item) {
+            $array[$item->name] = $item->value;
+            $array[$item->value] = $item->value;
+        }
+        return $array;
+    }
+
     /**
      * @return array
      */

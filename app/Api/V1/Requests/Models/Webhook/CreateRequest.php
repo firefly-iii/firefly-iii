@@ -42,9 +42,9 @@ class CreateRequest extends FormRequest
     public function getData(): array
     {
 
-        $triggers   = array_flip(Webhook::getTriggers());
-        $responses  = array_flip(Webhook::getResponses());
-        $deliveries = array_flip(Webhook::getDeliveries());
+        $triggers   = Webhook::getTriggersForValidation();
+        $responses  = Webhook::getResponsesForValidation();
+        $deliveries = Webhook::getDeliveriesForValidation();
 
         $fields = [
             'title'    => ['title', 'convertString'],
@@ -71,9 +71,9 @@ class CreateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers   = implode(',', Webhook::getTriggers() + array_keys(Webhook::getTriggers()));
-        $responses  = implode(',', Webhook::getResponses() + array_keys(Webhook::getResponses()));
-        $deliveries = implode(',', Webhook::getDeliveries() + array_keys(Webhook::getDeliveries()));
+        $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
+        $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
+        $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
 
         return [
             'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',

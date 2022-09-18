@@ -248,6 +248,9 @@ class InterestingMessage
         if ('deleted' === $message) {
             session()->flash('success', (string) trans('firefly.deleted_webhook', ['title' => $webhook->title]));
         }
+        if ('updated' === $message) {
+            session()->flash('success', (string) trans('firefly.updated_webhook', ['title' => $webhook->title]));
+        }
         if ('created' === $message) {
             session()->flash('success', (string) trans('firefly.stored_new_webhook', ['title' => $webhook->title]));
         }

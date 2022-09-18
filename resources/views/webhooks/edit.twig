@@ -9,6 +9,6 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var previousUrl = '{{ previousUrl }}';
+        var previousUrl = '{{ route('webhooks.index') }}';
     </script>
 {% endblock %}

@@ -41,9 +41,9 @@ class UpdateRequest extends FormRequest
      */
     public function getData(): array
     {
-        $triggers   = array_flip(Webhook::getTriggers());
-        $responses  = array_flip(Webhook::getResponses());
-        $deliveries = array_flip(Webhook::getDeliveries());
+        $triggers   = Webhook::getTriggersForValidation();
+        $responses  = Webhook::getResponsesForValidation();
+        $deliveries = Webhook::getDeliveriesForValidation();
 
         $fields = [
             'title'    => ['title', 'convertString'],
@@ -81,9 +81,9 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
 
-        $triggers   = implode(',', array_values(Webhook::getTriggers()));
-        $responses  = implode(',', array_values(Webhook::getResponses()));
-        $deliveries = implode(',', array_values(Webhook::getDeliveries()));
+        $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
+        $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
+        $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
         $webhook    = $this->route()->parameter('webhook');
 
         return [

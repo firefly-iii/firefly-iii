@@ -685,9 +685,12 @@ class FireflyValidator extends Validator
         $trigger    = 0;
         $response   = 0;
         $delivery   = 0;
-        $triggers   = array_flip(config('firefly.webhooks.triggers'));
-        $responses  = array_flip(config('firefly.webhooks.responses'));
-        $deliveries = array_flip(config('firefly.webhooks.deliveries'));
+
+
+
+        $triggers   = Webhook::getTriggersForValidation();
+        $responses  = Webhook::getResponsesForValidation();
+        $deliveries = Webhook::getDeliveriesForValidation();
         if (auth()->check()) {
             // get existing webhook value:
             if (0 !== $existingId) {
@@ -815,9 +818,9 @@ class FireflyValidator extends Validator
     {
         if (auth()->check()) {
 
-            $triggers   = array_flip(Webhook::getTriggers());
-            $responses  = array_flip(Webhook::getResponses());
-            $deliveries = array_flip(Webhook::getDeliveries());
+            $triggers   = Webhook::getTriggersForValidation();
+            $responses  = Webhook::getResponsesForValidation();
+            $deliveries = Webhook::getDeliveriesForValidation();
 
             // integers
             $trigger  = $triggers[$this->data['trigger']] ?? 0;
