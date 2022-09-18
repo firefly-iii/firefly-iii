@@ -102,8 +102,8 @@ class BudgetController extends Controller
             [
                 'budgeted'                => $budgeted,
                 'budgeted_formatted'      => app('amount')->formatAnything($currency, $budgeted, true),
-                'available'               => app('amount')->formatAnything($currency, $available, true),
-                'available_formatted'     => $available,
+                'available'               => $available,
+                'available_formatted'     => app('amount')->formatAnything($currency, $available, true),
                 'percentage'              => $percentage,
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,

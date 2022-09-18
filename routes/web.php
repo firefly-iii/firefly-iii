@@ -261,29 +261,6 @@ Route::group(
 );
 
 /**
- * Available Budget Controller.
- */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'available-budgets', 'as' => 'available-budgets.'],
-    static function () {
-
-        // create
-        Route::get('create/{start_date}/{end_date}/{currency?}', ['uses' => 'Budget\AvailableBudgetController@create', 'as' => 'create']);
-        Route::get(
-            'create-alternative/{start_date}/{end_date}',
-            ['uses' => 'Budget\AvailableBudgetController@createAlternative', 'as' => 'create-alternative']
-        );
-        Route::post('store', ['uses' => 'Budget\AvailableBudgetController@store', 'as' => 'store']);
-
-        // edit
-        Route::get('edit/{availableBudget}/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
-        Route::post('update/{availableBudget}/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
-
-        Route::post('delete', ['uses' => 'Budget\AvailableBudgetController@delete', 'as' => 'delete']);
-    }
-);
-
-/**
  * Budget Limit Controller.
  */
 Route::group(

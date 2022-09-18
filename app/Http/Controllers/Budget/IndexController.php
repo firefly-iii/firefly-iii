@@ -129,9 +129,6 @@ class IndexController extends Controller
             unset($spentArr);
         }
 
-        // count the number of enabled currencies. This determines if we display a "+" button.
-        $enableAddButton = $currencies->count() > count($availableBudgets);
-
         // number of days for consistent budgeting.
         $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
         $activeDaysLeft   = $this->activeDaysLeft($start, $end);   // see method description.
@@ -141,7 +138,7 @@ class IndexController extends Controller
 
         return view(
             'budgets.index', compact(
-                               'availableBudgets', 'budgeted', 'spent', 'prevLoop', 'nextLoop', 'budgets', 'currencies', 'enableAddButton', 'periodTitle',
+                               'availableBudgets', 'budgeted', 'spent', 'prevLoop', 'nextLoop', 'budgets', 'currencies', 'periodTitle',
                                'defaultCurrency', 'activeDaysPassed', 'activeDaysLeft', 'inactive', 'budgets', 'start', 'end', 'sums'
                            )
         );
