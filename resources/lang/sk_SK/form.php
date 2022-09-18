@@ -125,6 +125,7 @@ return [
     'start'                       => 'Začiatok rozsahu',
     'end'                         => 'Koniec rozsahu',
     'delete_account'              => 'Odstrániť účet „:name“',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Odstrániť účet „:name“',
     'delete_budget'               => 'Odstrániť rozpočet „:name“',
     'delete_category'             => 'Odstrániť kategóriu „:name“',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Skutočne chcete odstrániť skupinu s názvom ":title"?',
     'ruleGroup_areYouSure'        => 'Skutočne chcete odstrániť skupinu pravidiel s názvom ":title"?',
     'budget_areYouSure'           => 'Skutočne chcete odstrániť rozpočet s názvom ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Skutočne chcete odstrániť kategóriu s názvom ":name"?',
     'recurring_areYouSure'        => 'Skutočne chcete odstrániť opakovanú transakciu s názvom ":title"?',
     'currency_areYouSure'         => 'Skutočne chcete odstrániť menu s názvom ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Odoslané',
     'key'                         => 'Kľúč',
     'value'                       => 'Obsah záznamu',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

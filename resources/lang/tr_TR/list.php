@@ -77,7 +77,7 @@ return [
     'type'                    => 'Tür',
     'completed'               => 'Tamamlandı',
     'iban'                    => 'IBAN numarası',
-    'account_number'              => 'Account number',
+    'account_number'          => 'Account number',
     'paid_current_period'     => 'Bu dönemde ödenen',
     'email'                   => 'E-posta',
     'registered_at'           => 'Şurada kayıtlı',
@@ -139,4 +139,10 @@ return [
     'payment_info'            => 'Payment information',
     'expected_info'           => 'Next expected transaction',
     'start_date'              => 'Start date',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

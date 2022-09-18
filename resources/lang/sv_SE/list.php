@@ -76,7 +76,7 @@ return [
     'type'                    => 'Typ',
     'completed'               => 'Slutförd',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Kontonummer',
+    'account_number'          => 'Kontonummer',
     'paid_current_period'     => 'Betalt den här perioden',
     'email'                   => 'E-post',
     'registered_at'           => 'Registrerad den',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Betalinformation',
     'expected_info'           => 'Nästa förväntade transaktion',
     'start_date'              => 'Startdatum',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

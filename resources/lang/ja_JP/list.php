@@ -76,7 +76,7 @@ return [
     'type'                    => '種別',
     'completed'               => '完了',
     'iban'                    => 'IBAN',
-    'account_number'              => '口座番号',
+    'account_number'          => '口座番号',
     'paid_current_period'     => 'この期間の支払い済み',
     'email'                   => 'Email',
     'registered_at'           => '登録日時',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => '支払情報',
     'expected_info'           => '次の予想される取引',
     'start_date'              => '開始日',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

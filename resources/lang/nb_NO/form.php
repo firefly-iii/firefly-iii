@@ -125,6 +125,7 @@ return [
     'start'                       => 'Start of range',
     'end'                         => 'End of range',
     'delete_account'              => 'Slett konto ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Slett regning ":name"',
     'delete_budget'               => 'Slett budsjett ":name"',
     'delete_category'             => 'Slett kategori ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => 'Er du sikker på at du vil slette regelgruppen ved navn ":title"?',
     'budget_areYouSure'           => 'Er du sikker på at du vil slette budsjettet ved navn ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Er du sikker på at du vil slette kategorien ved navn ":name"?',
     'recurring_areYouSure'        => 'Er du sikker på at du vil slette gjentakende transaksjonen ved navn ":title"?',
     'currency_areYouSure'         => 'Er du sikker på at du vil slette valutaen ved navn ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Submitted',
     'key'                         => 'Key',
     'value'                       => 'Content of record',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

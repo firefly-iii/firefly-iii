@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
     'unique_object_group'            => 'Der Gruppenname muss eindeutig sein',
     'starts_with'                    => 'Der Wert muss mit :values beginnen.',
-    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_webhook'                 => 'Es existiert bereits ein Webhook mit dieser Kombination aus URL, Auslöser, Antwort und Zustellung.',
+    'unique_existing_webhook'        => 'Es existiert bereits ein Webhook mit dieser Kombination aus URL, Auslöser, Antwort und Zustellung.',
     'same_account_type'              => 'Beide Konten müssen vom selben Kontotyp sein',
     'same_account_currency'          => 'Beiden Konten muss die gleiche Währung zugeordnet sein',
 

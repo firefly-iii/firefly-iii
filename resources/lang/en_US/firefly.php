@@ -263,6 +263,8 @@ return [
     'webhook_attempt_at'                   => 'Attempt at {moment}',
     'logs'                                 => 'Logs',
     'response'                             => 'Response',
+    'visit_webhook_url'                    => 'Visit webhook URL',
+    'reset_webhook_secret'                 => 'Reset webhook secret',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Authorization Request',
@@ -321,6 +323,7 @@ return [
     // old
 
     'search_modifier_date_on'                         => 'Transaction date is ":value"',
+    'search_modifier_reconciled'                      => 'Transaction is reconciled',
     'search_modifier_id'                              => 'Transaction ID is ":value"',
     'search_modifier_date_before'                     => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                      => 'Transaction date is after or on ":value"',

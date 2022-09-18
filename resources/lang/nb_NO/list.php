@@ -76,7 +76,7 @@ return [
     'type'                    => 'Type',
     'completed'               => 'Ferdig',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Kontonummer',
+    'account_number'          => 'Kontonummer',
     'paid_current_period'     => 'Betalt denne perioden',
     'email'                   => 'Epost',
     'registered_at'           => 'Registrert den',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Betalingsinformasjon',
     'expected_info'           => 'Next expected transaction',
     'start_date'              => 'Start date',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

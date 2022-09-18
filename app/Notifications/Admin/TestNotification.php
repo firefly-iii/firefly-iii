@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * TestNotification.php
  * Copyright (c) 2022 james@firefly-iii.org
@@ -21,7 +22,64 @@
 
 namespace FireflyIII\Notifications\Admin;
 
-class TestNotification
-{
+use FireflyIII\Mail\AdminTestMail;
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
+/**
+ * Class TestNotification
+ */
+class TestNotification extends Notification
+{
+    use Queueable;
+
+    private string $address;
+
+    /**
+     * Create a new notification instance.
+     *
+     * @return void
+     */
+    public function __construct(string $address)
+    {
+        $this->address = $address;
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+            ->markdown('emails.admin-test', ['email' => $this->address])
+            ->subject((string) trans('email.admin_test_subject'));
+    }
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toArray($notifiable)
+    {
+        return [
+            //
+        ];
+    }
 }

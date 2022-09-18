@@ -76,7 +76,7 @@ return [
     'type'                    => '類型',
     'completed'               => '已完成',
     'iban'                    => '國際銀行帳戶號碼 (IBAN)',
-    'account_number'              => 'Account number',
+    'account_number'          => 'Account number',
     'paid_current_period'     => '已付此區間',
     'email'                   => '電子郵件',
     'registered_at'           => '註冊於',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Payment information',
     'expected_info'           => 'Next expected transaction',
     'start_date'              => 'Start date',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

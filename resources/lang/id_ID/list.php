@@ -76,7 +76,7 @@ return [
     'type'                    => 'Jenis',
     'completed'               => 'Lengkap',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Account number',
+    'account_number'          => 'Account number',
     'paid_current_period'     => 'Membayar periode ini',
     'email'                   => 'Email',
     'registered_at'           => 'Terdaftar di',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Informasi Pembayaran',
     'expected_info'           => 'Perkiraan transaksi berikutnya',
     'start_date'              => 'Tanggal mulai',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

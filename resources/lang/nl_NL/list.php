@@ -76,7 +76,7 @@ return [
     'type'                    => 'Type',
     'completed'               => 'Opgeslagen',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Rekeningnummer',
+    'account_number'          => 'Rekeningnummer',
     'paid_current_period'     => 'Betaald deze periode',
     'email'                   => 'E-mail',
     'registered_at'           => 'Geregistreerd op',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Betalingsinformatie',
     'expected_info'           => 'Volgende verwachte transactie',
     'start_date'              => 'Startdatum',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

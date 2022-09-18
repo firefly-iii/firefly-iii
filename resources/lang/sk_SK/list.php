@@ -76,7 +76,7 @@ return [
     'type'                    => 'Typ',
     'completed'               => 'Dokončené',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Account number',
+    'account_number'          => 'Account number',
     'paid_current_period'     => 'Zaplatené v tomto období',
     'email'                   => 'E-mail',
     'registered_at'           => 'Registrované',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Payment information',
     'expected_info'           => 'Next expected transaction',
     'start_date'              => 'Start date',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

@@ -26,7 +26,9 @@ use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\AdminTestMail;
+use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Facades\Notification;
 use Log;
 use Mail;
 use Session;
@@ -49,37 +51,12 @@ class AdminEventHandler
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-
-        // is user even admin?
-        if ($repository->hasRole($event->user, 'owner')) {
-            $email = $event->user->email;
-
-            // if user is demo user, send to owner:
-            if ($event->user->hasRole('demo')) {
-                $email = config('firefly.site_owner');
-            }
-
-            // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email');
-            if (null !== $pref) {
-                $email = $pref->data;
-            }
-
-            Log::debug(sprintf('Now in sendTestMessage event handler. Email is %s', $email));
-            try {
-                Log::debug('Trying to send message...');
-                Mail::to($email)->send(new AdminTestMail($email));
-
-                // Laravel cannot pretend this process failed during testing.
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::debug('Send message failed! :(');
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-                Session::flash('error', 'Possible email error: ' . $e->getMessage());
-            }
-
-            Log::debug('If no error above this line, message was sent.');
+        // do some validation.
+        if (!$repository->hasRole($event->user, 'owner')) {
+            return true;
         }
+
+        Notification::send($event->user, new TestNotification($event->user->email));
 
         return true;
     }

@@ -112,11 +112,13 @@
         "message_content_title": "Webhook message content",
         "message_content_help": "This is the content of the message that was sent (or tried) using this webhook.",
         "attempt_content_title": "Webhook attempts",
-        "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL.",
+        "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
         "no_attempts": "There are no unsuccessful attempts. That's a good thing!",
         "webhook_attempt_at": "Attempt at {moment}",
         "logs": "Logs",
-        "response": "Response"
+        "response": "Response",
+        "visit_webhook_url": "Visit webhook URL",
+        "reset_webhook_secret": "Reset webhook secret"
     },
     "form": {
         "url": "Liens",
@@ -133,6 +135,12 @@
         "webhook_response": "Response",
         "webhook_trigger": "Trigger",
         "webhook_delivery": "Delivery"
+    },
+    "list": {
+        "active": "Actif ?",
+        "trigger": "Trigger",
+        "response": "Response",
+        "delivery": "Delivery"
     },
     "config": {
         "html_language": "fr",

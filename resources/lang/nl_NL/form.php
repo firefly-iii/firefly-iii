@@ -125,6 +125,7 @@ return [
     'start'                       => 'Start van bereik',
     'end'                         => 'Einde van bereik',
     'delete_account'              => 'Verwijder rekening ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Verwijder contract ":name"',
     'delete_budget'               => 'Verwijder budget ":name"',
     'delete_category'             => 'Verwijder categorie ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Weet je zeker dat je groep ":title" wilt verwijderen?',
     'ruleGroup_areYouSure'        => 'Weet je zeker dat je regelgroep ":title" wilt verwijderen?',
     'budget_areYouSure'           => 'Weet je zeker dat je het budget met naam ":name" wilt verwijderen?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Weet je zeker dat je het category met naam ":name" wilt verwijderen?',
     'recurring_areYouSure'        => 'Weet je zeker dat je periodieke transactie ":title" wilt verwijderen?',
     'currency_areYouSure'         => 'Weet je zeker dat je de valuta met naam ":name" wilt verwijderen?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Verstuurd',
     'key'                         => 'Key',
     'value'                       => 'Inhoud',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

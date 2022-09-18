@@ -41,6 +41,7 @@ return [
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'YYYY年MM月DD日 HH:mm:ss',
+    'date_time_fns'            => 'MMMM do, yyyy @ HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'YYYY年MM月D日',

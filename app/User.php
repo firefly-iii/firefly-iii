@@ -57,8 +57,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
@@ -545,5 +547,31 @@ class User extends Authenticatable
     {
         return $this->hasMany(Webhook::class);
     }
-    // end LDAP related code
+
+    /**
+     * Get the notification routing information for the given driver.
+     *
+     * @param string            $driver
+     * @param Notification|null $notification
+     * @return mixed
+     */
+    public function routeNotificationFor($driver, $notification = null)
+    {
+        if (method_exists($this, $method = 'routeNotificationFor' . Str::studly($driver))) {
+            return $this->{$method}($notification);
+        }
+        $email = $this->email;
+        // see if user has alternative email address:
+        $pref = app('preferences')->getForUser($this, 'remote_guard_alt_email');
+        if (null !== $pref) {
+            $email = $pref->data;
+        }
+
+        return match ($driver) {
+            'database' => $this->notifications(),
+            'mail' => $email,
+            default => null,
+        };
+    }
+
 }

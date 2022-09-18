@@ -125,6 +125,7 @@ return [
     'start'                       => 'Начало диапазона',
     'end'                         => 'Конец диапазона',
     'delete_account'              => 'Удалить счёт ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Удаление счёта к оплате ":name"',
     'delete_budget'               => 'Удалить бюджет ":name"',
     'delete_category'             => 'Удалить категорию ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Вы действительно хотите удалить группу с названием ":title"?',
     'ruleGroup_areYouSure'        => 'Вы действительно хотите удалить группу правил с названием ":title"?',
     'budget_areYouSure'           => 'Вы действительно хотите удалить бюджет с именем ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Вы действительно хотите удалить категорию с именем ":name"?',
     'recurring_areYouSure'        => 'Вы действительно хотите удалить повторяющуюся транзакцию с названием ":title"?',
     'currency_areYouSure'         => 'Вы уверены, что хотите удалить валюту ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Отправлено',
     'key'                         => 'Ключ',
     'value'                       => 'Содержание записи',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

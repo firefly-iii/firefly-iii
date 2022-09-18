@@ -125,6 +125,7 @@ return [
     'start'                       => 'Αρχή του εύρους',
     'end'                         => 'Τέλος του εύρους',
     'delete_account'              => 'Διαγραφή λογαριασμού ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Διαγραφή πάγιου έξοδου ":name"',
     'delete_budget'               => 'Διαγραφή προϋπολογισμού ":name"',
     'delete_category'             => 'Διαγραφή κατηγορίας ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Είστε σίγουροι ότι θέλετε να διαγράψετε την ομάδα με τίτλο ":title";',
     'ruleGroup_areYouSure'        => 'Είστε σίγουροι ότι θέλετε να διαγράψετε την ομάδα κανόνων με τίτλο ":title";',
     'budget_areYouSure'           => 'Είστε σίγουροι ότι θέλετε να διαγράψετε τον προϋπολογισμό με όνομα ":name";',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Είστε σίγουροι ότι θέλετε να διαγράψετε την κατηγορία με όνομα ":name";',
     'recurring_areYouSure'        => 'Είστε σίγουροι ότι θέλετε να διαγράψετε την επαναλαμβανόμενη συναλλαγή με τίτλο ":title";',
     'currency_areYouSure'         => 'Είστε σίγουροι ότι θέλετε να διαγράψετε το νόμισμα με όνομα ":name";',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Υποβλήθηκε',
     'key'                         => 'Κλειδί',
     'value'                       => 'Περιεχόμενο της εγγραφής',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

@@ -76,7 +76,7 @@ return [
     'type'                    => 'Tip',
     'completed'               => 'Finalizată',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Account number',
+    'account_number'          => 'Account number',
     'paid_current_period'     => 'Plătit această perioadă',
     'email'                   => 'E-mail',
     'registered_at'           => 'Înregistrat la',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Informații de plată',
     'expected_info'           => 'Următoarea tranzacție așteptată',
     'start_date'              => 'Dată de începere',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

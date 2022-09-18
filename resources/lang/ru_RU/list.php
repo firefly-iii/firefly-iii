@@ -76,7 +76,7 @@ return [
     'type'                    => 'Тип',
     'completed'               => 'Завершено',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Номер счёта',
+    'account_number'          => 'Номер счёта',
     'paid_current_period'     => 'Оплатить в указанный период',
     'email'                   => 'E-mail',
     'registered_at'           => 'Дата регистрации',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Иформация о платеже',
     'expected_info'           => 'Следующая ожидаемая операция',
     'start_date'              => 'Начальная дата',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

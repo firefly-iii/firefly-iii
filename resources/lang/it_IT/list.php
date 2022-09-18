@@ -76,7 +76,7 @@ return [
     'type'                    => 'Tipo',
     'completed'               => 'Completato',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Numero conto',
+    'account_number'          => 'Numero conto',
     'paid_current_period'     => 'Pagati in questo periodo',
     'email'                   => 'Email',
     'registered_at'           => 'Registrato il',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Informazioni di pagamento',
     'expected_info'           => 'Prossima transazione attesa',
     'start_date'              => 'Data inizio',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

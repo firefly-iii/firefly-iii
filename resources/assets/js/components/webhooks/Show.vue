@@ -44,22 +44,22 @@
                 <td>{{ title }}</td>
               </tr>
               <tr>
-                <td>Is active?</td>
+                <td>{{ $t('list.active') }}</td>
                 <td>
                   <em class="fa fa-check text-success" v-if="active"></em>
                   <em class="fa fa-times text-danger" v-if="!active"></em>
                 </td>
               </tr>
               <tr>
-                <td>Trigger</td>
+                <td>{{ $t('list.trigger') }}</td>
                 <td> {{ trigger }}</td>
               </tr>
               <tr>
-                <td>Response</td>
+                <td>{{ $t('list.response') }}</td>
                 <td> {{ response }}</td>
               </tr>
               <tr>
-                <td>Delivery</td>
+                <td>{{ $t('list.delivery') }}</td>
                 <td> {{ delivery }}</td>
               </tr>
               </tbody>
@@ -69,7 +69,8 @@
             <div class="btn-group pull-right">
               <a :href=edit_url class="btn btn-default"><em class="fa fa-pencil"></em> {{ $t('firefly.edit') }}</a>
               <a id="triggerButton" href="#" @click="submitTest" class="btn btn-default"><em class="fa fa-bolt"></em>
-                Trigger</a>
+                {{ $t('list.trigger') }}
+              </a>
               <a :href=delete_url class="btn btn-danger"><em class="fa fa-trash"></em> {{ $t('firefly.delete') }}</a>
             </div>
           </div>
@@ -84,11 +85,13 @@
             <table class="table table-hover">
               <tbody>
               <tr>
-                <td style="width:40%;">URL</td>
+                <td style="width:40%;">{{ $t('list.url') }}</td>
                 <td><input type="text" readonly class="form-control" :value=url></td>
               </tr>
               <tr>
-                <td>Secret</td>
+                <td>
+                  {{ $t('list.secret') }}
+                </td>
                 <td>
                   <em style="cursor:pointer"
                       v-if="show_secret" class="fa fa-eye" @click="toggleSecret"></em>
@@ -102,7 +105,13 @@
             </table>
           </div>
           <div class="box-footer">
-            Visit url / reset secret
+            <a :href=url class="btn btn-default">
+              <em class="fa fa-globe-europe"></em> {{ $t('firefly.visit_webhook_url') }}
+            </a>
+            <a @click="resetSecret" class="btn btn-default">
+              <em class="fa fa-lock"></em> {{ $t('firefly.reset_webhook_secret') }}
+            </a>
+
           </div>
         </div>
       </div>
@@ -208,11 +217,11 @@
                 <span class="text-danger">({{ message.status_code }})</span>
               </strong>
               <p>
-                {{ $t('firefly.logs') }}: <br />
+                {{ $t('firefly.logs') }}: <br/>
                 <textarea class="form-control" rows="5" readonly>{{ message.logs }}</textarea>
               </p>
               <p v-if="null !== message.response">
-                {{ $t('firefly.response') }}: <br />
+                {{ $t('firefly.response') }}: <br/>
                 <textarea class="form-control" rows="5" readonly>{{ message.response }}</textarea>
               </p>
             </div>
@@ -278,6 +287,11 @@ export default {
         e.preventDefault();
       }
       return false;
+    },
+    resetSecret: function () {
+      axios.put('./api/v1/webhooks/' + this.id, {secret: 'anything'}).then(() => {
+        this.downloadWebhook();
+      });
     },
     downloadWebhookMessages: function () {
       this.messages = [];

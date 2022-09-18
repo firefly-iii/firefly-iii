@@ -76,7 +76,7 @@ return [
     'type'                    => 'Τύπος',
     'completed'               => 'Ολοκληρώθηκε',
     'iban'                    => 'IBAN',
-    'account_number'              => 'Αριθμός λογαριασμού',
+    'account_number'          => 'Αριθμός λογαριασμού',
     'paid_current_period'     => 'Πληρώθηκαν αυτή την περίοδο',
     'email'                   => 'Email',
     'registered_at'           => 'Εγγράφηκε στις',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => 'Πληροφορίες Πληρωμής',
     'expected_info'           => 'Επόμενη αναμενόμενη συναλλαγή',
     'start_date'              => 'Ημερομηνία έναρξης',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

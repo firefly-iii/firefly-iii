@@ -685,9 +685,6 @@ class FireflyValidator extends Validator
         $trigger    = 0;
         $response   = 0;
         $delivery   = 0;
-
-
-
         $triggers   = Webhook::getTriggersForValidation();
         $responses  = Webhook::getResponsesForValidation();
         $deliveries = Webhook::getDeliveriesForValidation();

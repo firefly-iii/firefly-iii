@@ -76,7 +76,7 @@ return [
     'type'                    => '类型',
     'completed'               => '已完成',
     'iban'                    => '国际银行账户号码（IBAN）',
-    'account_number'              => '账户号码',
+    'account_number'          => '账户号码',
     'paid_current_period'     => '当前周期支付',
     'email'                   => '电子邮件',
     'registered_at'           => '注册于',
@@ -138,4 +138,10 @@ return [
     'payment_info'            => '付款信息',
     'expected_info'           => '下一个预期的交易',
     'start_date'              => '起始日期',
+    'trigger'                 => 'Trigger',
+    'response'                => 'Response',
+    'delivery'                => 'Delivery',
+    'url'                     => 'URL',
+    'secret'                  => 'Secret',
+
 ];

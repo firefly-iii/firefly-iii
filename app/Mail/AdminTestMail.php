@@ -40,13 +40,11 @@ class AdminTestMail extends Mailable
     public string $email;
 
     /**
-     * ConfirmEmailChangeMail constructor.
-     *
-     * @param string $email
+     * AdminTestMail constructor.
      */
-    public function __construct(string $email)
+    public function __construct()
     {
-        $this->email = $email;
+
     }
 
     /**
