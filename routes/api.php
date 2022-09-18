@@ -331,10 +331,10 @@ Route::group(
     static function () {
 
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        //Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{availableBudget}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        Route::put('{availableBudget}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        Route::delete('{availableBudget}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+        //Route::put('{availableBudget}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        //Route::delete('{availableBudget}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
     }
 );
 
