@@ -43,6 +43,7 @@ class AutomationHandler
      * @param RequestedReportOnJournals $event
      *
      * @return bool
+     * @deprecated
      */
     public function reportJournals(RequestedReportOnJournals $event): bool
     {

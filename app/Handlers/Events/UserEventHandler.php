@@ -193,6 +193,7 @@ class UserEventHandler
      * @param DetectedNewIPAddress $event
      *
      * @throws FireflyException
+     * @deprecated
      */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
@@ -235,6 +236,7 @@ class UserEventHandler
      *
      * @return bool
      * @throws FireflyException
+     * @deprecated
      */
     public function sendEmailChangeConfirmMail(UserChangedEmail $event): bool
     {
@@ -260,6 +262,7 @@ class UserEventHandler
      *
      * @return bool
      * @throws FireflyException
+     * @deprecated
      */
     public function sendEmailChangeUndoMail(UserChangedEmail $event): bool
     {
@@ -281,7 +284,7 @@ class UserEventHandler
 
     /**
      * Send a new password to the user.
-     *
+     * @deprecated
      * @param RequestedNewPassword $event
      *
      * @return bool
@@ -312,6 +315,7 @@ class UserEventHandler
      * @param RegisteredUser $event
      *
      * @return bool
+     * @deprecated
      * @throws FireflyException
      */
     public function sendRegistrationMail(RegisteredUser $event): bool

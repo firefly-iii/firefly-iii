@@ -44,6 +44,7 @@ class APIEventHandler
      *
      * @return bool
      * @throws FireflyException
+     * @deprecated
      */
     public function accessTokenCreated(AccessTokenCreated $event): bool
     {

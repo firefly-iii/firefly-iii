@@ -46,6 +46,7 @@ class VersionCheckEventHandler
      * @throws FireflyException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @deprecated ?
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
