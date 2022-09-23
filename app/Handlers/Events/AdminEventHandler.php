@@ -44,8 +44,6 @@ class AdminEventHandler
      * @param AdminRequestedTestMessage $event
      *
      * @return bool
-     * @throws FireflyException
-     * @deprecated
      */
     public function sendTestMessage(AdminRequestedTestMessage $event): bool
     {

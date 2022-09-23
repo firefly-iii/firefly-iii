@@ -44,7 +44,6 @@ class WarnAboutBills implements ShouldQueue
     private Carbon $date;
     private bool   $force;
 
-
     /**
      * Create a new job instance.
      *
@@ -54,16 +53,16 @@ class WarnAboutBills implements ShouldQueue
      */
     public function __construct(?Carbon $date)
     {
+        $newDate = new Carbon;
+        $newDate->startOfDay();
+        $this->date = $newDate;
+
         if (null !== $date) {
             $newDate = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
         }
-        if (null === $date) {
-            $newDate = new Carbon;
-            $newDate->startOfDay();
-            $this->date = $newDate;
-        }
+
         $this->force = false;
 
         Log::debug(sprintf('Created new WarnAboutBills("%s")', $this->date->format('Y-m-d')));

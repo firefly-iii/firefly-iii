@@ -42,11 +42,13 @@ use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Client;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Log;
@@ -231,6 +233,8 @@ class EventServiceProvider extends ServiceProvider
 
                     return;
                 }
+                // HERE WE ARE
+                Notification::send($event->user, new TestNotification($event->user->email));
 
                 $email = $user->email;
 

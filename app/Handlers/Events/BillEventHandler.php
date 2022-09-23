@@ -25,8 +25,10 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\WarnUserAboutBill;
-use FireflyIII\Mail\BillWarningMail;
-use Log;
+use FireflyIII\Notifications\User\BillReminder;
+use FireflyIII\Support\Facades\Preferences;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Mail;
 
 /**
@@ -42,24 +44,17 @@ class BillEventHandler
      */
     public function warnAboutBill(WarnUserAboutBill $event): void
     {
-        $bill      = $event->bill;
-        $field     = $event->field;
-        $diff      = $event->diff;
-        $user      = $bill->user;
-        $address   = $user->email;
-        $ipAddress = request()?->ip();
+        Log::debug(sprintf('Now in %s', __METHOD__));
 
-        // see if user has alternative email address:
-        $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
-        if (null !== $pref) {
-            $address = $pref->data;
+        $bill       = $event->bill;
+        $preference = Preferences::getForUser($bill->user, 'notification_bill_reminder', true)->data;
+
+        if (true === $preference) {
+            Log::debug('Bill reminder is true!');
+            Notification::send($bill->user, new BillReminder($bill, $event->field, $event->diff));
         }
-
-        // send message:
-        Mail::to($address)->send(new BillWarningMail($bill, $field, $diff, $ipAddress));
-
-
-        Log::debug('warnAboutBill');
+        if (false === $preference) {
+            Log::debug('User has disabled bill reminders.');
+        }
     }
-
 }
