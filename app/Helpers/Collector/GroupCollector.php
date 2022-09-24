@@ -841,4 +841,13 @@ class GroupCollector implements GroupCollectorInterface
         $this->query->where('source.reconciled', 1)->where('destination.reconciled', 1);
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function exists(): GroupCollectorInterface
+    {
+        $this->query->whereNull('transaction_groups.deleted_at');
+        return $this;
+    }
 }

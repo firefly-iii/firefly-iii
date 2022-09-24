@@ -619,7 +619,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'amount_is':
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
-                $value = str_replace(',', '.', (string) $value);
+                $value  = str_replace(',', '.', (string) $value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
@@ -865,6 +865,9 @@ class OperatorQuerySearch implements SearchInterface
                 break;
             case 'attachment_notes_ends':
                 $this->collector->attachmentNotesEnds($value);
+                break;
+            case 'exists':
+                $this->collector->exists();
                 break;
 
         }

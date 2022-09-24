@@ -399,6 +399,9 @@ class Steam
             "\x20", // plain old normal space
         ];
 
+        // clear zalgo text
+        $string = preg_replace('/\pM/u', '', $string);
+
         return str_replace($search, '', $string);
     }
 

@@ -232,11 +232,16 @@ function updateActionInput(selectList) {
             break;
         case 'clear_category':
         case 'clear_budget':
+        case 'append_descr_to_notes':
+        case 'append_notes_to_descr':
+        case 'move_descr_to_notes':
+        case 'move_notes_to_descr':
         case 'clear_notes':
         case 'delete_transaction':
         case 'remove_all_tags':
             console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
-            inputResult.attr('disabled', 'disabled');
+            inputResult.prop('disabled', true);
+            inputResult.typeahead('destroy');
             break;
         case 'set_budget':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
@@ -343,6 +348,8 @@ function updateTriggerInput(selectList) {
         case 'has_no_tag':
         case 'no_notes':
         case 'any_notes':
+        case 'exists':
+        case 'reconciled':
         case 'has_any_tag':
         case 'has_attachments':
         case 'source_is_cash':
@@ -364,7 +371,7 @@ function updateTriggerInput(selectList) {
         case 'amount_exactly':
             console.log('Set value to type=number');
             inputResult.prop('type', 'number');
-            inputResult.prop('step','any');
+            inputResult.prop('step', 'any');
             break;
         default:
             console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
@@ -383,32 +390,32 @@ function createAutoComplete(input, URL) {
     input.typeahead('destroy');
 
     // append URL:
-    var lastChar = URL[URL.length -1];
+    var lastChar = URL[URL.length - 1];
     var urlParamSplit = '?';
-    if('&' === lastChar) {
+    if ('&' === lastChar) {
         urlParamSplit = '';
     }
     var source = new Bloodhound({
-                                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                    queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                    prefetch: {
-                                        url: URL + urlParamSplit + 'uid=' + uid,
-                                        filter: function (list) {
-                                            return $.map(list, function (item) {
-                                                return {name: item.name};
-                                            });
-                                        }
-                                    },
-                                    remote: {
-                                        url: URL + urlParamSplit + 'query=%QUERY&uid=' + uid,
-                                        wildcard: '%QUERY',
-                                        filter: function (list) {
-                                            return $.map(list, function (item) {
-                                                return {name: item.name};
-                                            });
-                                        }
-                                    }
-                                });
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: URL + urlParamSplit + 'uid=' + uid,
+            filter: function (list) {
+                return $.map(list, function (item) {
+                    return {name: item.name};
+                });
+            }
+        },
+        remote: {
+            url: URL + urlParamSplit + 'query=%QUERY&uid=' + uid,
+            wildcard: '%QUERY',
+            filter: function (list) {
+                return $.map(list, function (item) {
+                    return {name: item.name};
+                });
+            }
+        }
+    });
     source.initialize();
     input.typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false});
 }

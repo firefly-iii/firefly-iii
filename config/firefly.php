@@ -61,7 +61,9 @@ use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
+use FireflyIII\TransactionRules\Actions\AppendDescriptionToNotes;
 use FireflyIII\TransactionRules\Actions\AppendNotes;
+use FireflyIII\TransactionRules\Actions\AppendNotesToDescription;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
 use FireflyIII\TransactionRules\Actions\ClearNotes;
@@ -70,6 +72,8 @@ use FireflyIII\TransactionRules\Actions\ConvertToTransfer;
 use FireflyIII\TransactionRules\Actions\ConvertToWithdrawal;
 use FireflyIII\TransactionRules\Actions\DeleteTransaction;
 use FireflyIII\TransactionRules\Actions\LinkToBill;
+use FireflyIII\TransactionRules\Actions\MoveDescriptionToNotes;
+use FireflyIII\TransactionRules\Actions\MoveNotesToDescription;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
@@ -481,6 +485,10 @@ return [
         'convert_transfer'        => ConvertToTransfer::class,
         'update_piggy'            => UpdatePiggybank::class,
         'delete_transaction'      => DeleteTransaction::class,
+        'append_descr_to_notes'   => AppendDescriptionToNotes::class,
+        'append_notes_to_descr'    => AppendNotesToDescription::class,
+        'move_descr_to_notes'     => MoveDescriptionToNotes::class,
+        'move_notes_to_descr'     => MoveNotesToDescription::class,
     ],
     'context-rule-actions' => [
         'set_category',

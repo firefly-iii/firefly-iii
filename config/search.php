@@ -230,5 +230,6 @@ return [
         'attachment_notes_start'          => ['alias' => true, 'alias_for' => 'attachment_notes_starts', 'needs_context' => true],
         'attachment_notes_ends'           => ['alias' => false, 'needs_context' => true],
         'attachment_notes_end'            => ['alias' => true, 'alias_for' => 'attachment_notes_ends', 'needs_context' => true],
+        'exists'                          => ['alias' => false, 'needs_context' => false,],
     ],
 ];

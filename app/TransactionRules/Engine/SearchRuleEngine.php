@@ -99,7 +99,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $searchArray = [];
 
         /** @var Collection $triggers */
-        $triggers = $rule->ruleTriggers;
+        $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
 
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
@@ -409,7 +409,7 @@ class SearchRuleEngine implements RuleEngineInterface
     private function processTransactionJournal(Rule $rule, array $transaction): void
     {
         Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
-        $actions = $rule->ruleActions()->get();
+        $actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
         /** @var RuleAction $ruleAction */
         foreach ($actions as $ruleAction) {
             if (false === $ruleAction->active) {

@@ -57,6 +57,11 @@ interface GroupCollectorInterface
     public function isReconciled(): GroupCollectorInterface;
 
     /**
+     * @return GroupCollectorInterface
+     */
+    public function exists(): GroupCollectorInterface;
+
+    /**
      * Get transactions where the amount is less than.
      *
      * @param string $amount
