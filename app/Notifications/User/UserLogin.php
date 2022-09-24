@@ -25,6 +25,7 @@ namespace FireflyIII\Notifications\User;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class UserLogin extends Notification
@@ -51,7 +52,7 @@ class UserLogin extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'slack'];
     }
 
     /**
@@ -76,6 +77,27 @@ class UserLogin extends Notification
         return (new MailMessage)
             ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $host])
             ->subject((string) trans('email.login_from_new_ip'));
+    }
+
+    /**
+     * Get the Slack representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        $host = '';
+        try {
+            $hostName = gethostbyaddr($this->ip);
+        } catch (Exception $e) {
+            $hostName = $this->ip;
+        }
+        if ($hostName !== $this->ip) {
+            $host = $hostName;
+        }
+
+        return (new SlackMessage)->content((string) trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
     }
 
     /**

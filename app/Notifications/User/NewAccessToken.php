@@ -24,6 +24,7 @@ namespace FireflyIII\Notifications\User;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class NewAccessToken extends Notification
@@ -47,7 +48,7 @@ class NewAccessToken extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'slack'];
     }
 
     /**
@@ -61,6 +62,16 @@ class NewAccessToken extends Notification
         return (new MailMessage)
             ->markdown('emails.token-created')
             ->subject((string) trans('email.access_token_created_subject'));
+    }
+    /**
+     * Get the Slack representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        return (new SlackMessage)->content((string) trans('email.access_token_created_body'));
     }
 
     /**

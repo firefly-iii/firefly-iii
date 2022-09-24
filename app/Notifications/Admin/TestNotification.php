@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Admin;
 
-use FireflyIII\Mail\AdminTestMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
@@ -50,7 +49,7 @@ class TestNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -61,7 +60,7 @@ class TestNotification extends Notification
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -70,6 +69,7 @@ class TestNotification extends Notification
             ->markdown('emails.admin-test', ['email' => $this->address])
             ->subject((string) trans('email.admin_test_subject'));
     }
+
     /**
      * Get the Slack representation of the notification.
      *
@@ -78,13 +78,13 @@ class TestNotification extends Notification
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)->content((string)trans('email.admin_test_subject'));
+        return (new SlackMessage)->content((string) trans('email.admin_test_subject'));
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function toArray($notifiable)
