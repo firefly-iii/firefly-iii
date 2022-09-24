@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
+use Gdbots\QueryParser\Enum\BoolOperator;
 use Gdbots\QueryParser\Node\Date;
 use Gdbots\QueryParser\Node\Emoji;
 use Gdbots\QueryParser\Node\Emoticon;
@@ -206,14 +207,18 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Now handle Node class %s', $class));
                 /** @var Field $searchNode */
                 // used to search for x:y
-                $operator = strtolower($searchNode->getValue());
-                $value    = $searchNode->getNode()->getValue();
+                $operator   = strtolower($searchNode->getValue());
+                $value      = $searchNode->getNode()->getValue();
+                $prohibited = $searchNode->getBoolOperator()->equals(BoolOperator::PROHIBITED()->getValue());
                 // must be valid operator:
-                if (in_array($operator, $this->validOperators, true) && $this->updateCollector($operator, (string) $value)) {
+                if (
+                    in_array($operator, $this->validOperators, true) &&
+                    $this->updateCollector($operator, (string) $value, $prohibited)) {
                     $this->operators->push(
                         [
-                            'type'  => self::getRootOperator($operator),
-                            'value' => (string) $value,
+                            'type'       => self::getRootOperator($operator),
+                            'value'      => (string) $value,
+                            'prohibited' => $prohibited,
                         ]
                     );
                     Log::debug(sprintf('Added operator type "%s"', $operator));
@@ -236,8 +241,12 @@ class OperatorQuerySearch implements SearchInterface
      * @return bool
      * @throws FireflyException
      */
-    private function updateCollector(string $operator, string $value): bool
+    private function updateCollector(string $operator, string $value, bool $prohibited): bool
     {
+        if ($prohibited) {
+            $operator = sprintf('!%s', $operator);
+        }
+
         Log::debug(sprintf('Now in updateCollector("%s", "%s")', $operator, $value));
 
         // check if alias, replace if necessary:
@@ -471,6 +480,15 @@ class OperatorQuerySearch implements SearchInterface
                 $result = $this->categoryRepository->searchCategory($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case '!category_contains':
+                $result = $this->categoryRepository->searchCategory($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->setNotCategories($result);
                 }
                 if (0 === $result->count()) {
                     $this->collector->findNothing();

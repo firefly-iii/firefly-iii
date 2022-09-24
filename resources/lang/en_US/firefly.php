@@ -404,6 +404,7 @@ return [
     'search_modifier_account_nr_ends'                     => 'Either account number / IBAN ends with ":value"',
     'search_modifier_account_nr_starts'                   => 'Either account number / IBAN starts with ":value"',
     'search_modifier_category_contains'                   => 'Category contains ":value"',
+    'search_modifier_not_category_contains'               => 'Category does not contain ":value"',
     'search_modifier_category_ends'                       => 'Category ends with ":value"',
     'search_modifier_category_starts'                     => 'Category starts with ":value"',
     'search_modifier_budget_contains'                     => 'Budget contains ":value"',

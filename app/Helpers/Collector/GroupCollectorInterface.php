@@ -572,6 +572,15 @@ interface GroupCollectorInterface
     public function setCategories(Collection $categories): GroupCollectorInterface;
 
     /**
+     * Limit the search not to have a specific bunch of categories.
+     *
+     * @param Collection $categories
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setNotCategories(Collection $categories): GroupCollectorInterface;
+
+    /**
      * Limit the search to a specific category.
      *
      * @param Category $category

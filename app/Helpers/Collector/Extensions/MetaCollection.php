@@ -409,6 +409,23 @@ trait MetaCollection
     }
 
     /**
+     * Limit the search to a specific bunch of categories.
+     *
+     * @param Collection $categories
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setNotCategories(Collection $categories): GroupCollectorInterface
+    {
+        if ($categories->count() > 0) {
+            $this->withCategoryInformation();
+            $this->query->whereNotIn('categories.id', $categories->pluck('id')->toArray());
+        }
+
+        return $this;
+    }
+
+    /**
      * Will include category ID + name, if any.
      *
      * @return GroupCollectorInterface
