@@ -1085,6 +1085,7 @@ Route::group(
         // admin home
         Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::post('test-message', ['uses' => 'HomeController@testMessage', 'as' => 'test-message']);
+        Route::post('notifications', ['uses' => 'HomeController@notifications', 'as' => 'notifications']);
 
         // check for updates?
         Route::get('update-check', ['uses' => 'UpdateController@index', 'as' => 'update-check']);

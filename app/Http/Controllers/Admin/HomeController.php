@@ -26,6 +26,7 @@ use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -68,9 +69,28 @@ class HomeController extends Controller
         if (null !== $pref && is_string($pref->data)) {
             $email = $pref->data;
         }
-        Log::debug('Email is ', [$email]);
 
-        return view('admin.index', compact('title', 'mainTitleIcon', 'email'));
+        // admin notification settings:
+        $notifications = [];
+        foreach (config('firefly.admin_notifications') as $item) {
+            $notifications[$item] = FireflyConfig::get(sprintf('notification_%s', $item), true)->data;
+        }
+
+        return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications'));
+    }
+
+    public function notifications(Request $request): RedirectResponse
+    {
+        foreach (config('firefly.admin_notifications') as $item) {
+            $value = false;
+            if ($request->has(sprintf('notification_%s', $item))) {
+                $value = true;
+            }
+            FireflyConfig::set(sprintf('notification_%s',$item), $value);
+        }
+
+        session()->flash('success', (string) trans('firefly.notification_settings_saved'));
+        return redirect(route('admin.index'));
     }
 
     /**

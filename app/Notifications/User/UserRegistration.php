@@ -20,9 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Notifications\Admin;
+namespace FireflyIII\Notifications\User;
 
-use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -31,16 +30,13 @@ class UserRegistration extends Notification
 {
     use Queueable;
 
-    private User $user;
-
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct()
     {
-        $this->user = $user;
     }
 
     /**
@@ -63,8 +59,8 @@ class UserRegistration extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id])
-            ->subject((string) trans('email.registered_subject_admin'));
+            ->markdown('emails.registered', ['address' => route('index')])
+            ->subject((string) trans('email.registered_subject'));
     }
 
     /**
@@ -80,3 +76,4 @@ class UserRegistration extends Notification
         ];
     }
 }
+

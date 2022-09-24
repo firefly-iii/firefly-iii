@@ -33,15 +33,16 @@ use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
-use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
-use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
 use FireflyIII\Mail\UndoEmailChangeMail;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
+use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
 use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Notifications\User\UserNewPassword;
+use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Notification;
@@ -281,26 +282,28 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = config('firefly.send_registration_mail');
+        $sendMail = FireflyConfig::get('notification_user_new_reg', true)->data;
         if ($sendMail) {
-            // get the email address
-            $email = $event->user->email;
-            $url   = route('index');
+            Notification::send($event->user, new UserRegistrationNotification);
+        }
+    }
 
-            // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email');
-            if (null !== $pref) {
-                $email = $pref->data;
+    /**
+     * @param RegisteredUser $event
+     * @return void
+     */
+    public function sendAdminRegistrationNotification(RegisteredUser $event): void
+    {
+        $sendMail = FireflyConfig::get('notification_admin_new_reg', true)->data;
+        if ($sendMail) {
+            /** @var UserRepositoryInterface $repository */
+            $repository = app(UserRepositoryInterface::class);
+            $all        = $repository->all();
+            foreach ($all as $user) {
+                if ($repository->hasRole($user, 'owner')) {
+                    Notification::send($user, new AdminRegistrationNotification($event->user));
+                }
             }
-
-            // send email.
-            try {
-                Mail::to($email)->send(new RegisteredUserMail($url));
-
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::error($e->getMessage());
-            }
-
         }
     }
 
