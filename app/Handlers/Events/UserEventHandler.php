@@ -33,16 +33,18 @@ use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
-use FireflyIII\Mail\NewIPAddressWarningMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
 use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
 use FireflyIII\Mail\UndoEmailChangeMail;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
+use FireflyIII\Notifications\User\UserLogin;
+use FireflyIII\Notifications\User\UserNewPassword;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Notification;
 use Log;
 use Mail;
 
@@ -62,7 +64,7 @@ class UserEventHandler
      *
      * @return bool
      */
-    public function attachUserRole(RegisteredUser $event): bool
+    public function attachUserRole(RegisteredUser $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
@@ -72,19 +74,16 @@ class UserEventHandler
             Log::debug('User count is one, attach role.');
             $repository->attachRole($event->user, 'owner');
         }
-
-        return true;
     }
 
     /**
      * @param RegisteredUser $event
      * @return bool
      */
-    public function createExchangeRates(RegisteredUser $event): bool {
+    public function createExchangeRates(RegisteredUser $event): void
+    {
         $seeder = new ExchangeRateSeeder;
         $seeder->run();
-
-        return true;
     }
 
     /**
@@ -94,7 +93,7 @@ class UserEventHandler
      *
      * @return bool
      */
-    public function checkSingleUserIsAdmin(Login $event): bool
+    public function checkSingleUserIsAdmin(Login $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
@@ -117,8 +116,6 @@ class UserEventHandler
             // give user the role
             $repository->attachRole($user, 'owner');
         }
-
-        return true;
     }
 
     /**
@@ -127,7 +124,7 @@ class UserEventHandler
      * @return bool
      * @throws FireflyException
      */
-    public function createGroupMembership(RegisteredUser $event): bool
+    public function createGroupMembership(RegisteredUser $event): void
     {
         $user        = $event->user;
         $groupExists = true;
@@ -160,8 +157,6 @@ class UserEventHandler
         );
         $user->user_group_id = $group->id;
         $user->save();
-
-        return true;
     }
 
     /**
@@ -172,7 +167,7 @@ class UserEventHandler
      * @return bool
      * @throws FireflyException
      */
-    public function demoUserBackToEnglish(Login $event): bool
+    public function demoUserBackToEnglish(Login $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
@@ -185,15 +180,12 @@ class UserEventHandler
             app('preferences')->setForUser($user, 'locale', 'equal');
             app('preferences')->mark();
         }
-
-        return true;
     }
 
     /**
      * @param DetectedNewIPAddress $event
      *
      * @throws FireflyException
-     * @deprecated
      */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
@@ -207,21 +199,10 @@ class UserEventHandler
 
         $list = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
 
-        // see if user has alternative email address:
-        $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
-        if (null !== $pref) {
-            $email = $pref->data;
-        }
-
         /** @var array $entry */
         foreach ($list as $index => $entry) {
             if (false === $entry['notified']) {
-                try {
-                    Mail::to($email)->send(new NewIPAddressWarningMail($ipAddress));
-
-                } catch (Exception $e) { // @phpstan-ignore-line
-                    Log::error($e->getMessage());
-                }
+                Notification::send($user, new UserLogin($ipAddress));
             }
             $list[$index]['notified'] = true;
         }
@@ -230,41 +211,38 @@ class UserEventHandler
     }
 
     /**
-     * Send email to confirm email change.
+     * Send email to confirm email change. Will not be made into a notification, because
+     * this requires some custom fields from the user and not just the "user" object.
      *
      * @param UserChangedEmail $event
      *
-     * @return bool
      * @throws FireflyException
-     * @deprecated
      */
-    public function sendEmailChangeConfirmMail(UserChangedEmail $event): bool
+    public function sendEmailChangeConfirmMail(UserChangedEmail $event): void
     {
         $newEmail = $event->newEmail;
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
         $token    = app('preferences')->getForUser($user, 'email_change_confirm_token', 'invalid');
         $url      = route('profile.confirm-email-change', [$token->data]);
+
         try {
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
 
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
-
-        return true;
     }
 
     /**
-     * Send email to be able to undo email change.
+     * Send email to be able to undo email change. Will not be made into a notification, because
+     * this requires some custom fields from the user and not just the "user" object.
      *
      * @param UserChangedEmail $event
      *
-     * @return bool
      * @throws FireflyException
-     * @deprecated
      */
-    public function sendEmailChangeUndoMail(UserChangedEmail $event): bool
+    public function sendEmailChangeUndoMail(UserChangedEmail $event): void
     {
         $newEmail = $event->newEmail;
         $oldEmail = $event->oldEmail;
@@ -278,53 +256,36 @@ class UserEventHandler
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
-
-        return true;
     }
 
     /**
      * Send a new password to the user.
-     * @deprecated
      * @param RequestedNewPassword $event
-     *
-     * @return bool
      */
-    public function sendNewPassword(RequestedNewPassword $event): bool
+    public function sendNewPassword(RequestedNewPassword $event): void
     {
-        $email     = $event->user->email;
-        $ipAddress = $event->ipAddress;
-        $token     = $event->token;
-
-        $url = route('password.reset', [$token]);
-
-        // send email.
-        try {
-            Mail::to($email)->send(new RequestedNewPasswordMail($url, $ipAddress));
-
-        } catch (Exception $e) { // @phpstan-ignore-line
-            Log::error($e->getMessage());
-        }
-
-        return true;
+        Notification::send($event->user, new UserNewPassword(route('password.reset', [$event->token])));
     }
 
     /**
      * This method will send the user a registration mail, welcoming him or her to Firefly III.
      * This message is only sent when the configuration of Firefly III says so.
      *
+     * TODO this is an admin setting not a variable. Fix that first.
+     *
      * @param RegisteredUser $event
      *
      * @return bool
-     * @deprecated
      * @throws FireflyException
+     * @deprecated
      */
-    public function sendRegistrationMail(RegisteredUser $event): bool
+    public function sendRegistrationMail(RegisteredUser $event): void
     {
         $sendMail = config('firefly.send_registration_mail');
         if ($sendMail) {
             // get the email address
-            $email     = $event->user->email;
-            $url       = route('index');
+            $email = $event->user->email;
+            $url   = route('index');
 
             // see if user has alternative email address:
             $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email');
@@ -341,8 +302,6 @@ class UserEventHandler
             }
 
         }
-
-        return true;
     }
 
     /**
@@ -355,7 +314,7 @@ class UserEventHandler
         $user = $event->user;
         /** @var array $preference */
 
-        if($user->hasRole('demo')) {
+        if ($user->hasRole('demo')) {
             Log::debug('Do not log demo user logins');
             return;
         }

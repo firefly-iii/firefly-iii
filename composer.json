@@ -100,10 +100,10 @@
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^2.0",
     "psr/log": "<4",
-    "ramsey/uuid": "^4.4",
+    "ramsey/uuid": "^4.5",
     "rcrowe/twigbridge": "^0.14",
-    "spatie/data-transfer-object": "^3.8",
-    "spatie/laravel-ignition": "^1.4",
+    "spatie/data-transfer-object": "^3.9",
+    "spatie/laravel-ignition": "^1.5",
     "symfony/http-client": "^6.0",
     "symfony/mailgun-mailer": "^6.0"
   },

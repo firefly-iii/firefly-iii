@@ -26,7 +26,10 @@ namespace FireflyIII\Handlers\Events;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\AccessTokenCreatedMail;
+use FireflyIII\Notifications\Admin\TestNotification;
+use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Log;
 use Mail;
@@ -42,45 +45,18 @@ class APIEventHandler
      *
      * @param AccessTokenCreated $event
      *
-     * @return bool
      * @throws FireflyException
-     * @deprecated
      */
-    public function accessTokenCreated(AccessTokenCreated $event): bool
+    public function accessTokenCreated(AccessTokenCreated $event): void
     {
+        Log::debug(__METHOD__);
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find((int) $event->userId);
+
         if (null !== $user) {
-            $email = $user->email;
-
-            // if user is demo user, send to owner:
-            if ($user->hasRole('demo')) {
-                $email = config('firefly.site_owner');
-            }
-
-            // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
-            if (null !== $pref) {
-                $email = (string) (is_array($pref->data) ? $email : $pref->data);
-            }
-
-            Log::debug(sprintf('Now in APIEventHandler::accessTokenCreated. Email is %s', $email));
-            try {
-                Log::debug('Trying to send message...');
-                Mail::to($email)->send(new AccessTokenCreatedMail);
-
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::debug('Send message failed! :(');
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-                Session::flash('error', 'Possible email error: ' . $e->getMessage());
-            }
-
-            Log::debug('If no error above this line, message was sent.');
+            Notification::send($user, new NewAccessToken);
         }
-
-        return true;
     }
 
 }

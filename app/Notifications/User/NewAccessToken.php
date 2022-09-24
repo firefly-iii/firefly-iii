@@ -30,16 +30,13 @@ class NewAccessToken extends Notification
 {
     use Queueable;
 
-    private string $address;
-
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $address)
+    public function __construct()
     {
-        $this->address = $address;
     }
 
     /**
@@ -62,8 +59,8 @@ class NewAccessToken extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->markdown('emails.admin-test', ['email' => $this->address])
-            ->subject((string) trans('email.admin_test_subject'));
+            ->markdown('emails.token-created')
+            ->subject((string) trans('email.access_token_created_subject'));
     }
 
     /**

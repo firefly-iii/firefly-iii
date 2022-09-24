@@ -380,12 +380,18 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // create transaction array and send to factory.
         $groupTitle = null;
-        if ($recurrence->recurrenceTransactions->count() > 1) {
+        $count = $recurrence->recurrenceTransactions->count();
+        if ($count > 1) {
             /** @var RecurrenceTransaction $first */
 
             $first      = $recurrence->recurrenceTransactions()->first();
             $groupTitle = $first->description;
 
+        }
+        if(0 === $count) {
+            Log::error('No transactions to be created in this recurrence. Cannot continue.');
+
+            return null;
         }
 
         $array = [

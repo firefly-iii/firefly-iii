@@ -566,6 +566,10 @@ class User extends Authenticatable
         if (null !== $pref) {
             $email = $pref->data;
         }
+        // if user is demo user, send to owner:
+        if ($this->hasRole('demo')) {
+            $email = config('firefly.site_owner');
+        }
 
         return match ($driver) {
             'database' => $this->notifications(),

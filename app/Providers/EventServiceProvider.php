@@ -159,7 +159,7 @@ class EventServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * TODO needs a dedicated method.
      */
     protected function registerBudgetEvents(): void
     {
@@ -206,13 +206,10 @@ class EventServiceProvider extends ServiceProvider
     }
 
     /**
-     *
+     * TODO needs a dedicated (static) method.
      */
     protected function registerCreateEvents(): void
     {
-
-
-        // in case of repeated piggy banks and/or other problems.
         PiggyBank::created(
             static function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
@@ -221,40 +218,6 @@ class EventServiceProvider extends ServiceProvider
                 $repetition->targetdate    = $piggyBank->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
-            }
-        );
-        Client::created(
-            static function (Client $oauthClient) {
-                /** @var UserRepositoryInterface $repository */
-                $repository = app(UserRepositoryInterface::class);
-                $user       = $repository->find((int) $oauthClient->user_id);
-                if (null === $user) {
-                    Log::info('OAuth client generated but no user associated.');
-
-                    return;
-                }
-                // HERE WE ARE
-                Notification::send($event->user, new TestNotification($event->user->email));
-
-                $email = $user->email;
-
-                // see if user has alternative email address:
-                $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
-                if (null !== $pref) {
-                    $email = $pref->data;
-                }
-
-                Log::debug(sprintf('Now in EventServiceProvider::registerCreateEvents. Email is %s', $email));
-                try {
-                    Log::debug('Trying to send message...');
-                    Mail::to($email)->send(new OAuthTokenCreatedMail($oauthClient));
-                } catch (TypeError|Exception $e) { // @phpstan-ignore-line
-                    Log::debug('Send message failed! :(');
-                    Log::error($e->getMessage());
-                    Log::error($e->getTraceAsString());
-                    Session::flash('error', 'Possible email error: ' . $e->getMessage());
-                }
-                Log::debug('If no error above this line, message was sent.');
             }
         );
     }

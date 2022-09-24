@@ -27,7 +27,12 @@ use Exception;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ReportNewJournalsMail;
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Notifications\User\NewAccessToken;
+use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\TransactionGroupTransformer;
+use Illuminate\Support\Facades\Notification;
 use Log;
 use Mail;
 
@@ -41,36 +46,31 @@ class AutomationHandler
      * Respond to the creation of X journals.
      *
      * @param RequestedReportOnJournals $event
-     *
-     * @return bool
-     * @deprecated
      */
-    public function reportJournals(RequestedReportOnJournals $event): bool
+    public function reportJournals(RequestedReportOnJournals $event): void
     {
+        Log::debug('In reportJournals.');
         $sendReport = config('firefly.send_report_journals');
-
         if (false === $sendReport) {
-            return true;
+            return;
         }
 
-        Log::debug('In reportJournals.');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($event->userId);
-        if (null !== $user && 0 !== $event->groups->count()) {
-            try {
-                Log::debug('Trying to mail...');
-                Mail::to($user->email)->send(new ReportNewJournalsMail($event->groups));
-
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::debug('Send message failed! :(');
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-
-            Log::debug('Done!');
+        if (null === $user || 0 === $event->groups->count()) {
+            return;
         }
 
-        return true;
+        // transform groups into array:
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
+        $groups = [];
+        /** @var TransactionGroup $group */
+        foreach ($event->groups as $group) {
+            $groups[] = $transformer->transformObject($group);
+        }
+
+        Notification::send($user, new TransactionCreation($groups));
     }
 }

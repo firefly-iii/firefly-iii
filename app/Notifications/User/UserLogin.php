@@ -22,7 +22,73 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-class UserLogin
-{
+use Exception;
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
+class UserLogin extends Notification
+{
+    use Queueable;
+
+    private string $ip;
+
+    /**
+     * Create a new notification instance.
+     *
+     * @return void
+     */
+    public function __construct(string $ip)
+    {
+        $this->ip = $ip;
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        $time = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
+        $host = '';
+        try {
+            $hostName = gethostbyaddr($this->ip);
+        } catch (Exception $e) {
+            $hostName = $this->ip;
+        }
+        if ($hostName !== $this->ip) {
+            $host = $hostName;
+        }
+
+        return (new MailMessage)
+            ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $host])
+            ->subject((string) trans('email.login_from_new_ip'));
+    }
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toArray($notifiable)
+    {
+        return [
+            //
+        ];
+    }
 }
+

@@ -45,17 +45,15 @@ class AdminEventHandler
      *
      * @return bool
      */
-    public function sendTestMessage(AdminRequestedTestMessage $event): bool
+    public function sendTestMessage(AdminRequestedTestMessage $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        // do some validation.
+
         if (!$repository->hasRole($event->user, 'owner')) {
-            return true;
+            return;
         }
 
         Notification::send($event->user, new TestNotification($event->user->email));
-
-        return true;
     }
 }
