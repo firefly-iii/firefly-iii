@@ -48,6 +48,9 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
+use FireflyIII\Notifications\Admin\TestNotification;
+use FireflyIII\Notifications\Admin\UserRegistration;
+use FireflyIII\Notifications\Admin\VersionCheckResult;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -576,6 +579,27 @@ class User extends Authenticatable
             'mail' => $email,
             default => null,
         };
+    }
+
+    /**
+     * Route notifications for the Slack channel.
+     *
+     * @param Notification $notification
+     * @return string
+     */
+    public function routeNotificationForSlack(Notification $notification): string
+    {
+        // this check does not validate if the user is owner, Should be done by notification itself.
+        if ($notification instanceof TestNotification) {
+            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        }
+        if ($notification instanceof UserRegistration) {
+            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        }
+        if ($notification instanceof VersionCheckResult) {
+            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        }
+        return app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
     }
 
 }

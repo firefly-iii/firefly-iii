@@ -75,8 +75,9 @@ class HomeController extends Controller
         foreach (config('firefly.admin_notifications') as $item) {
             $notifications[$item] = FireflyConfig::get(sprintf('notification_%s', $item), true)->data;
         }
+        $slackUrl = FireflyConfig::get('slack_webhook_url', '')->data;
 
-        return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications'));
+        return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications', 'slackUrl'));
     }
 
     public function notifications(Request $request): RedirectResponse
@@ -86,7 +87,14 @@ class HomeController extends Controller
             if ($request->has(sprintf('notification_%s', $item))) {
                 $value = true;
             }
-            FireflyConfig::set(sprintf('notification_%s',$item), $value);
+            FireflyConfig::set(sprintf('notification_%s', $item), $value);
+        }
+        $url = (string) $request->get('slackUrl');
+        if ('' === $url) {
+            FireflyConfig::delete('slack_webhook_url');
+        }
+        if (str_starts_with($url, 'https://hooks.slack.com/services/')) {
+            FireflyConfig::set('slack_webhook_url', $url);
         }
 
         session()->flash('success', (string) trans('firefly.notification_settings_saved'));

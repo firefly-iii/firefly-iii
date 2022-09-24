@@ -101,6 +101,7 @@ class PreferencesController extends Controller
         $languages          = config('firefly.languages');
         $locale             = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
         $listPageSize       = app('preferences')->get('listPageSize', 50)->data;
+        $slackUrl           = app('preferences')->get('slack_webhook_url', '')->data;
         $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
@@ -139,6 +140,7 @@ class PreferencesController extends Controller
                 'frontPageAccounts',
                 'languages',
                 'notifications',
+                'slackUrl',
                 'locales',
                 'locale',
                 'tjOptionalFields',
@@ -173,12 +175,12 @@ class PreferencesController extends Controller
 
         // extract notifications:
         $all = $request->all();
-        foreach(config('firefly.available_notifications') as $option) {
+        foreach (config('firefly.available_notifications') as $option) {
             $key = sprintf('notification_%s', $option);
-            if(array_key_exists($key, $all)) {
+            if (array_key_exists($key, $all)) {
                 app('preferences')->set($key, true);
             }
-            if(!array_key_exists($key, $all)) {
+            if (!array_key_exists($key, $all)) {
                 app('preferences')->set($key, false);
             }
         }
@@ -189,6 +191,16 @@ class PreferencesController extends Controller
         session()->forget('start');
         session()->forget('end');
         session()->forget('range');
+
+
+        // slack URL:
+        $url = (string) $request->get('slackUrl');
+        if(str_starts_with($url, 'https://hooks.slack.com/services/')){
+            app('preferences')->set('slack_webhook_url', $url);
+        }
+        if('' === $url) {
+            app('preferences')->delete('slack_webhook_url');
+        }
 
         // custom fiscal year
         $customFiscalYear = 1 === (int) $request->get('customFiscalYear');

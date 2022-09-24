@@ -1051,6 +1051,10 @@ return [
     'pref_notification_user_login'              => 'Alert when you login from a new location',
     'pref_notifications'                        => 'Notifications',
     'pref_notifications_help'                   => 'Indicate if these are notifications you would like to get. Some notifications may contain sensitive financial information.',
+    'slack_webhook_url'                         => 'Slack Webhook URL',
+    'slack_webhook_url_help'                    => 'If you want Firefly III to notify you using Slack, enter the webhook URL here. Otherwise leave the field blank. If you are an admin, you need to set this URL in the administration as well.',
+    'slack_url_label'                           => 'Slack "incoming webhook" URL',
+
     // profile:
     'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
@@ -1349,6 +1353,7 @@ return [
     // bills:
     'not_expected_period'                       => 'Not expected this period',
     'not_or_not_yet'                            => 'Not (yet)',
+    'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Bill matches transactions between :low and :high.',
     'running_again_loss'                        => 'Previously linked transactions to this bill may lose their connection, if they (no longer) match the rule(s).',
     'bill_related_rules'                        => 'Rules related to this bill',
@@ -1978,7 +1983,7 @@ return [
     'delete_user'                            => 'Delete user :email',
     'user_deleted'                           => 'The user has been deleted',
     'send_test_email'                        => 'Send test email message',
-    'send_test_email_text'                   => 'To see if your installation is capable of sending email, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
+    'send_test_email_text'                   => 'To see if your installation is capable of sending email or posting Slack messages, please press this button. You will not see an error here (if any), <strong>the log files will reflect any errors</strong>. You can press this button as many times as you like. There is no spam control. The message will be sent to <code>:email</code> and should arrive shortly.',
     'send_message'                           => 'Send message',
     'send_test_triggered'                    => 'Test was triggered. Check your inbox and the log files.',
     'give_admin_careful'                     => 'Users who are given admin rights can take away yours. Be careful.',
@@ -1986,9 +1991,10 @@ return [
     'admin_maintanance_expl'                 => 'Some nifty buttons for Firefly III maintenance',
     'admin_maintenance_clear_cache'          => 'Clear cache',
     'admin_notifications'                    => 'Admin notifications',
-    'admin_notifications_expl'               => 'The following notifications can be enabled or disabled by the administrator.',
+    'admin_notifications_expl'               => 'The following notifications can be enabled or disabled by the administrator. If you want to get these messages over Slack as well, set the "incoming webhook" URL.',
     'admin_notification_check_user_new_reg'  => 'User gets post-registration welcome message',
     'admin_notification_check_admin_new_reg' => 'Administrator(s) get new user registration notification',
+    'admin_notification_check_new_version'   => 'A new version is available',
     'save_notification_settings'             => 'Save settings',
     'notification_settings_saved'            => 'The notification settings have been saved',
 

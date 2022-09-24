@@ -25,8 +25,12 @@ namespace FireflyIII\Notifications\Admin;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Class UserRegistration
+ */
 class UserRegistration extends Notification
 {
     use Queueable;
@@ -46,18 +50,18 @@ class UserRegistration extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'slack'];
     }
 
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -68,9 +72,20 @@ class UserRegistration extends Notification
     }
 
     /**
+     * Get the Slack representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        return (new SlackMessage)->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
+    }
+
+    /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function toArray($notifiable)

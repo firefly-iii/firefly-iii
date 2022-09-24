@@ -47,6 +47,7 @@
                             </label>
                         </div>
                         {% endfor %}
+                        {{ ExpandedForm.text('slackUrl', slackUrl, {'label' : 'slack_url_label'|_}) }}
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-success">

@@ -260,6 +260,13 @@
                                         {% endfor %}
                                     </div>
                                 </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="preferences-box">
+                                        <h3>{{ 'slack_webhook_url'|_ }}</h3>
+                                        <p class="text-info">{{ 'slack_webhook_url_help'|_ }}</p>
+                                        {{ ExpandedForm.text('slackUrl',slackUrl,{'label' : 'slack_url_label'|_}) }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

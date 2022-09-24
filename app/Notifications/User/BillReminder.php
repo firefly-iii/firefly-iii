@@ -25,6 +25,7 @@ namespace FireflyIII\Notifications\User;
 use FireflyIII\Models\Bill;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 /**
@@ -58,7 +59,7 @@ class BillReminder extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'slack'];
     }
 
     /**
@@ -77,6 +78,28 @@ class BillReminder extends Notification
         return (new MailMessage)
             ->markdown('emails.bill-warning', ['field' => $this->field, 'diff' => $this->diff, 'bill' => $this->bill])
             ->subject($subject);
+    }
+
+    /**
+     * Get the Slack representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        $message = (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
+        if (0 === $this->diff) {
+            $message = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
+        }
+        $bill = $this->bill;
+        $url  = route('bills.show', [$bill->id]);
+        return (new SlackMessage)
+            ->warning()
+            ->attachment(function ($attachment) use ($bill, $url) {
+                $attachment->title((string) trans('firefly.visit_bill', ['name' => $bill->name]), $url);
+            })
+            ->content($message);
     }
 
     /**

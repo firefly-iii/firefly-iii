@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Admin;
 
-use FireflyIII\Models\Bill;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 /**
@@ -35,7 +35,7 @@ class VersionCheckResult extends Notification
 {
     use Queueable;
 
-    private string  $message;
+    private string $message;
 
     /**
      * Create a new notification instance.
@@ -55,7 +55,7 @@ class VersionCheckResult extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'slack'];
     }
 
     /**
@@ -69,7 +69,21 @@ class VersionCheckResult extends Notification
 
         return (new MailMessage)
             ->markdown('emails.new-version', ['message' => $this->message])
-            ->subject((string)trans('email.new_version_email_subject'));
+            ->subject((string) trans('email.new_version_email_subject'));
+    }
+
+    /**
+     * Get the Slack representation of the notification.
+     *
+     * @param mixed $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        return (new SlackMessage)->content($this->message)
+                                 ->attachment(function ($attachment) {
+                                     $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
+                                 });
     }
 
     /**
