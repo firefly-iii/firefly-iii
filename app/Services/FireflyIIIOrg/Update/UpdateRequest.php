@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\FireflyIIIOrg\Update;
 
 use Carbon\Carbon;
+use FireflyIII\Events\NewVersionAvailable;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
@@ -168,6 +169,7 @@ class UpdateRequest implements UpdateRequestInterface
 
             return $return;
         }
+
         // a newer version is available!
         /** @var Carbon $released */
         $released     = $information['date'];
@@ -189,7 +191,7 @@ class UpdateRequest implements UpdateRequestInterface
             return $return;
         }
 
-        // its been around for a while:
+        // it's been around for a while:
         $return['level']   = 'success';
         $return['message'] = (string) trans(
             'firefly.update_new_version_alert',
@@ -214,6 +216,9 @@ class UpdateRequest implements UpdateRequestInterface
             Log::debug('New release is also a alpha!');
         }
         Log::debug('New release is here!', $return);
+
+        // send event, this may result in a notification.
+        event(new NewVersionAvailable($return['message']));
 
         return $return;
     }

@@ -61,6 +61,9 @@ return [
     'registered_pw_reset_link'                => 'Password reset:',
     'registered_doc_link'                     => 'Documentation:',
 
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
+
     // email change
     'email_change_subject'                    => 'Your Firefly III email address has changed',
     'email_change_body_to_new'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',

@@ -165,7 +165,6 @@ class UserEventHandler
      *
      * @param Login $event
      *
-     * @return bool
      * @throws FireflyException
      */
     public function demoUserBackToEnglish(Login $event): void
@@ -272,13 +271,8 @@ class UserEventHandler
      * This method will send the user a registration mail, welcoming him or her to Firefly III.
      * This message is only sent when the configuration of Firefly III says so.
      *
-     * TODO this is an admin setting not a variable. Fix that first.
-     *
      * @param RegisteredUser $event
      *
-     * @return bool
-     * @throws FireflyException
-     * @deprecated
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
@@ -290,7 +284,6 @@ class UserEventHandler
 
     /**
      * @param RegisteredUser $event
-     * @return void
      */
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
@@ -357,9 +350,10 @@ class UserEventHandler
             ];
         }
         $preference = array_values($preference);
+        $send       = app('preferences')->getForUser($user, 'notification_user_login', true)->data;
         app('preferences')->setForUser($user, 'login_ip_history', $preference);
 
-        if (false === $inArray && true === config('firefly.warn_new_ip')) {
+        if (false === $inArray && true === $send) {
             event(new DetectedNewIPAddress($user, $ip));
         }
 

@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Mail\AdminTestMail;
+use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Notifications\Admin\TestNotification;
+use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Notification;
 use Log;
 use Mail;
@@ -43,7 +43,7 @@ class AdminEventHandler
      *
      * @param AdminRequestedTestMessage $event
      *
-     * @return bool
+     * @return void
      */
     public function sendTestMessage(AdminRequestedTestMessage $event): void
     {
@@ -55,5 +55,28 @@ class AdminEventHandler
         }
 
         Notification::send($event->user, new TestNotification($event->user->email));
+    }
+
+    /**
+     * Send new version message to admin.
+     *
+     * @param NewVersionAvailable $event
+     * @return void
+     */
+    public function sendNewVersion(NewVersionAvailable $event): void
+    {
+        $sendMail = FireflyConfig::get('notification_new_version', true)->data;
+        if (false === $sendMail) {
+            return;
+        }
+
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $all        = $repository->all();
+        foreach ($all as $user) {
+            if ($repository->hasRole($user, 'owner')) {
+                Notification::send($user, new VersionCheckResult($event->message));
+            }
+        }
     }
 }

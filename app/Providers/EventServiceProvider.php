@@ -27,6 +27,7 @@ use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
+use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
@@ -108,6 +109,9 @@ class EventServiceProvider extends ServiceProvider
             // admin related
             AdminRequestedTestMessage::class    => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
+            ],
+            NewVersionAvailable::class => [
+                'FireflyIII\Handlers\Events\AdminEventHandler@sendNewVersion',
             ],
             // is a Transaction Journal related event.
             StoredTransactionGroup::class       => [
