@@ -42,6 +42,90 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
+    public function excludeBills(Collection $bills): GroupCollectorInterface
+    {
+        $this->withBillInformation();
+        $this->query->where(static function (EloquentBuilder $q1) use ($bills) {
+            $q1->whereNotIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
+            $q1->orWhereNull('transaction_journals.bill_id');
+        });
+
+        return $this;
+    }
+
+    /**
+     * Exclude a specific budget.
+     *
+     * @param Budget $budget
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeBudget(Budget $budget): GroupCollectorInterface
+    {
+        $this->withBudgetInformation();
+
+        $this->query->where(static function (EloquentBuilder $q2) use ($budget) {
+            $q2->where('budgets.id', '!=', $budget->id);
+            $q2->orWhereNull('budgets.id');
+        });
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function excludeBudgets(Collection $budgets): GroupCollectorInterface
+    {
+        if ($budgets->count() > 0) {
+            $this->withBudgetInformation();
+            $this->query->where(static function (EloquentBuilder $q1) use ($budgets) {
+                $q1->whereNotIn('budgets.id', $budgets->pluck('id')->toArray());
+                $q1->orWhereNull('budgets.id');
+            });
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function excludeCategories(Collection $categories): GroupCollectorInterface
+    {
+        if ($categories->count() > 0) {
+            $this->withCategoryInformation();
+            $this->query->where(static function (EloquentBuilder $q1) use ($categories) {
+                $q1->whereNotIn('categories.id', $categories->pluck('id')->toArray());
+                $q1->orWhereNull('categories.id');
+            });
+        }
+
+        return $this;
+    }
+
+    /**
+     * Exclude a specific category.
+     *
+     * @param Category $category
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeCategory(Category $category): GroupCollectorInterface
+    {
+        $this->withCategoryInformation();
+
+        $this->query->where(static function (EloquentBuilder $q2) use ($category) {
+            $q2->where('categories.id', '!=', $category->id);
+            $q2->orWhereNull('categories.id');
+        });
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function externalIdContains(string $externalId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -227,6 +311,30 @@ trait MetaCollection
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function withNotes(): GroupCollectorInterface
+    {
+        if (false === $this->hasNotesInformation) {
+            // join bill table
+            $this->query->leftJoin(
+                'notes',
+                static function (JoinClause $join) {
+                    $join->on('notes.noteable_id', '=', 'transaction_journals.id');
+                    $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
+                    $join->whereNull('notes.deleted_at');
+                }
+            );
+            // add fields
+            $this->fields[]            = 'notes.text as notes';
+            $this->hasNotesInformation = true;
+        }
+
+        return $this;
+    }
+
     /**
      * @param string $value
      *
@@ -238,22 +346,6 @@ trait MetaCollection
         $this->query->where(static function (Builder $q) use ($value) {
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s%%', $value));
-        });
-
-        return $this;
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
-    public function notesDontStartWith(string $value): GroupCollectorInterface
-    {
-        $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
-            $q->whereNull('notes.text');
-            $q->orWhere('notes.text', 'NOT LIKE', sprintf('%s%%', $value));
         });
 
         return $this;
@@ -276,24 +368,17 @@ trait MetaCollection
     }
 
     /**
-     * @inheritDoc
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
      */
-    public function withNotes(): GroupCollectorInterface
+    public function notesDontStartWith(string $value): GroupCollectorInterface
     {
-        if (false === $this->hasNotesInformation) {
-            // join bill table
-            $this->query->leftJoin(
-                'notes',
-                static function (JoinClause $join) {
-                    $join->on('notes.noteable_id', '=', 'transaction_journals.id');
-                    $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
-                    $join->whereNull('notes.deleted_at');
-                }
-            );
-            // add fields
-            $this->fields[]            = 'notes.text as notes';
-            $this->hasNotesInformation = true;
-        }
+        $this->withNotes();
+        $this->query->where(static function (Builder $q) use ($value) {
+            $q->whereNull('notes.text');
+            $q->orWhere('notes.text', 'NOT LIKE', sprintf('%s%%', $value));
+        });
 
         return $this;
     }
@@ -403,20 +488,6 @@ trait MetaCollection
     }
 
     /**
-     * @inheritDoc
-     */
-    public function excludeBills(Collection $bills): GroupCollectorInterface
-    {
-        $this->withBillInformation();
-        $this->query->where(static function(EloquentBuilder $q1) use ($bills) {
-            $q1->whereNotIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
-            $q1->orWhereNull('transaction_journals.bill_id');
-        });
-
-        return $this;
-    }
-
-    /**
      * Limit the search to a specific budget.
      *
      * @param Budget $budget
@@ -470,22 +541,6 @@ trait MetaCollection
     }
 
     /**
-     * @inheritDoc
-     */
-    public function excludeBudgets(Collection $budgets): GroupCollectorInterface
-    {
-        if ($budgets->count() > 0) {
-            $this->withBudgetInformation();
-            $this->query->where(static function (EloquentBuilder $q1) use ($budgets) {
-                $q1->whereNotIn('budgets.id', $budgets->pluck('id')->toArray());
-                $q1->orWhereNull('budgets.id');
-            });
-        }
-
-        return $this;
-    }
-
-    /**
      * Limit the search to a specific bunch of categories.
      *
      * @param Collection $categories
@@ -497,22 +552,6 @@ trait MetaCollection
         if ($categories->count() > 0) {
             $this->withCategoryInformation();
             $this->query->whereIn('categories.id', $categories->pluck('id')->toArray());
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function excludeCategories(Collection $categories): GroupCollectorInterface
-    {
-        if ($categories->count() > 0) {
-            $this->withCategoryInformation();
-            $this->query->where(static function (EloquentBuilder $q1) use ($categories) {
-                $q1->whereNotIn('categories.id', $categories->pluck('id')->toArray());
-                $q1->orWhereNull('categories.id');
-            });
         }
 
         return $this;
@@ -550,44 +589,6 @@ trait MetaCollection
     {
         $this->withCategoryInformation();
         $this->query->where('categories.id', $category->id);
-
-        return $this;
-    }
-
-    /**
-     * Exclude a specific category.
-     *
-     * @param Category $category
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeCategory(Category $category): GroupCollectorInterface
-    {
-        $this->withCategoryInformation();
-
-        $this->query->where(static function(EloquentBuilder $q2) use ($category) {
-            $q2->where('categories.id','!=', $category->id);
-            $q2->orWhereNull('categories.id');
-        });
-
-        return $this;
-    }
-
-    /**
-     * Exclude a specific budget.
-     *
-     * @param Budget $budget
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeBudget(Budget $budget): GroupCollectorInterface
-    {
-        $this->withBudgetInformation();
-
-        $this->query->where(static function(EloquentBuilder $q2) use ($budget) {
-            $q2->where('budgets.id','!=', $budget->id);
-            $q2->orWhereNull('budgets.id');
-        });
 
         return $this;
     }

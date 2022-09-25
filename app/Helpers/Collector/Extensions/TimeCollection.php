@@ -73,6 +73,73 @@ trait TimeCollection
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function excludeMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
+    {
+        if ($end < $start) {
+            [$start, $end] = [$end, $start];
+        }
+        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end->endOfDay();
+        $start->startOfDay();
+        $this->withMetaDate($field);
+
+        $filter              = function (int $index, array $object) use ($field, $start, $end): bool {
+            foreach ($object['transactions'] as $transaction) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
+                    return $transaction[$field]->lt($start) || $transaction[$field]->gt($end);
+                }
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
+
+        return $this;
+
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function excludeObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
+    {
+        $after  = $start->format('Y-m-d 00:00:00');
+        $before = $end->format('Y-m-d 23:59:59');
+
+        $this->query->where(sprintf('transaction_journals.%s', $field), '<', $after);
+        $this->query->orWhere(sprintf('transaction_journals.%s', $field), '>', $before);
+
+        return $this;
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return GroupCollectorInterface
+     */
+    public function excludeRange(Carbon $start, Carbon $end): GroupCollectorInterface
+    {
+        if ($end < $start) {
+            [$start, $end] = [$end, $start];
+        }
+        $startStr = $start->format('Y-m-d 00:00:00');
+        $endStr   = $end->format('Y-m-d 23:59:59');
+
+        $this->query->where('transaction_journals.date', '<', $startStr);
+        $this->query->orWhere('transaction_journals.date', '>', $endStr);
+
+        return $this;
+    }
+
+    /**
      * @param string $day
      * @param string $field
      * @return GroupCollectorInterface
@@ -655,37 +722,6 @@ trait TimeCollection
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $field
-     * @return GroupCollectorInterface
-     */
-    public function excludeMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
-    {
-        if ($end < $start) {
-            [$start, $end] = [$end, $start];
-        }
-        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
-        $end->endOfDay();
-        $start->startOfDay();
-        $this->withMetaDate($field);
-
-        $filter              = function (int $index, array $object) use ($field, $start, $end): bool {
-            foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
-                    return $transaction[$field]->lt($start) || $transaction[$field]->gt($end);
-                }
-            }
-
-            return false;
-        };
-        $this->postFilters[] = $filter;
-
-        return $this;
-
-    }
-
-    /**
      * @param Carbon $date
      * @param string $field
      * @return GroupCollectorInterface
@@ -727,23 +763,6 @@ trait TimeCollection
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $field
-     * @return GroupCollectorInterface
-     */
-    public function excludeObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
-    {
-        $after  = $start->format('Y-m-d 00:00:00');
-        $before = $end->format('Y-m-d 23:59:59');
-
-        $this->query->where(sprintf('transaction_journals.%s', $field), '<', $after);
-        $this->query->orWhere(sprintf('transaction_journals.%s', $field), '>', $before);
-
-        return $this;
-    }
-
-    /**
      * Set the start and end time of the results to return.
      *
      * @param Carbon $start
@@ -765,27 +784,6 @@ trait TimeCollection
 
         return $this;
     }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     * @return GroupCollectorInterface
-     */
-    public function excludeRange(Carbon $start, Carbon $end): GroupCollectorInterface
-    {
-        if ($end < $start) {
-            [$start, $end] = [$end, $start];
-        }
-        $startStr = $start->format('Y-m-d 00:00:00');
-        $endStr   = $end->format('Y-m-d 23:59:59');
-
-        $this->query->where('transaction_journals.date', '<', $startStr);
-        $this->query->orWhere('transaction_journals.date', '>', $endStr);
-
-        return $this;
-    }
-
-
 
     /**
      * Collect transactions updated on a specific date.

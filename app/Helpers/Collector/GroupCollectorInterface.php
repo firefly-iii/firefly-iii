@@ -56,25 +56,6 @@ interface GroupCollectorInterface
     public function amountIsNot(string $amount): GroupCollectorInterface;
 
     /**
-     * Only journals that are reconciled.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function isReconciled(): GroupCollectorInterface;
-
-    /**
-     * Only journals that are reconciled.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function isNotReconciled(): GroupCollectorInterface;
-
-    /**
-     * @return GroupCollectorInterface
-     */
-    public function exists(): GroupCollectorInterface;
-
-    /**
      * Get transactions where the amount is less than.
      *
      * @param string $amount
@@ -165,15 +146,6 @@ interface GroupCollectorInterface
     public function dayIsNot(string $day): GroupCollectorInterface;
 
     /**
-     * End of the description must match:
-     *
-     * @param array $array
-     *
-     * @return GroupCollectorInterface
-     */
-    public function descriptionEnds(array $array): GroupCollectorInterface;
-
-    /**
      * End of the description must not match:
      *
      * @param array $array
@@ -181,6 +153,24 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function descriptionDoesNotEnd(array $array): GroupCollectorInterface;
+
+    /**
+     * Beginning of the description must not start with:
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function descriptionDoesNotStart(array $array): GroupCollectorInterface;
+
+    /**
+     * End of the description must match:
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function descriptionEnds(array $array): GroupCollectorInterface;
 
     /**
      * Description must be:
@@ -210,14 +200,66 @@ interface GroupCollectorInterface
     public function descriptionStarts(array $array): GroupCollectorInterface;
 
     /**
-     * Beginning of the description must not start with:
+     * These accounts must not be accounts.
      *
-     * @param array $array
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
-    public function descriptionDoesNotStart(array $array): GroupCollectorInterface;
+    public function excludeAccounts(Collection $accounts): GroupCollectorInterface;
 
+    /**
+     * Exclude a specific set of bills
+     *
+     * @param Collection $bills
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeBills(Collection $bills): GroupCollectorInterface;
+
+    /**
+     * Exclude a budget
+     *
+     * @param Budget $budget
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeBudget(Budget $budget): GroupCollectorInterface;
+
+    /**
+     * Exclude a budget.
+     *
+     * @param Collection $budgets
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeBudgets(Collection $budgets): GroupCollectorInterface;
+
+    /**
+     * Exclude a set of categories.
+     *
+     * @param Collection $categories
+     * @return GroupCollectorInterface
+     */
+    public function excludeCategories(Collection $categories): GroupCollectorInterface;
+
+    /**
+     * Exclude a specific category
+     *
+     * @param Category $category
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeCategory(Category $category): GroupCollectorInterface;
+
+    /**
+     * Limit results to NOT a specific currency, either foreign or normal one.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeCurrency(TransactionCurrency $currency): GroupCollectorInterface;
 
     /**
      * Exclude destination accounts.
@@ -229,6 +271,65 @@ interface GroupCollectorInterface
     public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * Limit results to exclude a specific foreign currency.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface;
+
+    /**
+     * Limit the result to NOT a set of specific transaction groups.
+     *
+     * @param array $groupIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeIds(array $groupIds): GroupCollectorInterface;
+
+    /**
+     * Limit the result to NOT a set of specific transaction journals.
+     *
+     * @param array $journalIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeJournalIds(array $journalIds): GroupCollectorInterface;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function excludeMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function excludeObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return GroupCollectorInterface
+     */
+    public function excludeRange(Carbon $start, Carbon $end): GroupCollectorInterface;
+
+    /**
+     * Exclude words in descriptions.
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeSearchWords(array $array): GroupCollectorInterface;
+
+    /**
      * These accounts must not be source accounts.
      *
      * @param Collection $accounts
@@ -238,13 +339,18 @@ interface GroupCollectorInterface
     public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
-     * These accounts must not be accounts.
+     * Limit the included transaction types.
      *
-     * @param Collection $accounts
+     * @param array $types
      *
      * @return GroupCollectorInterface
      */
-    public function excludeAccounts(Collection $accounts): GroupCollectorInterface;
+    public function excludeTypes(array $types): GroupCollectorInterface;
+
+    /**
+     * @return GroupCollectorInterface
+     */
+    public function exists(): GroupCollectorInterface;
 
     /**
      * @param string $externalId
@@ -384,6 +490,20 @@ interface GroupCollectorInterface
     public function internalReferenceStarts(string $externalId): GroupCollectorInterface;
 
     /**
+     * Only journals that are reconciled.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function isNotReconciled(): GroupCollectorInterface;
+
+    /**
+     * Only journals that are reconciled.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function isReconciled(): GroupCollectorInterface;
+
+    /**
      * @param string $day
      * @param string $field
      * @return GroupCollectorInterface
@@ -460,7 +580,6 @@ interface GroupCollectorInterface
      */
     public function metaYearIs(string $year, string $field): GroupCollectorInterface;
 
-
     /**
      * @param string $year
      * @param string $field
@@ -511,14 +630,20 @@ interface GroupCollectorInterface
      *
      * @return GroupCollectorInterface
      */
-    public function notesEndWith(string $value): GroupCollectorInterface;
+    public function notesDontEndWith(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function notesDontStartWith(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
      *
      * @return GroupCollectorInterface
      */
-    public function notesDontEndWith(string $value): GroupCollectorInterface;
+    public function notesEndWith(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
@@ -540,12 +665,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function notesStartWith(string $value): GroupCollectorInterface;
-
-    /**
-     * @param string $value
-     * @return GroupCollectorInterface
-     */
-    public function notesDontStartWith(string $value): GroupCollectorInterface;
 
     /**
      * @param string $day
@@ -640,18 +759,6 @@ interface GroupCollectorInterface
      */
     public function setAccounts(Collection $accounts): GroupCollectorInterface;
 
-
-    /**
-     * Define which accounts can NOT be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setNotAccounts(Collection $accounts): GroupCollectorInterface;
-
-
-
     /**
      * Collect transactions after a specific date.
      *
@@ -689,15 +796,6 @@ interface GroupCollectorInterface
     public function setBills(Collection $bills): GroupCollectorInterface;
 
     /**
-     * Exclude a specific set of bills
-     *
-     * @param Collection $bills
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeBills(Collection $bills): GroupCollectorInterface;
-
-    /**
      * Both source AND destination must be in this list of accounts.
      *
      * @param Collection $accounts
@@ -716,15 +814,6 @@ interface GroupCollectorInterface
     public function setBudget(Budget $budget): GroupCollectorInterface;
 
     /**
-     * Exclude a budget
-     *
-     * @param Budget $budget
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeBudget(Budget $budget): GroupCollectorInterface;
-
-    /**
      * Limit the search to a specific set of budgets.
      *
      * @param Collection $budgets
@@ -732,15 +821,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setBudgets(Collection $budgets): GroupCollectorInterface;
-
-    /**
-     * Exclude a budget.
-     *
-     * @param Collection $budgets
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeBudgets(Collection $budgets): GroupCollectorInterface;
 
     /**
      * Limit the search to a specific bunch of categories.
@@ -752,14 +832,6 @@ interface GroupCollectorInterface
     public function setCategories(Collection $categories): GroupCollectorInterface;
 
     /**
-     * Exclude a set of categories.
-     *
-     * @param Collection $categories
-     * @return GroupCollectorInterface
-     */
-    public function excludeCategories(Collection $categories): GroupCollectorInterface;
-
-    /**
      * Limit the search to a specific category.
      *
      * @param Category $category
@@ -767,15 +839,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setCategory(Category $category): GroupCollectorInterface;
-
-    /**
-     * Exclude a specific category
-     *
-     * @param Category $category
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeCategory(Category $category): GroupCollectorInterface;
 
     /**
      * Collect transactions created on a specific date.
@@ -794,15 +857,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface;
-
-    /**
-     * Limit results to NOT a specific currency, either foreign or normal one.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeCurrency(TransactionCurrency $currency): GroupCollectorInterface;
 
     /**
      * Set destination accounts.
@@ -838,15 +892,6 @@ interface GroupCollectorInterface
     public function setForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface;
 
     /**
-     * Limit results to exclude a specific foreign currency.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface;
-
-    /**
      * Limit the result to a set of specific transaction groups.
      *
      * @param array $groupIds
@@ -854,15 +899,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setIds(array $groupIds): GroupCollectorInterface;
-
-    /**
-     * Limit the result to NOT a set of specific transaction groups.
-     *
-     * @param array $groupIds
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeIds(array $groupIds): GroupCollectorInterface;
 
     /**
      * Look for specific external ID's.
@@ -881,15 +917,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface;
-
-    /**
-     * Limit the result to NOT a set of specific transaction journals.
-     *
-     * @param array $journalIds
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeJournalIds(array $journalIds): GroupCollectorInterface;
 
     /**
      * Limit the number of returned entries.
@@ -930,14 +957,13 @@ interface GroupCollectorInterface
     public function setMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $field
+     * Define which accounts can NOT be part of the source and destination transactions.
+     *
+     * @param Collection $accounts
+     *
      * @return GroupCollectorInterface
      */
-    public function excludeMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
-
-
+    public function setNotAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
      * @param Carbon $date
@@ -962,14 +988,6 @@ interface GroupCollectorInterface
     public function setObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $field
-     * @return GroupCollectorInterface
-     */
-    public function excludeObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
-
-    /**
      * Set the page to get.
      *
      * @param int $page
@@ -989,13 +1007,6 @@ interface GroupCollectorInterface
     public function setRange(Carbon $start, Carbon $end): GroupCollectorInterface;
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     * @return GroupCollectorInterface
-     */
-    public function excludeRange(Carbon $start, Carbon $end): GroupCollectorInterface;
-
-    /**
      * Look for specific recurring ID's.
      *
      * @param string $recurringId
@@ -1012,15 +1023,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setSearchWords(array $array): GroupCollectorInterface;
-
-    /**
-     * Exclude words in descriptions.
-     *
-     * @param array $array
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeSearchWords(array $array): GroupCollectorInterface;
 
     /**
      * Set source accounts.
@@ -1066,15 +1068,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setTypes(array $types): GroupCollectorInterface;
-
-    /**
-     * Limit the included transaction types.
-     *
-     * @param array $types
-     *
-     * @return GroupCollectorInterface
-     */
-    public function excludeTypes(array $types): GroupCollectorInterface;
 
     /**
      * Collect transactions updated on a specific date.

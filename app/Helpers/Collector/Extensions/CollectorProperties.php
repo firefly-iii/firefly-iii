@@ -33,7 +33,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 trait CollectorProperties
 {
     private array   $fields;
-    private array   $stringFields;
     private bool    $hasAccountInfo;
     private bool    $hasBillInformation;
     private bool    $hasBudgetInformation;
@@ -47,6 +46,7 @@ trait CollectorProperties
     private ?int    $page;
     private array   $postFilters;
     private HasMany $query;
+    private array   $stringFields;
     private int     $total;
     private ?User   $user;
 }

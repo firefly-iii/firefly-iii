@@ -58,7 +58,7 @@ trait AmountCollection
     {
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount) {
-                $q->where('source.amount','!=', app('steam')->negative($amount));
+                $q->where('source.amount', '!=', app('steam')->negative($amount));
             }
         );
 
@@ -132,7 +132,7 @@ trait AmountCollection
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount) {
                 $q->whereNull('source.foreign_amount');
-                $q->orWhere('source.foreign_amount','!=', app('steam')->negative($amount));
+                $q->orWhere('source.foreign_amount', '!=', app('steam')->negative($amount));
             }
         );
 
