@@ -30,6 +30,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
@@ -226,6 +227,53 @@ trait MetaCollection
 
         return $this;
     }
+    /**
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function notesDoNotContain(string $value): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->where(static function (Builder $q) use ($value) {
+            $q->whereNull('notes.text');
+            $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s%%', $value));
+        });
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function notesDontStartWith(string $value): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->where(static function (Builder $q) use ($value) {
+            $q->whereNull('notes.text');
+            $q->orWhere('notes.text', 'NOT LIKE', sprintf('%s%%', $value));
+        });
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function notesDontEndWith(string $value): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->where(static function (Builder $q) use ($value) {
+            $q->whereNull('notes.text');
+            $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s', $value));
+        });
+
+        return $this;
+    }
 
     /**
      * @inheritDoc
@@ -272,6 +320,22 @@ trait MetaCollection
     {
         $this->withNotes();
         $this->query->where('notes.text', '=', sprintf('%s', $value));
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return GroupCollectorInterface
+     */
+    public function notesExactlyNot(string $value): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->where(static function (Builder $q) use ($value) {
+            $q->whereNull('notes.text');
+            $q->orWhere('notes.text', '!=', sprintf('%s', $value));
+        });
 
         return $this;
     }
@@ -339,6 +403,20 @@ trait MetaCollection
     }
 
     /**
+     * @inheritDoc
+     */
+    public function excludeBills(Collection $bills): GroupCollectorInterface
+    {
+        $this->withBillInformation();
+        $this->query->where(static function(EloquentBuilder $q1) use ($bills) {
+            $q1->whereNotIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
+            $q1->orWhereNull('transaction_journals.bill_id');
+        });
+
+        return $this;
+    }
+
+    /**
      * Limit the search to a specific budget.
      *
      * @param Budget $budget
@@ -392,6 +470,22 @@ trait MetaCollection
     }
 
     /**
+     * @inheritDoc
+     */
+    public function excludeBudgets(Collection $budgets): GroupCollectorInterface
+    {
+        if ($budgets->count() > 0) {
+            $this->withBudgetInformation();
+            $this->query->where(static function (EloquentBuilder $q1) use ($budgets) {
+                $q1->whereNotIn('budgets.id', $budgets->pluck('id')->toArray());
+                $q1->orWhereNull('budgets.id');
+            });
+        }
+
+        return $this;
+    }
+
+    /**
      * Limit the search to a specific bunch of categories.
      *
      * @param Collection $categories
@@ -409,17 +503,16 @@ trait MetaCollection
     }
 
     /**
-     * Limit the search to a specific bunch of categories.
-     *
-     * @param Collection $categories
-     *
-     * @return GroupCollectorInterface
+     * @inheritDoc
      */
-    public function setNotCategories(Collection $categories): GroupCollectorInterface
+    public function excludeCategories(Collection $categories): GroupCollectorInterface
     {
         if ($categories->count() > 0) {
             $this->withCategoryInformation();
-            $this->query->whereNotIn('categories.id', $categories->pluck('id')->toArray());
+            $this->query->where(static function (EloquentBuilder $q1) use ($categories) {
+                $q1->whereNotIn('categories.id', $categories->pluck('id')->toArray());
+                $q1->orWhereNull('categories.id');
+            });
         }
 
         return $this;
@@ -457,6 +550,44 @@ trait MetaCollection
     {
         $this->withCategoryInformation();
         $this->query->where('categories.id', $category->id);
+
+        return $this;
+    }
+
+    /**
+     * Exclude a specific category.
+     *
+     * @param Category $category
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeCategory(Category $category): GroupCollectorInterface
+    {
+        $this->withCategoryInformation();
+
+        $this->query->where(static function(EloquentBuilder $q2) use ($category) {
+            $q2->where('categories.id','!=', $category->id);
+            $q2->orWhereNull('categories.id');
+        });
+
+        return $this;
+    }
+
+    /**
+     * Exclude a specific budget.
+     *
+     * @param Budget $budget
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeBudget(Budget $budget): GroupCollectorInterface
+    {
+        $this->withBudgetInformation();
+
+        $this->query->where(static function(EloquentBuilder $q2) use ($budget) {
+            $q2->where('budgets.id','!=', $budget->id);
+            $q2->orWhereNull('budgets.id');
+        });
 
         return $this;
     }

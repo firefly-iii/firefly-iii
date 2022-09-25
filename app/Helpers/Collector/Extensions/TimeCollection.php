@@ -64,6 +64,16 @@ trait TimeCollection
 
     /**
      * @param string $day
+     * @return GroupCollectorInterface
+     */
+    public function dayIsNot(string $day): GroupCollectorInterface
+    {
+        $this->query->whereDay('transaction_journals.date', '!=', $day);
+        return $this;
+    }
+
+    /**
+     * @param string $day
      * @param string $field
      * @return GroupCollectorInterface
      */
@@ -143,6 +153,28 @@ trait TimeCollection
     }
 
     /**
+     * @param string $day
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaDayIsNot(string $day, string $field): GroupCollectorInterface
+    {
+        $this->withMetaDate($field);
+        $filter              = function (int $index, array $object) use ($field, $day): bool {
+            foreach ($object['transactions'] as $transaction) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
+                ) {
+                    return (int) $day !== $transaction[$field]->day;
+                }
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
+        return $this;
+    }
+
+    /**
      * @param string $month
      * @param string $field
      * @return GroupCollectorInterface
@@ -201,6 +233,28 @@ trait TimeCollection
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
                 ) {
                     return (int) $month === $transaction[$field]->month;
+                }
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
+        return $this;
+    }
+
+    /**
+     * @param string $month
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaMonthIsNot(string $month, string $field): GroupCollectorInterface
+    {
+        $this->withMetaDate($field);
+        $filter              = function (int $index, array $object) use ($field, $month): bool {
+            foreach ($object['transactions'] as $transaction) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
+                ) {
+                    return (int) $month !== $transaction[$field]->month;
                 }
             }
 
@@ -280,6 +334,28 @@ trait TimeCollection
     }
 
     /**
+     * @param string $year
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function metaYearIsNot(string $year, string $field): GroupCollectorInterface
+    {
+        $this->withMetaDate($field);
+        $filter              = function (int $index, array $object) use ($field, $year): bool {
+            foreach ($object['transactions'] as $transaction) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
+                ) {
+                    return $year !== (string) $transaction[$field]->year;
+                }
+            }
+            return true;
+        };
+        $this->postFilters[] = $filter;
+
+        return $this;
+    }
+
+    /**
      * @param string $month
      * @return GroupCollectorInterface
      */
@@ -308,6 +384,16 @@ trait TimeCollection
     public function monthIs(string $month): GroupCollectorInterface
     {
         $this->query->whereMonth('transaction_journals.date', '=', $month);
+        return $this;
+    }
+
+    /**
+     * @param string $month
+     * @return GroupCollectorInterface
+     */
+    public function monthIsNot(string $month): GroupCollectorInterface
+    {
+        $this->query->whereMonth('transaction_journals.date', '!=', $month);
         return $this;
     }
 
@@ -345,6 +431,17 @@ trait TimeCollection
     }
 
     /**
+     * @param string $day
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectDayIsNot(string $day, string $field): GroupCollectorInterface
+    {
+        $this->query->whereDay(sprintf('transaction_journals.%s', $field), '!=', $day);
+        return $this;
+    }
+
+    /**
      * @param string $month
      * @param string $field
      * @return GroupCollectorInterface
@@ -378,6 +475,17 @@ trait TimeCollection
     }
 
     /**
+     * @param string $month
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectMonthIsNot(string $month, string $field): GroupCollectorInterface
+    {
+        $this->query->whereMonth(sprintf('transaction_journals.%s', $field), '!=', $month);
+        return $this;
+    }
+
+    /**
      * @param string $year
      * @param string $field
      * @return GroupCollectorInterface
@@ -407,6 +515,17 @@ trait TimeCollection
     public function objectYearIs(string $year, string $field): GroupCollectorInterface
     {
         $this->query->whereYear(sprintf('transaction_journals.%s', $field), '=', $year);
+        return $this;
+    }
+
+    /**
+     * @param string $year
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function objectYearIsNot(string $year, string $field): GroupCollectorInterface
+    {
+        $this->query->whereYear(sprintf('transaction_journals.%s', $field), '!=', $year);
         return $this;
     }
 
@@ -536,6 +655,37 @@ trait TimeCollection
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function excludeMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
+    {
+        if ($end < $start) {
+            [$start, $end] = [$end, $start];
+        }
+        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end->endOfDay();
+        $start->startOfDay();
+        $this->withMetaDate($field);
+
+        $filter              = function (int $index, array $object) use ($field, $start, $end): bool {
+            foreach ($object['transactions'] as $transaction) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
+                    return $transaction[$field]->lt($start) || $transaction[$field]->gt($end);
+                }
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
+
+        return $this;
+
+    }
+
+    /**
      * @param Carbon $date
      * @param string $field
      * @return GroupCollectorInterface
@@ -577,6 +727,23 @@ trait TimeCollection
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $field
+     * @return GroupCollectorInterface
+     */
+    public function excludeObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
+    {
+        $after  = $start->format('Y-m-d 00:00:00');
+        $before = $end->format('Y-m-d 23:59:59');
+
+        $this->query->where(sprintf('transaction_journals.%s', $field), '<', $after);
+        $this->query->orWhere(sprintf('transaction_journals.%s', $field), '>', $before);
+
+        return $this;
+    }
+
+    /**
      * Set the start and end time of the results to return.
      *
      * @param Carbon $start
@@ -600,6 +767,27 @@ trait TimeCollection
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return GroupCollectorInterface
+     */
+    public function excludeRange(Carbon $start, Carbon $end): GroupCollectorInterface
+    {
+        if ($end < $start) {
+            [$start, $end] = [$end, $start];
+        }
+        $startStr = $start->format('Y-m-d 00:00:00');
+        $endStr   = $end->format('Y-m-d 23:59:59');
+
+        $this->query->where('transaction_journals.date', '<', $startStr);
+        $this->query->orWhere('transaction_journals.date', '>', $endStr);
+
+        return $this;
+    }
+
+
+
+    /**
      * Collect transactions updated on a specific date.
      *
      * @param Carbon $date
@@ -616,21 +804,43 @@ trait TimeCollection
         return $this;
     }
 
+    /**
+     * @param string $year
+     * @return GroupCollectorInterface
+     */
     public function yearAfter(string $year): GroupCollectorInterface
     {
         $this->query->whereYear('transaction_journals.date', '>=', $year);
         return $this;
     }
 
+    /**
+     * @param string $year
+     * @return GroupCollectorInterface
+     */
     public function yearBefore(string $year): GroupCollectorInterface
     {
         $this->query->whereYear('transaction_journals.date', '<=', $year);
         return $this;
     }
 
+    /**
+     * @param string $year
+     * @return GroupCollectorInterface
+     */
     public function yearIs(string $year): GroupCollectorInterface
     {
         $this->query->whereYear('transaction_journals.date', '=', $year);
+        return $this;
+    }
+
+    /**
+     * @param string $year
+     * @return GroupCollectorInterface
+     */
+    public function yearIsNot(string $year): GroupCollectorInterface
+    {
+        $this->query->whereYear('transaction_journals.date', '!=', $year);
         return $this;
     }
 

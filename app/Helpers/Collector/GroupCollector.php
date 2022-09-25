@@ -165,12 +165,62 @@ class GroupCollector implements GroupCollectorInterface
     /**
      * @inheritDoc
      */
+    public function descriptionDoesNotEnd(array $array): GroupCollectorInterface
+    {
+        $this->query->where(
+            static function (EloquentBuilder $q) use ($array) {
+                $q->where(
+                    static function (EloquentBuilder $q1) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%%%s', $word);
+                            $q1->where('transaction_journals.description', 'NOT LIKE', $keyword);
+                        }
+                    }
+                );
+                $q->where(
+                    static function (EloquentBuilder $q2) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%%%s', $word);
+                            $q2->where('transaction_groups.title', 'NOT LIKE', $keyword);
+                            $q2->orWhereNull('transaction_groups.title');
+                        }
+                    }
+                );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function descriptionIs(string $value): GroupCollectorInterface
     {
         $this->query->where(
             static function (EloquentBuilder $q) use ($value) {
                 $q->where('transaction_journals.description', '=', $value);
                 $q->orWhere('transaction_groups.title', '=', $value);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function descriptionIsNot(string $value): GroupCollectorInterface
+    {
+        $this->query->where(
+            static function (EloquentBuilder $q) use ($value) {
+                $q->where('transaction_journals.description', '!=', $value);
+                $q->where(
+                    static function (EloquentBuilder $q2) use ($value) {
+                        $q2->where('transaction_groups.title', '!=', $value);
+                        $q2->orWhereNull('transaction_groups.title');
+                    }
+                );
             }
         );
 
@@ -197,6 +247,36 @@ class GroupCollector implements GroupCollectorInterface
                         foreach ($array as $word) {
                             $keyword = sprintf('%s%%', $word);
                             $q2->where('transaction_groups.title', 'LIKE', $keyword);
+                        }
+                    }
+                );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function descriptionDoesNotStart(array $array): GroupCollectorInterface
+    {
+        $this->query->where(
+            static function (EloquentBuilder $q) use ($array) {
+                $q->where(
+                    static function (EloquentBuilder $q1) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%s%%', $word);
+                            $q1->where('transaction_journals.description', 'NOT LIKE', $keyword);
+                        }
+                    }
+                );
+                $q->where(
+                    static function (EloquentBuilder $q2) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%s%%', $word);
+                            $q2->where('transaction_groups.title', 'NOT LIKE', $keyword);
+                            $q2->orWhereNull('transaction_groups.title');
                         }
                     }
                 );
@@ -546,7 +626,6 @@ class GroupCollector implements GroupCollectorInterface
          * @var Closure $function
          */
         foreach ($this->postFilters as $function) {
-
             $nextCollection = new Collection;
             // loop everything in the current collection
             // and save it (or not) in the new collection.
@@ -619,11 +698,48 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Limit results to NOT a specific currency, either foreign or normal one.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeCurrency(TransactionCurrency $currency): GroupCollectorInterface
+    {
+        $this->query->where(
+            static function (EloquentBuilder $q) use ($currency) {
+                $q->where('source.transaction_currency_id','!=', $currency->id);
+                $q->where(
+                    static function (EloquentBuilder $q2) use ($currency) {
+                        $q2->where('source.foreign_currency_id','!=', $currency->id);
+                        $q2->orWhereNull('source.foreign_currency_id');
+                    }
+                );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function setForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where('source.foreign_currency_id', $currency->id);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function excludeForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface
+    {
+        $this->query->where(static function(EloquentBuilder $q2) use ($currency) {
+            $q2->where('source.foreign_currency_id','!=', $currency->id);
+            $q2->orWhereNull('source.foreign_currency_id');
+        });
 
         return $this;
     }
@@ -644,6 +760,21 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Limit the result to NOT a set of specific transaction groups.
+     *
+     * @param array $groupIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeIds(array $groupIds): GroupCollectorInterface
+    {
+
+        $this->query->whereNotIn('transaction_groups.id', $groupIds);
+
+        return $this;
+    }
+
+    /**
      * Limit the result to a set of specific journals.
      *
      * @param array $journalIds
@@ -658,6 +789,26 @@ class GroupCollector implements GroupCollectorInterface
 
 
             $this->query->whereIn('transaction_journals.id', $integerIDs);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Limit the result to NOT a set of specific journals.
+     *
+     * @param array $journalIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeJournalIds(array $journalIds): GroupCollectorInterface
+    {
+        if (!empty($journalIds)) {
+            // make all integers.
+            $integerIDs = array_map('intval', $journalIds);
+
+
+            $this->query->whereNotIn('transaction_journals.id', $integerIDs);
         }
 
         return $this;
@@ -688,6 +839,9 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setSearchWords(array $array): GroupCollectorInterface
     {
+        if (0 === count($array)) {
+            return $this;
+        }
         $this->query->where(
             static function (EloquentBuilder $q) use ($array) {
                 $q->where(
@@ -703,6 +857,43 @@ class GroupCollector implements GroupCollectorInterface
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q2->where('transaction_groups.title', 'LIKE', $keyword);
+                        }
+                    }
+                );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Search for words in descriptions.
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeSearchWords(array $array): GroupCollectorInterface
+    {
+        if (0 === count($array)) {
+            return $this;
+        }
+        $this->query->where(
+            static function (EloquentBuilder $q) use ($array) {
+                $q->where(
+                    static function (EloquentBuilder $q1) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%%%s%%', $word);
+                            $q1->where('transaction_journals.description', 'NOT LIKE', $keyword);
+                        }
+                    }
+                );
+                $q->where(
+                    static function (EloquentBuilder $q2) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%%%s%%', $word);
+                            $q2->where('transaction_groups.title', 'NOT LIKE', $keyword);
+                            $q2->orWhereNull('transaction_groups.title');
                         }
                     }
                 );
@@ -736,6 +927,16 @@ class GroupCollector implements GroupCollectorInterface
     public function setTypes(array $types): GroupCollectorInterface
     {
         $this->query->whereIn('transaction_types.type', $types);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function excludeTypes(array $types): GroupCollectorInterface
+    {
+        $this->query->whereNotIn('transaction_types.type', $types);
 
         return $this;
     }
@@ -839,6 +1040,15 @@ class GroupCollector implements GroupCollectorInterface
     public function isReconciled(): GroupCollectorInterface
     {
         $this->query->where('source.reconciled', 1)->where('destination.reconciled', 1);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isNotReconciled(): GroupCollectorInterface
+    {
+        $this->query->where('source.reconciled', 0)->where('destination.reconciled', 0);
         return $this;
     }
 

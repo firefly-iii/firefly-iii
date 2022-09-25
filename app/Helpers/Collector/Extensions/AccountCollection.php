@@ -73,6 +73,26 @@ trait AccountCollection
     }
 
     /**
+     * These accounts must not be included.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->whereNotIn('source.account_id', $accountIds);
+            $this->query->whereNotIn('destination.account_id', $accountIds);
+
+            app('log')->debug(sprintf('GroupCollector: excludeAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
      * Define which accounts can be part of the source and destination transactions.
      *
      * @param Collection $accounts
@@ -87,6 +107,29 @@ trait AccountCollection
                 static function (EloquentBuilder $query) use ($accountIds) {
                     $query->whereIn('source.account_id', $accountIds);
                     $query->orWhereIn('destination.account_id', $accountIds);
+                }
+            );
+            //app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Define which accounts can NOT be part of the source and destination transactions.
+     *
+     * @param Collection $accounts
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setNotAccounts(Collection $accounts): GroupCollectorInterface
+    {
+        if ($accounts->count() > 0) {
+            $accountIds = $accounts->pluck('id')->toArray();
+            $this->query->where(
+                static function (EloquentBuilder $query) use ($accountIds) {
+                    $query->whereNotIn('source.account_id', $accountIds);
+                    $query->whereNotIn('destination.account_id', $accountIds);
                 }
             );
             //app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
