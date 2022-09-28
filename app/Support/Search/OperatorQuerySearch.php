@@ -190,7 +190,7 @@ class OperatorQuerySearch implements SearchInterface
             case Subquery::class:
                 // loop all notes in subquery:
                 foreach ($searchNode->getNodes() as $subNode) { // @phpstan-ignore-line
-                    $this->handleSearchNode($subNode);          // let's hope it's not too recursive!
+                    $this->handleSearchNode($subNode);          // let's hope it's not too recursive
                 }
                 break;
             case Word::class:
@@ -254,8 +254,8 @@ class OperatorQuerySearch implements SearchInterface
     private function updateCollector(string $operator, string $value, bool $prohibited): bool
     {
         if ($prohibited) {
-            Log::debug(sprintf('Operator "%s" is now "%s"', $operator, '!' . $operator));
-            $operator = sprintf('!%s', $operator);
+            Log::debug(sprintf('Operator "%s" is now "%s"', $operator, sprintf('-%s', $operator)));
+            $operator = sprintf('-%s', $operator);
         }
 
         Log::debug(sprintf('Now in updateCollector("%s", "%s")', $operator, $value));
@@ -278,97 +278,97 @@ class OperatorQuerySearch implements SearchInterface
             case 'account_is':
                 $this->searchAccount($value, 3, 4);
                 break;
-            case '!account_is':
+            case '-account_is':
                 $this->searchAccount($value, 3, 4, true);
                 break;
             case 'account_contains':
                 $this->searchAccount($value, 3, 3);
                 break;
-            case '!account_contains':
+            case '-account_contains':
                 $this->searchAccount($value, 3, 3, true);
                 break;
             case 'account_ends':
                 $this->searchAccount($value, 3, 2);
                 break;
-            case '!account_ends':
+            case '-account_ends':
                 $this->searchAccount($value, 3, 2, true);
                 break;
             case 'account_starts':
                 $this->searchAccount($value, 3, 1);
                 break;
-            case '!account_starts':
+            case '-account_starts':
                 $this->searchAccount($value, 3, 1, true);
                 break;
             case 'account_nr_is':
                 $this->searchAccountNr($value, 3, 4);
                 break;
-            case '!account_nr_is':
+            case '-account_nr_is':
                 $this->searchAccountNr($value, 3, 4, true);
                 break;
             case 'account_nr_contains':
                 $this->searchAccountNr($value, 3, 3);
                 break;
-            case '!account_nr_contains':
+            case '-account_nr_contains':
                 $this->searchAccountNr($value, 3, 3, true);
                 break;
             case 'account_nr_ends':
                 $this->searchAccountNr($value, 3, 2);
                 break;
-            case '!account_nr_ends':
+            case '-account_nr_ends':
                 $this->searchAccountNr($value, 3, 2, true);
                 break;
             case 'account_nr_starts':
                 $this->searchAccountNr($value, 3, 1);
                 break;
-            case '!account_nr_starts':
+            case '-account_nr_starts':
                 $this->searchAccountNr($value, 3, 1, true);
                 break;
             case 'source_account_starts':
                 $this->searchAccount($value, 1, 1);
                 break;
-            case '!source_account_starts':
+            case '-source_account_starts':
                 $this->searchAccount($value, 1, 1, true);
                 break;
             case 'source_account_ends':
                 $this->searchAccount($value, 1, 2);
                 break;
-            case '!source_account_ends':
+            case '-source_account_ends':
                 $this->searchAccount($value, 1, 2, true);
                 break;
             case 'source_account_is':
                 $this->searchAccount($value, 1, 4);
                 break;
-            case '!source_account_is':
+            case '-source_account_is':
                 $this->searchAccount($value, 1, 4, true);
                 break;
             case 'source_account_nr_starts':
                 $this->searchAccountNr($value, 1, 1);
                 break;
-            case '!source_account_nr_starts':
+            case '-source_account_nr_starts':
                 $this->searchAccountNr($value, 1, 1, true);
                 break;
             case 'source_account_nr_ends':
                 $this->searchAccountNr($value, 1, 2);
                 break;
-            case '!source_account_nr_ends':
+            case '-source_account_nr_ends':
                 $this->searchAccountNr($value, 1, 2, true);
                 break;
             case 'source_account_nr_is':
                 $this->searchAccountNr($value, 1, 4);
                 break;
-            case '!source_account_nr_is':
+            case '-source_account_nr_is':
                 $this->searchAccountNr($value, 1, 4, true);
                 break;
             case 'source_account_nr_contains':
                 $this->searchAccountNr($value, 1, 3);
                 break;
-            case '!source_account_nr_contains':
+            case '-source_account_nr_contains':
                 $this->searchAccountNr($value, 1, 3, true);
                 break;
             case 'source_account_contains':
                 $this->searchAccount($value, 1, 3);
                 break;
-            case '!source_account_contains':
+            case '-source_account_contains':
                 $this->searchAccount($value, 1, 3, true);
                 break;
             case 'source_account_id':
@@ -381,7 +381,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!source_account_id':
+            case '-source_account_id':
                 $account = $this->accountRepository->find((int) $value);
                 if (null !== $account) {
                     $this->collector->excludeSourceAccounts(new Collection([$account]));
@@ -395,7 +395,7 @@ class OperatorQuerySearch implements SearchInterface
                 $parts = explode(',', $value);
                 $this->collector->setJournalIds($parts);
                 break;
-            case '!journal_id':
+            case '-journal_id':
                 $parts = explode(',', $value);
                 $this->collector->excludeJournalIds($parts);
                 break;
@@ -403,56 +403,56 @@ class OperatorQuerySearch implements SearchInterface
                 $parts = explode(',', $value);
                 $this->collector->setIds($parts);
                 break;
-            case '!id':
+            case '-id':
                 $parts = explode(',', $value);
                 $this->collector->excludeIds($parts);
                 break;
             case 'destination_account_starts':
                 $this->searchAccount($value, 2, 1);
                 break;
-            case '!destination_account_starts':
+            case '-destination_account_starts':
                 $this->searchAccount($value, 2, 1, true);
                 break;
             case 'destination_account_ends':
                 $this->searchAccount($value, 2, 2);
                 break;
-            case '!destination_account_ends':
+            case '-destination_account_ends':
                 $this->searchAccount($value, 2, 2, true);
                 break;
             case 'destination_account_nr_starts':
                 $this->searchAccountNr($value, 2, 1);
                 break;
-            case '!destination_account_nr_starts':
+            case '-destination_account_nr_starts':
                 $this->searchAccountNr($value, 2, 1, true);
                 break;
             case 'destination_account_nr_ends':
                 $this->searchAccountNr($value, 2, 2);
                 break;
-            case '!destination_account_nr_ends':
+            case '-destination_account_nr_ends':
                 $this->searchAccountNr($value, 2, 2, true);
                 break;
             case 'destination_account_nr_is':
                 $this->searchAccountNr($value, 2, 4);
                 break;
-            case '!destination_account_nr_is':
+            case '-destination_account_nr_is':
                 $this->searchAccountNr($value, 2, 4, true);
                 break;
             case 'destination_account_is':
                 $this->searchAccount($value, 2, 4);
                 break;
-            case '!destination_account_is':
+            case '-destination_account_is':
                 $this->searchAccount($value, 2, 4, true);
                 break;
             case 'destination_account_nr_contains':
                 $this->searchAccountNr($value, 2, 3);
                 break;
-            case '!destination_account_nr_contains':
+            case '-destination_account_nr_contains':
                 $this->searchAccountNr($value, 2, 3, true);
                 break;
             case 'destination_account_contains':
                 $this->searchAccount($value, 2, 3);
                 break;
-            case '!destination_account_contains':
+            case '-destination_account_contains':
                 $this->searchAccount($value, 2, 3, true);
                 break;
             case 'destination_account_id':
@@ -464,7 +464,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!destination_account_id':
+            case '-destination_account_id':
                 $account = $this->accountRepository->find((int) $value);
                 if (null !== $account) {
                     $this->collector->excludeDestinationAccounts(new Collection([$account]));
@@ -489,7 +489,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!account_id':
+            case '-account_id':
                 $parts      = explode(',', $value);
                 $collection = new Collection;
                 foreach ($parts as $accountId) {
@@ -512,7 +512,7 @@ class OperatorQuerySearch implements SearchInterface
                 $account = $this->getCashAccount();
                 $this->collector->setSourceAccounts(new Collection([$account]));
                 break;
-            case '!source_is_cash':
+            case '-source_is_cash':
                 $account = $this->getCashAccount();
                 $this->collector->excludeSourceAccounts(new Collection([$account]));
                 break;
@@ -520,7 +520,7 @@ class OperatorQuerySearch implements SearchInterface
                 $account = $this->getCashAccount();
                 $this->collector->setDestinationAccounts(new Collection([$account]));
                 break;
-            case '!destination_is_cash':
+            case '-destination_is_cash':
                 $account = $this->getCashAccount();
                 $this->collector->excludeDestinationAccounts(new Collection([$account]));
                 break;
@@ -528,7 +528,7 @@ class OperatorQuerySearch implements SearchInterface
                 $account = $this->getCashAccount();
                 $this->collector->setAccounts(new Collection([$account]));
                 break;
-            case '!account_is_cash':
+            case '-account_is_cash':
                 $account = $this->getCashAccount();
                 $this->collector->excludeAccounts(new Collection([$account]));
                 break;
@@ -538,27 +538,27 @@ class OperatorQuerySearch implements SearchInterface
             case 'description_starts':
                 $this->collector->descriptionStarts([$value]);
                 break;
-            case '!description_starts':
+            case '-description_starts':
                 $this->collector->descriptionDoesNotStart([$value]);
                 break;
             case 'description_ends':
                 $this->collector->descriptionEnds([$value]);
                 break;
-            case '!description_ends':
+            case '-description_ends':
                 $this->collector->descriptionDoesNotEnd([$value]);
                 break;
             case 'description_contains':
                 $this->words[] = $value;
 
                 return false;
-            case '!description_contains':
+            case '-description_contains':
                 $this->prohibitedWords[] = $value;
 
                 break;
             case 'description_is':
                 $this->collector->descriptionIs($value);
                 break;
-            case '!description_is':
+            case '-description_is':
                 $this->collector->descriptionIsNot($value);
                 break;
             //
@@ -573,7 +573,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!currency_is':
+            case '-currency_is':
                 $currency = $this->findCurrency($value);
                 if (null !== $currency) {
                     $this->collector->excludeCurrency($currency);
@@ -591,7 +591,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!foreign_currency_is':
+            case '-foreign_currency_is':
                 $currency = $this->findCurrency($value);
                 if (null !== $currency) {
                     $this->collector->excludeForeignCurrency($currency);
@@ -604,22 +604,22 @@ class OperatorQuerySearch implements SearchInterface
             // attachments
             //
             case 'has_attachments':
-            case '!has_no_attachments':
+            case '-has_no_attachments':
                 Log::debug('Set collector to filter on attachments.');
                 $this->collector->hasAttachments();
                 break;
             case 'has_no_attachments':
-            case '!has_attachments':
+            case '-has_attachments':
                 Log::debug('Set collector to filter on NO attachments.');
                 $this->collector->hasNoAttachments();
                 break;
             //
             // categories
-            case '!has_any_category':
+            case '-has_any_category':
             case 'has_no_category':
                 $this->collector->withoutCategory();
                 break;
-            case '!has_no_category':
+            case '-has_no_category':
             case 'has_any_category':
                 $this->collector->withCategory();
                 break;
@@ -631,7 +631,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 $this->collector->findNothing();
                 break;
-            case '!category_is':
+            case '-category_is':
                 $category = $this->categoryRepository->findByName($value);
                 if (null !== $category) {
                     $this->collector->excludeCategory($category);
@@ -647,7 +647,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!category_ends':
+            case '-category_ends':
                 $result = $this->categoryRepository->categoryEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeCategories($result);
@@ -665,7 +665,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!category_starts':
+            case '-category_starts':
                 $result = $this->categoryRepository->categoryStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeCategories($result);
@@ -683,7 +683,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!category_contains':
+            case '-category_contains':
                 $result = $this->categoryRepository->searchCategory($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeCategories($result);
@@ -695,12 +695,12 @@ class OperatorQuerySearch implements SearchInterface
             //
             // budgets
             //
-            case '!has_any_budget':
+            case '-has_any_budget':
             case 'has_no_budget':
                 $this->collector->withoutBudget();
                 break;
             case 'has_any_budget':
-            case '!has_no_budget':
+            case '-has_no_budget':
                 $this->collector->withBudget();
                 break;
             case 'budget_contains':
@@ -712,7 +712,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!budget_contains':
+            case '-budget_contains':
                 $result = $this->budgetRepository->searchBudget($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBudgets($result);
@@ -729,7 +729,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 $this->collector->findNothing();
                 break;
-            case '!budget_is':
+            case '-budget_is':
                 $budget = $this->budgetRepository->findByName($value);
                 if (null !== $budget) {
                     $this->collector->excludeBudget($budget);
@@ -746,7 +746,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!budget_ends':
+            case '-budget_ends':
                 $result = $this->budgetRepository->budgetEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBudgets($result);
@@ -764,7 +764,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!budget_starts':
+            case '-budget_starts':
                 $result = $this->budgetRepository->budgetStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBudgets($result);
@@ -776,11 +776,11 @@ class OperatorQuerySearch implements SearchInterface
             //
             // bill
             //
-            case '!has_any_bill':
+            case '-has_any_bill':
             case 'has_no_bill':
                 $this->collector->withoutBill();
                 break;
-            case '!has_no_bill':
+            case '-has_no_bill':
             case 'has_any_bill':
                 $this->collector->withBill();
                 break;
@@ -792,7 +792,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 $this->collector->findNothing();
                 break;
-            case '!bill_contains':
+            case '-bill_contains':
                 $result = $this->billRepository->searchBill($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBills($result);
@@ -808,7 +808,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 $this->collector->findNothing();
                 break;
-            case '!bill_is':
+            case '-bill_is':
                 $bill = $this->billRepository->findByName($value);
                 if (null !== $bill) {
                     $this->collector->excludeBills(new Collection([$bill]));
@@ -825,7 +825,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!bill_ends':
+            case '-bill_ends':
                 $result = $this->billRepository->billEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBills($result);
@@ -843,7 +843,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!bill_starts':
+            case '-bill_starts':
                 $result = $this->billRepository->billStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBills($result);
@@ -855,15 +855,15 @@ class OperatorQuerySearch implements SearchInterface
             //
             // tags
             //
-            case '!has_any_tag':
+            case '-has_any_tag':
             case 'has_no_tag':
                 $this->collector->withoutTags();
                 break;
-            case '!has_no_tag':
+            case '-has_no_tag':
             case 'has_any_tag':
                 $this->collector->hasAnyTag();
                 break;
-            case '!tag_is_not':
+            case '-tag_is_not':
             case 'tag_is':
                 $result = $this->tagRepository->searchTag($value);
                 if ($result->count() > 0) {
@@ -875,7 +875,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
-            case '!tag_is':
+            case '-tag_is':
             case 'tag_is_not':
                 $result = $this->tagRepository->searchTag($value);
                 if ($result->count() > 0) {
@@ -888,39 +888,39 @@ class OperatorQuerySearch implements SearchInterface
             case 'notes_contains':
                 $this->collector->notesContain($value);
                 break;
-            case '!notes_contains':
+            case '-notes_contains':
                 $this->collector->notesDoNotContain($value);
                 break;
             case 'notes_starts':
                 $this->collector->notesStartWith($value);
                 break;
-            case '!notes_starts':
+            case '-notes_starts':
                 $this->collector->notesDontStartWith($value);
                 break;
             case 'notes_ends':
                 $this->collector->notesEndWith($value);
                 break;
-            case '!notes_ends':
+            case '-notes_ends':
                 $this->collector->notesDontEndWith($value);
                 break;
             case 'notes_is':
                 $this->collector->notesExactly($value);
                 break;
-            case '!notes_is':
+            case '-notes_is':
                 $this->collector->notesExactlyNot($value);
                 break;
-            case '!any_notes':
+            case '-any_notes':
             case 'no_notes':
                 $this->collector->withoutNotes();
                 break;
             case 'any_notes':
-            case '!no_notes':
+            case '-no_notes':
                 $this->collector->withAnyNotes();
                 break;
             case 'reconciled':
                 $this->collector->isReconciled();
                 break;
-            case '!reconciled':
+            case '-reconciled':
                 $this->collector->isNotReconciled();
                 break;
             //
@@ -934,7 +934,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
                 break;
-            case '!amount_is':
+            case '-amount_is':
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
                 $value  = str_replace(',', '.', (string) $value);
@@ -951,7 +951,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIs($amount);
                 break;
-            case '!foreign_amount_is':
+            case '-foreign_amount_is':
 
                 // strip comma's, make dots.
                 $value = str_replace(',', '.', (string) $value);
@@ -960,7 +960,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIsNot($amount);
                 break;
-            case '!amount_more':
+            case '-amount_more':
             case 'amount_less':
                 // strip comma's, make dots.
                 $value = str_replace(',', '.', (string) $value);
@@ -969,7 +969,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
                 break;
-            case '!foreign_amount_more':
+            case '-foreign_amount_more':
             case 'foreign_amount_less':
                 // strip comma's, make dots.
                 $value = str_replace(',', '.', (string) $value);
@@ -978,7 +978,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountLess($amount);
                 break;
-            case '!amount_less':
+            case '-amount_less':
             case 'amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
@@ -987,7 +987,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
                 break;
-            case '!foreign_amount_less':
+            case '-foreign_amount_less':
             case 'foreign_amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
@@ -1003,158 +1003,158 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->setTypes([ucfirst($value)]);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 break;
-            case '!transaction_type':
+            case '-transaction_type':
                 $this->collector->excludeTypes([ucfirst($value)]);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 break;
             //
             // dates
             //
-            case '!date_on':
+            case '-date_on':
             case 'date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactDateParams($range, $prohibited);
                 return false;
             case 'date_before':
-            case '!date_after':
+            case '-date_after':
                 $range = $this->parseDateRange($value);
                 $this->setDateBeforeParams($range);
                 return false;
             case 'date_after':
-            case '!date_before':
+            case '-date_before':
                 $range = $this->parseDateRange($value);
                 $this->setDateAfterParams($range);
                 return false;
 
             case 'interest_date_on':
-            case '!interest_date_on':
+            case '-interest_date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactMetaDateParams('interest_date', $range, $prohibited);
                 return false;
             case 'interest_date_before':
-            case '!interest_date_after':
+            case '-interest_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('interest_date', $range);
                 return false;
             case 'interest_date_after':
-            case '!interest_date_before':
+            case '-interest_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('interest_date', $range);
                 return false;
 
             case 'book_date_on':
-            case '!book_date_on':
+            case '-book_date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactMetaDateParams('book_date', $range, $prohibited);
                 return false;
             case 'book_date_before':
-            case '!book_date_after':
+            case '-book_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('book_date', $range);
                 return false;
             case 'book_date_after':
-            case '!book_date_before':
+            case '-book_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('book_date', $range);
                 return false;
 
             case 'process_date_on':
-            case '!process_date_on':
+            case '-process_date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactMetaDateParams('process_date', $range, $prohibited);
                 return false;
             case 'process_date_before':
-            case '!process_date_after':
+            case '-process_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('process_date', $range);
                 return false;
             case 'process_date_after':
-            case '!process_date_before':
+            case '-process_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('process_date', $range);
                 return false;
 
             case 'due_date_on':
-            case '!due_date_on':
+            case '-due_date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactMetaDateParams('due_date', $range, $prohibited);
                 return false;
             case 'due_date_before':
-            case '!due_date_after':
+            case '-due_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('due_date', $range);
                 return false;
             case 'due_date_after':
-            case '!due_date_before':
+            case '-due_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('due_date', $range);
                 return false;
 
             case 'payment_date_on':
-            case '!payment_date_on':
+            case '-payment_date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactMetaDateParams('payment_date', $range, $prohibited);
                 return false;
             case 'payment_date_before':
-            case '!payment_date_after':
+            case '-payment_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('payment_date', $range);
                 return false;
             case 'payment_date_after':
-            case '!payment_date_before':
+            case '-payment_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('payment_date', $range);
                 return false;
 
             case 'invoice_date_on':
-            case '!invoice_date_on':
+            case '-invoice_date_on':
                 $range = $this->parseDateRange($value);
                 $this->setExactMetaDateParams('invoice_date', $range, $prohibited);
                 return false;
             case 'invoice_date_before':
-            case '!invoice_date_after':
+            case '-invoice_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('invoice_date', $range);
                 return false;
             case 'invoice_date_after':
-            case '!invoice_date_before':
+            case '-invoice_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('invoice_date', $range);
                 return false;
 
             case 'created_at_on':
-            case '!created_at_on':
+            case '-created_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setExactObjectDateParams('created_at', $range, $prohibited);
                 return false;
             case 'created_at_before':
-            case '!created_at_after':
+            case '-created_at_after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setObjectDateBeforeParams('created_at', $range);
                 return false;
             case 'created_at_after':
-            case '!created_at_before':
+            case '-created_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setObjectDateAfterParams('created_at', $range);
                 return false;
 
             case 'updated_at_on':
-            case '!updated_at_on':
+            case '-updated_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setExactObjectDateParams('updated_at', $range, $prohibited);
                 return false;
             case 'updated_at_before':
-            case '!updated_at_after':
+            case '-updated_at_after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setObjectDateBeforeParams('updated_at', $range);
                 return false;
             case 'updated_at_after':
-            case '!updated_at_before':
+            case '-updated_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setObjectDateAfterParams('updated_at', $range);
@@ -1162,86 +1162,153 @@ class OperatorQuerySearch implements SearchInterface
             //
             // external URL
             //
-            case '!any_external_url':
+            case '-any_external_url':
             case 'no_external_url':
                 $this->collector->withoutExternalUrl();
                 break;
-            case '!no_external_url':
+            case '-no_external_url':
             case 'any_external_url':
                 $this->collector->withExternalUrl();
                 break;
+
             case 'external_url_is':
                 $this->collector->setExternalUrl($value);
+                break;
+            case '-external_url_is':
+                $this->collector->excludeExternalUrl($value);
                 break;
             case 'external_url_contains':
                 $this->collector->externalUrlContains($value);
                 break;
+            case '-external_url_contains':
+                $this->collector->externalUrlDoesNotContain($value);
+                break;
             case 'external_url_starts':
                 $this->collector->externalUrlStarts($value);
+                break;
+            case '-external_url_starts':
+                $this->collector->externalUrlDoesNotStart($value);
                 break;
             case 'external_url_ends':
                 $this->collector->externalUrlEnds($value);
                 break;
+            case '-external_url_ends':
+                $this->collector->externalUrlDoesNotEnd($value);
+                break;
+
             //
             // other fields
             //
             case 'external_id_is':
                 $this->collector->setExternalId($value);
                 break;
+            case '-external_id_is':
+                $this->collector->excludeExternalId($value);
+                break;
             case 'recurrence_id':
                 $this->collector->setRecurrenceId($value);
+                break;
+            case '-recurrence_id':
+                $this->collector->excludeRecurrenceId($value);
                 break;
             case 'external_id_contains':
                 $this->collector->externalIdContains($value);
                 break;
+            case '-external_id_contains':
+                $this->collector->externalIdDoesNotContain($value);
+                break;
             case 'external_id_starts':
                 $this->collector->externalIdStarts($value);
                 break;
+            case '-external_id_starts':
+                $this->collector->externalIdDoesNotStart($value);
+                break;
             case 'external_id_ends':
                 $this->collector->externalIdEnds($value);
+                break;
+            case '-external_id_ends':
+                $this->collector->externalIdDoesNotEnd($value);
                 break;
 
             case 'internal_reference_is':
                 $this->collector->setInternalReference($value);
                 break;
+            case '-internal_reference_is':
+                $this->collector->excludeInternalReference($value);
+                break;
             case 'internal_reference_contains':
                 $this->collector->internalReferenceContains($value);
+                break;
+            case '-internal_reference_contains':
+                $this->collector->internalReferenceDoesNotContain($value);
                 break;
             case 'internal_reference_starts':
                 $this->collector->internalReferenceStarts($value);
                 break;
+            case '-internal_reference_starts':
+                $this->collector->internalReferenceDoesNotStart($value);
+                break;
             case 'internal_reference_ends':
                 $this->collector->internalReferenceEnds($value);
+                break;
+            case '-internal_reference_ends':
+                $this->collector->internalReferenceDoesNotEnd($value);
                 break;
 
             case 'attachment_name_is':
                 $this->collector->attachmentNameIs($value);
                 break;
+            case '-attachment_name_is':
+                $this->collector->attachmentNameIsNot($value);
+                break;
             case 'attachment_name_contains':
                 $this->collector->attachmentNameContains($value);
+                break;
+            case '-attachment_name_contains':
+                $this->collector->attachmentNameDoesNotContain($value);
                 break;
             case 'attachment_name_starts':
                 $this->collector->attachmentNameStarts($value);
                 break;
+            case '-attachment_name_starts':
+                $this->collector->attachmentNameDoesNotStart($value);
+                break;
             case 'attachment_name_ends':
                 $this->collector->attachmentNameEnds($value);
+                break;
+            case '-attachment_name_ends':
+                $this->collector->attachmentNameDoesNotEnd($value);
                 break;
 
             case 'attachment_notes_are':
                 $this->collector->attachmentNotesAre($value);
                 break;
+            case '-attachment_notes_are':
+                $this->collector->attachmentNotesAreNot($value);
+                break;
             case 'attachment_notes_contains':
                 $this->collector->attachmentNotesContains($value);
+                break;
+            case '-attachment_notes_contains':
+                $this->collector->attachmentNotesDoNotContain($value);
                 break;
             case 'attachment_notes_starts':
                 $this->collector->attachmentNotesStarts($value);
                 break;
+            case '-attachment_notes_starts':
+                $this->collector->attachmentNotesDoNotStart($value);
+                break;
             case 'attachment_notes_ends':
                 $this->collector->attachmentNotesEnds($value);
                 break;
-
+            case '-attachment_notes_ends':
+                $this->collector->attachmentNotesDoNotEnd($value);
+                break;
             case 'exists':
                 $this->collector->exists();
+                break;
+            case '-exists':
+                $this->collector->findNothing();
                 break;
 
         }
@@ -1257,9 +1324,9 @@ class OperatorQuerySearch implements SearchInterface
     public static function getRootOperator(string $operator): string
     {
         $original = $operator;
-        // if the string starts with "!" (not), we can remove it and recycle
+        // if the string starts with "-" (not), we can remove it and recycle
         // the configuration from the original operator.
-        if (str_starts_with($operator, '!')) {
+        if (str_starts_with($operator, '-')) {
             $operator = substr($operator, 1);
         }
 
@@ -1269,8 +1336,8 @@ class OperatorQuerySearch implements SearchInterface
         }
         if (true === $config['alias']) {
             $return = $config['alias_for'];
-            if (str_starts_with($original, '!')) {
-                $return = sprintf('!%s', $config['alias_for']);
+            if (str_starts_with($original, '-')) {
+                $return = sprintf('-%s', $config['alias_for']);
             }
             Log::debug(sprintf('"%s" is an alias for "%s", so return that instead.', $original, $return));
 
@@ -1423,7 +1490,7 @@ class OperatorQuerySearch implements SearchInterface
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered = $accounts->filter(
             function (Account $account) use ($value, $stringMethod) {
-                // either IBAN or account number!
+                // either IBAN or account number
                 $ibanMatch      = $stringMethod(strtolower((string) $account->iban), strtolower((string) $value));
                 $accountNrMatch = false;
                 /** @var AccountMeta $meta */

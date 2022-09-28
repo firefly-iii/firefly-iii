@@ -33,7 +33,7 @@ use Log;
  */
 class ParseDateString
 {
-    private $keywords
+    private array $keywords
         = [
             'today',
             'yesterday',
@@ -80,6 +80,7 @@ class ParseDateString
      */
     public function parseDate(string $date): Carbon
     {
+        Log::debug(sprintf('parseDate("%s")', $date));
         $date = strtolower($date);
         // parse keywords:
         if (in_array($date, $this->keywords, true)) {
@@ -118,7 +119,7 @@ class ParseDateString
             return new Carbon(sprintf('%d-01-01', $date));
         }
 
-        throw new FireflyException(sprintf('[d]Not a recognised date format: "%s"', $date));
+        throw new FireflyException(sprintf('[d] Not a recognised date format: "%s"', $date));
     }
 
     /**

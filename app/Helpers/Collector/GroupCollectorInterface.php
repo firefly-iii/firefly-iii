@@ -83,13 +83,37 @@ interface GroupCollectorInterface
      * @param string $name
      * @return GroupCollectorInterface
      */
+    public function attachmentNameDoesNotContain(string $name): GroupCollectorInterface;
+
+    /**
+     * @param string $name
+     * @return GroupCollectorInterface
+     */
     public function attachmentNameEnds(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
      * @return GroupCollectorInterface
      */
+    public function attachmentNameDoesNotEnd(string $name): GroupCollectorInterface;
+
+    /**
+     * @param string $name
+     * @return GroupCollectorInterface
+     */
     public function attachmentNameIs(string $name): GroupCollectorInterface;
+
+    /**
+     * @param string $name
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNameIsNot(string $name): GroupCollectorInterface;
+
+    /**
+     * @param string $name
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNameDoesNotStart(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
@@ -107,7 +131,19 @@ interface GroupCollectorInterface
      * @param string $value
      * @return GroupCollectorInterface
      */
+    public function attachmentNotesAreNot(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
     public function attachmentNotesContains(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNotesDoNotContain(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
@@ -120,6 +156,18 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function attachmentNotesStarts(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNotesDoNotEnd(string $value): GroupCollectorInterface;
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function attachmentNotesDoNotStart(string $value): GroupCollectorInterface;
 
     /**
      * @param string $day
@@ -362,13 +410,35 @@ interface GroupCollectorInterface
      * @param string $externalId
      * @return GroupCollectorInterface
      */
+    public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface;
+
+
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
     public function externalIdEnds(string $externalId): GroupCollectorInterface;
 
     /**
      * @param string $externalId
      * @return GroupCollectorInterface
      */
+    public function externalIdDoesNotEnd(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
     public function externalIdStarts(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface;
+
+
 
     /**
      * @param string $url
@@ -380,13 +450,31 @@ interface GroupCollectorInterface
      * @param string $url
      * @return GroupCollectorInterface
      */
+    public function externalUrlDoesNotContain(string $url): GroupCollectorInterface;
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
     public function externalUrlEnds(string $url): GroupCollectorInterface;
 
     /**
      * @param string $url
      * @return GroupCollectorInterface
      */
+    public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface;
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
     public function externalUrlStarts(string $url): GroupCollectorInterface;
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function externalUrlDoesNotStart(string $url): GroupCollectorInterface;
 
     /**
      * Ensure the search will find nothing at all, zero results.
@@ -481,13 +569,31 @@ interface GroupCollectorInterface
      * @param string $externalId
      * @return GroupCollectorInterface
      */
+    public function internalReferenceDoesNotContain(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
     public function internalReferenceEnds(string $externalId): GroupCollectorInterface;
 
     /**
      * @param string $externalId
      * @return GroupCollectorInterface
      */
+    public function internalReferenceDoesNotEnd(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
     public function internalReferenceStarts(string $externalId): GroupCollectorInterface;
+
+    /**
+     * @param string $externalId
+     * @return GroupCollectorInterface
+     */
+    public function internalReferenceDoesNotStart(string $externalId): GroupCollectorInterface;
 
     /**
      * Only journals that are reconciled.
@@ -877,10 +983,25 @@ interface GroupCollectorInterface
     public function setExternalId(string $externalId): GroupCollectorInterface;
 
     /**
+     * Look for specific external ID's.
+     *
+     * @param string $externalId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeExternalId(string $externalId): GroupCollectorInterface;
+
+    /**
      * @param string $url
      * @return GroupCollectorInterface
      */
     public function setExternalUrl(string $url): GroupCollectorInterface;
+
+    /**
+     * @param string $url
+     * @return GroupCollectorInterface
+     */
+    public function excludeExternalUrl(string $url): GroupCollectorInterface;
 
     /**
      * Limit results to a specific foreign currency.
@@ -908,6 +1029,17 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setInternalReference(string $externalId): GroupCollectorInterface;
+
+    /**
+     * Look for specific external ID's.
+     *
+     * @param string $externalId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeInternalReference(string $externalId): GroupCollectorInterface;
+
+
 
     /**
      * Limit the result to a set of specific transaction journals.
@@ -1014,6 +1146,13 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setRecurrenceId(string $recurringId): GroupCollectorInterface;
+
+    /**
+     * @param string $recurringId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function excludeRecurrenceId(string $recurringId): GroupCollectorInterface;
 
     /**
      * Search for words in descriptions.

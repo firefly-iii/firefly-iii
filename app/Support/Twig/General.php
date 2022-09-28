@@ -421,7 +421,8 @@ class General extends AbstractExtension
         return new TwigFunction(
             'getRootSearchOperator',
             static function (string $operator): string {
-                return OperatorQuerySearch::getRootOperator($operator);
+                $result =  OperatorQuerySearch::getRootOperator($operator);
+                return str_replace('-', 'not_', $result);
             }
         );
     }
