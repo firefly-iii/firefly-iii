@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Новый вход в Firefly III',
+    'slack_login_from_new_ip'                 => 'Новый вход Firefly III с IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III зафиксировал вход в ваш аккаунт с неизвестного IP-адреса. Если вы никогда не входили в систему с IP-адреса, указанного ниже, или это было более шести месяцев назад, Firefly III предупредит вас.',
     'new_ip_warning'                          => 'Если вы узнаёте этот IP адрес или логин, вы можете проигнорировать данное сообщение. Если вы не входили в систему, и не понимаете, что происходит, проверьте безопасность вашего пароля, измените его и выйдите из всех других сессий. Для этого перейдите на страницу своего профиля. Конечно, же у вас уже включена двухфакторная аутентификация, верно? Оставайтесь в безопасности!',
     'ip_address'                              => 'IP-адрес',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Добро пожаловать в Firefly III!',
+    'registered_subject_admin'                => 'Новый пользователь зарегистрирован',
+    'admin_new_user_registered'               => 'Зарегистрирован новый пользователь с электронной почтой: **:email** ему присвое ID #:id.',
     'registered_welcome'                      => 'Добро пожаловать в [Firefly III](:address). Подтверждаем вашу регистрацию этим e-mail. Ура!',
     'registered_pw'                           => 'Если вы забыли ваш пароль, пожалуйста, создайте его повторно используя [оснастку по сбросу пароля](:address/password/reset).',
     'registered_help'                         => 'В верхнем правом углу страницы есть иконка справки. Если вам нужна помощь, нажмите её!',
@@ -59,28 +62,31 @@ return [
     'registered_pw_reset_link'                => 'Сбросить пароль:',
     'registered_doc_link'                     => 'Документация:',
 
+    // new version
+    'new_version_email_subject'               => 'Доступна новая версия Firefly III',
+
     // email change
     'email_change_subject'                    => 'Ваш адрес электронной почты Firefly III был изменен',
     'email_change_body_to_new'                => 'Вы или кто-то, у кого есть доступ к вашей учетной записи Firefly III, изменил адрес вашей электронной почты. Если вы не ожидали этого сообщения, проигнорируйте и удалите его.',
-    'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
+    'email_change_body_to_old'                => 'Вы или кто-то, у кого есть доступ к вашей учетной записи Firefly III, изменили ваш адрес электронной почты. Если это не вы, то **необходимо** пройти по ссылке «отменить» ниже, чтобы защитить свой аккаунт!',
     'email_change_ignore'                     => 'Если вы инициировали это изменение, вы можете спокойно проигнорировать это сообщение.',
     'email_change_old'                        => 'Старый адрес электронной почты: :email',
-    'email_change_old_strong'                 => 'The old email address was: **:email**',
+    'email_change_old_strong'                 => 'Старый адрес электронной почты: **:email**',
     'email_change_new'                        => 'Новый адрес электронной почты: :email',
-    'email_change_new_strong'                 => 'The new email address is: **:email**',
+    'email_change_new_strong'                 => 'Новый адрес электронной почты: **:email**',
     'email_change_instructions'               => 'Вы не можете использовать Firefly III, пока не подтвердите это изменение. Для подтверждения перейдите по ссылке ниже.',
     'email_change_undo_link'                  => 'Чтобы отменить изменения, перейдите по ссылке:',
 
     // OAuth token created
     'oauth_created_subject'                   => 'Создан новый OAuth клиент',
-    'oauth_created_body'                      => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_body'                      => 'Кто-то (надеемся, что вы) только что создал новый клиент API OAuth для вашей учетной записи с именем ":name" и обратным URL `:url`.',
+    'oauth_created_explanation'               => 'С помощью этого токена, доступны **все** ваши финансовые записи через Firefly III API.',
+    'oauth_created_undo'                      => 'Если это были не вы, пожалуйста, отховите этого клиента как можно скорее по адресу `:url`',
 
     // reset password
     'reset_pw_subject'                        => 'Ваш запрос на сброс пароля',
     'reset_pw_instructions'                   => 'Кто-то пытался сбросить ваш пароль. Если это были Вы, пожалуйста, перейдите по ссылке ниже, чтобы сделать это.',
-    'reset_pw_warning'                        => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_warning'                        => '**ПОЖАЛУЙСТА** проверьте, что ссылка ведёт на Firefly III, как вы ожидаете!',
 
     // error
     'error_subject'                           => 'Найдена ошибка в Firefly III',
@@ -97,21 +103,21 @@ return [
     'error_github_html'                       => 'Если вы предпочитаете, вы также можете создать новый тикет на <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Если вы предпочитаете, вы также можете открыть новый тикет на https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'                  => 'Полная трассировка стека:',
-    'error_headers'                           => 'The following headers may also be relevant:',
+    'error_headers'                           => 'Заголовки также могут иметь отношение к следующим темам:',
 
     // report new journals
     'new_journals_subject'                    => 'Firefly III создал новую транзакцию|Firefly III создал :count новых транзакций',
     'new_journals_header'                     => 'Firefly III создал для вас транзакцию. Вы можете найти её в вашей установке Firefly III: |Firefly III создал для вас :count транзакций. Вы можете найти их в вашей установке Firefly III:',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
-    'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
+    'bill_warning_subject_end_date'           => 'Срок действия вашего счета ":name" истекает через :diff дней',
+    'bill_warning_subject_now_end_date'       => 'Ваш счет ":name" заканчивается сегодня',
+    'bill_warning_subject_extension_date'     => 'Ваш счет ":name" необходимо продлить или отменить через :diff дней',
+    'bill_warning_subject_now_extension_date' => 'Ваш счет ":name" должен быть продлен или отменен сегодня',
+    'bill_warning_end_date'                   => 'Срок действия вашего счета **":name"** истекает :date. Этот момент пройдет примерно через **:diff days**.',
+    'bill_warning_extension_date'             => 'Ваш счет **":name"** необходимо продлить или отменить :date. Этот момент пройдет примерно через **:diff days**.',
+    'bill_warning_end_date_zero'              => 'Срок действия вашего счета **":name"** истекает :date. Это **СЕГОДНЯ!**',
+    'bill_warning_extension_date_zero'        => 'Ваш счет **":name"** необходимо продлить или отменить :date. Это **СЕГОДНЯ!**',
     'bill_warning_please_action'              => 'Просим принять соответствующие меры.',
 
 ];

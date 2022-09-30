@@ -142,7 +142,7 @@ return [
     'unique_object_group'            => '组名称必须唯一',
     'starts_with'                    => '此值必须以 :values 开头',
     'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => '两个账户必须是相同类型的账户',
     'same_account_currency'          => '两个账户必须设置有相同的货币',
 

@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Nazwa skarbonki musi być unikalna.',
     'unique_object_group'            => 'Nazwa grupy musi być unikalna',
     'starts_with'                    => 'Wartość musi zaczynać się od :values.',
-    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_webhook'                 => 'Masz już webhook z tą kombinacją adresu URL, wyzwalacza, odpowiedzi i dostawy.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Oba konta muszą być tego samego typu',
     'same_account_currency'          => 'Oba konta muszą mieć to samo ustawienie waluty',
 

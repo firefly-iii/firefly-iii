@@ -138,7 +138,7 @@ return [
     'payment_info'            => 'Zahlungsinformationen',
     'expected_info'           => 'Nächste erwartete Buchung',
     'start_date'              => 'Beginnt am',
-    'trigger'                 => 'Trigger',
+    'trigger'                 => 'Auslöser',
     'response'                => 'Response',
     'delivery'                => 'Delivery',
     'url'                     => 'URL',

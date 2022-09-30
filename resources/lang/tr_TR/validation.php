@@ -142,7 +142,7 @@ return [
     'unique_object_group'            => 'Grup adı benzersiz olmalıdır',
     'starts_with'                    => 'Değer şununla başlamalıdır :values.',
     'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 

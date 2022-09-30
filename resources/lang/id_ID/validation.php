@@ -142,7 +142,7 @@ return [
     'unique_object_group'            => 'Nama grup harus unik',
     'starts_with'                    => 'Nilai harus di mulai dengan :values.',
     'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Kedua akun harus dari jenis akun yang sama',
     'same_account_currency'          => 'Kedua akun harus memiliki pengaturan mata uang yang sama',
 

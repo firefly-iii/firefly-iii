@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Nové prihlásenie do Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III zachytil nové prihlásenie do Vášho účtu z neznámej IP adresy. Ak ste sa tejto adresy nikdy neprihlásili, alebo to bolo pred viac, než 6 mesiacmi, Firefly III Vás na to upozorní.',
     'new_ip_warning'                          => 'Ak túto poznáte túto IP adresu alebo prihlásenie, ignorujte túto správu. Ak ste sa neprihlásili, alebo netušíte, o čo ide, overte si bezpečnosť Vášho hesla, zmeňte ho, a odhláste sa zo všetkých sedení. Môžete tak spraviť na stránke svojho profilu. Máte už zapnuté 2FA overenie, však? Buďte v bezpečí!',
     'ip_address'                              => 'IP adresa',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Vitajte vo Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'V pravom hornom rohu každej stánky je ikonka pomocníka. Ak potrebujete pomoc, kliknite na ňu!',
@@ -58,6 +61,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Obnova hesla:',
     'registered_doc_link'                     => 'Dokumentácia:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Vaša e-mailová adresa Firefly III bola zmenená',

@@ -142,7 +142,7 @@ return [
     'unique_object_group'            => 'Názov skupiny musí byť jedinečný',
     'starts_with'                    => 'Hodnota musí začínať :values.',
     'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Oba účty musia mať rovnaký typ',
     'same_account_currency'          => 'Oba účty musia mať rovnakú menu',
 

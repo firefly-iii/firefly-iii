@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Ново влизане в Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III откри нов вход за вашия акаунт от неизвестен IP адрес. Ако никога не сте влизали от IP адреса по-долу или е било преди повече от шест месеца, Firefly III ще ви предупреди.',
     'new_ip_warning'                          => 'Ако разпознаете този IP адрес или данните за вход, можете да игнорирате това съобщение. Ако не сте влезли вие или ако нямате представа за какво става въпрос, проверете защитата на паролата си, променете я и излезте от всички останали сесии. За да направите това, отидете на страницата на вашия профил. Разбира се, че вече сте активирали 2FA, нали? Пазете се!',
     'ip_address'                              => 'IP адрес',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Добре дошли в Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'В горния десен ъгъл на всяка страница има икона за помощ. Ако имате нужда от помощ, щракнете върху нея!',
@@ -58,6 +61,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Смяна на парола:',
     'registered_doc_link'                     => 'Документация:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Вашият имейл адрес за Firefly III е променен',

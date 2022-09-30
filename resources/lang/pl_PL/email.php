@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Nowe logowanie do Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III wykrył nowe logowanie na Twoim koncie z nieznanego adresu IP. Jeśli nigdy nie zalogowałeś się z poniższego adresu IP lub minęło ponad sześć miesięcy od ostatniego logowania, Firefly III ostrzeże Cię o tym.',
     'new_ip_warning'                          => 'Jeśli rozpoznajesz ten adres IP lub logowanie, możesz zignorować tę wiadomość. Jeśli nie logowałeś się lub jeśli nie masz pojęcia, o co w tym chodzi, zweryfikuj bezpieczeństwo hasła, zmień je i wyloguj wszystkie inne sesje. Aby to zrobić, przejdź na stronę Profil. Oczywiście masz już włączone 2FA, prawda? Bądź bezpieczny!',
     'ip_address'                              => 'Adres IP',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Witaj w Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Witaj w [Firefly III](:address). Twoja rejestracja przebiegła pomyślnie, a ten e-mail jest tutaj, aby to potwierdzić. Yay!',
     'registered_pw'                           => 'Jeśli już zapomniałeś swojego hasła, zresetuj je używając [narzędzia do resetowania hasła](:address/password/reset).',
     'registered_help'                         => 'W prawym górnym rogu każdej strony jest ikonka pomocy. Jeśli potrzebujesz pomocy, kliknij ją!',
@@ -58,6 +61,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Resetowanie hasła:',
     'registered_doc_link'                     => 'Dokumentacja:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Twój adres e-mail Firefly III został zmieniony',

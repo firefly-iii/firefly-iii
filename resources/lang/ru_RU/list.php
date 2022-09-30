@@ -138,10 +138,10 @@ return [
     'payment_info'            => 'Иформация о платеже',
     'expected_info'           => 'Следующая ожидаемая операция',
     'start_date'              => 'Начальная дата',
-    'trigger'                 => 'Trigger',
-    'response'                => 'Response',
-    'delivery'                => 'Delivery',
-    'url'                     => 'URL',
-    'secret'                  => 'Secret',
+    'trigger'                 => 'Событие',
+    'response'                => 'Ответ',
+    'delivery'                => 'Доставка',
+    'url'                     => 'Ссылка',
+    'secret'                  => 'Секретный ключ',
 
 ];

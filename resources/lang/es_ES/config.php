@@ -37,7 +37,7 @@ return [
     'month_and_date_day_js'    => 'dddd, D [de] MMMM [de] YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
-    'month_and_day_no_year_js' => 'd [de] MMMM',
+    'month_and_day_no_year_js' => 'D [de] MMMM',
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'D MMMM YYYY, HH:mm:ss',

@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Firefly III に新しいログイン',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III が未知のIPアドレスからあなたのアカウントへの新しいログインを検出しました。 以下のIPアドレスからログインしたことがないか、ログインから6ヶ月以上経過している場合、Firefly IIIは警告します。',
     'new_ip_warning'                          => 'この IP アドレスまたはログインに覚えがある場合は、このメッセージを無視してください。 ログインしていないか、これが何であるかがわからない場合、 パスワードの安全性を確認、変更し、すべてのセッションをログアウトしてください。 これはプロフィールページからできます。もちろん、すでに2要素認証は有効にしていますよね？ご安全に！',
     'ip_address'                              => 'IPアドレス',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Firefly III へようこそ！',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => '[Firefly III](:address) へようこそ。このメールにて登録が完了したことをお知らせします。やった！',
     'registered_pw'                           => 'パスワードを忘れた場合は、[パスワードリセットツール](:address/password/reset)を使用してリセットしてください。',
     'registered_help'                         => '各ページの右上にヘルプアイコンがあります。ヘルプが必要な場合は、クリックしてください。',
@@ -58,6 +61,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'パスワードのリセット:',
     'registered_doc_link'                     => 'ドキュメント:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Firefly III のメールアドレスが変更されました',

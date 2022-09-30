@@ -138,10 +138,10 @@ return [
     'payment_info'            => 'Informação de pagamento',
     'expected_info'           => 'Próxima transação esperada',
     'start_date'              => 'Data de início',
-    'trigger'                 => 'Trigger',
-    'response'                => 'Response',
-    'delivery'                => 'Delivery',
+    'trigger'                 => 'Gatilho',
+    'response'                => 'Resposta',
+    'delivery'                => 'Entrega',
     'url'                     => 'URL',
-    'secret'                  => 'Secret',
+    'secret'                  => 'Segredo',
 
 ];

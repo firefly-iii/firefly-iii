@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Ny inloggning för Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III upptäckte en ny inloggning på ditt konto från en okänd IP-adress. Om du aldrig loggat in från IP-adressen nedan, eller om det har varit mer än sex månader sedan, kommer Firefly III att varna dig.',
     'new_ip_warning'                          => 'Om du känner igen denna IP-adress eller inloggningen kan du ignorera detta meddelande. Om det inte var du, eller om du inte har någon aning om vad detta handlar om, verifiera din lösenordssäkerhet, ändra den och logga ut alla andra sessioner. För att göra detta, gå till din profilsida. Naturligtvis har du redan 2FA aktiverat, eller hur? Håll dig säker!',
     'ip_address'                              => 'IP-adress',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Välkommen till Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'Det finns en hjälp-ikon i det övre högra hörnet av varje sida. Om du behöver hjälp, klicka på den!',
@@ -58,6 +61,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Återställ lösenord:',
     'registered_doc_link'                     => 'Dokumentation:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Din Firefly III e-postadress har ändrats',

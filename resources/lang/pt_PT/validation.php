@@ -142,7 +142,7 @@ return [
     'unique_object_group'            => 'O nome do grupo tem que ser único',
     'starts_with'                    => 'O valor deve começar com :values.',
     'unique_webhook'                 => 'Você já tem um webhook com esta combinação de URL, gatilho, resposta e entrega.',
-    'unique_existing_webhook'        => 'Você já tem outro webhook com esta combinação de URL, gatilho, resposta e entrega.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Ambas as contas devem ser do mesmo tipo de conta',
     'same_account_currency'          => 'Ambas as contas devem ter a mesma moeda configurada',
 

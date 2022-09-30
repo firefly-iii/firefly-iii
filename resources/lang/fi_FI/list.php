@@ -138,10 +138,10 @@ return [
     'payment_info'            => 'Maksutiedot',
     'expected_info'           => 'Seuraava odotettu tapahtuma',
     'start_date'              => 'Aloituspäivä',
-    'trigger'                 => 'Trigger',
-    'response'                => 'Response',
-    'delivery'                => 'Delivery',
-    'url'                     => 'URL',
-    'secret'                  => 'Secret',
+    'trigger'                 => 'Ehto',
+    'response'                => 'Vastaus',
+    'delivery'                => 'Toimitus',
+    'url'                     => 'URL-osoite',
+    'secret'                  => 'Salaisuus',
 
 ];

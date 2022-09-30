@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Nouvelle connexion sur Firefly III',
+    'slack_login_from_new_ip'                 => 'Nouvelle connexion à Firefly III depuis IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III a détecté une nouvelle connexion sur votre compte à partir d\'une adresse IP inconnue. Si vous ne vous êtes jamais connecté depuis l\'adresse IP ci-dessous, ou si ça fait plus de six mois, Firefly III vous avertira.',
     'new_ip_warning'                          => 'Si vous reconnaissez cette adresse IP ou la connexion, vous pouvez ignorer ce message. Si vous ne vous êtes pas connecté, si vous n\'avez aucune idée de quoi il s\'agit, vérifiez la sécurité de votre mot de passe, modifiez-la et déconnectez toutes les autres sessions. Pour cela, allez sur votre page de profil. Bien sûr, vous avez déjà activé l\'A2F, n\'est-ce pas ? Soyez prudent !',
     'ip_address'                              => 'Adresse IP',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Bienvenue sur Firefly III !',
+    'registered_subject_admin'                => 'Un nouvel utilisateur s\'est inscrit',
+    'admin_new_user_registered'               => 'Un nouvel utilisateur s\'est inscrit. L\'utilisateur **:email** a reçu l\'ID utilisateur #:id.',
     'registered_welcome'                      => 'Bienvenue sur [Firefly III](:address). Votre inscription a été faite, et cet e-mail est là pour la confirmer. Yeah !',
     'registered_pw'                           => 'Si vous avez déjà oublié votre mot de passe, veuillez le réinitialiser en utilisant [l\'outil de réinitialisation du mot de passe](:address/password/reset).',
     'registered_help'                         => 'Il y a une icône d\'aide en haut à droite de chaque page. Si vous avez besoin d\'aide, cliquez dessus !',
@@ -58,6 +61,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III :',
     'registered_pw_reset_link'                => 'Réinitialisation du mot de passe :',
     'registered_doc_link'                     => 'Documentation :',
+
+    // new version
+    'new_version_email_subject'               => 'Une nouvelle version de Firefly III est disponible',
 
     // email change
     'email_change_subject'                    => 'Votre adresse e-mail Firefly III a été modifiée',

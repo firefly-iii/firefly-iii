@@ -142,7 +142,7 @@ return [
     'unique_object_group'            => 'De groepsnaam moet uniek zijn',
     'starts_with'                    => 'De waarde moet beginnen met :values.',
     'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Beide rekeningen moeten van hetzelfde rekeningtype zijn',
     'same_account_currency'          => 'Beide rekeningen moeten dezelfde valuta hebben',
 

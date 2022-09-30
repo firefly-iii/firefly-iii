@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Nieuwe login op Firefly III',
+    'slack_login_from_new_ip'                 => 'Nieuwe Firefly III login vanaf IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III heeft een nieuwe login op je account gedetecteerd van een onbekend IP-adres. Je krijgt deze waarschuwing omdat je nooit hebt ingelogd vanaf het onderstaande IP-adres, of dat was meer dan zes maanden geleden.',
     'new_ip_warning'                          => 'Je mag dit bericht negeren als je het IP adres herkent. Als je niet hebt ingelogd of je hebt geen flauw idee waar dit over gaat, zorg dan dat je je wachtwoord verandert en al je andere sessies uitlogt. Dit kan op je profielpagina. Je hebt 2FA al aanstaan toch? Stay safe!',
     'ip_address'                              => 'IP adres',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Welkom bij Firefly III!',
+    'registered_subject_admin'                => 'Nieuwe gebruiker geregistreerd',
+    'admin_new_user_registered'               => 'Een nieuwe gebruiker is geregistreerd. Gebruiker **:email** heeft ID #:id gekregen.',
     'registered_welcome'                      => 'Welkom bij [Firefly III](:address). Je registratie is doorgekomen en deze e-mail is hier om dat te bevestigen. Hoera!',
     'registered_pw'                           => 'Als je je wachtwoord nu al bent vergeten, reset deze dan via [de password reset tool](:address/password/reset).',
     'registered_help'                         => 'Er staat een help-icoontje rechtsboven op elke pagina. Gebruik die vooral!',
@@ -58,6 +61,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Wachtwoord resetten:',
     'registered_doc_link'                     => 'Documentatie:',
+
+    // new version
+    'new_version_email_subject'               => 'Er is een nieuwe Firefly III-versie beschikbaar',
 
     // email change
     'email_change_subject'                    => 'Je Firefly III e-mailadres is veranderd',

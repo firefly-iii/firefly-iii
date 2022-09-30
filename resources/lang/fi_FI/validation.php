@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Säästöpossu tarvitsee yksilöllisen nimen.',
     'unique_object_group'            => 'Ryhmän nimen täytyy olla yksilöllinen',
     'starts_with'                    => 'Arvon on alettava :values.',
-    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_webhook'                 => 'Sinulla on jo verkkotoimintokutsu (webhook) tällä URL -, ehto -, vastaus -, ja toimitus-yhdistelmällä.',
+    'unique_existing_webhook'        => 'Sinulla on jo toinen verkkotoimintokutsu (webhook) tällä URL -, ehto -, vastaus -, ja toimitus-yhdistelmällä.',
     'same_account_type'              => 'Molempien tilien on oltava samaa tyyppiä',
     'same_account_currency'          => 'Molemmilla tileillä on oltava sama valuuttaasetus',
 

@@ -35,6 +35,7 @@ return [
 
     // new IP
     'login_from_new_ip'                       => 'Firefly III yeni giriş',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III, hesabınızda bilinmeyen bir IP adresinden yeni bir giriş tespit etti. Aşağıdaki IP adresinden hiç giriş yapmadıysanız veya altı aydan daha uzun bir süre önce yapıldıysa, Firefly III sizi uyaracaktır.',
     'new_ip_warning'                          => 'Bu IP adresini veya oturum açmayı tanıyorsanız, bu iletiyi yoksayabilirsiniz. Eğer giriş eğer konuyla ilgili hiçbir fikriniz varsa, şifre güvenliğinizi doğrulamak, ve çıkış tüm oturumlar bu değişiklik olmadıysa. Bunu yapmak için profil sayfanıza gidin. Tabii ki zaten 2FA etkin, değil mi? Güvende kalın!',
     'ip_address'                              => 'IP adresi',
@@ -49,6 +50,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Firefly III\'e hoşgeldiniz!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => '[Firefly III] \'e hoş geldiniz(:address). Kaydınız yapıldı ve bu e-posta onaylamak için burada. Yay!',
     'registered_pw'                           => 'Parolanızı zaten unuttuysanız, lütfen [parola sıfırlama aracı] (:adres/parola/sıfırla) kullanarak sıfırlayın.',
     'registered_help'                         => 'Her sayfanın sağ üst köşesinde bir yardım simgesi bulunur. Yardıma ihtiyacınız olursa, tıklayın!',
@@ -58,6 +61,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Şifre sıfırlama:',
     'registered_doc_link'                     => 'Belge:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Firefly III e-posta adresiniz değişti',

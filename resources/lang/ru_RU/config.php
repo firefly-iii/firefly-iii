@@ -30,7 +30,7 @@ return [
 
     //'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js'  => 'D MMM YYYY',
-    'month_and_day_fns'        => 'MMMM d, y',
+    'month_and_day_fns'        => 'MMMM д, г',
     'month_and_day_js'         => 'Do MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
@@ -48,7 +48,7 @@ return [
 
     //'week_in_year'            => 'Week %V, %G',
     'week_in_year_js'          => '[Week] w, YYYY',
-    'week_in_year_fns'         => "'Week' w, yyyy",
+    'week_in_year_fns'         => "'Неделя' ww, yyyy",
 
     //'year'                    => '%Y',
     'year_js'                  => 'YYYY',

@@ -142,7 +142,7 @@ return [
     'unique_object_group'            => 'Tên nhóm phải không bị trùng',
     'starts_with'                    => 'Giá trị phải bắt đầu bằng :values.',
     'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Cả hai tài khoản phải thuộc cùng một loại tài khoản',
     'same_account_currency'          => 'Cả hai tài khoản phải có cùng cài đặt đơn vị tiền tệ',
 

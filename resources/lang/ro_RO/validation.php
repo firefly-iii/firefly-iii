@@ -142,7 +142,7 @@ return [
     'unique_object_group'            => 'Numele grupului trebuie să fie unic',
     'starts_with'                    => 'Valoarea trebuie să înceapă cu :values.',
     'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Ambele conturi trebuie să fie de acelaşi tip de cont',
     'same_account_currency'          => 'Ambele conturi trebuie să aibă aceeași monedă',
 
