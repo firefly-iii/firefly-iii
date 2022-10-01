@@ -189,7 +189,8 @@ class EditController extends Controller
     public function update(RuleFormRequest $request, Rule $rule)
     {
         $data = $request->getRuleData();
-        $this->ruleRepos->update($rule, $data);
+
+        //$this->ruleRepos->update($rule, $data);
 
         session()->flash('success', (string) trans('firefly.updated_rule', ['title' => $rule->title]));
         app('preferences')->mark();

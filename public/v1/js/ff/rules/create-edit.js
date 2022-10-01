@@ -353,6 +353,7 @@ function updateTriggerInput(selectList) {
         case 'has_any_tag':
         case 'has_attachments':
         case 'source_is_cash':
+        case 'has_no_attachments':
         case 'destination_is_cash':
         case 'account_is_cash':
         case 'no_external_url':

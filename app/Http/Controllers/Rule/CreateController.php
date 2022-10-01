@@ -261,6 +261,7 @@ class CreateController extends Controller
     public function store(RuleFormRequest $request)
     {
         $data = $request->getRuleData();
+
         $rule = $this->ruleRepos->store($data);
         session()->flash('success', (string) trans('firefly.stored_new_rule', ['title' => $rule->title]));
         app('preferences')->mark();

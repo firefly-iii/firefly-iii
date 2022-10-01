@@ -425,9 +425,13 @@ class RuleRepository implements RuleRepositoryInterface
             $value          = $trigger['value'] ?? '';
             $stopProcessing = $trigger['stop_processing'] ?? false;
             $active         = $trigger['active'] ?? true;
+            $type           = $trigger['type'];
+            if (true === $trigger['prohibited']) {
+                $type = sprintf('-%s', $type);
+            }
 
             $triggerValues = [
-                'action'          => $trigger['type'],
+                'action'          => $type,
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,

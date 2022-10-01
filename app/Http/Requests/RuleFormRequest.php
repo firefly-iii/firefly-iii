@@ -66,11 +66,14 @@ class RuleFormRequest extends FormRequest
         if (is_array($triggerData)) {
             foreach ($triggerData as $trigger) {
                 $stopProcessing = $trigger['stop_processing'] ?? '0';
-                $return[]       = [
+                $prohibited     = $trigger['prohibited'] ?? '0';
+                $set       = [
                     'type'            => $trigger['type'] ?? 'invalid',
                     'value'           => $trigger['value'] ?? '',
                     'stop_processing' => 1 === (int) $stopProcessing,
+                    'prohibited'      => 1 === (int) $prohibited,
                 ];
+                $return[] = $set;
             }
         }
 

@@ -317,14 +317,19 @@ trait RenderPartialViews
             if ('user_action' !== $entry->trigger_type) {
                 $count = ($index + 1);
                 try {
+                    $rootOperator = OperatorQuerySearch::getRootOperator($entry->trigger_type);
+                    if(str_starts_with($rootOperator, '-')) {
+                        $rootOperator = substr($rootOperator, 1);
+                    }
                     $renderedEntries[] = view(
                         'rules.partials.trigger',
                         [
-                            'oldTrigger' => OperatorQuerySearch::getRootOperator($entry->trigger_type),
-                            'oldValue'   => $entry->trigger_value,
-                            'oldChecked' => $entry->stop_processing,
-                            'count'      => $count,
-                            'triggers'   => $triggers,
+                            'oldTrigger'    => $rootOperator,
+                            'oldValue'      => $entry->trigger_value,
+                            'oldChecked'    => $entry->stop_processing,
+                            'oldProhibited' => str_starts_with($entry->trigger_type, '-'),
+                            'count'         => $count,
+                            'triggers'      => $triggers,
                         ]
                     )->render();
 

@@ -98,11 +98,12 @@ trait RuleManagement
                     $renderedEntries[] = view(
                         'rules.partials.trigger',
                         [
-                            'oldTrigger' => OperatorQuerySearch::getRootOperator($oldTrigger['type']),
-                            'oldValue'   => $oldTrigger['value'],
-                            'oldChecked' => 1 === (int) ($oldTrigger['stop_processing'] ?? '0'),
-                            'count'      => $index + 1,
-                            'triggers'   => $triggers,
+                            'oldTrigger'    => OperatorQuerySearch::getRootOperator($oldTrigger['type']),
+                            'oldValue'      => $oldTrigger['value'],
+                            'oldChecked'    => 1 === (int) ($oldTrigger['stop_processing'] ?? '0'),
+                            'oldProhibited' => 1 === (int) ($oldTrigger['prohibited'] ?? '0'),
+                            'count'         => $index + 1,
+                            'triggers'      => $triggers,
                         ]
                     )->render();
                 } catch (Throwable $e) { // @phpstan-ignore-line
