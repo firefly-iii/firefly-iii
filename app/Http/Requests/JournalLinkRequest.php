@@ -45,7 +45,7 @@ class JournalLinkRequest extends FormRequest
         $linkType                         = $this->get('link_type');
         $parts                            = explode('_', $linkType);
         $return['link_type_id']           = (int) $parts[0];
-        $return['transaction_journal_id'] = $this->integer('opposing');
+        $return['transaction_journal_id'] = $this->convertInteger('opposing');
         $return['notes']                  = $this->convertString('notes');
         $return['direction']              = $parts[1];
 

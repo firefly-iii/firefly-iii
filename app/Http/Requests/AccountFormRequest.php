@@ -48,7 +48,7 @@ class AccountFormRequest extends FormRequest
             'name'                    => $this->convertString('name'),
             'active'                  => $this->boolean('active'),
             'account_type_name'       => $this->convertString('objectType'),
-            'currency_id'             => $this->integer('currency_id'),
+            'currency_id'             => $this->convertInteger('currency_id'),
             'virtual_balance'         => $this->convertString('virtual_balance'),
             'iban'                    => $this->convertString('iban'),
             'BIC'                     => $this->convertString('BIC'),
@@ -77,7 +77,7 @@ class AccountFormRequest extends FormRequest
         // that could have been selected.
         if ('liabilities' === $data['account_type_name']) {
             $data['account_type_name'] = null;
-            $data['account_type_id']   = $this->integer('liability_type_id');
+            $data['account_type_id']   = $this->convertInteger('liability_type_id');
             if ('' !== $data['opening_balance']) {
                 $data['opening_balance'] = app('steam')->negative($data['opening_balance']);
             }

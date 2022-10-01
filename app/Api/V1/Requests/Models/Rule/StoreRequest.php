@@ -48,8 +48,8 @@ class StoreRequest extends FormRequest
         $fields = [
             'title'            => ['title', 'convertString'],
             'description'      => ['description', 'convertString'],
-            'rule_group_id'    => ['rule_group_id', 'integer'],
-            'order'            => ['order', 'integer'],
+            'rule_group_id'    => ['rule_group_id', 'convertInteger'],
+            'order'            => ['order', 'convertInteger'],
             'rule_group_title' => ['rule_group_title', 'convertString'],
             'trigger'          => ['trigger', 'convertString'],
             'strict'           => ['strict', 'boolean'],

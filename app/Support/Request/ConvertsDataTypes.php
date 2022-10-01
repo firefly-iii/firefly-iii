@@ -39,7 +39,7 @@ trait ConvertsDataTypes
      *
      * @return int
      */
-    public function integer(string $field): int
+    public function convertInteger(string $field): int
     {
         return (int) $this->get($field);
     }

@@ -45,7 +45,7 @@ class RuleFormRequest extends FormRequest
     {
         return [
             'title'           => $this->convertString('title'),
-            'rule_group_id'   => $this->integer('rule_group_id'),
+            'rule_group_id'   => $this->convertInteger('rule_group_id'),
             'active'          => $this->boolean('active'),
             'trigger'         => $this->convertString('trigger'),
             'description'     => $this->stringWithNewlines('description'),

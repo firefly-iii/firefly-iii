@@ -44,7 +44,7 @@ class UpdateRequest extends FormRequest
     {
         $fields = [
             'title' => ['title', 'convertString'],
-            'order' => ['order', 'integer'],
+            'order' => ['order', 'convertInteger'],
         ];
 
         return $this->getAllData($fields);

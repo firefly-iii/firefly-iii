@@ -49,7 +49,7 @@ class UpdateRequest extends FormRequest
             'start'         => ['start', 'date'],
             'end'           => ['end', 'date'],
             'amount'        => ['amount', 'convertString'],
-            'currency_id'   => ['currency_id', 'integer'],
+            'currency_id'   => ['currency_id', 'convertInteger'],
             'currency_code' => ['currency_code', 'convertString'],
         ];
 
