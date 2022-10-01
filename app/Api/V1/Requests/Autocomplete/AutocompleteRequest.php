@@ -45,7 +45,7 @@ class AutocompleteRequest extends FormRequest
         if ('' !== $types) {
             $array = explode(',', $types);
         }
-        $limit = $this->integer('limit');
+        $limit = $this->convertInteger('limit');
         $limit = 0 === $limit ? 10 : $limit;
 
         // remove 'initial balance' from allowed types. its internal
