@@ -33,6 +33,10 @@ return [
     'admin_test_subject'                      => 'A test message from your Firefly III installation',
     'admin_test_body'                         => 'This is a test message from your Firefly III instance. It was sent to :email.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+
     // new IP
     'login_from_new_ip'                       => 'New login on Firefly III',
     'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',

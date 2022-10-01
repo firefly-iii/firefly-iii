@@ -150,7 +150,7 @@ return [
 
     // notifications
     'available_notifications'      => ['bill_reminder', 'new_access_token', 'transaction_creation', 'user_login'],
-    'admin_notifications'          => ['admin_new_reg', 'user_new_reg', 'new_version'],
+    'admin_notifications'          => ['admin_new_reg', 'user_new_reg', 'new_version', 'invite_created', 'invite_redeemed'],
 
     // enabled languages
     'languages'                    => [
@@ -486,7 +486,7 @@ return [
         'update_piggy'            => UpdatePiggybank::class,
         'delete_transaction'      => DeleteTransaction::class,
         'append_descr_to_notes'   => AppendDescriptionToNotes::class,
-        'append_notes_to_descr'    => AppendNotesToDescription::class,
+        'append_notes_to_descr'   => AppendNotesToDescription::class,
         'move_descr_to_notes'     => MoveDescriptionToNotes::class,
         'move_notes_to_descr'     => MoveNotesToDescription::class,
     ],

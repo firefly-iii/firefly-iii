@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Notifications\Admin\TestNotification;
+use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
@@ -55,6 +57,27 @@ class AdminEventHandler
         }
 
         Notification::send($event->user, new TestNotification($event->user->email));
+    }
+
+    /**
+     * @param InvitationCreated $event
+     * @return void
+     */
+    public function sendInvitationNotification(InvitationCreated $event): void
+    {
+        $sendMail = FireflyConfig::get('notification_invite_created', true)->data;
+        if (false === $sendMail) {
+            return;
+        }
+
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $all        = $repository->all();
+        foreach ($all as $user) {
+            if ($repository->hasRole($user, 'owner')) {
+                Notification::send($user, new UserInvitation($event->invitee));
+            }
+        }
     }
 
     /**

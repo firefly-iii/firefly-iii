@@ -24,6 +24,7 @@ namespace FireflyIII\Providers;
 
 use Exception;
 use FireflyIII\Events\ActuallyLoggedIn;
+use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
@@ -113,6 +114,11 @@ class EventServiceProvider extends ServiceProvider
             NewVersionAvailable::class => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendNewVersion',
             ],
+            InvitationCreated::class => [
+                'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
+                //'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
+            ],
+
             // is a Transaction Journal related event.
             StoredTransactionGroup::class       => [
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',

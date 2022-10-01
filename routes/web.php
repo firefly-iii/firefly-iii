@@ -58,6 +58,7 @@ Route::group(
 
         // Registration Routes...
         Route::get('register', ['uses' => 'Auth\RegisterController@showRegistrationForm', 'as' => 'register']);
+        Route::get('invitee/{code}', ['uses' => 'Auth\RegisterController@showInviteForm', 'as' => 'invite']);
         Route::post('register', 'Auth\RegisterController@register');
 
         // Password Reset Routes...
@@ -1100,6 +1101,10 @@ Route::group(
 
         Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
         Route::post('users/destroy/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
+
+        // invitee management
+        Route::get('users/delete_invite/{invitedUser}', ['uses' => 'UserController@deleteInvite', 'as' => 'users.delete-invite']);
+        Route::post('users/invite', ['uses' => 'UserController@invite', 'as' => 'users.invite']);
 
         // journal links manager
         Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);

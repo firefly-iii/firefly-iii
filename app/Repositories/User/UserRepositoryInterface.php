@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -158,6 +159,30 @@ interface UserRepositoryInterface
      * @return bool
      */
     public function hasRole(User $user, string $role): bool;
+
+    /**
+     * @param User   $user
+     * @param string $email
+     * @return InvitedUser
+     */
+    public function inviteUser(User $user, string $email): InvitedUser;
+
+    /**
+     * @return Collection
+     */
+    public function getInvitedUsers(): Collection;
+
+    /**
+     * @param string $code
+     * @return bool
+     */
+    public function validateInviteCode(string $code): bool;
+
+    /**
+     * @param string $code
+     * @return void
+     */
+    public function redeemCode(string $code): void;
 
     /**
      * Remove any role the user has.

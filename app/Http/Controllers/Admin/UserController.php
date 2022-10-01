@@ -22,14 +22,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Http\Requests\InviteUserFormRequest;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Log;
@@ -142,9 +145,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        $subTitle     = (string) trans('firefly.user_administration');
-        $subTitleIcon = 'fa-users';
-        $users        = $this->repository->all();
+        $subTitle       = (string) trans('firefly.user_administration');
+        $subTitleIcon   = 'fa-users';
+        $users          = $this->repository->all();
+        $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $allowInvites   = false;
+        if (!$this->externalIdentity && $singleUserMode) {
+            // also registration enabled.
+            $allowInvites = true;
+        }
+
+        $invitedUsers = $this->repository->getInvitedUsers();
 
         // add meta stuff.
         $users->each(
@@ -154,7 +165,7 @@ class UserController extends Controller
             }
         );
 
-        return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users'));
+        return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users', 'allowInvites', 'invitedUsers'));
     }
 
     /**
@@ -183,6 +194,22 @@ class UserController extends Controller
                 'user'
             )
         );
+    }
+
+    /**
+     * @param InviteUserFormRequest $request
+     * @return RedirectResponse
+     */
+    public function invite(InviteUserFormRequest $request): RedirectResponse
+    {
+        $address = (string) $request->get('invited_user');
+        $invitee = $this->repository->inviteUser(auth()->user(), $address);
+        session()->flash('info', trans('firefly.user_is_invited', ['address' => $address]));
+
+        // event!
+        event(new InvitationCreated($invitee));
+
+        return redirect(route('admin.users'));
     }
 
     /**

@@ -23,6 +23,7 @@
 
                 <form action="{{ route('register') }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="invite_code" value="{{ inviteCode }}">
                     <div class="input-group mb-3">
                         <input type="email" name="email" value="{{ email }}" class="form-control"
                                placeholder="{{ trans('form.email') }}"/>

@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
@@ -104,22 +106,6 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @return int
-     */
-    public function count(): int
-    {
-        return $this->all()->count();
-    }
-
-    /**
-     * @return Collection
-     */
-    public function all(): Collection
-    {
-        return User::orderBy('id', 'DESC')->get(['users.*']);
-    }
-
-    /**
      * @param string $name
      * @param string $displayName
      * @param string $description
@@ -162,6 +148,22 @@ class UserRepository implements UserRepositoryInterface
                 $group->delete();
             }
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->all()->count();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        return User::orderBy('id', 'DESC')->get(['users.*']);
     }
 
     /**
@@ -263,6 +265,24 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function inviteUser(User $user, string $email): InvitedUser
+    {
+        $now = Carbon::now();
+        $now->addDays(2);
+        $invitee = new InvitedUser;
+        $invitee->user()->associate($user);
+        $invitee->invite_code = Str::random(64);
+        $invitee->email       = $email;
+        $invitee->redeemed    = false;
+        $invitee->expires     = $now;
+        $invitee->save();
+
+        return $invitee;
     }
 
     /**
@@ -415,5 +435,35 @@ class UserRepository implements UserRepositoryInterface
     public function getRole(string $role): ?Role
     {
         return Role::where('name', $role)->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInvitedUsers(): Collection
+    {
+        return InvitedUser::with('user')->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validateInviteCode(string $code): bool
+    {
+        $now     = Carbon::now();
+        $invitee = InvitedUser::where('invite_code', $code)->where('expires', '<=', $now)->where('redeemed', 0)->first();
+        return null !== $invitee;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function redeemCode(string $code): void
+    {
+        $obj = InvitedUser::where('invite_code', $code)->where('redeemed', 0)->first();
+        if ($obj) {
+            $obj->redeemed = true;
+            $obj->save();
+        }
     }
 }

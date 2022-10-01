@@ -49,6 +49,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Notifications\Admin\TestNotification;
+use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\UserRegistration;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use Illuminate\Database\Eloquent\Builder;
@@ -597,6 +598,9 @@ class User extends Authenticatable
             return app('fireflyconfig')->get('slack_webhook_url', '')->data;
         }
         if ($notification instanceof VersionCheckResult) {
+            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        }
+        if ($notification instanceof UserInvitation) {
             return app('fireflyconfig')->get('slack_webhook_url', '')->data;
         }
         return app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
