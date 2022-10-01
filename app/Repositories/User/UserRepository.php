@@ -451,7 +451,7 @@ class UserRepository implements UserRepositoryInterface
     public function validateInviteCode(string $code): bool
     {
         $now     = Carbon::now();
-        $invitee = InvitedUser::where('invite_code', $code)->where('expires', '<=', $now)->where('redeemed', 0)->first();
+        $invitee = InvitedUser::where('invite_code', $code)->where('expires', '>', $now->format('Y-m-d H:i:s'))->where('redeemed', 0)->first();
         return null !== $invitee;
     }
 

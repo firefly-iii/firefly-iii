@@ -116,7 +116,7 @@ class EventServiceProvider extends ServiceProvider
             ],
             InvitationCreated::class => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
-                //'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
+                'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
             ],
 
             // is a Transaction Journal related event.

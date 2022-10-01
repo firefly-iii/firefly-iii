@@ -1336,8 +1336,14 @@ return [
     'slack_url_label'                           => 'Slack "incoming webhook" URL',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data',
-    'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
+    'purge_data_title'                          => 'Purge data from Firefly III',
+    'purge_data_expl'                           => '"Purging" means "deleting that which is already deleted". In normal circumstances, Firefly III deletes nothing permanently. It just hides it. This can be annoying when you import data from other sources, as removed transactions will still be recognized as possible duplicates. The button below deletes all of these previously "deleted" records FOREVER.',
+    'delete_stuff_header'                       => 'Delete and purge data',
+    'purge_all_data'                            => 'Purge all deleted records',
+    'purge_data'                                => 'Purge data',
+    'purged_all_records'                        => 'All deleted records have been purged.',
+    'delete_data_title'                         => 'Delete data from Firefly III',
+    'permanent_delete_stuff'                    => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Delete ALL your budgets',
     'delete_all_categories'                     => 'Delete ALL your categories',
@@ -2283,6 +2289,7 @@ return [
     'admin_notification_check_new_version'     => 'A new version is available',
     'admin_notification_check_invite_created'  => 'A user is invited to Firefly III',
     'admin_notification_check_invite_redeemed' => 'A user invitation is redeemed',
+    'all_invited_users'                        => 'All invited users',
     'save_notification_settings'               => 'Save settings',
     'notification_settings_saved'              => 'The notification settings have been saved',
 

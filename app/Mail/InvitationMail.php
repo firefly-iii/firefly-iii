@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 /*
- * NewVersionAvailable.php
+ * InvitationMail.php
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,23 +19,43 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Events;
+namespace FireflyIII\Mail;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class NewVersionAvailable extends Event
+class InvitationMail extends Mailable
 {
-    use SerializesModels;
+    use Queueable, SerializesModels;
 
-    public string $message;
+    public string $invitee;
+    public string $admin;
+    public string $url;
+    public string $host;
 
     /**
-     * Create a new event instance. This event is triggered when a new version is available.
+     * OAuthTokenCreatedMail constructor.
      *
-     * @param string $message
+     * @param string $ipAddress
      */
-    public function __construct(string $message)
+    public function __construct(string $invitee, string $admin, string $url)
     {
-        $this->message = $message;
+        $this->invitee = $invitee;
+        $this->admin = $admin;
+        $this->url = $url;
+        $this->host = parse_url($url, PHP_URL_HOST);
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build(): self
+    {
+        return $this
+            ->markdown('emails.invitation')
+            ->subject((string) trans('email.invite_user_subject'));
     }
 }

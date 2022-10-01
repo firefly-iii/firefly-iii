@@ -27,12 +27,14 @@ use Carbon\Carbon;
 use Database\Seeders\ExchangeRateSeeder;
 use Exception;
 use FireflyIII\Events\ActuallyLoggedIn;
+use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
+use FireflyIII\Mail\InvitationMail;
 use FireflyIII\Mail\UndoEmailChangeMail;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
@@ -74,6 +76,23 @@ class UserEventHandler
         if (1 === $repository->count()) {
             Log::debug('User count is one, attach role.');
             $repository->attachRole($event->user, 'owner');
+        }
+    }
+
+    /**
+     * @param InvitationCreated $event
+     * @return void
+     */
+    public function sendRegistrationInvite(InvitationCreated $event): void
+    {
+        $invitee = $event->invitee->email;
+        $admin   = $event->invitee->user->email;
+        $url     = route('invite', [$event->invitee->invite_code]);
+        try {
+            Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
+
+        } catch (Exception $e) { // @phpstan-ignore-line
+            Log::error($e->getMessage());
         }
     }
 

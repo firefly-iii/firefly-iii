@@ -181,6 +181,13 @@ Route::group(
         Route::delete('', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
     }
 );
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data', 'prefix' => 'v1/data/purge',
+     'as'        => 'api.v1.data.',],
+    static function () {
+        Route::delete('', ['uses' => 'PurgeController@purge', 'as' => 'purge']);
+    }
+);
 
 // Bulk update API routes
 Route::group(

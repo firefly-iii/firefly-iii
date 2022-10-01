@@ -237,9 +237,6 @@ trait MetaCollection
 
         return $this;
     }
-
-
-
     /**
      * @param string $url
      * @return GroupCollectorInterface
@@ -269,9 +266,6 @@ trait MetaCollection
 
         return $this;
     }
-
-
-
     /**
      * @param string $url
      * @return GroupCollectorInterface

@@ -411,9 +411,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface;
-
-
-
     /**
      * @param string $externalId
      * @return GroupCollectorInterface
@@ -437,9 +434,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface;
-
-
-
     /**
      * @param string $url
      * @return GroupCollectorInterface
@@ -1038,9 +1032,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function excludeInternalReference(string $externalId): GroupCollectorInterface;
-
-
-
     /**
      * Limit the result to a set of specific transaction journals.
      *
