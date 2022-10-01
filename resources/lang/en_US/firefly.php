@@ -701,6 +701,7 @@ return [
     'yearly'                                              => 'yearly',
 
     // rules
+    'is_not_rule_trigger'                                 => 'Not',
     'cannot_fire_inactive_rules'                          => 'You cannot execute inactive rules.',
     'rules'                                               => 'Rules',
     'rule_name'                                           => 'Name of rule',
