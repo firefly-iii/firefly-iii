@@ -50,9 +50,9 @@ class UpdateRequest extends FormRequest
         $fields  = [
             'name'               => ['name', 'convertString'],
             'active'             => ['active', 'boolean'],
-            'order'              => ['order', 'integer'],
+            'order'              => ['order', 'convertInteger'],
             'notes'              => ['notes', 'convertString'],
-            'currency_id'        => ['auto_budget_currency_id', 'integer'],
+            'currency_id'        => ['auto_budget_currency_id', 'convertInteger'],
             'currency_code'      => ['auto_budget_currency_code', 'convertString'],
             'auto_budget_type'   => ['auto_budget_type', 'convertString'],
             'auto_budget_amount' => ['auto_budget_amount', 'convertString'],

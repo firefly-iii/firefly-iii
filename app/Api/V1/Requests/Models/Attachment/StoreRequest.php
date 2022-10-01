@@ -49,7 +49,7 @@ class StoreRequest extends FormRequest
             'title'           => $this->convertString('title'),
             'notes'           => $this->stringWithNewlines('notes'),
             'attachable_type' => $this->convertString('attachable_type'),
-            'attachable_id'   => $this->integer('attachable_id'),
+            'attachable_id'   => $this->convertInteger('attachable_id'),
         ];
     }
 

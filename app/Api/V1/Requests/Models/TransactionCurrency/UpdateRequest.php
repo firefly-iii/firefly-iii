@@ -49,7 +49,7 @@ class UpdateRequest extends FormRequest
             'name'           => ['name', 'convertString'],
             'code'           => ['code', 'convertString'],
             'symbol'         => ['symbol', 'convertString'],
-            'decimal_places' => ['decimal_places', 'integer'],
+            'decimal_places' => ['decimal_places', 'convertInteger'],
             'default'        => ['default', 'boolean'],
             'enabled'        => ['enabled', 'boolean'],
         ];

@@ -54,7 +54,7 @@ class UpdateRequest extends FormRequest
                 return ['value' => $this->boolean('value')];
             case 'configuration.permission_update_check':
             case 'configuration.last_update_check':
-                return ['value' => $this->integer('value')];
+                return ['value' => $this->convertInteger('value')];
         }
 
         return ['value' => $this->convertString('value')];

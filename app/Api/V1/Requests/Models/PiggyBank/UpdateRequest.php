@@ -47,15 +47,15 @@ class UpdateRequest extends FormRequest
     {
         $fields = [
             'name'               => ['name', 'convertString'],
-            'account_id'         => ['account_id', 'integer'],
+            'account_id'         => ['account_id', 'convertInteger'],
             'targetamount'       => ['target_amount', 'convertString'],
             'current_amount'     => ['current_amount', 'convertString'],
             'startdate'          => ['start_date', 'date'],
             'targetdate'         => ['target_date', 'convertString'],
             'notes'              => ['notes', 'stringWithNewlines'],
-            'order'              => ['order', 'integer'],
+            'order'              => ['order', 'convertInteger'],
             'object_group_title' => ['object_group_title', 'convertString'],
-            'object_group_id'    => ['object_group_id', 'integer'],
+            'object_group_id'    => ['object_group_id', 'convertInteger'],
         ];
 
         return $this->getAllData($fields);

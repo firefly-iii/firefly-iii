@@ -49,7 +49,7 @@ class UpdateRequest extends FormRequest
             'title'           => ['title', 'convertString'],
             'notes'           => ['notes', 'stringWithNewlines'],
             'attachable_type' => ['attachable_type', 'convertString'],
-            'attachable_id'   => ['attachable_id', 'integer'],
+            'attachable_id'   => ['attachable_id', 'convertInteger'],
         ];
 
         return $this->getAllData($fields);

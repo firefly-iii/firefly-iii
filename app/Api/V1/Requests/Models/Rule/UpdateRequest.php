@@ -48,12 +48,12 @@ class UpdateRequest extends FormRequest
         $fields = [
             'title'           => ['title', 'convertString'],
             'description'     => ['description', 'stringWithNewlines'],
-            'rule_group_id'   => ['rule_group_id', 'integer'],
+            'rule_group_id'   => ['rule_group_id', 'convertInteger'],
             'trigger'         => ['trigger', 'convertString'],
             'strict'          => ['strict', 'boolean'],
             'stop_processing' => ['stop_processing', 'boolean'],
             'active'          => ['active', 'boolean'],
-            'order'           => ['order', 'integer'],
+            'order'           => ['order', 'convertInteger'],
         ];
 
         $return   = $this->getAllData($fields);

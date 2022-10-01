@@ -54,7 +54,7 @@ class StoreRequest extends FormRequest
             'description'       => ['description', 'convertString'],
             'first_date'        => ['first_date', 'date'],
             'repeat_until'      => ['repeat_until', 'date'],
-            'nr_of_repetitions' => ['nr_of_repetitions', 'integer'],
+            'nr_of_repetitions' => ['nr_of_repetitions', 'convertInteger'],
             'apply_rules'       => ['apply_rules', 'boolean'],
             'active'            => ['active', 'boolean'],
             'notes'             => ['notes', 'stringWithNewlines'],

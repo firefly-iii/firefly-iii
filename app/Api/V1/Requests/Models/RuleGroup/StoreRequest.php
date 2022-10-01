@@ -49,7 +49,7 @@ class StoreRequest extends FormRequest
             $active = $this->boolean('active');
         }
         if (null !== $this->get('order')) {
-            $order = $this->integer('order');
+            $order = $this->convertInteger('order');
         }
 
         return [

@@ -57,7 +57,7 @@ class StoreRequest extends FormRequest
             'name'           => $this->convertString('name'),
             'code'           => $this->convertString('code'),
             'symbol'         => $this->convertString('symbol'),
-            'decimal_places' => $this->integer('decimal_places'),
+            'decimal_places' => $this->convertInteger('decimal_places'),
             'default'        => $default,
             'enabled'        => $enabled,
         ];
