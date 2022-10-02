@@ -54,27 +54,27 @@ class AppendNotesToDescription implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         Log::debug('Now in AppendNotesToDescription');
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        if (null === $journal) {
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             return false;
         }
-        $note = $journal->notes()->first();
+        $note = $object->notes()->first();
         if (null === $note) {
             Log::debug('Journal has no notes.');
             $note = new Note;
-            $note->noteable()->associate($journal);
+            $note->noteable()->associate($object);
             $note->text = '';
         }
         // only append if there is something to append
         if ('' !== $note->text) {
-            $before               = $journal->description;
-            $journal->description = trim(sprintf("%s %s", $journal->description, (string) $this->clearString($note->text, false)));
-            $journal->save();
-            Log::debug(sprintf('Journal description is updated to "%s".', $journal->description));
+            $before               = $object->description;
+            $object->description = trim(sprintf("%s %s", $object->description, (string) $this->clearString($note->text, false)));
+            $object->save();
+            Log::debug(sprintf('Journal description is updated to "%s".', $object->description));
 
-            event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', $before, $journal->description));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $object->description));
 
             return true;
         }

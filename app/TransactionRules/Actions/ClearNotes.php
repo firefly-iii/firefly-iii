@@ -50,8 +50,8 @@ class ClearNotes implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        $notes   = $journal->notes()->first();
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $notes   = $object->notes()->first();
         if (null === $notes) {
             Log::debug(sprintf('RuleAction ClearNotes, journal #%d has no notes.', $journal['transaction_journal_id']));
             return false;
@@ -64,7 +64,7 @@ class ClearNotes implements ActionInterface
           ->delete();
         Log::debug(sprintf('RuleAction ClearNotes removed all notes from journal #%d.', $journal['transaction_journal_id']));
 
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'clear_notes', $before, null));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'clear_notes', $before, null));
 
         return true;
     }

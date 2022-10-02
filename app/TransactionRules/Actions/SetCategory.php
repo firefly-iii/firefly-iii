@@ -85,9 +85,9 @@ class SetCategory implements ActionInterface
         DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
         DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
 
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'set_category', null, $category->name));
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_category', null, $category->name));
 
         return true;
     }

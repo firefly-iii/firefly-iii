@@ -68,11 +68,11 @@ class PrependNotes implements ActionInterface
         $dbNote->save();
 
         // journal
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_notes', $before, $text));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $text));
 
         return true;
     }

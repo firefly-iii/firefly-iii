@@ -78,8 +78,8 @@ class LinkToBill implements ActionInterface
                 sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name)
             );
 
-            $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-            event(new TriggeredAuditLog($this->action->rule, $journal, 'set_bill', null, $bill->name));
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'set_bill', null, $bill->name));
 
             return true;
         }

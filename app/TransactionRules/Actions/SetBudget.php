@@ -87,9 +87,9 @@ class SetBudget implements ActionInterface
         DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
         DB::table('budget_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'budget_id' => $budget->id]);
 
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'set_budget', null, $budget->name));
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_budget', null, $budget->name));
 
         return true;
     }

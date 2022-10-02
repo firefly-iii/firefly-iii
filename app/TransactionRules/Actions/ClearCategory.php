@@ -50,9 +50,9 @@ class ClearCategory implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        /** @var TransactionJournal $journal */
-        $journal  = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        $category = $journal->categories()->first();
+        /** @var TransactionJournal $object */
+        $object  = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $category = $object->categories()->first();
         if (null === $category) {
             Log::debug(sprintf('RuleAction ClearCategory, no category in journal #%d.', $journal['transaction_journal_id']));
             return false;
@@ -60,7 +60,7 @@ class ClearCategory implements ActionInterface
 
         DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
 
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'clear_category', $category->name, null));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'clear_category', $category->name, null));
 
         Log::debug(sprintf('RuleAction ClearCategory removed all categories from journal #%d.', $journal['transaction_journal_id']));
 

@@ -48,28 +48,28 @@ class AppendDescriptionToNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        if (null === $journal) {
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             return false;
         }
-        $note = $journal->notes()->first();
+        $note = $object->notes()->first();
         if (null === $note) {
             $note = new Note;
-            $note->noteable()->associate($journal);
+            $note->noteable()->associate($object);
             $note->text = '';
         }
         $before = $note->text;
         if ('' !== $note->text) {
-            $note->text = trim(sprintf("%s  \n%s", $note->text, $journal->description));
+            $note->text = trim(sprintf("%s  \n%s", $note->text, $object->description));
         }
         if ('' === $note->text) {
-            $note->text = (string) $journal->description;
+            $note->text = (string) $object->description;
         }
         $after = $note->text;
 
         // event for audit log entry
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_notes', $before, $after));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $after));
 
         $note->save();
         return true;

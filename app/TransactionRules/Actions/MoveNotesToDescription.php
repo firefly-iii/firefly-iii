@@ -51,13 +51,13 @@ class MoveNotesToDescription implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        if (null === $journal) {
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             return false;
         }
-        $note = $journal->notes()->first();
+        $note = $object->notes()->first();
         if (null === $note) {
             // nothing to move, return null
             return false;
@@ -67,14 +67,14 @@ class MoveNotesToDescription implements ActionInterface
             $note->delete();
             return false;
         }
-        $before               = $journal->description;
+        $before               = $object->description;
         $beforeNote           = $note->text;
-        $journal->description = (string) $this->clearString($note->text, false);
-        $journal->save();
+        $object->description = (string) $this->clearString($note->text, false);
+        $object->save();
         $note->delete();
 
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', $before, $journal->description));
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'clear_notes', $beforeNote, null));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $object->description));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'clear_notes', $beforeNote, null));
 
         return true;
     }

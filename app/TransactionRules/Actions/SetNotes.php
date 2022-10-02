@@ -69,10 +69,10 @@ class SetNotes implements ActionInterface
             )
         );
 
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_notes', $oldNotes, $this->action->action_value));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $oldNotes, $this->action->action_value));
 
         return true;
     }

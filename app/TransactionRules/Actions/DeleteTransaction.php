@@ -75,12 +75,12 @@ class DeleteTransaction implements ActionInterface
         );
 
         // trigger delete factory:
-        $journal = TransactionJournal::find($journal['transaction_group_id']);
-        if (null !== $journal) {
+        $object = TransactionJournal::find($journal['transaction_group_id']);
+        if (null !== $object) {
             /** @var JournalDestroyService $service */
             $service = app(JournalDestroyService::class);
-            $service->destroy($journal);
-            event(new TriggeredAuditLog($this->action->rule, $journal, 'delete_journal', null, null));
+            $service->destroy($object);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'delete_journal', null, null));
         }
 
         return true;
