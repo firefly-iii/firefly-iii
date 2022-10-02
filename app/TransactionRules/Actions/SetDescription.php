@@ -51,7 +51,7 @@ class SetDescription implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         $before  = $journal->description;
 
         DB::table('transaction_journals')
@@ -66,8 +66,8 @@ class SetDescription implements ActionInterface
                 $this->action->action_value
             )
         );
-        $journal->refresh();
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', $before, $this->action->action_value));
+        $object->refresh();
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $this->action->action_value));
 
         return true;
     }
