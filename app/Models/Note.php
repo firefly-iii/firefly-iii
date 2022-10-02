@@ -78,7 +78,7 @@ class Note extends Model
     /**
      * @codeCoverageIgnore
      *
-     * Get all of the owning noteable models.
+     * Get all the owning noteable models.
      */
     public function noteable(): MorphTo
     {

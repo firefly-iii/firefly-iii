@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Log;
 
@@ -71,6 +73,10 @@ class AddTag implements ActionInterface
             // add to journal:
             DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);
             Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
+            $journal = TransactionJournal::find($journal['transaction_journal_id']);
+            // event for audit log entry
+            //// changer, auditable, field, value before, value after
+            event(new TriggeredAuditLog($this->action->rule, $journal, 'add_tag', null, $tag->tag));
 
             return true;
         }

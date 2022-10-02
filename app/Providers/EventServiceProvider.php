@@ -36,6 +36,7 @@ use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
@@ -156,6 +157,11 @@ class EventServiceProvider extends ServiceProvider
             // bill related events:
             WarnUserAboutBill::class            => [
                 'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
+            ],
+
+            // audit log events:
+            TriggeredAuditLog::class => [
+                'FireflyIII\Handlers\Events\AuditEventHandler@storeAuditEvent',
             ],
         ];
 
