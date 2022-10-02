@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\AccountType;
@@ -57,7 +58,7 @@ class ConvertToWithdrawal implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
-        if($groupCount > 1) {
+        if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
             return false;
         }
@@ -71,11 +72,15 @@ class ConvertToWithdrawal implements ActionInterface
 
         if (TransactionType::DEPOSIT === $type) {
             Log::debug('Going to transform a deposit to a withdrawal.');
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'change_transaction_type', TransactionType::DEPOSIT, TransactionType::WITHDRAWAL));
 
             return $this->convertDepositArray($journal);
         }
         if (TransactionType::TRANSFER === $type) {
             Log::debug('Going to transform a transfer to a withdrawal.');
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'change_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
 
             return $this->convertTransferArray($journal);
         }

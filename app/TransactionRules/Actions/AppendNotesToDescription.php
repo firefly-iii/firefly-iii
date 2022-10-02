@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use FireflyIII\Support\Steam;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -34,6 +35,19 @@ use Illuminate\Support\Facades\Log;
 class AppendNotesToDescription implements ActionInterface
 {
     use ConvertsDataTypes;
+
+    private RuleAction $action;
+
+    /**
+     * TriggerInterface constructor.
+     *
+     * @param RuleAction $action
+     */
+    public function __construct(RuleAction $action)
+    {
+        $this->action = $action;
+    }
+
     /**
      * @inheritDoc
      */
@@ -55,9 +69,13 @@ class AppendNotesToDescription implements ActionInterface
         }
         // only append if there is something to append
         if ('' !== $note->text) {
+            $before               = $journal->description;
             $journal->description = trim(sprintf("%s %s", $journal->description, (string) $this->clearString($note->text, false)));
             $journal->save();
             Log::debug(sprintf('Journal description is updated to "%s".', $journal->description));
+
+            event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', $before, $journal->description));
+
             return true;
         }
         return false;

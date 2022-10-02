@@ -22,12 +22,26 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\Log;
 
 class AppendDescriptionToNotes implements ActionInterface
 {
+    private RuleAction $action;
+
+    /**
+     * TriggerInterface constructor.
+     *
+     * @param RuleAction $action
+     */
+    public function __construct(RuleAction $action)
+    {
+        $this->action = $action;
+    }
+
     /**
      * @inheritDoc
      */
@@ -45,12 +59,17 @@ class AppendDescriptionToNotes implements ActionInterface
             $note->noteable()->associate($journal);
             $note->text = '';
         }
+        $before = $note->text;
         if ('' !== $note->text) {
             $note->text = trim(sprintf("%s  \n%s", $note->text, $journal->description));
         }
         if ('' === $note->text) {
             $note->text = (string) $journal->description;
         }
+        $after = $note->text;
+
+        // event for audit log entry
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_notes', $before, $after));
 
         $note->save();
         return true;

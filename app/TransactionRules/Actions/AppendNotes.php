@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -32,8 +33,7 @@ use Log;
  */
 class AppendNotes implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
@@ -62,9 +62,15 @@ class AppendNotes implements ActionInterface
             $dbNote->text          = '';
         }
         Log::debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $this->action->action_value, $dbNote->text));
+        $before       = $dbNote->text;
         $text         = sprintf('%s%s', $dbNote->text, $this->action->action_value);
         $dbNote->text = $text;
         $dbNote->save();
+
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_notes', $before, $text));
 
         return true;
     }

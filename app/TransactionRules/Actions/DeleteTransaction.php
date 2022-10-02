@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
@@ -33,6 +35,18 @@ use Log;
  */
 class DeleteTransaction implements ActionInterface
 {
+    private RuleAction $action;
+
+    /**
+     * TriggerInterface constructor.
+     *
+     * @param RuleAction $action
+     */
+    public function __construct(RuleAction $action)
+    {
+        $this->action = $action;
+    }
+
     /**
      * @inheritDoc
      */
@@ -52,6 +66,8 @@ class DeleteTransaction implements ActionInterface
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($group);
 
+            event(new TriggeredAuditLog($this->action->rule, $group, 'delete_group', null, null));
+
             return true;
         }
         Log::debug(
@@ -64,6 +80,7 @@ class DeleteTransaction implements ActionInterface
             /** @var JournalDestroyService $service */
             $service = app(JournalDestroyService::class);
             $service->destroy($journal);
+            event(new TriggeredAuditLog($this->action->rule, $journal, 'delete_journal', null, null));
         }
 
         return true;

@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Log;
@@ -75,7 +77,7 @@ class SetBudget implements ActionInterface
                 )
             );
 
-            return true;
+            return false;
         }
 
         Log::debug(
@@ -84,6 +86,10 @@ class SetBudget implements ActionInterface
 
         DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
         DB::table('budget_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'budget_id' => $budget->id]);
+
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'set_budget', null, $budget->name));
 
         return true;
     }

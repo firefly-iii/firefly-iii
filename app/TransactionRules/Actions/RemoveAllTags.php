@@ -23,6 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
@@ -30,6 +33,18 @@ use Log;
  */
 class RemoveAllTags implements ActionInterface
 {
+    private RuleAction $action;
+
+    /**
+     * TriggerInterface constructor.
+     *
+     * @param RuleAction $action
+     */
+    public function __construct(RuleAction $action)
+    {
+        $this->action = $action;
+    }
+
     /**
      * @inheritDoc
      */
@@ -37,6 +52,12 @@ class RemoveAllTags implements ActionInterface
     {
         Log::debug(sprintf('RuleAction ClearCategory removed all tags from journal %d.', $journal['transaction_journal_id']));
         DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->delete();
+
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+
+        // audit log
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'remove_all_tags', null, null));
 
         return true;
     }

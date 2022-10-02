@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -89,7 +90,7 @@ class SetDestinationAccount implements ActionInterface
 
             return false;
         }
-        // account must not be deleted (in the mean time):
+        // account must not be deleted (in the meantime):
         if (null === $source->account) {
             Log::error('Could not find source transaction account.');
 
@@ -113,6 +114,8 @@ class SetDestinationAccount implements ActionInterface
         }
 
         Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
+
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_destination', null, $newAccount->name));
 
         // update destination transaction with new destination account:
         DB::table('transactions')

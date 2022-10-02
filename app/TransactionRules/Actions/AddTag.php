@@ -74,8 +74,8 @@ class AddTag implements ActionInterface
             DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);
             Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
             $journal = TransactionJournal::find($journal['transaction_journal_id']);
+
             // event for audit log entry
-            //// changer, auditable, field, value before, value after
             event(new TriggeredAuditLog($this->action->rule, $journal, 'add_tag', null, $tag->tag));
 
             return true;

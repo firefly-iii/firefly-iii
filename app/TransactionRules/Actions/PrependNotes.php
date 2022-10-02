@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -32,8 +33,7 @@ use Log;
  */
 class PrependNotes implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
@@ -61,10 +61,18 @@ class PrependNotes implements ActionInterface
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }
+        $before = $dbNote->text;
         Log::debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $this->action->action_value, $dbNote->text));
         $text         = sprintf('%s%s', $this->action->action_value, $dbNote->text);
         $dbNote->text = $text;
         $dbNote->save();
+
+        // journal
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+
+        // audit log
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_notes', $before, $text));
 
         return true;
     }

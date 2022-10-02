@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -67,6 +68,11 @@ class SetNotes implements ActionInterface
                 $this->action->action_value
             )
         );
+
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_notes', $oldNotes, $this->action->action_value));
 
         return true;
     }

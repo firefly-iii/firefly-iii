@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Log;
 
@@ -54,18 +56,22 @@ class RemoveTag implements ActionInterface
         $user = User::find($journal['user_id']);
         $tag  = $user->tags()->where('tag', $name)->first();
 
-        if (null !== $tag) {
-            Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
-            DB::table('tag_transaction_journal')
-              ->where('transaction_journal_id', $journal['transaction_journal_id'])
-              ->where('tag_id', $tag->id)
-              ->delete();
-
-            return true;
+        if (null === $tag) {
+            Log::debug(
+                sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id'])
+            );
+            return false;
         }
-        Log::debug(
-            sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id'])
-        );
+
+        Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
+        DB::table('tag_transaction_journal')
+          ->where('transaction_journal_id', $journal['transaction_journal_id'])
+          ->where('tag_id', $tag->id)
+          ->delete();
+
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'remove_tag', $tag->tag, null));
 
         return true;
     }

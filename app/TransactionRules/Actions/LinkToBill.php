@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
@@ -34,8 +36,7 @@ use Log;
  */
 class LinkToBill implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
@@ -68,6 +69,9 @@ class LinkToBill implements ActionInterface
             Log::debug(
                 sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name)
             );
+
+            $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $journal, 'change_bill', null, $bill->id));
 
             return true;
         }

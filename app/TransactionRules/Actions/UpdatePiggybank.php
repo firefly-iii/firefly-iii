@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -90,11 +91,15 @@ class UpdatePiggybank implements ActionInterface
             Log::debug('Piggy bank account is linked to source, so remove amount.');
             $this->removeAmount($journal, $piggyBank, $destination->amount);
 
+            event(new TriggeredAuditLog($this->action->rule, $journalObj, 'remove_from_piggy', null, ['amount' => $destination->amount, 'piggy' => $piggyBank->name]));
+
             return true;
         }
         if ((int) $destination->account_id === (int) $piggyBank->account_id) {
             Log::debug('Piggy bank account is linked to source, so add amount.');
             $this->addAmount($journal, $piggyBank, $destination->amount);
+
+            event(new TriggeredAuditLog($this->action->rule, $journalObj, 'add_to_piggy', null, ['amount' => $destination->amount, 'piggy' => $piggyBank->name]));
 
             return true;
         }

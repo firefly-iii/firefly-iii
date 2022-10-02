@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Support\Facades\Log;
@@ -29,6 +31,20 @@ use Illuminate\Support\Facades\Log;
 class MoveNotesToDescription implements ActionInterface
 {
     use ConvertsDataTypes;
+
+    private RuleAction $action;
+
+    /**
+     * TriggerInterface constructor.
+     *
+     * @codeCoverageIgnore
+     *
+     * @param RuleAction $action
+     */
+    public function __construct(RuleAction $action)
+    {
+        $this->action = $action;
+    }
 
     /**
      * @inheritDoc
@@ -51,9 +67,14 @@ class MoveNotesToDescription implements ActionInterface
             $note->delete();
             return false;
         }
+        $before               = $journal->description;
+        $beforeNote           = $note->text;
         $journal->description = (string) $this->clearString($note->text, false);
         $journal->save();
         $note->delete();
+
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', $before, $journal->description));
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'remove_notes', $beforeNote, null));
 
         return true;
     }
