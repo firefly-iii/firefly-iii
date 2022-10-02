@@ -43,76 +43,67 @@ trait ReconciliationValidation
      */
     protected function validateReconciliationDestination(array $array): bool
     {
-        $accountId = array_key_exists('id', $array) ? $array['id'] : null;
-        Log::debug('Now in validateReconciliationDestination', $array);
-        if (null === $accountId) {
-            Log::debug('Return FALSE');
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        // if both are NULL, the destination is valid because the reconciliation
+        // is expected to be "negative", i.e. the money flows towards the
+        // destination to the asset account which is the source.
 
-            return false;
-        }
-        $result = $this->accountRepository->find($accountId);
-        if (null === $result) {
-            $this->destError = (string) trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => '']);
-            Log::debug('Return FALSE');
-
-            return false;
-        }
-        // types depends on type of source:
-        $types = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        // if source is reconciliation, destination can't be.
-        if (null !== $this->source && AccountType::RECONCILIATION === $this->source->accountType->type) {
-            $types = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        }
-        // if source is not reconciliation, destination MUST be.
-        if (null !== $this->source
-            && in_array(
-                $this->source->accountType->type, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true
-            )) {
-            $types = [AccountType::RECONCILIATION];
-        }
-
-        if (in_array($result->accountType->type, $types, true)) {
-            $this->destination = $result;
-            Log::debug('Return TRUE');
-
+        if (null === $accountId && null === $accountName) {
             return true;
         }
-        $this->destError = (string) trans('validation.deposit_dest_wrong_type');
-        Log::debug('Return FALSE');
 
-        return false;
+        // after that, search for it expecting an asset account or a liability.
+        Log::debug('Now in validateReconciliationDestination', $array);
+
+        // source can be any of the following types.
+        $validTypes = array_keys($this->combinations[$this->transactionType]);
+        $search     = $this->findExistingAccount($validTypes, $array);
+        if (null === $search) {
+            $this->sourceError = (string) trans('validation.reconciliation_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            Log::warning('Not a valid source. Cant find it.', $validTypes);
+
+            return false;
+        }
+        $this->source = $search;
+        Log::debug('Valid source account!');
+
+        return true;
     }
 
     /**
+     * Basically the same check
      * @param array $array
      *
      * @return bool
      */
     protected function validateReconciliationSource(array $array): bool
     {
-        $accountId = array_key_exists('id', $array) ? $array['id'] : null;
-        Log::debug('In validateReconciliationSource', $array);
-        if (null === $accountId) {
-            Log::debug('Return FALSE');
-
-            return false;
-        }
-        $result = $this->accountRepository->find($accountId);
-        $types  = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::RECONCILIATION];
-        if (null === $result) {
-            Log::debug('Return FALSE');
-
-            return false;
-        }
-        if (in_array($result->accountType->type, $types, true)) {
-            $this->source = $result;
-            Log::debug('Return TRUE');
-
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        // if both are NULL, the source is valid because the reconciliation
+        // is expected to be "positive", i.e. the money flows from the
+        // source to the asset account that is the destination.
+        if (null === $accountId && null === $accountName) {
             return true;
         }
-        Log::debug('Return FALSE');
 
-        return false;
+        // after that, search for it expecting an asset account or a liability.
+        Log::debug('Now in validateReconciliationSource', $array);
+
+        // source can be any of the following types.
+        $validTypes = array_keys($this->combinations[$this->transactionType]);
+        $search     = $this->findExistingAccount($validTypes, $array);
+        if (null === $search) {
+            $this->sourceError = (string) trans('validation.reconciliation_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            Log::warning('Not a valid source. Cant find it.', $validTypes);
+
+            return false;
+        }
+        $this->source = $search;
+        Log::debug('Valid source account!');
+
+        return true;
     }
 
 }

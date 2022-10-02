@@ -39,7 +39,7 @@ class ALERepository implements ALERepositoryInterface
 
         $auditLogEntry->auditable()->associate($data['auditable']);
         $auditLogEntry->changer()->associate($data['changer']);
-        $auditLogEntry->action = $data['field'];
+        $auditLogEntry->action = $data['action'];
         $auditLogEntry->before = $data['before'];
         $auditLogEntry->after  = $data['after'];
         $auditLogEntry->save();

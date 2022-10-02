@@ -66,7 +66,7 @@ class SetDescription implements ActionInterface
                 $this->action->action_value
             )
         );
-
+        $journal->refresh();
         event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', $before, $this->action->action_value));
 
         return true;

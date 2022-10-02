@@ -22,7 +22,6 @@
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\TriggeredAuditLog;
-use FireflyIII\Models\AuditLogEntry;
 use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 
 class AuditEventHandler
@@ -36,10 +35,10 @@ class AuditEventHandler
     {
         $array = [
             'auditable' => $event->auditable,
-            'changer' => $event->changer,
-            'action' => $event->field,
-            'before' => $event->before,
-            'after' => $event->after,
+            'changer'   => $event->changer,
+            'action'    => $event->field,
+            'before'    => $event->before,
+            'after'     => $event->after,
         ];
         /** @var ALERepositoryInterface $repository */
         $repository = app(ALERepositoryInterface::class);

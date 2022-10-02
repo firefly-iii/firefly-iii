@@ -27,6 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Validation\Validator;
 use Log;
 
@@ -104,13 +105,13 @@ trait TransactionValidation
         $sourceName   = array_key_exists('source_name', $transaction) ? (string) $transaction['source_name'] : null;
         $sourceIban   = array_key_exists('source_iban', $transaction) ? (string) $transaction['source_iban'] : null;
         $sourceNumber = array_key_exists('source_number', $transaction) ? (string) $transaction['source_number'] : null;
-        $array        = [
+        $source       = [
             'id'     => $sourceId,
             'name'   => $sourceName,
             'iban'   => $sourceIban,
             'number' => $sourceNumber,
         ];
-        $validSource  = $accountValidator->validateSource($array);
+        $validSource  = $accountValidator->validateSource($source);
 
         // do something with result:
         if (false === $validSource) {
@@ -124,17 +125,52 @@ trait TransactionValidation
         $destinationName   = array_key_exists('destination_name', $transaction) ? (string) $transaction['destination_name'] : null;
         $destinationIban   = array_key_exists('destination_iban', $transaction) ? (string) $transaction['destination_iban'] : null;
         $destinationNumber = array_key_exists('destination_number', $transaction) ? (string) $transaction['destination_number'] : null;
-        $array             = [
+        $destination       = [
             'id'     => $destinationId,
             'name'   => $destinationName,
             'iban'   => $destinationIban,
             'number' => $destinationNumber,
         ];
-        $validDestination  = $accountValidator->validateDestination($array);
+        $validDestination  = $accountValidator->validateDestination($destination);
         // do something with result:
         if (false === $validDestination) {
             $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
             $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
+        }
+
+        // sanity check for reconciliation accounts. They can't both be null.
+        $this->sanityCheckReconciliation($validator, $transactionType, $index, $source, $destination);
+    }
+
+    /**
+     * @param Validator $validator
+     * @param string    $transactionType
+     * @param int       $index
+     * @param array     $source
+     * @param array     $destination
+     * @return void
+     */
+    protected function sanityCheckReconciliation(Validator $validator, string $transactionType, int $index, array $source, array $destination): void
+    {
+        Log::debug('sanityCheckReconciliation');
+        if (TransactionType::RECONCILIATION === ucfirst($transactionType) &&
+            null === $source['id'] && null === $source['name'] && null === $destination['id'] && null === $destination['name']
+        ) {
+            Log::debug('Both are NULL, error!');
+            $validator->errors()->add(sprintf('transactions.%d.source_id', $index), trans('validation.reconciliation_either_account'));
+            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), trans('validation.reconciliation_either_account'));
+            $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), trans('validation.reconciliation_either_account'));
+            $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), trans('validation.reconciliation_either_account'));
+        }
+
+        if (TransactionType::RECONCILIATION === $transactionType &&
+            (null !== $source['id'] || null !== $source['name']) &&
+            (null !== $destination['id'] || null !== $destination['name'])) {
+            Log::debug('Both are not NULL, error!');
+            $validator->errors()->add(sprintf('transactions.%d.source_id', $index), trans('validation.reconciliation_either_account'));
+            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), trans('validation.reconciliation_either_account'));
+            $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), trans('validation.reconciliation_either_account'));
+            $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), trans('validation.reconciliation_either_account'));
         }
     }
 
@@ -448,7 +484,7 @@ trait TransactionValidation
         // I think I can get away with one combination being equal, as long as the rest
         // of the code picks up on this as well.
         // either way all fields must be blank or all equal
-        // but if ID's are equal don't bother with the names.
+        // but if IDs are equal don't bother with the names.
         $comparison = $this->collectComparisonData($transactions);
         $result     = $this->compareAccountData($type, $comparison);
         if (false === $result) {
