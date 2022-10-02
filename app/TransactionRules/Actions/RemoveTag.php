@@ -62,6 +62,11 @@ class RemoveTag implements ActionInterface
             );
             return false;
         }
+        $count = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
+        if(0 === $count) {
+            Log::debug(sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.', $name, $journal['transaction_journal_id']));
+            return false;
+        }
 
         Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
         DB::table('tag_transaction_journal')
@@ -71,7 +76,7 @@ class RemoveTag implements ActionInterface
 
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'remove_tag', $tag->tag, null));
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'clear_tag', $tag->tag, null));
 
         return true;
     }

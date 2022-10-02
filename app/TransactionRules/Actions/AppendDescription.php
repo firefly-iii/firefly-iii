@@ -55,7 +55,7 @@ class AppendDescription implements ActionInterface
         // event for audit log entry
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', null, $description));
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', $journal['description'], $description));
 
         return true;
     }

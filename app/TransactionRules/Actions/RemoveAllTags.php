@@ -50,14 +50,19 @@ class RemoveAllTags implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        Log::debug(sprintf('RuleAction ClearCategory removed all tags from journal %d.', $journal['transaction_journal_id']));
         DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->delete();
+        $count = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->count();
+        if (0 === $count) {
+            Log::debug(sprintf('RuleAction RemoveAllTags, journal #%d has no tags.', $journal['transaction_journal_id']));
+            return false;
+        }
+        Log::debug(sprintf('RuleAction RemoveAllTags removed all tags from journal %d.', $journal['transaction_journal_id']));
 
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'remove_all_tags', null, null));
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'clear_all_tags', null, null));
 
         return true;
     }

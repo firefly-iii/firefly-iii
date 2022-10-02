@@ -75,13 +75,13 @@ class ConvertToDeposit implements ActionInterface
         if (TransactionType::WITHDRAWAL === $type) {
             Log::debug('Going to transform a withdrawal to a deposit.');
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-            event(new TriggeredAuditLog($this->action->rule, $object, 'change_transaction_type', TransactionType::WITHDRAWAL, TransactionType::DEPOSIT));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::DEPOSIT));
 
             return $this->convertWithdrawalArray($journal);
         }
         if (TransactionType::TRANSFER === $type) {
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-            event(new TriggeredAuditLog($this->action->rule, $object, 'change_transaction_type', TransactionType::TRANSFER, TransactionType::DEPOSIT));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::DEPOSIT));
             Log::debug('Going to transform a transfer to a deposit.');
 
             return $this->convertTransferArray($journal);

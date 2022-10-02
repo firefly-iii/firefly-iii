@@ -1,0 +1,89 @@
+<table class="table">
+    {% for logEntry in logEntries %}
+        <tr>
+            <td style="width:20%;">
+                {# link to object: #}
+                {% if 'FireflyIII\\Models\\Rule' == logEntry.changer_type %}
+                    <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
+                {% endif %}
+                {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""}) }}
+                #{{ logEntry.changer_id }}
+                    </a>
+            </td>
+            <td style="width:30%;">
+                {{ trans('firefly.ale_action_'~logEntry.action) }}
+            </td>
+            <td>
+                {# display depends on action #}
+                {% if 'add_tag' == logEntry.action %}
+                    <code>{{ logEntry.after }}</code>
+                {% endif %}
+                {% if 'clear_budget' == logEntry.action %}
+                    <code><s>{{ logEntry.before }}</s></code>
+                {% endif %}
+                {% if 'clear_category' == logEntry.action %}
+                    <code><s>{{ logEntry.before }}</s></code>
+                {% endif %}
+                {% if 'clear_tag' == logEntry.action %}
+                    <code><s>{{ logEntry.before }}</s></code>
+                {% endif %}
+
+                {% if 'clear_notes' == logEntry.action %}
+                    {% if logEntry.before|length > 25 %}
+                        <code><s>{{ logEntry.before|slice(0,25) }}...</s></code>
+                    {% else %}
+                        <code><s>{{ logEntry.before }}</s></code>
+                    {% endif %}
+                {% endif %}
+
+                {% if 'set_bill' == logEntry.action %}
+                    <code>{{ logEntry.after }}</code>
+                {% endif %}
+                {% if 'set_budget' == logEntry.action %}
+                    <code>{{ logEntry.after }}</code>
+                {% endif %}
+                {% if 'set_category' == logEntry.action %}
+                    <code>{{ logEntry.after }}</code>
+                {% endif %}
+                {% if 'set_source' == logEntry.action %}
+                    <code>{{ logEntry.after }}</code>
+                {% endif %}
+                {% if 'set_destination' == logEntry.action %}
+                    <code>{{ logEntry.after }}</code>
+                {% endif %}
+                {% if 'update_transaction_type' == logEntry.action %}
+                    {{ trans('firefly.'~logEntry.before) }} &rarr; {{ trans('firefly.'~logEntry.after) }}
+                {% endif %}
+
+                {% if 'update_notes' == logEntry.action %}
+                    {% if logEntry.before|length > 25 %}
+                        <code><s>{{ logEntry.before|slice(0,25) }}...</s></code>
+                    {% else %}
+                        <code><s>{{ logEntry.before }}</s></code>
+                    {% endif %}
+
+                    &rarr;
+                    {% if logEntry.after|length > 25 %}
+                        <code>{{ logEntry.after|slice(0,25) }}...</code>
+                    {% else %}
+                        <code>{{ logEntry.after }}</code>
+                    {% endif %}
+                {% endif %}
+
+                {% if 'update_description' == logEntry.action %}
+                    <code>{{ logEntry.before }}</code>
+                    &rarr;
+                    <code><s>{{ logEntry.after }}</s></code>
+                {% endif %}
+                {% if 'add_to_piggy' == logEntry.action %}
+                    {{ trans('firefly.ale_action_log_add', {amount: formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.name})|raw }}
+                {% endif %}
+                {% if 'remove_from_piggy' == logEntry.action %}
+                    {{ trans('firefly.ale_action_log_remove', {amount: formatAmountBySymbol(logEntry.after.amount, logEntry.after.currency_symbol, logEntry.after.decimal_places, true), name: logEntry.after.name})|raw }}
+                {% endif %}
+            </td>
+
+
+        </tr>
+    {% endfor %}
+</table>

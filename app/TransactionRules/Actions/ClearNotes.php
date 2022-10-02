@@ -64,7 +64,7 @@ class ClearNotes implements ActionInterface
           ->delete();
         Log::debug(sprintf('RuleAction ClearNotes removed all notes from journal #%d.', $journal['transaction_journal_id']));
 
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'remove_notes', $before, null));
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'clear_notes', $before, null));
 
         return true;
     }

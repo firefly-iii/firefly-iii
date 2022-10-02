@@ -60,7 +60,7 @@ class ClearCategory implements ActionInterface
 
         DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
 
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'removed_category', $category->name, null));
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'clear_category', $category->name, null));
 
         Log::debug(sprintf('RuleAction ClearCategory removed all categories from journal #%d.', $journal['transaction_journal_id']));
 

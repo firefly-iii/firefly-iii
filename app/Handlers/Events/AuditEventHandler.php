@@ -23,6 +23,7 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\AuditLogEntry;
+use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 
 class AuditEventHandler
 {
@@ -33,13 +34,16 @@ class AuditEventHandler
      */
     public function storeAuditEvent(TriggeredAuditLog $event)
     {
-        $auditLogEntry = new AuditLogEntry;
-        $auditLogEntry->auditable()->associate($event->auditable);
-        $auditLogEntry->changer()->associate($event->changer);
-        $auditLogEntry->action  = $event->field;
-        $auditLogEntry->before = $event->before;
-        $auditLogEntry->after  = $event->after;
-        $auditLogEntry->save();
+        $array = [
+            'auditable' => $event->auditable,
+            'changer' => $event->changer,
+            'action' => $event->field,
+            'before' => $event->before,
+            'after' => $event->after,
+        ];
+        /** @var ALERepositoryInterface $repository */
+        $repository = app(ALERepositoryInterface::class);
+        $repository->store($array);
     }
 
 }

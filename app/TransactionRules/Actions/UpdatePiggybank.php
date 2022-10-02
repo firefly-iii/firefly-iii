@@ -28,6 +28,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
@@ -61,6 +62,7 @@ class UpdatePiggybank implements ActionInterface
 
         // refresh the transaction type.
         $user                             = User::find($journal['user_id']);
+        /** @var TransactionJournal $journalObj */
         $journalObj                       = $user->transactionJournals()->find($journal['transaction_journal_id']);
         $type                             = TransactionType::find((int) $journalObj->transaction_type_id);
         $journal['transaction_type_type'] = $type->type;
@@ -91,7 +93,7 @@ class UpdatePiggybank implements ActionInterface
             Log::debug('Piggy bank account is linked to source, so remove amount.');
             $this->removeAmount($journal, $piggyBank, $destination->amount);
 
-            event(new TriggeredAuditLog($this->action->rule, $journalObj, 'remove_from_piggy', null, ['amount' => $destination->amount, 'piggy' => $piggyBank->name]));
+            event(new TriggeredAuditLog($this->action->rule, $journalObj, 'remove_from_piggy', null, ['currency_symbol' => $journalObj->transactionCurrency->symbol, 'decimal_places' => $journalObj->transactionCurrency->decimal_places, 'amount' => $destination->amount, 'piggy' => $piggyBank->name]));
 
             return true;
         }
@@ -99,7 +101,7 @@ class UpdatePiggybank implements ActionInterface
             Log::debug('Piggy bank account is linked to source, so add amount.');
             $this->addAmount($journal, $piggyBank, $destination->amount);
 
-            event(new TriggeredAuditLog($this->action->rule, $journalObj, 'add_to_piggy', null, ['amount' => $destination->amount, 'piggy' => $piggyBank->name]));
+            event(new TriggeredAuditLog($this->action->rule, $journalObj, 'add_to_piggy', null, ['currency_symbol' => $journalObj->transactionCurrency->symbol, 'decimal_places' => $journalObj->transactionCurrency->decimal_places, 'amount' => $destination->amount, 'piggy' => $piggyBank->name]));
 
             return true;
         }

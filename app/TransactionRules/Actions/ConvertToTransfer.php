@@ -92,7 +92,7 @@ class ConvertToTransfer implements ActionInterface
         if (TransactionType::WITHDRAWAL === $type) {
             Log::debug('Going to transform a withdrawal to a transfer.');
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-            event(new TriggeredAuditLog($this->action->rule, $object, 'change_transaction_type', TransactionType::WITHDRAWAL, TransactionType::TRANSFER));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::TRANSFER));
 
             return $this->convertWithdrawalArray($journal, $asset);
         }
@@ -100,7 +100,7 @@ class ConvertToTransfer implements ActionInterface
             Log::debug('Going to transform a deposit to a transfer.');
 
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-            event(new TriggeredAuditLog($this->action->rule, $object, 'change_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
 
             return $this->convertDepositArray($journal, $asset);
         }

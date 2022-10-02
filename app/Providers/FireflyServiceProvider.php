@@ -40,6 +40,8 @@ use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Webhook\Sha3SignatureGenerator;
 use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
+use FireflyIII\Repositories\AuditLogEntry\ALERepository;
+use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepository;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
@@ -171,6 +173,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
 
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
+        $this->app->bind(ALERepositoryInterface::class, ALERepository::class);
+
         $this->app->bind(
             ObjectGroupRepositoryInterface::class,
             static function (Application $app) {

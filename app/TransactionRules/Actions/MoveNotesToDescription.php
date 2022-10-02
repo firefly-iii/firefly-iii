@@ -74,7 +74,7 @@ class MoveNotesToDescription implements ActionInterface
         $note->delete();
 
         event(new TriggeredAuditLog($this->action->rule, $journal, 'update_description', $before, $journal->description));
-        event(new TriggeredAuditLog($this->action->rule, $journal, 'remove_notes', $beforeNote, null));
+        event(new TriggeredAuditLog($this->action->rule, $journal, 'clear_notes', $beforeNote, null));
 
         return true;
     }

@@ -1,6 +1,6 @@
 <?php
 /*
- * AuditLogEntry.php
+ * ALERepositoryInterface.php
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,40 +19,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Models;
+namespace FireflyIII\Repositories\AuditLogEntry;
 
+use FireflyIII\Models\AuditLogEntry;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 /**
- * Class AuditLogEntry
+ * Interface ALERepositoryInterface
  */
-class AuditLogEntry extends Model
+interface ALERepositoryInterface
 {
-    use SoftDeletes;
-
-    protected $casts = [
-        'before'     => 'array',
-        'after'      => 'array',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
-    ];
+    /**
+     * @param array $data
+     * @return AuditLogEntry
+     */
+    public function store(array $data): AuditLogEntry;
 
     /**
-     * @codeCoverageIgnore
+     * @param Model $model
+     * @return Collection
      */
-    public function auditable(): MorphTo
-    {
-        return $this->morphTo();
-    }
-
-    /**
-     * @codeCoverageIgnore
-     */
-    public function changer(): MorphTo
-    {
-        return $this->morphTo();
-    }
+    public function getForObject(Model $model): Collection;
 }

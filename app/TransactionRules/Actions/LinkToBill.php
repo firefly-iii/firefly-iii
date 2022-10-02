@@ -63,6 +63,14 @@ class LinkToBill implements ActionInterface
         $bill     = $repository->findByName($billName);
 
         if (null !== $bill && $journal['transaction_type_type'] === TransactionType::WITHDRAWAL) {
+            $count = DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
+                       ->where('bill_id', $bill->id)->count();
+            if (0 !== $count) {
+                Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.', $journal['transaction_journal_id'], $billName));
+                return false;
+            }
+
+
             DB::table('transaction_journals')
               ->where('id', '=', $journal['transaction_journal_id'])
               ->update(['bill_id' => $bill->id]);
@@ -71,7 +79,7 @@ class LinkToBill implements ActionInterface
             );
 
             $journal = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-            event(new TriggeredAuditLog($this->action->rule, $journal, 'change_bill', null, $bill->id));
+            event(new TriggeredAuditLog($this->action->rule, $journal, 'set_bill', null, $bill->name));
 
             return true;
         }

@@ -27,12 +27,12 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class ShowController extends Controller
 {
     private TransactionGroupRepositoryInterface $repository;
+    private ALERepositoryInterface              $ALERepository;
 
     /**
      * ShowController constructor.
@@ -54,7 +55,8 @@ class ShowController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(TransactionGroupRepositoryInterface::class);
+                $this->repository    = app(TransactionGroupRepositoryInterface::class);
+                $this->ALERepository = app(ALERepositoryInterface::class);
 
                 app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
@@ -108,9 +110,16 @@ class ShowController extends Controller
             $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects($groupArray['transactions'][$index]['transaction_journal_id']);
         }
 
+        // get audit log entries:
+        $logEntries = [];
+        foreach($transactionGroup->transactionJournals as $journal) {
+            $logEntries[$journal->id] = $this->ALERepository->getForObject($journal);
+        }
+
         $events      = $this->repository->getPiggyEvents($transactionGroup);
         $attachments = $this->repository->getAttachments($transactionGroup);
         $links       = $this->repository->getLinks($transactionGroup);
+
 
         return view(
             'transactions.show',
@@ -119,6 +128,7 @@ class ShowController extends Controller
                 'amounts',
                 'first',
                 'type',
+                'logEntries',
                 'subTitle',
                 'splits',
                 'groupArray',
