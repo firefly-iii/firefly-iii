@@ -43,7 +43,7 @@ class CreateGroupMemberships extends Command
      *
      * @var string
      */
-    protected $description = 'SOME DESCRIPTION';
+    protected $description = 'Update group memberships';
     /**
      * The name and signature of the console command.
      *
