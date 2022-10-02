@@ -50,9 +50,9 @@ class SetDescription implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        $before  = $journal->description;
+        $before  = $object->description;
 
         DB::table('transaction_journals')
           ->where('id', '=', $journal['transaction_journal_id'])
