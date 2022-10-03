@@ -81,7 +81,15 @@ class CreateFirstUser extends Command
         $user->save();
         $user->setRememberToken(Str::random(60));
 
+        // Make sure a passport client is available
+        $this->call('passport:client', ['--personal' => true, '--name' => config('app.name').' Personal Access Client']);
+        // Create a token for the user
+        $result = $user->createToken(
+            'testing', []
+        );
+
         $this->info(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));
+        $this->info('Created the following access token: ' . $result->accessToken);
         $this->error('Change this password.');
 
         return 0;
