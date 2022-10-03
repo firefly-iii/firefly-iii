@@ -29,7 +29,4 @@ $(document).ready(function () {
             }
         );
     }
-    // $('form.form-horizontal').on('submit', function () {
-    //     return confirm(askReadWarning);
-    // });
 });
