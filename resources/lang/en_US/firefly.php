@@ -2538,8 +2538,8 @@ return [
 
     // audit log entries
     'audit_log_entries'                  => 'Audit log entries',
-    'ale_action_log_add'                 => 'Add :amount to piggy bank ":name"',
-    'ale_action_log_remove'              => 'Remove :amount from piggy bank ":name"',
+    'ale_action_log_add'                 => 'Added :amount to piggy bank ":name"',
+    'ale_action_log_remove'              => 'Removed :amount from piggy bank ":name"',
     'ale_action_clear_budget'            => 'Removed from budget',
     'ale_action_clear_category'          => 'Removed from category',
     'ale_action_clear_notes'             => 'Removed notes',
