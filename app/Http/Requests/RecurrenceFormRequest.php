@@ -237,7 +237,7 @@ class RecurrenceFormRequest extends FormRequest
             $rules['repeat_until'] = 'required|date|after:' . $tomorrow->format('Y-m-d');
         }
 
-        // switchc on type to expand rules for source and destination accounts:
+        // switch on type to expand rules for source and destination accounts:
         switch ($this->convertString('transaction_type')) {
             case strtolower(TransactionType::WITHDRAWAL):
                 $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
