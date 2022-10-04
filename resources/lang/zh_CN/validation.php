@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
     'need_id_in_edit'           => '每笔拆分必须有 transaction_journal_id (有效的 ID 或 0)。',
 
-    'ob_source_need_data' => '需要一个有效的来源账户ID和/或来源账户名称才能继续。',
-    'lc_source_need_data' => '需要获取一个有效的来源账户 ID 才能继续。',
-    'ob_dest_need_data'   => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
-    'ob_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
+    'ob_source_need_data'           => '需要一个有效的来源账户ID和/或来源账户名称才能继续。',
+    'lc_source_need_data'           => '需要获取一个有效的来源账户 ID 才能继续。',
+    'ob_dest_need_data'             => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
+    'ob_dest_bad_data'              => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => '您不能使用此账户作为来源账户',
     'generic_invalid_destination' => '您不能使用此账户作为目标账户',

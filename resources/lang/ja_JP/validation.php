@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
     'need_id_in_edit'           => '各分割は transaction_journal_id (有効な ID または 0 のいずれか) でなければなりません。',
 
-    'ob_source_need_data' => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
-    'lc_source_need_data' => '続行するには有効な引き出し元口座 ID が必要です。',
-    'ob_dest_need_data'   => '続行するには、有効な預け入れ口座 ID および（または）有効な預け入れ口座名を取得する必要があります。',
-    'ob_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
+    'ob_source_need_data'           => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
+    'lc_source_need_data'           => '続行するには有効な引き出し元口座 ID が必要です。',
+    'ob_dest_need_data'             => '続行するには、有効な預け入れ口座 ID および（または）有効な預け入れ口座名を取得する必要があります。',
+    'ob_dest_bad_data'              => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'この口座を引き出し元口座として使用することはできません。',
     'generic_invalid_destination' => 'この口座を預け入れ先口座として使用することはできません。',

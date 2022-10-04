@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
     'need_id_in_edit'           => '每筆拆分須有 transaction_journal_id (為有效的 ID 或是 0)。',
 
-    'ob_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
-    'ob_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+    'ob_source_need_data'           => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
+    'ob_dest_bad_data'              => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'You can\'t use this account as the source account.',
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',

@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
     'unique_object_group'            => 'Le nom du groupe doit être unique',
     'starts_with'                    => 'La valeur doit commencer par :values.',
-    'unique_webhook'                 => 'Vous avez déjà un webhook avec cette combinaison d\'URL, de déclencheur, de réponse et de livraison.',
-    'unique_existing_webhook'        => 'Vous avez déjà un autre webhook avec cette combinaison d\'URL, de déclencheur, de réponse et de livraison.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Les deux comptes doivent être du même type',
     'same_account_currency'          => 'Les deux comptes doivent avoir la même devise',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
     'need_id_in_edit'           => 'Chaque ventilation doit avoir transaction_journal_id (ID valide ou 0).',
 
-    'ob_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
-    'lc_source_need_data' => 'Besoin d\'un identifiant de compte source valide pour continuer.',
-    'ob_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
-    'ob_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'ob_source_need_data'           => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
+    'lc_source_need_data'           => 'Besoin d\'un identifiant de compte source valide pour continuer.',
+    'ob_dest_need_data'             => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
+    'ob_dest_bad_data'              => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Vous ne pouvez pas utiliser ce compte comme compte source.',
     'generic_invalid_destination' => 'Vous ne pouvez pas utiliser ce compte comme compte de destination.',

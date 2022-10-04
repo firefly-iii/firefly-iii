@@ -33,6 +33,14 @@ return [
     'admin_test_subject'                      => 'Un message de test de votre installation de Firefly III',
     'admin_test_body'                         => 'Ceci est un message de test de votre instance Firefly III. Il a été envoyé à :email.',
 
+    // invite
+    'invitation_created_subject'              => 'Une invitation a été créée',
+    'invitation_created_body'                 => 'L\'utilisateur admin ":email" a créé une invitation d\'utilisateur qui peut être utilisée par quiconque est derrière l\'adresse e-mail ":invitee". L\'invitation sera valide pendant 48 heures.',
+    'invite_user_subject'                     => 'Vous avez été invité à créer un compte Firefly III.',
+    'invitation_introduction'                 => 'Vous avez été invité à créer un compte Firefly III sur **:host**. Firefly III est un gestionnaire personnel et privé de finances personnelles. Tous les gamins du quartier l\'utilisent.',
+    'invitation_invited_by'                   => 'Vous avez été invité par ":admin" et cette invitation a été envoyée à ":invitee". C\'est vous, non ?',
+    'invitation_url'                          => 'L\'invitation est valide pendant 48 heures et peut être échangée en naviguant sur [Firefly III](:url). Profitez-en !',
+
     // new IP
     'login_from_new_ip'                       => 'Nouvelle connexion sur Firefly III',
     'slack_login_from_new_ip'                 => 'Nouvelle connexion à Firefly III depuis IP :ip (:host)',

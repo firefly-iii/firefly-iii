@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Kunne ikke finne en gyldig destinasjons konto ved å søke etter ID ":id" eller navn ":name".',
     'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
 
-    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
-    'ob_dest_bad_data'    => 'Kunne ikke finne en gyldig destinasjonskonto ved søk etter ID ":id" eller navn ":name".',
+    'ob_source_need_data'           => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+    'ob_dest_bad_data'              => 'Kunne ikke finne en gyldig destinasjonskonto ved søk etter ID ":id" eller navn ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Du kan ikke bruke denne kontoen som kildekonto.',
     'generic_invalid_destination' => 'Du kan ikke bruke denne kontoen som destinasjonskonto.',

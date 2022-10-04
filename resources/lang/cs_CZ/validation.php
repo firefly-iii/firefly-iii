@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
     'need_id_in_edit'           => 'Každé rozdělení musí mít transakci_journal_id (platné ID nebo 0).',
 
-    'ob_source_need_data' => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
-    'lc_source_need_data' => 'Pro pokračování je třeba získat platné ID zdrojového účtu.',
-    'ob_dest_need_data'   => 'Pro pokračování je potřeba získat platné cílové ID účtu a/nebo platné jméno cílového účtu.',
-    'ob_dest_bad_data'    => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
+    'ob_source_need_data'           => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
+    'lc_source_need_data'           => 'Pro pokračování je třeba získat platné ID zdrojového účtu.',
+    'ob_dest_need_data'             => 'Pro pokračování je potřeba získat platné cílové ID účtu a/nebo platné jméno cílového účtu.',
+    'ob_dest_bad_data'              => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Tento účet nelze použít jako zdrojový účet.',
     'generic_invalid_destination' => 'Tento účet nelze použít jako cílový účet.',

@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
     'need_id_in_edit'           => 'Каждая разделённая транзакция должна иметь transaction_journal_id (либо действительный ID, либо 0).',
 
-    'ob_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
-    'ob_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
+    'ob_source_need_data'           => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
+    'ob_dest_bad_data'              => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Вы не можете использовать этот счёт в качестве счёта-источника.',
     'generic_invalid_destination' => 'Вы не можете использовать этот счёт в качестве счёта назначения.',

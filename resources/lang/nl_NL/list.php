@@ -43,6 +43,10 @@ return [
     'lastActivity'            => 'Laatste activiteit',
     'balanceDiff'             => 'Saldoverschil',
     'other_meta_data'         => 'Andere metadata',
+    'invited_at'              => 'Uitgenodigd op',
+    'expires'                 => 'Uitnodiging verloopt',
+    'invited_by'              => 'Uitgenodigd door',
+    'invite_link'             => 'Uitnodigingslink',
     'account_type'            => 'Accounttype',
     'created_at'              => 'Gemaakt op',
     'account'                 => 'Rekening',
@@ -139,9 +143,9 @@ return [
     'expected_info'           => 'Volgende verwachte transactie',
     'start_date'              => 'Startdatum',
     'trigger'                 => 'Trigger',
-    'response'                => 'Response',
-    'delivery'                => 'Delivery',
+    'response'                => 'Reactie',
+    'delivery'                => 'Bericht',
     'url'                     => 'URL',
-    'secret'                  => 'Secret',
+    'secret'                  => 'Geheim',
 
 ];

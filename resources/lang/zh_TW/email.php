@@ -33,6 +33,14 @@ return [
     'admin_test_subject'                      => '來自 Firefly III 安裝程式的測試訊息',
     'admin_test_body'                         => '這是您 Firefly III 載體的測試訊息，是寄給 :email 的。',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => '自 Firefly III 的新登入',
     'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',

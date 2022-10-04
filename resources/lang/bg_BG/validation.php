@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
     'need_id_in_edit'           => 'Всяко разделяне трябва да има transaction_journal_id (или валидно ID или 0).',
 
-    'ob_source_need_data' => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
-    'ob_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
+    'ob_source_need_data'           => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
+    'ob_dest_bad_data'              => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Не може да използвате тази сметка като разходна сметка.',
     'generic_invalid_destination' => 'Не може да използвате тази сметка като приходна сметка.',

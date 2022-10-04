@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Nem található érvényes célszámla ":id" azonosító vagy ":name" név keresésekor.',
     'need_id_in_edit'           => 'Minden felosztásnak rendelkeznie kell "transaction_journal_id"-val (lehet érvényes érték vagy 0).',
 
-    'ob_source_need_data' => 'Egy érvényes forrásszámla azonosító és/vagy egy érvényes forrásszámla név kell a folytatáshoz.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => 'Egy érvényes célszámla azonosító és/vagy egy érvényes célszámla név kell a folytatáshoz.',
-    'ob_dest_bad_data'    => 'Nem található érvényes célszámla ":id" azonosító vagy ":name" név keresésekor.',
+    'ob_source_need_data'           => 'Egy érvényes forrásszámla azonosító és/vagy egy érvényes forrásszámla név kell a folytatáshoz.',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => 'Egy érvényes célszámla azonosító és/vagy egy érvényes célszámla név kell a folytatáshoz.',
+    'ob_dest_bad_data'              => 'Nem található érvényes célszámla ":id" azonosító vagy ":name" név keresésekor.',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Nem használhatod ezt a fiókot forrásfiókként.',
     'generic_invalid_destination' => 'Nem használhatod ezt a fiókot célfiókként.',

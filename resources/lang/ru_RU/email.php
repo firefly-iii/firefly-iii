@@ -33,6 +33,14 @@ return [
     'admin_test_subject'                      => 'Тестовое сообщение от вашей установки Firefly III',
     'admin_test_body'                         => 'Это тестовое сообщение с вашего сервера Firefly III. Оно было отправлено на :email.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Новый вход в Firefly III',
     'slack_login_from_new_ip'                 => 'Новый вход Firefly III с IP :ip (:host)',

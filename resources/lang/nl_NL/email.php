@@ -33,6 +33,14 @@ return [
     'admin_test_subject'                      => 'Een testbericht van je Firefly III-installatie',
     'admin_test_body'                         => 'Dit is een testbericht vanaf jouw Firefly III-installatie. Het is verstuurd naar :email.',
 
+    // invite
+    'invitation_created_subject'              => 'Een uitnodiging is gemaakt',
+    'invitation_created_body'                 => 'Admin ":email" heeft een gebruikersuitnodiging gemaakt die kan worden gebruikt door ":invitee". De uitnodiging is 48 uur geldig.',
+    'invite_user_subject'                     => 'Je bent uitgenodigd om een Firefly III account aan te maken.',
+    'invitation_introduction'                 => 'Je bent uitgenodigd om een Firefly III account aan te maken op **:host**. Firefly III is een persoonlijke, zelfgehoste persoonlijke financiële manager. Echte hipsters gebruiken Firefly III.',
+    'invitation_invited_by'                   => 'Je bent uitgenodigd door ":admin", en deze uitnodiging is verzonden naar ":invitee". Dat ben jij, toch?',
+    'invitation_url'                          => 'De uitnodiging is 48 uur geldig en kan gebruikt door te surfen naar [Firefly III](:url). Veel plezier!',
+
     // new IP
     'login_from_new_ip'                       => 'Nieuwe login op Firefly III',
     'slack_login_from_new_ip'                 => 'Nieuwe Firefly III login vanaf IP :ip (:host)',

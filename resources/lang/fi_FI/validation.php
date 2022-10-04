@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Säästöpossu tarvitsee yksilöllisen nimen.',
     'unique_object_group'            => 'Ryhmän nimen täytyy olla yksilöllinen',
     'starts_with'                    => 'Arvon on alettava :values.',
-    'unique_webhook'                 => 'Sinulla on jo verkkotoimintokutsu (webhook) tällä URL -, ehto -, vastaus -, ja toimitus-yhdistelmällä.',
-    'unique_existing_webhook'        => 'Sinulla on jo toinen verkkotoimintokutsu (webhook) tällä URL -, ehto -, vastaus -, ja toimitus-yhdistelmällä.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Molempien tilien on oltava samaa tyyppiä',
     'same_account_currency'          => 'Molemmilla tileillä on oltava sama valuuttaasetus',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Kelvollista kohdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
     'need_id_in_edit'           => 'Kaikilla jaetuilla tapahtumilla täytyy olla transaction_journal_id (joko voimassaoleva tunniste tai 0).',
 
-    'ob_source_need_data' => 'Tarvitset kelvollisen lähdetilin tunnuksen ja/tai kelvollisen lähdetilin nimen jatkaaksesi.',
-    'lc_source_need_data' => 'Tarvitaan kelvollinen lähdetilin tunniste.',
-    'ob_dest_need_data'   => 'Tarvitset kelvollisen kohdetilin tunnuksen ja/tai kelvollisen kohdetilin nimen jatkaaksesi.',
-    'ob_dest_bad_data'    => 'Kelvollista kohdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
+    'ob_source_need_data'           => 'Tarvitset kelvollisen lähdetilin tunnuksen ja/tai kelvollisen lähdetilin nimen jatkaaksesi.',
+    'lc_source_need_data'           => 'Tarvitaan kelvollinen lähdetilin tunniste.',
+    'ob_dest_need_data'             => 'Tarvitset kelvollisen kohdetilin tunnuksen ja/tai kelvollisen kohdetilin nimen jatkaaksesi.',
+    'ob_dest_bad_data'              => 'Kelvollista kohdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Et voi käyttää tätä tiliä lähdetilinä.',
     'generic_invalid_destination' => 'Et voi käyttää tätä tiliä kohdetilinä.',

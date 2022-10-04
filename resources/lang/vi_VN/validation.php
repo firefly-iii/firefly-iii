@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
     'need_id_in_edit'           => 'Mỗi phân chia phải có giao dịch_journal_id (ID hợp lệ hoặc 0).',
 
-    'ob_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
-    'lc_source_need_data' => 'Cần lấy ID tài khoản hợp lệ để tiếp tục.',
-    'ob_dest_need_data'   => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
-    'ob_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
+    'ob_source_need_data'           => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
+    'lc_source_need_data'           => 'Cần lấy ID tài khoản hợp lệ để tiếp tục.',
+    'ob_dest_need_data'             => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
+    'ob_dest_bad_data'              => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Bạn không thể sử dụng tài khoản này làm tài khoản nguồn.',
     'generic_invalid_destination' => 'Bạn không thể sử dụng tài khoản này làm tài khoản đích.',
