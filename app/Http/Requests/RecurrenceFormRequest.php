@@ -99,7 +99,7 @@ class RecurrenceFormRequest extends FormRequest
         ];
 
         // fill in foreign currency data
-        if (null !== $this->float('foreign_amount')) {
+        if (null !== $this->convertFloat('foreign_amount')) {
             $return['transactions'][0]['foreign_amount']      = $this->convertString('foreign_amount');
             $return['transactions'][0]['foreign_currency_id'] = $this->convertInteger('foreign_currency_id');
         }
@@ -228,7 +228,7 @@ class RecurrenceFormRequest extends FormRequest
             $rules['repetitions'] = 'required|numeric|between:0,254';
         }
         // if foreign amount, currency must be  different.
-        if (null !== $this->float('foreign_amount')) {
+        if (null !== $this->convertFloat('foreign_amount')) {
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id|different:transaction_currency_id';
         }
 
@@ -237,7 +237,7 @@ class RecurrenceFormRequest extends FormRequest
             $rules['repeat_until'] = 'required|date|after:' . $tomorrow->format('Y-m-d');
         }
 
-        // switchc on type to expand rules for source and destination accounts:
+        // switch on type to expand rules for source and destination accounts:
         switch ($this->convertString('transaction_type')) {
             case strtolower(TransactionType::WITHDRAWAL):
                 $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';

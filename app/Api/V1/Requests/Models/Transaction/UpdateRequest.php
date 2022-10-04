@@ -48,6 +48,7 @@ class UpdateRequest extends FormRequest
     private array $dateFields;
     private array $integerFields;
     private array $stringFields;
+    private array $floatFields;
     private array $textareaFields;
 
     /**
@@ -84,12 +85,15 @@ class UpdateRequest extends FormRequest
             'notes',
         ];
 
-        $this->convertStringFields  = [
+        $this->floatFields = [
+            'amount',
+            'foreign_amount',
+        ];
+
+        $this->stringFields  = [
             'type',
             'currency_code',
             'foreign_currency_code',
-            'amount',
-            'foreign_amount',
             'description',
             'source_name',
             'source_iban',
@@ -163,6 +167,7 @@ class UpdateRequest extends FormRequest
             $current  = $this->getDateData($current, $transaction);
             $current  = $this->getBooleanData($current, $transaction);
             $current  = $this->getArrayData($current, $transaction);
+            $current  = $this->getFloatData($current, $transaction);
             $return[] = $current;
         }
 
@@ -196,7 +201,7 @@ class UpdateRequest extends FormRequest
      */
     private function getStringData(array $current, array $transaction): array
     {
-        foreach ($this->convertStringFields as $fieldName) {
+        foreach ($this->stringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
                 $current[$fieldName] = $this->clearString((string) $transaction[$fieldName], false);
             }
@@ -388,5 +393,28 @@ class UpdateRequest extends FormRequest
 
             }
         );
+    }
+
+    /**
+     * @param array $current
+     * @param array $transaction
+     * @return array
+     */
+    private function getFloatData(array $current, array $transaction): array
+    {
+        foreach ($this->floatFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $value = $transaction[$fieldName];
+                if (is_float($value)) {
+                    // TODO this effectively limits the max number of decimals in currencies to 14.
+                    $current[$fieldName] = sprintf('%.14f', $value);
+                }
+                if (!is_float($value)) {
+                    $current[$fieldName] = (string) $value;
+                }
+            }
+        }
+
+        return $current;
     }
 }

@@ -216,7 +216,7 @@ trait ConvertsDataTypes
      *
      * @return float|null
      */
-    protected function float(string $field): ?float
+    protected function convertFloat(string $field): ?float
     {
         $res = $this->get($field);
         if (null === $res) {
