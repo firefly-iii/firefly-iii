@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Utolsó hét nap',
     'last_thirty_days'                     => 'Elmúlt harminc nap',
     'last_180_days'                        => 'Last 180 days',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => 'Mi a helyzet?',
     'everything'                           => 'Minden',

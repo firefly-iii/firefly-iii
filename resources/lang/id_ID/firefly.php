@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => '7 hari terakhir',
     'last_thirty_days'                     => '30 hari terakhir',
     'last_180_days'                        => '180 hari terakhir',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => 'Apa yang sedang dimainkan?',
     'everything'                           => 'Segala sesuatu',

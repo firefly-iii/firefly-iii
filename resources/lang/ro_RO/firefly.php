@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Ultimele 7 zile',
     'last_thirty_days'                     => 'Ultimele 30 de zile',
     'last_180_days'                        => 'Ultimele 180 de zile',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => 'Ce se redă?',
     'everything'                           => 'Tot',

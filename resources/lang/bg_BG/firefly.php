@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Последните седем дни',
     'last_thirty_days'                     => 'Последните трийсет дни',
     'last_180_days'                        => 'Последните 180 дни',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => 'Какво се случва?',
     'everything'                           => 'Всичко',

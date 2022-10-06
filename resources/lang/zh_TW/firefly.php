@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => '最近7天',
     'last_thirty_days'                     => '最近30天',
     'last_180_days'                        => 'Last 180 days',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => 'What\'s playing?',
     'everything'                           => '所有',

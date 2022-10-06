@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Bảy ngày gần đây',
     'last_thirty_days'                     => 'Ba mươi ngày gần đây',
     'last_180_days'                        => '180 ngày qua',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => 'Chào mừng trở lại?',
     'everything'                           => 'Tất cả mọi thứ',

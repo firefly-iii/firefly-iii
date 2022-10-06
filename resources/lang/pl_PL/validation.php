@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Nazwa skarbonki musi być unikalna.',
     'unique_object_group'            => 'Nazwa grupy musi być unikalna',
     'starts_with'                    => 'Wartość musi zaczynać się od :values.',
-    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
+    'unique_webhook'                 => 'Masz już webhook z tą kombinacją adresu URL, wyzwalacza, odpowiedzi i doręczenia.',
+    'unique_existing_webhook'        => 'Masz już inny webhook z tą kombinacją adresu URL, wyzwalacza, odpowiedzi i doręczenia.',
     'same_account_type'              => 'Oba konta muszą być tego samego typu',
     'same_account_currency'          => 'Oba konta muszą mieć to samo ustawienie waluty',
 
@@ -212,7 +212,7 @@ return [
     'lc_source_need_data'           => 'Potrzebujemy poprawny identyfikator konta źródłowego, aby kontynuować.',
     'ob_dest_need_data'             => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
     'ob_dest_bad_data'              => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
-    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
+    'reconciliation_either_account' => 'Aby przesłać uzgodnienie, musisz przesłać konto źródłowe lub docelowe. Nie oba te konto, ani nie żadnego konta.',
 
     'generic_invalid_source'      => 'Nie możesz użyć tego konta jako konta źródłowego.',
     'generic_invalid_destination' => 'Nie możesz użyć tego konta jako konta docelowego.',

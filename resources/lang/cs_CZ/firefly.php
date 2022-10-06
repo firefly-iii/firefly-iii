@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Uplynulých 7 dnů',
     'last_thirty_days'                     => 'Uplynulých 30 dní',
     'last_180_days'                        => 'Posledních 180 dní',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'Tento rok',
     'welcome_back'                         => 'Jak to jde?',
     'everything'                           => 'Vše',

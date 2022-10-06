@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Son yedi gün',
     'last_thirty_days'                     => 'Son otuz gün',
     'last_180_days'                        => 'Son 180 gün',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'Son 2 Ay',
     'welcome_back'                         => 'Neler oluyor?',
     'everything'                           => 'Her şey',

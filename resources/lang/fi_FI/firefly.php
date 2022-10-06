@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Viimeiset 7 päivää',
     'last_thirty_days'                     => 'Viimeiset 30 päivää',
     'last_180_days'                        => 'Viimeiset 180 päivää',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'Vuoden alusta',
     'welcome_back'                         => 'Mitä kuuluu?',
     'everything'                           => 'Kaikki',

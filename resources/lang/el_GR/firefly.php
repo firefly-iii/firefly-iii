@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Τελευταίες επτά ημέρες',
     'last_thirty_days'                     => 'Τελευταίες τριάντα ημέρες',
     'last_180_days'                        => 'Τελευταίες 180 ημέρες',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'Από την αρχή του έτους ως σήμερα',
     'welcome_back'                         => 'Τι παίζει;',
     'everything'                           => 'Όλα',

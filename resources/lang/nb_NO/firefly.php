@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Syv siste dager',
     'last_thirty_days'                     => 'Tredve siste dager',
     'last_180_days'                        => 'Siste 180 dager',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'Hittil i år',
     'welcome_back'                         => 'Hvordan går det?',
     'everything'                           => 'Alt',

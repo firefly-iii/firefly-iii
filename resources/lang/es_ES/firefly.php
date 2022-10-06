@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Últimos siete días',
     'last_thirty_days'                     => 'Últimos treinta días',
     'last_180_days'                        => 'Últimos 180 días',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'Año en curso',
     'welcome_back'                         => '¿Qué está pasando?',
     'everything'                           => 'Todo',

@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => '最近 7 天',
     'last_thirty_days'                     => '最近 30 天',
     'last_180_days'                        => '最近 180 天',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => '今天理财了吗？',
     'everything'                           => '所有',

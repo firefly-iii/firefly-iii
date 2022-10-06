@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => 'Последние 7 дней',
     'last_thirty_days'                     => 'Последние 30 дней',
     'last_180_days'                        => 'Последние 180 дней',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => 'Что происходит с моими финансами?',
     'everything'                           => 'Всё',

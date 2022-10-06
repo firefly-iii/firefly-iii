@@ -35,6 +35,8 @@ return [
     'last_seven_days'                      => '過去7日間',
     'last_thirty_days'                     => '過去30日間',
     'last_180_days'                        => '過去180日間',
+    'month_to_date'                        => 'Month to date',
+    'year_to_date'                         => 'Year to date',
     'YTD'                                  => 'YTD',
     'welcome_back'                         => '概要',
     'everything'                           => '全て',
