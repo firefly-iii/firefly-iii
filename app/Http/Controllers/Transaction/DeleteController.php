@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -111,9 +115,31 @@ class DeleteController extends Controller
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         session()->flash('success', (string) trans('firefly.deleted_' . strtolower($objectType), ['description' => $group->title ?? $journal->description]));
 
+        // grab asset account(s) from group:
+        $accounts = [];
+        /** @var TransactionJournal $journal */
+        foreach($group->transactionJournals as $journal) {
+            /** @var Transaction $transaction */
+            foreach($journal->transactions as $transaction) {
+                $type = $transaction->account->accountType->type;
+                // if is valid liability, trigger event!
+                if(in_array($type, config('firefly.valid_liabilities'))) {
+                    $accounts[] = $transaction->account;
+                }
+            }
+        }
+
         $this->repository->destroy($group);
 
         app('preferences')->mark();
+
+
+        /** @var Account $account */
+        foreach($accounts as $account) {
+            Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
+            event(new UpdatedAccount($account));
+        }
+
 
         return redirect($this->getPreviousUrl('transactions.delete.url'));
     }

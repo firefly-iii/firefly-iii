@@ -25,11 +25,16 @@ namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Events\DestroyedTransactionGroup;
+use FireflyIII\Events\UpdatedAccount;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Log;
 
 /**
  * Class DestroyController
@@ -37,6 +42,7 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     private JournalRepositoryInterface $repository;
+    private TransactionGroupRepository $groupRepository;
 
     /**
      * TransactionController constructor.
@@ -53,6 +59,9 @@ class DestroyController extends Controller
 
                 $this->repository = app(JournalRepositoryInterface::class);
                 $this->repository->setUser($admin);
+
+                $this->groupRepository = app(TransactionGroupRepository::class);
+                $this->groupRepository->setUser($admin);
 
                 return $next($request);
             }
@@ -72,10 +81,31 @@ class DestroyController extends Controller
      */
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
-        $this->repository->destroyGroup($transactionGroup);
+        // grab asset account(s) from group:
+        $accounts = [];
+        /** @var TransactionJournal $journal */
+        foreach($transactionGroup->transactionJournals as $journal) {
+            /** @var Transaction $transaction */
+            foreach($journal->transactions as $transaction) {
+                $type = $transaction->account->accountType->type;
+                // if is valid liability, trigger event!
+                if(in_array($type, config('firefly.valid_liabilities'))) {
+                    $accounts[] = $transaction->account;
+                }
+            }
+        }
+
+        $this->groupRepository->destroy($transactionGroup);
+
         // trigger just after destruction
         event(new DestroyedTransactionGroup($transactionGroup));
         app('preferences')->mark();
+
+        /** @var Account $account */
+        foreach($accounts as $account) {
+            Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
+            event(new UpdatedAccount($account));
+        }
 
         return response()->json([], 204);
     }
