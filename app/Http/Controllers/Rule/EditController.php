@@ -190,7 +190,7 @@ class EditController extends Controller
     {
         $data = $request->getRuleData();
 
-        //$this->ruleRepos->update($rule, $data);
+        $this->ruleRepos->update($rule, $data);
 
         session()->flash('success', (string) trans('firefly.updated_rule', ['title' => $rule->title]));
         app('preferences')->mark();
