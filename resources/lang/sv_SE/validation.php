@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Namnet på spargrisen måste vara unikt.',
     'unique_object_group'            => 'Gruppnamnet måste vara unikt',
     'starts_with'                    => 'Värdet måste börja med :values.',
-    'unique_webhook'                 => 'Du har redan en webhook med dessa värden.',
-    'unique_existing_webhook'        => 'Du har redan en annan webhook med dessa värden.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Båda kontona måste vara samma kontotyp',
     'same_account_currency'          => 'Båda kontona måste ha samma valutainställning',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
     'need_id_in_edit'           => 'Varje delad transaktion kräver transaction_journal_id (giltigt ID eller 0).',
 
-    'ob_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
-    'lc_source_need_data' => 'Behöver få ett giltigt källkontonummer för att fortsätta.',
-    'ob_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
-    'ob_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
+    'ob_source_need_data'           => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
+    'lc_source_need_data'           => 'Behöver få ett giltigt källkontonummer för att fortsätta.',
+    'ob_dest_need_data'             => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
+    'ob_dest_bad_data'              => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Det går inte att använda detta konto som källkonto.',
     'generic_invalid_destination' => 'Det går inte att använda detta konto som mottagarkonto.',

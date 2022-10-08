@@ -125,6 +125,7 @@ return [
     'start'                       => '范围起始',
     'end'                         => '范围结束',
     'delete_account'              => '删除账户“:name”',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => '删除账单“:name”',
     'delete_budget'               => '删除预算“:name”',
     'delete_category'             => '删除分类“:name”',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => '您确定要删除组“:title”吗？',
     'ruleGroup_areYouSure'        => '您确定要删除规则组“:title”吗？',
     'budget_areYouSure'           => '您确定要删除预算“:name”吗？',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => '您确定要删除分类“:name”吗？',
     'recurring_areYouSure'        => '您确定要删除定期交易“:title”吗？',
     'currency_areYouSure'         => '您确定要删除货币“:name”吗？',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => '已提交',
     'key'                         => '按键',
     'value'                       => '记录内容',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

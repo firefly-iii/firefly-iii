@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Testovacia správa z vašej inštalácie Firefly III',
     'admin_test_body'                         => 'Toto je testovacia správa z vašej inštancie Firefly III. Bola odoslaná na :email.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Nové prihlásenie do Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III zachytil nové prihlásenie do Vášho účtu z neznámej IP adresy. Ak ste sa tejto adresy nikdy neprihlásili, alebo to bolo pred viac, než 6 mesiacmi, Firefly III Vás na to upozorní.',
     'new_ip_warning'                          => 'Ak túto poznáte túto IP adresu alebo prihlásenie, ignorujte túto správu. Ak ste sa neprihlásili, alebo netušíte, o čo ide, overte si bezpečnosť Vášho hesla, zmeňte ho, a odhláste sa zo všetkých sedení. Môžete tak spraviť na stránke svojho profilu. Máte už zapnuté 2FA overenie, však? Buďte v bezpečí!',
     'ip_address'                              => 'IP adresa',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Vitajte vo Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'V pravom hornom rohu každej stánky je ikonka pomocníka. Ak potrebujete pomoc, kliknite na ňu!',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Obnova hesla:',
     'registered_doc_link'                     => 'Dokumentácia:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Vaša e-mailová adresa Firefly III bola zmenená',

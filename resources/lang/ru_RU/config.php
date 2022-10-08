@@ -30,24 +30,25 @@ return [
 
     //'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js'  => 'D MMM YYYY',
-    'month_and_day_fns'        => 'MMMM d, y',
+    'month_and_day_fns'        => 'MMMM д, г',
     'month_and_day_js'         => 'Do MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'    => 'dddd MMMM Do, YYYY',
+    'month_and_date_day_js'    => 'Do MMMM YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
     'month_and_day_no_year_js' => 'MMMM Do',
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'Do MMMM YYYY, @ HH:mm:ss',
+    'date_time_fns'            => 'MMMM do, yyyy @ HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'D MMMM YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
     'week_in_year_js'          => '[Week] w, YYYY',
-    'week_in_year_fns'         => "'Week' w, yyyy",
+    'week_in_year_fns'         => "'Неделя' ww, yyyy",
 
     //'year'                    => '%Y',
     'year_js'                  => 'YYYY',

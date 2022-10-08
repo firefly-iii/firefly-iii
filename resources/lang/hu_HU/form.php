@@ -125,6 +125,7 @@ return [
     'start'                       => 'Tartomány kezdete',
     'end'                         => 'Tartomány vége',
     'delete_account'              => '":name" bankszámla törlése',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => '":name" számla törlése',
     'delete_budget'               => '":name" költségkeret törlése',
     'delete_category'             => '":name" kategória törlése',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Biztosan törölni szeretné a ":title" csoportot?',
     'ruleGroup_areYouSure'        => '":title" szabálycsoportot biztosan törölhető?',
     'budget_areYouSure'           => '":name" költségkeretet biztosan törölhető?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => '":name" kategória biztosan törölhető?',
     'recurring_areYouSure'        => ':title ismétlődő tranzakció biztosan törölhető?',
     'currency_areYouSure'         => '":name" pénznem biztosan törölhető?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Elküldött',
     'key'                         => 'Kulcs',
     'value'                       => 'Bejegyzés tartalma',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

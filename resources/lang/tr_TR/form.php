@@ -125,6 +125,7 @@ return [
     'start'                       => 'Start of range',
     'end'                         => 'End of range',
     'delete_account'              => '":name" adlı hesabı sil',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Faturayı sil ":name"',
     'delete_budget'               => '":name" bütçesini sil',
     'delete_category'             => '":name" kategorisini sil',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => '":title" başlıklı kural grubunu silmek istediğinizden emin misiniz?',
     'budget_areYouSure'           => '":name" isimli bütçeyi silmek istediğinizden emin misiniz?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => '":name" isimli kategoriyi silmek istediğinizden emin misiniz?',
     'recurring_areYouSure'        => 'Are you sure you want to delete the recurring transaction titled ":title"?',
     'currency_areYouSure'         => '":name" isimli para birimini silmek istediğinizden emin misiniz?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Submitted',
     'key'                         => 'Key',
     'value'                       => 'Content of record',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

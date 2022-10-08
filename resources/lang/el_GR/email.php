@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Ένα δοκιμαστικό μήνυμα από την εγκατάσταση του Firefly III',
     'admin_test_body'                         => 'Αυτό είναι ένα δοκιμαστικό μήνυμα από την εγκατάσταση του Firefly III. Αποστάλθηκε στο :email.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Νέα σύνδεση χρήστη στο Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Το Firefly III εντόπισε μια νέα σύνδεση στο λογαριασμό σας από μια άγνωστη διεύθυνση IP. Αν δεν συνδεθήκατε ποτέ από την παρακάτω διεύθυνση IP ή έγινε πριν από περισσότερο από έξι μήνες, το Firefly III θα σας προειδοποιήσει.',
     'new_ip_warning'                          => 'Αν αναγνωρίζετε αυτή τη διεύθυνση IP ή τη σύνδεση χρήστη, μπορείτε να αγνοήσετε αυτό το μήνυμα. Αν δεν συνδεθήκατε, αν δεν έχετε ιδέα για το τι είναι αυτό, επαληθεύστε ένα ασφαλή κωδικό πρόσβασης, αλλάξτε τον και αποσυνδεθείτε από όλες τις άλλες συνεδρίες. Για να το κάνετε αυτό, πηγαίνετε στη σελίδα του προφίλ σας. Φυσικά έχετε ήδη ενεργοποιημένο το 2FactorAuthentication, έτσι? Μείνετε ασφαλείς!',
     'ip_address'                              => 'Διεύθυνση IP',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Καλωσήρθατε στο Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'Υπάρχει ένα εικονίδιο βοήθειας στην επάνω δεξιά γωνία κάθε σελίδας. Αν χρειάζεστε βοήθεια, κάντε κλικ σε αυτό!',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Επαναφορά κωδικού πρόσβασης:',
     'registered_doc_link'                     => 'Τεκμηρίωση:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Η διεύθυνση email σας στο Firefly III έχει αλλάξει',

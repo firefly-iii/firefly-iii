@@ -125,6 +125,7 @@ return [
     'start'                       => 'Începutul intervalului',
     'end'                         => 'Sfârșit de interval',
     'delete_account'              => 'Șterge cont ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Șterge factură ":name"',
     'delete_budget'               => 'Șterge buget ":name"',
     'delete_category'             => 'Șterge categorie ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Sigur doriți să ștergeți grupul ":title"?',
     'ruleGroup_areYouSure'        => 'Sunteți sigur că doriți să ștergeți grupul de reguli ":title"?',
     'budget_areYouSure'           => 'Sunteți sigur că doriți să ștergeți bugetul ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Sunteți sigur că doriți să ștergeți categoria ":name"?',
     'recurring_areYouSure'        => 'Sunteți sigur că doriți să ștergeți tranzacția recurentă ":title"?',
     'currency_areYouSure'         => 'Sunteți sigur că doriți să ștergeți moneda ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Trimis',
     'key'                         => 'Cheie',
     'value'                       => 'Conținutul înregistrării',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

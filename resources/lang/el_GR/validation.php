@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Το όνομα του κουμπαρά πρέπει να είναι μοναδικό.',
     'unique_object_group'            => 'Το όνομα της ομάδας πρέπει να είναι μοναδικό',
     'starts_with'                    => 'Η τιμή πρέπει να ξεκινά με :values.',
-    'unique_webhook'                 => 'Έχετε ήδη ένα webhook με αυτές τις τιμές.',
-    'unique_existing_webhook'        => 'Έχετε ήδη ένα άλλο webhook με αυτές τις τιμές.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Και οι δύο λογαριασμοί πρέπει να έχουν τον ίδιο τύπο λογαριασμού',
     'same_account_currency'          => 'Και οι δύο λογαριασμοί πρέπει να έχουν την ίδια ρύθμιση νομίσματος',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Δεν ήταν δυνατή η εύρεση ενός έγκυρου λογαριασμού προορισμού κατά την αναζήτηση του αναγνωριστικού ID ":id" ή του ονόματος ":name".',
     'need_id_in_edit'           => 'Κάθε διαχωρισμός πρέπει να έχει transaction_journal_id (είτε έγκυρο αναγνωριστικό ID ή 0).',
 
-    'ob_source_need_data' => 'Πρέπει να λάβετε ένα έγκυρο αναγνωριστικό λογαριασμού προέλευσης και/ή ένα έγκυρο όνομα λογαριασμού προέλευσης για να συνεχίσετε.',
-    'lc_source_need_data' => 'Πρέπει να λάβετε ένα έγκυρο ID λογαριασμού προέλευσης για να συνεχίσετε.',
-    'ob_dest_need_data'   => 'Πρέπει να λάβετε ένα έγκυρο αναγνωριστικό ID λογαριασμού προορισμού και/ή ένα έγκυρο όνομα λογαριασμού προορισμού για να συνεχίσετε.',
-    'ob_dest_bad_data'    => 'Δεν ήταν δυνατή η εύρεση ενός έγκυρου λογαριασμού προορισμού κατά την αναζήτηση του αναγνωριστικού ID ":id" ή του ονόματος ":name".',
+    'ob_source_need_data'           => 'Πρέπει να λάβετε ένα έγκυρο αναγνωριστικό λογαριασμού προέλευσης και/ή ένα έγκυρο όνομα λογαριασμού προέλευσης για να συνεχίσετε.',
+    'lc_source_need_data'           => 'Πρέπει να λάβετε ένα έγκυρο ID λογαριασμού προέλευσης για να συνεχίσετε.',
+    'ob_dest_need_data'             => 'Πρέπει να λάβετε ένα έγκυρο αναγνωριστικό ID λογαριασμού προορισμού και/ή ένα έγκυρο όνομα λογαριασμού προορισμού για να συνεχίσετε.',
+    'ob_dest_bad_data'              => 'Δεν ήταν δυνατή η εύρεση ενός έγκυρου λογαριασμού προορισμού κατά την αναζήτηση του αναγνωριστικού ID ":id" ή του ονόματος ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Δεν μπορείτε να χρησιμοποιήσετε αυτό το λογαριασμό ως λογαριασμό προέλευσης.',
     'generic_invalid_destination' => 'Δεν μπορείτε να χρησιμοποιήσετε αυτό το λογαριασμό ως λογαριασμό προορισμού.',

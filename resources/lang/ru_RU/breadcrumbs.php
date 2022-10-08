@@ -24,13 +24,14 @@ declare(strict_types=1);
 
 return [
     'home'                   => 'Главная',
-    'budgets'                => 'Budgets',
-    'subscriptions'          => 'Subscriptions',
-    'transactions'           => 'Transactions',
-    'title_expenses'         => 'Expenses',
-    'title_withdrawal'       => 'Expenses',
-    'title_revenue'          => 'Revenue / income',
-    'title_deposit'          => 'Revenue / income',
+    'budgets'                => 'массив[\'бюджеты\']',
+    'subscriptions'          => 'массив[\'подписки\']',
+    'transactions'           => 'массив[\'транзакции\']',
+    'title_expenses'         => 'массив[\'название_расходы\']
+',
+    'title_withdrawal'       => 'массив[\'название_снятие\']',
+    'title_revenue'          => 'массив[\'название_доход\']',
+    'title_deposit'          => 'массив[\'название_депозит\']',
     'title_transfer'         => 'Перевод',
     'title_transfers'        => 'Переводы',
     'edit_currency'          => 'Редактирование валюты ":name"',
@@ -70,9 +71,10 @@ return [
     'edit_object_group'      => 'Редактировать группу ":title"',
     'delete_object_group'    => 'Удалить группу ":title"',
     'logout_others'          => 'Завершить другие сессии',
-    'asset_accounts'         => 'Asset accounts',
-    'expense_accounts'       => 'Expense accounts',
-    'revenue_accounts'       => 'Revenue accounts',
-    'liabilities_accounts'   => 'Liabilities',
-    'placeholder'            => '[Placeholder]',
+    'asset_accounts'         => 'массив [\'актив_учетные записи\']
+',
+    'expense_accounts'       => 'массив [\'расход_счетов\']',
+    'revenue_accounts'       => 'массив[\'доход_счетов\']',
+    'liabilities_accounts'   => 'массив [\'пассивные_счета\']',
+    'placeholder'            => 'Не стесняйтесь держать этот английский.',
 ];

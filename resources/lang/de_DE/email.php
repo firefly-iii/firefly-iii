@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Eine Testmeldung von Ihrer Firefly III Installation',
     'admin_test_body'                         => 'Dies ist eine Testnachricht von Ihrer Firefly III-Instanz. Sie wurde an :email gesendet.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Neue Anmeldung bei Firefly III',
+    'slack_login_from_new_ip'                 => 'Neue Firefly III Anmeldung von IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III hat eine neue Anmeldung auf Ihrem Konto von einer unbekannten IP-Adresse erkannt. Wenn Sie sich noch nie von der unten angegebenen IP-Adresse aus angemeldet haben oder dies mehr als sechs Monate her ist, warnt Sie Firefly III.',
     'new_ip_warning'                          => 'Wenn Sie diese IP-Adresse oder diese Anmeldung erkennen, können Sie diese Meldung ignorieren. Wenn Sie sich nicht angemeldet haben, oder wenn Sie keine Ahnung haben, worum es hier geht, überprüfen Sie die Sicherheit Ihres Passworts, ändern Sie es und melden Sie alle anderen Sitzungen ab. Rufen Sie dazu Ihre Profilseite auf. Es wird empfohlen die Zwei-Faktor-Authentifizierung (2FA) zu aktivieren. Bleiben Sie geschützt!',
     'ip_address'                              => 'IP-Adresse',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Willkommen bei Firefly III!',
+    'registered_subject_admin'                => 'Ein neuer User hat sich registriert',
+    'admin_new_user_registered'               => 'Ein neuer Benutzer hat sich registriert. Der Benutzer **:email** hat die Benutzer-ID #:id erhalten.',
     'registered_welcome'                      => 'Willkommen bei [Firefly III](:address). Ihre Registrierung ist abgeschlossen und diese E-Mail erhalten Sie zur Bestätigung. Hurra!',
     'registered_pw'                           => 'Wenn Sie Ihr Passwort bereits vergessen haben, setzen Sie es bitte mit dem [Tool zum Zurücksetzen des Passworts](:address/password/reset) zurück.',
     'registered_help'                         => 'Es gibt ein Hilfe-Icon in der oberen rechten Ecke jeder Seite. Wenn Sie Hilfe benötigen, klicken Sie dort drauf!',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Passwort zurücksetzen:',
     'registered_doc_link'                     => 'Dokumentation:',
+
+    // new version
+    'new_version_email_subject'               => 'Eine neue Firefly III-Version ist verfügbar',
 
     // email change
     'email_change_subject'                    => 'Ihre Firefly III E-Mail-Adresse hat sich geändert',

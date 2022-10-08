@@ -125,6 +125,7 @@ return [
     'start'                       => 'Awal rentang',
     'end'                         => 'Akhir rentang',
     'delete_account'              => 'Delete account ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Hapus tagihan ":name"',
     'delete_budget'               => 'Hapus anggaran ":name"',
     'delete_category'             => 'Hapus kategori ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Apakah anda yakin ingin menghapus grup yang berjudul ":title"?',
     'ruleGroup_areYouSure'        => 'Yakin ingin menghapus grup aturan yang berjudul ":title"?',
     'budget_areYouSure'           => 'Yakin ingin menghapus anggaran dengan nama ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Yakin ingin menghapus kategori yang bernama ":name"?',
     'recurring_areYouSure'        => 'Apakah anda yakin ingin menghapus transaksi berulang berjudul ":title"?',
     'currency_areYouSure'         => 'Yakin ingin menghapus mata uang dengan nama ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Sudah disimpan',
     'key'                         => 'Kunci',
     'value'                       => 'Isi konten',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

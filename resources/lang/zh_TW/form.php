@@ -125,6 +125,7 @@ return [
     'start'                       => 'Start of range',
     'end'                         => 'End of range',
     'delete_account'              => '刪除帳戶 ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => '刪除帳單 ":name"',
     'delete_budget'               => '刪除預算 ":name"',
     'delete_category'             => '刪除分類 ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => '你確定你想要刪除名為 ":title" 的規則群組?',
     'budget_areYouSure'           => '你確定你想要刪除名為 ":name" 的預算?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => '你確定你想要刪除名為 ":name" 的分類?',
     'recurring_areYouSure'        => '你確定你想要刪除名為 ":title" 的定期交易?',
     'currency_areYouSure'         => '你確定你想要刪除名為 ":name" 的貨幣?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Submitted',
     'key'                         => 'Key',
     'value'                       => 'Content of record',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

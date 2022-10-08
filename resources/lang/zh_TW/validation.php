@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => '小豬撲滿的名稱必須是獨一無二的。',
     'unique_object_group'            => 'The group name must be unique',
     'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
     'need_id_in_edit'           => '每筆拆分須有 transaction_journal_id (為有效的 ID 或是 0)。',
 
-    'ob_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
-    'ob_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+    'ob_source_need_data'           => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
+    'ob_dest_bad_data'              => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'You can\'t use this account as the source account.',
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
