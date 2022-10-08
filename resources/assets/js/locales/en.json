@@ -140,7 +140,9 @@
         "active": "Is active?",
         "trigger": "Trigger",
         "response": "Response",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "url": "URL",
+        "secret": "Secret"
     },
     "config": {
         "html_language": "en",

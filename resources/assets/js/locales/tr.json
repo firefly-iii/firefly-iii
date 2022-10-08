@@ -86,11 +86,11 @@
         "multi_account_warning_withdrawal": "Sonraki b\u00f6l\u00fcnmelerin kaynak hesab\u0131n\u0131n, geri \u00e7ekilmenin ilk b\u00f6l\u00fcnmesinde tan\u0131mlanan herhangi bir \u015fey taraf\u0131ndan reddedilece\u011fini unutmay\u0131n.",
         "multi_account_warning_deposit": "Sonraki b\u00f6l\u00fcnmelerin hedef hesab\u0131n\u0131n, mevduat\u0131n ilk b\u00f6l\u00fcnmesinde tan\u0131mlanan herhangi bir \u015fey taraf\u0131ndan iptal edilece\u011fini unutmay\u0131n.",
         "multi_account_warning_transfer": "Sonraki b\u00f6l\u00fcnmelerin kaynak + hedef hesab\u0131n\u0131n, aktar\u0131m\u0131n ilk b\u00f6l\u00fcnmesinde tan\u0131mlanan her \u015fey taraf\u0131ndan ge\u00e7ersiz k\u0131l\u0131naca\u011f\u0131n\u0131 unutmay\u0131n.",
-        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
-        "webhook_response_TRANSACTIONS": "Account details",
-        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
+        "webhook_response_TRANSACTIONS": "Transaction details",
+        "webhook_response_ACCOUNTS": "Account details",
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "Eylemler",
@@ -140,7 +140,9 @@
         "active": "Aktif mi?",
         "trigger": "Trigger",
         "response": "Response",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "url": "URL",
+        "secret": "Secret"
     },
     "config": {
         "html_language": "tr",

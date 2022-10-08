@@ -86,11 +86,11 @@
         "multi_account_warning_withdrawal": "\u8bf7\u6ce8\u610f\uff0c\u540e\u7eed\u62c6\u5206\u7684\u6765\u6e90\u8d26\u6237\u5c06\u4f1a\u88ab\u652f\u51fa\u7684\u9996\u7b14\u62c6\u5206\u7684\u914d\u7f6e\u6240\u8986\u76d6\u3002",
         "multi_account_warning_deposit": "\u8bf7\u6ce8\u610f\uff0c\u540e\u7eed\u62c6\u5206\u7684\u76ee\u6807\u8d26\u6237\u5c06\u4f1a\u88ab\u6536\u5165\u7684\u9996\u7b14\u62c6\u5206\u7684\u914d\u7f6e\u6240\u8986\u76d6\u3002",
         "multi_account_warning_transfer": "\u8bf7\u6ce8\u610f\uff0c\u540e\u7eed\u62c6\u5206\u7684\u6765\u6e90\u548c\u76ee\u6807\u8d26\u6237\u5c06\u4f1a\u88ab\u8f6c\u8d26\u7684\u9996\u7b14\u62c6\u5206\u7684\u914d\u7f6e\u6240\u8986\u76d6\u3002",
-        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
-        "webhook_response_TRANSACTIONS": "Account details",
-        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
+        "webhook_response_TRANSACTIONS": "Transaction details",
+        "webhook_response_ACCOUNTS": "Account details",
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "\u64cd\u4f5c",
@@ -140,7 +140,9 @@
         "active": "\u662f\u5426\u542f\u7528\uff1f",
         "trigger": "Trigger",
         "response": "Response",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "url": "URL",
+        "secret": "Secret"
     },
     "config": {
         "html_language": "zh-cn",

@@ -86,11 +86,11 @@
         "multi_account_warning_withdrawal": "Tenha em mente que a conta de origem das subsequentes divis\u00f5es ser\u00e1 sobrescrita pelo que estiver definido na primeira divis\u00e3o da sa\u00edda.",
         "multi_account_warning_deposit": "Tenha em mente que a conta de destino das divis\u00f5es subsequentes ser\u00e1 sobrescrita pelo que estiver definido na primeira divis\u00e3o da entrada.",
         "multi_account_warning_transfer": "Tenha em mente que a conta de origem + de destino das divis\u00f5es subsequentes ser\u00e1 sobrescrita pelo que for definido na primeira divis\u00e3o da transfer\u00eancia.",
-        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
-        "webhook_response_TRANSACTIONS": "Account details",
-        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
+        "webhook_response_TRANSACTIONS": "Transaction details",
+        "webhook_response_ACCOUNTS": "Account details",
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "A\u00e7\u00f5es",
@@ -140,7 +140,9 @@
         "active": "Est\u00e1 ativo?",
         "trigger": "Trigger",
         "response": "Response",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "url": "URL",
+        "secret": "Secret"
     },
     "config": {
         "html_language": "pt-br",

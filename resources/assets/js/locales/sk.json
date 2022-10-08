@@ -86,11 +86,11 @@
         "multi_account_warning_withdrawal": "Majte na pam\u00e4ti, \u017ee zdrojov\u00fd bankov\u00fd \u00fa\u010det n\u00e1sledn\u00fdch roz\u00fa\u010dtovan\u00ed bude prep\u00edsan\u00fd t\u00fdm, \u010do je definovan\u00e9 v prvom rozdelen\u00ed v\u00fdberu.",
         "multi_account_warning_deposit": "Majte na pam\u00e4ti, \u017ee zdrojov\u00fd bankov\u00fd \u00fa\u010det n\u00e1sledn\u00fdch roz\u00fa\u010dtovan\u00ed bude prep\u00edsan\u00fd t\u00fdm, \u010do je definovan\u00e9 v prvom roz\u00fa\u010dtovan\u00ed vkladu.",
         "multi_account_warning_transfer": "Majte na pam\u00e4ti, \u017ee zdrojov\u00fd a cie\u013eov\u00fd bankov\u00fd \u00fa\u010det n\u00e1sledn\u00fdch roz\u00fa\u010dtovan\u00ed bude prep\u00edsan\u00fd t\u00fdm, \u010do je definovan\u00e9 v prvom roz\u00fa\u010dtovan\u00ed prevodu.",
-        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
-        "webhook_response_TRANSACTIONS": "Account details",
-        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
+        "webhook_response_TRANSACTIONS": "Transaction details",
+        "webhook_response_ACCOUNTS": "Account details",
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "Akcie",
@@ -140,7 +140,9 @@
         "active": "Akt\u00edvne?",
         "trigger": "Trigger",
         "response": "Response",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "url": "URL",
+        "secret": "Secret"
     },
     "config": {
         "html_language": "sk",

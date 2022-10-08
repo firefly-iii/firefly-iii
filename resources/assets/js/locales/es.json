@@ -86,11 +86,11 @@
         "multi_account_warning_withdrawal": "Tenga en cuenta que la cuenta de origen de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del retiro.",
         "multi_account_warning_deposit": "Tenga en cuenta que la cuenta de destino de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del retiro.",
         "multi_account_warning_transfer": "Tenga en cuenta que la cuenta de origen + destino de divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n de la transferencia.",
-        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
-        "webhook_response_TRANSACTIONS": "Account details",
-        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
+        "webhook_response_TRANSACTIONS": "Transaction details",
+        "webhook_response_ACCOUNTS": "Account details",
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "Acciones",
@@ -140,7 +140,9 @@
         "active": "\u00bfEst\u00e1 Activo?",
         "trigger": "Trigger",
         "response": "Response",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "url": "URL",
+        "secret": "Secret"
     },
     "config": {
         "html_language": "es",

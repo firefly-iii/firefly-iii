@@ -86,11 +86,11 @@
         "multi_account_warning_withdrawal": "\u7d9a\u304f\u5206\u5272\u306e\u51fa\u91d1\u5143\u53e3\u5ea7\u306f\u3001\u51fa\u91d1\u306e\u6700\u521d\u306e\u5206\u5272\u306e\u5b9a\u7fa9\u306b\u3088\u3063\u3066\u8986\u3055\u308c\u308b\u3053\u3068\u306b\u6ce8\u610f\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
         "multi_account_warning_deposit": "\u7d9a\u304f\u5206\u5272\u306e\u9001\u91d1\u5148\u53e3\u5ea7\u306f\u3001\u9001\u91d1\u306e\u6700\u521d\u306e\u5206\u5272\u306e\u5b9a\u7fa9\u306b\u3088\u3063\u3066\u8986\u3055\u308c\u308b\u3053\u3068\u306b\u6ce8\u610f\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
         "multi_account_warning_transfer": "\u7d9a\u304f\u5206\u5272\u306e\u9001\u91d1\u5148\u53e3\u5ea7\u3068\u51fa\u91d1\u5143\u53e3\u5ea7\u306f\u3001\u9001\u91d1\u306e\u6700\u521d\u306e\u5206\u5272\u306e\u5b9a\u7fa9\u306b\u3088\u3063\u3066\u8986\u3055\u308c\u308b\u3053\u3068\u306b\u6ce8\u610f\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
-        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
-        "webhook_response_TRANSACTIONS": "Account details",
-        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
+        "webhook_response_TRANSACTIONS": "Transaction details",
+        "webhook_response_ACCOUNTS": "Account details",
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "\u64cd\u4f5c",
@@ -140,7 +140,9 @@
         "active": "\u6709\u52b9",
         "trigger": "Trigger",
         "response": "Response",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "url": "URL",
+        "secret": "Secret"
     },
     "config": {
         "html_language": "ja",

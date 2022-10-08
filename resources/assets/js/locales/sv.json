@@ -86,11 +86,11 @@
         "multi_account_warning_withdrawal": "T\u00e4nk p\u00e5 att k\u00e4llkontot f\u00f6r efterf\u00f6ljande uppdelningar kommer att upph\u00e4vas av vad som \u00e4n definieras i den f\u00f6rsta uppdelningen av uttaget.",
         "multi_account_warning_deposit": "T\u00e4nk p\u00e5 att destinationskontot f\u00f6r efterf\u00f6ljande uppdelningar kommer att styras av vad som \u00e4n definieras i den f\u00f6rsta uppdelningen av ins\u00e4ttningen.",
         "multi_account_warning_transfer": "T\u00e4nk p\u00e5 att k\u00e4ll + destinationskonto av efterf\u00f6ljande delningar kommer att styras av vad som definieras i den f\u00f6rsta uppdelningen av \u00f6verf\u00f6ringen.",
-        "webhook_trigger_STORE_TRANSACTION": "On transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "On transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "On transaction delete",
-        "webhook_response_TRANSACTIONS": "Account details",
-        "webhook_response_ACCOUNTS": "Transaction details",
+        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
+        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
+        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
+        "webhook_response_TRANSACTIONS": "Transaction details",
+        "webhook_response_ACCOUNTS": "Account details",
         "webhook_response_none_NONE": "No details",
         "webhook_delivery_JSON": "JSON",
         "actions": "\u00c5tg\u00e4rder",
@@ -140,7 +140,9 @@
         "active": "\u00c4r aktiv?",
         "trigger": "Trigger",
         "response": "Response",
-        "delivery": "Delivery"
+        "delivery": "Delivery",
+        "url": "URL",
+        "secret": "Secret"
     },
     "config": {
         "html_language": "sv",
