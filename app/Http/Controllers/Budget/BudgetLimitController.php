@@ -157,8 +157,8 @@ class BudgetLimitController extends Controller
             // return empty=ish array:
             return response()->json([]);
         }
-        if ((int) $amount > 16777216) {
-            $amount = '16777216';
+        if ((int) $amount > 268435456) {
+            $amount = '268435456';
         }
 
         if (null !== $limit) {
@@ -223,8 +223,8 @@ class BudgetLimitController extends Controller
             ];
             return response()->json($array);
         }
-        if ((int) $amount > 16777216) { // 16 million
-            $amount = '16777216';
+        if ((int) $amount > 268435456) { // 268 million
+            $amount = '268435456';
         }
 
         $limit = $this->blRepository->update($budgetLimit, ['amount' => $amount]);
