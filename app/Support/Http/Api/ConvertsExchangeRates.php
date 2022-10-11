@@ -121,6 +121,7 @@ trait ConvertsExchangeRates
             $carbon                = Carbon::createFromFormat(DateTimeInterface::ATOM, $date);
             $rate                  = $this->getRate($currency, $native, $carbon);
             $rate                  = '0' === $rate ? '1' : $rate;
+            Log::debug(sprintf('bcmul("%s", "%s")', (string) $entry, $rate));
             $set['entries'][$date] = (float) bcmul((string) $entry, $rate);
         }
         return $set;
