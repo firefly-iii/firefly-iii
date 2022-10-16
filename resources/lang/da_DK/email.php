@@ -34,16 +34,16 @@ return [
     'admin_test_body'                         => 'Dette er en test besked fra din Firefly III installation. Den blev sendt til :email.',
 
     // invite
-    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_subject'              => 'En invitation er blevet oprettet',
     'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invite_user_subject'                     => 'Du er blevet inviteret til at oprette en Firefly III-konto.',
     'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
     'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
     'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
 
     // new IP
     'login_from_new_ip'                       => 'Nyt login på Firefly III',
-    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
+    'slack_login_from_new_ip'                 => 'Nyt Firefly III-login fra IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III har registreret et nyt login på din konto fra en ukendt IP-adresse. Hvis du ikke tidligere har været logget ind fra IP-adressen herunder, eller dit sidste login herfra er sket for mere end 6 måneder siden - vil Firefly III advare dig.',
     'new_ip_warning'                          => 'Hvis du kan genkende IP-adressen eller login-forsøget, kan du trykt ignorere denne besked. Hvis du ikke har forsøgt at logge ind - eller ikke ved hvad det her handler om bør du verificere din password sikkerhed. Skift password og log ud af alle sessioner. For at gøre dette kan du gå til din profil side. Du har selvfølgeligt allerede 2FA slået til, ikke? Stay safe!',
     'ip_address'                              => 'IP-adresse',

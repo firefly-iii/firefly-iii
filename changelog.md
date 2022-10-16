@@ -2,10 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.7.13 - 2022-10-09
+## 5.7.13 - 2022-10-17
 
 ### Added
-- [Issue 6502](https://github.com/firefly-iii/firefly-iii/issues/6502) A few students from @D7032E-Group-6 added MTD and YTD. 
+- [Issue 6502](https://github.com/firefly-iii/firefly-iii/issues/6502) A few students from @D7032E-Group-6 added MTD and YTD, thanks!
 
 ### Fixed
 - [Issue 6461](https://github.com/firefly-iii/firefly-iii/issues/6461) Broken link in `/public` directory warning.
@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 6471](https://github.com/firefly-iii/firefly-iii/issues/6471) Fix float conversion
 - [Issue 6510](https://github.com/firefly-iii/firefly-iii/issues/6510) Destroy transaction now also triggers liability recalculation.
 - Amount check for budget amounts was too low.
-- Some other small fixes...
+- Some other small fixes
 
 ### API
 - [Issue 6481](https://github.com/firefly-iii/firefly-iii/issues/6481) Mixup in API validation, fixed by @janw
