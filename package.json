@@ -23,5 +23,8 @@
         "vue-i18n": "^8",
         "vue-loader": "^15",
         "vue-template-compiler": "^2.7"
+    },
+    "dependencies": {
+        "stream-browserify": "^3.0.0"
     }
 }
