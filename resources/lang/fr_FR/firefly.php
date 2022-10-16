@@ -1336,7 +1336,7 @@ return [
 
     // profile:
     'purge_data_title'                          => 'Purger des données de Firefly III',
-    'purge_data_expl'                           => '« Purge» signifie « supprimer ce qui est déjà supprimé». Dans des circonstances normales, Firefly III ne supprime rien définitivement. Il ne fait que le cacher. Cela peut être ennuyeux lorsque vous importez des données d\'autres sources, car les transactions supprimées seront toujours reconnues comme doublons possibles. Le bouton ci-dessous supprime tous ces enregistrements précédemment "supprimés".',
+    'purge_data_expl'                           => '"Purging" means "deleting that which is already deleted". In normal circumstances, Firefly III deletes nothing permanently. It just hides it. The button below deletes all of these previously "deleted" records FOREVER.',
     'delete_stuff_header'                       => 'Supprimer et purger les données',
     'purge_all_data'                            => 'Purger tous les enregistrements supprimés',
     'purge_data'                                => 'Purger les données',
