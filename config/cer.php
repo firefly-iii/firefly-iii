@@ -1,7 +1,7 @@
 <?php
-declare(strict_types=1);
+
 /*
- * default_cer.php
+ * cer.php
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,6 +20,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 return [
 
