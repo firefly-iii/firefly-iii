@@ -50,6 +50,7 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use League\Csv\CannotInsertRecord;
@@ -61,6 +62,8 @@ use League\Csv\Writer;
  */
 class ExportDataGenerator
 {
+    use ConvertsDataTypes;
+
     private const ADD_RECORD_ERR = 'Could not add record to set: %s';
     private const EXPORT_ERR     = 'Could not export to string: %s';
     private Collection $accounts;
@@ -698,7 +701,7 @@ class ExportDataGenerator
                 $journal['budget_name'],
                 $journal['bill_name'],
                 $this->mergeTags($journal['tags']),
-                $journal['notes'],
+                $this->clearString($journal['notes'], true),
 
                 // export also the optional fields (ALL)
 
