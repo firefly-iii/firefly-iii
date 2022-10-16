@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Một thông báo kiểm tra từ bản cài đặt Firefly III của bạn',
     'admin_test_body'                         => 'Đây là một thông báo thử nghiệm từ Firefly III của bạn. Nó đã được gửi đến :email.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Đăng nhập mới trên Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III đã phát hiện một thông tin đăng nhập mới vào tài khoản của bạn từ một địa chỉ IP không xác định. Nếu bạn chưa bao giờ đăng nhập từ địa chỉ IP bên dưới hoặc đã hơn sáu tháng trước, Firefly III sẽ cảnh báo bạn.',
     'new_ip_warning'                          => 'Nếu bạn nhận ra địa chỉ IP này hoặc thông tin đăng nhập, bạn có thể bỏ qua thông báo này. Nếu bạn không đăng nhập, nếu bạn không biết điều này là gì, hãy xác minh bảo mật mật khẩu của bạn, thay đổi mật khẩu và đăng xuất tất cả các phiên khác. Để làm điều này, hãy truy cập trang hồ sơ của bạn.',
     'ip_address'                              => 'Địa chỉ IP',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Chào mừng đến với Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'Có một biểu tượng trợ giúp ở góc trên bên phải của mỗi trang. Nếu bạn cần giúp đỡ, bấm vào nó!',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Thiết lập lại mật khẩu đăng nhập:',
     'registered_doc_link'                     => 'Tài Liệu:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Địa chỉ email Firefly III của bạn đã thay đổi',

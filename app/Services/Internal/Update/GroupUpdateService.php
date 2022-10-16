@@ -48,6 +48,7 @@ class GroupUpdateService
      */
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug('Now in group update service', $data);
         /** @var array $transactions */
         $transactions = $data['transactions'] ?? [];
@@ -117,6 +118,7 @@ class GroupUpdateService
      */
     private function updateTransactionJournal(TransactionGroup $transactionGroup, TransactionJournal $journal, array $data): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         if (empty($data)) {
             return;
         }
@@ -141,6 +143,7 @@ class GroupUpdateService
      */
     private function updateTransactions(TransactionGroup $transactionGroup, array $transactions): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // updated or created transaction journals:
         $updated = [];
         /**

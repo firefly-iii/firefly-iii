@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Un mesaj de testare de la instalarea Firefly III',
     'admin_test_body'                         => 'Acesta este un mesaj de test de la instanța dvs. Firefly III. Acesta a fost trimis la :email.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Autentificare nouă pe Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III a detectat o nouă autentificare în contul dvs. de la o adresă IP necunoscută. Dacă nu v-ați conectat niciodată de la adresa IP de mai jos, sau a trecut mai mult de șase luni, Firefly III vă va avertiza.',
     'new_ip_warning'                          => 'Dacă recunoști această adresă IP sau autentificare, poți ignora acest mesaj. Dacă nu te-ai logat, sau dacă nu ai nici o idee despre ce este vorba, verifică-ți securitatea, schimbă-o și deconectează toate celelalte sesiuni. Pentru a face acest lucru, accesați pagina de profil. Bineînțeles că ai Autentificare în Doi Pași activat deja, nu? Rămâi în siguranță!',
     'ip_address'                              => 'Adresa IP',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Bun venit la Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'Există o pictogramă de ajutor în colțul din dreapta sus al fiecărei pagini. Dacă ai nevoie de ajutor, apasă pe ea!',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Resetare parolă:',
     'registered_doc_link'                     => 'Documentaţie:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Adresa ta de email a fost schimbată',

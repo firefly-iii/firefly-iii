@@ -48,7 +48,7 @@ class UpdateRequest extends FormRequest
             'title'       => ['title', 'convertString'],
             'description' => ['description', 'stringWithNewlines'],
             'active'      => ['active', 'boolean'],
-            'order'       => ['order', 'integer'],
+            'order'       => ['order', 'convertInteger'],
         ];
 
         return $this->getAllData($fields);

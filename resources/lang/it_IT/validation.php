@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Il nome del salvadanaio deve essere unico.',
     'unique_object_group'            => 'Il nome del gruppo deve essere unico',
     'starts_with'                    => 'Il valore deve iniziare con :values.',
-    'unique_webhook'                 => 'Hai già un webhook con questi valori.',
-    'unique_existing_webhook'        => 'Hai già un altro webhook con questi valori.',
+    'unique_webhook'                 => 'Hai già un altro webhook con questa combinazione di URL, trigger, risposta e consegna.',
+    'unique_existing_webhook'        => 'Hai già un altro webhook con questa combinazione di URL, trigger, risposta e consegna.',
     'same_account_type'              => 'Entrambi i conti devono essere dello stesso tipo',
     'same_account_currency'          => 'Entrambi i conti devono essere impostati sulla stessa valuta',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
     'need_id_in_edit'           => 'Ogni suddivisione deve avere un "transaction_journal_id" (un ID valido oppure 0).',
 
-    'ob_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
-    'lc_source_need_data' => 'È necessario ottenere un ID del conto sorgente valido per continuare.',
-    'ob_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
-    'ob_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'ob_source_need_data'           => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'lc_source_need_data'           => 'È necessario ottenere un ID del conto sorgente valido per continuare.',
+    'ob_dest_need_data'             => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'ob_dest_bad_data'              => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'reconciliation_either_account' => 'Per inviare una riconciliazione devi inserire un conto sorgente o di destinazione, non entrambi o nessuno dei due.',
 
     'generic_invalid_source'      => 'Non puoi utilizzare questo conto come conto di origine.',
     'generic_invalid_destination' => 'Non puoi utilizzare questo conto come conto di destinazione.',

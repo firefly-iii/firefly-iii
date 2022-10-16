@@ -125,6 +125,7 @@ return [
     'start'                       => 'Inizio intervallo',
     'end'                         => 'Fine intervallo',
     'delete_account'              => 'Elimina conto ":name"',
+    'delete_webhook'              => 'Elimina webhook ":title"',
     'delete_bill'                 => 'Elimina bolletta ":name"',
     'delete_budget'               => 'Elimina budget ":name"',
     'delete_category'             => 'Elimina categoria ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Sei sicuro di voler eliminare il gruppo ":title"?',
     'ruleGroup_areYouSure'        => 'Sei sicuro di voler eliminare il gruppo regole ":title"?',
     'budget_areYouSure'           => 'Sei sicuro di voler eliminare il budget ":name"?',
+    'webhook_areYouSure'           => 'Sei sicuro di voler eliminare il webhook ":title"?',
     'category_areYouSure'         => 'Sei sicuro di voler eliminare categoria ":name"?',
     'recurring_areYouSure'        => 'Sei sicuro di voler eliminare la transazione ricorrente ":title"?',
     'currency_areYouSure'         => 'Sei sicuro di voler eliminare la valuta ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Inviati',
     'key'                         => 'Chiave',
     'value'                       => 'Contenuto dei dati',
+    'webhook_delivery'            => 'Consegna',
+    'webhook_response'            => 'Risposta',
+    'webhook_trigger'             => 'Trigger',
 ];

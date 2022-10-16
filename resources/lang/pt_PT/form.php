@@ -125,6 +125,7 @@ return [
     'start'                       => 'Início do intervalo',
     'end'                         => 'Fim do intervalo',
     'delete_account'              => 'Apagar conta ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Apagar factura ":name"',
     'delete_budget'               => 'Apagar orcamento ":name"',
     'delete_category'             => 'Apagar categoria ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Tem certeza que quer apagar o grupo ":title"?',
     'ruleGroup_areYouSure'        => 'Tens a certeza que pretendes apagar o grupo de regras com titulo ":title"?',
     'budget_areYouSure'           => 'Tens a certeza que pretendes apagar o orcamento chamado ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Tens a certeza que pretendes apagar a categoria chamada ":name"?',
     'recurring_areYouSure'        => 'Tens a certeza que pretendes apagar a transaccao recorrente chamada ":title"?',
     'currency_areYouSure'         => 'Tens a certeza que pretendes apagar a divisa chamada ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Enviado',
     'key'                         => 'Chave',
     'value'                       => 'Conteúdo do registo',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

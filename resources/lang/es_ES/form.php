@@ -26,7 +26,7 @@ return [
     // new user:
     'bank_name'                   => 'Banco',
     'bank_balance'                => 'Saldo',
-    'savings_balance'             => 'Salgo de ahorro',
+    'savings_balance'             => 'Saldo de ahorro',
     'credit_card_limit'           => 'Límite de la tarjeta de crédito',
     'automatch'                   => 'Coinciden automáticamente',
     'skip'                        => 'Saltar',
@@ -125,6 +125,7 @@ return [
     'start'                       => 'Inicio del rango',
     'end'                         => 'Final del rango',
     'delete_account'              => 'Borrar cuenta ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Eliminar factura ":name"',
     'delete_budget'               => 'Eliminar presupuesto ":name"',
     'delete_category'             => 'Eliminar categoría ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => '¿Seguro que quieres eliminar el grupo titulado ":title"?',
     'ruleGroup_areYouSure'        => '¿Seguro que quieres eliminar el grupo de reglas titulado ":title"?',
     'budget_areYouSure'           => '¿Seguro que quieres eliminar el presupuesto llamado ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => '¿Seguro que quieres eliminar la categoría llamada ":name"?',
     'recurring_areYouSure'        => '¿Está seguro de que desea eliminar la transacción recurrente ":title"?',
     'currency_areYouSure'         => '¿Está seguro que desea eliminar la moneda denominada ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Enviado',
     'key'                         => 'Clave',
     'value'                       => 'Contenido del registro',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

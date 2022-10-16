@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
     'unique_object_group'            => 'De groepsnaam moet uniek zijn',
     'starts_with'                    => 'De waarde moet beginnen met :values.',
-    'unique_webhook'                 => 'Je hebt al een webhook met deze waarden.',
-    'unique_existing_webhook'        => 'Je hebt al een andere webhook met deze waarden.',
+    'unique_webhook'                 => 'Je hebt al een webhook met deze combinatie van URL, trigger, reactie en bericht.',
+    'unique_existing_webhook'        => 'Je hebt al een andere webhook met deze combinatie van URL, trigger, reactie en bericht.',
     'same_account_type'              => 'Beide rekeningen moeten van hetzelfde rekeningtype zijn',
     'same_account_currency'          => 'Beide rekeningen moeten dezelfde valuta hebben',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
     'need_id_in_edit'           => 'Elke split moet een transaction_journal_id hebben (een geldig ID of 0).',
 
-    'ob_source_need_data' => 'Om door te gaan moet er een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
-    'lc_source_need_data' => 'Er moet een geldig bronrekening-ID zijn om door te gaan.',
-    'ob_dest_need_data'   => 'Om door te gaan moet een geldig doelrekening ID en/of geldige doelrekeningnaam worden gevonden.',
-    'ob_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'ob_source_need_data'           => 'Om door te gaan moet er een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
+    'lc_source_need_data'           => 'Er moet een geldig bronrekening-ID zijn om door te gaan.',
+    'ob_dest_need_data'             => 'Om door te gaan moet een geldig doelrekening ID en/of geldige doelrekeningnaam worden gevonden.',
+    'ob_dest_bad_data'              => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'reconciliation_either_account' => 'Om een afstemmingstransactie in te dienen moet je een bron- of doelrekening insturen. Niet beide, niet geen beide.',
 
     'generic_invalid_source'      => 'Je kan deze rekening niet gebruiken als bronrekening.',
     'generic_invalid_destination' => 'Je kan deze rekening niet gebruiken als doelrekening.',

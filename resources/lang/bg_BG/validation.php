@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Името на касичката трябва да е уникално.',
     'unique_object_group'            => 'Името на групата трябва да е уникално',
     'starts_with'                    => 'Стойността трябва да започва с :values.',
-    'unique_webhook'                 => 'Вече имате уеб кука с тези стойности.',
-    'unique_existing_webhook'        => 'Вече имате друга уеб кука с тези стойности.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
     'need_id_in_edit'           => 'Всяко разделяне трябва да има transaction_journal_id (или валидно ID или 0).',
 
-    'ob_source_need_data' => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
-    'ob_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
+    'ob_source_need_data'           => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
+    'ob_dest_bad_data'              => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Не може да използвате тази сметка като разходна сметка.',
     'generic_invalid_destination' => 'Не може да използвате тази сметка като приходна сметка.',

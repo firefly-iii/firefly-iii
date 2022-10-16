@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Testiviesti Firefly III applikaatioltasi',
     'admin_test_body'                         => 'Tämä on testiviesti Firefly III instanssiltasi. Se lähetettiin osoitteeseen :email.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Uusi kirjautuminen Firefly III:een',
+    'slack_login_from_new_ip'                 => 'Uusi Firefly III kirjautuminen IP-osoitteesta :ip (:host)',
     'new_ip_body'                             => 'Firefly III havaitsi uuden kirjautumisen tilillesi tuntemattomasta IP-osoitteesta. Jos et ole koskaan kirjautunut alla olevasta IP-osoitteesta tai edellisestä kirjautumisesta on yli kuusi kuukautta, Firefly III varoittaa sinua.',
     'new_ip_warning'                          => 'Jos tunnistat tämän IP-osoitteen tai kirjautumisen, voit ohittaa tämän viestin. Jos et ole kirjautunut, tai jos sinulla ei ole aavistustakaan mistä tässä on kyse, tarkista salasanasi turvallisuus, vaihda se ja kirjaudu ulos kaikista muista istunnoista. Voit tehdä tämän profiilisivullasi. Tietenkin sinulla on jo 2FA käytössä, eikö vain? Pysy turvassa!',
     'ip_address'                              => 'IP-osoite',
@@ -44,25 +53,30 @@ return [
     // access token created
     'access_token_created_subject'            => 'Uusi käyttöoikeustunnus luotiin',
     'access_token_created_body'               => 'Joku (toivottavasti sinä) loi juuri uuden Firefly III käyttöoikeustunnuksen käyttäjätilillesi.',
-    'access_token_created_explanation'        => 'With this token, they can access **all** of your financial records through the Firefly III API.',
-    'access_token_created_revoke'             => 'If this wasn\'t you, please revoke this token as soon as possible at :url',
+    'access_token_created_explanation'        => 'Tämän tunnisteen avulla heillä on pääsy **kaikkeen** kirjanpitoosi Firefly III -rajapinnan kautta.',
+    'access_token_created_revoke'             => 'Jos tämä et ollut sinä, peruuta tämä tunnus mahdollisimman pian osoitteessa :url',
 
     // registered
     'registered_subject'                      => 'Tervetuloa Firefly III:een!',
-    'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
+    'registered_subject_admin'                => 'Uusi käyttäjä on rekisteröitynyt',
+    'admin_new_user_registered'               => 'Uusi käyttäjä on rekisteröitynyt. Käyttäjä **:email** sai käyttäjätunnuksen #:id.',
+    'registered_welcome'                      => 'Tervetuloa [Firefly III](:address). Rekisteröitymisesi onnistui, ja tämä sähköposti vahvistaa sen. Siistiä!',
+    'registered_pw'                           => 'Jos olet jo unohtanut salasanasi, nollaa se käyttäen [salasanan nollaustyökalua](:address/password/reset).',
     'registered_help'                         => 'Jokaisen sivun oikeassa yläkulmassa on apukuvake. Jos tarvitset apua, napsauta sitä!',
-    'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',
+    'registered_doc_html'                     => 'Jos et vielä ole ehtinyt, käy lukemassa [grand theory](https://docs.firefly-iii.org/about-firefly-iiii/personal-finances).',
+    'registered_doc_text'                     => 'Jos et ole vielä ole lukenut, lue myös ensimmäisen käytön opas ja täydellinen kuvaus.',
     'registered_closing'                      => 'Nauti!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Salasanan nollaus:',
     'registered_doc_link'                     => 'Dokumentaatio:',
 
+    // new version
+    'new_version_email_subject'               => 'Uusi Firefly III versio on saatavilla',
+
     // email change
     'email_change_subject'                    => 'Firefly III sähköpostiosoitteesi on muuttunut',
     'email_change_body_to_new'                => 'Joko sinä, tai joku jolla on pääsy Firefly III -tilillesi, on vaihtanut sähköpostiosoitteesi. Jos et odottanut tätä viestiä, ohita ja poista se.',
-    'email_change_body_to_old'                => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you **must** follow the "undo"-link below to protect your account!',
+    'email_change_body_to_old'                => 'Joko Sinä tai joku jolla on pääsy Firefly III -tilillesi on muuttanut sähköpostiosoitettasi. Jos tämä tuli yllätyksenä, sinun **täytyy** seurata alla olevaa "kumoa"-linkkiä suojataksesi tilisi!',
     'email_change_ignore'                     => 'Jos teit itse tämän muutoksen, voit turvallisesti ohittaa tämän viestin.',
     'email_change_old'                        => 'Vanha sähköpostiosoite oli: :email',
     'email_change_old_strong'                 => 'Vanha sähköpostiosoite oli: **:email**',
@@ -73,14 +87,14 @@ return [
 
     // OAuth token created
     'oauth_created_subject'                   => 'Uusi OAuth-asiakas on luotu',
-    'oauth_created_body'                      => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL `:url`.',
-    'oauth_created_explanation'               => 'With this client, they can access **all** of your financial records through the Firefly III API.',
-    'oauth_created_undo'                      => 'If this wasn\'t you, please revoke this client as soon as possible at `:url`',
+    'oauth_created_body'                      => 'Joku (toivottavasti sinä) loi juuri uuden Firefly III API OAuth asiakkaan käyttäjätilillesi. Sen nimi on ":name" ja sen callback URL on `:url`.',
+    'oauth_created_explanation'               => 'Tämän ohjelman avulla heillä on pääsy **kaikkeen** kirjanpitoosi Firefly III -rajapinnan kautta.',
+    'oauth_created_undo'                      => 'Jos tämä et ollut sinä, peruuta tämä asiakas mahdollisimman pian osoitteessa `:url`',
 
     // reset password
     'reset_pw_subject'                        => 'Salasanasi nollauspyyntö',
     'reset_pw_instructions'                   => 'Joku yritti nollata salasanasi. Jos olit sinä, seuraa alla olevaa linkkiä tehdäksesi sen.',
-    'reset_pw_warning'                        => '**PLEASE** verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_warning'                        => '**Varmista**, että linkki todella menee siihen Firefly III:een, johon odotat sen menevän!',
 
     // error
     'error_subject'                           => 'Firefly III:ssa tapahtui virhe',
@@ -104,14 +118,14 @@ return [
     'new_journals_header'                     => 'Firefly III on luonut tapahtuman sinulle. Löydät sen Firefly III -asennuksestasi:|Firefly III on luonut sinulle :count tapahtumaa. Löydät ne Firefly III -asennuksestasi:',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
-    'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_subject_end_date'           => 'Laskusi ":name" on määrä päättyä :diff päivän kuluttua',
+    'bill_warning_subject_now_end_date'       => 'Laskusi ":name" on määrä päättyä TÄNÄÄN',
+    'bill_warning_subject_extension_date'     => 'Laskusi ":name" toistokertoja on määrä joko jatkaa tai peruuttaa :diff päivän kuluttua',
+    'bill_warning_subject_now_extension_date' => 'Laskusi ":name" toistokertoja on määrä joko jatkaa tai peruuttaa TÄNÄÄN',
+    'bill_warning_end_date'                   => 'Laskusi **":name"** on määrä päättyä :date. Tähän hetkeen on aikaa noin **:diff päivää**.',
+    'bill_warning_extension_date'             => 'Laskusi **":name"** toistokertoja on määrä joko jatkaa tai peruuttaa :date. Tähän hetkeen on aikaa noin **:diff päivää**.',
+    'bill_warning_end_date_zero'              => 'Laskusi **":name"** on määrä päättyä :date, eli **TÄNÄÄN!**',
+    'bill_warning_extension_date_zero'        => 'Laskusi **":name"** toistokertoja on määrä joko jatkaa tai peruuttaa :date. Eli **TÄNÄÄN!**',
+    'bill_warning_please_action'              => 'Suorita asianmukaiset toimet, ole hyvä.',
 
 ];

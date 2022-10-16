@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => '来自 Firefly III 安装的测试消息',
     'admin_test_body'                         => '这是来自 Firefly III 站点的测试消息，收件人是 :email。',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Firefly III 上有新的登录活动',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III 检测到了来自未知 IP 地址的登录活动。如果您从未在下列 IP 地址登录，或上次登录已超过6个月，Firefly III 会提醒您。',
     'new_ip_warning'                          => '如果您认识该 IP 地址或知道该次登录，您可以忽略此信息。如果您没有登录，或者您不知道发生了什么，请立即前往个人档案页面，确认您的密码安全、修改新密码，并立即退出登录其他所有设备。为了保证帐户的安全性，请务必启用两步验证功能。',
     'ip_address'                              => 'IP 地址',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => '欢迎使用 Firefly III！',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => '欢迎来到 [Firefly III](:address)。收到这封电子邮件即确认您的注册已经完成。耶！',
     'registered_pw'                           => '如果您忘记了您的密码，请使用 [密码重置工具] (:address/password/reset) 重置密码。',
     'registered_help'                         => '每个页面右上角都有一个帮助图标。如果您需要帮助，请点击它！',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => '密码已重置',
     'registered_doc_link'                     => '文档',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => '您的 Firefly III 电子邮件地址已更改',

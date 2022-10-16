@@ -46,8 +46,8 @@ class BudgetFormStoreRequest extends FormRequest
         return [
             'name'               => $this->convertString('name'),
             'active'             => $this->boolean('active'),
-            'auto_budget_type'   => $this->integer('auto_budget_type'),
-            'currency_id'        => $this->integer('auto_budget_currency_id'),
+            'auto_budget_type'   => $this->convertInteger('auto_budget_type'),
+            'currency_id'        => $this->convertInteger('auto_budget_currency_id'),
             'auto_budget_amount' => $this->convertString('auto_budget_amount'),
             'auto_budget_period' => $this->convertString('auto_budget_period'),
         ];

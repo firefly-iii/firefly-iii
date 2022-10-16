@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Názov pokladničky musí byť jedinečný.',
     'unique_object_group'            => 'Názov skupiny musí byť jedinečný',
     'starts_with'                    => 'Hodnota musí začínať :values.',
-    'unique_webhook'                 => 'Webhook s týmito hodnotami už existuje.',
-    'unique_existing_webhook'        => 'Iný webhook s týmito hodnotami už existuje.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Oba účty musia mať rovnaký typ',
     'same_account_currency'          => 'Oba účty musia mať rovnakú menu',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Pre ID „:id“ alebo meno „:name“ sa nenašiel žiadny platný cieľový účet.',
     'need_id_in_edit'           => 'Každé rozdelenie musí mať platné transaction_journal_id (platné ID alebo 0).',
 
-    'ob_source_need_data' => 'Pre pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => 'Pre pokračovanie je potrebné platné ID cieľového účtu a/alebo platný názov cieľového účtu.',
-    'ob_dest_bad_data'    => 'Pre ID „:id“ alebo mena „:name“ sa nenašiel žiadny platný cieľový účet.',
+    'ob_source_need_data'           => 'Pre pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => 'Pre pokračovanie je potrebné platné ID cieľového účtu a/alebo platný názov cieľového účtu.',
+    'ob_dest_bad_data'              => 'Pre ID „:id“ alebo mena „:name“ sa nenašiel žiadny platný cieľový účet.',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Tento účet nie je možné použiť ako zdrojový účet.',
     'generic_invalid_destination' => 'Tento účet nie je možné použiť ako cieľový účet.',

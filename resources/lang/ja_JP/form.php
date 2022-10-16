@@ -125,6 +125,7 @@ return [
     'start'                       => '期間の開始',
     'end'                         => '期間の終了',
     'delete_account'              => '口座「:name」を削除',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => '請求「:name」を削除',
     'delete_budget'               => '予算「:name」を削除',
     'delete_category'             => 'カテゴリ「:name」を削除',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'グループ「:title」を削除してもよろしいですか？',
     'ruleGroup_areYouSure'        => 'ルールグループ「:title」を削除してもよろしいですか？',
     'budget_areYouSure'           => '予算「:name」を削除してもよろしいですか？',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'カテゴリ「:name」を削除してもよろしいですか？',
     'recurring_areYouSure'        => '定期的な取引「:title」を削除してもよろしいですか？',
     'currency_areYouSure'         => '通貨「:name」を削除してもよろしいですか？',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => '送信済み',
     'key'                         => '鍵',
     'value'                       => '記録の内容',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

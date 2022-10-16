@@ -293,6 +293,7 @@ trait JournalServiceTrait
         if ('' === $amount) {
             throw new FireflyException(sprintf('The amount cannot be an empty string: "%s"', $amount));
         }
+        Log::debug(sprintf('Now in getAmount("%s")', $amount));
         if (0 === bccomp('0', $amount)) {
             throw new FireflyException(sprintf('The amount seems to be zero: "%s"', $amount));
         }

@@ -61,14 +61,14 @@ class RecurrenceFormRequest extends FormRequest
                 'description'       => $this->convertString('recurring_description'),
                 'first_date'        => $this->getCarbonDate('first_date'),
                 'repeat_until'      => $this->getCarbonDate('repeat_until'),
-                'nr_of_repetitions' => $this->integer('repetitions'),
+                'nr_of_repetitions' => $this->convertInteger('repetitions'),
                 'apply_rules'       => $this->boolean('apply_rules'),
                 'active'            => $this->boolean('active'),
                 'repetition_end'    => $this->convertString('repetition_end'),
             ],
             'transactions' => [
                 [
-                    'currency_id'           => $this->integer('transaction_currency_id'),
+                    'currency_id'           => $this->convertInteger('transaction_currency_id'),
                     'currency_code'         => null,
                     'type'                  => $this->convertString('transaction_type'),
                     'description'           => $this->convertString('transaction_description'),
@@ -76,14 +76,14 @@ class RecurrenceFormRequest extends FormRequest
                     'foreign_amount'        => null,
                     'foreign_currency_id'   => null,
                     'foreign_currency_code' => null,
-                    'budget_id'             => $this->integer('budget_id'),
+                    'budget_id'             => $this->convertInteger('budget_id'),
                     'budget_name'           => null,
-                    'bill_id'               => $this->integer('bill_id'),
+                    'bill_id'               => $this->convertInteger('bill_id'),
                     'bill_name'             => null,
                     'category_id'           => null,
                     'category_name'         => $this->convertString('category'),
                     'tags'                  => '' !== $this->convertString('tags') ? explode(',', $this->convertString('tags')) : [],
-                    'piggy_bank_id'         => $this->integer('piggy_bank_id'),
+                    'piggy_bank_id'         => $this->convertInteger('piggy_bank_id'),
                     'piggy_bank_name'       => null,
                 ],
             ],
@@ -91,17 +91,17 @@ class RecurrenceFormRequest extends FormRequest
                 [
                     'type'    => $repetitionData['type'],
                     'moment'  => $repetitionData['moment'],
-                    'skip'    => $this->integer('skip'),
-                    'weekend' => $this->integer('weekend'),
+                    'skip'    => $this->convertInteger('skip'),
+                    'weekend' => $this->convertInteger('weekend'),
                 ],
             ],
 
         ];
 
         // fill in foreign currency data
-        if (null !== $this->float('foreign_amount')) {
+        if (null !== $this->convertFloat('foreign_amount')) {
             $return['transactions'][0]['foreign_amount']      = $this->convertString('foreign_amount');
-            $return['transactions'][0]['foreign_currency_id'] = $this->integer('foreign_currency_id');
+            $return['transactions'][0]['foreign_currency_id'] = $this->convertInteger('foreign_currency_id');
         }
         // default values:
         $return['transactions'][0]['source_id']        = null;
@@ -113,16 +113,16 @@ class RecurrenceFormRequest extends FormRequest
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
             case 'withdrawal':
-                $return['transactions'][0]['source_id']      = $this->integer('source_id');
-                $return['transactions'][0]['destination_id'] = $this->integer('withdrawal_destination_id');
+                $return['transactions'][0]['source_id']      = $this->convertInteger('source_id');
+                $return['transactions'][0]['destination_id'] = $this->convertInteger('withdrawal_destination_id');
                 break;
             case 'deposit':
-                $return['transactions'][0]['source_id']      = $this->integer('deposit_source_id');
-                $return['transactions'][0]['destination_id'] = $this->integer('destination_id');
+                $return['transactions'][0]['source_id']      = $this->convertInteger('deposit_source_id');
+                $return['transactions'][0]['destination_id'] = $this->convertInteger('destination_id');
                 break;
             case 'transfer':
-                $return['transactions'][0]['source_id']      = $this->integer('source_id');
-                $return['transactions'][0]['destination_id'] = $this->integer('destination_id');
+                $return['transactions'][0]['source_id']      = $this->convertInteger('source_id');
+                $return['transactions'][0]['destination_id'] = $this->convertInteger('destination_id');
                 break;
         }
 
@@ -219,7 +219,7 @@ class RecurrenceFormRequest extends FormRequest
             'category'                => 'between:1,255|nullable',
             'tags'                    => 'between:1,255|nullable',
         ];
-        if ($this->integer('foreign_currency_id') > 0) {
+        if ($this->convertInteger('foreign_currency_id') > 0) {
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id';
         }
 
@@ -228,7 +228,7 @@ class RecurrenceFormRequest extends FormRequest
             $rules['repetitions'] = 'required|numeric|between:0,254';
         }
         // if foreign amount, currency must be  different.
-        if (null !== $this->float('foreign_amount')) {
+        if (null !== $this->convertFloat('foreign_amount')) {
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id|different:transaction_currency_id';
         }
 
@@ -237,7 +237,7 @@ class RecurrenceFormRequest extends FormRequest
             $rules['repeat_until'] = 'required|date|after:' . $tomorrow->format('Y-m-d');
         }
 
-        // switchc on type to expand rules for source and destination accounts:
+        // switch on type to expand rules for source and destination accounts:
         switch ($this->convertString('transaction_type')) {
             case strtolower(TransactionType::WITHDRAWAL):
                 $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';

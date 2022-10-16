@@ -44,17 +44,17 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         $fields                     = [
-            'order' => ['order', 'integer'],
+            'order' => ['order', 'convertInteger'],
         ];
         $data                       = $this->getAllData($fields);
         $data['name']               = $this->convertString('name');
-        $data['account_id']         = $this->integer('account_id');
+        $data['account_id']         = $this->convertInteger('account_id');
         $data['targetamount']       = $this->convertString('target_amount');
         $data['current_amount']     = $this->convertString('current_amount');
         $data['startdate']          = $this->getCarbonDate('start_date');
         $data['targetdate']         = $this->getCarbonDate('target_date');
         $data['notes']              = $this->stringWithNewlines('notes');
-        $data['object_group_id']    = $this->integer('object_group_id');
+        $data['object_group_id']    = $this->convertInteger('object_group_id');
         $data['object_group_title'] = $this->convertString('object_group_title');
 
         return $data;

@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Uma mensagem de teste da instalação do Firefly III',
     'admin_test_body'                         => 'Esta é uma mensagem de teste da sua plataforma Firefly III. Foi enviada para :email.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Nova sessão no Firefly III',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'O Firefly III detectou uma nova sessão na sua conta de um endereço IP desconhecido. Se nunca iniciou sessão a partir endereço IP abaixo, ou foi há mais de seis meses, o Firefly III irá avisá-lo.',
     'new_ip_warning'                          => 'Se reconhecer este endereço IP ou sessão, pode ignorar esta mensagem. Se não iniciou sessão ou não tenha ideia do que possa ser este inicio de sessão, verifique a segurança da sua senha, altere-a e desconecte-se de todas as outras sessões iniciadas. Para fazer isso, vá á sua página de perfil. Claro que você já activou 2FA, não é? Mantenha-se seguro!',
     'ip_address'                              => 'Endereço IP',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Bem vindo ao Firefly III!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'Existe um ícone de ajuda no canto superior direito de cada página. Se precisar de ajuda, clique-lhe!',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Alteração da senha:',
     'registered_doc_link'                     => 'Documentação:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'O seu endereço de e-mail do Firefly III mudou',

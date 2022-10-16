@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Numele pușculiței trebuie să fie unic.',
     'unique_object_group'            => 'Numele grupului trebuie să fie unic',
     'starts_with'                    => 'Valoarea trebuie să înceapă cu :values.',
-    'unique_webhook'                 => 'Deja ai un webhook cu aceste valori.',
-    'unique_existing_webhook'        => 'Aveți deja un alt webhook cu aceste valori.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Ambele conturi trebuie să fie de acelaşi tip de cont',
     'same_account_currency'          => 'Ambele conturi trebuie să aibă aceeași monedă',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
     'need_id_in_edit'           => 'Fiecare împărțire trebuie să aibă transaction_journal_id (fie ID valid sau 0).',
 
-    'ob_source_need_data' => 'Pentru a continua, trebuie să obțineți un ID sursă validă și / sau un nume valid al contului sursă valabil.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
-    'ob_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
+    'ob_source_need_data'           => 'Pentru a continua, trebuie să obțineți un ID sursă validă și / sau un nume valid al contului sursă valabil.',
+    'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
+    'ob_dest_need_data'             => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
+    'ob_dest_bad_data'              => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Nu puteți utiliza acest cont ca și cont sursă.',
     'generic_invalid_destination' => 'Nu puteți utiliza acest cont ca și cont de destinație.',

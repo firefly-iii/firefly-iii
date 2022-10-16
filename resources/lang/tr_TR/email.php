@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Firefly III kurulumunuzdan bir test mesajı',
     'admin_test_body'                         => 'Bu, Firefly III örneğinizden gelen bir test mesajıdır. Şu adrese gönderildi: e-posta.',
 
+    // invite
+    'invitation_created_subject'              => 'An invitation has been created',
+    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
+    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
+    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
+    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+
     // new IP
     'login_from_new_ip'                       => 'Firefly III yeni giriş',
+    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III, hesabınızda bilinmeyen bir IP adresinden yeni bir giriş tespit etti. Aşağıdaki IP adresinden hiç giriş yapmadıysanız veya altı aydan daha uzun bir süre önce yapıldıysa, Firefly III sizi uyaracaktır.',
     'new_ip_warning'                          => 'Bu IP adresini veya oturum açmayı tanıyorsanız, bu iletiyi yoksayabilirsiniz. Eğer giriş eğer konuyla ilgili hiçbir fikriniz varsa, şifre güvenliğinizi doğrulamak, ve çıkış tüm oturumlar bu değişiklik olmadıysa. Bunu yapmak için profil sayfanıza gidin. Tabii ki zaten 2FA etkin, değil mi? Güvende kalın!',
     'ip_address'                              => 'IP adresi',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Firefly III\'e hoşgeldiniz!',
+    'registered_subject_admin'                => 'A new user has registered',
+    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
     'registered_welcome'                      => '[Firefly III] \'e hoş geldiniz(:address). Kaydınız yapıldı ve bu e-posta onaylamak için burada. Yay!',
     'registered_pw'                           => 'Parolanızı zaten unuttuysanız, lütfen [parola sıfırlama aracı] (:adres/parola/sıfırla) kullanarak sıfırlayın.',
     'registered_help'                         => 'Her sayfanın sağ üst köşesinde bir yardım simgesi bulunur. Yardıma ihtiyacınız olursa, tıklayın!',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Şifre sıfırlama:',
     'registered_doc_link'                     => 'Belge:',
+
+    // new version
+    'new_version_email_subject'               => 'A new Firefly III version is available',
 
     // email change
     'email_change_subject'                    => 'Firefly III e-posta adresiniz değişti',

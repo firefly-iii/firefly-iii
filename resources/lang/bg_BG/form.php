@@ -125,6 +125,7 @@ return [
     'start'                       => 'Начало на обхвата',
     'end'                         => 'Край на обхвата',
     'delete_account'              => 'Изтрий сметка ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Изтрий сметка ":name"',
     'delete_budget'               => 'Изтрий бюджет ":name"',
     'delete_category'             => 'Изтрий категория ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Наистина ли искате да изтриете групата ":title"?',
     'ruleGroup_areYouSure'        => 'Наистина ли искате да изтриете групата правила ":title"?',
     'budget_areYouSure'           => 'Наистина ли искате да изтриете бюджета озаглавен ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Наистина ли искате да изтриете категорията озаглавена ":name"?',
     'recurring_areYouSure'        => 'Наистина ли искате да изтриете повтарящата се транзакция ":title"?',
     'currency_areYouSure'         => 'Наистина ли искате да изтриете валутата озаглавена ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Потвърдено',
     'key'                         => 'Ключ',
     'value'                       => 'Съдържание на записа',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

@@ -33,8 +33,17 @@ return [
     'admin_test_subject'                      => 'Un message de test de votre installation de Firefly III',
     'admin_test_body'                         => 'Ceci est un message de test de votre instance Firefly III. Il a été envoyé à :email.',
 
+    // invite
+    'invitation_created_subject'              => 'Une invitation a été créée',
+    'invitation_created_body'                 => 'L\'utilisateur admin ":email" a créé une invitation d\'utilisateur qui peut être utilisée par quiconque est derrière l\'adresse e-mail ":invitee". L\'invitation sera valide pendant 48 heures.',
+    'invite_user_subject'                     => 'Vous avez été invité à créer un compte Firefly III.',
+    'invitation_introduction'                 => 'Vous avez été invité à créer un compte Firefly III sur **:host**. Firefly III est un gestionnaire personnel et privé de finances personnelles. Tous les gamins du quartier l\'utilisent.',
+    'invitation_invited_by'                   => 'Vous avez été invité par ":admin" et cette invitation a été envoyée à ":invitee". C\'est vous, non ?',
+    'invitation_url'                          => 'L\'invitation est valide pendant 48 heures et peut être échangée en naviguant sur [Firefly III](:url). Profitez-en !',
+
     // new IP
     'login_from_new_ip'                       => 'Nouvelle connexion sur Firefly III',
+    'slack_login_from_new_ip'                 => 'Nouvelle connexion à Firefly III depuis IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III a détecté une nouvelle connexion sur votre compte à partir d\'une adresse IP inconnue. Si vous ne vous êtes jamais connecté depuis l\'adresse IP ci-dessous, ou si ça fait plus de six mois, Firefly III vous avertira.',
     'new_ip_warning'                          => 'Si vous reconnaissez cette adresse IP ou la connexion, vous pouvez ignorer ce message. Si vous ne vous êtes pas connecté, si vous n\'avez aucune idée de quoi il s\'agit, vérifiez la sécurité de votre mot de passe, modifiez-la et déconnectez toutes les autres sessions. Pour cela, allez sur votre page de profil. Bien sûr, vous avez déjà activé l\'A2F, n\'est-ce pas ? Soyez prudent !',
     'ip_address'                              => 'Adresse IP',
@@ -49,6 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Bienvenue sur Firefly III !',
+    'registered_subject_admin'                => 'Un nouvel utilisateur s\'est inscrit',
+    'admin_new_user_registered'               => 'Un nouvel utilisateur s\'est inscrit. L\'utilisateur **:email** a reçu l\'ID utilisateur #:id.',
     'registered_welcome'                      => 'Bienvenue sur [Firefly III](:address). Votre inscription a été faite, et cet e-mail est là pour la confirmer. Yeah !',
     'registered_pw'                           => 'Si vous avez déjà oublié votre mot de passe, veuillez le réinitialiser en utilisant [l\'outil de réinitialisation du mot de passe](:address/password/reset).',
     'registered_help'                         => 'Il y a une icône d\'aide en haut à droite de chaque page. Si vous avez besoin d\'aide, cliquez dessus !',
@@ -58,6 +69,9 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III :',
     'registered_pw_reset_link'                => 'Réinitialisation du mot de passe :',
     'registered_doc_link'                     => 'Documentation :',
+
+    // new version
+    'new_version_email_subject'               => 'Une nouvelle version de Firefly III est disponible',
 
     // email change
     'email_change_subject'                    => 'Votre adresse e-mail Firefly III a été modifiée',

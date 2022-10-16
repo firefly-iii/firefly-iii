@@ -147,6 +147,16 @@ trait GetConfigurationData
         $index          = (string) trans('firefly.last_thirty_days');
         $ranges[$index] = [$thirty, new Carbon];
 
+        // month to date:
+        $monthBegin     = Carbon::now()->startOfMonth();
+        $index          = (string) trans('firefly.month_to_date');
+        $ranges[$index] = [$monthBegin, new Carbon];
+
+        // year to date:
+        $yearBegin      = Carbon::now()->startOfYear();
+        $index          = (string) trans('firefly.year_to_date');
+        $ranges[$index] = [$yearBegin, new Carbon];
+
         // everything
         $index          = (string) trans('firefly.everything');
         $ranges[$index] = [$first, new Carbon];

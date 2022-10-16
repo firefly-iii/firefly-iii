@@ -126,6 +126,7 @@ class JournalUpdateService
      */
     public function update(): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Now in JournalUpdateService for journal #%d.', $this->transactionJournal->id));
 
         if ($this->removeReconciliation()) {
@@ -690,11 +691,13 @@ class JournalUpdateService
      */
     private function updateAmount(): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         if (!$this->hasFields(['amount'])) {
             return;
         }
 
         $value = $this->data['amount'] ?? '';
+        Log::debug(sprintf('Amount is now "%s"', $value));
         try {
             $amount = $this->getAmount($value);
         } catch (FireflyException $e) {

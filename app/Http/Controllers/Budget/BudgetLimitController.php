@@ -151,10 +151,14 @@ class BudgetLimitController extends Controller
 
         // sanity check on amount:
         if ((float) $amount === 0.0) {
-            $amount = '1';
+            if (null !== $limit) {
+                $this->blRepository->destroyBudgetLimit($limit);
+            }
+            // return empty=ish array:
+            return response()->json([]);
         }
-        if ((int) $amount > 65536) {
-            $amount = '65536';
+        if ((int) $amount > 268435456) {
+            $amount = '268435456';
         }
 
         if (null !== $limit) {
@@ -175,7 +179,7 @@ class BudgetLimitController extends Controller
 
         if ($request->expectsJson()) {
             $array = $limit->toArray();
-            // add some extra meta data:
+            // add some extra metadata:
             $spentArr                  = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
             $array['spent']            = $spentArr[$currency->id]['sum'] ?? '0';
             $array['left_formatted']   = app('amount')->formatAnything($limit->transactionCurrency, bcadd($array['spent'], $array['amount']));
@@ -208,10 +212,19 @@ class BudgetLimitController extends Controller
 
         // sanity check on amount:
         if ((float) $amount === 0.0) {
-            $amount = '1';
+            $budgetId = $budgetLimit->budget_id;
+            $currency = $budgetLimit->transactionCurrency;
+            $this->blRepository->destroyBudgetLimit($budgetLimit);
+            $array = [
+                'budget_id'               => $budgetId,
+                'left_formatted'          => app('amount')->formatAnything($currency, '0'),
+                'left_per_day_formatted'  => app('amount')->formatAnything($currency, '0'),
+                'transaction_currency_id' => $currency->id,
+            ];
+            return response()->json($array);
         }
-        if ((int) $amount > 65536) {
-            $amount = '65536';
+        if ((int) $amount > 268435456) { // 268 million
+            $amount = '268435456';
         }
 
         $limit = $this->blRepository->update($budgetLimit, ['amount' => $amount]);

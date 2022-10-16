@@ -33,7 +33,7 @@ return [
     'be_right_back'           => 'Gleich wieder zurück!',
     'check_back'              => 'Firefly III ist für eine notwendige Wartung nicht verfügbar. Bitte versuchen Sie es in einer Sekunde noch einmal.',
     'error_occurred'          => 'Hoppla! Ein Fehler ist aufgetreten.',
-    'db_error_occurred'       => 'Whoops! A database error occurred.',
+    'db_error_occurred'       => 'Hoppla! Ein Datenbankfehler ist aufgetreten.',
     'error_not_recoverable'   => 'Leider konnte dieser Fehler nicht wiederhergestellt werden :(. Firefly III ist kaputt. Der Fehler ist:',
     'error'                   => 'Fehler',
     'error_location'          => 'Dieser Fehler ist in der Datei <span style="font-family: monospace;">:file</span> in Zeile :line mit dem Code :code aufgetreten.',

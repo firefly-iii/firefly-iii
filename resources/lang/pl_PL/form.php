@@ -125,6 +125,7 @@ return [
     'start'                       => 'Początek zakresu',
     'end'                         => 'Koniec zakresu',
     'delete_account'              => 'Usuń konto ":name"',
+    'delete_webhook'              => 'Usuń webhook ":title"',
     'delete_bill'                 => 'Usuń rachunek ":name"',
     'delete_budget'               => 'Usuń budżet ":name"',
     'delete_category'             => 'Usuń kategorię ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Czy na pewno chcesz usunąć grupę o nazwie ":title"?',
     'ruleGroup_areYouSure'        => 'Czy na pewno chcesz usunąć grupę reguł o nazwie ":name"?',
     'budget_areYouSure'           => 'Czy na pewno chcesz usunąć budżet o nazwie ":name"?',
+    'webhook_areYouSure'           => 'Czy na pewno chcesz usunąć webhook o nazwie:title"?',
     'category_areYouSure'         => 'Czy na pewno chcesz usunąć kategorię o nazwie ":name"?',
     'recurring_areYouSure'        => 'Czy na pewno chcesz usunąć cykliczną transakcję o nazwie ":title"?',
     'currency_areYouSure'         => 'Czy na pewno chcesz usunąć walutę o nazwie ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Przesłane',
     'key'                         => 'Klucz',
     'value'                       => 'Zawartość rekordu',
+    'webhook_delivery'            => 'Doręczenie',
+    'webhook_response'            => 'Odpowiedź',
+    'webhook_trigger'             => 'Wyzwalacz',
 ];

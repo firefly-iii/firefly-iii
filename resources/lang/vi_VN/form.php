@@ -125,6 +125,7 @@ return [
     'start'                       => 'Bắt đầu phạm vi',
     'end'                         => 'Kết thúc phạm vi',
     'delete_account'              => 'Xóa tài khoản ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Xóa hóa đơn ":name"',
     'delete_budget'               => 'Xóa ngân sách ":name"',
     'delete_category'             => 'Xóa danh mục ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Bạn có chắc chắn muốn xóa nhóm có tiêu đề ":title"?',
     'ruleGroup_areYouSure'        => 'Bạn có chắc chắn muốn xóa nhóm quy tắc có tiêu đề ":title"?',
     'budget_areYouSure'           => 'Bạn có chắc chắn muốn xóa ngân sách có tên ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Bạn có chắc chắn muốn xóa danh mục có tên ":name"?',
     'recurring_areYouSure'        => 'Bạn có chắc chắn muốn xóa giao dịch định kỳ có tiêu đề ":title"?',
     'currency_areYouSure'         => 'Bạn có chắc chắn muốn xóa loại tiền có tên ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Đã gửi',
     'key'                         => 'Khóa',
     'value'                       => 'Nội dung của bản lưu trữ',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

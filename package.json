@@ -10,8 +10,8 @@
     },
     "devDependencies": {
         "@johmun/vue-tags-input": "^2",
-        "@vue/compiler-sfc": "^3.2.37",
-        "axios": "^0.27",
+        "@vue/compiler-sfc": "^3.2.40",
+        "axios": "^1.1",
         "bootstrap-sass": "^3",
         "cross-env": "^7.0",
         "font-awesome": "^4.7.0",
@@ -23,5 +23,8 @@
         "vue-i18n": "^8",
         "vue-loader": "^15",
         "vue-template-compiler": "^2.7"
+    },
+    "dependencies": {
+        "stream-browserify": "^3.0.0"
     }
 }

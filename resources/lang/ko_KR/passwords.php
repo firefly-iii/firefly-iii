@@ -1,6 +1,8 @@
-/*
- * index.js
- * Copyright (c) 2022 james@firefly-iii.org
+<?php
+
+/**
+ * passwords.php
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,10 +20,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// This is just an example,
-// so you can safely delete all default props below
+declare(strict_types=1);
 
-export default {
-  failed: 'Action failed',
-  success: 'Action was successful'
-}
+return [
+    'password' => '비밀번호는 최소 6자리 이상이어야 하며 비밀번호 확인과 일치해야 합니다.',
+    'user'     => '입력한 이메일 주소로 사용자를 찾을 수 없습니다.',
+    'token'    => '해당 비밀번호 재설정 토큰이 유효하지 않습니다.',
+    'sent'     => '비밀번호 재설정 링크를 이메일로 보냈습니다!',
+    'reset'    => '비밀번호가 재설정되었습니다!',
+    'blocked'  => '그래도 좋은 시도였어요.',
+];

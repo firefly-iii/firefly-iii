@@ -79,6 +79,7 @@ $(function () {
 });
 
 function updateBudgetedAmount(e) {
+    console.log('updateBudgetedAmount');
     var input = $(e.currentTarget);
     var budgetId = parseInt(input.data('id'));
     var budgetLimitId = parseInt(input.data('limit'));
@@ -95,7 +96,7 @@ function updateBudgetedAmount(e) {
         }).done(function (data) {
 
             input.prop('disabled', false);
-
+            input.data('limit', data.id);
             // update amount left.
             $('.left_span[data-limit="0"][data-id="' + budgetId + '"]').html(data.left_formatted);
             if (data.left_per_day > 0) {
@@ -113,6 +114,7 @@ function updateBudgetedAmount(e) {
             amount: input.val(),
         }).done(function (data) {
             input.prop('disabled', false);
+            input.data('limit', data.id);
             $('.left_span[data-limit="' + budgetLimitId + '"]').html(data.left_formatted);
             if (data.left_per_day > 0) {
                 $('.left_span[data-limit="' + budgetLimitId + '"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
@@ -214,7 +216,7 @@ function deleteBudgetLimit(e) {
     var url = deleteBudgetLimitUrl.replace('REPLACEME', budgetLimitId.toString());
     $.post(url, {_token: token}).then(function () {
         $('.bl_entry[data-budget-limit-id="' + budgetLimitId + '"]').remove();
-        
+
     });
     return false;
 }

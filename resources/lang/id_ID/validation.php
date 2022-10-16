@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Nama celengan harus unik.',
     'unique_object_group'            => 'Nama grup harus unik',
     'starts_with'                    => 'Nilai harus di mulai dengan :values.',
-    'unique_webhook'                 => 'Anda sudah memiliki sebuah webhook dengan nilai ini.',
-    'unique_existing_webhook'        => 'Anda sudah memiliki webhook yang lain dengan nilai ini.',
+    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
     'same_account_type'              => 'Kedua akun harus dari jenis akun yang sama',
     'same_account_currency'          => 'Kedua akun harus memiliki pengaturan mata uang yang sama',
 
@@ -208,10 +208,11 @@ return [
     'transfer_dest_bad_data'    => 'Tidak dapat menemukan sebuah akun tujuan yang valid saat mencari ID ":id" atau nama ":name".',
     'need_id_in_edit'           => 'Setiap pisahan harus memiliki transaction_journal_id (ID yang valid atau 0).',
 
-    'ob_source_need_data' => 'Perlu untuk mendapatkan sebuah ID akun sumber yang valid dan/atau nama akun sumber yang valid untuk melanjutkan.',
-    'lc_source_need_data' => 'Perlu untuk mendapatkan sebuah ID akun sumber yang valid untuk melanjutkan.',
-    'ob_dest_need_data'   => 'Perlu untuk mendapatkan sebuah ID akun tujuan yang valid dan/atau nama akun tujuan yang valid untuk melanjutkan.',
-    'ob_dest_bad_data'    => 'Tidak dapat menemukan sebuah akun tujuan yang valid saat mencari ID ":id" atau nama ":name".',
+    'ob_source_need_data'           => 'Perlu untuk mendapatkan sebuah ID akun sumber yang valid dan/atau nama akun sumber yang valid untuk melanjutkan.',
+    'lc_source_need_data'           => 'Perlu untuk mendapatkan sebuah ID akun sumber yang valid untuk melanjutkan.',
+    'ob_dest_need_data'             => 'Perlu untuk mendapatkan sebuah ID akun tujuan yang valid dan/atau nama akun tujuan yang valid untuk melanjutkan.',
+    'ob_dest_bad_data'              => 'Tidak dapat menemukan sebuah akun tujuan yang valid saat mencari ID ":id" atau nama ":name".',
+    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 
     'generic_invalid_source'      => 'Anda tidak dapat menggunakan akun ini sebagai akun sumber.',
     'generic_invalid_destination' => 'Anda tidak dapat menggunakan akun ini sebagai akun tujuan.',

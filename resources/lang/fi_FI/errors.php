@@ -33,7 +33,7 @@ return [
     'be_right_back'           => 'Palaan pian!',
     'check_back'              => 'Firefly III tekee joitain tarpeellisia huoltotoimenpiteitä. Ole hyvä ja yritä uudelleen hetken kuluttua.',
     'error_occurred'          => 'Hupsista! Tapahtui virhe.',
-    'db_error_occurred'       => 'Whoops! A database error occurred.',
+    'db_error_occurred'       => 'Hupsista! Tapahtui tietokantavirhe.',
     'error_not_recoverable'   => 'Valitettavasti tästä virheestä ei pystytä palautumaan :(. Firefly III meni rikki. Virhe on:',
     'error'                   => 'Virhe',
     'error_location'          => 'Tämä virhe tapahtui tiedostossa <span style="font-family: monospace;">:file</span> rivillä :line koodilla :code.',

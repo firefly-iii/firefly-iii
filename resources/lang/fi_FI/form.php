@@ -125,6 +125,7 @@ return [
     'start'                       => 'Valikoiman alku',
     'end'                         => 'Valikoiman loppu',
     'delete_account'              => 'Poista tili ":name"',
+    'delete_webhook'              => 'Delete webhook ":title"',
     'delete_bill'                 => 'Poista lasku ":name"',
     'delete_budget'               => 'Poista budjetti ":name"',
     'delete_category'             => 'Poista kategoria ":name"',
@@ -145,6 +146,7 @@ return [
     'object_group_areYouSure'     => 'Haluatko varmasti poistaa ryhmän ":title"?',
     'ruleGroup_areYouSure'        => 'Haluatko varmasti poistaa sääntöryhmän ":title"?',
     'budget_areYouSure'           => 'Haluatko varmasti poistaa budjetin ":name"?',
+    'webhook_areYouSure'           => 'Are you sure you want to delete the webhook named ":title"?',
     'category_areYouSure'         => 'Haluatko varmasti poistaa kategorian ":name"?',
     'recurring_areYouSure'        => 'Haluatko varmasti poistaa toistuvan tapahtuman ":title"?',
     'currency_areYouSure'         => 'Haluatko varmasti poistaa valuutan ":name"?',
@@ -246,4 +248,7 @@ return [
     'submitted'                   => 'Lähetetty',
     'key'                         => 'Avain',
     'value'                       => 'Tietueen sisältö',
+    'webhook_delivery'            => 'Delivery',
+    'webhook_response'            => 'Response',
+    'webhook_trigger'             => 'Trigger',
 ];

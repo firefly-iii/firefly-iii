@@ -39,7 +39,7 @@ trait ConvertsDataTypes
      *
      * @return int
      */
-    public function integer(string $field): int
+    public function convertInteger(string $field): int
     {
         return (int) $this->get($field);
     }
@@ -68,6 +68,9 @@ trait ConvertsDataTypes
             return null;
         }
         $search       = [
+            "\0", // NUL
+            "\f", // form feed
+            "\v", // vertical tab
             "\u{0001}", // start of heading
             "\u{0002}", // start of text
             "\u{0003}", // end of text
@@ -216,7 +219,7 @@ trait ConvertsDataTypes
      *
      * @return float|null
      */
-    protected function float(string $field): ?float
+    protected function convertFloat(string $field): ?float
     {
         $res = $this->get($field);
         if (null === $res) {
