@@ -68,6 +68,9 @@ trait ConvertsDataTypes
             return null;
         }
         $search       = [
+            "\0", // NUL
+            "\f", // form feed
+            "\v", // vertical tab
             "\u{0001}", // start of heading
             "\u{0002}", // start of text
             "\u{0003}", // end of text

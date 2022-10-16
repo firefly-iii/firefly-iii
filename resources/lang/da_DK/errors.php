@@ -33,7 +33,7 @@ return [
     'be_right_back'           => 'Er straks tilbage!',
     'check_back'              => 'Firefly III er utilgængelig pga. en nødvendig vedligeholdelse. Tjek venligst tilbage om et sekund.',
     'error_occurred'          => 'Beklager, der opstod en fejl.',
-    'db_error_occurred'       => 'Whoops! A database error occurred.',
+    'db_error_occurred'       => 'Hovsa! Der opstod en databasefejl.',
     'error_not_recoverable'   => 'Desværre er denne fejl uoprettelig :(. Firefly III brød sammen. Fejlen er:',
     'error'                   => 'Fejl',
     'error_location'          => 'Denne fejl opstod i filen "<span style="font-family: monospace;">:file</span>" på linje :line med koden :code.',

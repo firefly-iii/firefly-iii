@@ -34,14 +34,14 @@ return [
     'month_and_day_js'         => 'MMMM Do, YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'    => 'dddd MMMM Do, YYYY',
+    'month_and_date_day_js'    => 'дд MMMM Do, YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
-    'month_and_day_no_year_js' => 'MMMM Do',
+    'month_and_day_no_year_js' => 'dd MMMM',
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'MMMM Do, YYYY, @ HH:mm:ss',
-    'date_time_fns'            => 'MMMM do, yyyy @ HH:mm:ss',
+    'date_time_fns'            => 'ММММ do, рік @ ГГ:хв:сек',
 
     //'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'D MMMM YYYY',

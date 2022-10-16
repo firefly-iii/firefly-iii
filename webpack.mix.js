@@ -21,12 +21,18 @@
 let mix = require('laravel-mix');
 
 mix.webpackConfig({
-                      resolve: {
-                          alias: {
-                              'vue$': 'vue/dist/vue.runtime.common.js'
-                          }
-                      }
-                  });
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.runtime.common.js'
+        },
+        fallback: {
+            "stream": require.resolve("stream-browserify"),
+            "zlib": false,
+            "https": false,
+            "http": false
+        }
+    }
+});
 
 mix.js('resources/assets/js/app.js', 'public/v1/js');
 mix.js('resources/assets/js/app_vue.js', 'public/v1/js').vue({version: 2});

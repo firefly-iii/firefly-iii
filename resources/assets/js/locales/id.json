@@ -146,6 +146,6 @@
     },
     "config": {
         "html_language": "id",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "do MMMM yyyy @ HH:mm:ss"
     }
 }

@@ -86,20 +86,20 @@
         "multi_account_warning_withdrawal": "Ricorda che il conto di origine delle successive suddivisioni verr\u00e0 sovrascritto da quello definito nella prima suddivisione del prelievo.",
         "multi_account_warning_deposit": "Ricorda che il conto di destinazione delle successive suddivisioni verr\u00e0 sovrascritto da quello definito nella prima suddivisione del deposito.",
         "multi_account_warning_transfer": "Ricorda che il conto di origine e il conto di destinazione delle successive suddivisioni verranno sovrascritti da quelli definiti nella prima suddivisione del trasferimento.",
-        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
-        "webhook_response_TRANSACTIONS": "Transaction details",
-        "webhook_response_ACCOUNTS": "Account details",
-        "webhook_response_none_NONE": "No details",
+        "webhook_trigger_STORE_TRANSACTION": "Dopo aver creato la transazione",
+        "webhook_trigger_UPDATE_TRANSACTION": "Dopo aver aggiornato la transazione",
+        "webhook_trigger_DESTROY_TRANSACTION": "Dopo aver eliminato la transazione",
+        "webhook_response_TRANSACTIONS": "Dettagli transazione",
+        "webhook_response_ACCOUNTS": "Dettagli conto",
+        "webhook_response_none_NONE": "Nessun dettaglio",
         "webhook_delivery_JSON": "JSON",
         "actions": "Azioni",
         "meta_data": "Meta dati",
         "webhook_messages": "Webhook message",
         "inactive": "Disattivo",
         "no_webhook_messages": "There are no webhook messages",
-        "inspect": "Inspect",
-        "create_new_webhook": "Create new webhook",
+        "inspect": "Ispeziona",
+        "create_new_webhook": "Crea nuovo webhook",
         "webhooks": "Webhook",
         "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
         "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
@@ -115,8 +115,8 @@
         "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
         "no_attempts": "There are no unsuccessful attempts. That's a good thing!",
         "webhook_attempt_at": "Attempt at {moment}",
-        "logs": "Logs",
-        "response": "Response",
+        "logs": "Log",
+        "response": "Risposta",
         "visit_webhook_url": "Visit webhook URL",
         "reset_webhook_secret": "Reset webhook secret"
     },
@@ -132,20 +132,20 @@
         "payment_date": "Data pagamento",
         "invoice_date": "Data fatturazione",
         "internal_reference": "Riferimento interno",
-        "webhook_response": "Response",
+        "webhook_response": "Risposta",
         "webhook_trigger": "Trigger",
-        "webhook_delivery": "Delivery"
+        "webhook_delivery": "Consegna"
     },
     "list": {
         "active": "Attivo",
         "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
+        "response": "Risposta",
+        "delivery": "Consegna",
         "url": "URL",
-        "secret": "Secret"
+        "secret": "Segreto"
     },
     "config": {
         "html_language": "it",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "do MMMM yyyy @ HH:mm:ss"
     }
 }
