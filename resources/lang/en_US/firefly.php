@@ -242,7 +242,7 @@ return [
     'inspect'                              => 'Inspect',
     'create_new_webhook'                   => 'Create new webhook',
     'webhooks_create_breadcrumb'           => 'Create new webhook',
-    'webhook_trigger_form_help'            => 'Indicate on what event the webhook wil trigger',
+    'webhook_trigger_form_help'            => 'Indicate on what event the webhook will trigger',
     'webhook_response_form_help'           => 'Indicate what the webhook must submit to the URL.',
     'webhook_delivery_form_help'           => 'Which format the webhook must deliver data in.',
     'webhook_active_form_help'             => 'The webhook must be active or it won\'t be called.',
