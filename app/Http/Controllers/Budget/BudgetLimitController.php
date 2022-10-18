@@ -160,6 +160,9 @@ class BudgetLimitController extends Controller
         if ((int) $amount > 268435456) {
             $amount = '268435456';
         }
+        if((float) $amount < 0.0) {
+            $amount = bcmul($amount, '-1');
+        }
 
         if (null !== $limit) {
             $limit->amount = $amount;
@@ -225,6 +228,9 @@ class BudgetLimitController extends Controller
         }
         if ((int) $amount > 268435456) { // 268 million
             $amount = '268435456';
+        }
+        if((float) $amount < 0.0) {
+            $amount = bcmul($amount, '-1');
         }
 
         $limit = $this->blRepository->update($budgetLimit, ['amount' => $amount]);
