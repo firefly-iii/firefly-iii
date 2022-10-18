@@ -101,7 +101,7 @@
         "inspect": "Inspecteren",
         "create_new_webhook": "Maak nieuwe webhook",
         "webhooks": "Webhooks",
-        "webhook_trigger_form_help": "Geef aan bij welke gebeurtenis de webhook afgaat",
+        "webhook_trigger_form_help": "Indicate on what event the webhook will trigger",
         "webhook_response_form_help": "Geef aan wat de webhook mee moet sturen.",
         "webhook_delivery_form_help": "Geef aan welk dataformaat gebruikt moet worden.",
         "webhook_active_form_help": "De webhook moet actief zijn anders doet-ie het niet.",

@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.7.14 - 2022-10-19
+
+### Fixed
+- Bulk editing transactions works.
+- Negative budgets no longer work.
+
 ## 5.7.13 - 2022-10-17
 
 ### Added

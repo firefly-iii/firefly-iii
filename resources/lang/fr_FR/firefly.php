@@ -242,7 +242,7 @@ return [
     'inspect'                              => 'Inspecter',
     'create_new_webhook'                   => 'Créer un nouveau webhook',
     'webhooks_create_breadcrumb'           => 'Créer un nouveau webhook',
-    'webhook_trigger_form_help'            => 'Indiquer sur quel événement le webhook va se déclencher',
+    'webhook_trigger_form_help'            => 'Indique sur quel événement le webhook va se déclencher',
     'webhook_response_form_help'           => 'Indiquer ce que le webhook doit envoyer à l\'URL.',
     'webhook_delivery_form_help'           => 'Le format dans lequel le webhook doit fournir des données.',
     'webhook_active_form_help'             => 'Le webhook doit être actif, sinon il ne sera pas appelé.',
@@ -1336,7 +1336,7 @@ return [
 
     // profile:
     'purge_data_title'                          => 'Purger des données de Firefly III',
-    'purge_data_expl'                           => '« Purge» signifie « supprimer ce qui est déjà supprimé». Dans des circonstances normales, Firefly III ne supprime rien définitivement. Il ne fait que le cacher. Cela peut être ennuyeux lorsque vous importez des données d\'autres sources, car les transactions supprimées seront toujours reconnues comme doublons possibles. Le bouton ci-dessous supprime tous ces enregistrements précédemment "supprimés".',
+    'purge_data_expl'                           => '« Purger » signifie « supprimer ce qui est déjà supprimé ». En temps normal, Firefly III ne supprime rien définitivement. Il ne fait que le cacher. Le bouton ci-dessous supprime tous ces enregistrements précédemment "supprimés".',
     'delete_stuff_header'                       => 'Supprimer et purger les données',
     'purge_all_data'                            => 'Purger tous les enregistrements supprimés',
     'purge_data'                                => 'Purger les données',

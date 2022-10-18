@@ -101,7 +101,7 @@
         "inspect": "Inspect",
         "create_new_webhook": "Opret ny webhook",
         "webhooks": "Webhooks",
-        "webhook_trigger_form_help": "Indicate on what event the webhook wil trigger",
+        "webhook_trigger_form_help": "Indicate on what event the webhook will trigger",
         "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
         "webhook_delivery_form_help": "Hvilket format webhook skal levere data i.",
         "webhook_active_form_help": "Webhooken skal v\u00e6re aktiv, ellers vil den ikke blive kaldt.",

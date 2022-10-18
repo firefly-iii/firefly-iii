@@ -101,7 +101,7 @@
         "inspect": "Zbadaj",
         "create_new_webhook": "Utw\u00f3rz nowy webhook",
         "webhooks": "Webhooki",
-        "webhook_trigger_form_help": "Wska\u017c zdarzenie do wyzwolenia webhook'a",
+        "webhook_trigger_form_help": "Indicate on what event the webhook will trigger",
         "webhook_response_form_help": "Wska\u017c, co webhook musi przes\u0142a\u0107 do adresu URL.",
         "webhook_delivery_form_help": "W jakim formacie webhook musi dostarcza\u0107 dane.",
         "webhook_active_form_help": "Webhook musi by\u0107 aktywny lub nie zostanie wywo\u0142any.",
