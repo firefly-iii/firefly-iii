@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
@@ -32,6 +33,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Log;
 
@@ -102,8 +104,8 @@ class BulkController extends Controller
         $ignoreCategory = 1 === (int) $request->get('ignore_category');
         $ignoreBudget   = 1 === (int) $request->get('ignore_budget');
         $tagsAction     = $request->get('tags_action');
-
-        $count = 0;
+        $collection     = new Collection;
+        $count          = 0;
 
         foreach ($journalIds as $journalId) {
             $journalId = (int) $journalId;
@@ -114,9 +116,17 @@ class BulkController extends Controller
                 $resultC = $this->updateJournalCategory($journal, $ignoreCategory, $request->convertString('category'));
                 if ($resultA || $resultB || $resultC) {
                     $count++;
+                    $collection->push($journal);
                 }
             }
         }
+
+        // run rules on changed journals:
+        /** @var TransactionJournal $journal */
+        foreach ($collection as $journal) {
+            event(new UpdatedTransactionGroup($journal->transactionGroup));
+        }
+
         app('preferences')->mark();
         $request->session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count));
 

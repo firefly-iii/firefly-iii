@@ -45,8 +45,8 @@ return [
     'other_meta_data'         => 'Другие метаданные',
     'invited_at'              => 'Invited at',
     'expires'                 => 'Invitation expires',
-    'invited_by'              => 'Invited by',
-    'invite_link'             => 'Invite link',
+    'invited_by'              => 'Пригласил',
+    'invite_link'             => 'Ссылка на приглашение',
     'account_type'            => 'Тип профиля',
     'created_at'              => 'Создан',
     'account'                 => 'Счёт',
@@ -143,9 +143,9 @@ return [
     'expected_info'           => 'Следующая ожидаемая операция',
     'start_date'              => 'Начальная дата',
     'trigger'                 => 'Trigger',
-    'response'                => 'Response',
-    'delivery'                => 'Delivery',
-    'url'                     => 'URL',
+    'response'                => 'Ответ',
+    'delivery'                => 'Доставка',
+    'url'                     => 'Ссылка',
     'secret'                  => 'Secret',
 
 ];

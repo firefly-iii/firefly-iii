@@ -242,7 +242,7 @@ return [
     'inspect'                              => 'Inspecteren',
     'create_new_webhook'                   => 'Maak nieuwe webhook',
     'webhooks_create_breadcrumb'           => 'Maak nieuwe webhook',
-    'webhook_trigger_form_help'            => 'Geef aan bij welke gebeurtenis de webhook afgaat',
+    'webhook_trigger_form_help'            => 'Indicate on what event the webhook will trigger',
     'webhook_response_form_help'           => 'Geef aan wat de webhook mee moet sturen.',
     'webhook_delivery_form_help'           => 'Geef aan welk dataformaat gebruikt moet worden.',
     'webhook_active_form_help'             => 'De webhook moet actief zijn anders doet-ie het niet.',
@@ -1336,7 +1336,7 @@ return [
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
-    'purge_data_expl'                           => '"Purging" means "deleting that which is already deleted". In normal circumstances, Firefly III deletes nothing permanently. It just hides it. This can be annoying when you import data from other sources, as removed transactions will still be recognized as possible duplicates. The button below deletes all of these previously "deleted" records FOREVER.',
+    'purge_data_expl'                           => '"Purging" means "deleting that which is already deleted". In normal circumstances, Firefly III deletes nothing permanently. It just hides it. The button below deletes all of these previously "deleted" records FOREVER.',
     'delete_stuff_header'                       => 'Delete and purge data',
     'purge_all_data'                            => 'Purge all deleted records',
     'purge_data'                                => 'Purge data',

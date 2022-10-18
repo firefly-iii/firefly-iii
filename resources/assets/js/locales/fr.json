@@ -101,7 +101,7 @@
         "inspect": "Inspecter",
         "create_new_webhook": "Cr\u00e9er un nouveau webhook",
         "webhooks": "Webhooks",
-        "webhook_trigger_form_help": "Indiquer sur quel \u00e9v\u00e9nement le webhook va se d\u00e9clencher",
+        "webhook_trigger_form_help": "Indique sur quel \u00e9v\u00e9nement le webhook va se d\u00e9clencher",
         "webhook_response_form_help": "Indiquer ce que le webhook doit envoyer \u00e0 l'URL.",
         "webhook_delivery_form_help": "Le format dans lequel le webhook doit fournir des donn\u00e9es.",
         "webhook_active_form_help": "Le webhook doit \u00eatre actif, sinon il ne sera pas appel\u00e9.",
