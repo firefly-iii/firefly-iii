@@ -45,12 +45,15 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyController
  */
 class DestroyController extends Controller
 {
+    private bool $unused;
+
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/destroyData
@@ -62,8 +65,8 @@ class DestroyController extends Controller
      */
     public function destroy(DestroyRequest $request): JsonResponse
     {
-        $objects = $request->getObjects();
-
+        $objects      = $request->getObjects();
+        $this->unused = $request->boolean('unused', false);
         switch ($objects) {
             default:
                 throw new FireflyException(sprintf('This endpoint can\'t handle object "%s"', $objects));
@@ -260,9 +263,19 @@ class DestroyController extends Controller
         $repository = app(AccountRepositoryInterface::class);
         $collection = $repository->getAccountsByType($types);
         $service    = app(AccountDestroyService::class);
+
         /** @var Account $account */
         foreach ($collection as $account) {
-            $service->destroy($account, null);
+            $count = $account->transactions()->count();
+            if (true === $this->unused && 0 === $count) {
+                Log::info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
+                $service->destroy($account, null);
+                continue;
+            }
+            if (false === $this->unused) {
+                Log::info(sprintf('Deleting account #%d "%s"', $account->id, $account->name));
+                $service->destroy($account, null);
+            }
         }
     }
 

@@ -56,6 +56,7 @@ class DestroyRequest extends FormRequest
 
         return [
             'objects' => sprintf('required|min:1|string|in:%s', $valid),
+            'unused'  => 'in:true,false',
         ];
     }
 }

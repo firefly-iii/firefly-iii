@@ -257,6 +257,21 @@
                                             data-type="liabilities" class="confirm btn btn-warning btn-sm"><span
                                                 class="fa fa-ticket"></span> {{ 'delete_all_liabilities'|_ }}</button>
                                 </div>
+                                <h4>{{ 'accounts'|_ }}</h4>
+                                <p>
+                                    <em class="text-info">
+                                        {{ 'delete_unused_accounts'|_ }}
+                                    </em>
+                                </p>
+                                <div class="btn-group">
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_unused_accounts')|escape('html') }}"
+                                            data-type="unused_accounts" class="confirm btn btn-warning btn-sm"><span
+                                                class="fa fa-credit-card"></span> {{ 'delete_all_unused_accounts'|_ }}
+                                    </button>
+                                </div>
+
+
                                 <h4>{{ 'transactions'|_ }}</h4>
                                 <div class="btn-group">
                                     <button type="button"
@@ -301,8 +316,11 @@
                 var classes = link.find('i').attr('class');
                 var url = deleteAPIRoute + '?objects=' + link.data('type');
                 // different URL for purge route:
-                if(link.data('type') === 'purge') {
+                if (link.data('type') === 'purge') {
                     url = '{{ route('api.v1.data.purge') }}';
+                }
+                if (link.data('type') === 'unused_accounts') {
+                    url = deleteAPIRoute + '?objects=accounts&unused=true';
                 }
 
                 // replace icon with loading thing

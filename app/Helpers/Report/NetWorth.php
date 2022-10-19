@@ -33,6 +33,7 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use JsonException;
+use Illuminate\Support\Facades\Log;
 
 /**
  *
