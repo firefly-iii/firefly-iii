@@ -242,7 +242,7 @@ return [
     'inspect'                              => 'Zbadaj',
     'create_new_webhook'                   => 'Utwórz nowy webhook',
     'webhooks_create_breadcrumb'           => 'Utwórz nowy webhook',
-    'webhook_trigger_form_help'            => 'Wskaż zdarzenie do wyzwolenia webhook\'a',
+    'webhook_trigger_form_help'            => 'Indicate on what event the webhook will trigger',
     'webhook_response_form_help'           => 'Wskaż, co webhook musi przesłać do adresu URL.',
     'webhook_delivery_form_help'           => 'W jakim formacie webhook musi dostarczać dane.',
     'webhook_active_form_help'             => 'Webhook musi być aktywny lub nie zostanie wywołany.',
@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Delete data from Firefly III',
     'permanent_delete_stuff'                    => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                 => 'Wszystkie twoje inne sesje zostały wylogowane.',
+    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_all_unused_accounts'                => 'Delete unused accounts',
+    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
     'delete_all_budgets'                        => 'Usuń WSZYSTKIE budżety',
     'delete_all_categories'                     => 'Usuń WSZYSTKIE kategorie',
     'delete_all_tags'                           => 'Usuń WSZYSTKIE tagi',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Przychód / dochód',
     'title_transfer'                            => 'Transfery',
     'title_transfers'                           => 'Transfery',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Ta transakcja jest już wypłatą',

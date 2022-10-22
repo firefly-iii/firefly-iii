@@ -242,7 +242,7 @@ return [
     'inspect'                              => 'Inspecter',
     'create_new_webhook'                   => 'Créer un nouveau webhook',
     'webhooks_create_breadcrumb'           => 'Créer un nouveau webhook',
-    'webhook_trigger_form_help'            => 'Indiquer sur quel événement le webhook va se déclencher',
+    'webhook_trigger_form_help'            => 'Indique sur quel événement le webhook va se déclencher',
     'webhook_response_form_help'           => 'Indiquer ce que le webhook doit envoyer à l\'URL.',
     'webhook_delivery_form_help'           => 'Le format dans lequel le webhook doit fournir des données.',
     'webhook_active_form_help'             => 'Le webhook doit être actif, sinon il ne sera pas appelé.',
@@ -1336,7 +1336,7 @@ return [
 
     // profile:
     'purge_data_title'                          => 'Purger des données de Firefly III',
-    'purge_data_expl'                           => '"Purging" means "deleting that which is already deleted". In normal circumstances, Firefly III deletes nothing permanently. It just hides it. The button below deletes all of these previously "deleted" records FOREVER.',
+    'purge_data_expl'                           => '« Purger » signifie « supprimer ce qui est déjà supprimé ». En temps normal, Firefly III ne supprime rien définitivement. Il ne fait que le cacher. Le bouton ci-dessous supprime tous ces enregistrements précédemment "supprimés".',
     'delete_stuff_header'                       => 'Supprimer et purger les données',
     'purge_all_data'                            => 'Purger tous les enregistrements supprimés',
     'purge_data'                                => 'Purger les données',
@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Supprimer des données de Firefly III',
     'permanent_delete_stuff'                    => 'Vous pouvez supprimer des éléments de Firefly III. En utilisant les boutons ci-dessous, vos éléments seront cachés. Il n\'y a pas de bouton d\'annulation pour cela, mais les éléments peuvent rester dans la base de données où vous pouvez les restaurer si nécessaire.',
     'other_sessions_logged_out'                 => 'Toutes vos autres sessions ont été déconnectées.',
+    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_all_unused_accounts'                => 'Delete unused accounts',
+    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
     'delete_all_budgets'                        => 'Supprimer TOUS vos budgets',
     'delete_all_categories'                     => 'Supprimer TOUTES vos catégories',
     'delete_all_tags'                           => 'Supprimer TOUS vos tags',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Recette / revenu',
     'title_transfer'                            => 'Transferts',
     'title_transfers'                           => 'Transferts',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Cette opération est déjà une dépense',

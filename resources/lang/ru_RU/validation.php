@@ -142,9 +142,9 @@ return [
     'unique_object_group'            => 'Название группы должно быть уникальным',
     'starts_with'                    => 'Значение должно начинаться с :values.',
     'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
-    'same_account_type'              => 'Both accounts must be of the same account type',
-    'same_account_currency'          => 'Both accounts must have the same currency setting',
+    'unique_existing_webhook'        => 'У вас уже есть другой вебхук с этим сочетанием URL, триггер, ответа и доставки.',
+    'same_account_type'              => 'Оба счета должны иметь один тип счета',
+    'same_account_currency'          => 'Оба счета должны иметь одну и ту же валюту',
 
     'secure_password'             => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Недопустимый тип для повторяющихся транзакций.',

@@ -1486,6 +1486,9 @@ return [
     'title_deposit'                             => 'Revenue / income',
     'title_transfer'                            => 'Transfers',
     'title_transfers'                           => 'Transfers',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'This transaction is already a withdrawal',

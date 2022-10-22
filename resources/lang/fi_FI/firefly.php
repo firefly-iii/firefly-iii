@@ -242,7 +242,7 @@ return [
     'inspect'                              => 'Inspect',
     'create_new_webhook'                   => 'Create new webhook',
     'webhooks_create_breadcrumb'           => 'Create new webhook',
-    'webhook_trigger_form_help'            => 'Indicate on what event the webhook wil trigger',
+    'webhook_trigger_form_help'            => 'Indicate on what event the webhook will trigger',
     'webhook_response_form_help'           => 'Indicate what the webhook must submit to the URL.',
     'webhook_delivery_form_help'           => 'Which format the webhook must deliver data in.',
     'webhook_active_form_help'             => 'The webhook must be active or it won\'t be called.',
@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Delete data from Firefly III',
     'permanent_delete_stuff'                    => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                 => 'Kaikki muut istuntosi on kirjattu ulos.',
+    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_all_unused_accounts'                => 'Delete unused accounts',
+    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
     'delete_all_budgets'                        => 'Poista KAIKKI budjettisi',
     'delete_all_categories'                     => 'Poista KAIKKI kategoriasi',
     'delete_all_tags'                           => 'Poista KAIKKI tägit',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Tuotto / ansio',
     'title_transfer'                            => 'Tilisiirrot',
     'title_transfers'                           => 'Tilisiirrot',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Tämä tapahtuma on jo nosto',

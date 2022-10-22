@@ -242,7 +242,7 @@ return [
     'inspect'                              => 'Дослідити',
     'create_new_webhook'                   => 'Створити новий веб-хук',
     'webhooks_create_breadcrumb'           => 'Створити новий веб-хук',
-    'webhook_trigger_form_help'            => 'Укажіть, за якої події запускатиметься веб-хук',
+    'webhook_trigger_form_help'            => 'Indicate on what event the webhook will trigger',
     'webhook_response_form_help'           => 'Укажіть, що веб-хук має передати в URL-адресу.',
     'webhook_delivery_form_help'           => 'У якому форматі веб-хук має надавати дані.',
     'webhook_active_form_help'             => 'Веб-хук має бути активним, інакше його не буде викликано.',
@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Видалити дані з Firefly III',
     'permanent_delete_stuff'                    => 'Ви можете видалити вміст з Firefly III. Використання кнопок нижче означає, що ваші елементи будуть видалені з поля зору та приховані. Для цього немає кнопки скасування, але елементи можуть залишатися в базі даних, де ви можете їх зберегти, якщо це необхідно.',
     'other_sessions_logged_out'                 => 'Усі інші ваші сеанси вийшли з системи.',
+    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_all_unused_accounts'                => 'Delete unused accounts',
+    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
     'delete_all_budgets'                        => 'Видалити УСІ свої бюджети',
     'delete_all_categories'                     => 'Видалити ВСІ ваші категорії',
     'delete_all_tags'                           => 'Видалити УСІ свої теги',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Дохід / прихід',
     'title_transfer'                            => 'Переказ',
     'title_transfers'                           => 'Перекази',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Ця транзакція вже є витратою',

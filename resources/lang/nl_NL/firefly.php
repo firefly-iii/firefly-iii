@@ -242,7 +242,7 @@ return [
     'inspect'                              => 'Inspecteren',
     'create_new_webhook'                   => 'Maak nieuwe webhook',
     'webhooks_create_breadcrumb'           => 'Maak nieuwe webhook',
-    'webhook_trigger_form_help'            => 'Geef aan bij welke gebeurtenis de webhook afgaat',
+    'webhook_trigger_form_help'            => 'Indicate on what event the webhook will trigger',
     'webhook_response_form_help'           => 'Geef aan wat de webhook mee moet sturen.',
     'webhook_delivery_form_help'           => 'Geef aan welk dataformaat gebruikt moet worden.',
     'webhook_active_form_help'             => 'De webhook moet actief zijn anders doet-ie het niet.',
@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Delete data from Firefly III',
     'permanent_delete_stuff'                    => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                 => 'Al je andere sessies zijn uitgelogd.',
+    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_all_unused_accounts'                => 'Delete unused accounts',
+    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
     'delete_all_budgets'                        => 'Verwijder ALLE budgetten',
     'delete_all_categories'                     => 'Verwijder ALLE categorieën',
     'delete_all_tags'                           => 'Verwijder ALLE tags',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Inkomsten',
     'title_transfer'                            => 'Overschrijvingen',
     'title_transfers'                           => 'Overschrijvingen',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Deze transactie is al een uitgave',
