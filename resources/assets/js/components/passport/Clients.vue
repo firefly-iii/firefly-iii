@@ -127,7 +127,7 @@
                 <label class="col-md-3 col-form-label">{{ $t('firefly.name') }}</label>
 
                 <div class="col-md-9">
-                  <input id="create-client-name" v-model="createForm.name" class="form-control"
+                  <input id="create-client-name" v-model="createForm.name" class="form-control" spellcheck="false"
                          type="text" @keyup.enter="store">
 
                   <span class="form-text text-muted">
@@ -141,7 +141,7 @@
                 <label class="col-md-3 col-form-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
 
                 <div class="col-md-9">
-                  <input v-model="createForm.redirect" class="form-control" name="redirect"
+                  <input v-model="createForm.redirect" class="form-control" name="redirect" spellcheck="false"
                          type="text" @keyup.enter="store">
 
                   <span class="form-text text-muted">
@@ -214,7 +214,7 @@
                 <label class="col-md-3 col-form-label">{{ $t('firefly.name') }}</label>
 
                 <div class="col-md-9">
-                  <input id="edit-client-name" v-model="editForm.name" class="form-control"
+                  <input id="edit-client-name" v-model="editForm.name" class="form-control" spellcheck="false"
                          type="text" @keyup.enter="update">
 
                   <span class="form-text text-muted">
@@ -228,7 +228,7 @@
                 <label class="col-md-3 col-form-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
 
                 <div class="col-md-9">
-                  <input v-model="editForm.redirect" class="form-control" name="redirect"
+                  <input v-model="editForm.redirect" class="form-control" name="redirect" spellcheck="false"
                          type="text" @keyup.enter="update">
 
                   <span class="form-text text-muted">
@@ -268,7 +268,7 @@
               {{ $t('firefly.profile_oauth_client_secret_expl') }}
             </p>
 
-            <input v-model="clientSecret" class="form-control" type="text">
+            <input v-model="clientSecret" class="form-control" type="text" spellcheck="false">
           </div>
 
           <!-- Modal Actions -->

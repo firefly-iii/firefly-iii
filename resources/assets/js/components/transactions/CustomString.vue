@@ -27,7 +27,7 @@
     </div>
     <div class="col-sm-12">
       <div class="input-group">
-        <input ref="str" :name="name" :placeholder="title"
+        <input ref="str" :name="name" :placeholder="title" spellcheck="false"
                :title="title" :value="value"
                autocomplete="off"
                class="form-control" type="text"

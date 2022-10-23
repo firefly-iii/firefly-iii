@@ -41,13 +41,13 @@
                                     <div class="input-group-addon">
                                         <span class="fa fa-calendar"></span>
                                     </div>
-                                    <input type="date" value="{{ start.format('Y-m-d') }}" name="start_date" class="form-control">
+                                    <input type="date" value="{{ start.format('Y-m-d') }}" name="start_date" class="form-control" spellcheck="false">
                                 </div>
                             </td>
                             <td>
                                 <div class="input-group">
                                     <span class="input-group-addon non-selectable-currency-symbol">{{ currency.symbol }}</span>
-                                    <input type="number" value="{{ startBalance }}" name="start_balance" class="form-control">
+                                    <input type="number" value="{{ startBalance }}" name="start_balance" class="form-control" spellcheck="false">
                                 </div>
                             </td>
                             <td>
@@ -55,13 +55,13 @@
                                     <div class="input-group-addon">
                                         <span class="fa fa-calendar"></span>
                                     </div>
-                                    <input type="date" value="{{ end.format('Y-m-d') }}" name="end_date" class="form-control">
+                                    <input type="date" value="{{ end.format('Y-m-d') }}" name="end_date" class="form-control" spellcheck="false">
                                 </div>
                             </td>
                             <td>
                                 <div class="input-group">
                                     <span class="input-group-addon non-selectable-currency-symbol">{{ currency.symbol }}</span>
-                                    <input type="number" value="{{ endBalance }}" name="end_balance" class="form-control">
+                                    <input type="number" value="{{ endBalance }}" name="end_balance" class="form-control" spellcheck="false">
                                 </div>
                             </td>
                         </tr>

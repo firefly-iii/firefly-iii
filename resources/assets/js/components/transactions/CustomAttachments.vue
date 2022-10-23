@@ -27,7 +27,7 @@
     </div>
     <div class="col-sm-12">
       <div class="input-group">
-        <input ref="input"
+        <input ref="input" spellcheck="false"
                :name="name"
                :placeholder="title"
                :title="title"

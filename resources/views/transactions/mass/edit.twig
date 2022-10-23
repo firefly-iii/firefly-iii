@@ -111,7 +111,7 @@
 
                                         {# SOURCE ACCOUNT NAME FOR DEPOSIT #}
                                         {% if journal.transaction_type_type == 'Deposit' %}
-                                            <input class="form-control input-sm"
+                                            <input class="form-control input-sm" spellcheck="false"
                                                    placeholder="{% if journal.source_type != 'Cash account' %}{{ journal.source_account_name }}{% endif %}"
                                                    autocomplete="off"
                                                    name="source_name[{{ journal.transaction_journal_id }}]" type="text"
@@ -133,7 +133,7 @@
 
                                         {# DESTINATION ACCOUNT NAME FOR WITHDRAWAL #}
                                         {% if journal.transaction_type_type == 'Withdrawal' %}
-                                            <input class="form-control input-sm"
+                                            <input class="form-control input-sm" spellcheck="false"
                                                    placeholder="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}"
                                                    name="destination_name[{{ journal.transaction_journal_id }}]" type="text" autocomplete="off"
                                                    value="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}">
@@ -141,7 +141,7 @@
                                     </td>
                                     {# category #}
                                     <td style="position: relative;">
-                                        <input class="form-control input-sm" placeholder="{{ journal.category_name }}" autocomplete="off"
+                                        <input class="form-control input-sm" placeholder="{{ journal.category_name }}" autocomplete="off" spellcheck="false"
                                                name="category[{{ journal.transaction_journal_id }}]" type="text" value="{{ journal.category_name }}">
                                     </td>
                                     {# budget #}
