@@ -61,6 +61,7 @@ class CorrectDatabase extends Command
             'firefly-iii:create-link-types',
             'firefly-iii:create-access-tokens',
             'firefly-iii:remove-bills',
+            'firefly-iii:fix-negative-limits',
             'firefly-iii:enable-currencies',
             'firefly-iii:fix-transfer-budgets',
             'firefly-iii:fix-uneven-amount',

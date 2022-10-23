@@ -173,6 +173,7 @@
       "@php artisan firefly-iii:create-link-types",
       "@php artisan firefly-iii:create-access-tokens",
       "@php artisan firefly-iii:remove-bills",
+      "@php artisan firefly-iii:fix-negative-limits",
       "@php artisan firefly-iii:enable-currencies",
       "@php artisan firefly-iii:fix-transfer-budgets",
       "@php artisan firefly-iii:fix-uneven-amount",

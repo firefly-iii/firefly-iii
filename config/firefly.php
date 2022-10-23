@@ -219,6 +219,13 @@ return [
     'default_language'             => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
     'default_locale'               => envNonEmpty('DEFAULT_LOCALE', 'equal'),
 
+    // account types that may have or set a currency
+    'valid_currency_account_types' => [
+        AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,
+        AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT,
+        AccountType::RECONCILIATION
+    ],
+
     // "value must be in this list" values
     'valid_attachment_models'      => [
         Account::class,

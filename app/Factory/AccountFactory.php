@@ -288,18 +288,27 @@ class AccountFactory
             $fields = $this->validCCFields;
         }
 
+        // remove currency_id if necessary.
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
+        if (!in_array($type, $list, true)) {
+            $pos = array_search('currency_id', $fields);
+            if ($pos !== false) {
+                unset($fields[$pos]);
+            }
+        }
+
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         foreach ($fields as $field) {
             // if the field is set but NULL, skip it.
             // if the field is set but "", update it.
             if (array_key_exists($field, $data) && null !== $data[$field]) {
-
                 // convert boolean value:
                 if (is_bool($data[$field]) && false === $data[$field]) {
                     $data[$field] = 0;
                 }
-                if (is_bool($data[$field]) && true === $data[$field]) {
+                if (true === $data[$field]) {
                     $data[$field] = 1;
                 }
 
