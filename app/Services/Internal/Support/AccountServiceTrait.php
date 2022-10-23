@@ -115,6 +115,16 @@ trait AccountServiceTrait
             $fields = $this->validAssetFields;
         }
 
+        // remove currency_id if necessary.
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
+        if(!in_array($type, $list, true)) {
+            $pos = array_search('currency_id', $fields);
+            if ($pos !== false) {
+                unset($fields[$pos]);
+            }
+        }
+
         // the account role may not be set in the data but we may have it already:
         if (!array_key_exists('account_role', $data)) {
             $data['account_role'] = null;
