@@ -108,7 +108,7 @@
                 <label class="col-md-4 col-form-label">{{ $t('firefly.name') }}</label>
 
                 <div class="col-md-6">
-                  <input id="create-token-name" v-model="form.name" class="form-control" name="name" type="text">
+                  <input id="create-token-name" v-model="form.name" class="form-control" name="name" type="text" spellcheck="false">
                 </div>
               </div>
 

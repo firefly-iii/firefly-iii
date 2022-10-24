@@ -60,8 +60,8 @@
                                                         ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
                                                     {% endif %}
                                                 {% endif %}
-                                                
-                                                
+
+
                                             </td>
                                             <td>{{ journal.date.isoFormat(monthAndDayFormat) }}</td>
                                             <td>
@@ -104,7 +104,7 @@
                                     <tr>
                                         <th style="width:25%;">{{ trans('list.category') }}</th>
                                         <td>
-                                            <input class="form-control" placeholder="" name="category" autocomplete="off" type="text" value="">
+                                            <input class="form-control" placeholder="" name="category" autocomplete="off" type="text" value="" spellcheck="false">
                                         </td>
                                         <td>
                                             <div class="checkbox">
@@ -136,7 +136,7 @@
                                     <tr>
                                         <th>{{ trans('list.tags') }}</th>
                                         <td>
-                                            <input class="form-control" placeholder="" name="tags" autocomplete="off" type="text" value="">
+                                            <input class="form-control" placeholder="" name="tags" autocomplete="off" type="text" value="" spellcheck="false">
                                         </td>
                                         <td>
                                             <div class="radio">
