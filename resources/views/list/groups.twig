@@ -138,7 +138,7 @@
                     </a>
                     {% endif %}
                 </td>
-                <td style="{{ style|raw }};text-align:right;">
+                <td style="{{ style|raw }};text-align:right">
                     {#  deposit #}
                     {% if transaction.transaction_type_type == 'Deposit' %}
                         {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
