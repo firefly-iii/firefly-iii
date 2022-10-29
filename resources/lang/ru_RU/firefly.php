@@ -1344,9 +1344,9 @@ return [
     'delete_data_title'                         => 'Delete data from Firefly III',
     'permanent_delete_stuff'                    => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                 => 'Все прочие ваши сессии были прекращены.',
-    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
-    'delete_all_unused_accounts'                => 'Delete unused accounts',
-    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
+    'delete_unused_accounts'                    => 'Удаление неиспользуемых учетных записей очистит ваши автоматически заполненные списки.',
+    'delete_all_unused_accounts'                => 'Удалить неиспользуемые учётные записи',
+    'deleted_all_unused_accounts'               => 'Все неиспользуемые учетные записи удалены',
     'delete_all_budgets'                        => 'Удалить ВСЕ ваши бюджеты',
     'delete_all_categories'                     => 'Удалить ВСЕ ваши категории',
     'delete_all_tags'                           => 'Удалить ВСЕ ваши метки',
@@ -1487,7 +1487,7 @@ return [
     'title_transfer'                            => 'Переводы',
     'title_transfers'                           => 'Переводы',
     'submission_options'                        => 'Submission options',
-    'apply_rules_checkbox'                     => 'Apply rules',
+    'apply_rules_checkbox'                     => 'Применить правила',
     'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
