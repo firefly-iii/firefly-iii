@@ -102,7 +102,6 @@ class TransactionFactory
         ];
         try {
             $result = Transaction::create($data);
-
         } catch (QueryException $e) {
             Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
             Log::error($e->getMessage());

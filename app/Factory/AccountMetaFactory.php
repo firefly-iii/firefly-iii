@@ -49,7 +49,6 @@ class AccountMetaFactory
         $entry = $account->accountMeta()->where('name', $field)->first();
         // must not be an empty string:
         if ('' !== $value) {
-
             // if $data has field and $entry is null, create new one:
             if (null === $entry) {
                 Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $value, $account->id, $account->name));
@@ -84,5 +83,4 @@ class AccountMetaFactory
     {
         return AccountMeta::create($data);
     }
-
 }

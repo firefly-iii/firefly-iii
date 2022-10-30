@@ -132,7 +132,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
                 return parent::render($request, $e);
         }
-
     }
 
     /**
@@ -200,7 +199,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
         }
 
         return redirect(route('transactions.index', [strtolower($type)]));
-
     }
 
     /**
@@ -232,7 +230,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
             if (null !== $journal) {
                 return redirect(route('transactions.show', [$journal->transaction_group_id]));
             }
-
         }
         if (Bill::class === $attachment->attachable_type) {
             // is linked to bill.
@@ -247,5 +244,4 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
         return parent::render($request, $exception);
     }
-
 }

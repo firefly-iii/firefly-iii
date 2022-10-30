@@ -43,7 +43,8 @@ use Log;
  */
 class AccountFactory
 {
-    use AccountServiceTrait, LocationServiceTrait;
+    use AccountServiceTrait;
+    use LocationServiceTrait;
 
     protected AccountRepositoryInterface $accountRepository;
     protected array                      $validAssetFields;
@@ -279,7 +280,6 @@ class AccountFactory
      */
     private function storeMetaData(Account $account, array $data): void
     {
-
         $fields = $this->validFields;
         if ($account->accountType->type === AccountType::ASSET) {
             $fields = $this->validAssetFields;
@@ -292,7 +292,7 @@ class AccountFactory
         $type = $account->accountType->type;
         $list = config('firefly.valid_currency_account_types');
         if (!in_array($type, $list, true)) {
-            $pos = array_search('currency_id', $fields);
+            $pos = array_search('currency_id', $fields, true);
             if ($pos !== false) {
                 unset($fields[$pos]);
             }
@@ -399,6 +399,4 @@ class AccountFactory
         $this->user = $user;
         $this->accountRepository->setUser($user);
     }
-
-
 }

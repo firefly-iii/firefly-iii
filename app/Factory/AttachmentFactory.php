@@ -77,7 +77,7 @@ class AttachmentFactory
         );
         $notes      = (string) ($data['notes'] ?? '');
         if ('' !== $notes) {
-            $note = new Note;
+            $note = new Note();
             $note->noteable()->associate($attachment);
             $note->text = $notes;
             $note->save();
@@ -93,5 +93,4 @@ class AttachmentFactory
     {
         $this->user = $user;
     }
-
 }

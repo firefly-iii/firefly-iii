@@ -37,7 +37,8 @@ use Log;
  */
 class BillFactory
 {
-    use BillServiceTrait, CreatesObjectGroups;
+    use BillServiceTrait;
+    use CreatesObjectGroups;
 
     private User $user;
 
@@ -129,7 +130,6 @@ class BillFactory
         }
 
         return $bill;
-
     }
 
     /**
@@ -149,5 +149,4 @@ class BillFactory
     {
         $this->user = $user;
     }
-
 }

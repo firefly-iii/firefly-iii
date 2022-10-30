@@ -99,5 +99,4 @@ class CategoryFactory
     {
         $this->user = $user;
     }
-
 }

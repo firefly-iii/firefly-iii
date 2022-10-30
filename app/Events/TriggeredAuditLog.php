@@ -31,7 +31,6 @@ use Illuminate\Queue\SerializesModels;
  * Class TriggeredAuditLog
  */
 class TriggeredAuditLog extends Event
-
 {
     use SerializesModels;
 
@@ -52,5 +51,4 @@ class TriggeredAuditLog extends Event
         $this->before    = $before;
         $this->after     = $after;
     }
-
 }

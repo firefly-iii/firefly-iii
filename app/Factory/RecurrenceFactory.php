@@ -37,8 +37,8 @@ use Log;
  */
 class RecurrenceFactory
 {
-
-    use TransactionTypeTrait, RecurringTransactionTrait;
+    use TransactionTypeTrait;
+    use RecurringTransactionTrait;
 
     private MessageBag $errors;
     private User       $user;
@@ -50,7 +50,7 @@ class RecurrenceFactory
      */
     public function __construct()
     {
-        $this->errors = new MessageBag;
+        $this->errors = new MessageBag();
     }
 
     /**
@@ -120,20 +120,17 @@ class RecurrenceFactory
 
         if (array_key_exists('notes', $data['recurrence'])) {
             $this->updateNote($recurrence, (string) $data['recurrence']['notes']);
-
         }
 
         $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
         try {
             $this->createTransactions($recurrence, $data['transactions'] ?? []);
-
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             $recurrence->forceDelete();
             $message = sprintf('Could not create recurring transaction: %s', $e->getMessage());
             $this->errors->add('store', $message);
             throw new FireflyException($message, 0, $e);
-
         }
 
 
@@ -155,6 +152,4 @@ class RecurrenceFactory
     {
         $this->user = $user;
     }
-
-
 }

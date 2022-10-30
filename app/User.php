@@ -165,7 +165,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    use Notifiable;
+    use HasApiTokens;
 
     /**
      * The attributes that should be cast to native types.
@@ -212,7 +213,7 @@ class User extends Authenticatable
                 return $user;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -537,7 +538,7 @@ class User extends Authenticatable
      */
     public function userGroup(): BelongsTo
     {
-        return $this->belongsTo(UserGroup::class,);
+        return $this->belongsTo(UserGroup::class, );
     }
 
     /**
@@ -605,5 +606,4 @@ class User extends Authenticatable
         }
         return app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
     }
-
 }

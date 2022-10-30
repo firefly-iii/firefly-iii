@@ -31,7 +31,6 @@ use Illuminate\Support\Collection;
  */
 interface MessageGeneratorInterface
 {
-
     /**
      *
      */

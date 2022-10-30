@@ -22,7 +22,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Events;
 
 use FireflyIII\Models\Account;
@@ -46,5 +45,4 @@ class UpdatedAccount extends Event
     {
         $this->account = $account;
     }
-
 }

@@ -78,7 +78,7 @@ class TransactionGroupFactory
             throw new FireflyException('Created zero transaction journals.');
         }
 
-        $group = new TransactionGroup;
+        $group = new TransactionGroup();
         $group->user()->associate($this->user);
         $group->title = $title;
         $group->save();

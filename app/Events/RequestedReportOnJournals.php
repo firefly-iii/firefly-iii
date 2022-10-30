@@ -38,7 +38,9 @@ use Log;
  */
 class RequestedReportOnJournals
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public Collection $groups;
     public int        $userId;

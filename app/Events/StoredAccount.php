@@ -45,5 +45,4 @@ class StoredAccount extends Event
     {
         $this->account = $account;
     }
-
 }

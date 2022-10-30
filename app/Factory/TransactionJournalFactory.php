@@ -106,12 +106,12 @@ class TransactionJournalFactory
         $dataObject = new NullArrayObject($data);
 
         Log::debug('Start of TransactionJournalFactory::create()');
-        $collection   = new Collection;
+        $collection   = new Collection();
         $transactions = $dataObject['transactions'] ?? [];
         if (empty($transactions)) {
             Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
-            return new Collection;
+            return new Collection();
         }
         try {
             /** @var array $row */
@@ -312,10 +312,8 @@ class TransactionJournalFactory
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
         $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
         if (false === $json) {
-
             $json = json_encode((string) microtime(), JSON_THROW_ON_ERROR);
             Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
-
         }
         $hash = hash('sha256', $json);
         Log::debug(sprintf('The hash is: %s', $hash), $dataRow);

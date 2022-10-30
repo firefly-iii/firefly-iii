@@ -95,7 +95,7 @@ class TagFactory
         $tag       = Tag::create($array);
         if (null !== $tag && null !== $latitude && null !== $longitude) {
             // create location object.
-            $location             = new Location;
+            $location             = new Location();
             $location->latitude   = $latitude;
             $location->longitude  = $longitude;
             $location->zoom_level = $zoomLevel;
@@ -113,5 +113,4 @@ class TagFactory
     {
         $this->user = $user;
     }
-
 }

@@ -83,5 +83,4 @@ class BudgetFactory
     {
         $this->user = $user;
     }
-
 }

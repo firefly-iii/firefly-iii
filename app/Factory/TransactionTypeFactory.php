@@ -40,5 +40,4 @@ class TransactionTypeFactory
     {
         return TransactionType::whereType(ucfirst($type))->first();
     }
-
 }

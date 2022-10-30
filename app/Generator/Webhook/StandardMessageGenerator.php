@@ -147,7 +147,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 $basicMessage['content'] = [];
                 break;
             case WebhookResponse::TRANSACTIONS->value:
-                $transformer = new TransactionGroupTransformer;
+                $transformer = new TransactionGroupTransformer();
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
                 } catch (FireflyException $e) {
@@ -161,8 +161,8 @@ class StandardMessageGenerator implements MessageGeneratorInterface
             case WebhookResponse::ACCOUNTS->value:
                 $accounts = $this->collectAccounts($model);
                 foreach ($accounts as $account) {
-                    $transformer = new AccountTransformer;
-                    $transformer->setParameters(new ParameterBag);
+                    $transformer = new AccountTransformer();
+                    $transformer->setParameters(new ParameterBag());
                     $basicMessage['content'][] = $transformer->transform($account);
                 }
         }
@@ -184,7 +184,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function collectAccounts(TransactionGroup $transactionGroup): Collection
     {
-        $accounts = new Collection;
+        $accounts = new Collection();
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
             /** @var Transaction $transaction */
@@ -204,7 +204,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function storeMessage(Webhook $webhook, array $message): void
     {
-        $webhookMessage = new WebhookMessage;
+        $webhookMessage = new WebhookMessage();
         $webhookMessage->webhook()->associate($webhook);
         $webhookMessage->sent    = false;
         $webhookMessage->errored = false;
@@ -212,7 +212,6 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $webhookMessage->message = $message;
         $webhookMessage->save();
         Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
-
     }
 
     /**

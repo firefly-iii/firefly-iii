@@ -58,8 +58,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     #[Pure] public function __construct()
     {
-        $this->income   = new Collection;
-        $this->expenses = new Collection;
+        $this->income   = new Collection();
+        $this->expenses = new Collection();
     }
 
     /**

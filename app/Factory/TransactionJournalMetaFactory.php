@@ -87,5 +87,4 @@ class TransactionJournalMetaFactory
 
         return $entry;
     }
-
 }

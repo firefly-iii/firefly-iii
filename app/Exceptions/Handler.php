@@ -96,7 +96,7 @@ class Handler extends ExceptionHandler
             // somehow Laravel handler does not catch this:
             return response()->json(['message' => $e->getMessage(), 'exception' => 'OAuthServerException'], 401);
         }
-        if($e instanceof BadRequestHttpException) {
+        if ($e instanceof BadRequestHttpException) {
             return response()->json(['message' => $e->getMessage(), 'exception' => 'BadRequestHttpException'], 400);
         }
 
@@ -107,7 +107,7 @@ class Handler extends ExceptionHandler
 
         if ($request->expectsJson()) {
             $errorCode = 500;
-            $errorCode = $e instanceof MethodNotAllowedHttpException ? 405: $errorCode;
+            $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
             $isDebug = config('app.debug', false);
             if ($isDebug) {
@@ -140,7 +140,7 @@ class Handler extends ExceptionHandler
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
         // special view for database errors with extra instructions
-        if($e instanceof QueryException) {
+        if ($e instanceof QueryException) {
             $isDebug = config('app.debug');
 
             return response()->view('errors.DatabaseException', ['exception' => $e, 'debug' => $isDebug], 500);
@@ -215,9 +215,10 @@ class Handler extends ExceptionHandler
     {
         return !is_null(
             Arr::first(
-                $this->dontReport, function ($type) use ($e) {
-                return $e instanceof $type;
-            }
+                $this->dontReport,
+                function ($type) use ($e) {
+                    return $e instanceof $type;
+                }
             )
         );
     }
