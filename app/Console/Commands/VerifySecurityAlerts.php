@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
+use League\Flysystem\FilesystemException;
 use Log;
 use Storage;
 
@@ -50,7 +51,7 @@ class VerifySecurityAlerts extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws \League\Flysystem\FilesystemException
+     * @throws FilesystemException
      */
     public function handle(): int
     {

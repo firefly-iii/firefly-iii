@@ -86,11 +86,11 @@ class FixTransactionTypes extends Command
     private function collectJournals(): Collection
     {
         return TransactionJournal::with(['transactionType', 'transactions', 'transactions.account', 'transactions.account.accountType'])
-            ->get();
+                                 ->get();
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return bool
      */
@@ -105,7 +105,7 @@ class FixTransactionTypes extends Command
 
             return false;
         }
-        $expectedType = (string) config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
+        $expectedType = (string)config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
         if ($expectedType !== $type) {
             $this->line(
                 sprintf(
@@ -126,7 +126,7 @@ class FixTransactionTypes extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Account
      * @throws FireflyException
@@ -155,7 +155,7 @@ class FixTransactionTypes extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Account
      * @throws FireflyException
@@ -184,8 +184,8 @@ class FixTransactionTypes extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param string             $expectedType
+     * @param  TransactionJournal  $journal
+     * @param  string  $expectedType
      */
     private function changeJournal(TransactionJournal $journal, string $expectedType): void
     {

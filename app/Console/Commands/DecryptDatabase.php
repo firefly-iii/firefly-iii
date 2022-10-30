@@ -32,6 +32,8 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use stdClass;
 
 /**
@@ -75,7 +77,7 @@ class DecryptDatabase extends Command
         ];
         /**
          * @var string $table
-         * @var array  $fields
+         * @var array $fields
          */
         foreach ($tables as $table => $fields) {
             $this->decryptTable($table, $fields);
@@ -86,8 +88,8 @@ class DecryptDatabase extends Command
     }
 
     /**
-     * @param string $table
-     * @param array  $fields
+     * @param  string  $table
+     * @param  array  $fields
      */
     private function decryptTable(string $table, array $fields): void
     {
@@ -106,11 +108,11 @@ class DecryptDatabase extends Command
     }
 
     /**
-     * @param string $table
+     * @param  string  $table
      *
      * @return bool
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isDecrypted(string $table): bool
     {
@@ -122,15 +124,15 @@ class DecryptDatabase extends Command
             Log::error($e->getMessage());
         }
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
     }
 
     /**
-     * @param string $table
-     * @param string $field
+     * @param  string  $table
+     * @param  string  $field
      */
     private function decryptField(string $table, string $field): void
     {
@@ -142,9 +144,9 @@ class DecryptDatabase extends Command
     }
 
     /**
-     * @param string   $table
-     * @param string   $field
-     * @param stdClass $row
+     * @param  string  $table
+     * @param  string  $field
+     * @param  stdClass  $row
      */
     private function decryptRow(string $table, string $field, stdClass $row): void
     {
@@ -152,7 +154,7 @@ class DecryptDatabase extends Command
         if (null === $original) {
             return;
         }
-        $id    = (int) $row->id;
+        $id    = (int)$row->id;
         $value = '';
 
         try {
@@ -179,7 +181,7 @@ class DecryptDatabase extends Command
     /**
      * Tries to decrypt data. Will only throw an exception when the MAC is invalid.
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return string
      * @throws FireflyException
@@ -198,8 +200,8 @@ class DecryptDatabase extends Command
     }
 
     /**
-     * @param int    $id
-     * @param string $value
+     * @param  int  $id
+     * @param  string  $value
      */
     private function decryptPreferencesRow(int $id, string $value): void
     {
@@ -217,7 +219,7 @@ class DecryptDatabase extends Command
         }
 
         /** @var Preference $object */
-        $object = Preference::find((int) $id);
+        $object = Preference::find((int)$id);
         if (null !== $object) {
             $object->data = $newValue;
             $object->save();

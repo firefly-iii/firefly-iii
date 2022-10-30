@@ -28,8 +28,10 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # enable test .env file.
 # cp .ci/.env.ci .env
 
-# Do static code analysis.
-# ./vendor/bin/phpstan analyse -c .ci/phpstan.neon --no-progress
-./vendor/bin/phpstan analyse -c .ci/phpstan.neon
+# clean up php code
+cd $SCRIPT_DIR/php-cs-fixer
+composer update
+./vendor/bin/php-cs-fixer fix $SCRIPT_DIR/../app/Console --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+cd $SCRIPT_DIR/..
 
 exit 0

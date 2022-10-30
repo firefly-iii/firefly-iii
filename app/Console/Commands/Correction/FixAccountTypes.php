@@ -99,7 +99,7 @@ class FixAccountTypes extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @throws FireflyException
      */
@@ -140,7 +140,7 @@ class FixAccountTypes extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Transaction
      */
@@ -150,7 +150,7 @@ class FixAccountTypes extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Transaction
      */
@@ -160,10 +160,10 @@ class FixAccountTypes extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param string             $type
-     * @param Transaction        $source
-     * @param Transaction        $dest
+     * @param  TransactionJournal  $journal
+     * @param  string  $type
+     * @param  Transaction  $source
+     * @param  Transaction  $dest
      *
      * @throws FireflyException
      */

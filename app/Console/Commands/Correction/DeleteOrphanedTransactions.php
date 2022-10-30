@@ -66,6 +66,34 @@ class DeleteOrphanedTransactions extends Command
         return 0;
     }
 
+    private function deleteOrphanedJournals(): void
+    {
+        $set   = TransactionJournal::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+                                   ->whereNotNull('transaction_groups.deleted_at')
+                                   ->whereNull('transaction_journals.deleted_at')
+                                   ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id']);
+        $count = $set->count();
+        if (0 === $count) {
+            $this->info('No orphaned journals.');
+        }
+        if ($count > 0) {
+            $this->info(sprintf('Found %d orphaned journal(s).', $count));
+            foreach ($set as $entry) {
+                $journal = TransactionJournal::withTrashed()->find((int)$entry->id);
+                if (null !== $journal) {
+                    $journal->delete();
+                    $this->info(
+                        sprintf(
+                            'Journal #%d (part of deleted transaction group #%d) has been deleted as well.',
+                            $entry->id,
+                            $entry->transaction_group_id
+                        )
+                    );
+                }
+            }
+        }
+    }
+
     /**
      * @throws Exception
      */
@@ -73,18 +101,18 @@ class DeleteOrphanedTransactions extends Command
     {
         $count = 0;
         $set   = Transaction::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->whereNotNull('transaction_journals.deleted_at')
-            ->whereNull('transactions.deleted_at')
-            ->whereNotNull('transactions.id')
-            ->get(
-                [
-                    'transaction_journals.id as journal_id',
-                    'transactions.id as transaction_id',
-                ]
-            );
+                            ->whereNotNull('transaction_journals.deleted_at')
+                            ->whereNull('transactions.deleted_at')
+                            ->whereNotNull('transactions.id')
+                            ->get(
+                                [
+                                    'transaction_journals.id as journal_id',
+                                    'transactions.id as transaction_id',
+                                ]
+                            );
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $transaction = Transaction::find((int) $entry->transaction_id);
+            $transaction = Transaction::find((int)$entry->transaction_id);
             if (null !== $transaction) {
                 $transaction->delete();
                 $this->info(
@@ -109,13 +137,13 @@ class DeleteOrphanedTransactions extends Command
     {
         $set
                = Transaction::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-            ->whereNotNull('accounts.deleted_at')
-            ->get(['transactions.*']);
+                            ->whereNotNull('accounts.deleted_at')
+                            ->get(['transactions.*']);
         $count = 0;
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             // delete journals
-            $journal = TransactionJournal::find((int) $transaction->transaction_journal_id);
+            $journal = TransactionJournal::find((int)$transaction->transaction_journal_id);
             if ($journal) {
                 try {
                     $journal->delete();
@@ -123,7 +151,7 @@ class DeleteOrphanedTransactions extends Command
                     Log::info(sprintf('Could not delete journal %s', $e->getMessage()));
                 }
             }
-            Transaction::where('transaction_journal_id', (int) $transaction->transaction_journal_id)->delete();
+            Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
             $this->line(
                 sprintf(
                     'Deleted transaction journal #%d because account #%d was already deleted.',
@@ -135,34 +163,6 @@ class DeleteOrphanedTransactions extends Command
         }
         if (0 === $count) {
             $this->info('No orphaned accounts.');
-        }
-    }
-
-    private function deleteOrphanedJournals(): void
-    {
-        $set   = TransactionJournal::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
-            ->whereNotNull('transaction_groups.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id']);
-        $count = $set->count();
-        if (0 === $count) {
-            $this->info('No orphaned journals.');
-        }
-        if ($count > 0) {
-            $this->info(sprintf('Found %d orphaned journal(s).', $count));
-            foreach ($set as $entry) {
-                $journal = TransactionJournal::withTrashed()->find((int) $entry->id);
-                if (null !== $journal) {
-                    $journal->delete();
-                    $this->info(
-                        sprintf(
-                            'Journal #%d (part of deleted transaction group #%d) has been deleted as well.',
-                            $entry->id,
-                            $entry->transaction_group_id
-                        )
-                    );
-                }
-            }
         }
     }
 }

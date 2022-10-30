@@ -35,6 +35,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class OtherCurrenciesCorrections
@@ -115,14 +117,14 @@ class OtherCurrenciesCorrections extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -147,7 +149,7 @@ class OtherCurrenciesCorrections extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      */
     private function updateJournalCurrency(TransactionJournal $journal): void
     {
@@ -188,8 +190,8 @@ class OtherCurrenciesCorrections extends Command
                 }
 
                 // when mismatch in transaction:
-                if ((int) $transaction->transaction_currency_id !== (int) $currency->id) {
-                    $transaction->foreign_currency_id     = (int) $transaction->transaction_currency_id;
+                if ((int)$transaction->transaction_currency_id !== (int)$currency->id) {
+                    $transaction->foreign_currency_id     = (int)$transaction->transaction_currency_id;
                     $transaction->foreign_amount          = $transaction->amount;
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();
@@ -206,7 +208,7 @@ class OtherCurrenciesCorrections extends Command
      * Gets the transaction that determines the transaction that "leads" and will determine
      * the currency to be used by all transactions, and the journal itself.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Transaction|null
      */
@@ -247,7 +249,7 @@ class OtherCurrenciesCorrections extends Command
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return TransactionCurrency|null
      */

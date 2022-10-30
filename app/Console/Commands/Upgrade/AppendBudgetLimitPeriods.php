@@ -27,6 +27,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AppendBudgetLimitPeriods extends Command
 {
@@ -72,14 +74,14 @@ class AppendBudgetLimitPeriods extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar->data;
+        return (bool)$configVar->data;
     }
 
     /**
@@ -95,7 +97,7 @@ class AppendBudgetLimitPeriods extends Command
     }
 
     /**
-     * @param BudgetLimit $limit
+     * @param  BudgetLimit  $limit
      */
     private function fixLimit(BudgetLimit $limit)
     {
@@ -127,7 +129,7 @@ class AppendBudgetLimitPeriods extends Command
     }
 
     /**
-     * @param BudgetLimit $limit
+     * @param  BudgetLimit  $limit
      *
      * @return string|null
      */

@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Schema;
 
 /**
@@ -123,14 +125,14 @@ class TransactionIdentifier extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -140,7 +142,7 @@ class TransactionIdentifier extends Command
      * Grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing one
      * which has 0 as an identifier and give it the same identifier.
      *
-     * @param TransactionJournal $transactionJournal
+     * @param  TransactionJournal  $transactionJournal
      */
     private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
     {
@@ -166,15 +168,15 @@ class TransactionIdentifier extends Command
     }
 
     /**
-     * @param Transaction $transaction
-     * @param array       $exclude
+     * @param  Transaction  $transaction
+     * @param  array  $exclude
      *
      * @return Transaction|null
      */
     private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
     {
         // find opposing:
-        $amount = bcmul((string) $transaction->amount, '-1');
+        $amount = bcmul((string)$transaction->amount, '-1');
 
         try {
             /** @var Transaction $opposing */

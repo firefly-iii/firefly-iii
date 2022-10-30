@@ -28,6 +28,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateTagLocations
@@ -74,14 +76,14 @@ class MigrateTagLocations extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -99,7 +101,7 @@ class MigrateTagLocations extends Command
     }
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return bool
      */
@@ -109,7 +111,7 @@ class MigrateTagLocations extends Command
     }
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      */
     private function migrateLocationDetails(Tag $tag): void
     {

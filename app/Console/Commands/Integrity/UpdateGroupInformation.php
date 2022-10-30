@@ -48,18 +48,17 @@ use Illuminate\Console\Command;
 class UpdateGroupInformation extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:upgrade-group-information';
-
-    /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Makes sure that every object is linked to a group';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'firefly-iii:upgrade-group-information';
 
     /**
      * Execute the console command.
@@ -87,19 +86,31 @@ class UpdateGroupInformation extends Command
             $this->warn(sprintf('User "%s" has no group.', $user->email));
             return;
         }
-        $set = [Account::class, Attachment::class, AvailableBudget::class,
-                Bill::class, Budget::class, Category::class, CurrencyExchangeRate::class,
-                Recurrence::class, RuleGroup::class, Rule::class, Tag::class, TransactionGroup::class,
-                TransactionJournal::class, Webhook::class];
+        $set = [
+            Account::class,
+            Attachment::class,
+            AvailableBudget::class,
+            Bill::class,
+            Budget::class,
+            Category::class,
+            CurrencyExchangeRate::class,
+            Recurrence::class,
+            RuleGroup::class,
+            Rule::class,
+            Tag::class,
+            TransactionGroup::class,
+            TransactionJournal::class,
+            Webhook::class,
+        ];
         foreach ($set as $className) {
             $this->updateGroupInfoForObject($user, $group, $className);
         }
     }
 
     /**
-     * @param User      $user
-     * @param UserGroup $group
-     * @param string    $className
+     * @param  User  $user
+     * @param  UserGroup  $group
+     * @param  string  $className
      * @return void
      */
     private function updateGroupInfoForObject(User $user, UserGroup $group, string $className): void

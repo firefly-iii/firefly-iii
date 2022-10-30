@@ -33,6 +33,8 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateToRules
@@ -120,14 +122,14 @@ class MigrateToRules extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -136,7 +138,7 @@ class MigrateToRules extends Command
     /**
      * Migrate bills to new rule structure for a specific user.
      *
-     * @param User $user
+     * @param  User  $user
      *
      * @throws FireflyException
      */
@@ -148,14 +150,14 @@ class MigrateToRules extends Command
 
         /** @var Preference $lang */
         $lang       = app('preferences')->getForUser($user, 'language', 'en_US');
-        $groupTitle = (string) trans('firefly.rulegroup_for_bills_title', [], $lang->data);
+        $groupTitle = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
         $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);
 
         if (null === $ruleGroup) {
             $ruleGroup = $this->ruleGroupRepository->store(
                 [
-                    'title'       => (string) trans('firefly.rulegroup_for_bills_title', [], $lang->data),
-                    'description' => (string) trans('firefly.rulegroup_for_bills_description', [], $lang->data),
+                    'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data),
+                    'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $lang->data),
                     'active'      => true,
                 ]
             );
@@ -169,9 +171,9 @@ class MigrateToRules extends Command
     }
 
     /**
-     * @param RuleGroup  $ruleGroup
-     * @param Bill       $bill
-     * @param Preference $language
+     * @param  RuleGroup  $ruleGroup
+     * @param  Bill  $bill
+     * @param  Preference  $language
      */
     private function migrateBill(RuleGroup $ruleGroup, Bill $bill, Preference $language): void
     {
@@ -186,8 +188,8 @@ class MigrateToRules extends Command
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => (string) trans('firefly.rule_for_bill_title', ['name' => $bill->name], $language->data),
-            'description'     => (string) trans('firefly.rule_for_bill_description', ['name' => $bill->name], $language->data),
+            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $language->data),
+            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $language->data),
             'trigger'         => 'store-journal',
             'triggers'        => [
                 [

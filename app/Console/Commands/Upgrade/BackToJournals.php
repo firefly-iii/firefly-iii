@@ -32,6 +32,8 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class BackToJournals
@@ -85,27 +87,27 @@ class BackToJournals extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isMigrated(): bool
     {
         $configVar = app('fireflyconfig')->get(MigrateToGroups::CONFIG_NAME, false);
 
-        return (bool) $configVar->data;
+        return (bool)$configVar->data;
     }
 
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar->data;
+        return (bool)$configVar->data;
     }
 
     /**
@@ -159,7 +161,7 @@ class BackToJournals extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      */
     private function migrateBudgetsForJournal(TransactionJournal $journal): void
     {
@@ -179,7 +181,7 @@ class BackToJournals extends Command
         // both have a budget, but they don't match.
         if (null !== $budget && null !== $journalBudget && $budget->id !== $journalBudget->id) {
             // sync to journal:
-            $journal->budgets()->sync([(int) $budget->id]);
+            $journal->budgets()->sync([(int)$budget->id]);
 
             return;
         }
@@ -187,7 +189,7 @@ class BackToJournals extends Command
         // transaction has a budget, but the journal doesn't.
         if (null !== $budget && null === $journalBudget) {
             // sync to journal:
-            $journal->budgets()->sync([(int) $budget->id]);
+            $journal->budgets()->sync([(int)$budget->id]);
         }
     }
 
@@ -225,9 +227,9 @@ class BackToJournals extends Command
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set = DB::table('transactions') // @phpstan-ignore-line
-                     ->whereIn('transactions.id', $chunk)
-                     ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+            $set   = DB::table('transactions') // @phpstan-ignore-line
+                       ->whereIn('transactions.id', $chunk)
+                       ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
             $array = array_merge($array, $set);
         }
 
@@ -235,7 +237,7 @@ class BackToJournals extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      */
     private function migrateCategoriesForJournal(TransactionJournal $journal): void
     {
@@ -255,12 +257,12 @@ class BackToJournals extends Command
         // both have a category, but they don't match.
         if (null !== $category && null !== $journalCategory && $category->id !== $journalCategory->id) {
             // sync to journal:
-            $journal->categories()->sync([(int) $category->id]);
+            $journal->categories()->sync([(int)$category->id]);
         }
 
         // transaction has a category, but the journal doesn't.
         if (null !== $category && null === $journalCategory) {
-            $journal->categories()->sync([(int) $category->id]);
+            $journal->categories()->sync([(int)$category->id]);
         }
     }
 
