@@ -91,11 +91,9 @@ class Authenticate
         if (empty($guards)) {
             try {
                 // go for default guard:
-                /** @noinspection PhpUndefinedMethodInspection */
                 if ($this->auth->check()) {
 
                     // do an extra check on user object.
-                    /** @noinspection PhpUndefinedMethodInspection */
                     /** @var User $user */
                     $user = $this->auth->authenticate();
                     if (1 === (int) $user->blocked) {
@@ -104,7 +102,6 @@ class Authenticate
                             $message = (string) trans('firefly.email_changed_logout');
                         }
                         app('session')->flash('logoutMessage', $message);
-                        /** @noinspection PhpUndefinedMethodInspection */
                         $this->auth->logout();
 
                         throw new AuthenticationException('Blocked account.', $guards);
@@ -121,14 +118,12 @@ class Authenticate
 
             }
 
-            /** @noinspection PhpUndefinedMethodInspection */
             return $this->auth->authenticate();
         }
 
 
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
         }

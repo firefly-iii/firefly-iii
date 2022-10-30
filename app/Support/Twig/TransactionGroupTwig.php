@@ -37,7 +37,6 @@ use Twig\TwigFunction;
  */
 class TransactionGroupTwig extends AbstractExtension
 {
-    /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * @return array
      *

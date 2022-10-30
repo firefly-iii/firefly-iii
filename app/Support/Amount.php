@@ -66,7 +66,6 @@ class Amount
      * @return string
      *
      * @throws FireflyException
-     * @noinspection MoreThanThreeArgumentsInspection
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
     {

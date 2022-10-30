@@ -232,7 +232,6 @@ class BackToJournals extends Command
             $set = DB::table('transactions') // @phpstan-ignore-line
                      ->whereIn('transactions.id', $chunk)
                      ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-            /** @noinspection SlowArrayOperationsInLoopInspection */
             $array = array_merge($array, $set);
         }
 

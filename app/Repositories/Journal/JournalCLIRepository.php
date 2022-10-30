@@ -70,7 +70,6 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         if (null !== $budget) {
             return $budget->id;
         }
-        /** @noinspection NullPointerExceptionInspection */
         $budget = $journal->transactions()->first()->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
@@ -92,7 +91,6 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         if (null !== $category) {
             return $category->id;
         }
-        /** @noinspection NullPointerExceptionInspection */
         $category = $journal->transactions()->first()->categories()->first();
         if (null !== $category) {
             return $category->id;

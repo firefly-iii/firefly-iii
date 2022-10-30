@@ -74,7 +74,6 @@ interface OperationsRepositoryInterface
      */
     public function setUser(User $user): void;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Return multi-currency spent information.

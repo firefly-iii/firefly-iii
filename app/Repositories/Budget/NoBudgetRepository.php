@@ -145,7 +145,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * TODO this method does not include multi currency. It just counts.
      * TODO this probably also applies to the other "sumExpenses" methods.

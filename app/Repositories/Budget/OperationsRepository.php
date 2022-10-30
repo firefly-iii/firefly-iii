@@ -211,7 +211,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $repos->getActiveBudgets();
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param User $user

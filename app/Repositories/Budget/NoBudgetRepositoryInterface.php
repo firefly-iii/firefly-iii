@@ -58,7 +58,6 @@ interface NoBudgetRepositoryInterface
      */
     public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Carbon                   $start
      * @param Carbon                   $end

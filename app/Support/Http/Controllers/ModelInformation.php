@@ -81,7 +81,6 @@ trait ModelInformation
         $debt     = $repository->getAccountTypeByType(AccountType::DEBT);
         $loan     = $repository->getAccountTypeByType(AccountType::LOAN);
         $mortgage = $repository->getAccountTypeByType(AccountType::MORTGAGE);
-        /** @noinspection NullPointerExceptionInspection */
         $liabilityTypes = [
             $debt->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
             $loan->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),

@@ -57,7 +57,6 @@ class JavascriptController extends Controller
             [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]
         );
         $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        /** @noinspection NullPointerExceptionInspection */
         $default = $currencyRepository->findByCodeNull((string) $preference->data);
 
         $data = ['accounts' => []];
@@ -66,7 +65,6 @@ class JavascriptController extends Controller
         foreach ($accounts as $account) {
             $accountId = $account->id;
             $currency  = (int) $repository->getMetaValue($account, 'currency_id');
-            /** @noinspection NullPointerExceptionInspection */
             $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
@@ -124,7 +122,6 @@ class JavascriptController extends Controller
         $accounting                = app('amount')->getJsConfig();
         $accounting['frac_digits'] = $currency->decimal_places;
         $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
-        /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
         $dateRange = $this->getDateRangeConfig();
         $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
