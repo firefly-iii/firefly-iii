@@ -31,7 +31,7 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # clean up php code
 cd $SCRIPT_DIR/php-cs-fixer
 composer update
-./vendor/bin/php-cs-fixer fix $SCRIPT_DIR/../app/Console --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+./vendor/bin/php-cs-fixer fix $SCRIPT_DIR/../app --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
 cd $SCRIPT_DIR/..
 
 exit 0
