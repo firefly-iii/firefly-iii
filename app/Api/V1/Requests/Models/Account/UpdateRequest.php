@@ -101,6 +101,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var Account $account */
         $account        = $this->route()->parameter('account');
         $accountRoles   = implode(',', config('firefly.accountRoles'));
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));

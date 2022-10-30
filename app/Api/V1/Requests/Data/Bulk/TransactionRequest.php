@@ -62,7 +62,7 @@ class TransactionRequest extends FormRequest
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function rules(): array
     {

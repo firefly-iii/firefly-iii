@@ -6,6 +6,13 @@ includes:
 
 parameters:
   ignoreErrors:
+    - '#is not allowed to extend#'
+    - '#is neither abstract nor final#'
+    - '#has a nullable return type declaration#'
+    - '#with a nullable type declaration#'
+    -
+        message: '#Control structures using switch should not be used.#'
+        path: ../app/Api/V1/Controllers/Data/DestroyController.php
   paths:
     - ../app
     - ../database
