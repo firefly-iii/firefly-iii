@@ -201,5 +201,4 @@ class UpgradeLiabilities extends Command
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
-
 }

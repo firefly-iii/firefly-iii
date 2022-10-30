@@ -48,7 +48,7 @@ class FixAccountTypes extends Command
      *
      * @var string
      */
-    protected              $signature = 'firefly-iii:fix-account-types';
+    protected $signature = 'firefly-iii:fix-account-types';
     private int            $count;
     private array          $expected;
     private AccountFactory $factory;
@@ -121,12 +121,10 @@ class FixAccountTypes extends Command
         $destAccountType   = $destAccount->accountType->type;
 
         if (!array_key_exists($type, $this->expected)) {
-
             Log::info(sprintf('No source/destination info for transaction type %s.', $type));
             $this->info(sprintf('No source/destination info for transaction type %s.', $type));
 
             return;
-
         }
         if (!array_key_exists($sourceAccountType, $this->expected[$type])) {
             Log::debug(sprintf('Going to fix journal #%d', $journal->id));
@@ -211,8 +209,12 @@ class FixAccountTypes extends Command
                 $dest->account()->associate($result);
                 $dest->save();
                 $message = sprintf(
-                    'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").', $journal->id, $oldDest->id, $oldDest->name,
-                    $result->id, $result->name
+                    'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
+                    $journal->id,
+                    $oldDest->id,
+                    $oldDest->name,
+                    $result->id,
+                    $result->name
                 );
                 $this->info($message);
                 Log::debug($message);
@@ -227,8 +229,12 @@ class FixAccountTypes extends Command
                 $source->account()->associate($result);
                 $source->save();
                 $message = sprintf(
-                    'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").', $journal->id, $oldSource->id, $oldSource->name,
-                    $result->id, $result->name
+                    'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
+                    $journal->id,
+                    $oldSource->id,
+                    $oldSource->name,
+                    $result->id,
+                    $result->name
                 );
                 $this->info($message);
                 Log::debug($message);
@@ -244,7 +250,6 @@ class FixAccountTypes extends Command
                 Log::debug($message);
 
                 break;
-
         }
     }
 }

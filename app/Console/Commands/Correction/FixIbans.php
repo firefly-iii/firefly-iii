@@ -57,7 +57,6 @@ class FixIbans extends Command
         foreach ($accounts as $account) {
             $iban = $account->iban;
             if (str_contains($iban, ' ')) {
-
                 $iban = app('steam')->filterSpaces((string) $account->iban);
                 if ('' !== $iban) {
                     $account->iban = $iban;

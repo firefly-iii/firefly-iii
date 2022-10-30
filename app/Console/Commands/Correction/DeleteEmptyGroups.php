@@ -58,8 +58,7 @@ class DeleteEmptyGroups extends Command
         Log::debug(sprintf('Now in %s', __METHOD__));
         $start = microtime(true);
         $groupIds
-               = TransactionGroup
-            ::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
+               = TransactionGroup::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
             ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray();
 
         $total = count($groupIds);

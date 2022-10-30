@@ -129,7 +129,7 @@ class Cron extends Command
      */
     private function recurringCronJob(bool $force, ?Carbon $date): void
     {
-        $recurring = new RecurringCronjob;
+        $recurring = new RecurringCronjob();
         $recurring->setForce($force);
 
         // set date in cron job:
@@ -156,7 +156,7 @@ class Cron extends Command
      */
     private function autoBudgetCronJob(bool $force, ?Carbon $date): void
     {
-        $autoBudget = new AutoBudgetCronjob;
+        $autoBudget = new AutoBudgetCronjob();
         $autoBudget->setForce($force);
         // set date in cron job:
         if (null !== $date) {
@@ -174,7 +174,6 @@ class Cron extends Command
         if ($autoBudget->jobSucceeded) {
             $this->info(sprintf('"Create auto budgets" cron ran with success: %s', $autoBudget->message));
         }
-
     }
 
     /**
@@ -184,7 +183,7 @@ class Cron extends Command
      */
     private function billWarningCronJob(bool $force, ?Carbon $date): void
     {
-        $autoBudget = new BillWarningCronjob;
+        $autoBudget = new BillWarningCronjob();
         $autoBudget->setForce($force);
         // set date in cron job:
         if (null !== $date) {
@@ -202,7 +201,6 @@ class Cron extends Command
         if ($autoBudget->jobSucceeded) {
             $this->info(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
         }
-
     }
 
     /**
@@ -212,7 +210,7 @@ class Cron extends Command
      */
     private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
     {
-        $exchangeRates = new ExchangeRatesCronjob;
+        $exchangeRates = new ExchangeRatesCronjob();
         $exchangeRates->setForce($force);
         // set date in cron job:
         if (null !== $date) {
@@ -230,6 +228,5 @@ class Cron extends Command
         if ($exchangeRates->jobSucceeded) {
             $this->info(sprintf('"Exchange rates" cron ran with success: %s', $exchangeRates->message));
         }
-
     }
 }

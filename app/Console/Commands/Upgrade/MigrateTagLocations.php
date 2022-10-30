@@ -34,7 +34,6 @@ use Illuminate\Console\Command;
  */
 class MigrateTagLocations extends Command
 {
-
     public const CONFIG_NAME = '500_migrate_tag_locations';
     /**
      * The console command description.
@@ -114,7 +113,7 @@ class MigrateTagLocations extends Command
      */
     private function migrateLocationDetails(Tag $tag): void
     {
-        $location             = new Location;
+        $location             = new Location();
         $location->longitude  = $tag->longitude;
         $location->latitude   = $tag->latitude;
         $location->zoom_level = $tag->zoomLevel;

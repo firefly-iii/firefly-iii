@@ -159,26 +159,25 @@ class OtherCurrenciesCorrections extends Command
         $leadTransaction = $this->getLeadTransaction($journal);
 
         if (null === $leadTransaction) {
-
             $this->error(sprintf('Could not reliably determine which transaction is in the lead for transaction journal #%d.', $journal->id));
 
             return;
-
         }
 
         $account  = $leadTransaction->account;
         $currency = $this->getCurrency($account);
         if (null === $currency) {
-
             $this->error(
                 sprintf(
-                    'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected', $account->id, $account->name, $journal->id
+                    'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
+                    $account->id,
+                    $account->name,
+                    $journal->id
                 )
             );
             $this->count++;
 
             return;
-
         }
         // fix each transaction:
         $journal->transactions->each(
@@ -227,13 +226,19 @@ class OtherCurrenciesCorrections extends Command
             case TransactionType::OPENING_BALANCE:
                 // whichever isn't an initial balance account:
                 $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
-                    'account_types', 'accounts.account_type_id', '=', 'account_types.id'
+                    'account_types',
+                    'accounts.account_type_id',
+                    '=',
+                    'account_types.id'
                 )->where('account_types.type', '!=', AccountType::INITIAL_BALANCE)->first(['transactions.*']);
                 break;
             case TransactionType::RECONCILIATION:
                 // whichever isn't the reconciliation account:
                 $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
-                    'account_types', 'accounts.account_type_id', '=', 'account_types.id'
+                    'account_types',
+                    'accounts.account_type_id',
+                    '=',
+                    'account_types.id'
                 )->where('account_types.type', '!=', AccountType::RECONCILIATION)->first(['transactions.*']);
                 break;
         }
@@ -257,11 +262,9 @@ class OtherCurrenciesCorrections extends Command
         }
         $currency = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
-
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
-
         }
         $this->accountCurrencies[$accountId] = $currency;
 

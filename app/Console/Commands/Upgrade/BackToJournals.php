@@ -60,7 +60,6 @@ class BackToJournals extends Command
      */
     public function handle(): int
     {
-
         $start = microtime(true);
         if (!$this->isMigrated()) {
             $this->error('Please run firefly-iii:migrate-to-groups first.');
@@ -128,7 +127,7 @@ class BackToJournals extends Command
      */
     private function migrateBudgets(): void
     {
-        $journals = new Collection;
+        $journals = new Collection();
         $allIds   = $this->getIdsForBudgets();
         $chunks   = array_chunk($allIds, 500);
         foreach ($chunks as $journalIds) {
@@ -164,16 +163,13 @@ class BackToJournals extends Command
      */
     private function migrateBudgetsForJournal(TransactionJournal $journal): void
     {
-
         // grab category from first transaction
         /** @var Transaction $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
-
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
-
         }
         /** @var Budget $budget */
         $budget = $transaction->budgets->first();
@@ -201,7 +197,7 @@ class BackToJournals extends Command
     private function migrateCategories(): void
     {
         Log::debug('Now in migrateCategories()');
-        $journals = new Collection;
+        $journals = new Collection();
         $allIds   = $this->getIdsForCategories();
 
         Log::debug(sprintf('Total: %d', count($allIds)));
@@ -247,11 +243,9 @@ class BackToJournals extends Command
         /** @var Transaction $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
-
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
-
         }
         /** @var Category $category */
         $category = $transaction->categories->first();

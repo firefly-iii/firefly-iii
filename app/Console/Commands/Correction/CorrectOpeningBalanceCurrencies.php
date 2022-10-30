@@ -62,8 +62,7 @@ class CorrectOpeningBalanceCurrencies extends Command
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         // get all OB journals:
-        $set = TransactionJournal
-            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+        $set = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereNull('transaction_journals.deleted_at')
             ->where('transaction_types.type', TransactionType::OPENING_BALANCE)->get(['transaction_journals.*']);
 

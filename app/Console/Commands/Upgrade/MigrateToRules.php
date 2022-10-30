@@ -166,7 +166,6 @@ class MigrateToRules extends Command
         foreach ($bills as $bill) {
             $this->migrateBill($ruleGroup, $bill, $lang);
         }
-
     }
 
     /**

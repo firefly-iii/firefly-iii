@@ -88,9 +88,10 @@ class EnableCurrencies extends Command
         $found   = array_values(array_unique($found));
         $found   = array_values(
             array_filter(
-                $found, function (int $currencyId) {
-                return $currencyId !== 0;
-            }
+                $found,
+                function (int $currencyId) {
+                    return $currencyId !== 0;
+                }
             )
         );
         $message = sprintf('%d different currencies are currently in use.', count($found));

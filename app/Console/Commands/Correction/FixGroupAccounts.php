@@ -57,8 +57,7 @@ class FixGroupAccounts extends Command
     public function handle(): int
     {
         $groups = [];
-        $res    = TransactionJournal
-            ::groupBy('transaction_group_id')
+        $res    = TransactionJournal::groupBy('transaction_group_id')
             ->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')]);
         /** @var TransactionJournal $journal */
         foreach ($res as $journal) {
@@ -66,7 +65,7 @@ class FixGroupAccounts extends Command
                 $groups[] = (int) $journal->transaction_group_id;
             }
         }
-        $handler = new UpdatedGroupEventHandler;
+        $handler = new UpdatedGroupEventHandler();
         foreach ($groups as $groupId) {
             $group = TransactionGroup::find($groupId);
             $event = new UpdatedTransactionGroup($group);

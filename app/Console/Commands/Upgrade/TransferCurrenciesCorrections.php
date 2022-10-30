@@ -51,7 +51,7 @@ class TransferCurrenciesCorrections extends Command
      *
      * @var string
      */
-    protected                             $signature = 'firefly-iii:transfer-currencies {--F|force : Force the execution of this command.}';
+    protected $signature = 'firefly-iii:transfer-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
@@ -284,11 +284,9 @@ class TransferCurrenciesCorrections extends Command
         }
         $currency = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
-
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
-
         }
         $this->accountCurrencies[$accountId] = $currency;
 

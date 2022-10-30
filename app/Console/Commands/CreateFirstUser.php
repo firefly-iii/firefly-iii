@@ -47,7 +47,7 @@ class CreateFirstUser extends Command
      *
      * @var string
      */
-    protected                       $signature = 'firefly-iii:create-first-user {email}';
+    protected $signature = 'firefly-iii:create-first-user {email}';
     private UserRepositoryInterface $repository;
 
     /**
@@ -97,6 +97,5 @@ class CreateFirstUser extends Command
     private function stupidLaravel(): void
     {
         $this->repository = app(UserRepositoryInterface::class);
-
     }
 }

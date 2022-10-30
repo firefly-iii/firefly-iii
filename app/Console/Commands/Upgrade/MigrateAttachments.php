@@ -56,7 +56,6 @@ class MigrateAttachments extends Command
      */
     public function handle(): int
     {
-
         $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
@@ -70,15 +69,13 @@ class MigrateAttachments extends Command
 
         /** @var Attachment $att */
         foreach ($attachments as $att) {
-
             // move description:
             $attDescription = (string) $att->description;
             if ('' !== $attDescription) {
-
                 // find or create note:
                 $note = $att->notes()->first();
                 if (null === $note) {
-                    $note = new Note;
+                    $note = new Note();
                     $note->noteable()->associate($att);
                 }
                 $note->text = $attDescription;

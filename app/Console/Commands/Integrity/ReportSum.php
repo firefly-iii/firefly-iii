@@ -79,6 +79,5 @@ class ReportSum extends Command
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Report on total sum finished in %s seconds', $end));
-
     }
 }

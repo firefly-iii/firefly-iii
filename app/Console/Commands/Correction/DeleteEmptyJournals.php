@@ -66,8 +66,7 @@ class DeleteEmptyJournals extends Command
      */
     private function deleteUnevenJournals(): void
     {
-        $set   = Transaction
-            ::whereNull('deleted_at')
+        $set   = Transaction::whereNull('deleted_at')
             ->groupBy('transactions.transaction_journal_id')
             ->get([DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']);
         $total = 0;
@@ -78,7 +77,6 @@ class DeleteEmptyJournals extends Command
                 // uneven number, delete journal and transactions:
                 try {
                     TransactionJournal::find((int) $row->transaction_journal_id)->delete();
-
                 } catch (Exception $e) { // @phpstan-ignore-line
                     Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
                 }
@@ -106,7 +104,6 @@ class DeleteEmptyJournals extends Command
         foreach ($set as $entry) {
             try {
                 TransactionJournal::find($entry->id)->delete();
-
             } catch (Exception $e) { // @phpstan-ignore-line
                 Log::info(sprintf('Could not delete entry: %s', $e->getMessage()));
             }
@@ -121,5 +118,4 @@ class DeleteEmptyJournals extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified empty journals in %s seconds', $end));
     }
-
 }

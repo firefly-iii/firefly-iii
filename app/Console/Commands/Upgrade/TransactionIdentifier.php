@@ -163,7 +163,6 @@ class TransactionIdentifier extends Command
             }
             ++$identifier;
         }
-
     }
 
     /**
@@ -183,7 +182,6 @@ class TransactionIdentifier extends Command
                                    ->where('amount', $amount)->where('identifier', '=', 0)
                                    ->whereNotIn('id', $exclude)
                                    ->first();
-
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');

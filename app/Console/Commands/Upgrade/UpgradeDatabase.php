@@ -55,7 +55,6 @@ class UpgradeDatabase extends Command
      */
     public function handle(): int
     {
-
         $this->callInitialCommands();
         $commands = [
             // there are 14 upgrade commands.

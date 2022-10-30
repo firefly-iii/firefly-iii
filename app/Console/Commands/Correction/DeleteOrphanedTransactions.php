@@ -72,8 +72,7 @@ class DeleteOrphanedTransactions extends Command
     private function deleteOrphanedTransactions(): void
     {
         $count = 0;
-        $set   = Transaction
-            ::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $set   = Transaction::leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->whereNotNull('transaction_journals.deleted_at')
             ->whereNull('transactions.deleted_at')
             ->whereNotNull('transactions.id')
@@ -109,8 +108,7 @@ class DeleteOrphanedTransactions extends Command
     private function deleteFromOrphanedAccounts(): void
     {
         $set
-               = Transaction
-            ::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+               = Transaction::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
             ->whereNotNull('accounts.deleted_at')
             ->get(['transactions.*']);
         $count = 0;
@@ -121,11 +119,9 @@ class DeleteOrphanedTransactions extends Command
             if ($journal) {
                 try {
                     $journal->delete();
-
                 } catch (Exception $e) { // @phpstan-ignore-line
                     Log::info(sprintf('Could not delete journal %s', $e->getMessage()));
                 }
-
             }
             Transaction::where('transaction_journal_id', (int) $transaction->transaction_journal_id)->delete();
             $this->line(
@@ -144,8 +140,7 @@ class DeleteOrphanedTransactions extends Command
 
     private function deleteOrphanedJournals(): void
     {
-        $set   = TransactionJournal
-            ::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+        $set   = TransactionJournal::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
             ->whereNotNull('transaction_groups.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
             ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id']);

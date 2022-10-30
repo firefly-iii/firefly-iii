@@ -56,7 +56,7 @@ class ApplyRules extends Command
      *
      * @var string
      */
-    protected                            $signature
+    protected $signature
         = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}
@@ -161,13 +161,13 @@ class ApplyRules extends Command
     private function stupidLaravel(): void
     {
         $this->allRules            = false;
-        $this->accounts            = new Collection;
+        $this->accounts            = new Collection();
         $this->ruleSelection       = [];
         $this->ruleGroupSelection  = [];
         $this->ruleRepository      = app(RuleRepositoryInterface::class);
         $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
         $this->acceptedAccounts    = [AccountType::DEFAULT, AccountType::DEBT, AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE];
-        $this->groups              = new Collection;
+        $this->groups              = new Collection();
     }
 
     /**
@@ -205,7 +205,7 @@ class ApplyRules extends Command
 
             return false;
         }
-        $finalList   = new Collection;
+        $finalList   = new Collection();
         $accountList = explode(',', $accountString);
 
         /** @var AccountRepositoryInterface $accountRepository */
@@ -227,7 +227,6 @@ class ApplyRules extends Command
         $this->accounts = $finalList;
 
         return true;
-
     }
 
     /**
@@ -325,7 +324,7 @@ class ApplyRules extends Command
      */
     private function getRulesToApply(): Collection
     {
-        $rulesToApply = new Collection;
+        $rulesToApply = new Collection();
         /** @var RuleGroup $group */
         foreach ($this->groups as $group) {
             $rules = $this->ruleGroupRepository->getActiveStoreRules($group);

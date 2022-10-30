@@ -59,7 +59,7 @@ class MigrateToGroups extends Command
      *
      * @var string
      */
-    protected                             $signature = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
+    protected $signature = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int                           $count;
     private TransactionGroupFactory       $groupFactory;
@@ -169,11 +169,9 @@ class MigrateToGroups extends Command
     {
         // double check transaction count.
         if ($journal->transactions->count() <= 2) {
-
             Log::debug(sprintf('Will not try to convert journal #%d because it has 2 or less transactions.', $journal->id));
 
             return;
-
         }
         Log::debug(sprintf('Will now try to convert journal #%d', $journal->id));
 
@@ -221,7 +219,6 @@ class MigrateToGroups extends Command
             $opposingTr = $this->findOpposingTransaction($journal, $transaction);
 
             if (null === $opposingTr) {
-
                 $this->error(
                     sprintf(
                         'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
@@ -230,7 +227,6 @@ class MigrateToGroups extends Command
                     )
                 );
                 continue;
-
             }
 
             // overrule journal category with transaction category.

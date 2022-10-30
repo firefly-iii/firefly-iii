@@ -56,7 +56,7 @@ class ExportData extends Command
      *
      * @var string
      */
-    protected                          $signature = 'firefly-iii:export-data
+    protected $signature = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}
     {--start= : First transaction to export. Defaults to your very first transaction. Only applies to transaction export.}
@@ -230,8 +230,8 @@ class ExportData extends Command
      */
     private function getAccountsParameter(): Collection
     {
-        $final       = new Collection;
-        $accounts    = new Collection;
+        $final       = new Collection();
+        $accounts    = new Collection();
         $accountList = $this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         if (null !== $accountList && '' !== (string) $accountList) {
