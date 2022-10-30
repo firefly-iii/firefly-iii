@@ -41,7 +41,7 @@ class CacheProperties
      */
     public function __construct()
     {
-        $this->properties = new Collection;
+        $this->properties = new Collection();
         if (auth()->check()) {
             $this->addProperty(auth()->user()->id);
             $this->addProperty(app('preferences')->lastActivity());

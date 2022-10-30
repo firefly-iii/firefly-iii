@@ -39,7 +39,6 @@ use phpseclib3\Crypt\RSA;
  */
 trait CreateStuff
 {
-
     /**
      * Creates an asset account.
      *
@@ -61,7 +60,7 @@ trait CreateStuff
             'active'               => true,
             'account_role'         => 'defaultAsset',
             'opening_balance'      => $request->input('bank_balance'),
-            'opening_balance_date' => new Carbon,
+            'opening_balance_date' => new Carbon(),
             'currency_id'          => $currency->id,
         ];
 
@@ -120,7 +119,7 @@ trait CreateStuff
         if (class_exists(LegacyRSA::class)) {
             // PHP 7
             Log::info('Will run PHP7 code.');
-            $keys = (new LegacyRSA)->createKey(4096);
+            $keys = (new LegacyRSA())->createKey(4096);
         }
 
         if (!class_exists(LegacyRSA::class)) {
@@ -158,7 +157,7 @@ trait CreateStuff
             'active'               => true,
             'account_role'         => 'savingAsset',
             'opening_balance'      => $request->input('savings_balance'),
-            'opening_balance_date' => new Carbon,
+            'opening_balance_date' => new Carbon(),
             'currency_id'          => $currency->id,
         ];
         $repository->store($savingsAccount);
@@ -182,5 +181,4 @@ trait CreateStuff
             ]
         );
     }
-
 }

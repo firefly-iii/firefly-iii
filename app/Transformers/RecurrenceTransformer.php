@@ -60,7 +60,6 @@ class RecurrenceTransformer extends AbstractTransformer
         $this->factory     = app(CategoryFactory::class);
         $this->budgetRepos = app(BudgetRepositoryInterface::class);
         $this->billRepos   = app(BillRepositoryInterface::class);
-
     }
 
     /**
@@ -138,7 +137,7 @@ class RecurrenceTransformer extends AbstractTransformer
             ];
 
             // get the (future) occurrences for this specific type of repetition:
-            $occurrences = $this->repository->getXOccurrencesSince($repetition, $fromDate, new Carbon, 5);
+            $occurrences = $this->repository->getXOccurrencesSince($repetition, $fromDate, new Carbon(), 5);
             /** @var Carbon $carbon */
             foreach ($occurrences as $carbon) {
                 $repetitionArray['occurrences'][] = $carbon->toAtomString();
@@ -163,7 +162,6 @@ class RecurrenceTransformer extends AbstractTransformer
         // get all transactions:
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
-
             $sourceAccount         = $transaction->sourceAccount;
             $destinationAccount    = $transaction->destinationAccount;
             $foreignCurrencyCode   = null;
@@ -306,5 +304,4 @@ class RecurrenceTransformer extends AbstractTransformer
 
         return $array;
     }
-
 }

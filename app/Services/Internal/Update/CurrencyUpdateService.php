@@ -64,5 +64,4 @@ class CurrencyUpdateService
 
         return $currency;
     }
-
 }

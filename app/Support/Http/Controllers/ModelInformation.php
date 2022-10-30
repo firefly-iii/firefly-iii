@@ -119,7 +119,6 @@ trait ModelInformation
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
@@ -146,7 +145,6 @@ trait ModelInformation
                     ]
                 )->render();
             } catch (Throwable $e) { // @phpstan-ignore-line
-
                 Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
@@ -171,7 +169,6 @@ trait ModelInformation
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
@@ -262,7 +259,6 @@ trait ModelInformation
                     ]
                 )->render();
             } catch (Throwable $e) { // @phpstan-ignore-line
-
                 Log::debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';

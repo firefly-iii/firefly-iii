@@ -39,7 +39,6 @@ class BudgetDestroyService
      */
     public function destroy(Budget $budget): void
     {
-
         try {
             $budget->delete();
         } catch (Exception $e) { // @phpstan-ignore-line

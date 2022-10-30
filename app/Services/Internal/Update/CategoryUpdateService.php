@@ -130,8 +130,7 @@ class CategoryUpdateService
      */
     private function updateRecurrences(string $oldName, string $newName): void
     {
-        RecurrenceTransactionMeta
-            ::leftJoin('recurrences_transactions', 'rt_meta.rt_id', '=', 'recurrences_transactions.id')
+        RecurrenceTransactionMeta::leftJoin('recurrences_transactions', 'rt_meta.rt_id', '=', 'recurrences_transactions.id')
             ->leftJoin('recurrences', 'recurrences.id', '=', 'recurrences_transactions.recurrence_id')
             ->where('recurrences.user_id', $this->user->id)
             ->where('rt_meta.name', 'category_name')
@@ -165,11 +164,10 @@ class CategoryUpdateService
         }
         $dbNote = $category->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($category);
         }
         $dbNote->text = trim($note);
         $dbNote->save();
     }
-
 }

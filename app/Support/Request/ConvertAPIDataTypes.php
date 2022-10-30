@@ -28,5 +28,4 @@ namespace FireflyIII\Support\Request;
  */
 trait ConvertAPIDataTypes
 {
-
 }

@@ -61,7 +61,7 @@ class IsBoolean implements Rule
         if (is_int($value) && 1 === $value) {
             return true;
         }
-        if (is_string($value) && in_array($value, ['0', '1', 'true', 'false', 'on', 'off', 'yes', 'no', 'y', 'n'])) {
+        if (is_string($value) && in_array($value, ['0', '1', 'true', 'false', 'on', 'off', 'yes', 'no', 'y', 'n'], true)) {
             return true;
         }
 

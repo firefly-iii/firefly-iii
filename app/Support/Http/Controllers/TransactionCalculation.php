@@ -183,5 +183,4 @@ trait TransactionCalculation
 
         return $collector->getExtractedJournals();
     }
-
 }

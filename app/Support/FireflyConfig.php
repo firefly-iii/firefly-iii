@@ -35,7 +35,6 @@ use Illuminate\Database\QueryException;
  */
 class FireflyConfig
 {
-
     /**
      * @param string $name
      */
@@ -97,7 +96,7 @@ class FireflyConfig
         try {
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
         } catch (QueryException|Exception $e) { // @phpstan-ignore-line
-            $item       = new Configuration;
+            $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;
 
@@ -105,7 +104,7 @@ class FireflyConfig
         }
 
         if (null === $config) {
-            $item       = new Configuration;
+            $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;
             $item->save();
@@ -128,10 +127,8 @@ class FireflyConfig
      */
     public function getFresh(string $name, $default = null): ?Configuration
     {
-
         $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         if ($config) {
-
             return $config;
         }
         // no preference found and default is null:

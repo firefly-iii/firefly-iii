@@ -59,7 +59,8 @@ class DeleteTransaction implements ActionInterface
             Log::debug(
                 sprintf(
                     'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
-                    $journal['transaction_journal_id'], $journal['description']
+                    $journal['transaction_journal_id'],
+                    $journal['description']
                 )
             );
             $group   = TransactionGroup::find($journal['transaction_group_id']);

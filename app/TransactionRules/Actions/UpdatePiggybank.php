@@ -39,7 +39,6 @@ use Log;
  */
 class UpdatePiggybank implements ActionInterface
 {
-
     /** @var RuleAction The rule action */
     private $action;
 
@@ -107,7 +106,9 @@ class UpdatePiggybank implements ActionInterface
         }
         Log::info(
             sprintf(
-                'Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.', $source->account_id, $destination->account_id
+                'Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.',
+                $source->account_id,
+                $destination->account_id
             )
         );
 

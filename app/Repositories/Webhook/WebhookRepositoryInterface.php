@@ -98,5 +98,4 @@ interface WebhookRepositoryInterface
      * @return Webhook
      */
     public function update(Webhook $webhook, array $data): Webhook;
-
 }

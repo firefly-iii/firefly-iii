@@ -73,5 +73,4 @@ interface RuleEngineInterface
      * @param User $user
      */
     public function setUser(User $user): void;
-
 }

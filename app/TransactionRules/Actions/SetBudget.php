@@ -59,7 +59,8 @@ class SetBudget implements ActionInterface
         if (null === $budget) {
             Log::debug(
                 sprintf(
-                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal['transaction_journal_id'],
+                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.',
+                    $journal['transaction_journal_id'],
                     $search
                 )
             );

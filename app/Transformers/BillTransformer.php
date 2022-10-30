@@ -254,7 +254,7 @@ class BillTransformer extends AbstractTransformer
 
             return [];
         }
-        $set          = new Collection;
+        $set          = new Collection();
         $currentStart = clone $this->parameters->get('start');
         $loop         = 0;
         while ($currentStart <= $this->parameters->get('end')) {

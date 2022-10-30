@@ -146,5 +146,4 @@ class OAuthKeys
         file_put_contents($public, $publicContent);
         return true;
     }
-
 }

@@ -101,7 +101,10 @@ class UniqueAccountNumber implements Rule
                 Log::debug(
                     sprintf(
                         'account number "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
-                        $value, $count, $type, $this->expectedType
+                        $value,
+                        $count,
+                        $type,
+                        $this->expectedType
                     )
                 );
 
@@ -147,8 +150,7 @@ class UniqueAccountNumber implements Rule
      */
     private function countHits(string $type, string $accountNumber): int
     {
-        $query = AccountMeta
-            ::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+        $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->where('accounts.user_id', auth()->user()->id)
             ->where('account_types.type', $type)

@@ -44,13 +44,12 @@ class AuditLogger
      */
     public function __invoke(Logger $logger)
     {
-        $processor = new AuditProcessor;
+        $processor = new AuditProcessor();
         /** @var AbstractProcessingHandler $handler */
         foreach ($logger->getHandlers() as $handler) {
             $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n");
             $handler->setFormatter($formatter);
             $handler->pushProcessor($processor);
         }
-
     }
 }

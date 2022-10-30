@@ -121,7 +121,6 @@ class ConvertToWithdrawal implements ActionInterface
         Log::debug('Converted deposit to withdrawal.');
 
         return true;
-
     }
 
     /**

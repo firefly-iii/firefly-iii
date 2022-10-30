@@ -62,7 +62,7 @@ class MoveDescriptionToNotes implements ActionInterface
         }
         $note = $object->notes()->first();
         if (null === $note) {
-            $note = new Note;
+            $note = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
         }

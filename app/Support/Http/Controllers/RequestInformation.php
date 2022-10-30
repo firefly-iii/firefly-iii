@@ -228,5 +228,4 @@ trait RequestInformation
             ]
         );
     }
-
 }

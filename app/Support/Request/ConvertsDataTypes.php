@@ -314,5 +314,4 @@ trait ConvertsDataTypes
 
         return (int) $value;
     }
-
 }

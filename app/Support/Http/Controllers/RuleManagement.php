@@ -35,7 +35,6 @@ use Throwable;
  */
 trait RuleManagement
 {
-
     /**
      * @param Request $request
      *
@@ -83,7 +82,6 @@ trait RuleManagement
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
@@ -130,7 +128,6 @@ trait RuleManagement
         $triggers        = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }

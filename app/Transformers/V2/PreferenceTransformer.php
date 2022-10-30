@@ -47,7 +47,6 @@ class PreferenceTransformer extends AbstractTransformer
             'name'       => $preference->name,
             'data'       => $preference->data,
         ];
-
     }
 
     /**

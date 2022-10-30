@@ -35,5 +35,4 @@ interface GenericSearchInterface
      * @return Collection
      */
     public function search(): Collection;
-
 }

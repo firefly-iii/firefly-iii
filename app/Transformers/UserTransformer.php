@@ -61,5 +61,4 @@ class UserTransformer extends AbstractTransformer
             ],
         ];
     }
-
 }

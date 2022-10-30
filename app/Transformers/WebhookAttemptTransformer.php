@@ -49,5 +49,4 @@ class WebhookAttemptTransformer extends AbstractTransformer
             'response'           => $attempt->response,
         ];
     }
-
 }

@@ -154,7 +154,6 @@ class BelongsUser implements Rule
         if (PiggyBank::class === $class) {
             $objects = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                                 ->where('accounts.user_id', '=', auth()->user()->id)->get(['piggy_banks.*']);
-
         }
         if (PiggyBank::class !== $class) {
             $objects = $class::where('user_id', '=', auth()->user()->id)->get();

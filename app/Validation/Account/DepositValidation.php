@@ -153,7 +153,7 @@ trait DepositValidation
             $result = true;
 
             // set the source to be a (dummy) revenue account.
-            $account              = new Account;
+            $account              = new Account();
             $accountType          = AccountType::whereType(AccountType::REVENUE)->first();
             $account->accountType = $accountType;
             $this->source         = $account;

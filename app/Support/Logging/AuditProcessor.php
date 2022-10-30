@@ -39,13 +39,13 @@ class AuditProcessor
     public function __invoke(array $record): array
     {
         if (auth()->check()) {
-
             $record['message'] = sprintf(
                 'AUDIT: %s (%s (%s) -> %s:%s)',
                 $record['message'],
                 app('request')->ip(),
                 auth()->user()->email,
-                request()->method(), request()->url()
+                request()->method(),
+                request()->url()
             );
 
             return $record;
@@ -55,7 +55,8 @@ class AuditProcessor
             'AUDIT: %s (%s -> %s:%s)',
             $record['message'],
             app('request')->ip(),
-            request()->method(), request()->url()
+            request()->method(),
+            request()->url()
         );
 
         return $record;

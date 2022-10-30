@@ -34,7 +34,6 @@ use Log;
  */
 class ExchangeRatesCronjob extends AbstractCronjob
 {
-
     /**
      * @inheritDoc
      */

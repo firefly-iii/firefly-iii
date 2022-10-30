@@ -210,5 +210,4 @@ class CategoryReportGenerator
         $this->noCatRepository->setUser($user);
         $this->opsRepository->setUser($user);
     }
-
 }

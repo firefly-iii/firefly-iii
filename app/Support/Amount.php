@@ -117,7 +117,7 @@ class Amount
      */
     public function getCurrencyCode(): string
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('getCurrencyCode');
         if ($cache->has()) {
             return $cache->get();
@@ -155,7 +155,7 @@ class Amount
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('getDefaultCurrency');
         $cache->addProperty($user->id);
         if ($cache->has()) {

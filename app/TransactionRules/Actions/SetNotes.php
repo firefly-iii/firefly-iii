@@ -53,7 +53,7 @@ class SetNotes implements ActionInterface
         $dbNote = Note::where('noteable_id', $journal['transaction_journal_id'])
                       ->where('noteable_type', TransactionJournal::class)->first();
         if (null === $dbNote) {
-            $dbNote                = new Note;
+            $dbNote                = new Note();
             $dbNote->noteable_id   = $journal['transaction_journal_id'];
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
@@ -64,7 +64,9 @@ class SetNotes implements ActionInterface
 
         Log::debug(
             sprintf(
-                'RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".', $journal['transaction_journal_id'], $oldNotes,
+                'RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".',
+                $journal['transaction_journal_id'],
+                $oldNotes,
                 $this->action->action_value
             )
         );

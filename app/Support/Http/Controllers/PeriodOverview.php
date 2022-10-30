@@ -88,7 +88,7 @@ trait PeriodOverview
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-show-period-entries');
@@ -252,12 +252,10 @@ trait PeriodOverview
                         'currency_symbol'         => $journal['foreign_currency_symbol'],
                         'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                     ];
-
                 }
                 $return[$foreignCurrencyId]['count']++;
                 $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
             }
-
         }
 
         return $return;
@@ -361,7 +359,7 @@ trait PeriodOverview
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('no-budget-period-entries');
@@ -415,7 +413,7 @@ trait PeriodOverview
         Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
         $range = app('preferences')->get('viewRange', '1M')->data;
         $first = $this->journalRepos->firstNull();
-        $start = null === $first ? new Carbon : $first->date;
+        $start = null === $first ? new Carbon() : $first->date;
         $end   = $theDate ?? today(config('app.timezone'));
 
         Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
@@ -484,12 +482,11 @@ trait PeriodOverview
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
-
         $range = app('preferences')->get('viewRange', '1M')->data;
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('tag-period-entries');
@@ -565,7 +562,7 @@ trait PeriodOverview
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('transactions-period-entries');

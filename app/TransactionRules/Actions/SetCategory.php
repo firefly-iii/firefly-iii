@@ -67,7 +67,8 @@ class SetCategory implements ActionInterface
         if (null === $category) {
             Log::debug(
                 sprintf(
-                    'RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.', $journal['transaction_journal_id'],
+                    'RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.',
+                    $journal['transaction_journal_id'],
                     $search
                 )
             );
@@ -77,7 +78,9 @@ class SetCategory implements ActionInterface
 
         Log::debug(
             sprintf(
-                'RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal['transaction_journal_id'], $category->id,
+                'RuleAction SetCategory set the category of journal #%d to category #%d ("%s").',
+                $journal['transaction_journal_id'],
+                $category->id,
                 $category->name
             )
         );

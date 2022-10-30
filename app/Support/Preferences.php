@@ -45,7 +45,7 @@ class Preferences
     {
         $user = auth()->user();
         if (null === $user) {
-            return new Collection;
+            return new Collection();
         }
 
         return Preference::where('user_id', $user->id)->get();
@@ -139,7 +139,7 @@ class Preferences
         /** @var User|null $user */
         $user = auth()->user();
         if (null === $user) {
-            $preference       = new Preference;
+            $preference       = new Preference();
             $preference->data = $default;
 
             return $preference;
@@ -183,7 +183,6 @@ class Preferences
         }
 
         if (null !== $preference) {
-
             return $preference;
         }
         // no preference found and default is null:
@@ -217,13 +216,13 @@ class Preferences
                 throw new FireflyException(sprintf('Could not delete preference: %s', $e->getMessage()), 0, $e);
             }
 
-            return new Preference;
+            return new Preference();
         }
         if (null === $value) {
-            return new Preference;
+            return new Preference();
         }
         if (null === $pref) {
-            $pref          = new Preference;
+            $pref          = new Preference();
             $pref->user_id = $user->id;
             $pref->name    = $name;
         }
@@ -269,7 +268,7 @@ class Preferences
         /** @var User|null $user */
         $user = auth()->user();
         if (null === $user) {
-            $preference       = new Preference;
+            $preference       = new Preference();
             $preference->data = $default;
 
             return $preference;
@@ -299,7 +298,7 @@ class Preferences
         $user = auth()->user();
         if (null === $user) {
             // make new preference, return it:
-            $pref       = new Preference;
+            $pref       = new Preference();
             $pref->name = $name;
             $pref->data = $value;
 

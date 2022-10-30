@@ -82,7 +82,7 @@ class ExportDataGenerator
 
     public function __construct()
     {
-        $this->accounts = new Collection;
+        $this->accounts = new Collection();
         $this->start    = today(config('app.timezone'));
         $this->start->subYear();
         $this->end                = today(config('app.timezone'));
@@ -310,7 +310,6 @@ class ExportDataGenerator
         }
 
         return $string;
-
     }
 
     /**
@@ -737,7 +736,6 @@ class ExportDataGenerator
                 $metaData['recurrence_total'],
                 $metaData['recurrence_count'],
             ];
-
         }
 
         //load the CSV document from a string
@@ -883,5 +881,4 @@ class ExportDataGenerator
     {
         $this->user = $user;
     }
-
 }

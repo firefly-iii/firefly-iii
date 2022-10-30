@@ -54,9 +54,9 @@ class TagOrId implements BinderInterface
                 return $result;
             }
             Log::error('TagOrId: tag not found.');
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
         Log::error('TagOrId: user is not logged in.');
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

@@ -32,7 +32,6 @@ use Illuminate\Support\Collection;
  */
 interface UserRepositoryInterface
 {
-
     /**
      * Returns a collection of all users.
      *

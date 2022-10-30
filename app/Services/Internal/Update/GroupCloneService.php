@@ -108,7 +108,7 @@ class GroupCloneService
         // clone linked piggy banks
         /** @var PiggyBankEvent $event */
         $event =  $journal->piggyBankEvents()->first();
-        if(null !== $event) {
+        if (null !== $event) {
             $piggyBank = $event->piggyBank;
             $factory = app(PiggyBankEventFactory::class);
             $factory->create($newJournal, $piggyBank);
@@ -136,11 +136,11 @@ class GroupCloneService
     {
         $newNote              = $note->replicate();
         $newNote->text        .= sprintf(
-            "\n\n%s", trans('firefly.clones_journal_x', ['description' => $newJournal->description, 'id' => $oldGroupId])
+            "\n\n%s",
+            trans('firefly.clones_journal_x', ['description' => $newJournal->description, 'id' => $oldGroupId])
         );
         $newNote->noteable_id = $newJournal->id;
         $newNote->save();
-
     }
 
     /**

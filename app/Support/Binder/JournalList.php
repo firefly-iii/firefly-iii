@@ -53,12 +53,12 @@ class JournalList implements BinderInterface
             $collector->setJournalIds($list);
             $result = $collector->getExtractedJournals();
             if (empty($result)) {
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
             return $result;
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -70,7 +70,7 @@ class JournalList implements BinderInterface
     {
         $list = array_unique(array_map('\intval', explode(',', $value)));
         if (empty($list)) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
 
         return $list;

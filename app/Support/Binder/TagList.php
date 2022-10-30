@@ -44,7 +44,6 @@ class TagList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-
             if ('allTags' === $value) {
                 return auth()->user()->tags()
                              ->orderBy('tag', 'ASC')
@@ -55,7 +54,7 @@ class TagList implements BinderInterface
 
             if (empty($list)) {
                 Log::error('Tag list is empty.');
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
 
@@ -82,6 +81,6 @@ class TagList implements BinderInterface
             }
         }
         Log::error('TagList: user is not logged in.');
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

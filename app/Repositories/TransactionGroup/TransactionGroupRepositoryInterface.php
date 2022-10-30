@@ -176,5 +176,4 @@ interface TransactionGroupRepositoryInterface
      * @return TransactionGroup
      */
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup;
-
 }

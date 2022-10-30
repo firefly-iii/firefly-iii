@@ -69,7 +69,6 @@ class BudgetReportGenerator
      */
     public function accountPerBudget(): void
     {
-
         $spent        = $this->opsRepository->listExpenses($this->start, $this->end, $this->accounts, $this->budgets);
         $this->report = [];
         /** @var Account $account */
@@ -87,7 +86,6 @@ class BudgetReportGenerator
         foreach ($spent as $currency) {
             $this->processExpenses($currency);
         }
-
     }
 
     /**
@@ -251,7 +249,6 @@ class BudgetReportGenerator
 
         $noBudget = $this->nbRepository->sumExpenses($this->start, $this->end, $this->accounts);
         foreach ($noBudget as $noBudgetEntry) {
-
             // currency information:
             $nbCurrencyId     = (int) ($noBudgetEntry['currency_id'] ?? $this->currency->id);
             $nbCurrencyCode   = $noBudgetEntry['currency_code'] ?? $this->currency->code;

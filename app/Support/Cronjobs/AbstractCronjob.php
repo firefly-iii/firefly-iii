@@ -74,5 +74,4 @@ abstract class AbstractCronjob
     {
         $this->force = $force;
     }
-
 }

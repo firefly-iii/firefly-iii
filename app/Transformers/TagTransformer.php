@@ -31,7 +31,6 @@ use FireflyIII\Models\Tag;
  */
 class TagTransformer extends AbstractTransformer
 {
-
     /**
      * Transform a tag.
      *
@@ -73,5 +72,4 @@ class TagTransformer extends AbstractTransformer
             ],
         ];
     }
-
 }

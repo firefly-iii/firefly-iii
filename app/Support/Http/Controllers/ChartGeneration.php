@@ -52,7 +52,6 @@ trait ChartGeneration
      */
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
-
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);

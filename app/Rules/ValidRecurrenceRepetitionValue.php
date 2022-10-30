@@ -35,7 +35,6 @@ use Log;
  */
 class ValidRecurrenceRepetitionValue implements Rule
 {
-
     /**
      * Get the validation error message.
      *

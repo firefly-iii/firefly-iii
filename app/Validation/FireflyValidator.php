@@ -47,6 +47,7 @@ use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use ValueError;
+
 use function is_string;
 
 /**
@@ -54,7 +55,6 @@ use function is_string;
  */
 class FireflyValidator extends Validator
 {
-
     /**
      * @param mixed $attribute
      * @param mixed $value
@@ -364,7 +364,7 @@ class FireflyValidator extends Validator
         }
 
         // check if it's an existing account.
-        if (in_array($triggerType, ['destination_account_id', 'source_account_id'])) {
+        if (in_array($triggerType, ['destination_account_id', 'source_account_id'], true)) {
             return is_numeric($value) && (int) $value > 0;
         }
 
@@ -382,7 +382,6 @@ class FireflyValidator extends Validator
             try {
                 $parser->parseDate($value);
             } catch (FireflyException $e) {
-
                 Log::error($e->getMessage());
 
                 return false;
@@ -390,7 +389,6 @@ class FireflyValidator extends Validator
         }
 
         return true;
-
     }
 
     /**
@@ -424,7 +422,6 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
-
         // because a user does not have to be logged in (tests and what-not).
         if (!auth()->check()) {
             return $this->validateAccountAnonymously();
@@ -501,7 +498,6 @@ class FireflyValidator extends Validator
         );
 
         return null === $result;
-
     }
 
     /**
@@ -812,7 +808,6 @@ class FireflyValidator extends Validator
     public function validateUniqueWebhook($value, $parameters): bool
     {
         if (auth()->check()) {
-
             $triggers   = Webhook::getTriggersForValidation();
             $responses  = Webhook::getResponsesForValidation();
             $deliveries = Webhook::getDeliveriesForValidation();

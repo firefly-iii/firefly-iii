@@ -42,7 +42,13 @@ use Log;
  */
 class AccountValidator
 {
-    use AccountValidatorProperties, WithdrawalValidation, DepositValidation, TransferValidation, ReconciliationValidation, OBValidation, LiabilityValidation;
+    use AccountValidatorProperties;
+    use WithdrawalValidation;
+    use DepositValidation;
+    use TransferValidation;
+    use ReconciliationValidation;
+    use OBValidation;
+    use LiabilityValidation;
 
     public bool                        $createMode;
     public string                      $destError;
@@ -258,5 +264,4 @@ class AccountValidator
 
         return null;
     }
-
 }

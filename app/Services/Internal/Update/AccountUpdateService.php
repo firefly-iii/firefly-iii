@@ -270,7 +270,7 @@ class AccountUpdateService
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
                 $location = $this->accountRepository->getLocation($account);
                 if (null === $location) {
-                    $location = new Location;
+                    $location = new Location();
                     $location->locatable()->associate($account);
                 }
 

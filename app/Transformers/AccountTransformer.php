@@ -45,7 +45,7 @@ class AccountTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->parameters = new ParameterBag;
+        $this->parameters = new ParameterBag();
         $this->repository = app(AccountRepositoryInterface::class);
     }
 
@@ -92,7 +92,7 @@ class AccountTransformer extends AbstractTransformer
 
         // no order for some accounts:
         $order = (int) $account->order;
-        if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'])) {
+        if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
         }
 

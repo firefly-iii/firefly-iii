@@ -49,7 +49,8 @@ trait CurrencyValidation
             if (array_key_exists('foreign_amount', $transaction)
                 && !(array_key_exists('foreign_currency_id', $transaction)
                      || array_key_exists(
-                         'foreign_currency_code', $transaction
+                         'foreign_currency_code',
+                         $transaction
                      ))
                 && 0 !== bccomp('0', $transaction['foreign_amount'])
             ) {
@@ -61,7 +62,8 @@ trait CurrencyValidation
             // if the currency is present, then the amount must be present as well.
             if ((array_key_exists('foreign_currency_id', $transaction) || array_key_exists('foreign_currency_code', $transaction))
                 && !array_key_exists(
-                    'foreign_amount', $transaction
+                    'foreign_amount',
+                    $transaction
                 )) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.foreign_amount',

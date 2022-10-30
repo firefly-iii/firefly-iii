@@ -38,12 +38,10 @@ class CurrencyDestroyService
      */
     public function destroy(TransactionCurrency $currency): void
     {
-
         try {
             $currency->delete();
         } catch (Exception $e) { // @phpstan-ignore-line
             // @ignoreException
         }
     }
-
 }

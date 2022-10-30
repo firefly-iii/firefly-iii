@@ -48,7 +48,7 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function includeBudget(BudgetLimit $limit)
     {
-        return $this->item($limit->budget, new BudgetTransformer, 'budgets');
+        return $this->item($limit->budget, new BudgetTransformer(), 'budgets');
     }
 
     /**

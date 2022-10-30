@@ -64,7 +64,6 @@ class FrontpageChartGenerator
         $this->accountRepos = app(AccountRepositoryInterface::class);
         $this->opsRepos     = app(OperationsRepositoryInterface::class);
         $this->noCatRepos   = app(NoCategoryRepositoryInterface::class);
-
     }
 
     /**
@@ -200,10 +199,8 @@ class FrontpageChartGenerator
             $category                                 = $array['name'];
             $amount                                   = $array['sum_float'] < 0 ? $array['sum_float'] * -1 : $array['sum_float'];
             $currencyData[$key]['entries'][$category] = $amount;
-
         }
 
         return $currencyData;
     }
-
 }

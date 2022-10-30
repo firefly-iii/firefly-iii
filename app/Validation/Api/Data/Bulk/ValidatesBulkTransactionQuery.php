@@ -73,5 +73,4 @@ trait ValidatesBulkTransactionQuery
             }
         }
     }
-
 }

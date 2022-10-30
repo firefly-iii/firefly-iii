@@ -37,7 +37,6 @@ use Str;
  */
 class RemoteUserProvider implements UserProvider
 {
-
     /**
      * @inheritDoc
      */
@@ -65,7 +64,7 @@ class RemoteUserProvider implements UserProvider
                 ]
             );
             // if this is the first user, give them admin as well.
-            if(1 === User::count()) {
+            if (1 === User::count()) {
                 $roleObject = Role::where('name', 'owner')->first();
                 $user->roles()->attach($roleObject);
             }

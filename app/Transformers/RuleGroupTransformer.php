@@ -30,7 +30,6 @@ use FireflyIII\Models\RuleGroup;
  */
 class RuleGroupTransformer extends AbstractTransformer
 {
-
     /**
      * Transform the rule group
      *

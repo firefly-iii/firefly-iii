@@ -46,6 +46,6 @@ class CurrencyCode implements BinderInterface
                 return $currency;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

@@ -260,7 +260,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function date(?string $string): ?Carbon
     {
-        if(null === $string) {
+        if (null === $string) {
             return null;
         }
         return Carbon::createFromFormat('Y-m-d', $string);

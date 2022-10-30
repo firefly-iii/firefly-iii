@@ -84,7 +84,6 @@ trait DateCalculation
      */
     protected function calculateStep(Carbon $start, Carbon $end): string
     {
-
         $step   = '1D';
         $months = $start->diffInMonths($end);
         if ($months > 3) {
@@ -167,5 +166,4 @@ trait DateCalculation
 
         return $loop;
     }
-
 }

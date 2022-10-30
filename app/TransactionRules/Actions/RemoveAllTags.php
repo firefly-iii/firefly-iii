@@ -66,5 +66,4 @@ class RemoveAllTags implements ActionInterface
 
         return true;
     }
-
 }

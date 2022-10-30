@@ -240,13 +240,12 @@ trait AppendsLocationData
         $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
 
         return (
-                   null === $this->get($longitudeKey)
-                   && null === $this->get($latitudeKey)
-                   && null === $this->get($zoomLevelKey))
-               && ('PUT' === $this->method()
-                   || ('POST' === $this->method() && $this->routeIs('*.update'))
+            null === $this->get($longitudeKey)
+            && null === $this->get($latitudeKey)
+            && null === $this->get($zoomLevelKey))
+               && (
+                   'PUT' === $this->method()
+            || ('POST' === $this->method() && $this->routeIs('*.update'))
                );
-
     }
-
 }

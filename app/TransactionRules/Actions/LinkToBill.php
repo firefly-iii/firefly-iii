@@ -87,7 +87,8 @@ class LinkToBill implements ActionInterface
         Log::error(
             sprintf(
                 'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.',
-                $journal['transaction_journal_id'], $billName
+                $journal['transaction_journal_id'],
+                $billName
             )
         );
 

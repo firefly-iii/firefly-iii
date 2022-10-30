@@ -58,5 +58,4 @@ trait GeneratesInstallationId
             app('fireflyconfig')->set('installation_id', $uniqueId);
         }
     }
-
 }

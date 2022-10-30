@@ -31,7 +31,6 @@ use Carbon\Carbon;
  */
 trait CalculateXOccurrences
 {
-
     /**
      * Calculates the number of daily occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
      * over $skipMod -1 recurrences.
@@ -210,6 +209,5 @@ trait CalculateXOccurrences
         }
 
         return $return;
-
     }
 }

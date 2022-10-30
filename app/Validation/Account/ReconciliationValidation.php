@@ -86,7 +86,7 @@ trait ReconciliationValidation
         // source to the asset account that is the destination.
         if (null === $accountId && null === $accountName) {
             Log::debug('The source is valid because ID and name are NULL.');
-            $this->source = new Account;
+            $this->source = new Account();
             return true;
         }
 
@@ -107,5 +107,4 @@ trait ReconciliationValidation
 
         return true;
     }
-
 }

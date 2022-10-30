@@ -120,11 +120,10 @@ class AmountFormat extends AbstractExtension
     {
         return new TwigFunction(
             'formatAmountBySymbol',
-
             static function (string $amount, string $symbol, int $decimalPlaces = null, bool $coloured = null): string {
                 $decimalPlaces            = $decimalPlaces ?? 2;
                 $coloured                 = $coloured ?? true;
-                $currency                 = new TransactionCurrency;
+                $currency                 = new TransactionCurrency();
                 $currency->symbol         = $symbol;
                 $currency->decimal_places = $decimalPlaces;
 

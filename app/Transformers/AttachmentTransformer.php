@@ -76,5 +76,4 @@ class AttachmentTransformer extends AbstractTransformer
             ],
         ];
     }
-
 }

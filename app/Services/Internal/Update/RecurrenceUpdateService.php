@@ -42,7 +42,8 @@ use Log;
  */
 class RecurrenceUpdateService
 {
-    use TransactionTypeTrait, RecurringTransactionTrait;
+    use TransactionTypeTrait;
+    use RecurringTransactionTrait;
 
     private User $user;
 

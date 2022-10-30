@@ -36,7 +36,6 @@ use Log;
  */
 class UpdateRequest implements UpdateRequestInterface
 {
-
     /**
      * @param string $channel
      *
@@ -83,7 +82,7 @@ class UpdateRequest implements UpdateRequestInterface
         $url = config('firefly.update_endpoint');
         Log::debug(sprintf('Going to call %s', $url));
         try {
-            $client  = new Client;
+            $client  = new Client();
             $options = [
                 'headers' => [
                     'User-Agent' => sprintf('FireflyIII/%s/%s', config('firefly.version'), $channel),
@@ -110,7 +109,6 @@ class UpdateRequest implements UpdateRequestInterface
         $body = (string) $res->getBody();
         try {
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-
         } catch (JsonException $e) {
             Log::error('Body is not valid JSON');
             Log::error($body);

@@ -44,7 +44,6 @@ class BudgetList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-
             if ('allBudgets' === $value) {
                 return auth()->user()->budgets()->where('active', true)
                              ->orderBy('order', 'ASC')
@@ -57,7 +56,7 @@ class BudgetList implements BinderInterface
 
             if (empty($list)) {
                 Log::warning('Budget list count is zero, return 404.');
-                throw new NotFoundHttpException;
+                throw new NotFoundHttpException();
             }
 
 
@@ -69,15 +68,14 @@ class BudgetList implements BinderInterface
 
             // add empty budget if applicable.
             if (in_array(0, $list, true)) {
-                $collection->push(new Budget);
+                $collection->push(new Budget());
             }
 
             if ($collection->count() > 0) {
-
                 return $collection;
             }
         }
         Log::warning('BudgetList fallback to 404.');
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

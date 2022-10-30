@@ -86,5 +86,4 @@ trait GetRecurrenceData
 
         return $return;
     }
-
 }

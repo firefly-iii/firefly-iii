@@ -97,7 +97,6 @@ trait RecurringTransactionTrait
                     'weekend'           => $array['weekend'] ?? 1,
                 ]
             );
-
         }
     }
 
@@ -181,7 +180,6 @@ trait RecurringTransactionTrait
             if (array_key_exists('tags', $array) && is_array($array['tags'])) {
                 $this->updateTags($transaction, $array['tags']);
             }
-
         }
     }
 
@@ -226,11 +224,9 @@ trait RecurringTransactionTrait
             if (!in_array($expectedType, $cannotCreate, true)) {
                 try {
                     $result = $factory->findOrCreate($accountName, $expectedType);
-
                 } catch (FireflyException $e) {
                     Log::error($e->getMessage());
                 }
-
             }
         }
 
@@ -252,7 +248,7 @@ trait RecurringTransactionTrait
 
         $meta = $transaction->recurrenceTransactionMeta()->where('name', 'budget_id')->first();
         if (null === $meta) {
-            $meta        = new RecurrenceTransactionMeta;
+            $meta        = new RecurrenceTransactionMeta();
             $meta->rt_id = $transaction->id;
             $meta->name  = 'budget_id';
         }
@@ -275,7 +271,7 @@ trait RecurringTransactionTrait
 
         $meta = $transaction->recurrenceTransactionMeta()->where('name', 'bill_id')->first();
         if (null === $meta) {
-            $meta        = new RecurrenceTransactionMeta;
+            $meta        = new RecurrenceTransactionMeta();
             $meta->rt_id = $transaction->id;
             $meta->name  = 'bill_id';
         }
@@ -304,7 +300,7 @@ trait RecurringTransactionTrait
 
         $meta = $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->first();
         if (null === $meta) {
-            $meta        = new RecurrenceTransactionMeta;
+            $meta        = new RecurrenceTransactionMeta();
             $meta->rt_id = $transaction->id;
             $meta->name  = 'category_id';
         }

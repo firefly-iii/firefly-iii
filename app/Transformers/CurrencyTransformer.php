@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionCurrency;
  */
 class CurrencyTransformer extends AbstractTransformer
 {
-
     /**
      * Transform the currency.
      *

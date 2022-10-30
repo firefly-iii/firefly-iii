@@ -69,5 +69,4 @@ class ObjectGroupTransformer extends AbstractTransformer
             ],
         ];
     }
-
 }

@@ -45,7 +45,6 @@ class RecurrenceDestroyService
             return;
         }
         $this->destroy($recurrence);
-
     }
 
     /**
@@ -82,5 +81,4 @@ class RecurrenceDestroyService
             // @ignoreException
         }
     }
-
 }

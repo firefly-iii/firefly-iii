@@ -40,7 +40,8 @@ use Log;
  */
 class BillUpdateService
 {
-    use BillServiceTrait, CreatesObjectGroups;
+    use BillServiceTrait;
+    use CreatesObjectGroups;
 
     protected User $user;
 
@@ -203,7 +204,6 @@ class BillUpdateService
             $bill->order = $newOrder;
             $bill->save();
         }
-
     }
 
     /**
@@ -239,7 +239,6 @@ class BillUpdateService
             }
             $this->updateRules($rules, $ruleTriggerKey, $oldData[$field], $newData[$field]);
         }
-
     }
 
     /**

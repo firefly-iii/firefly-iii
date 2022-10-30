@@ -59,7 +59,6 @@ class AccountSearch implements GenericSearchInterface
      */
     public function search(): Collection
     {
-
         $searchQuery   = $this->user->accounts()
                                     ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
                                     ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
@@ -140,5 +139,4 @@ class AccountSearch implements GenericSearchInterface
     {
         $this->user = $user;
     }
-
 }

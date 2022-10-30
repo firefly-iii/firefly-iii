@@ -95,7 +95,6 @@ class ParseDateString
 
         // if + or -:
         if (str_starts_with($date, '+') || str_starts_with($date, '-')) {
-
             return $this->parseRelativeDate($date);
         }
         if ('xxxx-xx-xx' === strtolower($date)) {
@@ -204,7 +203,6 @@ class ParseDateString
             Log::debug(sprintf('Will now do %s(%d) on %s', $func, $number, $today->format('Y-m-d')));
             $today->$func($number);
             Log::debug(sprintf('Resulting date is %s', $today->format('Y-m-d')));
-
         }
 
         return $today;
@@ -464,5 +462,4 @@ class ParseDateString
             'month' => $parts[1],
         ];
     }
-
 }

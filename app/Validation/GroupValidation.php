@@ -35,7 +35,6 @@ use Log;
  */
 trait GroupValidation
 {
-
     /**
      * @param Validator $validator
      *
@@ -62,10 +61,12 @@ trait GroupValidation
             // set errors:
             if (false === $hasAccountInfo && !$hasJournalId) {
                 $validator->errors()->add(
-                    sprintf('transactions.%d.source_id', $index), (string) trans('validation.generic_no_source')
+                    sprintf('transactions.%d.source_id', $index),
+                    (string) trans('validation.generic_no_source')
                 );
                 $validator->errors()->add(
-                    sprintf('transactions.%d.destination_id', $index), (string) trans('validation.generic_no_destination')
+                    sprintf('transactions.%d.destination_id', $index),
+                    (string) trans('validation.generic_no_destination')
                 );
             }
         }
@@ -93,7 +94,8 @@ trait GroupValidation
         // no valid descriptions?
         if (0 === $validDescriptions) {
             $validator->errors()->add(
-                'transactions.0.description', (string) trans('validation.filled', ['attribute' => (string) trans('validation.attributes.description')])
+                'transactions.0.description',
+                (string) trans('validation.filled', ['attribute' => (string) trans('validation.attributes.description')])
             );
         }
     }

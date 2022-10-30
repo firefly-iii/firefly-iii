@@ -34,7 +34,6 @@ use Illuminate\Support\Facades\Log;
  */
 trait FiltersWeekends
 {
-
     /**
      * Filters out all weekend entries, if necessary.
      *

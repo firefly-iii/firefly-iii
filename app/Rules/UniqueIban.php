@@ -98,7 +98,10 @@ class UniqueIban implements Rule
                 Log::debug(
                     sprintf(
                         'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
-                        $value, $count, $type, $this->expectedType
+                        $value,
+                        $count,
+                        $type,
+                        $this->expectedType
                     )
                 );
 

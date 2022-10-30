@@ -68,6 +68,6 @@ class EitherConfigKey
         if (in_array($value, self::$static, true) || in_array($value, DynamicConfigKey::$accepted, true)) {
             return $value;
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

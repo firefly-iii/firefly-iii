@@ -44,7 +44,6 @@ use Throwable;
  */
 trait RenderPartialViews
 {
-
     /**
      * View for transactions in a budget for an account.
      *
@@ -114,7 +113,7 @@ trait RenderPartialViews
 
         $budget = $budgetRepository->find((int) $attributes['budgetId']);
         if (null === $budget) {
-            $budget = new Budget;
+            $budget = new Budget();
         }
         $journals = $popupHelper->byBudget($budget, $attributes);
 
@@ -276,7 +275,6 @@ trait RenderPartialViews
                         'count'      => $count,
                     ]
                 )->render();
-
             } catch (Throwable $e) { // @phpstan-ignore-line
                 Log::debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
@@ -303,7 +301,6 @@ trait RenderPartialViews
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
@@ -318,7 +315,7 @@ trait RenderPartialViews
                 $count = ($index + 1);
                 try {
                     $rootOperator = OperatorQuerySearch::getRootOperator($entry->trigger_type);
-                    if(str_starts_with($rootOperator, '-')) {
+                    if (str_starts_with($rootOperator, '-')) {
                         $rootOperator = substr($rootOperator, 1);
                     }
                     $renderedEntries[] = view(
@@ -332,7 +329,6 @@ trait RenderPartialViews
                             'triggers'      => $triggers,
                         ]
                     )->render();
-
                 } catch (Throwable $e) { // @phpstan-ignore-line
                     Log::debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
@@ -384,7 +380,6 @@ trait RenderPartialViews
      */
     protected function noReportOptions(): string // render a view
     {
-
         try {
             $result = view('reports.options.no-options')->render();
         } catch (Throwable $e) { // @phpstan-ignore-line

@@ -124,7 +124,6 @@ class WholePeriodChartGenerator
      */
     protected function calculateStep(Carbon $start, Carbon $end): string
     {
-
         $step   = '1D';
         $months = $start->diffInMonths($end);
         if ($months > 3) {
@@ -165,5 +164,4 @@ class WholePeriodChartGenerator
 
         return $return;
     }
-
 }

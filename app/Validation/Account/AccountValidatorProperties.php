@@ -31,5 +31,4 @@ namespace FireflyIII\Validation\Account;
  */
 trait AccountValidatorProperties
 {
-
 }

@@ -63,7 +63,7 @@ class RemoveTag implements ActionInterface
             return false;
         }
         $count = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
-        if(0 === $count) {
+        if (0 === $count) {
             Log::debug(sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.', $name, $journal['transaction_journal_id']));
             return false;
         }

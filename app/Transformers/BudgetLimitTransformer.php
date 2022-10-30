@@ -48,7 +48,7 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function includeBudget(BudgetLimit $limit)
     {
-        return $this->item($limit->budget, new BudgetTransformer, 'budgets');
+        return $this->item($limit->budget, new BudgetTransformer(), 'budgets');
     }
 
     /**
@@ -63,7 +63,11 @@ class BudgetLimitTransformer extends AbstractTransformer
         $repository = app(OperationsRepository::class);
         $repository->setUser($budgetLimit->budget->user);
         $expenses              = $repository->sumExpenses(
-            $budgetLimit->start_date, $budgetLimit->end_date, null, new Collection([$budgetLimit->budget]), $budgetLimit->transactionCurrency
+            $budgetLimit->start_date,
+            $budgetLimit->end_date,
+            null,
+            new Collection([$budgetLimit->budget]),
+            $budgetLimit->transactionCurrency
         );
         $currency              = $budgetLimit->transactionCurrency;
         $amount                = $budgetLimit->amount;

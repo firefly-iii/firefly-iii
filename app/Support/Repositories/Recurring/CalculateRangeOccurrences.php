@@ -32,7 +32,6 @@ use Illuminate\Support\Facades\Log;
  */
 trait CalculateRangeOccurrences
 {
-
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *
@@ -185,7 +184,6 @@ trait CalculateRangeOccurrences
         $return     = [];
         if ($start > $date) {
             $date->addYear();
-
         }
 
         // is $date between $start and $end?
@@ -201,6 +199,5 @@ trait CalculateRangeOccurrences
         }
 
         return $return;
-
     }
 }

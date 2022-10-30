@@ -36,7 +36,6 @@ use Log;
  */
 trait BillServiceTrait
 {
-
     /**
      * @param Bill   $bill
      * @param string $oldName
@@ -90,5 +89,4 @@ trait BillServiceTrait
 
         return true;
     }
-
 }

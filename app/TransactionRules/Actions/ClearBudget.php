@@ -33,7 +33,6 @@ use Log;
  */
 class ClearBudget implements ActionInterface
 {
-
     private RuleAction $action;
 
     /**

@@ -88,7 +88,7 @@ class OperatorQuerySearch implements SearchInterface
     public function __construct()
     {
         Log::debug('Constructed OperatorQuerySearch');
-        $this->operators          = new Collection;
+        $this->operators          = new Collection();
         $this->page               = 1;
         $this->words              = [];
         $this->prohibitedWords    = [];
@@ -241,7 +241,6 @@ class OperatorQuerySearch implements SearchInterface
                     ];
                 }
         }
-
     }
 
     /**
@@ -267,13 +266,13 @@ class OperatorQuerySearch implements SearchInterface
             default:
                 Log::error(sprintf('No such operator: %s', $operator));
                 throw new FireflyException(sprintf('Unsupported search operator: "%s"', $operator));
-            // some search operators are ignored, basically:
+                // some search operators are ignored, basically:
             case 'user_action':
                 Log::info(sprintf('Ignore search operator "%s"', $operator));
 
                 return false;
             //
-            // all account related searches:
+                // all account related searches:
             //
             case 'account_is':
                 $this->searchAccount($value, 3, 4);
@@ -475,7 +474,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
             case 'account_id':
                 $parts      = explode(',', $value);
-                $collection = new Collection;
+                $collection = new Collection();
                 foreach ($parts as $accountId) {
                     $account = $this->accountRepository->find((int) $accountId);
                     if (null !== $account) {
@@ -491,7 +490,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
             case '-account_id':
                 $parts      = explode(',', $value);
-                $collection = new Collection;
+                $collection = new Collection();
                 foreach ($parts as $accountId) {
                     $account = $this->accountRepository->find((int) $accountId);
                     if (null !== $account) {
@@ -506,7 +505,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             //
-            // cash account
+                // cash account
             //
             case 'source_is_cash':
                 $account = $this->getCashAccount();
@@ -533,7 +532,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->excludeAccounts(new Collection([$account]));
                 break;
             //
-            // description
+                // description
             //
             case 'description_starts':
                 $this->collector->descriptionStarts([$value]);
@@ -562,7 +561,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->descriptionIsNot($value);
                 break;
             //
-            // currency
+                // currency
             //
             case 'currency_is':
                 $currency = $this->findCurrency($value);
@@ -601,7 +600,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             //
-            // attachments
+                // attachments
             //
             case 'has_attachments':
             case '-has_no_attachments':
@@ -614,7 +613,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->hasNoAttachments();
                 break;
             //
-            // categories
+                // categories
             case '-has_any_category':
             case 'has_no_category':
                 $this->collector->withoutCategory();
@@ -693,7 +692,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             //
-            // budgets
+                // budgets
             //
             case '-has_any_budget':
             case 'has_no_budget':
@@ -774,7 +773,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             //
-            // bill
+                // bill
             //
             case '-has_any_bill':
             case 'has_no_bill':
@@ -853,7 +852,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             //
-            // tags
+                // tags
             //
             case '-has_any_tag':
             case 'has_no_tag':
@@ -883,7 +882,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             //
-            // notes
+                // notes
             //
             case 'notes_contains':
                 $this->collector->notesContain($value);
@@ -924,7 +923,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->isNotReconciled();
                 break;
             //
-            // amount
+                // amount
             //
             case 'amount_is':
                 // strip comma's, make dots.
@@ -997,7 +996,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->foreignAmountMore($amount);
                 break;
             //
-            // transaction type
+                // transaction type
             //
             case 'transaction_type':
                 $this->collector->setTypes([ucfirst($value)]);
@@ -1008,7 +1007,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 break;
             //
-            // dates
+                // dates
             //
             case '-date_on':
             case 'date_on':
@@ -1160,7 +1159,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->setObjectDateAfterParams('updated_at', $range);
                 return false;
             //
-            // external URL
+                // external URL
             //
             case '-any_external_url':
             case 'no_external_url':
@@ -1197,7 +1196,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             //
-            // other fields
+                // other fields
             //
             case 'external_id_is':
                 $this->collector->setExternalId($value);
@@ -1310,7 +1309,6 @@ class OperatorQuerySearch implements SearchInterface
             case '-exists':
                 $this->collector->findNothing();
                 break;
-
         }
         return true;
     }
@@ -1550,7 +1548,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function parseDateRange(string $value): array
     {
-        $parser = new ParseDateString;
+        $parser = new ParseDateString();
         if ($parser->isDateRange($value)) {
             return $parser->parseRange($value);
         }
@@ -2044,7 +2042,6 @@ class OperatorQuerySearch implements SearchInterface
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
         $this->setLimit((int) app('preferences')->getForUser($user, 'listPageSize', 50)->data);
-
     }
 
     /**

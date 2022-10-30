@@ -75,7 +75,9 @@ class SetDestinationAccount implements ActionInterface
         if ((TransactionType::DEPOSIT === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             Log::error(
                 sprintf(
-                    'Cant change destination account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value
+                    'Cant change destination account of journal #%d because no asset account with name "%s" exists.',
+                    $object->id,
+                    $this->action->action_value
                 )
             );
 
@@ -99,7 +101,8 @@ class SetDestinationAccount implements ActionInterface
         if (null !== $newAccount && (int) $newAccount->id === (int) $source->account_id) {
             Log::error(
                 sprintf(
-                    'New destination account ID #%d and current source account ID #%d are the same. Do nothing.', $newAccount->id,
+                    'New destination account ID #%d and current source account ID #%d are the same. Do nothing.',
+                    $newAccount->id,
                     $source->account_id
                 )
             );
@@ -126,8 +129,6 @@ class SetDestinationAccount implements ActionInterface
         Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
 
         return true;
-
-
     }
 
     /**
@@ -167,6 +168,4 @@ class SetDestinationAccount implements ActionInterface
 
         return $account;
     }
-
-
 }

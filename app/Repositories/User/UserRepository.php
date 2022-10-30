@@ -274,7 +274,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $now = Carbon::now();
         $now->addDays(2);
-        $invitee = new InvitedUser;
+        $invitee = new InvitedUser();
         $invitee->user()->associate($user);
         $invitee->invite_code = Str::random(64);
         $invitee->email       = $email;
@@ -353,7 +353,6 @@ class UserRepository implements UserRepositoryInterface
         $user->blocked      = false;
         $user->blocked_code = '';
         $user->save();
-
     }
 
     /**

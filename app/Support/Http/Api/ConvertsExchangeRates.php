@@ -87,7 +87,6 @@ trait ConvertsExchangeRates
                 $entry['native_decimal_places'] = $native->decimal_places;
             }
             $return[] = $entry;
-
         }
         return $return;
     }
@@ -267,5 +266,4 @@ trait ConvertsExchangeRates
     {
         $this->enabled = true;
     }
-
 }

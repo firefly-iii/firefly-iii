@@ -38,8 +38,8 @@ use Log;
 class RemoteUserGuard implements Guard
 {
     protected Application $application;
-    protected             $provider;
-    protected             $user;
+    protected $provider;
+    protected $user;
 
     /**
      * Create a new authentication guard.

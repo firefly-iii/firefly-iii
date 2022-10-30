@@ -39,7 +39,6 @@ use Log;
  */
 trait UserNavigation
 {
-
     /**
      * Functionality:.
      *

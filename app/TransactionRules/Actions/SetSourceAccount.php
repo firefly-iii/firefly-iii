@@ -96,7 +96,8 @@ class SetSourceAccount implements ActionInterface
         if (null !== $newAccount && (int) $newAccount->id === (int) $destination->account_id) {
             Log::error(
                 sprintf(
-                    'New source account ID #%d and current destination account ID #%d are the same. Do nothing.', $newAccount->id,
+                    'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
+                    $newAccount->id,
                     $destination->account_id
                 )
             );

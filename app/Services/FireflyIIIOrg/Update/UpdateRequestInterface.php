@@ -35,5 +35,4 @@ interface UpdateRequestInterface
      * @return array
      */
     public function getUpdateInformation(string $channel): array;
-
 }

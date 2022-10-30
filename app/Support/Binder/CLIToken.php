@@ -34,7 +34,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class CLIToken implements BinderInterface
 {
-
     /**
      * @param string $value
      * @param Route  $route
@@ -62,6 +61,6 @@ class CLIToken implements BinderInterface
             }
         }
         Log::error(sprintf('Recognized no users by access token "%s"', $value));
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

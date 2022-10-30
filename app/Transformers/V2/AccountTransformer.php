@@ -131,8 +131,7 @@ class AccountTransformer extends AbstractTransformer
 
         // get currencies:
         $accountIds  = $objects->pluck('id')->toArray();
-        $meta        = AccountMeta
-            ::whereIn('account_id', $accountIds)
+        $meta        = AccountMeta::whereIn('account_id', $accountIds)
             ->where('name', 'currency_id')
             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
         $currencyIds = $meta->pluck('data')->toArray();

@@ -59,7 +59,7 @@ trait AugumentData
         $combined   = [];
         /** @var Account $expenseAccount */
         foreach ($accounts as $expenseAccount) {
-            $collection = new Collection;
+            $collection = new Collection();
             $collection->push($expenseAccount);
 
             $revenue = $repository->findByName($expenseAccount->name, [AccountType::REVENUE]);
@@ -200,7 +200,7 @@ trait AugumentData
         /** @var BudgetLimitRepositoryInterface $blRepository */
         $blRepository = app(BudgetLimitRepositoryInterface::class);
         // properties for cache
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($budget->id);
@@ -240,7 +240,6 @@ trait AugumentData
      */
     protected function groupByName(array $array): array // filter + group data
     {
-
         // group by opposing account name.
         $grouped = [];
         /** @var array $journal */

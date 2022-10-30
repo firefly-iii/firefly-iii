@@ -91,8 +91,7 @@ class AccountDestroyService
             Log::debug(sprintf('Found opening balance journal with ID #%d', $journalId));
 
             // get transactions with this journal (should be just one):
-            $transactions = Transaction
-                ::where('transaction_journal_id', $journalId)
+            $transactions = Transaction::where('transaction_journal_id', $journalId)
                 ->where('account_id', '!=', $account->id)
                 ->get();
             /** @var Transaction $transaction */
@@ -159,7 +158,6 @@ class AccountDestroyService
      */
     private function destroyJournals(Account $account): void
     {
-
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
 
@@ -181,8 +179,7 @@ class AccountDestroyService
      */
     private function destroyRecurrences(Account $account): void
     {
-        $recurrences = RecurrenceTransaction::
-        where(
+        $recurrences = RecurrenceTransaction::where(
             static function (Builder $q) use ($account) {
                 $q->where('source_id', $account->id);
                 $q->orWhere('destination_id', $account->id);
@@ -195,5 +192,4 @@ class AccountDestroyService
             $destroyService->destroyById((int) $recurrenceId);
         }
     }
-
 }

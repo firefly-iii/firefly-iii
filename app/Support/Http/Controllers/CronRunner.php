@@ -93,8 +93,5 @@ trait CronRunner
             'job_errored'   => $recurring->jobErrored,
             'message'       => $recurring->message,
         ];
-
     }
-
-
 }

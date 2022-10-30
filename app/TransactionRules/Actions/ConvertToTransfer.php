@@ -82,8 +82,10 @@ class ConvertToTransfer implements ActionInterface
         if (null === $asset) {
             Log::error(
                 sprintf(
-                    'Journal #%d cannot be converted because no asset with name "%s" exists (rule #%d).', $journal['transaction_journal_id'],
-                    $this->action->action_value, $this->action->rule_id
+                    'Journal #%d cannot be converted because no asset with name "%s" exists (rule #%d).',
+                    $journal['transaction_journal_id'],
+                    $this->action->action_value,
+                    $this->action->rule_id
                 )
             );
 
@@ -187,5 +189,4 @@ class ConvertToTransfer implements ActionInterface
 
         return true;
     }
-
 }

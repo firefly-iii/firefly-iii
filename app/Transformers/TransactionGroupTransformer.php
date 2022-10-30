@@ -126,7 +126,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $metaDateData  = $this->groupRepos->getMetaDateFields((int) $row['transaction_journal_id'], $this->metaDateFields);
         $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
 
-        
+
         $longitude = null;
         $latitude  = null;
         $zoomLevel = null;

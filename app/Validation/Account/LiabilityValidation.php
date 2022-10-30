@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Log;
@@ -34,7 +33,6 @@ use Log;
  */
 trait LiabilityValidation
 {
-
     /**
      * @param array $array
      *
@@ -89,7 +87,7 @@ trait LiabilityValidation
         }
         if (true === $result) {
             // set the source to be a (dummy) revenue account.
-            $account              = new Account;
+            $account              = new Account();
             $accountType          = AccountType::whereType(AccountType::LIABILITY_CREDIT)->first();
             $account->accountType = $accountType;
             $this->source         = $account;
@@ -97,5 +95,4 @@ trait LiabilityValidation
 
         return $result;
     }
-
 }

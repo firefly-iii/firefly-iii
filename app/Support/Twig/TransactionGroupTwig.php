@@ -112,7 +112,6 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function signAmount(string $amount, string $transactionType, string $sourceType): string
     {
-
         // withdrawals stay negative
         if ($transactionType !== TransactionType::WITHDRAWAL) {
             $amount = bcmul($amount, '-1');

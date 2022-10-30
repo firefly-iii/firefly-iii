@@ -34,7 +34,6 @@ use Log;
  */
 class AutoBudgetCronjob extends AbstractCronjob
 {
-
     /**
      * @inheritDoc
      */

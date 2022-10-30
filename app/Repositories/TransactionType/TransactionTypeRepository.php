@@ -32,7 +32,6 @@ use Log;
  */
 class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
-
     /**
      * @param TransactionType|null $type
      * @param string|null          $typeString

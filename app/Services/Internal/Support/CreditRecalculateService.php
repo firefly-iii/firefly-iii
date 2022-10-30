@@ -22,9 +22,7 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Services\Internal\Support;
-
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
@@ -110,11 +108,11 @@ class CreditRecalculateService
 
         // destination or source must be liability.
         $valid = config('firefly.valid_liabilities');
-        if (in_array($destination->accountType->type, $valid)) {
+        if (in_array($destination->accountType->type, $valid, true)) {
             Log::debug(sprintf('Dest account type is "%s", include it.', $destination->accountType->type));
             $this->work[] = $destination;
         }
-        if (in_array($source->accountType->type, $valid)) {
+        if (in_array($source->accountType->type, $valid, true)) {
             Log::debug(sprintf('Src account type is "%s", include it.', $source->accountType->type));
             $this->work[] = $source;
         }
@@ -170,7 +168,7 @@ class CreditRecalculateService
     private function processAccount(): void
     {
         $valid = config('firefly.valid_liabilities');
-        if (in_array($this->account->accountType->type, $valid)) {
+        if (in_array($this->account->accountType->type, $valid, true)) {
             Log::debug(sprintf('Account type is "%s", include it.', $this->account->accountType->type));
             $this->work[] = $this->account;
         }
@@ -290,6 +288,4 @@ class CreditRecalculateService
     {
         $this->group = $group;
     }
-
-
 }

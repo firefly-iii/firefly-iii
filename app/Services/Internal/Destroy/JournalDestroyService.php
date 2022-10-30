@@ -95,11 +95,8 @@ class JournalDestroyService
                     $group->delete();
                 }
             }
-
         } catch (Exception $e) { // @phpstan-ignore-line
             // @ignoreException
         }
-
     }
-
 }

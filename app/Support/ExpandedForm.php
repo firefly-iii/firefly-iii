@@ -340,7 +340,6 @@ class ExpandedForm
      */
     public function password(string $name, array $options = null): string
     {
-
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);

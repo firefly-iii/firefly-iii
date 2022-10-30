@@ -33,7 +33,6 @@ use FireflyIII\Models\TransactionGroup;
  */
 class TransactionGroupDestroyService
 {
-
     /**
      * @param TransactionGroup $transactionGroup
      */
@@ -50,5 +49,4 @@ class TransactionGroupDestroyService
             // @ignoreException
         }
     }
-
 }

@@ -206,13 +206,13 @@ trait JournalServiceTrait
             Log::debug(
                 sprintf(
                     'Was given %s account #%d ("%s") so will simply return that.',
-                    $account->accountType->type, $account->id, $account->name
-
+                    $account->accountType->type,
+                    $account->id,
+                    $account->name
                 )
             );
         }
         if (null === $account) {
-
             // final attempt, create it.
             if (AccountType::ASSET === $preferredType) {
                 throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s', json_encode($data)));
@@ -258,7 +258,6 @@ trait JournalServiceTrait
                 $metaFactory = app(AccountMetaFactory::class);
                 $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['number']]);
             }
-
         }
 
         return $account;
@@ -385,7 +384,7 @@ trait JournalServiceTrait
         $note  = $journal->notes()->first();
         if ('' !== $notes) {
             if (null === $note) {
-                $note = new Note;
+                $note = new Note();
                 $note->noteable()->associate($journal);
             }
             $note->text = $notes;

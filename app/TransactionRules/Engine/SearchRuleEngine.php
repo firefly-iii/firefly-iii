@@ -50,8 +50,8 @@ class SearchRuleEngine implements RuleEngineInterface
 
     public function __construct()
     {
-        $this->rules       = new Collection;
-        $this->groups      = new Collection;
+        $this->rules       = new Collection();
+        $this->groups      = new Collection();
         $this->operators   = [];
         $this->resultCount = [];
     }
@@ -71,9 +71,9 @@ class SearchRuleEngine implements RuleEngineInterface
     public function find(): Collection
     {
         Log::debug('SearchRuleEngine::find()');
-        $collection = new Collection;
+        $collection = new Collection();
         foreach ($this->rules as $rule) {
-            $found = new Collection;
+            $found = new Collection();
             if (true === $rule->strict) {
                 $found = $this->findStrictRule($rule);
             }
@@ -216,7 +216,7 @@ class SearchRuleEngine implements RuleEngineInterface
     private function findNonStrictRule(Rule $rule): Collection
     {
         // start a search query for individual each trigger:
-        $total = new Collection;
+        $total = new Collection();
         $count = 0;
 
         /** @var Collection $triggers */
@@ -502,7 +502,6 @@ class SearchRuleEngine implements RuleEngineInterface
                 return;
             }
         }
-
     }
 
     /**
@@ -534,7 +533,6 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     public function setRules(Collection $rules): void
     {
-
         Log::debug(__METHOD__);
         foreach ($rules as $rule) {
             if ($rule instanceof Rule) {

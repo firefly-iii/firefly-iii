@@ -43,7 +43,6 @@ use ValueError;
  */
 class Steam
 {
-
     /**
      * @param Account $account
      * @param Carbon  $date
@@ -53,7 +52,7 @@ class Steam
     public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
         // abuse chart properties:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-no-virtual');
         $cache->addProperty($date);
@@ -124,7 +123,7 @@ class Steam
     public function balanceInRange(Account $account, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null): array
     {
         // abuse chart properties:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range');
         $cache->addProperty($currency ? $currency->id : 0);
@@ -210,7 +209,7 @@ class Steam
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
         // abuse chart properties:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
@@ -259,7 +258,7 @@ class Steam
     {
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($ids);
         $cache->addProperty('balances');
         $cache->addProperty($date);
@@ -292,7 +291,7 @@ class Steam
     {
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($ids);
         $cache->addProperty('balances-per-currency');
         $cache->addProperty($date);
@@ -321,7 +320,7 @@ class Steam
     public function balancePerCurrency(Account $account, Carbon $date): array
     {
         // abuse chart properties:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-per-currency');
         $cache->addProperty($date);

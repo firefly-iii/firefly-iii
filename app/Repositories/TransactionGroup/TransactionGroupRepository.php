@@ -65,7 +65,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $journal = $this->user->transactionJournals()->find($journalId);
 
         return $journal->attachments()->count();
-
     }
 
     /**
@@ -73,7 +72,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function destroy(TransactionGroup $group): void
     {
-        $service = new TransactionGroupDestroyService;
+        $service = new TransactionGroupDestroyService();
         $service->destroy($group);
     }
 
@@ -181,7 +180,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $current['notes']         = $repository->getNoteText($attachment);
             $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
             $result[$journalId][]     = $current;
-
         }
 
         return $result;
@@ -198,8 +196,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
-        $set      = TransactionJournalLink
-            ::where(
+        $set      = TransactionJournalLink::where(
                 static function (Builder $q) use ($journals) {
                     $q->whereIn('source_id', $journals);
                     $q->orWhereIn('destination_id', $journals);
@@ -262,7 +259,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
         if (TransactionType::WITHDRAWAL !== $type) {
             $return = app('amount')->formatAnything($currency, $amount);
-
         }
 
         return $return;
@@ -319,8 +315,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function getMetaDateFields(int $journalId, array $fields): NullArrayObject
     {
-        $query  = DB
-            ::table('journal_meta')
+        $query  = DB::table('journal_meta')
             ->where('transaction_journal_id', $journalId)
             ->whereIn('name', $fields)
             ->whereNull('deleted_at')
@@ -344,8 +339,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function getMetaFields(int $journalId, array $fields): NullArrayObject
     {
-        $query  = DB
-            ::table('journal_meta')
+        $query  = DB::table('journal_meta')
             ->where('transaction_journal_id', $journalId)
             ->whereIn('name', $fields)
             ->whereNull('deleted_at')
@@ -369,8 +363,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     public function getNoteText(int $journalId): ?string
     {
         /** @var Note|null $note */
-        $note = Note
-            ::where('noteable_id', $journalId)
+        $note = Note::where('noteable_id', $journalId)
             ->where('noteable_type', TransactionJournal::class)
             ->first();
         if (null === $note) {
@@ -394,8 +387,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $currency = app('amount')->getDefaultCurrencyByUser($this->user);
-        $data     = PiggyBankEvent
-            ::whereIn('transaction_journal_id', $journals)
+        $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)
             ->with('piggyBank', 'piggyBank.account')
             ->get(['piggy_bank_events.*']);
         /** @var PiggyBankEvent $row */
@@ -404,8 +396,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                 continue;
             }
             // get currency preference.
-            $currencyPreference = AccountMeta
-                ::where('account_id', $row->piggyBank->account_id)
+            $currencyPreference = AccountMeta::where('account_id', $row->piggyBank->account_id)
                 ->where('name', 'currency_id')
                 ->first();
             if (null !== $currencyPreference) {
@@ -448,8 +439,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function getTags(int $journalId): array
     {
-        $result = DB
-            ::table('tag_transaction_journal')
+        $result = DB::table('tag_transaction_journal')
             ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
             ->where('tag_transaction_journal.transaction_journal_id', $journalId)
             ->orderBy('tags.tag', 'ASC')

@@ -41,7 +41,6 @@ class WebhookMessageTransformer extends AbstractTransformer
      */
     public function transform(WebhookMessage $message): array
     {
-
         $json = '{}';
         try {
             $json = json_encode($message->message, JSON_THROW_ON_ERROR);
@@ -60,5 +59,4 @@ class WebhookMessageTransformer extends AbstractTransformer
             'message'    => $json,
         ];
     }
-
 }

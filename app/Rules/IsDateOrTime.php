@@ -35,7 +35,6 @@ use Log;
  */
 class IsDateOrTime implements Rule
 {
-
     /**
      * Get the validation error message.
      *

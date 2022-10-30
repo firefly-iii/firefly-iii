@@ -32,7 +32,6 @@ use Illuminate\Contracts\Validation\Rule;
  */
 class ValidRecurrenceRepetitionType implements Rule
 {
-
     /**
      * Get the validation error message.
      *
@@ -60,7 +59,7 @@ class ValidRecurrenceRepetitionType implements Rule
         }
         //monthly,17
         //ndom,3,7
-        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
+        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'], true)) {
             return true;
         }
         if (str_starts_with($value, 'monthly')) {

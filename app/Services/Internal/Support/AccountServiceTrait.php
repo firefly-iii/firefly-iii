@@ -118,8 +118,8 @@ trait AccountServiceTrait
         // remove currency_id if necessary.
         $type = $account->accountType->type;
         $list = config('firefly.valid_currency_account_types');
-        if(!in_array($type, $list, true)) {
-            $pos = array_search('currency_id', $fields);
+        if (!in_array($type, $list, true)) {
+            $pos = array_search('currency_id', $fields, true);
             if ($pos !== false) {
                 unset($fields[$pos]);
             }
@@ -147,7 +147,6 @@ trait AccountServiceTrait
             // if the field is set but NULL, skip it.
             // if the field is set but "", update it.
             if (array_key_exists($field, $data) && null !== $data[$field]) {
-
                 // convert boolean value:
                 if (is_bool($data[$field]) && false === $data[$field]) {
                     $data[$field] = 0;
@@ -184,7 +183,7 @@ trait AccountServiceTrait
         }
         $dbNote = $account->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($account);
         }
         $dbNote->text = trim($note);

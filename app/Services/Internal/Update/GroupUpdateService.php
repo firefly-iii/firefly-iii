@@ -227,5 +227,4 @@ class GroupUpdateService
 
         return $collection->first();
     }
-
 }

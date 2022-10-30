@@ -224,5 +224,4 @@ class CurrencyForm
 
         return $this->select($name, $array, $value, $options);
     }
-
 }
