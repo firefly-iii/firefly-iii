@@ -53,7 +53,10 @@ use Log;
  */
 class RecurringRepository implements RecurringRepositoryInterface
 {
-    use CalculateRangeOccurrences, CalculateXOccurrences, CalculateXOccurrencesSince, FiltersWeekends;
+    use CalculateRangeOccurrences;
+    use CalculateXOccurrences;
+    use CalculateXOccurrencesSince;
+    use FiltersWeekends;
 
     private User $user;
 
@@ -100,8 +103,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     public function getAll(): Collection
     {
         // grab ALL recurring transactions:
-        return Recurrence
-            ::with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
+        return Recurrence::with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
             ->orderBy('active', 'DESC')
             ->orderBy('title', 'ASC')
             ->get();
@@ -194,8 +196,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getJournalCount(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): int
     {
-        $query = TransactionJournal
-            ::leftJoin('journal_meta', 'journal_meta.transaction_journal_id', '=', 'transaction_journals.id')
+        $query = TransactionJournal::leftJoin('journal_meta', 'journal_meta.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transaction_journals.user_id', $recurrence->user_id)
             ->whereNull('transaction_journals.deleted_at')
             ->where('journal_meta.name', 'recurrence_id')
@@ -292,8 +293,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getTransactionPaginator(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator
     {
-        $journalMeta = TransactionJournalMeta
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
             ->whereNull('transaction_journals.deleted_at')
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('name', 'recurrence_id')
@@ -321,8 +321,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getTransactions(Recurrence $recurrence): Collection
     {
-        $journalMeta = TransactionJournalMeta
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+        $journalMeta = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
             ->whereNull('transaction_journals.deleted_at')
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('name', 'recurrence_id')
@@ -334,8 +333,7 @@ class RecurringRepository implements RecurringRepositoryInterface
             $search[] = (int) $journalId;
         }
         if (empty($search)) {
-
-            return new Collection;
+            return new Collection();
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -465,7 +463,6 @@ class RecurringRepository implements RecurringRepositoryInterface
             return (string) trans('firefly.recurring_daily', [], $language);
         }
         if ('weekly' === $repetition->repetition_type) {
-
             $dayOfWeek = trans(sprintf('config.dow_%s', $repetition->repetition_moment), [], $language);
             if ($repetition->repetition_skip > 0) {
                 return (string) trans('firefly.recurring_weekly_skip', ['weekday' => $dayOfWeek, 'skip' => $repetition->repetition_skip + 1], $language);
@@ -476,12 +473,16 @@ class RecurringRepository implements RecurringRepositoryInterface
         if ('monthly' === $repetition->repetition_type) {
             if ($repetition->repetition_skip > 0) {
                 return (string) trans(
-                    'firefly.recurring_monthly_skip', ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip + 1], $language
+                    'firefly.recurring_monthly_skip',
+                    ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip + 1],
+                    $language
                 );
             }
 
             return (string) trans(
-                'firefly.recurring_monthly', ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip - 1], $language
+                'firefly.recurring_monthly',
+                ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip - 1],
+                $language
             );
         }
         if ('ndom' === $repetition->repetition_type) {
@@ -503,7 +504,6 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
 
         return '';
-
     }
 
     /**

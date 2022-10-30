@@ -72,5 +72,4 @@ class ShowController extends Controller
 
         return view('webhooks.show', compact('webhook', 'subTitle'));
     }
-
 }

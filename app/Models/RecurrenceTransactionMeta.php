@@ -86,5 +86,4 @@ class RecurrenceTransactionMeta extends Model
     {
         return $this->belongsTo(RecurrenceTransaction::class, 'rt_id');
     }
-
 }

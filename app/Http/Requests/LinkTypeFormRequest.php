@@ -31,7 +31,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class LinkTypeFormRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Rules for this request.

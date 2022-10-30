@@ -34,7 +34,6 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
-
     /**
      * @param string $query
      * @param int    $limit

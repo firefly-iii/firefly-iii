@@ -42,7 +42,8 @@ use Log;
  */
 class RecurrenceFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get the data required by the controller.
@@ -160,7 +161,7 @@ class RecurrenceFormRequest extends FormRequest
         }
         //monthly,17
         //ndom,3,7
-        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
+        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'], true)) {
             $return['type']   = substr($value, 0, 6);
             $return['moment'] = substr($value, 7);
         }
@@ -191,7 +192,7 @@ class RecurrenceFormRequest extends FormRequest
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'first_date'              => 'required|date|after:' . $today->format('Y-m-d'),
-            'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue, new ValidRecurrenceRepetitionType, 'between:1,20'],
+            'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'between:1,20'],
             'skip'                    => 'required|numeric|integer|gte:0|lte:31',
 
             // optional for recurrence:

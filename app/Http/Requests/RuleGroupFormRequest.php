@@ -33,7 +33,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleGroupFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data for controller.
@@ -73,7 +74,7 @@ class RuleGroupFormRequest extends FormRequest
         return [
             'title'       => $titleRule,
             'description' => 'between:1,5000|nullable',
-            'active'      => [new IsBoolean],
+            'active'      => [new IsBoolean()],
         ];
     }
 }

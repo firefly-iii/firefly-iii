@@ -121,6 +121,5 @@ class BudgetServiceProvider extends ServiceProvider
                 return $repository;
             }
         );
-
     }
 }

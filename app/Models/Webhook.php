@@ -110,7 +110,7 @@ class Webhook extends Model
                 return $webhook;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

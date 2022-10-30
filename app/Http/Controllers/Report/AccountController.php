@@ -36,7 +36,6 @@ use Throwable;
  */
 class AccountController extends Controller
 {
-
     /**
      * Show partial overview for account balances.
      *
@@ -49,7 +48,7 @@ class AccountController extends Controller
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-report');
@@ -63,7 +62,6 @@ class AccountController extends Controller
         $accountReport = $accountTasker->getAccountReport($accounts, $start, $end);
         try {
             $result = view('reports.partials.accounts', compact('accountReport'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
             $result = 'Could not render view.';

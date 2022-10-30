@@ -189,7 +189,7 @@ trait ModifiesPiggyBanks
     public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
     {
         if (0 === bccomp('0', $amount)) {
-            return new PiggyBankEvent;
+            return new PiggyBankEvent();
         }
 
         return PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
@@ -242,7 +242,6 @@ trait ModifiesPiggyBanks
         }
 
         return $piggyBank;
-
     }
 
     /**
@@ -295,7 +294,6 @@ trait ModifiesPiggyBanks
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
                 $piggyBank->save();
             }
-
         }
         // try also with ID
         $objectGroupId = (int) ($data['object_group_id'] ?? 0);
@@ -377,7 +375,7 @@ trait ModifiesPiggyBanks
         }
         $dbNote = $piggyBank->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($piggyBank);
         }
         $dbNote->text = trim($note);
@@ -475,7 +473,6 @@ trait ModifiesPiggyBanks
         }
         if (array_key_exists('startdate', $data)) {
             $piggyBank->startdate = $data['startdate'];
-
         }
         $piggyBank->save();
 

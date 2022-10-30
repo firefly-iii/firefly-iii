@@ -22,7 +22,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Notifications\User;
 
 use Exception;
@@ -77,7 +76,7 @@ class UserLogin extends Notification
             $host = $hostName;
         }
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $host])
             ->subject((string) trans('email.login_from_new_ip'));
     }
@@ -100,7 +99,7 @@ class UserLogin extends Notification
             $host = $hostName;
         }
 
-        return (new SlackMessage)->content((string) trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
+        return (new SlackMessage())->content((string) trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
     }
 
     /**
@@ -116,4 +115,3 @@ class UserLogin extends Notification
         ];
     }
 }
-

@@ -128,12 +128,14 @@ class BudgetRepository implements BudgetRepositoryInterface
                 $days                         = $this->daysInOverlap($limit, $start, $end);
                 $amount                       = bcmul(bcdiv((string) $limit->amount, (string) $total), (string) $days);
                 $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
-                Log::debug(sprintf('Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                                   bcdiv((string) $limit->amount, (string) $total),
-                                   $limit->amount,
-                                   $total,
-                                   $days,
-                                   $amount));
+                Log::debug(sprintf(
+                    'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
+                    bcdiv((string) $limit->amount, (string) $total),
+                    $limit->amount,
+                    $total,
+                    $days,
+                    $amount
+                ));
             }
         }
         return $return;
@@ -398,7 +400,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function searchBudget(string $query, int $limit): Collection
     {
-
         $search = $this->user->budgets();
         if ('' !== $query) {
             $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
@@ -440,7 +441,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
         $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection = new Collection;
+        $selection = new Collection();
         /** @var Account $account */
         foreach ($subset as $account) {
             if ('credit' === $repository->getMetaValue($account, 'liability_direction')) {
@@ -550,7 +551,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
 
-        $autoBudget = new AutoBudget;
+        $autoBudget = new AutoBudget();
         $autoBudget->budget()->associate($newBudget);
         $autoBudget->transaction_currency_id = $currency->id;
         $autoBudget->auto_budget_type        = $type;
@@ -593,7 +594,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $dbNote = $budget->notes()->first();
         if ('' !== $text) {
             if (null === $dbNote) {
-                $dbNote = new Note;
+                $dbNote = new Note();
                 $dbNote->noteable()->associate($budget);
             }
             $dbNote->text = trim($text);
@@ -723,7 +724,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         if (null === $autoBudget) {
             // at this point it's a blind assumption auto_budget_type is 1 or 2.
-            $autoBudget                          = new AutoBudget;
+            $autoBudget                          = new AutoBudget();
             $autoBudget->auto_budget_type        = $data['auto_budget_type'];
             $autoBudget->budget_id               = $budget->id;
             $autoBudget->transaction_currency_id = $currency->id;
@@ -749,7 +750,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
         if (array_key_exists('auto_budget_amount', $data)) {
             $autoBudget->amount = $data['auto_budget_amount'];
-
         }
         if (array_key_exists('auto_budget_period', $data)) {
             $autoBudget->period = $data['auto_budget_period'];

@@ -98,7 +98,7 @@ class ObjectGroup extends Model
                 return $objectGroup;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

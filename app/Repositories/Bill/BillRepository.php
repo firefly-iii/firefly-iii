@@ -92,7 +92,7 @@ class BillRepository implements BillRepositoryInterface
     public function collectBillsUnpaidInRange(Carbon $start, Carbon $end): Collection
     {
         $bills  = $this->getActiveBills();
-        $return = new Collection;
+        $return = new Collection();
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             $dates = $this->getPayDatesInRange($bill, $start, $end);
@@ -382,7 +382,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        $set          = new Collection;
+        $set          = new Collection();
         $currentStart = clone $start;
         //Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
         //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
@@ -417,7 +417,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($bill->id);
         $cache->addProperty('nextDateMatch');
         $cache->addProperty($date);
@@ -632,11 +632,11 @@ class BillRepository implements BillRepositoryInterface
 
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
-                [
-                    'transaction_journals.id', 'transaction_journals.date',
-                    'transaction_journals.transaction_group_id',
-                ]
-            );
+                        [
+                            'transaction_journals.id', 'transaction_journals.date',
+                            'transaction_journals.transaction_group_id',
+                        ]
+                    );
     }
 
     /**
@@ -767,7 +767,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($bill->id);
         $cache->addProperty('nextExpectedMatch');
         $cache->addProperty($date);

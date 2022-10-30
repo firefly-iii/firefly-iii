@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
-
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -43,7 +42,10 @@ use Log;
  */
 class DownloadExchangeRates implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private Carbon                      $date;
     private CurrencyRepositoryInterface $repository;
@@ -107,7 +109,7 @@ class DownloadExchangeRates implements ShouldQueue
     {
         Log::debug(sprintf('Now downloading new exchange rates for currency %s.', $currency->code));
         $base       = sprintf('%s/%s/%s', (string) config('cer.url'), $this->date->year, $this->date->isoWeek);
-        $client     = new Client;
+        $client     = new Client();
         $url        = sprintf('%s/%s.json', $base, $currency->code);
         $res        = $client->get($url);
         $statusCode = $res->getStatusCode();

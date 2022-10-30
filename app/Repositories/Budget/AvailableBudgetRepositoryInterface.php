@@ -34,7 +34,6 @@ use Illuminate\Support\Collection;
  */
 interface AvailableBudgetRepositoryInterface
 {
-
     /**
      * Delete all available budgets.
      */
@@ -160,5 +159,4 @@ interface AvailableBudgetRepositoryInterface
      * @return AvailableBudget
      */
     public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget;
-
 }

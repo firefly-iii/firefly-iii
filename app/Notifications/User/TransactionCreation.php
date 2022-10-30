@@ -64,7 +64,7 @@ class TransactionCreation extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.report-new-journals', ['transformed' => $this->collection])
             ->subject((string) trans_choice('email.new_journals_subject', count($this->collection)));
     }

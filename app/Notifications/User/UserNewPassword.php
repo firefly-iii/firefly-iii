@@ -63,7 +63,7 @@ class UserNewPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.password', ['url' => $this->url])
             ->subject((string) trans('email.reset_pw_subject'));
     }

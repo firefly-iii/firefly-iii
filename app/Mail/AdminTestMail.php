@@ -35,7 +35,8 @@ use Illuminate\Queue\SerializesModels;
  */
 class AdminTestMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public string $email;
 
@@ -44,7 +45,6 @@ class AdminTestMail extends Mailable
      */
     public function __construct()
     {
-
     }
 
     /**

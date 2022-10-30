@@ -32,7 +32,6 @@ use Illuminate\Support\Collection;
  */
 interface AttachmentRepositoryInterface
 {
-
     /**
      * @param Attachment $attachment
      *

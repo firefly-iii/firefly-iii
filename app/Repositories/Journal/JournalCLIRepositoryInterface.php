@@ -117,5 +117,4 @@ interface JournalCLIRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user);
-
 }

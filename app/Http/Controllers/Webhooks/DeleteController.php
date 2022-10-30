@@ -72,5 +72,4 @@ class DeleteController extends Controller
 
         return view('webhooks.delete', compact('webhook', 'subTitle'));
     }
-
 }

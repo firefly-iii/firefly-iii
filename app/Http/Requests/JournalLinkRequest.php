@@ -32,7 +32,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class JournalLinkRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Returns the data required by the controller.

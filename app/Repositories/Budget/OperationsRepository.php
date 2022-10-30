@@ -194,7 +194,6 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'transaction_group_id'     => $journal['transaction_group_id'],
                 'date'                     => $journal['date'],
             ];
-
         }
 
         return $array;
@@ -290,9 +289,13 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @deprecated
      * @return array
      */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null
-    ): array
-    {
+    public function sumExpenses(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         Log::debug(sprintf('Now in %s', __METHOD__));
         $start->startOfDay();
         $end->endOfDay();
@@ -305,7 +308,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
         $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection = new Collection;
+        $selection = new Collection();
         /** @var Account $account */
         foreach ($subset as $account) {
             if ('credit' === $repository->getMetaValue($account, 'liability_direction')) {

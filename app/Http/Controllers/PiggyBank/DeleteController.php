@@ -36,7 +36,6 @@ use Illuminate\View\View;
  */
 class DeleteController extends Controller
 {
-
     private PiggyBankRepositoryInterface $piggyRepos;
 
     /**

@@ -60,7 +60,7 @@ class UserRegistration extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.registered', ['address' => route('index')])
             ->subject((string) trans('email.registered_subject'));
     }
@@ -78,4 +78,3 @@ class UserRegistration extends Notification
         ];
     }
 }
-

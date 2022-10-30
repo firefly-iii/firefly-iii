@@ -90,7 +90,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function expandWithDoubles(Collection $accounts): Collection
     {
-        $result = new Collection;
+        $result = new Collection();
         /** @var Account $account */
         foreach ($accounts as $account) {
             $byName = $this->user->accounts()->where('name', $account->name)
@@ -113,7 +113,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $result;
-
     }
 
     /**
@@ -294,8 +293,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getCreditTransactionGroup(Account $account): ?TransactionGroup
     {
-        $journal = TransactionJournal
-            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->transactionTypes([TransactionType::LIABILITY_CREDIT])
             ->first(['transaction_journals.*']);
@@ -364,7 +362,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getOpeningBalanceAmount(Account $account): ?string
     {
-
         $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                      ->where('transactions.account_id', $account->id)
                                      ->transactionTypes([TransactionType::OPENING_BALANCE])
@@ -419,8 +416,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getOpeningBalance(Account $account): ?TransactionJournal
     {
-        return TransactionJournal
-            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->first(['transaction_journals.*']);
@@ -490,7 +486,7 @@ class AccountRepository implements AccountRepositoryInterface
         $list = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
-        if(!in_array($type, $list, true)) {
+        if (!in_array($type, $list, true)) {
             return null;
         }
         $currencyId = (int) $this->getMetaValue($account, 'currency_id');
@@ -701,7 +697,6 @@ class AccountRepository implements AccountRepositoryInterface
                 $search = sprintf('%%%s%%', $part);
                 $dbQuery->where('name', 'LIKE', $search);
             }
-
         }
         if (!empty($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -787,5 +782,4 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $service->update($account, $data);
     }
-
 }

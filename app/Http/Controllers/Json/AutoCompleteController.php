@@ -29,6 +29,4 @@ use FireflyIII\Http\Controllers\Controller;
  */
 class AutoCompleteController extends Controller
 {
-
-
 }

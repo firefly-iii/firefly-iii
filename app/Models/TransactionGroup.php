@@ -106,7 +106,7 @@ class TransactionGroup extends Model
             }
         }
 
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -126,5 +126,4 @@ class TransactionGroup extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

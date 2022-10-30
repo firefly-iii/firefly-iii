@@ -73,7 +73,7 @@ class ShowController extends Controller
         /** @var Carbon $end */
         $end = session('end', Carbon::now()->endOfMonth());
         // transform piggies using the transformer:
-        $parameters = new ParameterBag;
+        $parameters = new ParameterBag();
         $parameters->set('end', $end);
 
         /** @var PiggyBankTransformer $transformer */

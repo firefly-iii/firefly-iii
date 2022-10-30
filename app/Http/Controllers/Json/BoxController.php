@@ -67,7 +67,7 @@ class BoxController extends Controller
         $display  = 2; // see method docs.
         $boxTitle = (string) trans('firefly.spent');
 
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($today);
@@ -138,7 +138,7 @@ class BoxController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end   = session('end', Carbon::now()->endOfMonth());
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
@@ -261,5 +261,4 @@ class BoxController extends Controller
 
         return response()->json($return);
     }
-
 }

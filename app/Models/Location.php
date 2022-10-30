@@ -63,7 +63,6 @@ use Illuminate\Support\Carbon;
  */
 class Location extends Model
 {
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -117,5 +116,4 @@ class Location extends Model
     {
         return $this->morphTo();
     }
-
 }

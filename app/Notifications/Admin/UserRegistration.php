@@ -22,7 +22,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Notifications\Admin;
 
 use FireflyIII\User;
@@ -69,7 +68,7 @@ class UserRegistration extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id])
             ->subject((string) trans('email.registered_subject_admin'));
     }
@@ -82,7 +81,7 @@ class UserRegistration extends Notification
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
+        return (new SlackMessage())->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
     }
 
     /**

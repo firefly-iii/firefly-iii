@@ -98,7 +98,7 @@ class TransactionJournalLink extends Model
                 return $link;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

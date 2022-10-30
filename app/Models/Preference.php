@@ -91,7 +91,7 @@ class Preference extends Model
             }
             $default = config('firefly.default_preferences');
             if (array_key_exists($value, $default)) {
-                $preference          = new Preference;
+                $preference          = new Preference();
                 $preference->name    = $value;
                 $preference->data    = $default[$value];
                 $preference->user_id = $user->id;
@@ -100,7 +100,7 @@ class Preference extends Model
                 return $preference;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

@@ -68,8 +68,7 @@ class VersionCheckResult extends Notification
      */
     public function toMail($notifiable)
     {
-
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.new-version', ['message' => $this->message])
             ->subject((string) trans('email.new_version_email_subject'));
     }
@@ -82,7 +81,7 @@ class VersionCheckResult extends Notification
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)->content($this->message)
+        return (new SlackMessage())->content($this->message)
                                  ->attachment(function ($attachment) {
                                      $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
                                  });
@@ -101,4 +100,3 @@ class VersionCheckResult extends Notification
         ];
     }
 }
-

@@ -123,7 +123,7 @@ class PiggyBank extends Model
                 return $piggyBank;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

@@ -371,7 +371,6 @@ class TagRepository implements TagRepositoryInterface
                     $amount = bcmul($amount, '-1');
                 }
                 $sums[$foreignCurrencyId][$type] = bcadd($sums[$foreignCurrencyId][$type], $amount);
-
             }
         }
 
@@ -433,7 +432,7 @@ class TagRepository implements TagRepositoryInterface
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
                 $location = $this->getLocation($tag);
                 if (null === $location) {
-                    $location = new Location;
+                    $location = new Location();
                     $location->locatable()->associate($tag);
                 }
 
@@ -457,5 +456,4 @@ class TagRepository implements TagRepositoryInterface
     {
         return $tag->locations()->first();
     }
-
 }

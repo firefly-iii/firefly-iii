@@ -35,7 +35,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AccountFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
+    use ConvertsDataTypes;
+    use AppendsLocationData;
+    use ChecksLogin;
 
     /**
      * Get all data.

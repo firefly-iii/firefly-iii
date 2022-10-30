@@ -57,8 +57,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      */
     public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string
     {
-        $query = BudgetLimit
-            ::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+        $query = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
 
             // same complex where query as below.
             ->where(
@@ -274,11 +273,11 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                                       )
                                           // budget limit start within period
                                          ->orWhere(
-                                              static function (Builder $q3) use ($start, $end) {
-                                                  $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                                  $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 23:59:59'));
-                                              }
-                                          );
+                                             static function (Builder $q3) use ($start, $end) {
+                                                 $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                 $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 23:59:59'));
+                                             }
+                                         );
                                   }
                               )
                                  ->orWhere(
@@ -337,7 +336,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         Log::debug('No existing budget limit, create a new one');
 
         // or create one and return it.
-        $limit = new BudgetLimit;
+        $limit = new BudgetLimit();
         $limit->budget()->associate($budget);
         $limit->start_date              = $data['start_date']->format('Y-m-d');
         $limit->end_date                = $data['end_date']->format('Y-m-d');
@@ -443,7 +442,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         }
         Log::debug('No existing budget limit, create a new one');
         // or create one and return it.
-        $limit = new BudgetLimit;
+        $limit = new BudgetLimit();
         $limit->budget()->associate($budget);
         $limit->start_date = $start->startOfDay();
         $limit->end_date   = $end->startOfDay();

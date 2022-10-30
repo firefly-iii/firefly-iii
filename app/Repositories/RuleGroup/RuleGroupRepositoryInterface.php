@@ -31,7 +31,6 @@ use Illuminate\Support\Collection;
  */
 interface RuleGroupRepositoryInterface
 {
-
     /**
      * Make sure rule group order is correct in DB.
      */

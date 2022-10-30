@@ -110,7 +110,6 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'description'              => $journal['description'],
                 'transaction_group_id'     => $journal['transaction_group_id'],
             ];
-
         }
 
         return $array;
@@ -196,7 +195,6 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'description'              => $journal['description'],
                 'transaction_group_id'     => $journal['transaction_group_id'],
             ];
-
         }
 
         return $array;
@@ -262,7 +260,6 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'description'              => $journal['description'],
                 'transaction_group_id'     => $journal['transaction_group_id'],
             ];
-
         }
 
         return $array;
@@ -328,7 +325,6 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'description'              => $journal['description'],
                 'transaction_group_id'     => $journal['transaction_group_id'],
             ];
-
         }
 
         return $array;

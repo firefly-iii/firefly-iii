@@ -105,7 +105,7 @@ class AvailableBudget extends Model
                 return $availableBudget;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

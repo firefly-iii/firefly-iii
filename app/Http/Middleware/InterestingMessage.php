@@ -100,7 +100,6 @@ class InterestingMessage
      */
     private function handleGroupMessage(Request $request): void
     {
-
         // get parameters from request.
         $transactionGroupId = $request->get('transaction_group_id');
         $message            = $request->get('message');
@@ -156,7 +155,6 @@ class InterestingMessage
      */
     private function handleAccountMessage(Request $request): void
     {
-
         // get parameters from request.
         $accountId = $request->get('account_id');
         $message   = $request->get('message');
@@ -210,7 +208,6 @@ class InterestingMessage
      */
     private function handleBillMessage(Request $request): void
     {
-
         // get parameters from request.
         $billId  = $request->get('bill_id');
         $message = $request->get('message');
@@ -234,7 +231,6 @@ class InterestingMessage
      */
     private function handleWebhookMessage(Request $request): void
     {
-
         // get parameters from request.
         $webhookId  = $request->get('webhook_id');
         $message = $request->get('message');

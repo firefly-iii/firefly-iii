@@ -75,7 +75,6 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                           ->where('start_date', $start->format('Y-m-d'))
                           ->where('end_date', $end->format('Y-m-d'))
                           ->first();
-
     }
 
     /**
@@ -213,7 +212,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                                       ->where('start_date', $start->format('Y-m-d'))
                                       ->where('end_date', $end->format('Y-m-d'))->first();
         if (null === $availableBudget) {
-            $availableBudget = new AvailableBudget;
+            $availableBudget = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
             $availableBudget->start_date = $start->format('Y-m-d');
@@ -312,6 +311,5 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         }
 
         return $availableBudget;
-
     }
 }

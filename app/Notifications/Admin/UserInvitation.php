@@ -68,7 +68,7 @@ class UserInvitation extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
             ->subject((string) trans('email.invitation_created_subject'));
     }
@@ -81,7 +81,7 @@ class UserInvitation extends Notification
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)->content((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
+        return (new SlackMessage())->content((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
     }
 
     /**

@@ -31,7 +31,8 @@ use Illuminate\Queue\SerializesModels;
 
 class BillWarningMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public Bill   $bill;
     public int    $diff;

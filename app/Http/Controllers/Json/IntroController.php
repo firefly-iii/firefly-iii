@@ -55,7 +55,6 @@ class IntroController extends Controller
             return response()->json($steps);
         }
         if ($this->hasOutroStep($route)) {
-
             // save last step:
             $lastStep = $steps[count($steps) - 1];
             // remove last step:
@@ -63,7 +62,6 @@ class IntroController extends Controller
             // merge arrays and add last step again
             $steps   = array_merge($steps, $specificSteps);
             $steps[] = $lastStep;
-
         }
         if (!$this->hasOutroStep($route)) {
             $steps = array_merge($steps, $specificSteps);
@@ -142,5 +140,4 @@ class IntroController extends Controller
 
         return response()->json(['result' => sprintf('Reported demo watched for route "%s" (%s): %s.', $route, $specialPage, $key)]);
     }
-
 }

@@ -61,7 +61,7 @@ class NewAccessToken extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.token-created')
             ->subject((string) trans('email.access_token_created_subject'));
     }
@@ -73,7 +73,7 @@ class NewAccessToken extends Notification
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)->content((string) trans('email.access_token_created_body'));
+        return (new SlackMessage())->content((string) trans('email.access_token_created_body'));
     }
 
     /**

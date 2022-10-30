@@ -99,7 +99,7 @@ class LinkType extends Model
                 return $linkType;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

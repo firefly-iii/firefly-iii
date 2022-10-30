@@ -120,7 +120,7 @@ class Rule extends Model
                 return $rule;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

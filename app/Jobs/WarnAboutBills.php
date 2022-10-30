@@ -39,7 +39,10 @@ use Log;
  */
 class WarnAboutBills implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private Carbon $date;
     private bool   $force;
@@ -53,7 +56,7 @@ class WarnAboutBills implements ShouldQueue
      */
     public function __construct(?Carbon $date)
     {
-        $newDate = new Carbon;
+        $newDate = new Carbon();
         $newDate->startOfDay();
         $this->date = $newDate;
 

@@ -122,7 +122,7 @@ class Tag extends Model
                 return $tag;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

@@ -45,7 +45,8 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    use RuleManagement, ModelInformation;
+    use RuleManagement;
+    use ModelInformation;
 
     private RuleRepositoryInterface $ruleRepos;
 
@@ -279,10 +280,8 @@ class CreateController extends Controller
         $redirect = redirect($this->getPreviousUrl('rules.create.url'));
 
         if (1 === (int) $request->get('create_another')) {
-
             session()->put('rules.create.fromStore', true);
             $redirect = redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
-
         }
 
         return $redirect;

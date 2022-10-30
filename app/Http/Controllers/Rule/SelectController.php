@@ -136,8 +136,8 @@ class SelectController extends Controller
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
         // build fake rule
-        $rule         = new Rule;
-        $triggers     = new Collection;
+        $rule         = new Rule();
+        $triggers     = new Collection();
         $rule->strict = '1' === $request->get('strict');
 
         // build trigger array from response
@@ -149,7 +149,7 @@ class SelectController extends Controller
         }
 
         foreach ($textTriggers as $textTrigger) {
-            $trigger                = new RuleTrigger;
+            $trigger                = new RuleTrigger();
             $trigger->trigger_type  = $textTrigger['type'];
             $trigger->trigger_value = $textTrigger['value'];
             $triggers->push($trigger);
@@ -176,7 +176,6 @@ class SelectController extends Controller
         $view = 'ERROR, see logs.';
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
-
         } catch (Throwable $exception) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
@@ -219,7 +218,6 @@ class SelectController extends Controller
         $view = 'ERROR, see logs.';
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
-
         } catch (Throwable $exception) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());

@@ -36,7 +36,6 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-
 /**
  * Class ShowController
  */
@@ -99,7 +98,7 @@ class ShowController extends Controller
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
-        $transformer->setParameters(new ParameterBag);
+        $transformer->setParameters(new ParameterBag());
         $groupArray = $transformer->transformObject($transactionGroup);
 
         // do some calculations:
@@ -112,7 +111,7 @@ class ShowController extends Controller
 
         // get audit log entries:
         $logEntries = [];
-        foreach($transactionGroup->transactionJournals as $journal) {
+        foreach ($transactionGroup->transactionJournals as $journal) {
             $logEntries[$journal->id] = $this->ALERepository->getForObject($journal);
         }
 

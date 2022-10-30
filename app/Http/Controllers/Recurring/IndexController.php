@@ -92,12 +92,11 @@ class IndexController extends Controller
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag);
+        $transformer->setParameters(new ParameterBag());
 
         $recurring = [];
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
-
             $year->addYear();
             if ($recurrence->first_date > $today) {
                 $today = clone $recurrence->first_date;
@@ -128,5 +127,4 @@ class IndexController extends Controller
 
         return view('recurring.index', compact('paginator', 'today', 'page', 'pageSize', 'total'));
     }
-
 }

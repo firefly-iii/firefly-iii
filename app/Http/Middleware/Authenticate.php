@@ -87,12 +87,10 @@ class Authenticate
      */
     protected function authenticate($request, array $guards)
     {
-
         if (empty($guards)) {
             try {
                 // go for default guard:
                 if ($this->auth->check()) {
-
                     // do an extra check on user object.
                     /** @var User $user */
                     $user = $this->auth->authenticate();
@@ -108,14 +106,14 @@ class Authenticate
                     }
                 }
             } catch (QueryException $e) {
-
                 throw new FireflyException(
                     sprintf(
                         'It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands? Error: %s',
                         $e->getMessage()
-                    ), 0, $e
+                    ),
+                    0,
+                    $e
                 );
-
             }
 
             return $this->auth->authenticate();
@@ -129,6 +127,5 @@ class Authenticate
         }
 
         throw new AuthenticationException('Unauthenticated.', $guards);
-
     }
 }

@@ -136,7 +136,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         $journals = $this->getTransactions($start, $end, $accounts, TransactionType::DEPOSIT);
 
         return $this->sortByCurrency($journals, 'positive');
-
     }
 
     /**
@@ -150,13 +149,16 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null
-    ): array
-    {
+    public function sumExpenses(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
 
         return $this->groupByCurrency($journals, 'negative');
-
     }
 
     /**
@@ -170,10 +172,13 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @return array
      */
     private function getTransactionsForSum(
-        string $type, Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $opposing = null, ?TransactionCurrency $currency = null
-
-    ): array
-    {
+        string $type,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $opposing = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         $start->startOfDay();
         $end->endOfDay();
 
@@ -284,9 +289,12 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @inheritDoc
      */
     public function sumExpensesByDestination(
-        Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null
-    ): array
-    {
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
 
         return $this->groupByDirection($journals, 'destination', 'negative');
@@ -343,9 +351,12 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @inheritDoc
      */
     public function sumExpensesBySource(
-        Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null
-    ): array
-    {
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
 
         return $this->groupByDirection($journals, 'source', 'negative');
@@ -354,9 +365,13 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
-    ): array
-    {
+    public function sumIncome(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
 
         return $this->groupByCurrency($journals, 'positive');
@@ -366,9 +381,12 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @inheritDoc
      */
     public function sumIncomeByDestination(
-        Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
-    ): array
-    {
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
 
         return $this->groupByDirection($journals, 'destination', 'positive');
@@ -378,9 +396,12 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @inheritDoc
      */
     public function sumIncomeBySource(
-        Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
-    ): array
-    {
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
 
         return $this->groupByDirection($journals, 'source', 'positive');
@@ -512,7 +533,6 @@ class OperationsRepository implements OperationsRepositoryInterface
             // destination  account? money comes in:
             $return[$destKey]['in']         = bcadd($return[$destKey]['in'], $amount);
             $return[$destKey]['difference'] = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
-
         }
 
         return $return;

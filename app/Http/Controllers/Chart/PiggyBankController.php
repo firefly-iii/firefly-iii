@@ -69,7 +69,7 @@ class PiggyBankController extends Controller
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('chart.piggy-bank.history');
         $cache->addProperty($piggyBank->id);
         if ($cache->has()) {
@@ -84,7 +84,7 @@ class PiggyBankController extends Controller
 
         /** @var PiggyBankEvent $firstEvent */
         $firstEvent = $set->first();
-        $firstDate  = null === $firstEvent ? new Carbon : $firstEvent->date;
+        $firstDate  = null === $firstEvent ? new Carbon() : $firstEvent->date;
 
         // which ever is older:
         $oldest = $startDate->lt($firstDate) ? $startDate : $firstDate;

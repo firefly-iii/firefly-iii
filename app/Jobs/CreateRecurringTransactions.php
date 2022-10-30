@@ -50,7 +50,10 @@ use Log;
  */
 class CreateRecurringTransactions implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public int                                  $created;
     public int                                  $executed;
@@ -76,7 +79,7 @@ class CreateRecurringTransactions implements ShouldQueue
             $this->date = $newDate;
         }
         if (null === $date) {
-            $newDate = new Carbon;
+            $newDate = new Carbon();
             $newDate->startOfDay();
             $this->date = $newDate;
         }
@@ -109,7 +112,7 @@ class CreateRecurringTransactions implements ShouldQueue
         /** @var Recurrence $recurrence */
         foreach ($filtered as $recurrence) {
             if (!array_key_exists($recurrence->user_id, $result)) {
-                $result[$recurrence->user_id] = new Collection;
+                $result[$recurrence->user_id] = new Collection();
             }
             $this->repository->setUser($recurrence->user);
             $this->journalRepository->setUser($recurrence->user);
@@ -296,7 +299,7 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     private function handleRepetitions(Recurrence $recurrence): Collection
     {
-        $collection = new Collection;
+        $collection = new Collection();
         /** @var RecurrenceRepetition $repetition */
         foreach ($recurrence->recurrenceRepetitions as $repetition) {
             Log::debug(
@@ -336,7 +339,7 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     private function handleOccurrences(Recurrence $recurrence, RecurrenceRepetition $repetition, array $occurrences): Collection
     {
-        $collection = new Collection;
+        $collection = new Collection();
         /** @var Carbon $date */
         foreach ($occurrences as $date) {
             $result = $this->handleOccurrence($recurrence, $repetition, $date);
@@ -361,7 +364,6 @@ class CreateRecurringTransactions implements ShouldQueue
     {
         $date->startOfDay();
         if ($date->ne($this->date)) {
-
             return null;
         }
         Log::debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
@@ -386,9 +388,8 @@ class CreateRecurringTransactions implements ShouldQueue
 
             $first      = $recurrence->recurrenceTransactions()->first();
             $groupTitle = $first->description;
-
         }
-        if(0 === $count) {
+        if (0 === $count) {
             Log::error('No transactions to be created in this recurrence. Cannot continue.');
 
             return null;

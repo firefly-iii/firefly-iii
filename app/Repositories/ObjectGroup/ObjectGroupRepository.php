@@ -145,7 +145,6 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
                 $search = sprintf('%%%s%%', $part);
                 $dbQuery->where('title', 'LIKE', $search);
             }
-
         }
 
         return $dbQuery->take($limit)->get(['object_groups.*']);

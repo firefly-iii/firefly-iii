@@ -67,7 +67,7 @@ class TestNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.admin-test', ['email' => $this->address])
             ->subject((string) trans('email.admin_test_subject'));
     }
@@ -80,7 +80,7 @@ class TestNotification extends Notification
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage)->content((string) trans('email.admin_test_subject'));
+        return (new SlackMessage())->content((string) trans('email.admin_test_subject'));
     }
 
     /**

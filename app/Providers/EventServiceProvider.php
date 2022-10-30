@@ -193,7 +193,6 @@ class EventServiceProvider extends ServiceProvider
                 ->first();
             // update!
             if (null !== $availableBudget) {
-
                 $repository = app(BudgetLimitRepositoryInterface::class);
                 $repository->setUser($user);
                 $set = $repository->getAllBudgetLimitsByCurrency($limit->transactionCurrency, $limit->start_date, $limit->end_date);
@@ -229,7 +228,7 @@ class EventServiceProvider extends ServiceProvider
     {
         PiggyBank::created(
             static function (PiggyBank $piggyBank) {
-                $repetition = new PiggyBankRepetition;
+                $repetition = new PiggyBankRepetition();
                 $repetition->piggyBank()->associate($piggyBank);
                 $repetition->startdate     = $piggyBank->startdate;
                 $repetition->targetdate    = $piggyBank->targetdate;
@@ -238,5 +237,4 @@ class EventServiceProvider extends ServiceProvider
             }
         );
     }
-
 }

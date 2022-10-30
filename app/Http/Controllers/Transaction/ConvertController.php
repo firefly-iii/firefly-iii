@@ -167,10 +167,8 @@ class ConvertController extends Controller
                 $role = 'l_' . $account->accountType->type;
             }
             if (AccountType::CASH === $account->accountType->type) {
-
                 $role = 'cash_account';
                 $name = sprintf('(%s)', trans('firefly.cash'));
-
             }
             if (AccountType::REVENUE === $account->accountType->type) {
                 $role = 'revenue_account';
@@ -208,10 +206,8 @@ class ConvertController extends Controller
                 $role = 'l_' . $account->accountType->type;
             }
             if (AccountType::CASH === $account->accountType->type) {
-
                 $role = 'cash_account';
                 $name = sprintf('(%s)', trans('firefly.cash'));
-
             }
             if (AccountType::EXPENSE === $account->accountType->type) {
                 $role = 'expense_account';

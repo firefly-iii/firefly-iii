@@ -84,7 +84,7 @@ class WebhookAttempt extends Model
                 return $attempt;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

@@ -56,7 +56,6 @@ class Range
 
             // set more view variables:
             $this->configureList();
-
         }
 
         return $next($request);

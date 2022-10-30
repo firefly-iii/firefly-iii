@@ -43,7 +43,8 @@ use Log;
  */
 class ReportController extends Controller
 {
-    use BasicDataSupport, ChartGeneration;
+    use BasicDataSupport;
+    use ChartGeneration;
 
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
@@ -74,7 +75,7 @@ class ReportController extends Controller
     public function netWorth(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('chart.report.net-worth');
         $cache->addProperty($start);
         $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
@@ -125,7 +126,6 @@ class ReportController extends Controller
                     ];
                 }
                 $chartData[$currencyId]['entries'][$label] = $netWorthItem['balance'];
-
             }
             $current->addDays(7);
         }
@@ -149,7 +149,7 @@ class ReportController extends Controller
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('chart.report.operations');
         $cache->addProperty($start);
         $cache->addProperty($accounts);

@@ -58,7 +58,6 @@ class AppServiceProvider extends ServiceProvider
             return response()
                 ->json($value)
                 ->withHeaders($headers);
-
         });
     }
 

@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetLimitRepositoryInterface
 {
-
     /**
      * Tells you which amount has been budgeted (for the given budgets)
      * in the selected query. Returns a positive amount as a string.
@@ -128,5 +127,4 @@ interface BudgetLimitRepositoryInterface
      * @return BudgetLimit|null
      */
     public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit;
-
 }

@@ -30,7 +30,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class InviteUserFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Rules for this request.

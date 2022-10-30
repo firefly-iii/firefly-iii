@@ -35,7 +35,8 @@ use Laravel\Passport\Client;
  */
 class OAuthTokenCreatedMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public Client $client;
 

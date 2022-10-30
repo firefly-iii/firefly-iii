@@ -133,7 +133,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalTotal(TransactionJournal $journal): string
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($journal->id);
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
@@ -189,7 +189,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getMetaDateById(int $journalId, string $field): ?Carbon
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journalId);
         $cache->addProperty($field);

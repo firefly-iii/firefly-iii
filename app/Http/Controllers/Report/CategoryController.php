@@ -312,7 +312,6 @@ class CategoryController extends Controller
 
         try {
             $result = view('reports.category.partials.avg-expenses', compact('result'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
@@ -364,7 +363,6 @@ class CategoryController extends Controller
 
         try {
             $result = view('reports.category.partials.avg-income', compact('result'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
@@ -493,7 +491,7 @@ class CategoryController extends Controller
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('category-period-expenses-report');
@@ -549,7 +547,6 @@ class CategoryController extends Controller
 
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
@@ -574,7 +571,7 @@ class CategoryController extends Controller
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('category-period-income-report');
@@ -629,7 +626,6 @@ class CategoryController extends Controller
 
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
@@ -653,7 +649,7 @@ class CategoryController extends Controller
     public function operations(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('category-report');
@@ -723,7 +719,6 @@ class CategoryController extends Controller
 
         try {
             $result = view('reports.category.partials.top-expenses', compact('result'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
@@ -773,7 +768,6 @@ class CategoryController extends Controller
 
         try {
             $result = view('reports.category.partials.top-income', compact('result'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
@@ -781,5 +775,4 @@ class CategoryController extends Controller
 
         return $result;
     }
-
 }

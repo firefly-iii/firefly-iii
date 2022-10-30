@@ -112,8 +112,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is being used in accounts (as integer)
-        $meta = AccountMeta
-            ::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+        $meta = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->whereNull('accounts.deleted_at')
             ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode((int) $currency->id))->count();
         if ($meta > 0) {
@@ -421,7 +420,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate
     {
         if ($fromCurrency->id === $toCurrency->id) {
-            $rate       = new CurrencyExchangeRate;
+            $rate       = new CurrencyExchangeRate();
             $rate->rate = 1;
             $rate->id   = 0;
 

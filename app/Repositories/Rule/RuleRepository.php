@@ -196,7 +196,6 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return implode(' ', $params);
-
     }
 
     /**
@@ -212,7 +211,7 @@ class RuleRepository implements RuleRepositoryInterface
                                  ->orderBy('rules.order', 'ASC')
                                  ->orderBy('rules.id', 'ASC')
                                  ->with(['ruleGroup', 'ruleTriggers'])->get(['rules.*']);
-        $filtered   = new Collection;
+        $filtered   = new Collection();
         /** @var Rule $rule */
         foreach ($collection as $rule) {
             /** @var RuleTrigger $ruleTrigger */
@@ -239,7 +238,7 @@ class RuleRepository implements RuleRepositoryInterface
                                  ->orderBy('rules.order', 'ASC')
                                  ->orderBy('rules.id', 'ASC')
                                  ->with(['ruleGroup', 'ruleTriggers'])->get();
-        $filtered   = new Collection;
+        $filtered   = new Collection();
         /** @var Rule $rule */
         foreach ($collection as $rule) {
             /** @var RuleTrigger $ruleTrigger */
@@ -296,7 +295,7 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         // start by creating a new rule:
-        $rule = new Rule;
+        $rule = new Rule();
         $rule->user()->associate($this->user->id);
 
         $rule->rule_group_id   = $ruleGroup->id;
@@ -344,7 +343,7 @@ class RuleRepository implements RuleRepositoryInterface
 
             return;
         }
-        $trigger                  = new RuleTrigger;
+        $trigger                  = new RuleTrigger();
         $trigger->order           = 0;
         $trigger->trigger_type    = 'user_action';
         $trigger->trigger_value   = $moment;
@@ -440,7 +439,6 @@ class RuleRepository implements RuleRepositoryInterface
             $this->storeTrigger($rule, $triggerValues);
             ++$order;
         }
-
     }
 
     /**
@@ -451,7 +449,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function storeTrigger(Rule $rule, array $values): RuleTrigger
     {
-        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger = new RuleTrigger();
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = $values['order'];
         $ruleTrigger->active          = $values['active'];
@@ -486,7 +484,6 @@ class RuleRepository implements RuleRepositoryInterface
             $this->storeAction($rule, $actionValues);
             ++$order;
         }
-
     }
 
     /**
@@ -497,7 +494,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function storeAction(Rule $rule, array $values): RuleAction
     {
-        $ruleAction = new RuleAction;
+        $ruleAction = new RuleAction();
         $ruleAction->rule()->associate($rule);
         $ruleAction->order           = $values['order'];
         $ruleAction->active          = $values['active'];

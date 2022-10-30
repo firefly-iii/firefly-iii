@@ -161,7 +161,6 @@ class ReconcileController extends Controller
                     'selectedIds'
                 )
             )->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('View error: %s', $e->getMessage()));
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
@@ -262,7 +261,6 @@ class ReconcileController extends Controller
                 'accounts.reconcile.transactions',
                 compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
             )->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render: %s', $e->getMessage()));
             $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());

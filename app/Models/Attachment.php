@@ -120,7 +120,7 @@ class Attachment extends Model
                 return $attachment;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

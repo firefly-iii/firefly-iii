@@ -103,66 +103,66 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(
             'preferences',
             static function () {
-                return new Preferences;
+                return new Preferences();
             }
         );
 
         $this->app->bind(
             'fireflyconfig',
             static function () {
-                return new FireflyConfig;
+                return new FireflyConfig();
             }
         );
         $this->app->bind(
             'navigation',
             static function () {
-                return new Navigation;
+                return new Navigation();
             }
         );
         $this->app->bind(
             'amount',
             static function () {
-                return new Amount;
+                return new Amount();
             }
         );
 
         $this->app->bind(
             'steam',
             static function () {
-                return new Steam;
+                return new Steam();
             }
         );
         $this->app->bind(
             'expandedform',
             static function () {
-                return new ExpandedForm;
+                return new ExpandedForm();
             }
         );
 
         $this->app->bind(
             'accountform',
             static function () {
-                return new AccountForm;
+                return new AccountForm();
             }
         );
         $this->app->bind(
             'currencyform',
             static function () {
-                return new CurrencyForm;
+                return new CurrencyForm();
             }
         );
 
         $this->app->bind(
             'piggybankform',
             static function () {
-                return new PiggyBankForm;
+                return new PiggyBankForm();
             }
         );
 
         $this->app->bind(
             'ruleform',
             static function () {
-                return new RuleForm;
+                return new RuleForm();
             }
         );
 

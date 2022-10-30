@@ -44,7 +44,8 @@ use Throwable;
  */
 class EditController extends Controller
 {
-    use RuleManagement, RenderPartialViews;
+    use RuleManagement;
+    use RenderPartialViews;
 
     private RuleRepositoryInterface $ruleRepos;
 
@@ -149,7 +150,6 @@ class EditController extends Controller
         $triggers        = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
@@ -196,11 +196,9 @@ class EditController extends Controller
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
-
             session()->put('rules.edit.fromUpdate', true);
 
             $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
-
         }
 
         return $redirect;

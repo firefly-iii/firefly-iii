@@ -70,12 +70,10 @@ class FrontpageController extends Controller
         if (!empty($info)) {
             try {
                 $html = view('json.piggy-banks', compact('info'))->render();
-
             } catch (Throwable $e) { // @phpstan-ignore-line
                 Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
                 $html = 'Could not render view.';
             }
-
         }
 
         return response()->json(['html' => $html]);

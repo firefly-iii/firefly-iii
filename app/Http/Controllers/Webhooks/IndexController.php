@@ -35,7 +35,6 @@ use Illuminate\View\View;
  */
 class IndexController extends Controller
 {
-
     /**
      *
      */
@@ -63,8 +62,6 @@ class IndexController extends Controller
      */
     public function index(Request $request)
     {
-
         return view('webhooks.index');
     }
-
 }

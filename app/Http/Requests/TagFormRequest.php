@@ -34,7 +34,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TagFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
+    use ConvertsDataTypes;
+    use AppendsLocationData;
+    use ChecksLogin;
 
     /**
      * Get all data for controller.
@@ -50,7 +52,6 @@ class TagFormRequest extends FormRequest
         ];
 
         return $this->appendLocationData($data, 'location');
-
     }
 
     /**

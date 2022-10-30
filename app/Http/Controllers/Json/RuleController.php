@@ -51,7 +51,6 @@ class RuleController extends Controller
         }
         try {
             $view = view('rules.partials.action', compact('actions', 'count'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             $view = 'Could not render view.';
@@ -74,7 +73,6 @@ class RuleController extends Controller
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
@@ -89,5 +87,4 @@ class RuleController extends Controller
 
         return response()->json(['html' => $view]);
     }
-
 }

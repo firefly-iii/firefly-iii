@@ -111,7 +111,7 @@ class RuleGroup extends Model
                 return $ruleGroup;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

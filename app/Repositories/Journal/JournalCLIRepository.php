@@ -50,8 +50,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getAllJournals(array $types): Collection
     {
-        return TransactionJournal
-            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+        return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereIn('transaction_types.type', $types)
             ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
             ->get(['transaction_journals.*']);
@@ -119,7 +118,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
@@ -162,7 +161,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
@@ -221,8 +220,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getSplitJournals(): Collection
     {
-        $query      = TransactionJournal
-            ::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->groupBy('transaction_journals.id');
         $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]);
         $journalIds = [];
@@ -234,8 +232,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         }
         $journalIds = array_unique($journalIds);
 
-        return TransactionJournal
-            ::with(['transactions'])
+        return TransactionJournal::with(['transactions'])
             ->whereIn('id', $journalIds)->get();
     }
 

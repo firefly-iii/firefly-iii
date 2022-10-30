@@ -118,11 +118,9 @@ class CreateController extends Controller
         $redirect = redirect($this->getPreviousUrl('piggy-banks.create.url'));
 
         if (1 === (int) $request->get('create_another')) {
-
             session()->put('piggy-banks.create.fromStore', true);
 
             $redirect = redirect(route('piggy-banks.create'))->withInput();
-
         }
 
         return $redirect;

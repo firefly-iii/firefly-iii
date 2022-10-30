@@ -104,7 +104,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Account extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that should be casted to native types.
@@ -123,7 +124,7 @@ class Account extends Model
     /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array Hidden from view */
-    protected    $hidden = ['encrypted'];
+    protected $hidden = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**
@@ -146,7 +147,7 @@ class Account extends Model
                 return $account;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

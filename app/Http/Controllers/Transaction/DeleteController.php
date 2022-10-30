@@ -83,7 +83,7 @@ class DeleteController extends Controller
 
         $journal = $group->transactionJournals->first();
         if (null === $journal) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle   = (string) trans('firefly.delete_' . $objectType, ['description' => $group->title ?? $journal->description]);
@@ -110,7 +110,7 @@ class DeleteController extends Controller
 
         $journal = $group->transactionJournals->first();
         if (null === $journal) {
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         session()->flash('success', (string) trans('firefly.deleted_' . strtolower($objectType), ['description' => $group->title ?? $journal->description]));
@@ -118,12 +118,12 @@ class DeleteController extends Controller
         // grab asset account(s) from group:
         $accounts = [];
         /** @var TransactionJournal $journal */
-        foreach($group->transactionJournals as $journal) {
+        foreach ($group->transactionJournals as $journal) {
             /** @var Transaction $transaction */
-            foreach($journal->transactions as $transaction) {
+            foreach ($journal->transactions as $transaction) {
                 $type = $transaction->account->accountType->type;
                 // if is valid liability, trigger event!
-                if(in_array($type, config('firefly.valid_liabilities'))) {
+                if (in_array($type, config('firefly.valid_liabilities'), true)) {
                     $accounts[] = $transaction->account;
                 }
             }
@@ -135,7 +135,7 @@ class DeleteController extends Controller
 
 
         /** @var Account $account */
-        foreach($accounts as $account) {
+        foreach ($accounts as $account) {
             Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
             event(new UpdatedAccount($account));
         }

@@ -37,7 +37,8 @@ use Mail;
  */
 class MailError extends Job implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue;
+    use SerializesModels;
 
     protected string $destination;
     protected array  $exception;

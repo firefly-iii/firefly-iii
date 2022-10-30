@@ -192,7 +192,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return $category;
-
     }
 
     /**
@@ -210,7 +209,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $dbNote = $category->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($category);
         }
         $dbNote->text = trim($notes);

@@ -104,7 +104,7 @@ class BulkController extends Controller
         $ignoreCategory = 1 === (int) $request->get('ignore_category');
         $ignoreBudget   = 1 === (int) $request->get('ignore_budget');
         $tagsAction     = $request->get('tags_action');
-        $collection     = new Collection;
+        $collection     = new Collection();
         $count          = 0;
 
         foreach ($journalIds as $journalId) {

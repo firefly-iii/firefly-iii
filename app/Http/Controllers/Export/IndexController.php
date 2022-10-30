@@ -38,7 +38,6 @@ use Illuminate\View\View;
  */
 class IndexController extends Controller
 {
-
     private JournalRepositoryInterface $journalRepository;
 
     /**
@@ -112,5 +111,4 @@ class IndexController extends Controller
     {
         return view('export.index');
     }
-
 }

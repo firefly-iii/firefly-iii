@@ -113,7 +113,7 @@ class Category extends Model
                 return $category;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

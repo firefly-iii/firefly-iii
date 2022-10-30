@@ -122,7 +122,7 @@ class Budget extends Model
                 return $budget;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

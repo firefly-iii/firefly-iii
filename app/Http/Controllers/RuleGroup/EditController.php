@@ -142,15 +142,12 @@ class EditController extends Controller
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUrl('rule-groups.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
-
             session()->put('rule-groups.edit.fromUpdate', true);
 
             $redirect = redirect(route('rule-groups.edit', [$ruleGroup->id]))->withInput(['return_to_edit' => 1]);
-
         }
 
         // redirect to previous URL.
         return $redirect;
     }
-
 }

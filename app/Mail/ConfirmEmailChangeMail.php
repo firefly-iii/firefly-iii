@@ -35,7 +35,8 @@ use Illuminate\Queue\SerializesModels;
  */
 class ConfirmEmailChangeMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public string $newEmail;
     public string $oldEmail;

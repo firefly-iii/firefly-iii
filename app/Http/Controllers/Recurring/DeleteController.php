@@ -97,5 +97,4 @@ class DeleteController extends Controller
 
         return redirect($this->getPreviousUrl('recurrences.delete.url'));
     }
-
 }

@@ -139,7 +139,7 @@ class Recurrence extends Model
                 return $recurrence;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -213,5 +213,4 @@ class Recurrence extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

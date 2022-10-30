@@ -34,7 +34,8 @@ use Illuminate\Queue\SerializesModels;
  */
 class NewIPAddressWarningMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public string $host;
     public string $ipAddress;

@@ -33,7 +33,6 @@ use Illuminate\Support\Collection;
  */
 interface TagRepositoryInterface
 {
-
     /**
      * @return int
      */

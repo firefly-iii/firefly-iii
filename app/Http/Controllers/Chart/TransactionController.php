@@ -39,7 +39,6 @@ use JsonException;
  */
 class TransactionController extends Controller
 {
-
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -60,7 +59,7 @@ class TransactionController extends Controller
      */
     public function budgets(Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.transactions.budgets');
@@ -104,7 +103,7 @@ class TransactionController extends Controller
      */
     public function categories(string $objectType, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
@@ -144,7 +143,6 @@ class TransactionController extends Controller
                     'currency_code'   => $journal['currency_code'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
-
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -162,7 +160,7 @@ class TransactionController extends Controller
      */
     public function destinationAccounts(string $objectType, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
@@ -219,7 +217,7 @@ class TransactionController extends Controller
      */
     public function sourceAccounts(string $objectType, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
@@ -259,7 +257,6 @@ class TransactionController extends Controller
                     'currency_code'   => $journal['currency_code'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
-
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);

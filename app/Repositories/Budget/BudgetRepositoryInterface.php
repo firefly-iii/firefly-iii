@@ -34,7 +34,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-
     /**
      * @param string $query
      * @param int    $limit
@@ -210,5 +209,4 @@ interface BudgetRepositoryInterface
      * @return Budget
      */
     public function update(Budget $budget, array $data): Budget;
-
 }

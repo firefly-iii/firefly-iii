@@ -84,7 +84,6 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
                 'amount' => app('steam')->negative($journal['amount']),
                 'date'   => $journal['date'],
             ];
-
         }
 
         return $array;
@@ -137,7 +136,6 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
                 'amount' => app('steam')->positive($journal['amount']),
                 'date'   => $journal['date'],
             ];
-
         }
 
         return $array;

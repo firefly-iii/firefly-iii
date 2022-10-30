@@ -104,7 +104,7 @@ class IndexController extends Controller
         $subTitle = (string) trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
 
         $firstJournal = $this->repository->firstNull();
-        $startPeriod  = null === $firstJournal ? new Carbon : $firstJournal->date;
+        $startPeriod  = null === $firstJournal ? new Carbon() : $firstJournal->date;
         $endPeriod    = clone $end;
         $periods      = $this->getTransactionPeriodOverview($objectType, $startPeriod, $endPeriod);
 
@@ -144,7 +144,7 @@ class IndexController extends Controller
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $this->repository->firstNull();
-        $start        = null === $first ? new Carbon : $first->date;
+        $start        = null === $first ? new Carbon() : $first->date;
         $last         = $this->repository->getLast();
         $end          = $last ? $last->date : today(config('app.timezone'));
         $subTitle     = (string) trans('firefly.all_' . $objectType);

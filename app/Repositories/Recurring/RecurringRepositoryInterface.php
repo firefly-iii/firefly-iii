@@ -254,5 +254,4 @@ interface RecurringRepositoryInterface
      * @return Recurrence
      */
     public function update(Recurrence $recurrence, array $data): Recurrence;
-
 }

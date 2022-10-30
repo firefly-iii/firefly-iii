@@ -86,5 +86,4 @@ class RecurrenceMeta extends Model
     {
         return $this->belongsTo(Recurrence::class);
     }
-
 }

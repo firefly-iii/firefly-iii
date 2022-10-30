@@ -52,7 +52,7 @@ class ReportFormRequest extends FormRequest
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('accounts');
-        $collection = new Collection;
+        $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
                 $account = $repository->find((int) $accountId);
@@ -75,7 +75,7 @@ class ReportFormRequest extends FormRequest
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $set        = $this->get('budget');
-        $collection = new Collection;
+        $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $budgetId) {
                 $budget = $repository->find((int) $budgetId);
@@ -98,7 +98,7 @@ class ReportFormRequest extends FormRequest
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $set        = $this->get('category');
-        $collection = new Collection;
+        $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $categoryId) {
                 $category = $repository->find((int) $categoryId);
@@ -121,7 +121,7 @@ class ReportFormRequest extends FormRequest
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('double');
-        $collection = new Collection;
+        $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
                 $account = $repository->find((int) $accountId);
@@ -213,7 +213,7 @@ class ReportFormRequest extends FormRequest
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $set        = $this->get('tag');
-        $collection = new Collection;
+        $collection = new Collection();
         Log::debug('Set is:', $set ?? []);
         if (is_array($set)) {
             foreach ($set as $tagTag) {

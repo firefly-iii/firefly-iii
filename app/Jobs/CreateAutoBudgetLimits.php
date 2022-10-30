@@ -43,7 +43,10 @@ use Log;
  */
 class CreateAutoBudgetLimits implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private Carbon $date;
 
@@ -222,7 +225,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         if (null !== $amount) {
             Log::debug(sprintf('Amount is overruled and will be set to %s', $amount));
         }
-        $budgetLimit = new BudgetLimit;
+        $budgetLimit = new BudgetLimit();
         $budgetLimit->budget()->associate($autoBudget->budget);
         $budgetLimit->transactionCurrency()->associate($autoBudget->transactionCurrency);
         $budgetLimit->start_date = $start;

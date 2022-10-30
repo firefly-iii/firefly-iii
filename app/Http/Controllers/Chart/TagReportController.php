@@ -37,7 +37,8 @@ use Illuminate\Support\Collection;
  */
 class TagReportController extends Controller
 {
-    use AugumentData, TransactionCalculation;
+    use AugumentData;
+    use TransactionCalculation;
 
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;

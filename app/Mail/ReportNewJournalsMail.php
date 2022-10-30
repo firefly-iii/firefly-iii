@@ -38,7 +38,8 @@ use Illuminate\Support\Collection;
  */
 class ReportNewJournalsMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public Collection $groups;
     public array      $transformed;

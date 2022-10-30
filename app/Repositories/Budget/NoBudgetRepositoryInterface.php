@@ -67,5 +67,4 @@ interface NoBudgetRepositoryInterface
      * @return array
      */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array;
-
 }

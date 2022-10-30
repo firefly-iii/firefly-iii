@@ -33,7 +33,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UserFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get data for controller.

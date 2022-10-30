@@ -68,7 +68,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class WebhookMessage extends Model
 {
-
     protected $casts
         = [
             'sent'    => 'boolean',
@@ -98,7 +97,7 @@ class WebhookMessage extends Model
                 return $message;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**

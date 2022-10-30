@@ -99,5 +99,4 @@ class DeleteController extends Controller
 
         return redirect($this->getPreviousUrl('rule-groups.delete.url'));
     }
-
 }

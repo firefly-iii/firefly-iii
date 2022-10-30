@@ -80,7 +80,7 @@ class ShowController extends Controller
     {
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag);
+        $transformer->setParameters(new ParameterBag());
 
         $array                 = $transformer->transform($recurrence);
         $groups                = $this->recurring->getTransactions($recurrence);

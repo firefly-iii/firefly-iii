@@ -40,7 +40,6 @@ use Log;
  */
 class AmountController extends Controller
 {
-
     private AccountRepositoryInterface   $accountRepos;
     private PiggyBankRepositoryInterface $piggyRepos;
 

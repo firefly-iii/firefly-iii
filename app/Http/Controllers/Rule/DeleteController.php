@@ -93,5 +93,4 @@ class DeleteController extends Controller
 
         return redirect($this->getPreviousUrl('rules.delete.url'));
     }
-
 }

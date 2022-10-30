@@ -210,7 +210,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         }
         $dbNote = $attachment->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($attachment);
         }
         $dbNote->text = trim($note);

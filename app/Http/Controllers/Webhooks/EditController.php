@@ -73,5 +73,4 @@ class EditController extends Controller
 
         return view('webhooks.edit', compact('webhook', 'subTitle'));
     }
-
 }

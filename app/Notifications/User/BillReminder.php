@@ -77,7 +77,7 @@ class BillReminder extends Notification
             $subject = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
         }
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->markdown('emails.bill-warning', ['field' => $this->field, 'diff' => $this->diff, 'bill' => $this->bill])
             ->subject($subject);
     }
@@ -96,7 +96,7 @@ class BillReminder extends Notification
         }
         $bill = $this->bill;
         $url  = route('bills.show', [$bill->id]);
-        return (new SlackMessage)
+        return (new SlackMessage())
             ->warning()
             ->attachment(function ($attachment) use ($bill, $url) {
                 $attachment->title((string) trans('firefly.visit_bill', ['name' => $bill->name]), $url);

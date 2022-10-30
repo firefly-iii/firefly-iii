@@ -88,7 +88,7 @@ class IndexController extends Controller
         $end = session('end', Carbon::now()->endOfMonth());
 
         // transform piggies using the transformer:
-        $parameters = new ParameterBag;
+        $parameters = new ParameterBag();
         $parameters->set('end', $end);
 
         // make piggy bank groups:
@@ -96,7 +96,7 @@ class IndexController extends Controller
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
-        $transformer->setParameters(new ParameterBag);
+        $transformer->setParameters(new ParameterBag());
 
         /** @var AccountTransformer $accountTransformer */
         $accountTransformer = app(AccountTransformer::class);

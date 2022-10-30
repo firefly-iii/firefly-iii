@@ -239,7 +239,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $room    = bcsub((string) $piggyBank->targetamount, (string) $repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
 
-        if(bccomp((string) $piggyBank->targetamount,'0') === 0) {
+        if (bccomp((string) $piggyBank->targetamount, '0') === 0) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.
             $room = app('steam')->positive($amount);
             Log::debug(sprintf('Room is now %s', $room));
@@ -302,7 +302,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanksWithAmount(): Collection
     {
-
         $currency = app('amount')->getDefaultCurrency();
 
         $set = $this->getPiggyBanks();
@@ -370,7 +369,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string
     {
-
         $balance = app('steam')->balanceIgnoreVirtual($piggyBank->account, $date);
 
         /** @var Collection $piggies */

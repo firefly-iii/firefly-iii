@@ -33,7 +33,6 @@ use Illuminate\Support\Collection;
  */
 interface CategoryRepositoryInterface
 {
-
     /**
      * @param string $query
      * @param int    $limit

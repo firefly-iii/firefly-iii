@@ -59,5 +59,4 @@ class RecurringServiceProvider extends ServiceProvider
             }
         );
     }
-
 }

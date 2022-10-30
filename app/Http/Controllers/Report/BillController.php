@@ -46,7 +46,7 @@ class BillController extends Controller
      */
     public function overview(Collection $accounts, Carbon $start, Carbon $end)
     {   // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('bill-report');
@@ -59,7 +59,6 @@ class BillController extends Controller
         $report = $helper->getBillReport($accounts, $start, $end);
         try {
             $result = view('reports.partials.bills', compact('report'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -68,6 +67,5 @@ class BillController extends Controller
         $cache->store($result);
 
         return $result;
-
     }
 }

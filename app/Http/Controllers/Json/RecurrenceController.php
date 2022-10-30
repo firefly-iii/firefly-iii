@@ -97,7 +97,7 @@ class RecurrenceController extends Controller
             $repetitionMoment = explode(',', $request->get('type'))[1] ?? '2018-01-01';
         }
         $actualStart->startOfDay();
-        $repetition                    = new RecurrenceRepetition;
+        $repetition                    = new RecurrenceRepetition();
         $repetition->repetition_type   = $repetitionType;
         $repetition->repetition_moment = $repetitionMoment;
         $repetition->repetition_skip   = (int) $request->get('skip');

@@ -229,7 +229,7 @@ class InstallController extends Controller
         if (class_exists(LegacyRSA::class)) {
             // PHP 7
             Log::info('Will run PHP7 code.');
-            $keys = (new LegacyRSA)->createKey(4096);
+            $keys = (new LegacyRSA())->createKey(4096);
         }
 
         if (!class_exists(LegacyRSA::class)) {

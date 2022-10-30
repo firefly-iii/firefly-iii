@@ -102,7 +102,6 @@ class MassController extends Controller
         if (is_array($ids)) {
             /** @var string $journalId */
             foreach ($ids as $journalId) {
-
                 /** @var TransactionJournal $journal */
                 $journal = $this->repository->find((int) $journalId);
                 if (null !== $journal && (int) $journalId === $journal->id) {

@@ -36,7 +36,6 @@ use Throwable;
  */
 class OperationsController extends Controller
 {
-
     /** @var AccountTaskerInterface Some specific account things. */
     private $tasker;
 
@@ -71,7 +70,7 @@ class OperationsController extends Controller
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('expense-report');
@@ -83,7 +82,6 @@ class OperationsController extends Controller
         $type   = 'expense-entry';
         try {
             $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -106,7 +104,7 @@ class OperationsController extends Controller
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('income-report');
@@ -118,7 +116,6 @@ class OperationsController extends Controller
         $type   = 'income-entry';
         try {
             $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
-
         } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -141,7 +138,7 @@ class OperationsController extends Controller
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('inc-exp-report');

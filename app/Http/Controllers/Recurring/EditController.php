@@ -97,7 +97,7 @@ class EditController extends Controller
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag);
+        $transformer->setParameters(new ParameterBag());
 
         $array   = $transformer->transform($recurrence);
         $budgets = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
@@ -151,8 +151,15 @@ class EditController extends Controller
         return view(
             'recurring.edit',
             compact(
-                'recurrence', 'array', 'bills',
-                'weekendResponses', 'budgets', 'preFilled', 'currentRepType', 'repetitionEnd', 'repetitionEnds'
+                'recurrence',
+                'array',
+                'bills',
+                'weekendResponses',
+                'budgets',
+                'preFilled',
+                'currentRepType',
+                'repetitionEnd',
+                'repetitionEnds'
             )
         );
     }

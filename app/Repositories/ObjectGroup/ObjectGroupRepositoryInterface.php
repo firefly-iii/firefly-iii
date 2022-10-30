@@ -100,5 +100,4 @@ interface ObjectGroupRepositoryInterface
      * @return ObjectGroup
      */
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup;
-
 }
