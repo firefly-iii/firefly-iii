@@ -318,7 +318,7 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * See reference nr. 57
+     * TODO duplicate function
      *
      * @param Carbon $start
      * @param Carbon $end

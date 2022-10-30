@@ -70,7 +70,7 @@ class Configuration extends Model
     protected $table = 'configuration';
 
     /**
-     * See reference nr. 17
+     * TODO can be replaced with native laravel code.
      *
      * @codeCoverageIgnore
      *

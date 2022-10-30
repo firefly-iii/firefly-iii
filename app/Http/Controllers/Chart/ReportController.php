@@ -104,7 +104,7 @@ class ReportController extends Controller
             }
         );
 
-        // See reference nr. 56
+        // TODO get liabilities and include those as well?
 
         while ($current < $end) {
             // get balances by date, grouped by currency.

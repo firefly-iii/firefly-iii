@@ -105,7 +105,7 @@ class CurrencyForm
     }
 
     /**
-     * See reference nr. 23
+     * TODO describe and cleanup.
      *
      * @param string     $name
      * @param mixed      $value
@@ -119,7 +119,7 @@ class CurrencyForm
     }
 
     /**
-     * See reference nr. 24
+     * TODO describe and cleanup
      *
      * @param string     $name
      * @param string     $view
@@ -174,7 +174,7 @@ class CurrencyForm
     }
 
     /**
-     * See reference nr. 25
+     * TODO cleanup and describe
      *
      * @param string     $name
      * @param mixed      $value
@@ -199,7 +199,7 @@ class CurrencyForm
     }
 
     /**
-     * See reference nr. 26
+     * TODO cleanup and describe
      *
      * @param string     $name
      * @param mixed      $value

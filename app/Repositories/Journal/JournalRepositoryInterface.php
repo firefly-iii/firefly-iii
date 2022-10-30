@@ -51,7 +51,6 @@ interface JournalRepositoryInterface
     public function destroyJournal(TransactionJournal $journal): void;
 
     /**
-     * See reference nr. 1
      * Find a specific journal.
      *
      * @param int $journalId
@@ -126,7 +125,7 @@ interface JournalRepositoryInterface
     public function getSourceAccount(TransactionJournal $journal): Account;
 
     /**
-     * See reference nr. 5
+     * TODO Maybe to account repository? Do this wen reconcile is API only.
      *
      * @param int $journalId
      */

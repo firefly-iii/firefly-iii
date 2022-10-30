@@ -220,7 +220,7 @@ class AccountTransformer extends AbstractTransformer
      *
      * @return array
      *
-     * See reference nr. 20
+     * TODO refactor call to get~OpeningBalanceAmount / Date because it is a lot of queries.
      */
     private function getOpeningBalance(Account $account, string $accountType): array
     {

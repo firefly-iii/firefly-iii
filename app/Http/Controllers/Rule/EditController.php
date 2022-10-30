@@ -143,7 +143,7 @@ class EditController extends Controller
      */
     private function parseFromOperators(array $submittedOperators): array
     {
-        // See reference nr. 65
+        // TODO this code is duplicate.
         $operators       = config('search.operators');
         $renderedEntries = [];
         $triggers        = [];

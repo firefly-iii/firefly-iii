@@ -518,7 +518,7 @@ class AccountController extends Controller
     /**
      * Shows the balances for a given set of dates and accounts.
      *
-     * See reference nr. 55
+     * TODO this chart is not multi currency aware.
      *
      * @param Collection $accounts
      *

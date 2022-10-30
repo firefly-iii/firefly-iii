@@ -68,7 +68,7 @@ class IndexController extends Controller
     }
 
     /**
-     * See reference nr. 70
+     * TODO the notes of a recurrence are pretty pointless at this moment.
      * Show all recurring transactions.
      *
      * @param Request $request

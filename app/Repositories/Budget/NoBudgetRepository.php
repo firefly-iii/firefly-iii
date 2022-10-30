@@ -147,8 +147,8 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * See reference nr. 15
-     * See reference nr. 16
+     * TODO this method does not include multi currency. It just counts.
+     * TODO this probably also applies to the other "sumExpenses" methods.
      *
      * @param Carbon                   $start
      * @param Carbon                   $end

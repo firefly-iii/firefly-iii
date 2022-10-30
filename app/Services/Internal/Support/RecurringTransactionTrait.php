@@ -148,7 +148,7 @@ trait RecurringTransactionTrait
             if (array_key_exists('foreign_amount', $array) && '' === (string) $array['foreign_amount']) {
                 unset($array['foreign_amount']);
             }
-            // See reference nr. 100
+            // TODO typeOverrule. The account validator may have a different opinion on the type of the transaction.
             $transaction = new RecurrenceTransaction(
                 [
                     'recurrence_id'           => $recurrence->id,

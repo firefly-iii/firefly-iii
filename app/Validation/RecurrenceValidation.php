@@ -41,7 +41,7 @@ trait RecurrenceValidation
     /**
      * Validate account information input for recurrences which are being updated.
      *
-     * See reference nr. 101
+     * TODO Must always trigger when the type of the recurrence changes.
      *
      * @param Validator $validator
      */

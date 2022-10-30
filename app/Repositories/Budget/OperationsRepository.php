@@ -240,7 +240,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        // See reference nr. 13
+        // TODO possible candidate for "get extracted groups" method.
         $set        = $collector->getGroups();
         $return     = [];
         $total      = [];
@@ -384,7 +384,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * For now, simply refer to whichever repository holds this function.
-     * See reference nr. 14
+     * TODO perhaps better in the future.
      *
      * @param Budget      $budget
      * @param Carbon|null $start

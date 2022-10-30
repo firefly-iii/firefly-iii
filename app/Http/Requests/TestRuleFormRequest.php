@@ -37,7 +37,7 @@ class TestRuleFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     * See reference nr. 46
+     * TODO these rules are not valid anymore.
      *
      * @return array
      */

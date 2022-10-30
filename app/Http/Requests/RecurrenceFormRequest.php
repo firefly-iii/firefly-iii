@@ -307,7 +307,7 @@ class RecurrenceFormRequest extends FormRequest
         $sourceId      = null;
         $destinationId = null;
 
-        // See reference nr. 45
+        // TODO typeOverrule: the account validator may have another opinion the transaction type.
 
         switch ($this->convertString('transaction_type')) {
             default:

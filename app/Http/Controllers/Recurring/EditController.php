@@ -89,7 +89,7 @@ class EditController extends Controller
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
-        // See reference nr. 69
+        // TODO this should be in the repository.
         $count = $recurrence->recurrenceTransactions()->count();
         if (0 === $count) {
             throw new FireflyException('This recurring transaction has no meta-data. You will have to delete it and recreate it. Sorry!');

@@ -219,7 +219,7 @@ class JournalUpdateService
         $result = $validator->validateSource(['id' => $sourceId]);
         Log::debug(sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true)));
 
-        // See reference nr. 95
+        // TODO typeoverrule the account validator may have a different opinion on the transaction type.
 
         // validate submitted info:
         return $result;
@@ -313,7 +313,7 @@ class JournalUpdateService
         $result            = $validator->validateDestination(['id' => $destId]);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
-        // See reference nr. 96
+        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
 
         // validate submitted info:
         return $result;

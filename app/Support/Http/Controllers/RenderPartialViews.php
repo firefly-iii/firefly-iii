@@ -298,7 +298,7 @@ trait RenderPartialViews
      */
     protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
     {
-        // See reference nr. 38
+        // TODO duplicated code.
         $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {

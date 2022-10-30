@@ -1135,13 +1135,13 @@ try {
                 $title = limitStringLength((string) $group->title);
             }
             if ('opening balance' === $type) {
-// See reference nr. 1
+                // TODO link to account
                 $breadcrumbs->push($title, route('transactions.show', [$group->id]));
 
                 return;
             }
             if ('reconciliation' === $type) {
-// See reference nr. 2
+                // TODO link to account
                 $breadcrumbs->push($title, route('transactions.show', [$group->id]));
 
                 return;

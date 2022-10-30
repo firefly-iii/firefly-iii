@@ -49,7 +49,7 @@ class RecurrenceUpdateService
     /**
      * Updates a recurrence.
      *
-     * See reference nr. 88
+     * TODO if the user updates the type, the accounts must be validated again.
      *
      * @param Recurrence $recurrence
      * @param array      $data
@@ -217,7 +217,7 @@ class RecurrenceUpdateService
     }
 
     /**
-     * See reference nr. 89
+     * TODO this method is very complex.
      *
      * @param Recurrence $recurrence
      * @param array      $transactions

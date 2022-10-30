@@ -30,7 +30,7 @@ use Illuminate\Support\HtmlString;
 
 /**
  * Class RuleForm
- * See reference nr. 31
+ * TODO cleanup and describe
  */
 class RuleForm
 {

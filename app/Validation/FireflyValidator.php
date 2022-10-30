@@ -788,8 +788,6 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * See reference nr. 107
-     *
      * @return bool
      */
     public function validateUniquePiggyBankForUser($attribute, $value, $parameters): bool

@@ -96,7 +96,7 @@ export default {
     };
   },
   computed: {
-// See reference nr. 6
+    // TODO this seems to be a pretty weird way of doing it.
     dateComponent() {
       return 'custom-date';
     },

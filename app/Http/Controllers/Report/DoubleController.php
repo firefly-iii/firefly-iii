@@ -292,7 +292,7 @@ class DoubleController extends Controller
     }
 
     /**
-     * See reference nr. 67
+     * TODO this method is duplicated.
      *
      * @param Collection  $accounts
      * @param int         $id

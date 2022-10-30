@@ -115,7 +115,7 @@ trait ModelInformation
      */
     protected function getTriggersForBill(Bill $bill): array // get info and augument
     {
-        // See reference nr. 39
+        // TODO duplicate code
         $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {

@@ -76,7 +76,7 @@ class UpdateRequest extends FormRequest
      * Configure the validator instance with special rules for after the basic validation rules.
      *
      * @param Validator $validator
-     * See reference nr. 72
+     * TODO duplicate code
      *
      * @return void
      */

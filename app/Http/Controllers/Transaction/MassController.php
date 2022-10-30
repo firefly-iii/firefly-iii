@@ -168,7 +168,7 @@ class MassController extends Controller
     {
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {
-            // See reference nr. 48
+            // TODO this is a weird error, should be caught.
             throw new FireflyException('This is not an array.');
         }
         $count = 0;

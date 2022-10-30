@@ -35,7 +35,7 @@ use Log;
 
 /**
  * Class AccountUpdateService
- * See reference nr. 90
+ * TODO this service is messy and convoluted.
  */
 class AccountUpdateService
 {

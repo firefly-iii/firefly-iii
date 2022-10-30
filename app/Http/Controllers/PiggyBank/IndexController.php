@@ -69,7 +69,8 @@ class IndexController extends Controller
 
     /**
      * Show overview of all piggy banks.
-     * See reference nr. 66
+     *
+     * TODO very complicated function.
      *
      * @param Request $request
      *

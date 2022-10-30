@@ -76,7 +76,7 @@ trait ChartGeneration
         $chartData = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
-            // See reference nr. 33
+            // TODO we can use getAccountCurrency instead.
             $currency = $repository->find((int) $accountRepos->getMetaValue($account, 'currency_id'));
             if (null === $currency) {
                 $currency = $default;
