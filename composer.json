@@ -110,10 +110,16 @@
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "2.*",
-    "filp/whoops": "2.*",
+    "ergebnis/phpstan-rules": "^1.0",
     "fakerphp/faker": "1.*",
+    "filp/whoops": "2.*",
     "mockery/mockery": "1.*",
-    "phpunit/phpunit": "^9.5"
+    "nunomaduro/larastan": "^2.0",
+    "phpstan/phpstan": "^1.8",
+    "phpstan/phpstan-deprecation-rules": "^1.0",
+    "phpstan/phpstan-strict-rules": "^1.4",
+    "phpunit/phpunit": "^9.5",
+    "thecodingmachine/phpstan-strict-rules": "^1.0"
   },
   "suggest": {
   },
