@@ -54,11 +54,11 @@ trait JournalServiceTrait
      * @param string $direction
      * @param array  $data
      *
-     * @return Account
+     * @return Account|null
      * @codeCoverageIgnore
      * @throws FireflyException
      */
-    protected function getAccount(string $transactionType, string $direction, array $data): Account
+    protected function getAccount(string $transactionType, string $direction, array $data): ?Account
     {
         // some debug logging:
         Log::debug(sprintf('Now in getAccount(%s)', $direction), $data);
@@ -228,10 +228,11 @@ trait JournalServiceTrait
                 $data['name'] = $data['number'];
             }
             // if name is still NULL, return NULL.
-            if (null === $data['name']) {
+            if ('' === (string)$data['name']) {
+                Log::debug('Account name is still NULL, return NULL.');
                 return null;
             }
-            $data['name'] = $data['name'] ?? '(no name)';
+            //$data['name'] = $data['name'] ?? '(no name)';
 
             $account = $this->accountRepository->store(
                 [
@@ -273,11 +274,11 @@ trait JournalServiceTrait
     private function getCashAccount(?Account $account, array $data, array $types): ?Account
     {
         // return cash account.
-        if (null === $account && null === $data['name']
+        if (null === $account && '' === (string) $data['name']
             && in_array(AccountType::CASH, $types, true)) {
             $account = $this->accountRepository->getCashAccount();
         }
-
+        Log::debug('Cannot return cash account, return input instead.');
         return $account;
     }
 

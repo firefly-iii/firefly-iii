@@ -85,6 +85,8 @@ trait ReconciliationValidation
         // is expected to be "positive", i.e. the money flows from the
         // source to the asset account that is the destination.
         if (null === $accountId && null === $accountName) {
+            Log::debug('The source is valid because ID and name are NULL.');
+            $this->source = new Account;
             return true;
         }
 

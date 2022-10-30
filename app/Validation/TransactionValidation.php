@@ -152,7 +152,7 @@ trait TransactionValidation
      */
     protected function sanityCheckReconciliation(Validator $validator, string $transactionType, int $index, array $source, array $destination): void
     {
-        Log::debug('sanityCheckReconciliation');
+        Log::debug('Now in sanityCheckReconciliation');
         if (TransactionType::RECONCILIATION === ucfirst($transactionType) &&
             null === $source['id'] && null === $source['name'] && null === $destination['id'] && null === $destination['name']
         ) {

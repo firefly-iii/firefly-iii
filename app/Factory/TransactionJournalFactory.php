@@ -207,6 +207,12 @@ class TransactionJournalFactory
         Log::debug('Now calling getAccount for the destination.');
         $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
         Log::debug('Done with getAccount(2x)');
+
+        // this is the moment for a reconciliation sanity check (again).
+        if (TransactionType::RECONCILIATION === $type->type) {
+            [$sourceAccount, $destinationAccount] = $this->reconciliationSanityCheck($sourceAccount, $destinationAccount);
+        }
+
         $currency        = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
         $foreignCurrency = $this->compareCurrencies($currency, $foreignCurrency);
         $foreignCurrency = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
@@ -596,5 +602,34 @@ class TransactionJournalFactory
         $this->categoryRepository->setUser($this->user);
         $this->piggyRepository->setUser($this->user);
         $this->accountRepository->setUser($this->user);
+    }
+
+    /**
+     * @param Account|null $sourceAccount
+     * @param Account|null $destinationAccount
+     * @return array
+     */
+    private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        if (null !== $sourceAccount && null !== $destinationAccount) {
+            Log::debug('Both accounts exist, simply return them.');
+            return [$sourceAccount, $destinationAccount];
+        }
+        if (null !== $sourceAccount && null === $destinationAccount) {
+            Log::debug('Destination account is NULL, source account is not.');
+            $account = $this->accountRepository->getReconciliation($sourceAccount);
+            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+            return [$sourceAccount, $account];
+        }
+
+        if (null === $sourceAccount && null !== $destinationAccount) {
+            Log::debug('Source account is NULL, destination account is not.');
+            $account = $this->accountRepository->getReconciliation($destinationAccount);
+            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+            return [$account, $destinationAccount];
+        }
+        Log::debug('Unused fallback');
+        return [$sourceAccount, $destinationAccount];
     }
 }
