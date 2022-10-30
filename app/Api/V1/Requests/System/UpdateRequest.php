@@ -36,7 +36,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -73,7 +74,7 @@ class UpdateRequest extends FormRequest
                 break;
             case 'configuration.is_demo_site':
             case 'configuration.single_user_mode':
-                return ['value' => ['required', new IsBoolean]];
+                return ['value' => ['required', new IsBoolean()]];
             case 'configuration.permission_update_check':
                 return ['value' => 'required|numeric|between:-1,1'];
             case 'configuration.last_update_check':

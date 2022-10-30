@@ -34,7 +34,6 @@ use Illuminate\Http\JsonResponse;
  */
 class PeriodController extends Controller
 {
-
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/insight/insightTransferTotal
@@ -76,7 +75,8 @@ class PeriodController extends Controller
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
                 $response[$foreignCurrencyId]['difference']       = bcadd(
-                    $response[$foreignCurrencyId]['difference'], app('steam')->positive($journal['foreign_amount'])
+                    $response[$foreignCurrencyId]['difference'],
+                    app('steam')->positive($journal['foreign_amount'])
                 );
                 $response[$foreignCurrencyId]['difference_float'] = (float) $response[$foreignCurrencyId]['difference'];
             }
@@ -84,5 +84,4 @@ class PeriodController extends Controller
 
         return response()->json(array_values($response));
     }
-
 }

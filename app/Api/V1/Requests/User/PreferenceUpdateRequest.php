@@ -30,7 +30,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PreferenceUpdateRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array
@@ -63,5 +64,4 @@ class PreferenceUpdateRequest extends FormRequest
             'data' => 'required',
         ];
     }
-
 }

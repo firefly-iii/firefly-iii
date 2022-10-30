@@ -167,5 +167,4 @@ class TriggerController extends Controller
 
         return response()->json([], 204);
     }
-
 }

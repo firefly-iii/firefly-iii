@@ -101,7 +101,7 @@ class TransactionController extends Controller
     public function transactionsWithID(AutocompleteRequest $request): JsonResponse
     {
         $data   = $request->getData();
-        $result = new Collection;
+        $result = new Collection();
         if (is_numeric($data['query'])) {
             // search for group, not journal.
             $firstResult = $this->groupRepository->find((int) $data['query']);

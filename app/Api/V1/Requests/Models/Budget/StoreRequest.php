@@ -37,7 +37,9 @@ use Illuminate\Validation\Validator;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ValidatesAutoBudgetRequest, ChecksLogin;
+    use ConvertsDataTypes;
+    use ValidatesAutoBudgetRequest;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -72,7 +74,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name'               => 'required|between:1,100|uniqueObjectForUser:budgets,name',
-            'active'             => [new IsBoolean],
+            'active'             => [new IsBoolean()],
             'currency_id'        => 'exists:transaction_currencies,id',
             'currency_code'      => 'exists:transaction_currencies,code',
             'notes'              => 'nullable|between:1,65536',

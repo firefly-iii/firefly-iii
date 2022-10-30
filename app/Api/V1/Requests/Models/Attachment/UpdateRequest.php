@@ -35,7 +35,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -64,10 +65,10 @@ class UpdateRequest extends FormRequest
     {
         $models = config('firefly.valid_attachment_models');
         $models = array_map(
-
             static function (string $className) {
                 return str_replace('FireflyIII\\Models\\', '', $className);
-            }, $models
+            },
+            $models
         );
         $models = implode(',', $models);
         $model  = $this->convertString('attachable_type');

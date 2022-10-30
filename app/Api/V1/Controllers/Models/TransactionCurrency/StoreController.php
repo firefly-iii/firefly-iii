@@ -41,7 +41,8 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    use AccountFilter, TransactionFilter;
+    use AccountFilter;
+    use TransactionFilter;
 
     private CurrencyRepositoryInterface $repository;
     private UserRepositoryInterface     $userRepository;

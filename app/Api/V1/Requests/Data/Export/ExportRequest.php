@@ -36,7 +36,8 @@ use Illuminate\Support\Collection;
  */
 class ExportRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
     public function getAll(): array
     {
@@ -49,7 +50,7 @@ class ExportRequest extends FormRequest
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        $accounts = new Collection;
+        $accounts = new Collection();
         foreach ($parts as $part) {
             $accountId = (int) $part;
             if (0 !== $accountId) {

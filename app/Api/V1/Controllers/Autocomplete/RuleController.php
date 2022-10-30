@@ -77,5 +77,4 @@ class RuleController extends Controller
 
         return response()->json($response);
     }
-
 }

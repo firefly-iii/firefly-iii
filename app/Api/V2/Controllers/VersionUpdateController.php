@@ -29,5 +29,4 @@ namespace FireflyIII\Api\V2\Controllers;
  */
 class VersionUpdateController extends Controller
 {
-
 }

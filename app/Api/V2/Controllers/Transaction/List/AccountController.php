@@ -77,8 +77,7 @@ class AccountController extends Controller
         $paginator->setPath(route('api.v2.accounts.transactions', [$account->id])); // TODO  . $this->buildParams()
 
         return response()
-            ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer))
+            ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

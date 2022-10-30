@@ -57,5 +57,4 @@ class CronController extends Controller
 
         return response()->json($return);
     }
-
 }

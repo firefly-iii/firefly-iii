@@ -80,5 +80,4 @@ class ObjectGroupController extends Controller
 
         return response()->json($return);
     }
-
 }

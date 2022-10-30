@@ -35,7 +35,8 @@ use Illuminate\Validation\Validator;
  */
 class UserUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Logged in + owner
@@ -78,7 +79,7 @@ class UserUpdateRequest extends FormRequest
 
         return [
             'email'        => sprintf('email|unique:users,email,%d', $user->id),
-            'blocked'      => [new IsBoolean],
+            'blocked'      => [new IsBoolean()],
             'blocked_code' => 'in:email_changed',
             'role'         => 'in:owner,demo,',
         ];
@@ -104,5 +105,4 @@ class UserUpdateRequest extends FormRequest
             }
         );
     }
-
 }

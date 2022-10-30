@@ -67,7 +67,6 @@ class ExportController extends Controller
         $this->exporter->setExportAccounts(true);
 
         return $this->returnExport('accounts');
-
     }
 
     /**
@@ -229,5 +228,4 @@ class ExportController extends Controller
 
         return $this->returnExport('transactions');
     }
-
 }

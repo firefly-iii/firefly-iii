@@ -176,5 +176,4 @@ class TagController extends Controller
 
         return response()->json(array_values($response));
     }
-
 }

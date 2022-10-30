@@ -26,5 +26,4 @@ namespace FireflyIII\Api\V2\Controllers\System;
 
 class ConfigurationController
 {
-
 }

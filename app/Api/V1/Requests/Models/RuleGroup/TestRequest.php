@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TestRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * @return array
@@ -78,5 +79,4 @@ class TestRequest extends FormRequest
             'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
         ];
     }
-
 }

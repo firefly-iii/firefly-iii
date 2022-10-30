@@ -34,14 +34,14 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class CreateRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array
      */
     public function getData(): array
     {
-
         $triggers   = Webhook::getTriggersForValidation();
         $responses  = Webhook::getResponsesForValidation();
         $deliveries = Webhook::getDeliveriesForValidation();
@@ -77,13 +77,11 @@ class CreateRequest extends FormRequest
 
         return [
             'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
-            'active'   => [new IsBoolean],
+            'active'   => [new IsBoolean()],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),
             'delivery' => sprintf('required|in:%s', $deliveries),
             'url'      => ['required', 'url', 'uniqueWebhook'],
         ];
     }
-
-
 }

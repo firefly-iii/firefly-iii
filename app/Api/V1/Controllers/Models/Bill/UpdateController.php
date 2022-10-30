@@ -80,7 +80,5 @@ class UpdateController extends Controller
         $resource = new Item($bill, $transformer, 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
-
 }

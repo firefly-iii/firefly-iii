@@ -37,7 +37,9 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ValidatesAutoBudgetRequest, ChecksLogin;
+    use ConvertsDataTypes;
+    use ValidatesAutoBudgetRequest;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -82,7 +84,7 @@ class UpdateRequest extends FormRequest
 
         return [
             'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
-            'active'                    => [new IsBoolean],
+            'active'                    => [new IsBoolean()],
             'notes'                     => 'nullable|between:1,65536',
             'auto_budget_type'          => 'in:reset,rollover,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',

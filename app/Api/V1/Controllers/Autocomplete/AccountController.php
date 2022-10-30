@@ -111,12 +111,13 @@ class AccountController extends Controller
         // custom order.
         $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
         usort(
-            $return, function ($a, $b) use ($order) {
-            $pos_a = array_search($a['type'], $order);
-            $pos_b = array_search($b['type'], $order);
+            $return,
+            function ($a, $b) use ($order) {
+                $pos_a = array_search($a['type'], $order, true);
+                $pos_b = array_search($b['type'], $order, true);
 
-            return $pos_a - $pos_b;
-        }
+                return $pos_a - $pos_b;
+            }
         );
 
         return response()->json($return);

@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array
@@ -80,7 +81,6 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-
         $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
         $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
         $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
@@ -88,7 +88,7 @@ class UpdateRequest extends FormRequest
 
         return [
             'title'    => sprintf('between:1,512|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
-            'active'   => [new IsBoolean],
+            'active'   => [new IsBoolean()],
             'trigger'  => sprintf('in:%s', $triggers),
             'response' => sprintf('in:%s', $responses),
             'delivery' => sprintf('in:%s', $deliveries),

@@ -42,7 +42,9 @@ use Log;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
+    use ConvertsDataTypes;
+    use AppendsLocationData;
+    use ChecksLogin;
 
     /**
      * @return array
@@ -116,8 +118,8 @@ class UpdateRequest extends FormRequest
             'order'                => 'numeric|nullable',
             'currency_id'          => 'numeric|exists:transaction_currencies,id',
             'currency_code'        => 'min:3|max:3|exists:transaction_currencies,code',
-            'active'               => [new IsBoolean],
-            'include_net_worth'    => [new IsBoolean],
+            'active'               => [new IsBoolean()],
+            'include_net_worth'    => [new IsBoolean()],
             'account_role'         => sprintf('in:%s|nullable|required_if:type,asset', $accountRoles),
             'credit_card_type'     => sprintf('in:%s|nullable|required_if:account_role,ccAsset', $ccPaymentTypes),
             'monthly_payment_date' => 'date' . '|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',

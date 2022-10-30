@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -66,7 +67,7 @@ class UpdateRequest extends FormRequest
         return [
             'title'       => 'between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id,
             'description' => 'between:1,5000|nullable',
-            'active'      => [new IsBoolean],
+            'active'      => [new IsBoolean()],
         ];
     }
 }

@@ -31,6 +31,4 @@ use FireflyIII\Api\V2\Controllers\Controller;
  */
 class BillController extends Controller
 {
-
-
 }

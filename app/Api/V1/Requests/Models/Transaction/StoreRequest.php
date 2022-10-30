@@ -43,7 +43,12 @@ use Log;
  */
 class StoreRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes, ChecksLogin, AppendsLocationData;
+    use TransactionValidation;
+    use GroupValidation;
+    use CurrencyValidation;
+    use ConvertsDataTypes;
+    use ChecksLogin;
+    use AppendsLocationData;
 
     /**
      * Get all data. Is pretty complex because of all the ??-statements.
@@ -173,12 +178,12 @@ class StoreRequest extends FormRequest
         return [
             // basic fields for group:
             'group_title'                          => 'between:1,1000|nullable',
-            'error_if_duplicate_hash'              => [new IsBoolean],
-            'apply_rules'                          => [new IsBoolean],
+            'error_if_duplicate_hash'              => [new IsBoolean()],
+            'apply_rules'                          => [new IsBoolean()],
 
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
-            'transactions.*.date'                  => ['required', new IsDateOrTime],
+            'transactions.*.date'                  => ['required', new IsDateOrTime()],
             'transactions.*.order'                 => 'numeric|min:0',
 
             // currency info
@@ -195,31 +200,31 @@ class StoreRequest extends FormRequest
             'transactions.*.description'           => 'nullable|between:1,1000',
 
             // source of transaction
-            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser()],
             'transactions.*.source_name'           => 'between:1,255|nullable',
             'transactions.*.source_iban'           => 'between:1,255|nullable|iban',
             'transactions.*.source_number'         => 'between:1,255|nullable',
             'transactions.*.source_bic'            => 'between:1,255|nullable|bic',
 
             // destination of transaction
-            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser()],
             'transactions.*.destination_name'      => 'between:1,255|nullable',
             'transactions.*.destination_iban'      => 'between:1,255|nullable|iban',
             'transactions.*.destination_number'    => 'between:1,255|nullable',
             'transactions.*.destination_bic'       => 'between:1,255|nullable|bic',
 
             // budget, category, bill and piggy
-            'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
-            'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser, 'nullable'],
+            'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser()],
+            'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser(), 'nullable'],
             'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.bill_id'               => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
-            'transactions.*.bill_name'             => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.piggy_bank_id'         => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
-            'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser],
+            'transactions.*.bill_id'               => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser()],
+            'transactions.*.bill_name'             => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.piggy_bank_id'         => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser()],
+            'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser()],
 
             // other interesting fields
-            'transactions.*.reconciled'            => [new IsBoolean],
+            'transactions.*.reconciled'            => [new IsBoolean()],
             'transactions.*.notes'                 => 'min:1,max:50000|nullable',
             'transactions.*.tags'                  => 'between:0,255',
 
@@ -261,7 +266,6 @@ class StoreRequest extends FormRequest
     {
         $validator->after(
             function (Validator $validator) {
-
                 // must be valid array.
                 $this->validateTransactionArray($validator);
 
@@ -285,7 +289,6 @@ class StoreRequest extends FormRequest
 
                 // the group must have a description if > 1 journal.
                 $this->validateGroupDescription($validator);
-
             }
         );
     }

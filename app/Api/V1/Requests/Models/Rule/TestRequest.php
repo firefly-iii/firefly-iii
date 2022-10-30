@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TestRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * @return array
@@ -56,7 +57,6 @@ class TestRequest extends FormRequest
     private function getPage(): int
     {
         return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
-
     }
 
     /**
@@ -89,5 +89,4 @@ class TestRequest extends FormRequest
             'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];
     }
-
 }

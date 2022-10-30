@@ -34,7 +34,6 @@ use Illuminate\Http\JsonResponse;
  */
 class PeriodController extends Controller
 {
-
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/insight/insightExpenseTotal
@@ -82,5 +81,4 @@ class PeriodController extends Controller
 
         return response()->json(array_values($response));
     }
-
 }

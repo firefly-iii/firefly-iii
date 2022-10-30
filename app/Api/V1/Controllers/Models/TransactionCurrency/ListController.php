@@ -63,7 +63,8 @@ use League\Fractal\Resource\Collection as FractalCollection;
  */
 class ListController extends Controller
 {
-    use AccountFilter, TransactionFilter;
+    use AccountFilter;
+    use TransactionFilter;
 
     private CurrencyRepositoryInterface $repository;
     private UserRepositoryInterface     $userRepository;
@@ -310,7 +311,6 @@ class ListController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -363,7 +363,6 @@ class ListController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**

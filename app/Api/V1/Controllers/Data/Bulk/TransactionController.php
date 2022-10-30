@@ -96,5 +96,4 @@ class TransactionController extends Controller
     {
         return array_key_exists('account_id', $params['where']) && array_key_exists('account_id', $params['update']);
     }
-
 }

@@ -35,7 +35,8 @@ use Illuminate\Validation\Validator;
  */
 class MoveTransactionsRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array
@@ -84,7 +85,8 @@ class MoveTransactionsRequest extends FormRequest
      * @param Validator $validator
      * @return void
      */
-    private function validateMove(Validator $validator): void {
+    private function validateMove(Validator $validator): void
+    {
         $data = $validator->getData();
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());

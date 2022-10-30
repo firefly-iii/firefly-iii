@@ -80,6 +80,5 @@ class UpdateController extends Controller
         $resource = new Item($recurrence, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

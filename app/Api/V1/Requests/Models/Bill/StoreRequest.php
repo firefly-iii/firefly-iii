@@ -38,7 +38,8 @@ use Log;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -87,7 +88,7 @@ class StoreRequest extends FormRequest
             'extension_date' => 'date|after:date',
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly|required',
             'skip'           => 'between:0,31',
-            'active'         => [new IsBoolean],
+            'active'         => [new IsBoolean()],
             'notes'          => 'between:1,65536',
         ];
     }

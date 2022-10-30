@@ -42,7 +42,8 @@ use League\Fractal\Resource\Item;
  */
 class UpdateController extends Controller
 {
-    use AccountFilter, TransactionFilter;
+    use AccountFilter;
+    use TransactionFilter;
 
     private CurrencyRepositoryInterface $repository;
     private UserRepositoryInterface     $userRepository;
@@ -98,7 +99,6 @@ class UpdateController extends Controller
         $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -129,7 +129,6 @@ class UpdateController extends Controller
         $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -162,7 +161,6 @@ class UpdateController extends Controller
         $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -200,6 +198,5 @@ class UpdateController extends Controller
         $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

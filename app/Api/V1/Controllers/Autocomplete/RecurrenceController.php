@@ -77,5 +77,4 @@ class RecurrenceController extends Controller
 
         return response()->json($response);
     }
-
 }

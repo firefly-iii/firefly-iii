@@ -77,5 +77,4 @@ class SumController extends Controller
 
         return response()->json($converted);
     }
-
 }

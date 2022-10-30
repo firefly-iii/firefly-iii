@@ -49,7 +49,6 @@ class ApiDemoUser
         }
         if ($user->hasRole('demo')) {
             return response('', 403);
-
         }
 
         return $next($request);

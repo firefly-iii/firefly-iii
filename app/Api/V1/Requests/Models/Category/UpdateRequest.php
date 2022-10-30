@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.

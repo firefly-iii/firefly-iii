@@ -73,7 +73,7 @@ class Controller extends BaseController
     final protected function jsonApiObject(string $key, Model $object, AbstractTransformer $transformer): array
     {
         // create some objects:
-        $manager = new Manager;
+        $manager = new Manager();
         $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
@@ -91,7 +91,7 @@ class Controller extends BaseController
      */
     final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
     {
-        $manager = new Manager;
+        $manager = new Manager();
         $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
@@ -115,7 +115,7 @@ class Controller extends BaseController
      */
     private function getParameters(): ParameterBag
     {
-        $bag      = new ParameterBag;
+        $bag      = new ParameterBag();
         try {
             $page = (int) request()->get('page');
         } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
@@ -161,5 +161,4 @@ class Controller extends BaseController
 
         return $bag;
     }
-
 }

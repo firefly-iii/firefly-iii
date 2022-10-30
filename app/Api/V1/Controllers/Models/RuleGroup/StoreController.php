@@ -37,7 +37,6 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-
     private AccountRepositoryInterface   $accountRepository;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
 
@@ -87,6 +86,5 @@ class StoreController extends Controller
         $resource = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

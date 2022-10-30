@@ -103,7 +103,6 @@ class ShowController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -128,6 +127,5 @@ class ShowController extends Controller
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

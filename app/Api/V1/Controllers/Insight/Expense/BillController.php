@@ -170,5 +170,4 @@ class BillController extends Controller
 
         return response()->json(array_values($response));
     }
-
 }

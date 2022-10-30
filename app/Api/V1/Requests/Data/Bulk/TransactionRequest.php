@@ -39,7 +39,9 @@ use Log;
  */
 class TransactionRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes, ValidatesBulkTransactionQuery;
+    use ChecksLogin;
+    use ConvertsDataTypes;
+    use ValidatesBulkTransactionQuery;
 
     /**
      * @return array

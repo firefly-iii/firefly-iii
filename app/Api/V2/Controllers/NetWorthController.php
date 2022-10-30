@@ -68,5 +68,4 @@ class NetWorthController extends Controller
 
         return response()->api($converted);
     }
-
 }

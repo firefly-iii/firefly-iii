@@ -45,7 +45,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 abstract class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     protected const CONTENT_TYPE = 'application/vnd.api+json';
     protected array        $allowedSort;
@@ -69,7 +71,6 @@ abstract class Controller extends BaseController
                 return $next($request);
             }
         );
-
     }
 
     /**
@@ -81,7 +82,7 @@ abstract class Controller extends BaseController
      */
     private function getParameters(): ParameterBag
     {
-        $bag  = new ParameterBag;
+        $bag  = new ParameterBag();
         $page = (int)request()->get('page');
 
         if ($page < 1) {
@@ -180,7 +181,7 @@ abstract class Controller extends BaseController
     final protected function getManager(): Manager
     {
         // create some objects:
-        $manager = new Manager;
+        $manager = new Manager();
         $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 

@@ -113,7 +113,9 @@ class PiggyBankController extends Controller
                 'id'                      => (string) $piggy->id,
                 'name'                    => $piggy->name,
                 'name_with_balance'       => sprintf(
-                    '%s (%s / %s)', $piggy->name, app('amount')->formatAnything($currency, $currentAmount, false),
+                    '%s (%s / %s)',
+                    $piggy->name,
+                    app('amount')->formatAnything($currency, $currentAmount, false),
                     app('amount')->formatAnything($currency, $piggy->targetamount, false),
                 ),
                 'currency_id'             => $currency->id,
@@ -126,5 +128,4 @@ class PiggyBankController extends Controller
 
         return response()->json($response);
     }
-
 }

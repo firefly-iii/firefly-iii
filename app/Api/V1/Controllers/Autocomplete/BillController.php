@@ -78,5 +78,4 @@ class BillController extends Controller
 
         return response()->json($filtered->toArray());
     }
-
 }

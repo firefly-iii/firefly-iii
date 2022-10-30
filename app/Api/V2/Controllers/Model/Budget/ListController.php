@@ -62,5 +62,4 @@ class ListController extends Controller
             ->api($this->jsonApiList('budgets', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

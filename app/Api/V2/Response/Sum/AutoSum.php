@@ -65,7 +65,5 @@ class AutoSum
 
         var_dump(array_values($return));
         exit;
-
     }
-
 }

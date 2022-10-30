@@ -29,6 +29,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
+
 use function is_array;
 
 /**
@@ -36,7 +37,9 @@ use function is_array;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, GetRuleConfiguration, ChecksLogin;
+    use ConvertsDataTypes;
+    use GetRuleConfiguration;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -128,15 +131,15 @@ class StoreRequest extends FormRequest
             'trigger'                    => 'required|in:store-journal,update-journal',
             'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
             'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue',
-            'triggers.*.stop_processing' => [new IsBoolean],
-            'triggers.*.active'          => [new IsBoolean],
+            'triggers.*.stop_processing' => [new IsBoolean()],
+            'triggers.*.active'          => [new IsBoolean()],
             'actions.*.type'             => 'required|in:' . implode(',', $validActions),
             'actions.*.value'            => 'required_if:actions.*.type,' . $contextActions . '|ruleActionValue',
-            'actions.*.stop_processing'  => [new IsBoolean],
-            'actions.*.active'           => [new IsBoolean],
-            'strict'                     => [new IsBoolean],
-            'stop_processing'            => [new IsBoolean],
-            'active'                     => [new IsBoolean],
+            'actions.*.stop_processing'  => [new IsBoolean()],
+            'actions.*.active'           => [new IsBoolean()],
+            'strict'                     => [new IsBoolean()],
+            'stop_processing'            => [new IsBoolean()],
+            'active'                     => [new IsBoolean()],
         ];
     }
 

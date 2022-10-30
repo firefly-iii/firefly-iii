@@ -36,7 +36,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class SingleDateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -45,7 +46,7 @@ class SingleDateRequest extends FormRequest
      */
     public function getDate(): Carbon
     {
-         return $this->getCarbonDate('date');
+        return $this->getCarbonDate('date');
     }
 
     /**

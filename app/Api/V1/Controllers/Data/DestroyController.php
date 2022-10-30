@@ -293,5 +293,4 @@ class DestroyController extends Controller
             $service->destroy($journal);
         }
     }
-
 }

@@ -116,7 +116,6 @@ class AttemptController extends Controller
         }
         if ($attempt->webhook_message_id !== $message->id) {
             throw new FireflyException('Webhook message and webhook attempt are no match');
-
         }
 
         $manager = $this->getManager();

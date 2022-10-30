@@ -201,7 +201,5 @@ class UserController extends Controller
         $resource = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
-
 }

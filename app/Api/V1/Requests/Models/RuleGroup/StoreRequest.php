@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -70,7 +71,7 @@ class StoreRequest extends FormRequest
         return [
             'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title',
             'description' => 'between:1,5000|nullable',
-            'active'      => [new IsBoolean],
+            'active'      => [new IsBoolean()],
         ];
     }
 }

@@ -53,7 +53,7 @@ class ListController extends Controller
     public function index(DateRequest $request, Budget $budget): JsonResponse
     {
         $dates      = $request->getAll();
-        $collection = $this->repository->getBudgetLimits($budget,$dates['start'], $dates['end']);
+        $collection = $this->repository->getBudgetLimits($budget, $dates['start'], $dates['end']);
         $total      = $collection->count();
         $collection->slice($this->pageSize * $this->parameters->get('page'), $this->pageSize);
 
@@ -63,5 +63,4 @@ class ListController extends Controller
             ->api($this->jsonApiList('budget_limits', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

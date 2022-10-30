@@ -35,8 +35,8 @@ use Illuminate\Http\JsonResponse;
  */
 class SumController extends Controller
 {
-    private BillRepositoryInterface $repository;
     use ConvertsExchangeRates;
+    private BillRepositoryInterface $repository;
 
     /**
      *

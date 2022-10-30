@@ -34,7 +34,6 @@ use Illuminate\Http\JsonResponse;
  */
 class PreferencesController extends Controller
 {
-
     /**
      * @param Preference $preference
      * @return JsonResponse
@@ -42,8 +41,7 @@ class PreferencesController extends Controller
     public function get(Preference $preference): JsonResponse
     {
         return response()
-            ->json($this->jsonApiObject('preferences', $preference, new PreferenceTransformer))
+            ->json($this->jsonApiObject('preferences', $preference, new PreferenceTransformer()))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

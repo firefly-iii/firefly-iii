@@ -80,7 +80,7 @@ class ListController extends Controller
     {
         $manager    = $this->getManager();
         $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $collection = new Collection;
+        $collection = new Collection();
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getAttachments($transactionJournal)->merge($collection);
         }
@@ -115,7 +115,7 @@ class ListController extends Controller
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager    = $this->getManager();
-        $collection = new Collection;
+        $collection = new Collection();
         $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal)->merge($collection);

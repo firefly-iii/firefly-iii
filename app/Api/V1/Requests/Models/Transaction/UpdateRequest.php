@@ -41,7 +41,10 @@ use Log;
  */
 class UpdateRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, ConvertsDataTypes, ChecksLogin;
+    use TransactionValidation;
+    use GroupValidation;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     private array $arrayFields;
     private array $booleanFields;
@@ -290,15 +293,15 @@ class UpdateRequest extends FormRequest
         return [
             // basic fields for group:
             'group_title'                           => 'between:1,1000',
-            'apply_rules'                           => [new IsBoolean],
+            'apply_rules'                           => [new IsBoolean()],
 
             // transaction rules (in array for splits):
             'transactions.*.type'                   => 'in:withdrawal,deposit,transfer,opening-balance,reconciliation',
-            'transactions.*.date'                   => [new IsDateOrTime],
+            'transactions.*.date'                   => [new IsDateOrTime()],
             'transactions.*.order'                  => 'numeric|min:0',
 
             // group id:
-            'transactions.*.transaction_journal_id' => ['nullable', 'numeric', new BelongsUser],
+            'transactions.*.transaction_journal_id' => ['nullable', 'numeric', new BelongsUser()],
 
 
             // currency info
@@ -315,23 +318,23 @@ class UpdateRequest extends FormRequest
             'transactions.*.description'            => 'nullable|between:1,1000',
 
             // source of transaction
-            'transactions.*.source_id'              => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.source_id'              => ['numeric', 'nullable', new BelongsUser()],
             'transactions.*.source_name'            => 'between:1,255|nullable',
 
             // destination of transaction
-            'transactions.*.destination_id'         => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.destination_id'         => ['numeric', 'nullable', new BelongsUser()],
             'transactions.*.destination_name'       => 'between:1,255|nullable',
 
             // budget, category, bill and piggy
-            'transactions.*.budget_id'              => ['mustExist:budgets,id', new BelongsUser],
-            'transactions.*.budget_name'            => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.category_id'            => ['mustExist:categories,id', new BelongsUser],
+            'transactions.*.budget_id'              => ['mustExist:budgets,id', new BelongsUser()],
+            'transactions.*.budget_name'            => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.category_id'            => ['mustExist:categories,id', new BelongsUser()],
             'transactions.*.category_name'          => 'between:1,255|nullable',
-            'transactions.*.bill_id'                => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
-            'transactions.*.bill_name'              => ['between:1,255', 'nullable', new BelongsUser],
+            'transactions.*.bill_id'                => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser()],
+            'transactions.*.bill_name'              => ['between:1,255', 'nullable', new BelongsUser()],
 
             // other interesting fields
-            'transactions.*.reconciled'             => [new IsBoolean],
+            'transactions.*.reconciled'             => [new IsBoolean()],
             'transactions.*.notes'                  => 'min:1,max:50000|nullable',
             'transactions.*.tags'                   => 'between:0,255',
 
@@ -385,12 +388,11 @@ class UpdateRequest extends FormRequest
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
 
                 // a catch when users submit splits with no source or destination info at all.
-                $this->preventNoAccountInfo($validator,);
+                $this->preventNoAccountInfo($validator, );
 
                 // validate that the currency fits the source and/or destination account.
                 // validate all account info
                 $this->validateAccountInformationUpdate($validator, $transactionGroup);
-
             }
         );
     }

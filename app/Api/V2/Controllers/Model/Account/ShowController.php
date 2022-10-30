@@ -35,14 +35,13 @@ use Illuminate\Http\Request;
  */
 class ShowController extends Controller
 {
-
     /**
      * @param Account $account
      * @return JsonResponse
      */
     public function show(Request $request, Account $account): JsonResponse
     {
-        $transformer = new AccountTransformer;
+        $transformer = new AccountTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
