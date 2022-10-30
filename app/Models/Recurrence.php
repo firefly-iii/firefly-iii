@@ -153,7 +153,7 @@ class Recurrence extends Model
 
     /**
      * @codeCoverageIgnore
-     * Get all of the notes.
+     * Get all the notes.
      */
     public function notes(): MorphMany
     {

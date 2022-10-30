@@ -101,7 +101,7 @@ class CorrectOpeningBalanceCurrencies extends Command
         $account = $this->getAccount($journal);
         if (null === $account) {
             $message = sprintf('Transaction journal #%d has no valid account. Cant fix this line.', $journal->id);
-            Log::warning($message);
+            app('log')->warning($message);
             $this->warn($message);
 
             return 0;

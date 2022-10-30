@@ -158,7 +158,7 @@ class AccountFactory
             }
         }
         if (null === $result) {
-            Log::warning(sprintf('Found NO account type based on %d and "%s"', $accountTypeId, $accountTypeName));
+            app('log')->warning(sprintf('Found NO account type based on %d and "%s"', $accountTypeId, $accountTypeName));
             throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $accountTypeId, $accountTypeName));
         }
         Log::debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountTypeName, $result->type));

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
+use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -80,6 +81,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var Budget $budget */
         $budget = $this->route()->parameter('budget');
 
         return [

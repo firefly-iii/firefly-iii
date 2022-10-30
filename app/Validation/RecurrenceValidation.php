@@ -66,7 +66,7 @@ trait RecurrenceValidation
                     Log::debug(sprintf('Determined type to be %s.', $transactionType));
                 }
                 if (null === $first) {
-                    Log::warning('Just going to assume type is a withdrawal.');
+                    app('log')->warning('Just going to assume type is a withdrawal.');
                     $transactionType = 'withdrawal';
                 }
             }

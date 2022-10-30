@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Requests\System;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -75,6 +76,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var User $user */
         $user = $this->route()->parameter('user');
 
         return [

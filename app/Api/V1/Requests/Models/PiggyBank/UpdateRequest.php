@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
 use FireflyIII\Rules\LessThanPiggyTarget;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -69,6 +70,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var PiggyBank $piggyBank */
         $piggyBank = $this->route()->parameter('piggyBank');
 
         return [

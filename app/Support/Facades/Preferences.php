@@ -47,7 +47,7 @@ class Preferences extends Facade
 {
     public function __construct()
     {
-        Log::warning('Hi there');
+        app('log')->warning('Hi there');
     }
 
     /**

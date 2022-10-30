@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Category;
 
+use FireflyIII\Models\Category;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -59,6 +60,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var Category $category */
         $category = $this->route()->parameter('category');
 
         return [

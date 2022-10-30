@@ -70,7 +70,7 @@ class DebugController extends Controller
         Log::debug('This is a test message at the DEBUG level.');
         Log::info('This is a test message at the INFO level.');
         Log::notice('This is a test message at the NOTICE level.');
-        Log::warning('This is a test message at the WARNING level.');
+        app('log')->warning('This is a test message at the WARNING level.');
         Log::error('This is a test message at the ERROR level.');
         Log::critical('This is a test message at the CRITICAL level.');
         Log::alert('This is a test message at the ALERT level.');

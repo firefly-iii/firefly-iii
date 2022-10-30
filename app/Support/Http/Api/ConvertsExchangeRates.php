@@ -222,7 +222,7 @@ trait ConvertsExchangeRates
         Log::debug(sprintf('Find rate for %s to Euro', $currency->code));
         $euro = TransactionCurrency::whereCode('EUR')->first();
         if (null === $euro) {
-            Log::warning('Cannot do indirect conversion without EUR.');
+            app('log')->warning('Cannot do indirect conversion without EUR.');
             return '0';
         }
 

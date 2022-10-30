@@ -609,7 +609,7 @@ class FireflyValidator extends Validator
         }
         $type = $this->data['objectType'] ?? 'unknown';
         if ('expense' !== $type && 'revenue' !== $type) {
-            Log::warning(sprintf('Account number "%s" is not unique and account type "%s" cannot share its account number.', $value, $type));
+            app('log')->warning(sprintf('Account number "%s" is not unique and account type "%s" cannot share its account number.', $value, $type));
             return false;
         }
         Log::debug(sprintf('Account number "%s" is not unique but account type "%s" may share its account number.', $value, $type));

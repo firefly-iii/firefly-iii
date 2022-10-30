@@ -117,7 +117,7 @@ class LoginController extends Controller
 
             return $this->sendLoginResponse($request);
         }
-        Log::warning('Login attempt failed.');
+        app('log')->warning('Login attempt failed.');
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         // If the login attempt was unsuccessful we will increment the number of attempts

@@ -61,7 +61,7 @@ trait ReconciliationValidation
         $search     = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string) trans('validation.reconciliation_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-            Log::warning('Not a valid source. Cant find it.', $validTypes);
+            app('log')->warning('Not a valid source. Cant find it.', $validTypes);
 
             return false;
         }
@@ -98,7 +98,7 @@ trait ReconciliationValidation
         $search     = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string) trans('validation.reconciliation_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-            Log::warning('Not a valid source. Cant find it.', $validTypes);
+            app('log')->warning('Not a valid source. Cant find it.', $validTypes);
 
             return false;
         }

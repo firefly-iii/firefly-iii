@@ -55,7 +55,7 @@ class BudgetList implements BinderInterface
 
 
             if (empty($list)) {
-                Log::warning('Budget list count is zero, return 404.');
+                app('log')->warning('Budget list count is zero, return 404.');
                 throw new NotFoundHttpException();
             }
 
@@ -75,7 +75,7 @@ class BudgetList implements BinderInterface
                 return $collection;
             }
         }
-        Log::warning('BudgetList fallback to 404.');
+        app('log')->warning('BudgetList fallback to 404.');
         throw new NotFoundHttpException();
     }
 }

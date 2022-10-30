@@ -103,7 +103,7 @@ class Installer
             }
             if ($this->noTablesExist($message)) {
                 // redirect to UpdateController
-                Log::warning('There are no Firefly III tables present. Redirect to migrate routine.');
+                app('log')->warning('There are no Firefly III tables present. Redirect to migrate routine.');
 
                 return true;
             }
@@ -150,7 +150,7 @@ class Installer
         $configVersion = (int) config('firefly.db_version');
         $dbVersion     = (int) app('fireflyconfig')->getFresh('db_version', 1)->data;
         if ($configVersion > $dbVersion) {
-            Log::warning(
+            app('log')->warning(
                 sprintf(
                     'The current configured version (%d) is older than the required version (%d). Redirect to migrate routine.',
                     $dbVersion,
@@ -177,7 +177,7 @@ class Installer
         $configVersion = (string) config('firefly.version');
         $dbVersion     = (string) app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
         if (1 === version_compare($configVersion, $dbVersion)) {
-            Log::warning(
+            app('log')->warning(
                 sprintf(
                     'The current configured Firefly III version (%s) is older than the required version (%s). Redirect to migrate routine.',
                     $dbVersion,

@@ -134,7 +134,7 @@ class UpdatedGroupEventHandler
                        ->first();
 
         if (null === $first) {
-            Log::warning(sprintf('Group #%d has no transaction journals.', $group->id));
+            app('log')->warning(sprintf('Group #%d has no transaction journals.', $group->id));
             return;
         }
 

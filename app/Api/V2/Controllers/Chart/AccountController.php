@@ -75,7 +75,7 @@ class AccountController extends Controller
         $accounts   = $this->repository->getAccountsById($frontPage->data);
         $chartData  = [];
 
-        if (empty($frontPage->data)) {
+        if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }

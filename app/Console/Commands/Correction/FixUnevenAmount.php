@@ -68,7 +68,7 @@ class FixUnevenAmount extends Command
             if (0 !== bccomp((string)$entry->the_sum, '0')) {
                 $message = sprintf('Sum of journal #%d is %s instead of zero.', $entry->transaction_journal_id, $entry->the_sum);
                 $this->warn($message);
-                Log::warning($message);
+                app('log')->warning($message);
                 $this->fixJournal((int)$entry->transaction_journal_id);
                 $count++;
             }

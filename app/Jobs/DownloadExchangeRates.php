@@ -114,13 +114,13 @@ class DownloadExchangeRates implements ShouldQueue
         $res        = $client->get($url);
         $statusCode = $res->getStatusCode();
         if (200 !== $statusCode) {
-            Log::warning(sprintf('Trying to grab "%s" resulted in status code %d.', $url, $statusCode));
+            app('log')->warning(sprintf('Trying to grab "%s" resulted in status code %d.', $url, $statusCode));
             return;
         }
         $body = (string) $res->getBody();
         $json = json_decode($body, true);
         if (false === $json || null === $json) {
-            Log::warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));
+            app('log')->warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));
             return;
         }
         $date = Carbon::createFromFormat('Y-m-d', $json['date']);

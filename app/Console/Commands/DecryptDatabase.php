@@ -211,9 +211,9 @@ class DecryptDatabase extends Command
         } catch (JsonException $e) {
             $message = sprintf('Could not JSON decode preference row #%d: %s. This does not have to be a problem.', $id, $e->getMessage());
             $this->error($message);
-            Log::warning($message);
-            Log::warning($value);
-            Log::warning($e->getTraceAsString());
+            app('log')->warning($message);
+            app('log')->warning($value);
+            app('log')->warning($e->getTraceAsString());
 
             return;
         }

@@ -471,10 +471,10 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         try {
             return $factory->create($data);
         } catch (DuplicateTransactionException $e) {
-            Log::warning('Group repository caught group factory with a duplicate exception!');
+            app('log')->warning('Group repository caught group factory with a duplicate exception!');
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         } catch (FireflyException $e) {
-            Log::warning('Group repository caught group factory with an exception!');
+            app('log')->warning('Group repository caught group factory with an exception!');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);

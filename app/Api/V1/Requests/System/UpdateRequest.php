@@ -47,15 +47,12 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         $name = $this->route()->parameter('dynamicConfigKey');
-        switch ($name) {
-            default:
-                break;
-            case 'configuration.is_demo_site':
-            case 'configuration.single_user_mode':
-                return ['value' => $this->boolean('value')];
-            case 'configuration.permission_update_check':
-            case 'configuration.last_update_check':
-                return ['value' => $this->convertInteger('value')];
+
+        if ($name === 'configuration.is_demo_site' || $name === 'configuration.single_user_mode') {
+            return ['value' => $this->boolean('value')];
+        }
+        if ($name === 'configuration.permission_update_check' || $name === 'configuration.last_update_check') {
+            return ['value' => $this->convertInteger('value')];
         }
 
         return ['value' => $this->convertString('value')];
@@ -69,16 +66,15 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         $name = $this->route()->parameter('configName');
-        switch ($name) {
-            default:
-                break;
-            case 'configuration.is_demo_site':
-            case 'configuration.single_user_mode':
-                return ['value' => ['required', new IsBoolean()]];
-            case 'configuration.permission_update_check':
-                return ['value' => 'required|numeric|between:-1,1'];
-            case 'configuration.last_update_check':
-                return ['value' => 'required|numeric|min:464272080'];
+
+        if ($name === 'configuration.is_demo_site' || $name === 'configuration.single_user_mode') {
+            return ['value' => ['required', new IsBoolean()]];
+        }
+        if ($name === 'configuration.permission_update_check') {
+            return ['value' => 'required|numeric|between:-1,1'];
+        }
+        if ($name === 'configuration.last_update_check') {
+            return ['value' => 'required|numeric|min:464272080'];
         }
 
         return ['value' => 'required'];

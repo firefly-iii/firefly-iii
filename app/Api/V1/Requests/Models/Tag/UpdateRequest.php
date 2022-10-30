@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\Tag;
 
 use FireflyIII\Models\Location;
+use FireflyIII\Models\Tag;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -66,6 +67,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var Tag $tag */
         $tag = $this->route()->parameter('tagOrId');
         // TODO check if uniqueObjectForUser is obsolete
         $rules = [

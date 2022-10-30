@@ -103,7 +103,7 @@ trait TransferValidation
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
             $this->sourceError = (string) trans('validation.transfer_source_need_data');
-            Log::warning('Not a valid source, need more data.');
+            app('log')->warning('Not a valid source, need more data.');
 
             return false;
         }
@@ -112,7 +112,7 @@ trait TransferValidation
         $search = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string) trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-            Log::warning('Not a valid source, cant find it.', $validTypes);
+            app('log')->warning('Not a valid source, cant find it.', $validTypes);
 
             return false;
         }

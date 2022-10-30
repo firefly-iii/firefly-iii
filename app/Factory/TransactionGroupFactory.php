@@ -65,7 +65,7 @@ class TransactionGroupFactory
         try {
             $collection = $this->journalFactory->create($data);
         } catch (DuplicateTransactionException $e) {
-            Log::warning('GroupFactory::create() caught journalFactory::create() with a duplicate!');
+            app('log')->warning('GroupFactory::create() caught journalFactory::create() with a duplicate!');
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         }
         $title = $data['group_title'] ?? null;

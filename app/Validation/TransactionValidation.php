@@ -230,7 +230,7 @@ trait TransactionValidation
 
             // do something with result:
             if (false === $validSource) {
-                Log::warning('Looks like the source account is not valid so complain to the user about it.');
+                app('log')->warning('Looks like the source account is not valid so complain to the user about it.');
                 $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
                 $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
 
@@ -258,7 +258,7 @@ trait TransactionValidation
             $validDestination = $accountValidator->validateDestination($array);
             // do something with result:
             if (false === $validDestination) {
-                Log::warning('Looks like the destination account is not valid so complain to the user about it.');
+                app('log')->warning('Looks like the destination account is not valid so complain to the user about it.');
                 $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
                 $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
             }
@@ -395,7 +395,7 @@ trait TransactionValidation
         }
         $unique = array_unique($types);
         if (count($unique) > 1) {
-            Log::warning('Add error for mismatch transaction types.');
+            app('log')->warning('Add error for mismatch transaction types.');
             $validator->errors()->add('transactions.0.type', (string) trans('validation.transaction_types_equal'));
 
             return;
@@ -498,7 +498,7 @@ trait TransactionValidation
                 $validator->errors()->add('transactions.0.source_id', (string) trans('validation.all_accounts_equal'));
                 $validator->errors()->add('transactions.0.destination_id', (string) trans('validation.all_accounts_equal'));
             }
-            Log::warning('Add error about equal accounts.');
+            app('log')->warning('Add error about equal accounts.');
 
             return;
         }

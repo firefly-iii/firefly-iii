@@ -377,7 +377,7 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         if ($journalCount > 0 && true === $this->force) {
-            Log::warning(sprintf('Already created %d groups for date %s but FORCED to continue.', $journalCount, $date->format('Y-m-d')));
+            app('log')->warning(sprintf('Already created %d groups for date %s but FORCED to continue.', $journalCount, $date->format('Y-m-d')));
         }
 
         // create transaction array and send to factory.

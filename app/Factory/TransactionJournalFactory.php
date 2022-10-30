@@ -126,13 +126,13 @@ class TransactionJournalFactory
                 }
             }
         } catch (DuplicateTransactionException $e) {
-            Log::warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
+            app('log')->warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         } catch (FireflyException $e) {
-            Log::warning('TransactionJournalFactory::create() caught an exception.');
+            app('log')->warning('TransactionJournalFactory::create() caught an exception.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
@@ -267,7 +267,7 @@ class TransactionJournalFactory
             Log::error('Exception creating positive transaction.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            Log::warning('Delete negative transaction.');
+            app('log')->warning('Delete negative transaction.');
             $this->forceTrDelete($negative);
             $this->forceDeleteOnError(new Collection([$journal]));
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -345,7 +345,7 @@ class TransactionJournalFactory
                                             ->first();
         }
         if (null !== $result) {
-            Log::warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
+            app('log')->warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
             $journal = $result->transactionJournal()->withTrashed()->first();
             $group   = $journal?->transactionGroup()->withTrashed()->first();
             $groupId = $group?->id;

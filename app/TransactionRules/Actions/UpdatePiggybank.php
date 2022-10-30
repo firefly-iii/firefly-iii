@@ -146,14 +146,14 @@ class UpdatePiggybank implements ActionInterface
 
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {
-            Log::warning('Amount left is zero, stop.');
+            app('log')->warning('Amount left is zero, stop.');
 
             return;
         }
 
         // make sure we can remove amount:
         if (false === $repository->canRemoveAmount($piggyBank, $amount)) {
-            Log::warning(sprintf('Cannot remove %s from piggy bank.', $amount));
+            app('log')->warning(sprintf('Cannot remove %s from piggy bank.', $amount));
 
             return;
         }
@@ -185,14 +185,14 @@ class UpdatePiggybank implements ActionInterface
 
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {
-            Log::warning('Amount left is zero, stop.');
+            app('log')->warning('Amount left is zero, stop.');
 
             return;
         }
 
         // make sure we can add amount:
         if (false === $repository->canAddAmount($piggyBank, $amount)) {
-            Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
+            app('log')->warning(sprintf('Cannot add %s to piggy bank.', $amount));
 
             return;
         }

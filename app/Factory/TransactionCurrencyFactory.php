@@ -47,7 +47,7 @@ class TransactionCurrencyFactory
         if (1 === $count) {
             $old = TransactionCurrency::withTrashed()->whereCode($data['code'])->first();
             $old->forceDelete();
-            Log::warning(sprintf('Force deleted old currency with ID #%d and code "%s".', $old->id, $data['code']));
+            app('log')->warning(sprintf('Force deleted old currency with ID #%d and code "%s".', $old->id, $data['code']));
         }
 
         try {
@@ -93,7 +93,7 @@ class TransactionCurrencyFactory
             if (null !== $currency) {
                 return $currency;
             }
-            Log::warning(sprintf('Currency ID is %d but found nothing!', $currencyId));
+            app('log')->warning(sprintf('Currency ID is %d but found nothing!', $currencyId));
         }
         // then by code:
         if ('' !== $currencyCode) {
@@ -101,9 +101,9 @@ class TransactionCurrencyFactory
             if (null !== $currency) {
                 return $currency;
             }
-            Log::warning(sprintf('Currency code is %d but found nothing!', $currencyCode));
+            app('log')->warning(sprintf('Currency code is %d but found nothing!', $currencyCode));
         }
-        Log::warning('Found nothing for currency.');
+        app('log')->warning('Found nothing for currency.');
 
         return null;
     }

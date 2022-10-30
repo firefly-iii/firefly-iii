@@ -142,7 +142,7 @@ class Controller extends BaseController
                     $obj = Carbon::parse($date);
                 } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
-                    Log::warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', $date, $e->getMessage()));
+                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', $date, $e->getMessage()));
                 }
             }
             $bag->set($field, $obj);
