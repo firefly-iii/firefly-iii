@@ -36,7 +36,11 @@ use Route;
  */
 abstract class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, RequestInformation, UserNavigation;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
+    use RequestInformation;
+    use UserNavigation;
 
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;

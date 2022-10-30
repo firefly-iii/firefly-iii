@@ -49,7 +49,8 @@ use JsonException;
  */
 class BudgetController extends Controller
 {
-    use DateCalculation, AugumentData;
+    use DateCalculation;
+    use AugumentData;
 
     protected GeneratorInterface            $generator;
     protected OperationsRepositoryInterface $opsRepository;
@@ -209,7 +210,7 @@ class BudgetController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
-        $cache         = new CacheProperties;
+        $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-asset');
@@ -277,7 +278,7 @@ class BudgetController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
-        $cache         = new CacheProperties;
+        $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
@@ -341,7 +342,7 @@ class BudgetController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
         $budgetLimitId = null === $budgetLimit ? 0 : $budgetLimit->id;
-        $cache         = new CacheProperties;
+        $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-expense');

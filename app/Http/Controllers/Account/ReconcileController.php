@@ -96,11 +96,9 @@ class ReconcileController extends Controller
             return $this->redirectAccountToAccount($account);
         }
         if (AccountType::ASSET !== $account->accountType->type) {
-
             session()->flash('error', (string) trans('firefly.must_be_asset_account'));
 
             return redirect(route('accounts.index', [config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type))]));
-
         }
         $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
@@ -110,11 +108,10 @@ class ReconcileController extends Controller
         // get start and end
 
         if (null === $start && null === $end) {
-
             /** @var Carbon $start */
-            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon(), $range));
             /** @var Carbon $end */
-            $end = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
+            $end = clone session('end', app('navigation')->endOfPeriod(new Carbon(), $range));
         }
         if (null === $end) {
             /** @var Carbon $end */

@@ -118,7 +118,6 @@ class StoredGroupEventHandler
         $engine->generateMessages();
 
         // trigger event to send them:
-        event(new RequestedSendWebhookMessages);
+        event(new RequestedSendWebhookMessages());
     }
-
 }

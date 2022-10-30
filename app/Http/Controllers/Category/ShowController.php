@@ -132,7 +132,7 @@ class ShowController extends Controller
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $start        = null;
         $end          = null;
-        $periods      = new Collection;
+        $periods      = new Collection();
 
         $subTitle = (string) trans('firefly.all_journals_for_category', ['name' => $category->name]);
         $first    = $this->repository->firstUseDate($category);

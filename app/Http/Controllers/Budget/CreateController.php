@@ -139,11 +139,9 @@ class CreateController extends Controller
         $redirect = redirect($this->getPreviousUrl('budgets.create.url'));
 
         if (1 === (int) $request->get('create_another')) {
-
             $request->session()->put('budgets.create.fromStore', true);
 
             $redirect = redirect(route('budgets.create'))->withInput();
-
         }
 
         return $redirect;

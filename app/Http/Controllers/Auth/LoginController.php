@@ -52,7 +52,8 @@ use Log;
  */
 class LoginController extends Controller
 {
-    use AuthenticatesUsers, ThrottlesLogins;
+    use AuthenticatesUsers;
+    use ThrottlesLogins;
 
     /**
      * Where to redirect users after login.

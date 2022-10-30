@@ -44,7 +44,8 @@ use Illuminate\View\View;
  */
 class ShowController extends Controller
 {
-    use PeriodOverview, AugumentData;
+    use PeriodOverview;
+    use AugumentData;
 
     protected JournalRepositoryInterface $journalRepos;
     private BudgetRepositoryInterface    $repository;
@@ -123,10 +124,9 @@ class ShowController extends Controller
      */
     public function noBudgetAll(Request $request)
     {
-
         $subTitle = (string) trans('firefly.all_journals_without_budget');
         $first    = $this->journalRepos->firstNull();
-        $start    = null === $first ? new Carbon : $first->date;
+        $start    = null === $first ? new Carbon() : $first->date;
         $end      = today(config('app.timezone'));
         $page     = (int) $request->get('page');
         $pageSize = (int) app('preferences')->get('listPageSize', 50)->data;

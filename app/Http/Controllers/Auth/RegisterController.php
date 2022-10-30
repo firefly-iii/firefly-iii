@@ -51,7 +51,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers, CreateStuff;
+    use RegistersUsers;
+    use CreateStuff;
 
     /**
      * Where to redirect users after registration.
@@ -74,7 +75,6 @@ class RegisterController extends Controller
         if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
             throw new FireflyException('Using external identity provider. Cannot continue.');
         }
-
     }
 
     /**
@@ -191,7 +191,7 @@ class RegisterController extends Controller
 
             return view('error', compact('message'));
         }
-        if(false === $validCode) {
+        if (false === $validCode) {
             $message = 'Invalid code.';
 
             return view('error', compact('message'));

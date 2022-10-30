@@ -38,8 +38,7 @@ class WebhookEventHandler
     public function sendWebhookMessages(): void
     {
         // kick off the job!
-        $messages = WebhookMessage
-            ::where('webhook_messages.sent', 0)
+        $messages = WebhookMessage::where('webhook_messages.sent', 0)
             //->where('webhook_messages.errored', 0)
             ->get(['webhook_messages.*'])
             ->filter(

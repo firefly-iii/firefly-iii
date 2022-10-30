@@ -855,7 +855,7 @@ trait MetaCollection
         $filter              = function (int $index, array $object) use ($list): bool {
             foreach ($object['transactions'] as $transaction) {
                 foreach ($transaction['tags'] as $tag) {
-                    if (in_array($tag['name'], $list)) {
+                    if (in_array($tag['name'], $list, true)) {
                         return false;
                     }
                 }

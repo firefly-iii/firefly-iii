@@ -43,5 +43,4 @@ class StoredAccountEventHandler
         $object->setAccount($account);
         $object->recalculate();
     }
-
 }

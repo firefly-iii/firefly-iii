@@ -166,5 +166,4 @@ class JavascriptController extends Controller
             ->view('v2.javascript.variables', $data)
             ->header('Content-Type', 'text/javascript');
     }
-
 }

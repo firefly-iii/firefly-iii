@@ -29,7 +29,6 @@ use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 
 class AuditEventHandler
 {
-
     /**
      * @param TriggeredAuditLog $event
      * @return void
@@ -47,5 +46,4 @@ class AuditEventHandler
         $repository = app(ALERepositoryInterface::class);
         $repository->store($array);
     }
-
 }

@@ -55,8 +55,7 @@ class APIEventHandler
         $user       = $repository->find((int) $event->userId);
 
         if (null !== $user) {
-            Notification::send($user, new NewAccessToken);
+            Notification::send($user, new NewAccessToken());
         }
     }
-
 }

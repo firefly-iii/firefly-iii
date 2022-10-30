@@ -81,7 +81,7 @@ class IndexController extends Controller
 
         $collection->each(
             function (Category $category) {
-                $category->lastActivity = $this->repository->lastUseDate($category, new Collection);
+                $category->lastActivity = $this->repository->lastUseDate($category, new Collection());
             }
         );
 
@@ -91,5 +91,4 @@ class IndexController extends Controller
 
         return view('categories.index', compact('categories'));
     }
-
 }

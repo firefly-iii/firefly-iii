@@ -110,7 +110,7 @@ class UpdatedGroupEventHandler
         $engine->setTrigger(WebhookTrigger::UPDATE_TRANSACTION->value);
         $engine->generateMessages();
 
-        event(new RequestedSendWebhookMessages);
+        event(new RequestedSendWebhookMessages());
     }
 
     /**
@@ -155,6 +155,5 @@ class UpdatedGroupEventHandler
             Transaction::whereIn('transaction_journal_id', $all)
                        ->where('amount', '>', 0)->update(['account_id' => $destAccount->id]);
         }
-
     }
 }

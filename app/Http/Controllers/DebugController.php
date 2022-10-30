@@ -98,7 +98,6 @@ class DebugController extends Controller
         Log::debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
-
         } catch (Exception $e) { // @phpstan-ignore-line
             // @ignoreException
         }
@@ -189,11 +188,9 @@ class DebugController extends Controller
                 if (null !== $logFile) {
                     try {
                         $logContent = file_get_contents($logFile);
-
                     } catch (Exception $e) { // @phpstan-ignore-line
                         // @ignoreException
                     }
-
                 }
             }
         }
@@ -238,7 +235,6 @@ class DebugController extends Controller
                 'defaultLanguage',
                 'defaultLocale',
                 'isDocker'
-
             )
         );
     }

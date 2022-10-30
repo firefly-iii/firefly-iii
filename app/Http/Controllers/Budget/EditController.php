@@ -149,11 +149,9 @@ class EditController extends Controller
         }
 
         if (1 === (int) $request->get('return_to_edit')) {
-
             $request->session()->put('budgets.edit.fromUpdate', true);
 
             $redirect = redirect(route('budgets.edit', [$budget->id]))->withInput(['return_to_edit' => 1]);
-
         }
 
         return $redirect;

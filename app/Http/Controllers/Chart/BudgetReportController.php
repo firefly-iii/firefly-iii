@@ -41,7 +41,8 @@ use Illuminate\Support\Collection;
  */
 class BudgetReportController extends Controller
 {
-    use AugumentData, TransactionCalculation;
+    use AugumentData;
+    use TransactionCalculation;
 
     /** @var GeneratorInterface Chart generation methods. */
     private $generator;

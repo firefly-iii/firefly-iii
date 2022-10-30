@@ -89,7 +89,6 @@ class UserEventHandler
         $url     = route('invite', [$event->invitee->invite_code]);
         try {
             Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
-
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
@@ -101,7 +100,7 @@ class UserEventHandler
      */
     public function createExchangeRates(RegisteredUser $event): void
     {
-        $seeder = new ExchangeRateSeeder;
+        $seeder = new ExchangeRateSeeder();
         $seeder->run();
     }
 
@@ -246,7 +245,6 @@ class UserEventHandler
 
         try {
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
-
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
@@ -270,7 +268,6 @@ class UserEventHandler
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
-
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
@@ -296,7 +293,7 @@ class UserEventHandler
     {
         $sendMail = FireflyConfig::get('notification_user_new_reg', true)->data;
         if ($sendMail) {
-            Notification::send($event->user, new UserRegistrationNotification);
+            Notification::send($event->user, new UserRegistrationNotification());
         }
     }
 
@@ -374,6 +371,5 @@ class UserEventHandler
         if (false === $inArray && true === $send) {
             event(new DetectedNewIPAddress($user, $ip));
         }
-
     }
 }

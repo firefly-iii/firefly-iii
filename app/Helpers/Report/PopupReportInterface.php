@@ -31,7 +31,6 @@ use FireflyIII\Models\Category;
  */
 interface PopupReportInterface
 {
-
     /**
      * Get balances for budget.
      *

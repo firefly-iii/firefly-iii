@@ -335,11 +335,9 @@ class TagController extends Controller
         }
         $redirect = redirect($this->getPreviousUrl('tags.create.url'));
         if (1 === (int) $request->get('create_another')) {
-
             session()->put('tags.create.fromStore', true);
 
             $redirect = redirect(route('tags.create'))->withInput();
-
         }
 
         return $redirect;
@@ -376,11 +374,9 @@ class TagController extends Controller
         }
         $redirect = redirect($this->getPreviousUrl('tags.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
-
             session()->put('tags.edit.fromUpdate', true);
 
             $redirect = redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);
-
         }
 
         // redirect to previous URL.

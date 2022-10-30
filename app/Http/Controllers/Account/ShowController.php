@@ -188,7 +188,7 @@ class ShowController extends Controller
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
-        $periods      = new Collection;
+        $periods      = new Collection();
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();

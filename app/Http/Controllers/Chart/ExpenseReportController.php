@@ -42,7 +42,8 @@ use JsonException;
  */
 class ExpenseReportController extends Controller
 {
-    use AugumentData, TransactionCalculation;
+    use AugumentData;
+    use TransactionCalculation;
 
     /** @var AccountRepositoryInterface The account repository */
     protected $accountRepository;
@@ -82,7 +83,7 @@ class ExpenseReportController extends Controller
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('chart.expense.report.main');
         $cache->addProperty($accounts);
         $cache->addProperty($expense);
@@ -98,7 +99,7 @@ class ExpenseReportController extends Controller
         $currentStart = clone $start;
         $combined     = $this->combineAccounts($expense);
         // make "all" set:
-        $all = new Collection;
+        $all = new Collection();
         foreach ($combined as $name => $combination) {
             $all = $all->merge($combination);
         }

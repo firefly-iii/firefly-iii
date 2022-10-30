@@ -123,7 +123,7 @@ class IndexController extends Controller
 
         // get budgeted for default currency:
         if (empty($availableBudgets)) {
-            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency,);
+            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency, );
             $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $defaultCurrency);
             $spent    = $spentArr[$defaultCurrency->id]['sum'] ?? '0';
             unset($spentArr);
@@ -137,10 +137,25 @@ class IndexController extends Controller
         $inactive = $this->repository->getInactiveBudgets();
 
         return view(
-            'budgets.index', compact(
-                               'availableBudgets', 'budgeted', 'spent', 'prevLoop', 'nextLoop', 'budgets', 'currencies', 'periodTitle',
-                               'defaultCurrency', 'activeDaysPassed', 'activeDaysLeft', 'inactive', 'budgets', 'start', 'end', 'sums'
-                           )
+            'budgets.index',
+            compact(
+                'availableBudgets',
+                'budgeted',
+                'spent',
+                'prevLoop',
+                'nextLoop',
+                'budgets',
+                'currencies',
+                'periodTitle',
+                'defaultCurrency',
+                'activeDaysPassed',
+                'activeDaysLeft',
+                'inactive',
+                'budgets',
+                'start',
+                'end',
+                'sums'
+            )
         );
     }
 
@@ -167,7 +182,7 @@ class IndexController extends Controller
             $array['spent'] = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
 
             // budgeted in period:
-            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency,);
+            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency, );
             $array['budgeted']  = $budgeted;
             $availableBudgets[] = $array;
             unset($spentArr);

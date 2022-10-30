@@ -33,7 +33,6 @@ use Illuminate\Support\Collection;
  */
 trait AccountCollection
 {
-
     /**
      * These accounts must not be included.
      *

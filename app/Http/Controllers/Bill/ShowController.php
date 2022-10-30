@@ -88,7 +88,7 @@ class ShowController extends Controller
 
             return redirect(route('bills.show', [$bill->id]));
         }
-        $set = new Collection;
+        $set = new Collection();
         if (true === $bill->active) {
             $set   = $this->repository->getRulesForBill($bill);
             $total = 0;
@@ -167,7 +167,7 @@ class ShowController extends Controller
 
         // transform any attachments as well.
         $collection  = $this->repository->getAttachments($bill);
-        $attachments = new Collection;
+        $attachments = new Collection();
 
 
         if ($collection->count() > 0) {
@@ -183,5 +183,4 @@ class ShowController extends Controller
 
         return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
-
 }

@@ -67,7 +67,7 @@ class NetWorth implements NetWorthInterface
     public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array
     {
         // start in the past, end in the future? use $date
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($date);
         $cache->addProperty('net-worth-by-currency');
         $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
@@ -184,7 +184,7 @@ class NetWorth implements NetWorthInterface
     private function getAccounts(): Collection
     {
         $accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::DEFAULT, AccountType::CREDITCARD]);
-        $filtered = new Collection;
+        $filtered = new Collection();
         /** @var Account $account */
         foreach ($accounts as $account) {
             if (1 === (int) $this->accountRepository->getMetaValue($account, 'include_net_worth')) {

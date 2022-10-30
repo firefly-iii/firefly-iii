@@ -77,7 +77,7 @@ class IndexController extends Controller
         $total      = $collection->count();
 
         $defaultCurrency = app('amount')->getDefaultCurrency();
-        $parameters      = new ParameterBag;
+        $parameters      = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
 

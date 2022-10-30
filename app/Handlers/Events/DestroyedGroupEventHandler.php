@@ -51,6 +51,6 @@ class DestroyedGroupEventHandler
         $engine->setTrigger(WebhookTrigger::DESTROY_TRANSACTION->value);
         $engine->generateMessages();
 
-        event(new RequestedSendWebhookMessages);
+        event(new RequestedSendWebhookMessages());
     }
 }

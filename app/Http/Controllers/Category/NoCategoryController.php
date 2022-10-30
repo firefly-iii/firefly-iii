@@ -125,13 +125,13 @@ class NoCategoryController extends Controller
         // default values:
         $start    = null;
         $end      = null;
-        $periods  = new Collection;
+        $periods  = new Collection();
         $page     = (int) $request->get('page');
         $pageSize = (int) app('preferences')->get('listPageSize', 50)->data;
         Log::debug('Start of noCategory()');
         $subTitle = (string) trans('firefly.all_journals_without_category');
         $first    = $this->journalRepos->firstNull();
-        $start    = null === $first ? new Carbon : $first->date;
+        $start    = null === $first ? new Carbon() : $first->date;
         $end      = today(config('app.timezone'));
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));

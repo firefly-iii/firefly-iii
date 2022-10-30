@@ -1395,6 +1395,4 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function yearIsNot(string $year): GroupCollectorInterface;
-
-
 }

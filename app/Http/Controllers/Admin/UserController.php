@@ -246,11 +246,9 @@ class UserController extends Controller
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUrl('users.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
-
             session()->put('users.edit.fromUpdate', true);
 
             $redirect = redirect(route('admin.users.edit', [$user->id]))->withInput(['return_to_edit' => 1]);
-
         }
 
         // redirect to previous URL.

@@ -46,7 +46,9 @@ use JsonException;
  */
 class CategoryController extends Controller
 {
-    use DateCalculation, AugumentData, ChartGeneration;
+    use DateCalculation;
+    use AugumentData;
+    use ChartGeneration;
 
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
@@ -77,7 +79,7 @@ class CategoryController extends Controller
     public function all(Category $category): JsonResponse
     {
         // cache results:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
         if ($cache->has()) {
@@ -125,7 +127,7 @@ class CategoryController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
@@ -154,7 +156,7 @@ class CategoryController extends Controller
      */
     public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.category.period');
@@ -202,7 +204,6 @@ class CategoryController extends Controller
             $collection = new Collection([$category]);
             $expenses   = $opsRepository->listExpenses($start, $end, null, $collection);
             $income     = $opsRepository->listIncome($start, $end, null, $collection);
-
         }
         $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
         $periods    = app('navigation')->listOfPeriods($start, $end);
@@ -269,7 +270,7 @@ class CategoryController extends Controller
      */
     public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.category.period.no-cat');
@@ -305,7 +306,7 @@ class CategoryController extends Controller
             [$end, $start] = [$start, $end];
         }
 
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($category->id);

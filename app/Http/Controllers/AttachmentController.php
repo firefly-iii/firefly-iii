@@ -40,7 +40,6 @@ use Illuminate\View\View;
  */
 class AttachmentController extends Controller
 {
-
     /** @var AttachmentRepositoryInterface Attachment repository */
     private $repository;
 
@@ -198,11 +197,9 @@ class AttachmentController extends Controller
 
         $redirect = redirect($this->getPreviousUrl('attachments.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
-
             $request->session()->put('attachments.edit.fromUpdate', true);
 
             $redirect = redirect(route('attachments.edit', [$attachment->id]))->withInput(['return_to_edit' => 1]);
-
         }
 
         // redirect to previous URL.

@@ -32,7 +32,6 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
  */
 trait AmountCollection
 {
-
     /**
      * Get transactions with a specific amount.
      *

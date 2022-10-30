@@ -210,9 +210,7 @@ class ProfileController extends Controller
     public function confirmEmailChange(UserRepositoryInterface $repository, string $token)
     {
         if (!$this->internalAuth || !$this->internalIdentity) {
-
             throw new FireflyException(trans('firefly.external_user_mgt_disabled'));
-
         }
         // find preference with this token value.
         /** @var Collection $set */
@@ -349,7 +347,8 @@ class ProfileController extends Controller
         }
 
         return view(
-            'profile.index', compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'isInternalAuth', 'isInternalIdentity')
+            'profile.index',
+            compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'isInternalAuth', 'isInternalIdentity')
         );
     }
 
@@ -633,7 +632,6 @@ class ProfileController extends Controller
         session()->flash('error', (string) trans('auth.failed'));
 
         return redirect(route('profile.index'));
-
     }
 
     /**

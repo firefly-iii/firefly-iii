@@ -100,7 +100,6 @@ trait TimeCollection
         $this->postFilters[] = $filter;
 
         return $this;
-
     }
 
     /**
@@ -430,7 +429,6 @@ trait TimeCollection
     {
         $this->query->whereMonth('transaction_journals.date', '>=', $month);
         return $this;
-
     }
 
     /**
@@ -441,7 +439,6 @@ trait TimeCollection
     {
         $this->query->whereMonth('transaction_journals.date', '<=', $month);
         return $this;
-
     }
 
     /**
@@ -718,7 +715,6 @@ trait TimeCollection
         };
         $this->postFilters[] = $filter;
         return $this;
-
     }
 
     /**
@@ -841,5 +837,4 @@ trait TimeCollection
         $this->query->whereYear('transaction_journals.date', '!=', $year);
         return $this;
     }
-
 }

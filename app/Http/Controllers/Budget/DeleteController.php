@@ -95,5 +95,4 @@ class DeleteController extends Controller
 
         return redirect($this->getPreviousUrl('budgets.delete.url'));
     }
-
 }

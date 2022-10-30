@@ -50,7 +50,12 @@ use Log;
  */
 class GroupCollector implements GroupCollectorInterface
 {
-    use CollectorProperties, AccountCollection, AmountCollection, TimeCollection, MetaCollection, AttachmentCollection;
+    use CollectorProperties;
+    use AccountCollection;
+    use AmountCollection;
+    use TimeCollection;
+    use MetaCollection;
+    use AttachmentCollection;
 
     /**
      * Group collector constructor.
@@ -352,7 +357,6 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function excludeIds(array $groupIds): GroupCollectorInterface
     {
-
         $this->query->whereNotIn('transaction_groups.id', $groupIds);
 
         return $this;
@@ -767,7 +771,7 @@ class GroupCollector implements GroupCollectorInterface
          * @var Closure $function
          */
         foreach ($this->postFilters as $function) {
-            $nextCollection = new Collection;
+            $nextCollection = new Collection();
             // loop everything in the current collection
             // and save it (or not) in the new collection.
             // that new collection is the next current collection
@@ -874,7 +878,6 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setIds(array $groupIds): GroupCollectorInterface
     {
-
         $this->query->whereIn('transaction_groups.id', $groupIds);
 
         return $this;
@@ -992,7 +995,6 @@ class GroupCollector implements GroupCollectorInterface
         if (null === $this->user) {
             $this->user = $user;
             $this->startQuery();
-
         }
 
         return $this;

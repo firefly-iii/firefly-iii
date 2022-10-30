@@ -95,7 +95,6 @@ class NewUserController extends Controller
         $language = $request->convertString('language');
         if (!array_key_exists($language, config('firefly.languages'))) {
             $language = 'en_US';
-
         }
 
         // set language preference:
@@ -133,5 +132,4 @@ class NewUserController extends Controller
 
         return redirect(route('index'));
     }
-
 }

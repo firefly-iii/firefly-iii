@@ -62,7 +62,7 @@ class BillController extends Controller
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.bill.frontpage');
@@ -106,7 +106,7 @@ class BillController extends Controller
      */
     public function single(Bill $bill): JsonResponse
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {

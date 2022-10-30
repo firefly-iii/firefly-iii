@@ -160,7 +160,7 @@ class BudgetLimitController extends Controller
         if ((int) $amount > 268435456) {
             $amount = '268435456';
         }
-        if((float) $amount < 0.0) {
+        if ((float) $amount < 0.0) {
             $amount = bcmul($amount, '-1');
         }
 
@@ -229,7 +229,7 @@ class BudgetLimitController extends Controller
         if ((int) $amount > 268435456) { // 268 million
             $amount = '268435456';
         }
-        if((float) $amount < 0.0) {
+        if ((float) $amount < 0.0) {
             $amount = bcmul($amount, '-1');
         }
 

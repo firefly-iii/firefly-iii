@@ -144,11 +144,9 @@ class EditController extends Controller
         $redirect = redirect($this->getPreviousUrl('bills.edit.url'));
 
         if (1 === (int) $request->get('return_to_edit')) {
-
             $request->session()->put('bills.edit.fromUpdate', true);
 
             $redirect = redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
-
         }
 
         return $redirect;

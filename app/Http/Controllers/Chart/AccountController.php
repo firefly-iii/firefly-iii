@@ -48,7 +48,9 @@ use Log;
  */
 class AccountController extends Controller
 {
-    use DateCalculation, AugumentData, ChartGeneration;
+    use DateCalculation;
+    use AugumentData;
+    use ChartGeneration;
 
     protected GeneratorInterface        $generator;
     private AccountRepositoryInterface  $accountRepository;
@@ -88,7 +90,7 @@ class AccountController extends Controller
         $start = clone session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end   = clone session('end', Carbon::now()->endOfMonth());
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-accounts');
@@ -196,7 +198,7 @@ class AccountController extends Controller
      */
     public function expenseBudget(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -271,7 +273,7 @@ class AccountController extends Controller
      */
     public function expenseCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -372,7 +374,7 @@ class AccountController extends Controller
      */
     public function incomeCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -432,7 +434,7 @@ class AccountController extends Controller
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         $chartData = [];
-        $cache     = new CacheProperties;
+        $cache     = new CacheProperties();
         $cache->addProperty('chart.account.period');
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -508,7 +510,6 @@ class AccountController extends Controller
                     $current         = app('navigation')->addPeriod($current, $step, 0);
                 }
                 break;
-
         }
         $result['entries'] = $entries;
 
@@ -547,7 +548,7 @@ class AccountController extends Controller
         $start = clone session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end   = clone session('end', Carbon::now()->endOfMonth());
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');

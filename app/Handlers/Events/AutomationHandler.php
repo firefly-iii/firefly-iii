@@ -41,7 +41,6 @@ use Mail;
  */
 class AutomationHandler
 {
-
     /**
      * Respond to the creation of X journals.
      *

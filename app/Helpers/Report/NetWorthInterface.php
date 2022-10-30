@@ -66,5 +66,4 @@ interface NetWorthInterface
      * @return array
      */
     public function sumNetWorthByCurrency(Carbon $date): array;
-
 }

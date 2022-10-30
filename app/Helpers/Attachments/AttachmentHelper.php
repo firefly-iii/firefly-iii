@@ -59,9 +59,9 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $this->maxUploadSize = (int) config('firefly.maxUploadSize');
         $this->allowedMimes  = (array) config('firefly.allowedMimes');
-        $this->errors        = new MessageBag;
-        $this->messages      = new MessageBag;
-        $this->attachments   = new Collection;
+        $this->errors        = new MessageBag();
+        $this->messages      = new MessageBag();
+        $this->attachments   = new Collection();
         $this->uploadDisk    = Storage::disk('upload');
     }
 
@@ -145,11 +145,9 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $resource = tmpfile();
         if (false === $resource) {
-
             Log::error('Cannot create temp-file for file upload.');
 
             return false;
-
         }
 
         if ('' === $content) {
@@ -239,7 +237,7 @@ class AttachmentHelper implements AttachmentHelperInterface
                 $user = $model->account->user;
             }
 
-            $attachment = new Attachment; // create Attachment object.
+            $attachment = new Attachment(); // create Attachment object.
             $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
             $attachment->md5      = md5_file($file->getRealPath());

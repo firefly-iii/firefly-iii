@@ -113,5 +113,4 @@ class DeleteController extends Controller
 
         return redirect($this->getPreviousUrl('accounts.delete.url'));
     }
-
 }

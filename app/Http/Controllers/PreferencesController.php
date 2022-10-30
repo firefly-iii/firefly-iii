@@ -195,10 +195,10 @@ class PreferencesController extends Controller
 
         // slack URL:
         $url = (string) $request->get('slackUrl');
-        if(str_starts_with($url, 'https://hooks.slack.com/services/')){
+        if (str_starts_with($url, 'https://hooks.slack.com/services/')) {
             app('preferences')->set('slack_webhook_url', $url);
         }
-        if('' === $url) {
+        if ('' === $url) {
             app('preferences')->delete('slack_webhook_url');
         }
 

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 
