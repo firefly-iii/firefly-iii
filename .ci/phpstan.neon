@@ -15,6 +15,7 @@ parameters:
         paths:
             - ../app/Api/V1/Controllers/Data/DestroyController.php
             - ../app/Console/Commands/Correction/FixAccountTypes.php
+            - ../app/Console/Commands/Upgrade/OtherCurrenciesCorrections.php
 
   paths:
     - ../app
@@ -24,4 +25,4 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 3
+  level: 1

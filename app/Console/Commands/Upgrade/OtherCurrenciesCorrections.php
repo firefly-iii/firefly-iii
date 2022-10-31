@@ -56,18 +56,12 @@ class OtherCurrenciesCorrections extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
-    /** @var array */
-    private $accountCurrencies;
-    /** @var AccountRepositoryInterface */
-    private $accountRepos;
-    /** @var JournalCLIRepositoryInterface */
-    private $cliRepos;
-    /** @var int */
-    private $count;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepos;
-    /** @var JournalRepositoryInterface */
-    private $journalRepos;
+    private array $accountCurrencies;
+    private AccountRepositoryInterface $accountRepos;
+    private JournalCLIRepositoryInterface $cliRepos;
+    private int $count;
+    private CurrencyRepositoryInterface  $currencyRepos;
+    private JournalRepositoryInterface $journalRepos;
 
     /**
      * Execute the console command.
