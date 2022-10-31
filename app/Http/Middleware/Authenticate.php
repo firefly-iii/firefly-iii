@@ -122,7 +122,7 @@ class Authenticate
 
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
-                return $this->auth->shouldUse($guard); 
+                return $this->auth->shouldUse($guard);
             }
         }
 

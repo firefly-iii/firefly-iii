@@ -54,7 +54,7 @@ trait FormSupport
         unset($options['autocomplete'], $options['placeholder']);
         try {
             $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
         }
@@ -134,7 +134,7 @@ trait FormSupport
             if (null !== request()->old($name)) {
                 $value = request()->old($name);
             }
-        } catch (RuntimeException $e) { 
+        } catch (RuntimeException $e) {
             // don't care about session errors.
             Log::debug(sprintf('Run time: %s', $e->getMessage()));
         }
@@ -163,7 +163,7 @@ trait FormSupport
         $date = null;
         try {
             $date = today(config('app.timezone'));
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
 

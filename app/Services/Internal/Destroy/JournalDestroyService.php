@@ -95,7 +95,7 @@ class JournalDestroyService
                     $group->delete();
                 }
             }
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
     }

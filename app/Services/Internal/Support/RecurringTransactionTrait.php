@@ -62,7 +62,7 @@ trait RecurringTransactionTrait
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) { 
+                } catch (Exception $e) {
                     // @ignoreException
                 }
             }
@@ -377,7 +377,7 @@ trait RecurringTransactionTrait
             $transaction->recurrenceTransactionMeta()->delete();
             try {
                 $transaction->delete();
-            } catch (Exception $e) { 
+            } catch (Exception $e) {
                 // @ignoreException
             }
         }

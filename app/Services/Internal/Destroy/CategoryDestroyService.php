@@ -41,7 +41,7 @@ class CategoryDestroyService
     {
         try {
             $category->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
 

@@ -67,7 +67,7 @@ trait RenderPartialViews
 
         try {
             $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
@@ -119,7 +119,7 @@ trait RenderPartialViews
 
         try {
             $view = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
@@ -146,7 +146,7 @@ trait RenderPartialViews
 
         try {
             $view = view('popup.report.category-entry', compact('journals', 'category'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
@@ -167,7 +167,7 @@ trait RenderPartialViews
 
         try {
             $result = view('reports.options.category', compact('categories'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.category: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
@@ -208,7 +208,7 @@ trait RenderPartialViews
 
         try {
             $result = view('reports.options.double', compact('set'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
@@ -241,7 +241,7 @@ trait RenderPartialViews
 
         try {
             $view = view('popup.report.expense-entry', compact('journals', 'account'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
@@ -275,7 +275,7 @@ trait RenderPartialViews
                         'count'      => $count,
                     ]
                 )->render();
-            } catch (Throwable $e) { 
+            } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
@@ -329,7 +329,7 @@ trait RenderPartialViews
                             'triggers'      => $triggers,
                         ]
                     )->render();
-                } catch (Throwable $e) { 
+                } catch (Throwable $e) {
                     Log::debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
                 }
@@ -365,7 +365,7 @@ trait RenderPartialViews
 
         try {
             $view = view('popup.report.income-entry', compact('journals', 'account'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
@@ -382,7 +382,7 @@ trait RenderPartialViews
     {
         try {
             $result = view('reports.options.no-options')->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.no-options: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
@@ -404,7 +404,7 @@ trait RenderPartialViews
 
         try {
             $result = view('reports.options.tag', compact('tags'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }

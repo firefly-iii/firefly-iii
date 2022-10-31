@@ -58,7 +58,7 @@ class RecurrenceDestroyService
         try {
             // delete all meta data
             $recurrence->recurrenceMeta()->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
         // delete all transactions.
@@ -67,7 +67,7 @@ class RecurrenceDestroyService
             $transaction->recurrenceTransactionMeta()->delete();
             try {
                 $transaction->delete();
-            } catch (Exception $e) { 
+            } catch (Exception $e) {
                 // @ignoreException
             }
         }
@@ -77,7 +77,7 @@ class RecurrenceDestroyService
         // delete recurrence
         try {
             $recurrence->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
     }

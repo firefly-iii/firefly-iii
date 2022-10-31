@@ -178,7 +178,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $current                  = $attachment->toArray();
             $current['file_exists']   = true;
             $current['notes']         = $repository->getNoteText($attachment);
-            $current['journal_title'] = $attachment->attachable->description; 
+            $current['journal_title'] = $attachment->attachable->description;
             $result[$journalId][]     = $current;
         }
 
@@ -197,11 +197,11 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $set      = TransactionJournalLink::where(
-                static function (Builder $q) use ($journals) {
-                    $q->whereIn('source_id', $journals);
-                    $q->orWhereIn('destination_id', $journals);
-                }
-            )
+            static function (Builder $q) use ($journals) {
+                $q->whereIn('source_id', $journals);
+                $q->orWhereIn('destination_id', $journals);
+            }
+        )
             ->with(['source', 'destination', 'source.transactions'])
             ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
             ->get(['journal_links.*', 'link_types.inward', 'link_types.outward', 'link_types.editable']);

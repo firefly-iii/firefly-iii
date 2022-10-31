@@ -126,7 +126,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     {
         try {
             $budgetLimit->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
     }
@@ -426,7 +426,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
             Log::debug(sprintf('%s is zero, delete budget limit #%d', $amount, $limit->id));
             try {
                 $limit->delete();
-            } catch (Exception $e) { 
+            } catch (Exception $e) {
                 // @ignoreException
             }
 

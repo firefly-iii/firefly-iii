@@ -64,7 +64,7 @@ class AccountMetaFactory
         if ('' === $value && null !== $entry) {
             try {
                 $entry->delete();
-            } catch (Exception $e) { 
+            } catch (Exception $e) {
                 Log::debug(sprintf('Could not delete entry: %s', $e->getMessage()));
             }
 

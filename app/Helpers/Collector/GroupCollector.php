@@ -572,7 +572,7 @@ class GroupCollector implements GroupCollectorInterface
             $result['date']->setTimezone(config('app.timezone'));
             $result['created_at']->setTimezone(config('app.timezone'));
             $result['updated_at']->setTimezone(config('app.timezone'));
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             Log::error($e->getMessage());
         }
 

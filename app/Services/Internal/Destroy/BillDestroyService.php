@@ -39,7 +39,7 @@ class BillDestroyService
     {
         try {
             $bill->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
     }

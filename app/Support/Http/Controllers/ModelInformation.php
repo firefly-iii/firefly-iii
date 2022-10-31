@@ -57,7 +57,7 @@ trait ModelInformation
                     'count'      => 1,
                 ]
             )->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
             $result = 'Could not render view. See log files.';
@@ -144,7 +144,7 @@ trait ModelInformation
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) { 
+            } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
@@ -258,7 +258,7 @@ trait ModelInformation
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) { 
+            } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';

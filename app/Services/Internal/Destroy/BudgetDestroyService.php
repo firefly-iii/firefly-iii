@@ -41,7 +41,7 @@ class BudgetDestroyService
     {
         try {
             $budget->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
 

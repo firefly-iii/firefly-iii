@@ -397,7 +397,7 @@ trait JournalServiceTrait
             // try to delete existing notes.
             try {
                 $note->delete();
-            } catch (Exception $e) { 
+            } catch (Exception $e) {
                 // @ignoreException
             }
         }

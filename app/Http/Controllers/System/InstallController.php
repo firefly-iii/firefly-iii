@@ -198,7 +198,7 @@ class InstallController extends Controller
                 Artisan::call($command, $args);
                 Log::debug(Artisan::output());
             }
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
@@ -211,7 +211,7 @@ class InstallController extends Controller
             return false;
         }
         // clear cache as well.
-        Cache::clear(); 
+        Cache::clear();
         Preferences::mark();
 
         return true;

@@ -168,7 +168,7 @@ class EditController extends Controller
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) { 
+            } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }

@@ -148,10 +148,10 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $user      = auth()->user();
         $route     = $request->route();
         $param = $route->parameter('account');
-        if($param instanceof Account) {
+        if ($param instanceof Account) {
             $accountId = (int) $param->id;
         }
-        if(!($param instanceof Account)) {
+        if (!($param instanceof Account)) {
             $accountId = (int) $param;
         }
         /** @var Account $account */

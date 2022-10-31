@@ -198,7 +198,7 @@ class BudgetController extends Controller
 
         try {
             $result = view('reports.budget.partials.avg-expenses', compact('result'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -353,7 +353,7 @@ class BudgetController extends Controller
         }
         try {
             $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
@@ -404,7 +404,7 @@ class BudgetController extends Controller
 
         try {
             $result = view('reports.budget.partials.top-expenses', compact('result'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }

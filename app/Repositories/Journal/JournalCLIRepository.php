@@ -127,7 +127,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
             $result = null;
             try {
                 $result = new Carbon($cache->get());
-            } catch (Exception $e) { 
+            } catch (Exception $e) {
                 // @ignoreException
             }
 
@@ -141,7 +141,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         $value = null;
         try {
             $value = new Carbon($entry->data);
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
         if (null !== $value) {
@@ -188,7 +188,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         $return = (string) $value;
         try {
             $cache->store($return);
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
 

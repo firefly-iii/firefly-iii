@@ -80,7 +80,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('categories', $this->categories)
                 ->with('accounts', $this->accounts)
                 ->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.category.month: %s', $e->getMessage()));
             $result = sprintf('Could not render report view: %s', $e->getMessage());
         }

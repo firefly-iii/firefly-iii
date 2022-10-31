@@ -54,7 +54,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     {
         try {
             $availableBudget->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
     }

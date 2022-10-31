@@ -109,7 +109,7 @@ class CategoryController extends Controller
         $carbon = null;
         try {
             $carbon = today(config('app.timezone'));
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
 

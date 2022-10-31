@@ -137,7 +137,7 @@ class BalanceController extends Controller
         }
         try {
             $result = view('reports.partials.balance', compact('report'))->render();
-        } catch (Throwable $e) { 
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }

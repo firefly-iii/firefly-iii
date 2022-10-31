@@ -640,7 +640,7 @@ class JournalUpdateService
             if ($this->hasFields([$field])) {
                 try {
                     $value = '' === (string) $this->data[$field] ? null : new Carbon($this->data[$field]);
-                } catch (Exception $e) { 
+                } catch (Exception $e) {
                     Log::debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
 
                     return;

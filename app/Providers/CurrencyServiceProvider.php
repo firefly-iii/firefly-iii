@@ -50,7 +50,7 @@ class CurrencyServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var CurrencyRepository $repository */
                 $repository = app(CurrencyRepository::class);
-                if ($app->auth->check()) { 
+                if ($app->auth->check()) {
                     $repository->setUser(auth()->user());
                 }
 

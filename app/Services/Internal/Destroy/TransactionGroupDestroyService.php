@@ -45,7 +45,7 @@ class TransactionGroupDestroyService
         }
         try {
             $transactionGroup->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
     }

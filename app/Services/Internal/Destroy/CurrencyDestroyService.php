@@ -40,7 +40,7 @@ class CurrencyDestroyService
     {
         try {
             $currency->delete();
-        } catch (Exception $e) { 
+        } catch (Exception $e) {
             // @ignoreException
         }
     }
