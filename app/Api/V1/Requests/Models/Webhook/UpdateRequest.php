@@ -84,6 +84,8 @@ class UpdateRequest extends FormRequest
         $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
         $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
         $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+
+        /** @var Webhook $webhook */
         $webhook    = $this->route()->parameter('webhook');
 
         return [

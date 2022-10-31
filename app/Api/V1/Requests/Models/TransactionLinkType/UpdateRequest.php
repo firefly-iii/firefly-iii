@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\TransactionLinkType;
 
+use FireflyIII\Models\LinkType;
+use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -59,6 +61,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var LinkType $linkType */
         $linkType = $this->route()->parameter('linkType');
 
         return [

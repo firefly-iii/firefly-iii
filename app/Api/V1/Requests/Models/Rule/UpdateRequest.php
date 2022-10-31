@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
+use FireflyIII\Models\Rule;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -131,6 +132,8 @@ class UpdateRequest extends FormRequest
     {
         $validTriggers = $this->getTriggers();
         $validActions  = array_keys(config('firefly.rule-actions'));
+
+        /** @var Rule $rule */
         $rule          = $this->route()->parameter('rule');
 
         // some triggers and actions require text:

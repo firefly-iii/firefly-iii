@@ -96,6 +96,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
+        /** @var User $current */
         $current = $this->route()->parameter('user');
         $validator->after(
             static function (Validator $validator) use ($current) {

@@ -148,7 +148,8 @@ class BackToJournals extends Command
      */
     private function getIdsForBudgets(): array
     {
-        $transactions = DB::table('budget_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray(); // @phpstan-ignore-line
+        $transactions = DB::table('budget_transaction')->distinct()->get(['transaction_id'])->
+            toCollection()->pluck('transaction_id')->toArray(); // @phpstan-ignore-line
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 

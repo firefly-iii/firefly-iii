@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\TransactionCurrency;
 
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -66,6 +67,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var TransactionCurrency $currency */
         $currency = $this->route()->parameter('currency_code');
 
         return [

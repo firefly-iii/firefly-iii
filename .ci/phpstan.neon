@@ -12,7 +12,10 @@ parameters:
     - '#with a nullable type declaration#'
     -
         message: '#Control structures using switch should not be used.#'
-        path: ../app/Api/V1/Controllers/Data/DestroyController.php
+        paths:
+            - ../app/Api/V1/Controllers/Data/DestroyController.php
+            - ../app/Console/Commands/Correction/FixAccountTypes.php
+
   paths:
     - ../app
     - ../database
