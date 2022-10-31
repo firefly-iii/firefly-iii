@@ -5159,9 +5159,9 @@ vue-hot-reload-api@^2.3.0:
   integrity sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==
 
 vue-i18n@^8:
-  version "8.28.0"
-  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.28.0.tgz#7fc445bae179d86d1f3b3c5e18948118a36b9495"
-  integrity sha512-PSiU716SxKjFyJTa1KVpa8tQHdyrKXXsHi9+34SvBC6nVQNsO/ZBt1W+YefuljzeNj7l4ddi0bgBHEUtktg/LQ==
+  version "8.28.1"
+  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.28.1.tgz#f74e249ed9dbe3133661ff9879ae298664bc46ea"
+  integrity sha512-5anatPdfF5uHyHxZukYoqWPKFCbkLg854tnnAeRfUc3yE4/6hYDgvW/ftZLwCQvT7U0QZExC8Bv5L8xd61izBw==
 
 vue-loader@^15:
   version "15.10.0"
