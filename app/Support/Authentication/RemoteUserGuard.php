@@ -47,8 +47,7 @@ class RemoteUserGuard implements Guard
      * @param UserProvider $provider
      * @param Application  $app
      */
-    // @phpstan-ignore-next-line
-    public function __construct(UserProvider $provider, Application $app) // @phpstan-ignore-line
+    public function __construct(UserProvider $provider, Application $app)
     {
         $this->application = $app;
         $this->provider    = $provider;

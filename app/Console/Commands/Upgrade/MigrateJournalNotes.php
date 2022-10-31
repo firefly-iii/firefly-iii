@@ -83,7 +83,7 @@ class MigrateJournalNotes extends Command
             Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             try {
                 $meta->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
+            } catch (Exception $e) { 
                 Log::error(sprintf('Could not delete old meta entry #%d: %s', $meta->id, $e->getMessage()));
             }
 

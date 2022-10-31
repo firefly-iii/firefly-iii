@@ -198,7 +198,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         // delete limits with amount 0:
         try {
             BudgetLimit::where('amount', 0)->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             // @ignoreException
         }
         $budgets = $this->getActiveBudgets();
@@ -605,7 +605,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         if (null !== $dbNote) {
             try {
                 $dbNote->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
+            } catch (Exception $e) { 
                 // @ignoreException
             }
         }

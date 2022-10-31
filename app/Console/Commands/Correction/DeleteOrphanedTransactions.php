@@ -147,7 +147,7 @@ class DeleteOrphanedTransactions extends Command
             if ($journal) {
                 try {
                     $journal->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
+                } catch (Exception $e) { 
                     Log::info(sprintf('Could not delete journal %s', $e->getMessage()));
                 }
             }

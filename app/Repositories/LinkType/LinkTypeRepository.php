@@ -311,7 +311,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         if (null !== $dbNote && '' === $text) {
             try {
                 $dbNote->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
+            } catch (Exception $e) { 
                 // @ignoreException
             }
         }

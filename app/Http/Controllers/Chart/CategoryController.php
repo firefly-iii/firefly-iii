@@ -109,7 +109,7 @@ class CategoryController extends Controller
         $carbon = null;
         try {
             $carbon = today(config('app.timezone'));
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             // @ignoreException
         }
 

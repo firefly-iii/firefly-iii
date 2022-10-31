@@ -119,7 +119,7 @@ class SearchController extends Controller
 
         try {
             $html = view('search.search', compact('groups', 'hasPages', 'searchTime'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) { 
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             $html = 'Could not render view.';
         }

@@ -77,7 +77,7 @@ class DeleteEmptyJournals extends Command
                 // uneven number, delete journal and transactions:
                 try {
                     TransactionJournal::find((int)$row->transaction_journal_id)->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
+                } catch (Exception $e) { 
                     Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
                 }
 
@@ -104,7 +104,7 @@ class DeleteEmptyJournals extends Command
         foreach ($set as $entry) {
             try {
                 TransactionJournal::find($entry->id)->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
+            } catch (Exception $e) { 
                 Log::info(sprintf('Could not delete entry: %s', $e->getMessage()));
             }
 

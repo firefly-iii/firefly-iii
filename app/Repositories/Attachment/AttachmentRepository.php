@@ -57,7 +57,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $path = $helper->getAttachmentLocation($attachment);
         try {
             Storage::disk('upload')->delete($path);
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             // @ignoreException
         }
         $attachment->delete();
@@ -201,7 +201,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
+                } catch (Exception $e) { 
                     // @ignoreException
                 }
             }

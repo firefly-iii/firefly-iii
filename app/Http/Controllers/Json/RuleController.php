@@ -51,7 +51,7 @@ class RuleController extends Controller
         }
         try {
             $view = view('rules.partials.action', compact('actions', 'count'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) { 
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
@@ -80,7 +80,7 @@ class RuleController extends Controller
 
         try {
             $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) { 
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }

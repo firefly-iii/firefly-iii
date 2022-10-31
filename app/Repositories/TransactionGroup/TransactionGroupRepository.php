@@ -178,7 +178,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $current                  = $attachment->toArray();
             $current['file_exists']   = true;
             $current['notes']         = $repository->getNoteText($attachment);
-            $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
+            $current['journal_title'] = $attachment->attachable->description; 
             $result[$journalId][]     = $current;
         }
 

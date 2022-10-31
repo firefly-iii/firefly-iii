@@ -54,7 +54,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     {
         try {
             $availableBudget->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             // @ignoreException
         }
     }

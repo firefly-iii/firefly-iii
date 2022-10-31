@@ -70,7 +70,7 @@ class AccountDestroyService
         // delete account.
         try {
             $account->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             // @ignoreException
         }
     }
@@ -122,7 +122,7 @@ class AccountDestroyService
 
         $collection = Transaction::groupBy('transaction_journal_id', 'account_id')
                                  ->where('account_id', $moveTo->id)
-                                 ->get(['transaction_journal_id', 'account_id', DB::raw('count(*) as the_count')]); // @phpstan-ignore-line
+                                 ->get(['transaction_journal_id', 'account_id', DB::raw('count(*) as the_count')]); 
         if (0 === $collection->count()) {
             return;
         }

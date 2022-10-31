@@ -50,7 +50,7 @@ class RuleServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var RuleRepository $repository */
                 $repository = app(RuleRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
+                if ($app->auth->check()) { 
                     $repository->setUser(auth()->user());
                 }
 

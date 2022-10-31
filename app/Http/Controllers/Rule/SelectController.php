@@ -176,7 +176,7 @@ class SelectController extends Controller
         $view = 'ERROR, see logs.';
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
-        } catch (Throwable $exception) { // @phpstan-ignore-line
+        } catch (Throwable $exception) { 
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
             $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
@@ -218,7 +218,7 @@ class SelectController extends Controller
         $view = 'ERROR, see logs.';
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
-        } catch (Throwable $exception) { // @phpstan-ignore-line
+        } catch (Throwable $exception) { 
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }

@@ -89,7 +89,7 @@ class UserEventHandler
         $url     = route('invite', [$event->invitee->invite_code]);
         try {
             Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             Log::error($e->getMessage());
         }
     }
@@ -245,7 +245,7 @@ class UserEventHandler
 
         try {
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             Log::error($e->getMessage());
         }
     }
@@ -268,7 +268,7 @@ class UserEventHandler
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             Log::error($e->getMessage());
         }
     }

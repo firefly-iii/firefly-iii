@@ -122,7 +122,7 @@ class Authenticate
 
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
-                return $this->auth->shouldUse($guard); // @phpstan-ignore-line
+                return $this->auth->shouldUse($guard); 
             }
         }
 

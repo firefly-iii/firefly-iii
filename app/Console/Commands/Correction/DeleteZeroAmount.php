@@ -62,7 +62,7 @@ class DeleteZeroAmount extends Command
             $this->info(sprintf('Deleted transaction journal #%d because the amount is zero (0.00).', $journal->id));
             try {
                 $journal->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
+            } catch (Exception $e) { 
                 $this->line($e->getMessage());
             }
 

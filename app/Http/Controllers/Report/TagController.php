@@ -305,7 +305,7 @@ class TagController extends Controller
 
         try {
             $result = view('reports.tag.partials.avg-expenses', compact('result'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) { 
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -356,7 +356,7 @@ class TagController extends Controller
 
         try {
             $result = view('reports.tag.partials.avg-income', compact('result'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) { 
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -513,7 +513,7 @@ class TagController extends Controller
 
         try {
             $result = view('reports.tag.partials.top-expenses', compact('result'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) { 
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -562,7 +562,7 @@ class TagController extends Controller
 
         try {
             $result = view('reports.tag.partials.top-income', compact('result'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) { 
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }

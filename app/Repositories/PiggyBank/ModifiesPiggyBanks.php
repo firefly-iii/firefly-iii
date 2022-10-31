@@ -366,7 +366,7 @@ trait ModifiesPiggyBanks
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
+                } catch (Exception $e) { 
                     // @ignoreException
                 }
             }

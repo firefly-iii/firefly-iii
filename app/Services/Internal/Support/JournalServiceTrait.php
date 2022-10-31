@@ -397,7 +397,7 @@ trait JournalServiceTrait
             // try to delete existing notes.
             try {
                 $note->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
+            } catch (Exception $e) { 
                 // @ignoreException
             }
         }

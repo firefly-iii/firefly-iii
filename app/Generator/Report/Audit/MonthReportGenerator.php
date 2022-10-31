@@ -83,7 +83,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
                 ->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) { 
             Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());

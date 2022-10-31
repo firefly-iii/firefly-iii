@@ -510,7 +510,7 @@ class TransactionJournalFactory
     {
         try {
             $transaction->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             Log::error('Could not delete negative transaction.');

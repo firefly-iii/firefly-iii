@@ -45,7 +45,7 @@ class TransactionGroupDestroyService
         }
         try {
             $transactionGroup->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { 
             // @ignoreException
         }
     }
