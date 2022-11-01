@@ -27,6 +27,7 @@ use Exception;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 
 /**
  * Class DeleteZeroAmount
@@ -62,7 +63,7 @@ class DeleteZeroAmount extends Command
             $this->info(sprintf('Deleted transaction journal #%d because the amount is zero (0.00).', $journal->id));
             try {
                 $journal->delete();
-            } catch (Exception $e) {
+            } catch (QueryException $e) {
                 $this->line($e->getMessage());
             }
 

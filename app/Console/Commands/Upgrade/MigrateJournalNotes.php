@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -83,7 +84,7 @@ class MigrateJournalNotes extends Command
             Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             try {
                 $meta->delete();
-            } catch (Exception $e) {
+            } catch (QueryException $e) {
                 Log::error(sprintf('Could not delete old meta entry #%d: %s', $meta->id, $e->getMessage()));
             }
 

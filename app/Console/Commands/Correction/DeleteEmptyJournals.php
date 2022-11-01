@@ -28,6 +28,7 @@ use Exception;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use Log;
 
 /**
@@ -77,7 +78,7 @@ class DeleteEmptyJournals extends Command
                 // uneven number, delete journal and transactions:
                 try {
                     TransactionJournal::find((int)$row->transaction_journal_id)->delete();
-                } catch (Exception $e) {
+                } catch (QueryException $e) {
                     Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
                 }
 
@@ -104,7 +105,7 @@ class DeleteEmptyJournals extends Command
         foreach ($set as $entry) {
             try {
                 TransactionJournal::find($entry->id)->delete();
-            } catch (Exception $e) {
+            } catch (QueryException $e) {
                 Log::info(sprintf('Could not delete entry: %s', $e->getMessage()));
             }
 

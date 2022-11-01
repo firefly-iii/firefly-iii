@@ -229,7 +229,7 @@ class BackToJournals extends Command
         foreach ($chunks as $chunk) {
             $set   = DB::table('transactions')
                        ->whereIn('transactions.id', $chunk)
-                       ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+                       ->pluck('transaction_journal_id')->toArray();
             $array = array_merge($array, $set);
         }
 
