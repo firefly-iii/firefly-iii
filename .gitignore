@@ -6,4 +6,4 @@
 npm-debug.log
 yarn-error.log
 .env
-.php-cs-fixer.cache
+/.ci/php-cs-fixer/vendor

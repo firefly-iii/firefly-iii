@@ -97,8 +97,6 @@ class DestroyController extends Controller
 
         $this->groupRepository->destroy($transactionGroup);
 
-        // trigger just after destruction
-        event(new DestroyedTransactionGroup($transactionGroup));
         app('preferences')->mark();
 
         /** @var Account $account */
