@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -130,9 +131,6 @@ class DeleteController extends Controller
         }
 
         $this->repository->destroy($group);
-
-        app('preferences')->mark();
-
 
         /** @var Account $account */
         foreach($accounts as $account) {
