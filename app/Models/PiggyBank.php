@@ -198,7 +198,7 @@ class PiggyBank extends Model
     protected function targetamount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string) $value,
         );
     }
 }

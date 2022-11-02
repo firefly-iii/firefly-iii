@@ -584,11 +584,11 @@ class Navigation
             default:
                 break;
             case 'last7':
-            $date->subDays(7);
-            return $date;
+                $date->subDays(7);
+                return $date;
             case 'last30':
-            $date->subDays(30);
-            return $date;
+                $date->subDays(30);
+                return $date;
             case 'last90':
                 $date->subDays(90);
                 return $date;
@@ -714,11 +714,11 @@ class Navigation
             default:
                 break;
             case 'last7':
-            $start->subDays(7);
-            return $start;
+                $start->subDays(7);
+                return $start;
             case 'last30':
-            $start->subDays(30);
-            return $start;
+                $start->subDays(30);
+                return $start;
             case 'last90':
                 $start->subDays(90);
                 return $start;
