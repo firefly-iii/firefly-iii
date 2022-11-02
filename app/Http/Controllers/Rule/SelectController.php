@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Rule;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
@@ -180,6 +181,7 @@ class SelectController extends Controller
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
             $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
+            throw new FireflyException($view, 0, $exception);
         }
 
         return response()->json(['html' => $view, 'warning' => $warning]);
@@ -219,8 +221,10 @@ class SelectController extends Controller
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
         } catch (Throwable $exception) {
-            Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
+            $message = sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage());
+            Log::error($message);
             Log::error($exception->getTraceAsString());
+            throw new FireflyException($message, 0, $exception);
         }
 
         return response()->json(['html' => $view, 'warning' => $warning]);

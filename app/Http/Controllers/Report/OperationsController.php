@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -85,6 +86,7 @@ class OperationsController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         $cache->store($result);
@@ -119,6 +121,7 @@ class OperationsController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         $cache->store($result);
@@ -173,6 +176,7 @@ class OperationsController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
         $cache->store($result);
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -73,6 +74,7 @@ class FrontpageController extends Controller
             } catch (Throwable $e) {
                 Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
                 $html = 'Could not render view.';
+                throw new FireflyException($html, 0, $e);
             }
         }
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -140,6 +141,7 @@ class AccountForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;

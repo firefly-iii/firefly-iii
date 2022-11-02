@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
@@ -315,6 +316,7 @@ class CategoryController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -366,6 +368,7 @@ class CategoryController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -550,6 +553,7 @@ class CategoryController extends Controller
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
 
@@ -629,6 +633,7 @@ class CategoryController extends Controller
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
 
@@ -673,6 +678,7 @@ class CategoryController extends Controller
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -722,6 +728,7 @@ class CategoryController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -771,6 +778,7 @@ class CategoryController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;

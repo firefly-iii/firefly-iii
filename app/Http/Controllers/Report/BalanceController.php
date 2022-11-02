@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -140,6 +141,7 @@ class BalanceController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;

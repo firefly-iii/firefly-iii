@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Http\Request;
@@ -61,6 +62,7 @@ trait RuleManagement
                 } catch (Throwable $e) {
                     Log::debug(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
+                    throw new FireflyException('Could not render', 0, $e);
                 }
                 $index++;
             }
@@ -107,6 +109,7 @@ trait RuleManagement
                 } catch (Throwable $e) {
                     Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
+                    throw new FireflyException('Could not render', 0, $e);
                 }
                 $index++;
             }
@@ -149,6 +152,7 @@ trait RuleManagement
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
+                throw new FireflyException('Could not render', 0, $e);
             }
             $index++;
         }

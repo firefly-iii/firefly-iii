@@ -153,7 +153,7 @@ class AccountFactory
         // try with type:
         if (null === $result) {
             $types = config(sprintf('firefly.accountTypeByIdentifier.%s', $accountTypeName)) ?? [];
-            if (!empty($types)) {
+            if (0 !== count($types)) {
                 $result = AccountType::whereIn('type', $types)->first();
             }
         }

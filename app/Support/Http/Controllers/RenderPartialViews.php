@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -70,6 +71,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
+            throw new FireflyException($view, 0, $e);
         }
 
         return $view;
@@ -91,6 +93,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -122,6 +125,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
+            throw new FireflyException($view, 0, $e);
         }
 
         return $view;
@@ -149,6 +153,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
+            throw new FireflyException($view, 0, $e);
         }
 
         return $view;
@@ -170,6 +175,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.category: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -211,6 +217,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -244,6 +251,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
+            throw new FireflyException($view, 0, $e);
         }
 
         return $view;
@@ -278,6 +286,7 @@ trait RenderPartialViews
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
+                throw new FireflyException('Could not render', 0, $e);
             }
 
             ++$index;
@@ -332,6 +341,7 @@ trait RenderPartialViews
                 } catch (Throwable $e) {
                     Log::debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
+                    throw new FireflyException('Could not render', 0, $e);
                 }
 
                 ++$index;
@@ -368,6 +378,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
+            throw new FireflyException($view, 0, $e);
         }
 
         return $view;
@@ -385,6 +396,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.no-options: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -407,6 +419,7 @@ trait RenderPartialViews
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;

@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Closure;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\Extensions\AccountCollection;
 use FireflyIII\Helpers\Collector\Extensions\AmountCollection;
 use FireflyIII\Helpers\Collector\Extensions\AttachmentCollection;
@@ -574,6 +575,7 @@ class GroupCollector implements GroupCollectorInterface
             $result['updated_at']->setTimezone(config('app.timezone'));
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         // try to process meta date value (if present)

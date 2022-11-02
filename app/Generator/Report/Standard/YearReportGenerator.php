@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Generator\Report\Standard;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -61,6 +62,7 @@ class YearReportGenerator implements ReportGeneratorInterface
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             $result = 'Could not render report view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -65,6 +66,7 @@ class AccountController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         $cache->store($result);

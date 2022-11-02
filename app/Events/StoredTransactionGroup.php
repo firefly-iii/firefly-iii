@@ -47,7 +47,7 @@ class StoredTransactionGroup extends Event
      * @param bool             $applyRules
      * @param bool             $fireWebhooks
      */
-    public function __construct(TransactionGroup $transactionGroup, bool $applyRules = true, bool $fireWebhooks = true)
+    public function __construct(TransactionGroup $transactionGroup, bool $applyRules, bool $fireWebhooks)
     {
         $this->transactionGroup = $transactionGroup;
         $this->fireWebhooks     = $fireWebhooks;

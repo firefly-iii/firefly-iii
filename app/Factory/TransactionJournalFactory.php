@@ -45,6 +45,7 @@ use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use JsonException;
 use Log;
@@ -108,7 +109,7 @@ class TransactionJournalFactory
         Log::debug('Start of TransactionJournalFactory::create()');
         $collection   = new Collection();
         $transactions = $dataObject['transactions'] ?? [];
-        if (empty($transactions)) {
+        if (0 === count($transactions)) {
             Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
             return new Collection();
@@ -510,7 +511,7 @@ class TransactionJournalFactory
     {
         try {
             $transaction->delete();
-        } catch (Exception $e) {
+        } catch (QueryException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             Log::error('Could not delete negative transaction.');

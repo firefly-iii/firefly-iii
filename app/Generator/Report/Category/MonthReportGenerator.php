@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Generator\Report\Category;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
-use JetBrains\PhpStorm\Pure;
 use Log;
 use Throwable;
 
@@ -56,7 +56,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * MonthReportGenerator constructor.
      */
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->income   = new Collection();
         $this->expenses = new Collection();
@@ -83,6 +83,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.category.month: %s', $e->getMessage()));
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;

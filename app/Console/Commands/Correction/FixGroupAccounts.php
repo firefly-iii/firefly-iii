@@ -68,7 +68,7 @@ class FixGroupAccounts extends Command
         $handler = new UpdatedGroupEventHandler();
         foreach ($groups as $groupId) {
             $group = TransactionGroup::find($groupId);
-            $event = new UpdatedTransactionGroup($group);
+            $event = new UpdatedTransactionGroup($group, true, true);
             $handler->unifyAccounts($event);
         }
 

@@ -43,7 +43,7 @@ class TriggeredAuditLog extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(Model $changer, Model $auditable, string $field, mixed $before = null, mixed $after = null)
+    public function __construct(Model $changer, Model $auditable, string $field, mixed $before, mixed $after)
     {
         $this->changer   = $changer;
         $this->auditable = $auditable;

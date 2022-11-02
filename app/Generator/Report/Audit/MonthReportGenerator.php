@@ -31,7 +31,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use JetBrains\PhpStorm\ArrayShape;
 use JsonException;
 use Log;
 use Throwable;
@@ -87,6 +86,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -102,8 +102,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @throws FireflyException
      * @throws JsonException
      */
-    #[ArrayShape(['journals'         => "array", 'currency' => "mixed", 'exists' => "bool", 'end' => "string", 'endBalance' => "mixed", 'dayBefore' => "string",
-                  'dayBeforeBalance' => "mixed"])] public function getAuditReport(Account $account, Carbon $date): array
+    public function getAuditReport(Account $account, Carbon $date): array
                   {
                       /** @var AccountRepositoryInterface $accountRepository */
                       $accountRepository = app(AccountRepositoryInterface::class);

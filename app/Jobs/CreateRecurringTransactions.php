@@ -407,7 +407,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::info(sprintf('Created new transaction group #%d', $group->id));
 
         // trigger event:
-        event(new StoredTransactionGroup($group, $recurrence->apply_rules));
+        event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
 
         // update recurring thing:
         $recurrence->latest_date = $date;

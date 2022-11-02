@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Models\TransactionJournalMeta;
+use Illuminate\Database\QueryException;
 use Log;
 
 /**
@@ -48,7 +49,7 @@ class TransactionJournalMetaFactory
             //Log::debug('Value is empty, delete meta value.');
             try {
                 $entry->delete();
-            } catch (Exception $e) {
+            } catch (QueryException $e) {
                 Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage()));
             }
 
@@ -66,7 +67,7 @@ class TransactionJournalMetaFactory
                 Log::debug('Will not store empty strings, delete meta value');
                 try {
                     $entry->delete();
-                } catch (Exception $e) {
+                } catch (QueryException $e) {
                     Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage()));
                 }
             }

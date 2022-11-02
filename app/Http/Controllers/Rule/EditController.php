@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Rule;
@@ -171,6 +172,7 @@ class EditController extends Controller
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
+                throw new FireflyException($result, 0, $e);
             }
             $index++;
         }

@@ -24,6 +24,7 @@ namespace FireflyIII\Support;
 
 use Amount as Amt;
 use Eloquent;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Form\FormSupport;
 use Illuminate\Support\Collection;
 use Log;
@@ -66,6 +67,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
             $html = 'Could not render amountNoCurrency.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -101,6 +103,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
             $html = 'Could not render checkbox.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -125,6 +128,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render date(): %s', $e->getMessage()));
             $html = 'Could not render date.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -147,6 +151,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render file(): %s', $e->getMessage()));
             $html = 'Could not render file.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -172,6 +177,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render integer(): %s', $e->getMessage()));
             $html = 'Could not render integer.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -196,6 +202,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render location(): %s', $e->getMessage()));
             $html = 'Could not render location.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -254,6 +261,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render nonSelectableAmount(): %s', $e->getMessage()));
             $html = 'Could not render nonSelectableAmount.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -279,6 +287,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render number(): %s', $e->getMessage()));
             $html = 'Could not render number.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -308,6 +317,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render objectGroup(): %s', $e->getMessage()));
             $html = 'Could not render objectGroup.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -327,6 +337,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render optionsList.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -348,6 +359,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
             $html = 'Could not render password.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -375,6 +387,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
             $html = 'Could not render percentage.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -397,6 +410,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render staticText(): %s', $e->getMessage()));
             $html = 'Could not render staticText.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -420,6 +434,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render text(): %s', $e->getMessage()));
             $html = 'Could not render text.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -449,6 +464,7 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render textarea(): %s', $e->getMessage()));
             $html = 'Could not render textarea.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;

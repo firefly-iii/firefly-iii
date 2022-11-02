@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -114,6 +115,7 @@ class DoubleController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -165,6 +167,7 @@ class DoubleController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -458,6 +461,7 @@ class DoubleController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -507,6 +511,7 @@ class DoubleController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;

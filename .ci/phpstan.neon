@@ -16,12 +16,23 @@ parameters:
             - ../app/Api/V1/Controllers/Data/DestroyController.php
             - ../app/Console/Commands/Correction/FixAccountTypes.php
             - ../app/Console/Commands/Upgrade/OtherCurrenciesCorrections.php
+            - ../app/Exceptions/GracefulNotFoundHandler.php
+    -
+        message: '#Function compact\(\) should not be used#'
+        paths:
+            - ../app/Generator/Report/Account/MonthReportGenerator.php
+            - ../app/Generator/Report/Audit/MonthReportGenerator.php
+            - ../app/Generator/Report/Budget/MonthReportGenerator.php
+            - ../app/Generator/Report/Category/MonthReportGenerator.php
+            - ../app/Generator/Report/Standard/MonthReportGenerator.php
+            - ../app/Generator/Report/Standard/MultiYearReportGenerator.php
+            - ../app/Generator/Report/Standard/YearReportGenerator.php
+            - ../app/Generator/Report/Tag/MonthReportGenerator.php
 
   paths:
     - ../app
     - ../database
     - ../routes
-    - ../tests
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5

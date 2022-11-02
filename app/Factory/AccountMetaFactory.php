@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use Illuminate\Database\QueryException;
 use Log;
 
 /**
@@ -64,7 +64,7 @@ class AccountMetaFactory
         if ('' === $value && null !== $entry) {
             try {
                 $entry->delete();
-            } catch (Exception $e) {
+            } catch (QueryException $e) {
                 Log::debug(sprintf('Could not delete entry: %s', $e->getMessage()));
             }
 

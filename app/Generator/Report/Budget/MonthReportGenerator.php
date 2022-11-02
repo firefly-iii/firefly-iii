@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Generator\Report\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -74,6 +75,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;

@@ -91,6 +91,7 @@ class UserEventHandler
             Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
 
@@ -247,6 +248,7 @@ class UserEventHandler
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
 
@@ -270,6 +272,7 @@ class UserEventHandler
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
 

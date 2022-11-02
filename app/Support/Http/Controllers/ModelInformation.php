@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Tag;
@@ -61,6 +62,7 @@ trait ModelInformation
             Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
             $result = 'Could not render view. See log files.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return [$result];
@@ -148,6 +150,7 @@ trait ModelInformation
                 Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
+                throw new FireflyException('Could not render trigger', 0, $e);
             }
             if ('' !== $string) {
                 $result[] = $string;
@@ -262,6 +265,7 @@ trait ModelInformation
                 Log::debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
+                throw new FireflyException('Could not render trigger', 0, $e);
             }
             if ('' !== $string) {
                 $result[] = $string;

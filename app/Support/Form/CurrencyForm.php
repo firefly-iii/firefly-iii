@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Form;
 
 use Amount as Amt;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -99,6 +100,7 @@ class CurrencyForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
@@ -168,6 +170,7 @@ class CurrencyForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;

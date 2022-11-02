@@ -124,7 +124,7 @@ class BulkController extends Controller
         // run rules on changed journals:
         /** @var TransactionJournal $journal */
         foreach ($collection as $journal) {
-            event(new UpdatedTransactionGroup($journal->transactionGroup));
+            event(new UpdatedTransactionGroup($journal->transactionGroup, true, true));
         }
 
         app('preferences')->mark();
