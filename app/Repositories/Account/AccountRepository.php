@@ -486,6 +486,13 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
+
+        // return null if not in this list.
+        if(!in_array($type, $list, true)) {
+            return null;
+        }
         $currencyId = (int) $this->getMetaValue($account, 'currency_id');
         if ($currencyId > 0) {
             return TransactionCurrency::find($currencyId);

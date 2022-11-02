@@ -27,7 +27,7 @@
     </div>
     <div class="col-sm-12">
       <div class="input-group">
-        <input ref="date" :name="name" :placeholder="title"
+        <input ref="date" :name="name" :placeholder="title" spellcheck="false"
                :title="title" :value="value ? value.substr(0,10): ''"
                autocomplete="off"
                class="form-control" type="date"

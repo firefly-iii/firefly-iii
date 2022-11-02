@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Destroy;
 
 use Exception;
+use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Models\TransactionGroup;
 
 /**
@@ -49,6 +50,8 @@ class TransactionGroupDestroyService
         } catch (Exception $e) { // @phpstan-ignore-line
             // @ignoreException
         }
+        // trigger just after destruction
+        event(new DestroyedTransactionGroup($transactionGroup));
     }
 
 }

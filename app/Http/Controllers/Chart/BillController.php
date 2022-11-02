@@ -31,7 +31,6 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
-use JsonException;
 
 /**
  * Class BillController.
@@ -134,7 +133,7 @@ class BillController extends Controller
             }
         );
 
-        $chartData = [
+        $chartData  = [
             ['type'          => 'line', 'label' => (string) trans('firefly.min-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol,
              'currency_code' => $bill->transactionCurrency->code, 'entries' => []],
             ['type'          => 'line', 'label' => (string) trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol,
@@ -142,7 +141,7 @@ class BillController extends Controller
             ['type'          => 'bar', 'label' => (string) trans('firefly.journal-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol,
              'currency_code' => $bill->transactionCurrency->code, 'entries' => []],
         ];
-
+        $currencyId = (int) $bill->transaction_currency_id;
         foreach ($journals as $journal) {
             $date                           = $journal['date']->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
@@ -152,7 +151,12 @@ class BillController extends Controller
             if (!array_key_exists($date, $chartData[2]['entries'])) {
                 $chartData[2]['entries'][$date] = '0';
             }
-            $amount                         = bcmul($journal['amount'], '-1');
+            $amount = bcmul($journal['amount'], '-1');
+            if ($currencyId === $journal['foreign_currency_id']) {
+                $amount = bcmul($journal['foreign_amount'], '-1');
+            }
+
+
             $chartData[2]['entries'][$date] = bcadd($chartData[2]['entries'][$date], $amount);  // amount of journal
         }
 

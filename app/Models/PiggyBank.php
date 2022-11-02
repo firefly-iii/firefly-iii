@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Eloquent;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -154,7 +155,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * Get all of the tags for the post.
+     * Get all the tags for the post.
      */
     public function objectGroups()
     {
@@ -187,5 +188,17 @@ class PiggyBank extends Model
     public function setTargetamountAttribute($value): void
     {
         $this->attributes['targetamount'] = (string) $value;
+    }
+
+    /**
+     * Get the max amount
+     *
+     * @return Attribute
+     */
+    protected function targetamount(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
     }
 }

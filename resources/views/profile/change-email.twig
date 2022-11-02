@@ -29,7 +29,7 @@
                         <div class="form-group">
                             <label for="email" class="col-sm-4 control-label">{{ trans('form.new_email_address') }}</label>
                             <div class="col-sm-8">
-                                <input type="email" class="form-control" id="email" placeholder="{{ 'new_email_address'|_ }}"
+                                <input type="email" class="form-control" id="email" placeholder="{{ 'new_email_address'|_ }}" spellcheck="false"
                                        value="{{ old('email')|default(email) }}"
                                        name="email">
                             </div>

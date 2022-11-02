@@ -1,3 +1,23 @@
+/*
+ * index.js
+ * Copyright (c) 2022 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 export default {
     "config": {
         "html_language": "hu",
@@ -49,6 +69,9 @@ export default {
         "new_budget": "\u00daj k\u00f6lts\u00e9gkeret",
         "new_asset_account": "\u00daj eszk\u00f6zsz\u00e1mla",
         "newTransfer": "\u00daj \u00e1tvezet\u00e9s",
+        "submission_options": "(firefly.submission_options)",
+        "apply_rules_checkbox": "(firefly.apply_rules_checkbox)",
+        "fire_webhooks_checkbox": "(firefly.fire_webhooks_checkbox)",
         "newDeposit": "\u00daj bev\u00e9tel",
         "newWithdrawal": "\u00daj k\u00f6lts\u00e9g",
         "bills_paid": "Befizetett sz\u00e1ml\u00e1k",

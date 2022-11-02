@@ -25,6 +25,7 @@
     <div class="col-sm-12">
       <div class="input-group">
         <input
+            spellcheck="false"
             ref="input"
             :data-index="index"
             :disabled="inputDisabled"

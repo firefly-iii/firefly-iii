@@ -1,3 +1,23 @@
+/*
+ * index.js
+ * Copyright (c) 2022 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 export default {
     "config": {
         "html_language": "bg",
@@ -49,6 +69,9 @@ export default {
         "new_budget": "\u041d\u043e\u0432 \u0431\u044e\u0434\u0436\u0435\u0442",
         "new_asset_account": "\u041d\u043e\u0432\u0430 \u0441\u043c\u0435\u0442\u043a\u0430 \u0437\u0430 \u0430\u043a\u0442\u0438\u0432\u0438",
         "newTransfer": "\u041d\u043e\u0432\u043e \u043f\u0440\u0435\u0445\u0432\u044a\u0440\u043b\u044f\u043d\u0435",
+        "submission_options": "(firefly.submission_options)",
+        "apply_rules_checkbox": "(firefly.apply_rules_checkbox)",
+        "fire_webhooks_checkbox": "(firefly.fire_webhooks_checkbox)",
         "newDeposit": "\u041d\u043e\u0432 \u0434\u0435\u043f\u043e\u0437\u0438\u0442",
         "newWithdrawal": "\u041d\u043e\u0432 \u0440\u0430\u0437\u0445\u043e\u0434",
         "bills_paid": "\u041f\u043b\u0430\u0442\u0435\u043d\u0438 \u0441\u043c\u0435\u0442\u043a\u0438",

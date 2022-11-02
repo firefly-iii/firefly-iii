@@ -26,7 +26,7 @@
     <label ref="cur" class="col-sm-4 control-label"></label>
     <div class="col-sm-8">
       <div class="input-group">
-        <input ref="amount"
+        <input ref="amount" spellcheck="false"
                :title="$t('firefly.amount')"
                :value="value"
                autocomplete="off"

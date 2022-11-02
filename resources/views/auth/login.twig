@@ -57,11 +57,11 @@
                 {% if config('firefly.authentication_guard') == 'web' %}
                     <input type="email" autocomplete="email" name="email" value="{% if not IS_DEMO_SITE %}{{ email }}{% else %}{{ DEMO_USERNAME }}{% endif %}" class="form-control" placeholder="{{ trans('form.email') }}"/>
                 {% else %}
-                    <input type="text" autocomplete="username" name="{{ usernameField }}" value="{{ email }}" class="form-control" placeholder="{{ trans('form.login_name') }}"/>
+                    <input type="text" autocomplete="username" name="{{ usernameField }}" value="{{ email }}" class="form-control" placeholder="{{ trans('form.login_name') }}" spellcheck="false"/>
                 {% endif %}
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="password" autocomplete="current-password" {% if IS_DEMO_SITE %}value="{{ DEMO_PASSWORD }}"{% endif%} class="form-control" placeholder="{{ trans('form.password') }}"/>
+                <input type="password" name="password" autocomplete="current-password" {% if IS_DEMO_SITE %}value="{{ DEMO_PASSWORD }}"{% endif%} class="form-control" placeholder="{{ trans('form.password') }}" spellcheck="false"/>
             </div>
             <div class="row">
                 <div class="col-xs-6">
