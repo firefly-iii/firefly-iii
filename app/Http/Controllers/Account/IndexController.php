@@ -79,7 +79,6 @@ class IndexController extends Controller
      */
     public function inactive(Request $request, string $objectType)
     {
-        $objectType   = $objectType ?? 'asset';
         $inactivePage = true;
         $subTitle     = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
@@ -137,7 +136,6 @@ class IndexController extends Controller
     public function index(Request $request, string $objectType)
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        $objectType   = $objectType ?? 'asset';
         $subTitle     = (string) trans(sprintf('firefly.%s_accounts', $objectType));
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));

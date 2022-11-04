@@ -372,7 +372,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function excludeJournalIds(array $journalIds): GroupCollectorInterface
     {
-        if (!empty($journalIds)) {
+        if (0 !== count($journalIds)) {
             // make all integers.
             $integerIDs = array_map('intval', $journalIds);
 
@@ -894,7 +894,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
-        if (!empty($journalIds)) {
+        if (0 !== count($journalIds)) {
             // make all integers.
             $integerIDs = array_map('intval', $journalIds);
 

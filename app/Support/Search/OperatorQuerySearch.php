@@ -1993,7 +1993,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function searchTransactions(): LengthAwarePaginator
     {
-        if (empty($this->getWords()) && empty($this->getOperators())) {
+        if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
             return new LengthAwarePaginator([], 0, 5, 1);
         }
 

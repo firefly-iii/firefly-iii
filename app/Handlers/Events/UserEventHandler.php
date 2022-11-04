@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserEventHandler.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -62,7 +63,7 @@ class UserEventHandler
     /**
      * This method will bestow upon a user the "owner" role if he is the first user in the system.
      *
-     * @param RegisteredUser $event
+     * @param  RegisteredUser  $event
      *
      * @return bool
      */
@@ -79,7 +80,7 @@ class UserEventHandler
     }
 
     /**
-     * @param InvitationCreated $event
+     * @param  InvitationCreated  $event
      * @return void
      */
     public function sendRegistrationInvite(InvitationCreated $event): void
@@ -96,7 +97,7 @@ class UserEventHandler
     }
 
     /**
-     * @param RegisteredUser $event
+     * @param  RegisteredUser  $event
      * @return bool
      */
     public function createExchangeRates(RegisteredUser $event): void
@@ -108,7 +109,7 @@ class UserEventHandler
     /**
      * Fires to see if a user is admin.
      *
-     * @param Login $event
+     * @param  Login  $event
      *
      * @return bool
      */
@@ -138,7 +139,7 @@ class UserEventHandler
     }
 
     /**
-     * @param RegisteredUser $event
+     * @param  RegisteredUser  $event
      *
      * @return bool
      * @throws FireflyException
@@ -149,6 +150,8 @@ class UserEventHandler
         $groupExists = true;
         $groupTitle  = $user->email;
         $index       = 1;
+        /** @var UserGroup $group */
+        $group = null;
 
         // create a new group.
         while (true === $groupExists) {
@@ -163,6 +166,7 @@ class UserEventHandler
                 throw new FireflyException('Email address can no longer be used for registrations.');
             }
         }
+        /** @var UserRole $role */
         $role = UserRole::where('title', UserRole::OWNER)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
@@ -181,7 +185,7 @@ class UserEventHandler
     /**
      * Set the demo user back to English.
      *
-     * @param Login $event
+     * @param  Login  $event
      *
      * @throws FireflyException
      */
@@ -201,7 +205,7 @@ class UserEventHandler
     }
 
     /**
-     * @param DetectedNewIPAddress $event
+     * @param  DetectedNewIPAddress  $event
      *
      * @throws FireflyException
      */
@@ -232,7 +236,7 @@ class UserEventHandler
      * Send email to confirm email change. Will not be made into a notification, because
      * this requires some custom fields from the user and not just the "user" object.
      *
-     * @param UserChangedEmail $event
+     * @param  UserChangedEmail  $event
      *
      * @throws FireflyException
      */
@@ -256,7 +260,7 @@ class UserEventHandler
      * Send email to be able to undo email change. Will not be made into a notification, because
      * this requires some custom fields from the user and not just the "user" object.
      *
-     * @param UserChangedEmail $event
+     * @param  UserChangedEmail  $event
      *
      * @throws FireflyException
      */
@@ -266,7 +270,7 @@ class UserEventHandler
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
         $token    = app('preferences')->getForUser($user, 'email_change_undo_token', 'invalid');
-        $hashed   = hash('sha256', sprintf('%s%s', (string) config('app.key'), $oldEmail));
+        $hashed   = hash('sha256', sprintf('%s%s', (string)config('app.key'), $oldEmail));
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
@@ -278,7 +282,7 @@ class UserEventHandler
 
     /**
      * Send a new password to the user.
-     * @param RequestedNewPassword $event
+     * @param  RequestedNewPassword  $event
      */
     public function sendNewPassword(RequestedNewPassword $event): void
     {
@@ -289,7 +293,7 @@ class UserEventHandler
      * This method will send the user a registration mail, welcoming him or her to Firefly III.
      * This message is only sent when the configuration of Firefly III says so.
      *
-     * @param RegisteredUser $event
+     * @param  RegisteredUser  $event
      *
      */
     public function sendRegistrationMail(RegisteredUser $event): void
@@ -301,7 +305,7 @@ class UserEventHandler
     }
 
     /**
-     * @param RegisteredUser $event
+     * @param  RegisteredUser  $event
      */
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
@@ -319,7 +323,7 @@ class UserEventHandler
     }
 
     /**
-     * @param ActuallyLoggedIn $event
+     * @param  ActuallyLoggedIn  $event
      * @throws FireflyException
      */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void

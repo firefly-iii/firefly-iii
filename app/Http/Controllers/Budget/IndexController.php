@@ -96,7 +96,7 @@ class IndexController extends Controller
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function index(Request $request, Carbon $start = null, Carbon $end = null)
+    public function index(Request $request, Carbon $start = null, Carbon $end = null) // @phpstan-ignore-line
     {
         Log::debug('Start of IndexController::index()');
 
@@ -122,7 +122,7 @@ class IndexController extends Controller
         $sums    = $this->getSums($budgets);
 
         // get budgeted for default currency:
-        if (empty($availableBudgets)) {
+        if (0 === count($availableBudgets)) {
             $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency, );
             $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $defaultCurrency);
             $spent    = $spentArr[$defaultCurrency->id]['sum'] ?? '0';

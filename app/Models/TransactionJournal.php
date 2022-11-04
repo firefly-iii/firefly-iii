@@ -296,7 +296,7 @@ class TransactionJournal extends Model
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         }
-        if (!empty($types)) {
+        if (0 !== count($types)) {
             $query->whereIn('transaction_types.type', $types);
         }
     }

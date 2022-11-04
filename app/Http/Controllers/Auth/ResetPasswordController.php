@@ -126,7 +126,7 @@ class ResetPasswordController extends Controller
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function showResetForm(Request $request, $token = null)
+    public function showResetForm(Request $request, $token = null) // @phpstan-ignore-line
     {
         $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {

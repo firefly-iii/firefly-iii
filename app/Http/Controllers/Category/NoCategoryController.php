@@ -80,7 +80,7 @@ class NoCategoryController extends Controller
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function show(Request $request, Carbon $start = null, Carbon $end = null)
+    public function show(Request $request, Carbon $start = null, Carbon $end = null)// @phpstan-ignore-line
     {
         Log::debug('Start of noCategory()');
         /** @var Carbon $start */

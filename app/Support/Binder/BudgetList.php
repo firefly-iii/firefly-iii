@@ -54,7 +54,7 @@ class BudgetList implements BinderInterface
             $list = array_unique(array_map('\intval', explode(',', $value)));
 
 
-            if (empty($list)) {
+            if (0 === count($list)) {
                 app('log')->warning('Budget list count is zero, return 404.');
                 throw new NotFoundHttpException();
             }

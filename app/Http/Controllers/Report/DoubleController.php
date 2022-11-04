@@ -115,7 +115,7 @@ class DoubleController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
-            throw new FireflyException($result, 0, $e);
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         return $result;
@@ -167,7 +167,7 @@ class DoubleController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
-            throw new FireflyException($result, 0, $e);
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         return $result;
@@ -461,7 +461,7 @@ class DoubleController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
-            throw new FireflyException($result, 0, $e);
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         return $result;
@@ -511,7 +511,7 @@ class DoubleController extends Controller
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
-            throw new FireflyException($result, 0, $e);
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         return $result;

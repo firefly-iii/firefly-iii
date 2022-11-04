@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CategoryController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -39,7 +39,6 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Class CategoryController.
@@ -69,7 +68,7 @@ class CategoryController extends Controller
      * Show an overview for a category for all time, per month/week/year.
      * TODO test method, for category refactor.
      *
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -106,14 +105,7 @@ class CategoryController extends Controller
      */
     private function getDate(): Carbon
     {
-        $carbon = null;
-        try {
-            $carbon = today(config('app.timezone'));
-        } catch (Exception $e) {
-            // @ignoreException
-        }
-
-        return $carbon;
+        return today(config('app.timezone'));
     }
 
     /**
@@ -147,10 +139,10 @@ class CategoryController extends Controller
      * Chart report.
      * TODO test method for category refactor.
      *
-     * @param Category   $category
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Category  $category
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
      */
@@ -175,10 +167,10 @@ class CategoryController extends Controller
     /**
      * Generate report chart for either with or without category.
      *
-     * @param Collection    $accounts
-     * @param Carbon        $start
-     * @param Carbon        $end
-     * @param Category|null $category
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Category|null  $category
      *
      * @return array
      */
@@ -199,7 +191,7 @@ class CategoryController extends Controller
         if (null !== $category) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
-            $categoryId    = (int) $category->id;
+            $categoryId    = (int)$category->id;
             // this gives us all currencies
             $collection = new Collection([$category]);
             $expenses   = $opsRepository->listExpenses($start, $end, null, $collection);
@@ -217,7 +209,7 @@ class CategoryController extends Controller
             $inKey        = sprintf('%d-in', $currencyId);
             $chartData[$outKey]
                           = [
-                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
@@ -225,7 +217,7 @@ class CategoryController extends Controller
 
             $chartData[$inKey]
                 = [
-                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
@@ -262,9 +254,9 @@ class CategoryController extends Controller
      * Chart for period for transactions without a category.
      * TODO test me.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
      */
@@ -289,8 +281,8 @@ class CategoryController extends Controller
      * Chart for a specific period.
      * TODO test me, for category refactor.
      *
-     * @param Category $category
-     * @param Carbon   $date
+     * @param  Category  $category
+     * @param  Carbon  $date
      *
      * @return JsonResponse
      * @throws FireflyException

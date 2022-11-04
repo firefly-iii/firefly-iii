@@ -88,7 +88,7 @@ class ShowController extends Controller
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
+    public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null) // @phpstan-ignore-line
     {
         $objectType = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 

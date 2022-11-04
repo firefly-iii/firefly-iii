@@ -127,7 +127,7 @@ class PreferencesController extends Controller
         $locales = ['equal' => (string) trans('firefly.equal_to_language')] + $locales;
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
-        if (empty($frontPageAccounts->data)) {
+        if (0 === count($frontPageAccounts->data)) {
             $frontPageAccounts = $accountIds;
         }
 

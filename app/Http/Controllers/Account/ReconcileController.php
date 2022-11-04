@@ -90,7 +90,7 @@ class ReconcileController extends Controller
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
+    public function reconcile(Account $account, Carbon $start = null, Carbon $end = null) // @phpstan-ignore-line
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);

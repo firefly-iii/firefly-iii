@@ -60,7 +60,7 @@ class GroupUpdateService
         }
 
 
-        if (empty($transactions)) {
+        if (0 === count($transactions)) {
             Log::debug('No transactions submitted, do nothing.');
 
             return $transactionGroup;
@@ -119,7 +119,7 @@ class GroupUpdateService
     private function updateTransactionJournal(TransactionGroup $transactionGroup, TransactionJournal $journal, array $data): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        if (empty($data)) {
+        if (0 === count($data)) {
             return;
         }
         if (1 === count($data) && array_key_exists('transaction_journal_id', $data)) {

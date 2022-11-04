@@ -180,7 +180,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     protected function getExpenses(): array
     {
-        if (!empty($this->expenses)) {
+        if (0 !== count($this->expenses)) {
             Log::debug('Return previous set of expenses.');
 
             return $this->expenses;

@@ -150,7 +150,7 @@ class RecurrenceUpdateService
     private function updateRepetitions(Recurrence $recurrence, array $repetitions): void
     {
         $originalCount = $recurrence->recurrenceRepetitions()->count();
-        if (empty($repetitions)) {
+        if (0 === count($repetitions)) {
             // wont drop repetition, rather avoid.
             return;
         }
@@ -228,7 +228,7 @@ class RecurrenceUpdateService
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
         $originalCount = $recurrence->recurrenceTransactions()->count();
-        if (empty($transactions)) {
+        if (0 === count($transactions)) {
             // wont drop transactions, rather avoid.
             return;
         }

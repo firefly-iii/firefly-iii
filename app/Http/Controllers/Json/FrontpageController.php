@@ -68,7 +68,7 @@ class FrontpageController extends Controller
             }
         }
         $html = '';
-        if (!empty($info)) {
+        if (0 !== count($info)) {
             try {
                 $html = view('json.piggy-banks', compact('info'))->render();
             } catch (Throwable $e) {

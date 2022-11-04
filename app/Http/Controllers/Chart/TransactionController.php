@@ -115,20 +115,17 @@ class TransactionController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
         $collector->withCategoryInformation();
-        switch ($objectType) {
-            default:
-                throw new FireflyException(sprintf('Cant handle "%s"', $objectType));
-            case 'withdrawal':
-                $collector->setTypes([TransactionType::WITHDRAWAL]);
-                break;
-            case 'deposit':
-                $collector->setTypes([TransactionType::DEPOSIT]);
-                break;
-            case 'transfers':
-            case 'transfer':
-                $collector->setTypes([TransactionType::TRANSFER]);
-                break;
+
+        if ('withdrawal' === $objectType) {
+            $collector->setTypes([TransactionType::WITHDRAWAL]);
         }
+        if ('deposit' === $objectType) {
+            $collector->setTypes([TransactionType::DEPOSIT]);
+        }
+        if ('transfer' === $objectType || 'transfers' === $objectType) {
+            $collector->setTypes([TransactionType::TRANSFER]);
+        }
+
         $result = $collector->getExtractedJournals();
         $data   = [];
 
@@ -172,20 +169,17 @@ class TransactionController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
         $collector->withAccountInformation();
-        switch ($objectType) {
-            default:
-                throw new FireflyException(sprintf('Cant handle "%s"', $objectType));
-            case 'withdrawal':
-                $collector->setTypes([TransactionType::WITHDRAWAL]);
-                break;
-            case 'deposit':
-                $collector->setTypes([TransactionType::DEPOSIT]);
-                break;
-            case 'transfers':
-            case 'transfer':
-                $collector->setTypes([TransactionType::TRANSFER]);
-                break;
+
+        if ('withdrawal' === $objectType) {
+            $collector->setTypes([TransactionType::WITHDRAWAL]);
         }
+        if ('deposit' === $objectType) {
+            $collector->setTypes([TransactionType::DEPOSIT]);
+        }
+        if ('transfer' === $objectType || 'transfers' === $objectType) {
+            $collector->setTypes([TransactionType::TRANSFER]);
+        }
+
         $result = $collector->getExtractedJournals();
         $data   = [];
 
@@ -229,20 +223,17 @@ class TransactionController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
         $collector->withAccountInformation();
-        switch ($objectType) {
-            default:
-                throw new FireflyException(sprintf('Cant handle "%s"', $objectType));
-            case 'withdrawal':
-                $collector->setTypes([TransactionType::WITHDRAWAL]);
-                break;
-            case 'deposit':
-                $collector->setTypes([TransactionType::DEPOSIT]);
-                break;
-            case 'transfers':
-            case 'transfer':
-                $collector->setTypes([TransactionType::TRANSFER]);
-                break;
+
+        if ('withdrawal' === $objectType) {
+            $collector->setTypes([TransactionType::WITHDRAWAL]);
         }
+        if ('deposit' === $objectType) {
+            $collector->setTypes([TransactionType::DEPOSIT]);
+        }
+        if ('transfer' === $objectType || 'transfers' === $objectType) {
+            $collector->setTypes([TransactionType::TRANSFER]);
+        }
+
         $result = $collector->getExtractedJournals();
         $data   = [];
 

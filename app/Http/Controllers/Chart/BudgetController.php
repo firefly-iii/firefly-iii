@@ -205,7 +205,7 @@ class BudgetController extends Controller
      *
      * @return JsonResponse
      */
-    public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
+    public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse // @phpstan-ignore-line
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
@@ -273,7 +273,7 @@ class BudgetController extends Controller
      *
      * @return JsonResponse
      */
-    public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
+    public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse // @phpstan-ignore-line
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);
@@ -337,7 +337,7 @@ class BudgetController extends Controller
      *
      * @return JsonResponse
      */
-    public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
+    public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse // @phpstan-ignore-line
     {
         /** @var GroupCollectorInterface $collector */
         $collector     = app(GroupCollectorInterface::class);

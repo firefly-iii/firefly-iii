@@ -87,7 +87,7 @@ class Authenticate
      */
     protected function authenticate($request, array $guards)
     {
-        if (empty($guards)) {
+        if (0 === count($guards)) {
             try {
                 // go for default guard:
                 if ($this->auth->check()) {

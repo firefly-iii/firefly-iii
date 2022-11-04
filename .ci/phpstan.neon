@@ -17,6 +17,7 @@ parameters:
             - ../app/Console/Commands/Correction/FixAccountTypes.php
             - ../app/Console/Commands/Upgrade/OtherCurrenciesCorrections.php
             - ../app/Exceptions/GracefulNotFoundHandler.php
+            - ../app/Generator/Webhook/StandardMessageGenerator.php
     -
         message: '#Function compact\(\) should not be used#'
         paths:
@@ -28,6 +29,9 @@ parameters:
             - ../app/Generator/Report/Standard/MultiYearReportGenerator.php
             - ../app/Generator/Report/Standard/YearReportGenerator.php
             - ../app/Generator/Report/Tag/MonthReportGenerator.php
+            - ../app/Http/Controllers/Account/*.php
+            - ../app/Http/Controllers/Admin/*.php
+            - ../app/Http/Controllers/*.php
 
   paths:
     - ../app

@@ -81,8 +81,6 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse|RedirectResponse
-     *
      * @throws ValidationException
      */
     public function login(Request $request)

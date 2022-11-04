@@ -145,7 +145,7 @@ class SelectController extends Controller
         $textTriggers = $this->getValidTriggerList($request);
 
         // warn if nothing.
-        if (empty($textTriggers)) {
+        if (0 === count($textTriggers)) {
             return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]);
         }
 
@@ -169,7 +169,7 @@ class SelectController extends Controller
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
-        if (empty($collection)) {
+        if (0 === count($collection)) {
             $warning = (string) trans('firefly.warning_no_matching_transactions');
         }
 
@@ -200,7 +200,7 @@ class SelectController extends Controller
     {
         $triggers = $rule->ruleTriggers;
 
-        if (empty($triggers)) {
+        if (0 === count($triggers)) {
             return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]);
         }
         // create new rule engine:
@@ -212,7 +212,7 @@ class SelectController extends Controller
         $collection = $collection->slice(0, 20);
 
         $warning = '';
-        if (empty($collection)) {
+        if (0 === count($collection)) {
             $warning = (string) trans('firefly.warning_no_matching_transactions');
         }
 
