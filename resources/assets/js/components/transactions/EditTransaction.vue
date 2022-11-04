@@ -128,6 +128,7 @@
                       v-model="transaction.amount"
                       :destination="transaction.destination_account"
                       :error="transaction.errors.amount"
+                      :index="index"
                       :source="transaction.source_account"
                       :transactionType="transactionType"
                   ></amount>
@@ -548,16 +549,24 @@ export default {
         transactionType = 'deposit';
       }
 
+      // get currency from first transaction. overrule the rest
+      let currencyId = this.transactions[0].source_account.currency_id;
+
+      if ('deposit' === transactionType) {
+        currencyId = this.transactions[0].destination_account.currency_id;
+      }
+      console.log('Overruled currency ID to ' + currencyId);
+
       for (let key in this.transactions) {
         if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-          data.transactions.push(this.convertDataRow(this.transactions[key], key, transactionType));
+          data.transactions.push(this.convertDataRow(this.transactions[key], key, transactionType, currencyId));
         }
       }
       //console.log(data);
 
       return data;
     },
-    convertDataRow(row, index, transactionType) {
+    convertDataRow(row, index, transactionType, currencyId) {
       let tagList = [];
       let foreignAmount = null;
       let foreignCurrency = null;
@@ -573,14 +582,17 @@ export default {
       destName = row.destination_account.name;
 
       // depends on the transaction type, where we get the currency.
-      if ('withdrawal' === transactionType || 'transfer' === transactionType) {
-        row.currency_id = row.source_account.currency_id;
-        // console.log('Overruled currency ID to ' + row.currency_id);
-      }
-      if ('deposit' === transactionType) {
-        row.currency_id = row.destination_account.currency_id;
-        // console.log('Overruled currency ID to ' + row.currency_id);
-      }
+      // if ('withdrawal' === transactionType || 'transfer' === transactionType) {
+      //   row.currency_id = row.source_account.currency_id;
+      //   console.log('Overruled currency ID to ' + row.currency_id);
+      // }
+      // if ('deposit' === transactionType) {
+      //   row.currency_id = row.destination_account.currency_id;
+      //   console.log('Overruled currency ID to ' + row.currency_id);
+      // }
+
+      row.currency_id = currencyId;
+      console.log('Final currency ID = ' + currencyId);
 
       date = row.date;
       if (index > 0) {
