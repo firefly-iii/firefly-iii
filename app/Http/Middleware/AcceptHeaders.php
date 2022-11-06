@@ -50,8 +50,10 @@ class AcceptHeaders
         if ('GET' === $method && !$request->accepts(['application/json', 'application/vdn.api+json'])) {
             throw new BadHttpHeaderException('Your request must accept either application/json or application/vdn.api+json.');
         }
-        if (('POST' === $method || 'PUT' === $method) && 'application/json' !== (string)$request->header('Content-Type')) {
-            $error             = new BadHttpHeaderException('Content-Type must be application/json');
+        $allowed = ['application/x-www-form-urlencoded','application/json'];
+        $submitted = (string)$request->header('Content-Type');
+        if (('POST' === $method || 'PUT' === $method) && !in_array($submitted, $allowed, true)) {
+            $error             = new BadHttpHeaderException(sprintf('Content-Type cannot be "%s"', $submitted));
             $error->statusCode = 415;
             throw $error;
         }
