@@ -72,6 +72,7 @@ trait AttachmentCollection
         Log::debug('Add filter on attachment ID.');
         $this->joinAttachmentTables();
         $this->query->whereNotNull('attachments.attachable_id');
+        $this->query->whereNull('attachments.deleted_at');
 
         return $this;
     }
