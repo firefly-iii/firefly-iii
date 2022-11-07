@@ -100,7 +100,7 @@
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^2.0",
     "psr/log": "<4",
-    "ramsey/uuid": "^4.5",
+    "ramsey/uuid": "^4.6",
     "rcrowe/twigbridge": "^0.14",
     "spatie/data-transfer-object": "^3.9",
     "spatie/laravel-ignition": "^1.5",
