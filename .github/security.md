@@ -40,7 +40,7 @@ The Firefly III developer will respond to vulnerability reports as follows:
 9.  Once the fix is confirmed, the developer will patch the vulnerability in the next patch or minor release. Upon release of the patched version of Firefly III, we will follow the **Public Disclosure Process**.
 
 ### Public Disclosure Process
-The developer publishes a public [advisory](https://github.com/firefly-iii/firefly-iii/security/advisories) to the Firefly III community via GitHub. In most cases, additional communication via Twitter, reddit and other channels will assist in educating Firefly III users and rolling out the patched release to affected users. 
+The developer publishes a public [advisory](https://github.com/firefly-iii/firefly-iii/security/advisories) to the Firefly III community via GitHub. In most cases, additional communication via Mastodon, Gitter and other channels will assist in educating Firefly III users and rolling out the patched release to affected users. 
 
 The develop will also publish any mitigating steps users can take until the fix can be applied to their Firefly III instances.
  
