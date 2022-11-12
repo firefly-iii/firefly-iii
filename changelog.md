@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.7.15 - 2022-05-25
+## 5.7.15 - 2022-10-25
 
 ### Fixed
 - You can no longer set the currency of expense and revenue accounts.
