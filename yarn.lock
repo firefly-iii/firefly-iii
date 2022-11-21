@@ -5124,9 +5124,9 @@ vue-i18n@^8:
   integrity sha512-C5GZjs1tYlAqjwymaaCPDjCyGo10ajUphiwA922jKt9n7KPpqR7oM1PCwYzhB/E7+nT3wfdG3oRre5raIT1rKA==
 
 vue-loader@^15:
-  version "15.10.0"
-  resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-15.10.0.tgz#2a12695c421a2a2cc2138f05a949d04ed086e38b"
-  integrity sha512-VU6tuO8eKajrFeBzMssFUP9SvakEeeSi1BxdTH5o3+1yUyrldp8IERkSdXlMI2t4kxF2sqYUDsQY+WJBxzBmZg==
+  version "15.10.1"
+  resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-15.10.1.tgz#c451c4cd05a911aae7b5dbbbc09fb913fb3cca18"
+  integrity sha512-SaPHK1A01VrNthlix6h1hq4uJu7S/z0kdLUb6klubo738NeQoLbS6V9/d8Pv19tU0XdQKju3D1HSKuI8wJ5wMA==
   dependencies:
     "@vue/component-compiler-utils" "^3.1.0"
     hash-sum "^1.0.2"
