@@ -699,4 +699,17 @@ trait MetaCollection
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSepaCT(string $sepaCT): GroupCollectorInterface
+    {
+        $this->joinMetaDataTables();
+        $this->query->where('journal_meta.name', '=', 'sepa_ct_id');
+        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($sepaCT)));
+        $this->query->whereNull('journal_meta.deleted_at');
+
+        return $this;
+    }
 }
