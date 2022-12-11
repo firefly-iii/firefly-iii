@@ -70,8 +70,6 @@ class RemoteUserGuard implements Guard
         $header = config('auth.guard_header', 'REMOTE_USER');
         $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
 
-        $userID = 'james@firefly';
-
         if (null === $userID) {
             Log::error(sprintf('No user in header "%s".', $header));
             throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
