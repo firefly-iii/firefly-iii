@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /*
  * PiggyBankEventHandler.php
@@ -27,7 +28,6 @@ use FireflyIII\Events\ChangedPiggyBankAmount;
 use FireflyIII\Models\PiggyBankEvent;
 use Illuminate\Support\Facades\Log;
 
-
 /**
  * Class PiggyBankEventHandler
  */
@@ -51,7 +51,7 @@ class PiggyBankEventHandler
             $exists = PiggyBankEvent::where('piggy_bank_id', $event->piggyBank->id)
                                     ->where('transaction_journal_id', $journal->id)
                                     ->exists();
-            if($exists) {
+            if ($exists) {
                 Log::warning('Already have event for this journal and piggy, will not create another.');
                 return;
             }
@@ -66,5 +66,4 @@ class PiggyBankEventHandler
             ]
         );
     }
-
 }

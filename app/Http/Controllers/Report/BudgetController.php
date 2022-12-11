@@ -359,7 +359,6 @@ class BudgetController extends Controller
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
-
         }
 
         $cache->store($result);
