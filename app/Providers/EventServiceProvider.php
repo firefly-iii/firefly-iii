@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EventServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -22,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use Exception;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
@@ -42,23 +42,15 @@ use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Events\WarnUserAboutBill;
-use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Notification;
-use Laravel\Passport\Client;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Log;
-use Mail;
-use Session;
-use TypeError;
 
 /**
  * Class EventServiceProvider.
@@ -113,10 +105,10 @@ class EventServiceProvider extends ServiceProvider
             AdminRequestedTestMessage::class    => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
             ],
-            NewVersionAvailable::class => [
+            NewVersionAvailable::class          => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendNewVersion',
             ],
-            InvitationCreated::class => [
+            InvitationCreated::class            => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
             ],
@@ -161,11 +153,11 @@ class EventServiceProvider extends ServiceProvider
             ],
 
             // audit log events:
-            TriggeredAuditLog::class => [
+            TriggeredAuditLog::class            => [
                 'FireflyIII\Handlers\Events\AuditEventHandler@storeAuditEvent',
-
+            ],
             // piggy bank related events:
-            ChangedPiggyBankAmount::class => [
+            ChangedPiggyBankAmount::class       => [
                 'FireflyIII\Handlers\Events\PiggyBankEventHandler@changePiggyAmount',
             ],
         ];
@@ -201,10 +193,17 @@ class EventServiceProvider extends ServiceProvider
                 $repository = app(BudgetLimitRepositoryInterface::class);
                 $repository->setUser($user);
                 $set = $repository->getAllBudgetLimitsByCurrency($limit->transactionCurrency, $limit->start_date, $limit->end_date);
-                $sum = (string) $set->sum('amount');
+                $sum = (string)$set->sum('amount');
 
 
-                Log::debug(sprintf('Because budget limit #%d had its amount changed to %s, available budget limit #%d will be updated.', $limit->id, $limit->amount, $availableBudget->id));
+                Log::debug(
+                    sprintf(
+                        'Because budget limit #%d had its amount changed to %s, available budget limit #%d will be updated.',
+                        $limit->id,
+                        $limit->amount,
+                        $availableBudget->id
+                    )
+                );
                 $availableBudget->amount = $sum;
                 $availableBudget->save();
                 return;
