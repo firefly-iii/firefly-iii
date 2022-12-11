@@ -47,10 +47,8 @@ interface PiggyBankRepositoryInterface
     /**
      * @param PiggyBankRepetition $repetition
      * @param string              $amount
-     *
-     * @return string
      */
-    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount): string;
+    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount): void;
 
     /**
      * @param PiggyBank $piggyBank
@@ -67,25 +65,6 @@ interface PiggyBankRepositoryInterface
      * @return bool
      */
     public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool;
-
-    /**
-     * Create a new event.
-     *
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
-     * @return PiggyBankEvent
-     */
-    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent;
-
-    /**
-     * @param PiggyBank          $piggyBank
-     * @param string             $amount
-     * @param TransactionJournal $journal
-     *
-     * @return PiggyBankEvent
-     */
-    public function createEventWithJournal(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): PiggyBankEvent;
 
     /**
      * Destroy piggy bank.

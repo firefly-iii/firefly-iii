@@ -152,7 +152,6 @@ class UpdatePiggybank implements ActionInterface
         Log::debug(sprintf('Will now remove %s from piggy bank.', $amount));
 
         $repository->removeAmount($piggyBank, $amount);
-        $repository->createEventWithJournal($piggyBank, app('steam')->negative($amount), $journal);
     }
 
     /**
@@ -191,6 +190,5 @@ class UpdatePiggybank implements ActionInterface
         Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
 
         $repository->addAmount($piggyBank, $amount);
-        $repository->createEventWithJournal($piggyBank, app('steam')->positive($amount), $journal);
     }
 }

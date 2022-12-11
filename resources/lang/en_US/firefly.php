@@ -1851,6 +1851,7 @@ return [
     'no_tags'                                   => '(no tags)',
 
     // piggy banks:
+    'event_history'                             => 'Event history',
     'add_money_to_piggy'                        => 'Add money to piggy bank ":name"',
     'piggy_bank'                                => 'Piggy bank',
     'new_piggy_bank'                            => 'New piggy bank',
