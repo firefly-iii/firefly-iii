@@ -41,6 +41,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 
 /**
  * Class UpdateGroupInformation
@@ -115,7 +116,12 @@ class UpdateGroupInformation extends Command
      */
     private function updateGroupInfoForObject(User $user, UserGroup $group, string $className): void
     {
+        try {
         $result = $className::where('user_id', $user->id)->where('user_group_id', null)->update(['user_group_id' => $group->id]);
+        } catch(QueryException $e) {
+            $this->error(sprintf('Could not update group information for "%s" because of error "%s"', $className, $e->getMessage()));
+            return;
+        }
         if (0 !== $result) {
             $this->line(sprintf('Moved %d %s objects to the correct group.', $result, str_replace('FireflyIII\\Models\\', '', $className)));
         }

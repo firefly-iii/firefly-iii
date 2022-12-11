@@ -30,6 +30,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class AuditLogEntry
+ *
+ * @property-read Model|\Eloquent $auditable
+ * @property-read Model|\Eloquent $changer
+ * @method static \Illuminate\Database\Eloquent\Builder|AuditLogEntry newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AuditLogEntry newQuery()
+ * @method static \Illuminate\Database\Query\Builder|AuditLogEntry onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|AuditLogEntry query()
+ * @method static \Illuminate\Database\Query\Builder|AuditLogEntry withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|AuditLogEntry withoutTrashed()
+ * @mixin \Eloquent
  */
 class AuditLogEntry extends Model
 {

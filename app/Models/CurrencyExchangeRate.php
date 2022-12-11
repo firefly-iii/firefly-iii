@@ -29,6 +29,34 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class CurrencyExchangeRate
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property int $user_id
+ * @property int $from_currency_id
+ * @property int $to_currency_id
+ * @property \Illuminate\Support\Carbon $date
+ * @property string $rate
+ * @property string|null $user_rate
+ * @property-read \FireflyIII\Models\TransactionCurrency $fromCurrency
+ * @property-read \FireflyIII\Models\TransactionCurrency $toCurrency
+ * @property-read User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereFromCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereToCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereUserRate($value)
+ * @mixin Eloquent
  */
 class CurrencyExchangeRate extends Model
 {

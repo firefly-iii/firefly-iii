@@ -30,6 +30,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class InvitedUser
+ *
+ * @property-read User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|InvitedUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|InvitedUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|InvitedUser query()
+ * @mixin \Eloquent
  */
 class InvitedUser extends Model
 {
