@@ -26,6 +26,7 @@ use Exception;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Events\ChangedPiggyBankAmount;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\NewVersionAvailable;
@@ -162,6 +163,10 @@ class EventServiceProvider extends ServiceProvider
             // audit log events:
             TriggeredAuditLog::class => [
                 'FireflyIII\Handlers\Events\AuditEventHandler@storeAuditEvent',
+
+            // piggy bank related events:
+            ChangedPiggyBankAmount::class => [
+                'FireflyIII\Handlers\Events\PiggyBankEventHandler@changePiggyAmount',
             ],
         ];
 

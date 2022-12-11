@@ -51,14 +51,6 @@ class Steam
      */
     public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
-        // abuse chart properties:
-        $cache = new CacheProperties();
-        $cache->addProperty($account->id);
-        $cache->addProperty('balance-no-virtual');
-        $cache->addProperty($date);
-        if ($cache->has()) {
-            return $cache->get();
-        }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
@@ -80,11 +72,7 @@ class Steam
                                 ->get(['transactions.foreign_amount'])->toArray();
 
         $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
-        $balance        = bcadd($nativeBalance, $foreignBalance);
-
-        $cache->store($balance);
-
-        return $balance;
+        return bcadd($nativeBalance, $foreignBalance);
     }
 
     /**

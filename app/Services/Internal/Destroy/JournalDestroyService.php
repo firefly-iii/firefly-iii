@@ -83,6 +83,7 @@ class JournalDestroyService
             $journal->notes()->delete();
 
             // update events
+            // TODO move to repository
             $journal->piggyBankEvents()->update(['transaction_journal_id' => null]);
 
             $journal->delete();

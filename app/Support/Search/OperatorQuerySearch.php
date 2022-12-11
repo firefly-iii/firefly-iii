@@ -1309,6 +1309,9 @@ class OperatorQuerySearch implements SearchInterface
             case '-exists':
                 $this->collector->findNothing();
                 break;
+            case 'sepa_ct_is':
+                $this->collector->setSepaCT($value);
+                break;
         }
         return true;
     }
