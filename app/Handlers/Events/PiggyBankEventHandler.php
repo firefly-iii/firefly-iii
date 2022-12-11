@@ -24,6 +24,8 @@ namespace FireflyIII\Handlers\Events;
 use Carbon\Carbon;
 use FireflyIII\Events\ChangedPiggyBankAmount;
 use FireflyIII\Models\PiggyBankEvent;
+use Illuminate\Support\Facades\Log;
+
 
 /**
  * Class PiggyBankEventHandler
@@ -42,6 +44,18 @@ class PiggyBankEventHandler
             $journal = $event->transactionGroup->transactionJournals()->first();
         }
         $date = $journal?->date ?? Carbon::now();
+
+        // sanity check: event must not already exist for this journal and piggy bank.
+        if (null !== $journal) {
+            $exists = PiggyBankEvent::where('piggy_bank_id', $event->piggyBank->id)
+                                    ->where('transaction_journal_id', $journal->id)
+                                    ->exists();
+            if($exists) {
+                Log::warning('Already have event for this journal and piggy, will not create another.');
+                return;
+            }
+        }
+
         PiggyBankEvent::create(
             [
                 'piggy_bank_id'          => $event->piggyBank->id,

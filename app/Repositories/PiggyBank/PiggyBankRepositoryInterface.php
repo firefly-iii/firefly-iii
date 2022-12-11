@@ -37,18 +37,18 @@ use Illuminate\Support\Collection;
 interface PiggyBankRepositoryInterface
 {
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $amount
+     * @param  TransactionJournal|null  $journal
      * @return bool
      */
-    public function addAmount(PiggyBank $piggyBank, string $amount): bool;
+    public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
     /**
      * @param PiggyBankRepetition $repetition
      * @param string              $amount
      */
-    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount): void;
+    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void;
 
     /**
      * @param PiggyBank $piggyBank
@@ -197,12 +197,12 @@ interface PiggyBankRepositoryInterface
     public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string;
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $amount
+     * @param  TransactionJournal|null  $journal
      * @return bool
      */
-    public function removeAmount(PiggyBank $piggyBank, string $amount): bool;
+    public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
     /**
      * @param PiggyBank $piggyBank

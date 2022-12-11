@@ -30,6 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
@@ -44,10 +45,10 @@ trait ModifiesPiggyBanks
     /**
      * @param  PiggyBank  $piggyBank
      * @param  string  $amount
-     *
+     * @param  TransactionJournal|null  $journal
      * @return bool
      */
-    public function addAmount(PiggyBank $piggyBank, string $amount): bool
+    public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
         $repetition = $this->getRepetition($piggyBank);
         if (null === $repetition) {
@@ -58,7 +59,7 @@ trait ModifiesPiggyBanks
         $repetition->save();
 
         Log::debug('addAmount: Trigger change for positive amount.');
-        event(new ChangedPiggyBankAmount($piggyBank, $amount, null, null));
+        event(new ChangedPiggyBankAmount($piggyBank, $amount, $journal, null));
 
         return true;
     }
@@ -69,16 +70,16 @@ trait ModifiesPiggyBanks
      *
      * @return void
      */
-    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount): void
+    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
     {
         Log::debug(sprintf('addAmountToRepetition: %s', $amount));
         if (-1 === bccomp($amount, '0')) {
             Log::debug('Remove amount.');
-            $this->removeAmount($repetition->piggyBank, bcmul($amount, '-1'));
+            $this->removeAmount($repetition->piggyBank, bcmul($amount, '-1'), $journal);
         }
         if (1 === bccomp($amount, '0')) {
             Log::debug('Add amount.');
-            $this->addAmount($repetition->piggyBank, $amount);
+            $this->addAmount($repetition->piggyBank, $amount, $journal);
         }
     }
 
@@ -149,7 +150,7 @@ trait ModifiesPiggyBanks
      *
      * @return bool
      */
-    public function removeAmount(PiggyBank $piggyBank, string $amount): bool
+    public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
         $repetition = $this->getRepetition($piggyBank);
         if (null === $repetition) {
@@ -159,7 +160,7 @@ trait ModifiesPiggyBanks
         $repetition->save();
 
         Log::debug('addAmount: Trigger change for negative amount.');
-        event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), null, null));
+        event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
 
         return true;
     }

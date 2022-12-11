@@ -74,8 +74,7 @@ class PiggyBankEventFactory
 
             return;
         }
-        // amount can be negative.
-
-        $piggyRepos->addAmountToRepetition($repetition, $amount);
+        // amount can be negative here
+        $piggyRepos->addAmountToRepetition($repetition, $amount, $journal);
     }
 }
