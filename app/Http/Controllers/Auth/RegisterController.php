@@ -148,7 +148,7 @@ class RegisterController extends Controller
         $allowRegistration = $this->allowedToRegister();
 
         if (false === $allowRegistration) {
-            $message = 'Registration is currently not available.';
+            $message = 'Registration is currently not available. If you are the administrator, you can enable this in the administration.';
 
             return view('error', compact('message'));
         }
