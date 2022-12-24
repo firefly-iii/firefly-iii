@@ -167,14 +167,19 @@ class IndexController extends Controller
         $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
         $activities    = app('steam')->getLastActivities($ids);
 
+
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
+
+                $interest = (string)$this->repository->getMetaValue($account, 'interest');
+                $interest = '' === $interest ? '0' : $interest;
+
                 // See reference nr. 68
                 $account->lastActivityDate    = $this->isInArrayDate($activities, $account->id);
                 $account->startBalance        = $this->isInArray($startBalances, $account->id);
                 $account->endBalance          = $this->isInArray($endBalances, $account->id);
                 $account->difference          = bcsub($account->endBalance, $account->startBalance);
-                $account->interest            = app('steam')->bcround($this->repository->getMetaValue($account, 'interest'), 4);
+                $account->interest            = app('steam')->bcround($interest, 4);
                 $account->interestPeriod      = (string) trans(
                     sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period'))
                 );

@@ -135,6 +135,7 @@ class EditController extends Controller
 
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
+        $virtualBalance = null === $account->virtual_balance ? '0' : $account->virtual_balance;
         $preFilled   = [
             'account_number'          => $repository->getMetaValue($account, 'account_number'),
             'account_role'            => $repository->getMetaValue($account, 'account_role'),
@@ -145,7 +146,7 @@ class EditController extends Controller
             'liability_type_id'       => $account->account_type_id,
             'opening_balance'         => app('steam')->bcround($openingBalanceAmount, $currency->decimal_places),
             'liability_direction'     => $this->repository->getMetaValue($account, 'liability_direction'),
-            'virtual_balance'         => app('steam')->bcround($account->virtual_balance, $currency->decimal_places),
+            'virtual_balance'         => app('steam')->bcround($virtualBalance, $currency->decimal_places),
             'currency_id'             => $currency->id,
             'include_net_worth'       => $includeNetWorth,
             'interest'                => $repository->getMetaValue($account, 'interest'),

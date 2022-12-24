@@ -446,6 +446,9 @@ trait ModifiesPiggyBanks
         if (array_key_exists('targetamount', $data) && '' !== $data['targetamount']) {
             $piggyBank->targetamount = $data['targetamount'];
         }
+        if (array_key_exists('targetamount', $data) && '' === $data['targetamount']) {
+            $piggyBank->targetamount = '0';
+        }
         if (array_key_exists('targetdate', $data) && '' !== $data['targetdate']) {
             $piggyBank->targetdate = $data['targetdate'];
         }
