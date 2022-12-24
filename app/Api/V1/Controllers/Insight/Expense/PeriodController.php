@@ -65,7 +65,7 @@ class PeriodController extends Controller
                         'currency_code'    => $journal['currency_code'],
                     ];
                 $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], $journal['amount']);
-                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // float but on purpose.
+                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // intentional float
             }
             if (0 !== $foreignCurrencyId) {
                 $response[$foreignCurrencyId]                     = $response[$foreignCurrencyId] ?? [
@@ -75,7 +75,7 @@ class PeriodController extends Controller
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
                 $response[$foreignCurrencyId]['difference']       = bcadd($response[$foreignCurrencyId]['difference'], $journal['foreign_amount']);
-                $response[$foreignCurrencyId]['difference_float'] = (float) $response[$foreignCurrencyId]['difference']; // float but on purpose.
+                $response[$foreignCurrencyId]['difference_float'] = (float) $response[$foreignCurrencyId]['difference']; // intentional float
             }
         }
 

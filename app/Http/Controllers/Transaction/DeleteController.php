@@ -137,6 +137,7 @@ class DeleteController extends Controller
             Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
             event(new UpdatedAccount($account));
         }
+        app('preferences')->mark();
 
 
         return redirect($this->getPreviousUrl('transactions.delete.url'));

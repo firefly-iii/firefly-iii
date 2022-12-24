@@ -130,7 +130,7 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
-                        'diff_float'  => (float)$diff,
+                        'diff_float'  => (float) $diff, // intentional float
                         'currency_id' => $currencyId,
                     ];
                 }
@@ -482,7 +482,6 @@ class AccountController extends Controller
         ];
         $entries = [];
         $current = clone $start;
-
         if ('1D' === $step) {
             // per day the entire period, balance for every day.
             $format   = (string)trans('config.month_and_day_js', [], $locale);
@@ -581,7 +580,7 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
-                        'diff_float'  => (float)$diff,
+                        'diff_float'  => (float) $diff, // intentional float
                         'currency_id' => $currencyId,
                     ];
                 }

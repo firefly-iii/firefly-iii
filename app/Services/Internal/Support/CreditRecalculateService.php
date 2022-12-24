@@ -97,7 +97,7 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @throws FireflyException
      */
@@ -119,7 +119,7 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Account
      * @throws FireflyException
@@ -130,8 +130,8 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param string             $direction
+     * @param  TransactionJournal  $journal
+     * @param  string  $direction
      *
      * @return Account
      * @throws FireflyException
@@ -152,7 +152,7 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Account
      * @throws FireflyException
@@ -187,7 +187,7 @@ class CreditRecalculateService
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      */
     private function processWorkAccount(Account $account): void
     {
@@ -203,7 +203,7 @@ class CreditRecalculateService
         $factory->crud($account, 'start_of_debt', $startOfDebt);
 
         // get direction of liability:
-        $direction = (string) $this->repository->getMetaValue($account, 'liability_direction');
+        $direction = (string)$this->repository->getMetaValue($account, 'liability_direction');
 
         // now loop all transactions (except opening balance and credit thing)
         $transactions = $account->transactions()->get();
@@ -218,24 +218,36 @@ class CreditRecalculateService
     }
 
     /**
-     * @param Account     $account
-     * @param string      $direction
-     * @param Transaction $transaction
-     * @param string      $amount
+     * @param  Account  $account
+     * @param  string  $direction
+     * @param  Transaction  $transaction
+     * @param  string  $amount
      *
      * @return string
      */
     private function processTransaction(Account $account, string $direction, Transaction $transaction, string $amount): string
     {
         Log::debug(sprintf('Now in %s(#%d, %s)', __METHOD__, $transaction->id, $amount));
-        $journal = $transaction->transactionJournal;
-        $groupId = $journal->transaction_group_id;
-        $type    = $journal->transactionType->type;
+        $journal         = $transaction->transactionJournal;
+        $foreignCurrency = $transaction->foreignCurrency;
+        $accountCurrency = $this->repository->getAccountCurrency($account);
+        $groupId         = $journal->transaction_group_id;
+        $type            = $journal->transactionType->type;
+
+        Log::debug(sprintf('Account currency is #%d (%s)', $accountCurrency->id, $accountCurrency->code));
+
         if ('' === $direction) {
             Log::debug('Since direction is "", do nothing.');
 
             return $amount;
         }
+        // amount to use depends on the currency:
+        $usedAmount = $transaction->amount;
+        if (null !== $foreignCurrency && $foreignCurrency->id === $accountCurrency->id) {
+            $usedAmount = $transaction->foreign_amount;
+            Log::debug('Will now use foreign amount!');
+        }
+
 
         Log::debug(sprintf('Processing group #%d, journal #%d of type "%s"', $journal->id, $groupId, $type));
 
@@ -244,8 +256,8 @@ class CreditRecalculateService
         // to a credit-liability doesn't increase the amount (yet)
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int) $account->id === (int) $transaction->account_id
-            && 1 === bccomp($transaction->amount, '0')
+            && (int)$account->id === (int)$transaction->account_id
+            && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
             Log::debug(sprintf('Is withdrawal into credit liability #%d, does not influence the amount due.', $transaction->account_id));
@@ -256,8 +268,8 @@ class CreditRecalculateService
         // likewise deposit into a credit debt does not change the amount
         if (
             $type === TransactionType::DEPOSIT
-            && (int) $account->id === (int) $transaction->account_id
-            && -1 === bccomp($transaction->amount, '0')
+            && (int)$account->id === (int)$transaction->account_id
+            && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
             Log::debug(sprintf('Is deposit from liability #%d,does not influence the amount left.', $transaction->account_id));
@@ -266,7 +278,7 @@ class CreditRecalculateService
         }
 
         if (in_array($type, [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
-            $amount = bcadd($amount, bcmul($transaction->amount, '-1'));
+            $amount = bcadd($amount, bcmul($usedAmount, '-1'));
         }
         Log::debug(sprintf('Amount is now %s', $amount));
 
@@ -274,7 +286,7 @@ class CreditRecalculateService
     }
 
     /**
-     * @param Account|null $account
+     * @param  Account|null  $account
      */
     public function setAccount(?Account $account): void
     {
@@ -282,7 +294,7 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionGroup $group
+     * @param  TransactionGroup  $group
      */
     public function setGroup(TransactionGroup $group): void
     {

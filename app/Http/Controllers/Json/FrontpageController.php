@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FrontpageController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,7 @@ class FrontpageController extends Controller
     /**
      * Piggy bank pie chart.
      *
-     * @param PiggyBankRepositoryInterface $repository
+     * @param  PiggyBankRepositoryInterface  $repository
      *
      * @return JsonResponse
      */
@@ -52,7 +53,7 @@ class FrontpageController extends Controller
             if (1 === bccomp($amount, '0')) {
                 // percentage!
                 $pct = 0;
-                if (0.0 !== (float) $piggyBank->targetamount) {
+                if (0 !== bccomp($piggyBank->targetamount, '0')) {
                     $pct = round(($amount / $piggyBank->targetamount) * 100);
                 }
 
