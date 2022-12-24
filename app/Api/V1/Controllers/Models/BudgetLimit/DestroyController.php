@@ -77,6 +77,7 @@ class DestroyController extends Controller
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
         $this->blRepository->destroyBudgetLimit($budgetLimit);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

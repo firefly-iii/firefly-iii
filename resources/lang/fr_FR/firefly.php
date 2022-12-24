@@ -145,7 +145,7 @@ return [
     'pref_languages_locale'                => 'Pour une langue autre que l’anglais et pour fonctionner correctement, votre système d’exploitation doit être équipé avec les paramètres régionaux correctes. Si ils ne sont pas présents, les données de devises, les dates et les montants peuvent être mal formatés.',
     'budget_in_period'                     => 'Toutes les opérations pour le budget ":name" entre :start et :end dans la monnaie :currency',
     'chart_budget_in_period'               => 'Graphique pour toutes les opérations pour le budget ":name" entre :start et :end dans :currency',
-    'chart_budget_in_period_only_currency' => 'Le montant que vous avez budgété était en :currency, ce graphique ne montrera donc que les opérations dans :currency.',
+    'chart_budget_in_period_only_currency' => 'Le montant que vous avez budgété était en :currency, ce graphique ne montrera donc que les opérations en :currency.',
     'chart_account_in_period'              => 'Graphique pour toutes les opérations pour le compte ":name" (:balance) entre :start et :end',
     'chart_category_in_period'             => 'Graphique pour toutes les opérations pour la catégorie ":name" entre :start et :end',
     'chart_category_all'                   => 'Graphique pour toutes les opérations pour la catégorie ":name"',

@@ -70,6 +70,7 @@ class DestroyController extends Controller
     public function destroy(ObjectGroup $objectGroup): JsonResponse
     {
         $this->repository->destroy($objectGroup);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

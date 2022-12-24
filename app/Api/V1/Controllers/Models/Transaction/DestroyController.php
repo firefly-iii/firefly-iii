@@ -122,6 +122,7 @@ class DestroyController extends Controller
     public function destroyJournal(TransactionJournal $transactionJournal): JsonResponse
     {
         $this->repository->destroyJournal($transactionJournal);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

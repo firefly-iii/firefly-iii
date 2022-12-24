@@ -104,7 +104,7 @@
         "inspect": "Zbadaj",
         "create_new_webhook": "Utw\u00f3rz nowy webhook",
         "webhooks": "Webhooki",
-        "webhook_trigger_form_help": "Indicate on what event the webhook will trigger",
+        "webhook_trigger_form_help": "Wska\u017c zdarzenie do wyzwolenia webhook'a",
         "webhook_response_form_help": "Wska\u017c, co webhook musi przes\u0142a\u0107 do adresu URL.",
         "webhook_delivery_form_help": "W jakim formacie webhook musi dostarcza\u0107 dane.",
         "webhook_active_form_help": "Webhook musi by\u0107 aktywny lub nie zostanie wywo\u0142any.",
@@ -118,10 +118,10 @@
         "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
         "no_attempts": "Nie ma nieudanych pr\u00f3b. To dobrze!",
         "webhook_attempt_at": "Attempt at {moment}",
-        "logs": "Logs",
+        "logs": "Logi",
         "response": "Odpowied\u017a",
-        "visit_webhook_url": "Visit webhook URL",
-        "reset_webhook_secret": "Reset webhook secret"
+        "visit_webhook_url": "Odwied\u017a adres URL webhooka",
+        "reset_webhook_secret": "Resetuj sekret webhooka"
     },
     "form": {
         "url": "URL",

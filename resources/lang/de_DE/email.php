@@ -34,12 +34,12 @@ return [
     'admin_test_body'                         => 'Dies ist eine Testnachricht von Ihrer Firefly III-Instanz. Sie wurde an :email gesendet.',
 
     // invite
-    'invitation_created_subject'              => 'An invitation has been created',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
-    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
-    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+    'invitation_created_subject'              => 'Eine Einladung wurde erstellt',
+    'invitation_created_body'                 => 'Admin-Benutzer „:email” hat eine Benutzereinladung erstellt, die von demjenigen benutzt werden kann, der hinter der E-Mail-Adresse „:invitee” steht. Die Einladung ist 48 Stunden lang gültig.',
+    'invite_user_subject'                     => 'Sie wurden eingeladen, ein Firefly III-Konto zu erstellen.',
+    'invitation_introduction'                 => 'Sie wurden eingeladen, ein Firefly III-Konto auf **:host** zu erstellen. Firefly III ist ein persönlicher, selbst gehosteter, privater Finanzmanager. Alle coolen Kids benutzen ihn.',
+    'invitation_invited_by'                   => 'Sie wurden von „:admin” eingeladen und diese Einladung wurde an „:invitee” gesendet. Das sind Sie, richtig?',
+    'invitation_url'                          => 'Die Einladung ist 48 Stunden lang gültig und kann durch einen Besuch von [Firefly III](:url) eingelöst werden. Viel Spaß!',
 
     // new IP
     'login_from_new_ip'                       => 'Neue Anmeldung bei Firefly III',

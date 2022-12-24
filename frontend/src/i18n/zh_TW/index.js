@@ -45,7 +45,7 @@ export default {
     },
     "breadcrumbs": {
         "placeholder": "[Placeholder]",
-        "budgets": "Budgets",
+        "budgets": "\u9810\u7b97",
         "subscriptions": "Subscriptions",
         "transactions": "Transactions",
         "title_expenses": "Expenses",

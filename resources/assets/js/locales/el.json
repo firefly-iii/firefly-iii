@@ -135,20 +135,20 @@
         "payment_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c0\u03bb\u03b7\u03c1\u03c9\u03bc\u03ae\u03c2",
         "invoice_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c4\u03b9\u03bc\u03bf\u03bb\u03cc\u03b3\u03b7\u03c3\u03b7\u03c2",
         "internal_reference": "\u0395\u03c3\u03c9\u03c4\u03b5\u03c1\u03b9\u03ba\u03ae \u03b1\u03bd\u03b1\u03c6\u03bf\u03c1\u03ac",
-        "webhook_response": "Response",
-        "webhook_trigger": "Trigger",
-        "webhook_delivery": "Delivery"
+        "webhook_response": "\u0391\u03c0\u03cc\u03ba\u03c1\u03b9\u03c3\u03b7",
+        "webhook_trigger": "\u0395\u03bd\u03b5\u03c1\u03b3\u03bf\u03c0\u03bf\u03af\u03b7\u03c3\u03b7",
+        "webhook_delivery": "\u03a0\u03b1\u03c1\u03ac\u03b4\u03bf\u03c3\u03b7"
     },
     "list": {
         "active": "\u0395\u03af\u03bd\u03b1\u03b9 \u03b5\u03bd\u03b5\u03c1\u03b3\u03cc;",
-        "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
-        "url": "URL",
-        "secret": "Secret"
+        "trigger": "\u0395\u03bd\u03b5\u03c1\u03b3\u03bf\u03c0\u03bf\u03af\u03b7\u03c3\u03b7",
+        "response": "\u0391\u03c0\u03cc\u03ba\u03c1\u03b9\u03c3\u03b7",
+        "delivery": "\u03a0\u03b1\u03c1\u03ac\u03b4\u03bf\u03c3\u03b7",
+        "url": "\u0394\u03b9\u03b5\u03cd\u03b8\u03c5\u03bd\u03c3\u03b7 URL",
+        "secret": "\u039c\u03c5\u03c3\u03c4\u03b9\u03ba\u03cc"
     },
     "config": {
         "html_language": "el",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "do MMMM yyyy @ HH:mm:ss"
     }
 }

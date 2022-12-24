@@ -84,7 +84,7 @@ class TestRequest extends FormRequest
     {
         return [
             'start'      => 'date',
-            'end'        => 'date|after:start',
+            'end'        => 'date|after_or_equal:start',
             'accounts'   => '',
             'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];

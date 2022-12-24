@@ -30,10 +30,10 @@ return [
     'index_help'                            => 'Če potrebuješ pomoč na strani ali obrazcu, pritisni ta gumb.',
     'index_outro'                           => 'Večina strani Firefly III se bo začela z malo predstavitvijo, kot je ta. Če imaš vprašanja ali pripombe, se obrni name. Uživaj!',
     'index_sidebar-toggle'                  => 'Za ustvarjanje novih transakcij, računov ali drugih stvari uporabi meni pod to ikono.',
-    'index_cash_account'                    => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                    => 'To so računi, ki so bili ustvarjeni do sedaj. Lahko uporabiš gotovinski račun za sledenje gotovinskih stroškov, vendar to ni obvezno.',
 
     // transactions
-    'transactions_create_basic_info'        => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_basic_info'        => 'Vnesite osnovne podatke o transakciji. Vir, destinacija, datum in opis.',
     'transactions_create_amount_info'       => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
     'transactions_create_optional_info'     => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
     'transactions_create_split'             => 'If you want to split a transaction, add more splits with this button',

@@ -98,12 +98,15 @@ class Steam
     /**
      * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
      *
-     * @param  string  $number
+     * @param null|string  $number
      * @param  int  $precision
      * @return string
      */
-    public function bcround(string $number, int $precision = 0): string
+    public function bcround(?string $number, int $precision = 0): string
     {
+        if(null === $number) {
+            return '0';
+        }
         if (str_contains($number, '.')) {
             if ($number[0] !== '-') {
                 return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);

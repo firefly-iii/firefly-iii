@@ -71,6 +71,7 @@ class DestroyController extends Controller
     public function destroy(Tag $tag): JsonResponse
     {
         $this->repository->destroy($tag);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

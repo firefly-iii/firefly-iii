@@ -73,6 +73,7 @@ class DestroyController extends Controller
     public function destroy(Attachment $attachment): JsonResponse
     {
         $this->repository->destroy($attachment);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

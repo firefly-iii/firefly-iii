@@ -69,6 +69,7 @@ class DestroyController extends Controller
     public function destroy(Account $account): JsonResponse
     {
         $this->repository->destroy($account, null);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }
