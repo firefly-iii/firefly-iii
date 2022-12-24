@@ -69,6 +69,7 @@ class DestroyController extends Controller
     public function destroy(Webhook $webhook): JsonResponse
     {
         $this->repository->destroy($webhook);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }
@@ -98,6 +99,7 @@ class DestroyController extends Controller
         }
 
         $this->repository->destroyAttempt($attempt);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }
@@ -121,6 +123,7 @@ class DestroyController extends Controller
             throw new FireflyException('Webhook and webhook message are no match');
         }
         $this->repository->destroyMessage($message);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

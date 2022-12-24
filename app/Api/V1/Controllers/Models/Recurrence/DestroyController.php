@@ -67,6 +67,7 @@ class DestroyController extends Controller
     public function destroy(Recurrence $recurrence): JsonResponse
     {
         $this->repository->destroy($recurrence);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

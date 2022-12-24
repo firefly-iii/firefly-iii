@@ -82,6 +82,7 @@ class DestroyController extends Controller
             throw new FireflyException('200020: Link type cannot be changed.');
         }
         $this->repository->destroy($linkType);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

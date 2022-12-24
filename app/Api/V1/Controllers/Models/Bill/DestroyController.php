@@ -67,6 +67,7 @@ class DestroyController extends Controller
     public function destroy(Bill $bill): JsonResponse
     {
         $this->repository->destroy($bill);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

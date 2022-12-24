@@ -88,6 +88,7 @@ class DestroyController extends Controller
         }
 
         $this->repository->destroy($currency);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }
