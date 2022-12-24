@@ -250,5 +250,5 @@ return [
     'value'                       => 'Inhalt der Aufzeichnungen',
     'webhook_delivery'            => 'Delivery',
     'webhook_response'            => 'Response',
-    'webhook_trigger'             => 'Trigger',
+    'webhook_trigger'             => 'Auslöser',
 ];

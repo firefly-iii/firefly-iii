@@ -34,12 +34,12 @@ return [
     'admin_test_body'                         => 'Essa é uma mensagem de teste de sua instância do Firefly III. Foi enviada para :email.',
 
     // invite
-    'invitation_created_subject'              => 'An invitation has been created',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
-    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
-    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+    'invitation_created_subject'              => 'Um convite foi criado',
+    'invitation_created_body'                 => 'O administrador ":email" criou um convite de usuário que pode ser usado por quem administrar o e-mail ":invitee". O convite é válido por 48h.',
+    'invite_user_subject'                     => 'Você foi convidado a criar uma conta no Firefly III.',
+    'invitation_introduction'                 => 'Você foi convidado para criar uma conta no Firefly III em **:host**. Firefly III é um gerenciador privado de finanças pessoal e auto-hospedado. Todas as crianças legais estão usando-o.',
+    'invitation_invited_by'                   => 'Você foi convidado por ":admin" e este convite foi enviado para ":invitee". É você, né?',
+    'invitation_url'                          => 'O convite é válido por 48 horas e pode ser resgatado acessando o [Firefly III](:url). Aproveite!',
 
     // new IP
     'login_from_new_ip'                       => 'Novo login no Firefly III',

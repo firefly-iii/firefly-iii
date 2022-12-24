@@ -34,16 +34,16 @@ return [
     'admin_test_body'                         => '这是来自 Firefly III 站点的测试消息，收件人是 :email。',
 
     // invite
-    'invitation_created_subject'              => 'An invitation has been created',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
-    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
-    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+    'invitation_created_subject'              => '邀请已发送',
+    'invitation_created_body'                 => '管理员用户:email创建了用户邀请，可以由电子邮件地址背后的任何人使用":invitee"。 邀请将对48小时有效。',
+    'invite_user_subject'                     => '您已被邀请创建一个Fifly III帐户。',
+    'invitation_introduction'                 => '您已被邀请在 **:host**创建一个 Firefly III 帐户。 Firefly III是一个个人的、自托管的私人财务经理。所有很酷的人都在使用它。',
+    'invitation_invited_by'                   => '您已经被“:admin”邀请，这个邀请已经被发送到“:invitee”。这是您，对吗？',
+    'invitation_url'                          => '邀请有效期为48小时，可以通过访问 [Firefly III](:url)来兑现。享受！',
 
     // new IP
     'login_from_new_ip'                       => 'Firefly III 上有新的登录活动',
-    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
+    'slack_login_from_new_ip'                 => '新 Firefly III 登录 IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III 检测到了来自未知 IP 地址的登录活动。如果您从未在下列 IP 地址登录，或上次登录已超过6个月，Firefly III 会提醒您。',
     'new_ip_warning'                          => '如果您认识该 IP 地址或知道该次登录，您可以忽略此信息。如果您没有登录，或者您不知道发生了什么，请立即前往个人档案页面，确认您的密码安全、修改新密码，并立即退出登录其他所有设备。为了保证帐户的安全性，请务必启用两步验证功能。',
     'ip_address'                              => 'IP 地址',
@@ -58,8 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => '欢迎使用 Firefly III！',
-    'registered_subject_admin'                => 'A new user has registered',
-    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
+    'registered_subject_admin'                => '一个新用户已注册',
+    'admin_new_user_registered'               => '一个新用户已经注册。用户 **:email** 已被授予用户 ID #:id。',
     'registered_welcome'                      => '欢迎来到 [Firefly III](:address)。收到这封电子邮件即确认您的注册已经完成。耶！',
     'registered_pw'                           => '如果您忘记了您的密码，请使用 [密码重置工具] (:address/password/reset) 重置密码。',
     'registered_help'                         => '每个页面右上角都有一个帮助图标。如果您需要帮助，请点击它！',
@@ -71,7 +71,7 @@ return [
     'registered_doc_link'                     => '文档',
 
     // new version
-    'new_version_email_subject'               => 'A new Firefly III version is available',
+    'new_version_email_subject'               => '有新的 Firefly III 版本可用',
 
     // email change
     'email_change_subject'                    => '您的 Firefly III 电子邮件地址已更改',
@@ -111,7 +111,7 @@ return [
     'error_github_html'                       => '如果您愿意，您也可以在 <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a> 上创建新工单。',
     'error_github_text'                       => '如果您愿意，您也可以在 https://github.com/firefrechy-iii/firefrechy-iii/issues 上创建新工单。',
     'error_stacktrace_below'                  => '完整的堆栈跟踪如下：',
-    'error_headers'                           => 'The following headers may also be relevant:',
+    'error_headers'                           => '以下标题也可能具有相关性：',
 
     // report new journals
     'new_journals_subject'                    => 'Firefly III 创建了一笔新的交易|Firefly III 创建了 :count 笔新的交易',
@@ -120,12 +120,12 @@ return [
     // bill warning
     'bill_warning_subject_end_date'           => '您的账单“:name”将于 :diff 天后到期',
     'bill_warning_subject_now_end_date'       => '您的账单“:name”将于今天到期',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
-    'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
+    'bill_warning_subject_extension_date'     => '您的账单":name" 将在 :diff 天内被延期或取消',
+    'bill_warning_subject_now_extension_date' => '您的账单":name" 将被延期或取消，就在今日',
+    'bill_warning_end_date'                   => '您的账单**":name"** 将在 :date结束。还剩 **:diff ** 天。',
+    'bill_warning_extension_date'             => '您的账单**":name"** 将在 :date延期或取消。还剩大约**:diff 天**。',
+    'bill_warning_end_date_zero'              => '您的账单**":name"** 将于 :date结束。过期日 **今天！**',
+    'bill_warning_extension_date_zero'        => '您的账单**":name"** 将在 :date延期或取消。过期日 **今天！**',
     'bill_warning_please_action'              => '请采取适当的行动。',
 
 ];

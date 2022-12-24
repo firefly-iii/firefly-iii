@@ -53,7 +53,7 @@ return [
     'require_repeat_until'           => 'Erfordert entweder eine Anzahl von Wiederholungen oder ein Enddatum (repeat_until). Nicht beides.',
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
     'not_transfer_account'           => 'Dieses Konto ist kein Konto, welches für Buchungen genutzt werden kann.',
-    'require_currency_amount'        => 'Der Inhalt dieses Feldes ist ohne Fremdbetragsangaben ungültig.',
+    'require_currency_amount'        => 'Der Inhalt dieses Feldes ist ohne Eingabe eines Betrags in Fremdwährung ungültig.',
     'equal_description'              => 'Die Transaktionsbeschreibung darf nicht der globalen Beschreibung entsprechen.',
     'file_invalid_mime'              => 'Die Datei „:name” ist vom Typ „:mime”, welcher nicht zum Hochladen zugelassen ist.',
     'file_too_large'                 => 'Die Datei „:name” ist zu groß.',
@@ -212,7 +212,7 @@ return [
     'lc_source_need_data'           => 'Zum Fortfahren wird eine gültige Quellkonto-ID benötigt.',
     'ob_dest_need_data'             => 'Sie benötigen eine gültige Zielkontennummer und/oder einen gültigen Zielkontonamen, um fortzufahren.',
     'ob_dest_bad_data'              => 'Bei der Suche nach der ID ":id" oder dem Namen ":name" konnte kein gültiges Zielkonto gefunden werden.',
-    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
+    'reconciliation_either_account' => 'Um einen Abgleich zu übermitteln, müssen Sie entweder ein Quell- oder ein Zielkonto angeben. Nicht beides, nicht keines von beiden.',
 
     'generic_invalid_source'      => 'Sie können dieses Konto nicht als Quellkonto verwenden.',
     'generic_invalid_destination' => 'Sie können dieses Konto nicht als Zielkonto verwenden.',

@@ -35,11 +35,11 @@ return [
 
     // invite
     'invitation_created_subject'              => 'Приглашение было создано',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
-    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
-    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+    'invitation_created_body'                 => 'Администратор ":email" создал приглашение пользователю с адресом электронной почты ":invitee". Приглашение действительно в течение 48 часов.',
+    'invite_user_subject'                     => 'Вас пригласили создать аккаунт в Firefly III.',
+    'invitation_introduction'                 => 'Вас пригласили создать аккаунт Firefly III на **:host**. Firefly III – это персональный, приватный менеджер финансов, размещаемый на собственном сервере. Все крутые ребята им пользуются.',
+    'invitation_invited_by'                   => 'Вас пригласил ":admin" и это приглашение было отправлено ":invitee". Это вы, верно?',
+    'invitation_url'                          => 'Приглашение действительно в течение 48 часов и может быть использовано на [Firefly III](:url). Наслаждайтесь!',
 
     // new IP
     'login_from_new_ip'                       => 'Новый вход в Firefly III',
@@ -59,7 +59,7 @@ return [
     // registered
     'registered_subject'                      => 'Добро пожаловать в Firefly III!',
     'registered_subject_admin'                => 'Новый пользователь зарегистрирован',
-    'admin_new_user_registered'               => 'Зарегистрирован новый пользователь с электронной почтой: **:email** ему присвое ID #:id.',
+    'admin_new_user_registered'               => 'Зарегистрирован новый пользователь с электронной почтой: **:email** ему присвоен ID #:id.',
     'registered_welcome'                      => 'Добро пожаловать в [Firefly III](:address). Подтверждаем вашу регистрацию этим e-mail. Ура!',
     'registered_pw'                           => 'Если вы забыли ваш пароль, пожалуйста, создайте его повторно используя [оснастку по сбросу пароля](:address/password/reset).',
     'registered_help'                         => 'В верхнем правом углу страницы есть иконка справки. Если вам нужна помощь, нажмите её!',
@@ -89,7 +89,7 @@ return [
     'oauth_created_subject'                   => 'Создан новый OAuth клиент',
     'oauth_created_body'                      => 'Кто-то (надеемся, что вы) только что создал новый клиент API OAuth для вашей учетной записи с именем ":name" и обратным URL `:url`.',
     'oauth_created_explanation'               => 'С помощью этого токена, доступны **все** ваши финансовые записи через Firefly III API.',
-    'oauth_created_undo'                      => 'Если это были не вы, пожалуйста, отховите этого клиента как можно скорее по адресу `:url`',
+    'oauth_created_undo'                      => 'Если это были не вы, пожалуйста, отзовите этого клиента как можно скорее по адресу `:url`',
 
     // reset password
     'reset_pw_subject'                        => 'Ваш запрос на сброс пароля',
@@ -103,7 +103,7 @@ return [
     'error_timestamp'                         => 'Ошибка произошла в: :time.',
     'error_location'                          => 'Эта ошибка произошла в файле <span style="font-family: monospace;">:file</span> в строке :line с кодом :code.',
     'error_user'                              => 'У пользователя #:id произошла ошибка, <a href="mailto::email">:email</a>.',
-    'error_no_user'                           => 'Б процессе этой ошибки пользователь не был авторизован или пользователь не был обнаружен.',
+    'error_no_user'                           => 'Пользователь не авторизован из-за этой ошибки или пользователь не был обнаружен.',
     'error_ip'                                => 'IP адрес, связанный с этой ошибкой: :ip',
     'error_url'                               => 'URL-адрес: :url',
     'error_user_agent'                        => 'User agent: :userAgent',
@@ -122,8 +122,8 @@ return [
     'bill_warning_subject_now_end_date'       => 'Ваш счет ":name" заканчивается сегодня',
     'bill_warning_subject_extension_date'     => 'Ваш счет ":name" необходимо продлить или отменить через :diff дней',
     'bill_warning_subject_now_extension_date' => 'Ваш счет ":name" должен быть продлен или отменен сегодня',
-    'bill_warning_end_date'                   => 'Срок действия вашего счета **":name"** истекает :date. Этот момент пройдет примерно через **:diff days**.',
-    'bill_warning_extension_date'             => 'Ваш счет **":name"** необходимо продлить или отменить :date. Этот момент пройдет примерно через **:diff days**.',
+    'bill_warning_end_date'                   => 'Срок действия вашего счета **":name"** истекает :date. Осталось примерно **:diff дней**.',
+    'bill_warning_extension_date'             => 'Ваш счет **":name"** необходимо продлить или отменить :date. Осталось примерно **:diff дней**.',
     'bill_warning_end_date_zero'              => 'Срок действия вашего счета **":name"** истекает :date. Это **СЕГОДНЯ!**',
     'bill_warning_extension_date_zero'        => 'Ваш счет **":name"** необходимо продлить или отменить :date. Это **СЕГОДНЯ!**',
     'bill_warning_please_action'              => 'Просим принять соответствующие меры.',

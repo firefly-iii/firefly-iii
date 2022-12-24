@@ -145,7 +145,7 @@ return [
     'pref_languages_locale'                => 'Pour une langue autre que l’anglais et pour fonctionner correctement, votre système d’exploitation doit être équipé avec les paramètres régionaux correctes. Si ils ne sont pas présents, les données de devises, les dates et les montants peuvent être mal formatés.',
     'budget_in_period'                     => 'Toutes les opérations pour le budget ":name" entre :start et :end dans la monnaie :currency',
     'chart_budget_in_period'               => 'Graphique pour toutes les opérations pour le budget ":name" entre :start et :end dans :currency',
-    'chart_budget_in_period_only_currency' => 'Le montant que vous avez budgété était en :currency, ce graphique ne montrera donc que les opérations dans :currency.',
+    'chart_budget_in_period_only_currency' => 'Le montant que vous avez budgété était en :currency, ce graphique ne montrera donc que les opérations en :currency.',
     'chart_account_in_period'              => 'Graphique pour toutes les opérations pour le compte ":name" (:balance) entre :start et :end',
     'chart_category_in_period'             => 'Graphique pour toutes les opérations pour la catégorie ":name" entre :start et :end',
     'chart_category_all'                   => 'Graphique pour toutes les opérations pour la catégorie ":name"',
@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Supprimer des données de Firefly III',
     'permanent_delete_stuff'                    => 'Vous pouvez supprimer des éléments de Firefly III. En utilisant les boutons ci-dessous, vos éléments seront cachés. Il n\'y a pas de bouton d\'annulation pour cela, mais les éléments peuvent rester dans la base de données où vous pouvez les restaurer si nécessaire.',
     'other_sessions_logged_out'                 => 'Toutes vos autres sessions ont été déconnectées.',
+    'delete_unused_accounts'                    => 'La suppression des comptes inutilisés effacera vos listes de remplissage automatique.',
+    'delete_all_unused_accounts'                => 'Supprimer les comptes inutilisés',
+    'deleted_all_unused_accounts'               => 'Tous les comptes inutilisés sont supprimés',
     'delete_all_budgets'                        => 'Supprimer TOUS vos budgets',
     'delete_all_categories'                     => 'Supprimer TOUTES vos catégories',
     'delete_all_tags'                           => 'Supprimer TOUS vos tags',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Recette / revenu',
     'title_transfer'                            => 'Transferts',
     'title_transfers'                           => 'Transferts',
+    'submission_options'                        => 'Options de soumission',
+    'apply_rules_checkbox'                     => 'Appliquer les règles',
+    'fire_webhooks_checkbox'                    => 'Lancer les webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Cette opération est déjà une dépense',

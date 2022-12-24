@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Delete data from Firefly III',
     'permanent_delete_stuff'                    => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                 => 'Todas as outras sessões foram desconectadas.',
+    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_all_unused_accounts'                => 'Delete unused accounts',
+    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
     'delete_all_budgets'                        => 'Apagar TODOS os orçamentos',
     'delete_all_categories'                     => 'Apagar TODAS as categorias',
     'delete_all_tags'                           => 'Apagar TODAS as etiquetas',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Receita / renda',
     'title_transfer'                            => 'Transferências',
     'title_transfers'                           => 'Transferências',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Esta transação já e um levantamento',

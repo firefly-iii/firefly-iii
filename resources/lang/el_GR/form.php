@@ -248,7 +248,7 @@ return [
     'submitted'                   => 'Υποβλήθηκε',
     'key'                         => 'Κλειδί',
     'value'                       => 'Περιεχόμενο της εγγραφής',
-    'webhook_delivery'            => 'Delivery',
-    'webhook_response'            => 'Response',
-    'webhook_trigger'             => 'Trigger',
+    'webhook_delivery'            => 'Παράδοση',
+    'webhook_response'            => 'Απόκριση',
+    'webhook_trigger'             => 'Ενεργοποίηση',
 ];
