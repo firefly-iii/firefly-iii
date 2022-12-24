@@ -330,7 +330,7 @@ class MigrateToGroups extends Command
     {
         $set = $journal->transactions->filter(
             static function (Transaction $subject) use ($transaction) {
-                $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;
+                $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;  // intentional float
                 $identifier = $transaction->identifier === $subject->identifier;
                 Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
                 Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));

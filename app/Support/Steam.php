@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Steam.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -45,8 +46,8 @@ class Steam
 {
 
     /**
-     * @param Account $account
-     * @param Carbon  $date
+     * @param  Account  $account
+     * @param  Carbon  $date
      *
      * @return string
      */
@@ -56,7 +57,7 @@ class Steam
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        $currencyId    = (int) $repository->getMetaValue($account, 'currency_id');
+        $currencyId    = (int)$repository->getMetaValue($account, 'currency_id');
         $transactions  = $account->transactions()
                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
@@ -77,8 +78,8 @@ class Steam
     }
 
     /**
-     * @param array  $transactions
-     * @param string $key
+     * @param  array  $transactions
+     * @param  string  $key
      *
      * @return string
      */
@@ -87,7 +88,7 @@ class Steam
         $sum = '0';
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
-            $value = (string) ($transaction[$key] ?? '0');
+            $value = (string)($transaction[$key] ?? '0');
             $value = '' === $value ? '0' : $value;
             $sum   = bcadd($sum, $value);
         }
@@ -96,14 +97,34 @@ class Steam
     }
 
     /**
+     * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
+     *
+     * @param  string  $number
+     * @param  int  $precision
+     * @return string
+     */
+    public function bcround(string $number, int $precision = 0): string
+    {
+        if (str_contains($number, '.')) {
+            if ($number[0] !== '-') {
+                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
+            }
+
+            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
+        }
+
+        return $number;
+    }
+
+    /**
      * Gets the balance for the given account during the whole range, using this format:.
      *
      * [yyyy-mm-dd] => 123,2
      *
-     * @param Account                  $account
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param TransactionCurrency|null $currency
+     * @param  Account  $account
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  TransactionCurrency|null  $currency
      *
      * @return array
      * @throws FireflyException
@@ -134,7 +155,7 @@ class Steam
             $repository->setUser($account->user);
             $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
         }
-        $currencyId = (int) $currency->id;
+        $currencyId = (int)$currency->id;
 
         $start->addDay();
 
@@ -162,14 +183,14 @@ class Steam
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal amount and foreign amount
-            $modified        = null === $entry->modified ? '0' : (string) $entry->modified;
-            $foreignModified = null === $entry->modified_foreign ? '0' : (string) $entry->modified_foreign;
+            $modified        = null === $entry->modified ? '0' : (string)$entry->modified;
+            $foreignModified = null === $entry->modified_foreign ? '0' : (string)$entry->modified_foreign;
             $amount          = '0';
-            if ($currencyId === (int) $entry->transaction_currency_id || 0 === $currencyId) {
+            if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
                 $amount = $modified;
             }
-            if ($currencyId === (int) $entry->foreign_currency_id) {
+            if ($currencyId === (int)$entry->foreign_currency_id) {
                 // use foreign amount:
                 $amount = $foreignModified;
             }
@@ -188,9 +209,9 @@ class Steam
     /**
      * Gets balance at the end of current month by default
      *
-     * @param Account                  $account
-     * @param Carbon                   $date
-     * @param TransactionCurrency|null $currency
+     * @param  Account  $account
+     * @param  Carbon  $date
+     * @param  TransactionCurrency|null  $currency
      *
      * @return string
      * @throws FireflyException
@@ -228,7 +249,7 @@ class Steam
                                   ->get(['transactions.foreign_amount'])->toArray();
         $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
         $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = null === $account->virtual_balance ? '0' : (string) $account->virtual_balance;
+        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
         $balance        = bcadd($balance, $virtual);
 
         $cache->store($balance);
@@ -239,8 +260,8 @@ class Steam
     /**
      * This method always ignores the virtual balance.
      *
-     * @param Collection $accounts
-     * @param Carbon     $date
+     * @param  Collection  $accounts
+     * @param  Carbon  $date
      *
      * @return array
      * @throws JsonException
@@ -272,8 +293,8 @@ class Steam
     /**
      * Same as above, but also groups per currency.
      *
-     * @param Collection $accounts
-     * @param Carbon     $date
+     * @param  Collection  $accounts
+     * @param  Carbon  $date
      *
      * @return array
      * @throws JsonException
@@ -303,8 +324,8 @@ class Steam
     }
 
     /**
-     * @param Account $account
-     * @param Carbon  $date
+     * @param  Account  $account
+     * @param  Carbon  $date
      *
      * @return array
      */
@@ -326,7 +347,7 @@ class Steam
         $return   = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
-            $return[(int) $entry->transaction_currency_id] = (string) $entry->sum_for_currency;
+            $return[(int)$entry->transaction_currency_id] = (string)$entry->sum_for_currency;
         }
         $cache->store($return);
 
@@ -334,7 +355,7 @@ class Steam
     }
 
     /**
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
@@ -393,7 +414,7 @@ class Steam
     }
 
     /**
-     * @param array $accounts
+     * @param  array  $accounts
      *
      * @return array
      */
@@ -409,7 +430,7 @@ class Steam
         foreach ($set as $entry) {
             $date = new Carbon($entry->max_date, config('app.timezone'));
             $date->setTimezone(config('app.timezone'));
-            $list[(int) $entry->account_id] = $date;
+            $list[(int)$entry->account_id] = $date;
         }
 
         return $list;
@@ -456,7 +477,7 @@ class Steam
     }
 
     /**
-     * @param string $locale
+     * @param  string  $locale
      *
      * @return array
      */
@@ -489,8 +510,8 @@ class Steam
     /**
      * Make sure URL is safe.
      *
-     * @param string $unknownUrl
-     * @param string $safeUrl
+     * @param  string  $unknownUrl
+     * @param  string  $safeUrl
      *
      * @return string
      */
@@ -515,7 +536,7 @@ class Steam
     }
 
     /**
-     * @param string $amount
+     * @param  string  $amount
      *
      * @return string
      */
@@ -539,7 +560,7 @@ class Steam
      * Convert a scientific notation to float
      * Additionally fixed a problem with PHP <= 5.2.x with big integers
      *
-     * @param string $value
+     * @param  string  $value
      * @return string
      */
     public function floatalize(string $value): string
@@ -554,15 +575,15 @@ class Steam
             $post   = strlen(substr($number, strpos($number, '.') + 1));
             $mantis = substr($value, strpos($value, 'E') + 1);
             if ($mantis < 0) {
-                $post += abs((int) $mantis);
+                $post += abs((int)$mantis);
             }
-            return number_format((float) $value, $post, '.', '');
+            return number_format((float)$value, $post, '.', '');
         }
-        return number_format((float) $value, 0, '.', '');
+        return number_format((float)$value, 0, '.', '');
     }
 
     /**
-     * @param string|null $amount
+     * @param  string|null  $amount
      *
      * @return string|null
      */
@@ -576,7 +597,7 @@ class Steam
     }
 
     /**
-     * @param string $string
+     * @param  string  $string
      *
      * @return int
      */
@@ -588,28 +609,28 @@ class Steam
             // has a K in it, remove the K and multiply by 1024.
             $bytes = bcmul(rtrim($string, 'k'), '1024');
 
-            return (int) $bytes;
+            return (int)$bytes;
         }
 
         if (false !== stripos($string, 'm')) {
             // has a M in it, remove the M and multiply by 1048576.
             $bytes = bcmul(rtrim($string, 'm'), '1048576');
 
-            return (int) $bytes;
+            return (int)$bytes;
         }
 
         if (false !== stripos($string, 'g')) {
             // has a G in it, remove the G and multiply by (1024)^3.
             $bytes = bcmul(rtrim($string, 'g'), '1073741824');
 
-            return (int) $bytes;
+            return (int)$bytes;
         }
 
-        return (int) $string;
+        return (int)$string;
     }
 
     /**
-     * @param string $amount
+     * @param  string  $amount
      *
      * @return string
      */

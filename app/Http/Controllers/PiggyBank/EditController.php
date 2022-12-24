@@ -56,7 +56,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
+                app('view')->share('title', (string)trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->attachments       = app(AttachmentHelperInterface::class);
@@ -70,13 +70,13 @@ class EditController extends Controller
     /**
      * Edit a piggy bank.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return Factory|View
      */
     public function edit(PiggyBank $piggyBank)
     {
-        $subTitle     = (string) trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
+        $subTitle     = (string)trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
@@ -87,15 +87,16 @@ class EditController extends Controller
             $currency = Amount::getDefaultCurrency();
         }
 
-        $preFilled = ['name'         => $piggyBank->name,
-                      'account_id'   => $piggyBank->account_id,
-                      'targetamount' => number_format((float) $piggyBank->targetamount, $currency->decimal_places, '.', ''),
-                      'targetdate'   => $targetDate,
-                      'startdate'    => $startDate,
-                      'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
-                      'notes'        => null === $note ? '' : $note->text,
+        $preFilled = [
+            'name'         => $piggyBank->name,
+            'account_id'   => $piggyBank->account_id,
+            'targetamount' => app('steam')->bcround($piggyBank->targetamount, $currency->decimal_places),
+            'targetdate'   => $targetDate,
+            'startdate'    => $startDate,
+            'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
+            'notes'        => null === $note ? '' : $note->text,
         ];
-        if (0.0 === (float) $piggyBank->targetamount) {
+        if (0 === bccomp($piggyBank->targetamount, '0')) {
             $preFilled['targetamount'] = '';
         }
         session()->flash('preFilled', $preFilled);
@@ -112,8 +113,8 @@ class EditController extends Controller
     /**
      * Update a piggy bank.
      *
-     * @param PiggyBankUpdateRequest $request
-     * @param PiggyBank              $piggyBank
+     * @param  PiggyBankUpdateRequest  $request
+     * @param  PiggyBank  $piggyBank
      *
      * @return RedirectResponse|Redirector
      */
@@ -122,7 +123,7 @@ class EditController extends Controller
         $data      = $request->getPiggyBankData();
         $piggyBank = $this->piggyRepos->update($piggyBank, $data);
 
-        session()->flash('success', (string) trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success', (string)trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name]));
         app('preferences')->mark();
 
         // store new attachment(s):
@@ -132,7 +133,7 @@ class EditController extends Controller
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -140,12 +141,10 @@ class EditController extends Controller
         }
         $redirect = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
 
-        if (1 === (int) $request->get('return_to_edit')) {
-
+        if (1 === (int)$request->get('return_to_edit')) {
             session()->put('piggy-banks.edit.fromUpdate', true);
 
             $redirect = redirect(route('piggy-banks.edit', [$piggyBank->id]));
-
         }
 
         return $redirect;

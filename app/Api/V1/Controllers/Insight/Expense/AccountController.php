@@ -94,7 +94,7 @@ class AccountController extends Controller
                 'id'               => (string) $expense['id'],
                 'name'             => $expense['name'],
                 'difference'       => $expense['sum'],
-                'difference_float' => (float) $expense['sum'],
+                'difference_float' => (float) $expense['sum'], // intentional float
                 'currency_id'      => (string) $expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];
@@ -126,7 +126,7 @@ class AccountController extends Controller
                 'id'               => (string) $expense['id'],
                 'name'             => $expense['name'],
                 'difference'       => $expense['sum'],
-                'difference_float' => (float) $expense['sum'],
+                'difference_float' => (float) $expense['sum'], // intentional float
                 'currency_id'      => (string) $expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];

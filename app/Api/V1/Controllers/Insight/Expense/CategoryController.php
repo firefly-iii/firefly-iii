@@ -92,7 +92,7 @@ class CategoryController extends Controller
                     'id'               => (string) $category->id,
                     'name'             => $category->name,
                     'difference'       => $expense['sum'],
-                    'difference_float' => (float) $expense['sum'],
+                    'difference_float' => (float) $expense['sum'], // intentional float
                     'currency_id'      => (string) $expense['currency_id'],
                     'currency_code'    => $expense['currency_code'],
                 ];
@@ -121,7 +121,7 @@ class CategoryController extends Controller
         foreach ($expenses as $expense) {
             $result[] = [
                 'difference'       => $expense['sum'],
-                'difference_float' => (float) $expense['sum'],
+                'difference_float' => (float) $expense['sum'], // intentional float
                 'currency_id'      => (string) $expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];

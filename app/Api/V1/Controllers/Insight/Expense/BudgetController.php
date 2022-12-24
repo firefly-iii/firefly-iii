@@ -91,7 +91,7 @@ class BudgetController extends Controller
                     'id'               => (string) $budget->id,
                     'name'             => $budget->name,
                     'difference'       => $expense['sum'],
-                    'difference_float' => (float) $expense['sum'],
+                    'difference_float' => (float) $expense['sum'], // intentional float
                     'currency_id'      => (string) $expense['currency_id'],
                     'currency_code'    => $expense['currency_code'],
                 ];
@@ -120,7 +120,7 @@ class BudgetController extends Controller
         foreach ($expenses as $expense) {
             $result[] = [
                 'difference'       => $expense['sum'],
-                'difference_float' => (float) $expense['sum'],
+                'difference_float' => (float) $expense['sum'], // intentional float
                 'currency_id'      => (string) $expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];

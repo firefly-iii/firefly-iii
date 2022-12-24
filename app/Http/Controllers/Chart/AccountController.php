@@ -127,7 +127,7 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
-                        'diff_float'  => (float) $diff,
+                        'diff_float'  => (float) $diff, // intentional float
                         'currency_id' => $currencyId,
                     ];
                 }
@@ -492,7 +492,7 @@ class AccountController extends Controller
                     $theDate         = $current->format('Y-m-d');
                     $balance         = $range[$theDate] ?? $previous;
                     $label           = $current->isoFormat($format);
-                    $entries[$label] = (float) $balance;
+                    $entries[$label] = $balance;
                     $previous        = $balance;
                     $current->addDay();
                 }
@@ -502,7 +502,7 @@ class AccountController extends Controller
             case '1M':
             case '1Y':
                 while ($end >= $current) {
-                    $balance         = (float) app('steam')->balance($account, $current, $currency);
+                    $balance         = app('steam')->balance($account, $current, $currency);
                     $label           = app('navigation')->periodShow($current, $step);
                     $entries[$label] = $balance;
                     $current         = app('navigation')->addPeriod($current, $step, 0);
@@ -586,7 +586,7 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
-                        'diff_float'  => (float) $diff,
+                        'diff_float'  => (float) $diff, // intentional float
                         'currency_id' => $currencyId,
                     ];
                 }

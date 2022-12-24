@@ -101,7 +101,7 @@ class BillController extends Controller
                         'currency_code'    => $journal['currency_code'],
                     ];
                 $response[$key]['difference']       = bcadd($response[$key]['difference'], $journal['amount']);
-                $response[$key]['difference_float'] = (float) $response[$key]['difference'];
+                $response[$key]['difference_float'] = (float) $response[$key]['difference']; // intentional float
             }
             if (0 !== $foreignCurrencyId) {
                 $response[$foreignKey]                     = $response[$foreignKey] ?? [
@@ -111,7 +111,7 @@ class BillController extends Controller
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
                 $response[$foreignKey]['difference']       = bcadd($response[$foreignKey]['difference'], $journal['foreign_amount']);
-                $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference'];
+                $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference']; // intentional float
             }
         }
 
@@ -154,7 +154,7 @@ class BillController extends Controller
                         'currency_code'    => $journal['currency_code'],
                     ];
                 $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], $journal['amount']);
-                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
+                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // intentional float
             }
             if (0 !== $foreignCurrencyId) {
                 $response[$foreignCurrencyId]                     = $response[$foreignCurrencyId] ?? [
@@ -164,7 +164,7 @@ class BillController extends Controller
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
                 $response[$foreignCurrencyId]['difference']       = bcadd($response[$foreignCurrencyId]['difference'], $journal['foreign_amount']);
-                $response[$foreignCurrencyId]['difference_float'] = (float) $response[$foreignCurrencyId]['difference'];
+                $response[$foreignCurrencyId]['difference_float'] = (float) $response[$foreignCurrencyId]['difference']; // intentional float
             }
         }
 

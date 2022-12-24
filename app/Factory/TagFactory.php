@@ -81,8 +81,8 @@ class TagFactory
     public function create(array $data): ?Tag
     {
         $zoomLevel = 0 === (int) $data['zoom_level'] ? null : (int) $data['zoom_level'];
-        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude'];
-        $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude'];
+        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude']; // intentional float
+        $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude']; // intentional float
         $array     = [
             'user_id'     => $this->user->id,
             'tag'         => trim($data['tag']),

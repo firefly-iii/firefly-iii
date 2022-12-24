@@ -96,7 +96,7 @@ trait ModifiesPiggyBanks
         $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $maxAmount     = $leftOnAccount;
         $leftToSave    = null;
-        if (0.0 !== (float)$piggyBank->targetamount) {
+        if (0 !== bccomp($piggyBank->targetamount, '0')) {
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
         }
@@ -383,7 +383,7 @@ trait ModifiesPiggyBanks
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
         $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount && 0.0 !== (float)$piggyBank->targetamount) {
+        if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount && 0 !== bccomp($piggyBank->targetamount, '0')) {
             $difference = bcsub($piggyBank->targetamount, $repetition->currentamount);
 
             // an amount will be removed, create "negative" event:

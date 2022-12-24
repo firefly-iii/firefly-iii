@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Amount.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -42,26 +43,26 @@ class Amount
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param TransactionCurrency $format
-     * @param string              $amount
-     * @param bool                $coloured
+     * @param  TransactionCurrency  $format
+     * @param  string  $amount
+     * @param  bool  $coloured
      *
      * @return string
      *
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        return $this->formatFlat($format->symbol, (int) $format->decimal_places, $amount, $coloured);
+        return $this->formatFlat($format->symbol, (int)$format->decimal_places, $amount, $coloured);
     }
 
     /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param string $symbol
-     * @param int    $decimalPlaces
-     * @param string $amount
-     * @param bool   $coloured
+     * @param  string  $symbol
+     * @param  int  $decimalPlaces
+     * @param  string  $amount
+     * @param  bool  $coloured
      *
      * @return string
      *
@@ -78,13 +79,13 @@ class Amount
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = $fmt->format((float) $amount);
+        $result = $fmt->format((float)app('steam')->bcround($amount, $decimalPlaces)); // intentional float
 
         if (true === $coloured) {
-            if ($amount > 0) {
+            if (1 === bccomp($amount, '0')) {
                 return sprintf('<span class="text-success">%s</span>', $result);
             }
-            if ($amount < 0) {
+            if (-1 === bccomp($amount, '0')) {
                 return sprintf('<span class="text-danger">%s</span>', $result);
             }
 
@@ -133,7 +134,7 @@ class Amount
         }
         $cache->store(config('firefly.default_currency', 'EUR'));
 
-        return (string) config('firefly.default_currency', 'EUR');
+        return (string)config('firefly.default_currency', 'EUR');
     }
 
     /**
@@ -150,7 +151,7 @@ class Amount
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @return TransactionCurrency
      * @throws FireflyException
@@ -167,7 +168,7 @@ class Amount
         $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';
 
         // at this point the currency preference could be encrypted, if coming from an old version.
-        $currencyCode = $this->tryDecrypt((string) $currencyPrefStr);
+        $currencyCode = $this->tryDecrypt((string)$currencyPrefStr);
 
         // could still be json encoded:
         /** @var TransactionCurrency|null $currency */
@@ -182,7 +183,7 @@ class Amount
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return string
      */
@@ -251,8 +252,8 @@ class Amount
     }
 
     /**
-     * @param array  $info
-     * @param string $field
+     * @param  array  $info
+     * @param  string  $field
      *
      * @return bool
      */
@@ -268,10 +269,10 @@ class Amount
      * string $sign = $localeconv['negative_sign']
      * bool $csPrecedes = $localeconv['n_cs_precedes'].
      *
-     * @param bool   $sepBySpace
-     * @param int    $signPosn
-     * @param string $sign
-     * @param bool   $csPrecedes
+     * @param  bool  $sepBySpace
+     * @param  int  $signPosn
+     * @param  string  $sign
+     * @param  bool  $csPrecedes
      *
      * @return string
      *
@@ -326,11 +327,11 @@ class Amount
         }
 
         // default is amount before currency
-        $format = $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
+        $format = $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
 
         if ($csPrecedes) {
             // alternative is currency before amount
-            $format = $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
+            $format = $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
         }
 
         return $format;

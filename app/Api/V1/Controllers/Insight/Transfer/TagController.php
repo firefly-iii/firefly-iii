@@ -171,7 +171,7 @@ class TagController extends Controller
                     $response[$foreignKey]['difference']       = bcadd(
                         $response[$foreignKey]['difference'], app('steam')->positive($journal['foreign_amount'])
                     );
-                    $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference'];
+                    $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference']; // intentional float
                 }
             }
         }

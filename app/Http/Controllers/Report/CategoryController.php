@@ -301,7 +301,7 @@ class CategoryController extends Controller
                     $result[$key]['transactions']++;
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
                     $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float) $result[$key]['avg'];
+                    $result[$key]['avg_float'] = (float) $result[$key]['avg']; // intentional float
                 }
             }
         }
