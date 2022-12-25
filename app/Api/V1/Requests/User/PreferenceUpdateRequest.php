@@ -47,6 +47,7 @@ class PreferenceUpdateRequest extends FormRequest
         if ('false' === $array['data']) {
             $array['data'] = false;
         }
+        // TODO remove float
         if (is_numeric($array['data'])) {
             $array['data'] = (float) $array['data'];
         }

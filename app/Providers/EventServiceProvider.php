@@ -25,6 +25,7 @@ namespace FireflyIII\Providers;
 use Exception;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Events\ChangedPiggyBankAmount;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
@@ -139,6 +140,11 @@ class EventServiceProvider extends ServiceProvider
             // bill related events:
             WarnUserAboutBill::class            => [
                 'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
+            ],
+
+            // piggy bank related events:
+            ChangedPiggyBankAmount::class => [
+                'FireflyIII\Handlers\Events\PiggyBankEventHandler@changePiggyAmount',
             ],
         ];
 

@@ -210,7 +210,7 @@ class IndexController extends Controller
                 $currency            = $limit->transactionCurrency ?? $defaultCurrency;
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
-                    'amount'                  => number_format((float) $limit->amount, $currency->decimal_places, '.', ''),
+                    'amount'                  => app('steam')->bcround($limit->amount, $currency->decimal_places),
                     'start_date'              => $limit->start_date->isoFormat($this->monthAndDayFormat),
                     'end_date'                => $limit->end_date->isoFormat($this->monthAndDayFormat),
                     'in_range'                => $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end),

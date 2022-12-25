@@ -37,20 +37,18 @@ use Illuminate\Support\Collection;
 interface PiggyBankRepositoryInterface
 {
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $amount
+     * @param  TransactionJournal|null  $journal
      * @return bool
      */
-    public function addAmount(PiggyBank $piggyBank, string $amount): bool;
+    public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
     /**
      * @param PiggyBankRepetition $repetition
      * @param string              $amount
-     *
-     * @return string
      */
-    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount): string;
+    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void;
 
     /**
      * @param PiggyBank $piggyBank
@@ -67,25 +65,6 @@ interface PiggyBankRepositoryInterface
      * @return bool
      */
     public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool;
-
-    /**
-     * Create a new event.
-     *
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
-     * @return PiggyBankEvent
-     */
-    public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent;
-
-    /**
-     * @param PiggyBank          $piggyBank
-     * @param string             $amount
-     * @param TransactionJournal $journal
-     *
-     * @return PiggyBankEvent
-     */
-    public function createEventWithJournal(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): PiggyBankEvent;
 
     /**
      * Destroy piggy bank.
@@ -218,12 +197,12 @@ interface PiggyBankRepositoryInterface
     public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string;
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
-     *
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $amount
+     * @param  TransactionJournal|null  $journal
      * @return bool
      */
-    public function removeAmount(PiggyBank $piggyBank, string $amount): bool;
+    public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
     /**
      * @param PiggyBank $piggyBank

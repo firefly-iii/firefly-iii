@@ -71,6 +71,7 @@ class DestroyController extends Controller
     public function destroy(TransactionJournalLink $link): JsonResponse
     {
         $this->repository->destroyLink($link);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

@@ -71,6 +71,7 @@ class DestroyController extends Controller
     public function destroy(Rule $rule): JsonResponse
     {
         $this->ruleRepository->destroy($rule);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

@@ -127,11 +127,11 @@ class AccountController extends Controller
             ];
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
-            $previous     = round((float) array_values($range)[0], 12);
+            $previous     = $range[0] ?? '0';
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
                 $label    = $currentStart->toAtomString();
-                $balance  = array_key_exists($format, $range) ? round((float) $range[$format], 12) : $previous;
+                $balance  = array_key_exists($format, $range) ? $range[$format] : $previous;
                 $previous = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;

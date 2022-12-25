@@ -89,8 +89,8 @@ class EditController extends Controller
         }
 
         $currency         = app('amount')->getDefaultCurrency();
-        $bill->amount_min = round((float) $bill->amount_min, $currency->decimal_places);
-        $bill->amount_max = round((float) $bill->amount_max, $currency->decimal_places);
+        $bill->amount_min = app('steam')->bcround($bill->amount_min, $currency->decimal_places);
+        $bill->amount_max = app('steam')->bcround($bill->amount_max, $currency->decimal_places);
         $rules            = $this->repository->getRulesForBill($bill);
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 

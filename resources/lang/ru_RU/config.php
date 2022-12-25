@@ -24,25 +24,24 @@ declare(strict_types=1);
 
 return [
     'html_language'            => 'ru',
-    'locale'                   => 'ru_RU.utf8, ru_RU.UTF-8',
+    'locale'                   => 'ru, Russian, ru_RU.utf8, ru_RU.UTF-8',
     //'month'                   => '%B %Y',
     'month_js'                 => 'MMMM YYYY',
 
     //'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js'  => 'D MMM YYYY',
-    'month_and_day_fns'        => 'MMMM д, г',
+    'month_and_day_fns'        => 'd MMMM yyyy',
     'month_and_day_js'         => 'Do MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
     'month_and_date_day_js'    => 'Do MMMM YYYY',
 
     //'month_and_day_no_year'   => '%B %e',
-    'month_and_day_no_year_js' => 'Ключ: массив [\'месяц _ и _ день _ нет _ год _ js\']',
+    'month_and_day_no_year_js' => 'Do MMMM',
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'Do MMMM YYYY, @ HH:mm:ss',
-    'date_time_fns'            => 'Ключ: массив [\' дата _ время _ fns \']
-массив[\'дата_время_fns\']',
+    'date_time_fns'            => 'do MMMM yyyy, @ HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'D MMMM YYYY',
@@ -57,8 +56,8 @@ return [
     //'half_year'               => '%B %Y',
     'half_year_js'             => '\QQ YYYY',
 
-    'quarter_fns'   => "Ключ: массив['четверть_fns']",
-    'half_year_fns' => "Ключ: массив ['половина _ года _ fns']",
+    'quarter_fns'   => "Q'-й квартал', yyyy",
+    'half_year_fns' => "'{half}-е полугодие', yyyy",
     'dow_1'         => 'Понедельник',
     'dow_2'         => 'Вторник',
     'dow_3'         => 'Среда',

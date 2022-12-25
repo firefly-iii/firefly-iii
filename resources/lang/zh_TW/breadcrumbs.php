@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'home'                   => '首頁',
-    'budgets'                => 'Budgets',
+    'budgets'                => '預算',
     'subscriptions'          => 'Subscriptions',
     'transactions'           => 'Transactions',
     'title_expenses'         => 'Expenses',

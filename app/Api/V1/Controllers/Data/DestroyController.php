@@ -162,6 +162,7 @@ class DestroyController extends Controller
                 );
                 break;
         }
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

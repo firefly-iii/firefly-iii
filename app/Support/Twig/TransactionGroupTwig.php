@@ -221,7 +221,7 @@ class TransactionGroupTwig extends AbstractExtension
         /** @var Transaction $first */
         $first = $journal->transactions()->where('amount', '<', 0)->first();
 
-        return null !== $first->foreign_amount;
+        return '' !== $first->foreign_amount;
     }
 
     /**
@@ -237,7 +237,7 @@ class TransactionGroupTwig extends AbstractExtension
         /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
         $currency   = $first->foreignCurrency;
-        $amount     = $first->foreign_amount ?? '0';
+        $amount     = '' === $first->foreign_amount ? '0' : $first->foreign_amount;
         $colored    = true;
         $sourceType = $first->account()->first()->accountType()->first()->type;
 

@@ -27,6 +27,7 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
@@ -37,14 +38,12 @@ use Log;
  */
 class UpdatePiggybank implements ActionInterface
 {
-
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -59,9 +58,10 @@ class UpdatePiggybank implements ActionInterface
         Log::debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
 
         // refresh the transaction type.
-        $user                             = User::find($journal['user_id']);
+        $user = User::find($journal['user_id']);
+        /** @var TransactionJournal $journalObj */
         $journalObj                       = $user->transactionJournals()->find($journal['transaction_journal_id']);
-        $type                             = TransactionType::find((int) $journalObj->transaction_type_id);
+        $type                             = TransactionType::find((int)$journalObj->transaction_type_id);
         $journal['transaction_type_type'] = $type->type;
 
         if (TransactionType::TRANSFER !== $journal['transaction_type_type']) {
@@ -70,10 +70,10 @@ class UpdatePiggybank implements ActionInterface
             return false;
         }
 
-        $piggyBank = $this->findPiggybank($user);
+        $piggyBank = $this->findPiggyBank($user);
         if (null === $piggyBank) {
             Log::info(
-                sprintf('No piggy bank names "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id)
+                sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id)
             );
 
             return false;
@@ -82,25 +82,27 @@ class UpdatePiggybank implements ActionInterface
         Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
 
         /** @var Transaction $source */
-        $source = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '<', 0)->first();
         /** @var Transaction $destination */
-        $destination = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '>', 0)->first();
+        $source      = $journalObj->transactions()->where('amount', '<', 0)->first();
+        $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
-        if ((int) $source->account_id === (int) $piggyBank->account_id) {
-            Log::debug('Piggy bank account is linked to source, so remove amount.');
+        if ((int)$source->account_id === (int)$piggyBank->account_id) {
+            Log::debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
             $this->removeAmount($journal, $piggyBank, $destination->amount);
 
             return true;
         }
-        if ((int) $destination->account_id === (int) $piggyBank->account_id) {
-            Log::debug('Piggy bank account is linked to source, so add amount.');
+        if ((int)$destination->account_id === (int)$piggyBank->account_id) {
+            Log::debug('Piggy bank account is linked to source, so add amount to piggy bank.');
             $this->addAmount($journal, $piggyBank, $destination->amount);
 
             return true;
         }
         Log::info(
             sprintf(
-                'Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.', $source->account_id, $destination->account_id
+                'Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.',
+                $source->account_id,
+                $destination->account_id
             )
         );
 
@@ -108,30 +110,30 @@ class UpdatePiggybank implements ActionInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @return PiggyBank|null
      */
-    private function findPiggybank(User $user): ?PiggyBank
+    private function findPiggyBank(User $user): ?PiggyBank
     {
         return $user->piggyBanks()->where('piggy_banks.name', $this->action->action_value)->first();
     }
 
     /**
-     * @param array     $journalArray
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param  PiggyBank  $piggyBank
+     * @param  TransactionJournal  $journal
+     * @param  string  $amount
+     * @return void
      */
-    private function removeAmount(array $journalArray, PiggyBank $piggyBank, string $amount): void
+    private function removeAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
     {
-        $user       = User::find($journalArray['user_id']);
-        $journal    = $user->transactionJournals()->find($journalArray['transaction_journal_id']);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser($journal->user);
 
-        // how much can we remove from piggy bank?
+        // how much can we remove from this piggy bank?
         $toRemove = $repository->getCurrentAmount($piggyBank);
         Log::debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
+
         // if $amount is bigger than $toRemove, shrink it.
         $amount = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
         Log::debug(sprintf('Amount is now %s', $amount));
@@ -151,19 +153,17 @@ class UpdatePiggybank implements ActionInterface
         }
         Log::debug(sprintf('Will now remove %s from piggy bank.', $amount));
 
-        $repository->removeAmount($piggyBank, $amount);
-        $repository->createEventWithJournal($piggyBank, app('steam')->negative($amount), $journal);
+        $repository->removeAmount($piggyBank, $amount, $journal);
     }
 
     /**
-     * @param array     $journalArray
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param  PiggyBank  $piggyBank
+     * @param  TransactionJournal  $journal
+     * @param  string  $amount
+     * @return void
      */
-    private function addAmount(array $journalArray, PiggyBank $piggyBank, string $amount): void
+    private function addAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
     {
-        $user       = User::find($journalArray['user_id']);
-        $journal    = $user->transactionJournals()->find($journalArray['transaction_journal_id']);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser($journal->user);
 
@@ -190,7 +190,6 @@ class UpdatePiggybank implements ActionInterface
         }
         Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
 
-        $repository->addAmount($piggyBank, $amount);
-        $repository->createEventWithJournal($piggyBank, app('steam')->positive($amount), $journal);
+        $repository->addAmount($piggyBank, $amount, $journal);
     }
 }

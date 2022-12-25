@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Delete data from Firefly III',
     'permanent_delete_stuff'                    => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                 => 'Minden másik bejelentkezésed ki lett léptetve.',
+    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_all_unused_accounts'                => 'Delete unused accounts',
+    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
     'delete_all_budgets'                        => 'MINDEN költségkeret törlése',
     'delete_all_categories'                     => 'MINDEN kategória törlése',
     'delete_all_tags'                           => 'MINDEN címke törlése',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Jövedelem / bevétel',
     'title_transfer'                            => 'Átvezetések',
     'title_transfers'                           => 'Átvezetések',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Ez a tranzakció már egy költség',

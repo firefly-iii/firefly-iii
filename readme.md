@@ -77,7 +77,7 @@ If you need support using Firefly III or the associated tools, come find us!
 - [GitHub Discussions for questions and support](https://github.com/firefly-iii/firefly-iii/discussions/)
 - [Gitter.im for a good chat and a quick answer](https://gitter.im/firefly-iii/firefly-iii)
 - [GitHub Issues for bugs and issues](https://github.com/firefly-iii/firefly-iii/issues)
-- [Follow me around for news and updates on Twitter](https://twitter.com/Firefly_iii)
+- <a rel="me" href="https://fosstodon.org/@ff3">Follow me around for news and updates on Mastodon</a>
 
 <!-- END OF HELP TEXT -->
 
@@ -138,7 +138,7 @@ There are many ways to run Firefly III
 
 ## Contributing
 
-You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you may open an issue in the [main repository](https://github.com/firefly-iii/firefly-iii) or contact me through [gitter](https://gitter.im/firefly-iii/firefly-iii) and [Twitter](https://twitter.com/Firefly_III).
+You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you may open an issue in the [main repository](https://github.com/firefly-iii/firefly-iii) or contact me through [gitter](https://gitter.im/firefly-iii/firefly-iii) and [Mastodon](https://fosstodon.org/@ff3).
 
 Of course, there are some [contributing guidelines](https://docs.firefly-iii.org/firefly-iii/other-pages/contributing) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out.
 

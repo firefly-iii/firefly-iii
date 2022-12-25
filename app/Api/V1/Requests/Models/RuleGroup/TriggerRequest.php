@@ -73,7 +73,7 @@ class TriggerRequest extends FormRequest
     {
         return [
             'start' => 'date',
-            'end'   => 'date|after:start',
+            'end'   => 'date|after_or_equal:start',
         ];
     }
 

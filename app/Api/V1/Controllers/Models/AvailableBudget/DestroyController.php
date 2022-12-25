@@ -71,6 +71,7 @@ class DestroyController extends Controller
     public function destroy(AvailableBudget $availableBudget): JsonResponse
     {
         $this->abRepository->destroyAvailableBudget($availableBudget);
+        app('preferences')->mark();
 
         return response()->json([], 204);
     }

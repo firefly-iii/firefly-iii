@@ -104,9 +104,10 @@ class StoreRequest extends FormRequest
         $validator->after(
             static function (Validator $validator) {
                 $data = $validator->getData();
-                $min  = (float) ($data['amount_min'] ?? 0);
-                $max  = (float) ($data['amount_max'] ?? 0);
-                if ($min > $max) {
+                $min  = $data['amount_min'] ?? '0';
+                $max  = $data['amount_max'] ?? '0';
+
+                if (1 === bccomp($min, $max)) {
                     $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
                 }
             }

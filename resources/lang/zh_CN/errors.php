@@ -23,7 +23,7 @@
 declare(strict_types=1);
 
 return [
-    '404_header'              => 'Firefly III 无法找到该页面',
+    '404_header'              => 'Firefly III 找不到这个页面。',
     '404_page_does_not_exist' => '您请求的页面不存在，请确认您输入的网址正确无误。',
     '404_send_error'          => '如果您被自动跳转到该页面，很抱歉。日志文件中记录了该错误，请将错误信息提交给开发者，万分感谢。',
     '404_github_link'         => '如果您确信该页面应该存在，请在 <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong> 上创建工单。',
@@ -33,7 +33,7 @@ return [
     'be_right_back'           => '敬请期待！',
     'check_back'              => 'Firefly III 正在进行必要的维护，请稍后再试',
     'error_occurred'          => '很抱歉，出现错误',
-    'db_error_occurred'       => 'Whoops! A database error occurred.',
+    'db_error_occurred'       => '哎呀！发生数据库错误。',
     'error_not_recoverable'   => '很遗憾，该错误无法恢复 :( Firefly III 已崩溃。错误信息：',
     'error'                   => '错误',
     'error_location'          => '该错误位于文件 <span style="font-family: monospace;">:file</span> 第 :line 行的代码 :code',

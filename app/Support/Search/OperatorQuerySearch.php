@@ -863,6 +863,9 @@ class OperatorQuerySearch implements SearchInterface
             case 'attachment_notes_ends':
                 $this->collector->attachmentNotesEnds($value);
                 break;
+            case 'sepa_ct_is':
+                $this->collector->setSepaCT($value);
+                break;
 
         }
 

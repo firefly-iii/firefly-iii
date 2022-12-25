@@ -78,7 +78,7 @@ class AmountController extends Controller
         $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, today(config('app.timezone')));
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $maxAmount     = $leftOnAccount;
-        if (0.000 !== (float) $piggyBank->targetamount) {
+        if (0 !== bccomp($piggyBank->targetamount,'0')) {
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = min($leftOnAccount, $leftToSave);
         }
@@ -102,7 +102,7 @@ class AmountController extends Controller
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $maxAmount     = $leftOnAccount;
 
-        if (0.000 !== (float) $piggyBank->targetamount) {
+        if (0 !== bccomp($piggyBank->targetamount,'0')) {
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = min($leftOnAccount, $leftToSave);
         }
@@ -129,7 +129,6 @@ class AmountController extends Controller
         }
         if ($this->piggyRepos->canAddAmount($piggyBank, $amount)) {
             $this->piggyRepos->addAmount($piggyBank, $amount);
-            $this->piggyRepos->createEvent($piggyBank, $amount);
             session()->flash(
                 'success',
                 (string) trans(
@@ -183,7 +182,7 @@ class AmountController extends Controller
 
             return redirect(route('piggy-banks.index'));
         }
-        $amount = number_format((float) $request->get('amount'), 12, '.', '');
+        $amount = (string) $request->get('amount');
 
         session()->flash(
             'error',

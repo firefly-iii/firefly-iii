@@ -17,7 +17,7 @@
     "axios-cache-adapter": "^2.7.3",
     "core-js": "^3.6.5",
     "date-fns": "^2.28.0",
-    "quasar": "^2.7.1",
+    "quasar": "^2.11.1",
     "vue": "3",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0",

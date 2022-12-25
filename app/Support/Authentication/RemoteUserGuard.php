@@ -69,6 +69,7 @@ class RemoteUserGuard implements Guard
         // Get the user identifier from $_SERVER or apache filtered headers
         $header = config('auth.guard_header', 'REMOTE_USER');
         $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
+
         if (null === $userID) {
             Log::error(sprintf('No user in header "%s".', $header));
             throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
@@ -81,10 +82,14 @@ class RemoteUserGuard implements Guard
         $header = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string) (request()->server($header) ?? null);
+            $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
             $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email');
 
-            if (null !== $emailAddress && null === $preference && $emailAddress !== $userID) {
+            if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {
+                app('preferences')->setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
+            }
+            // if the pref isn't null and the object returned isn't null, update the email address.
+            if ('' !== $emailAddress && null !== $preference && $emailAddress !== $preference->data) {
                 app('preferences')->setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
             }
         }

@@ -444,11 +444,11 @@ trait TransactionValidation
         }
         $type = $this->getTransactionType($transactionGroup, $transactions);
 
-        // compare source ID's, destination ID's, source names and destination names.
+        // compare source IDs, destination IDs, source names and destination names.
         // I think I can get away with one combination being equal, as long as the rest
         // of the code picks up on this as well.
         // either way all fields must be blank or all equal
-        // but if ID's are equal don't bother with the names.
+        // but if IDs are equal don't bother with the names.
         $comparison = $this->collectComparisonData($transactions);
         $result     = $this->compareAccountData($type, $comparison);
         if (false === $result) {

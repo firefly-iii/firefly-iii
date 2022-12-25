@@ -1344,6 +1344,9 @@ return [
     'delete_data_title'                         => 'Delete data from Firefly III',
     'permanent_delete_stuff'                    => 'You can delete stuff from Firefly III. Using the buttons below means that your items will be removed from view and hidden. There is no undo-button for this, but the items may remain in the database where you can salvage them if necessary.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
+    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_all_unused_accounts'                => 'Delete unused accounts',
+    'deleted_all_unused_accounts'               => 'All unused accounts are deleted',
     'delete_all_budgets'                        => 'Xóa TẤT CẢ ngân sách của bạn',
     'delete_all_categories'                     => 'Xóa TẤT CẢ danh mục của bạn',
     'delete_all_tags'                           => 'Xóa TẤT CẢ các nhãn của bạn',
@@ -1483,6 +1486,9 @@ return [
     'title_deposit'                             => 'Thu nhập doanh thu',
     'title_transfer'                            => 'Chuyển',
     'title_transfers'                           => 'Chuyển',
+    'submission_options'                        => 'Submission options',
+    'apply_rules_checkbox'                     => 'Apply rules',
+    'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Giao dịch này đã được rút tiền',

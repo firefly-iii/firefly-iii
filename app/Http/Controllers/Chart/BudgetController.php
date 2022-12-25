@@ -483,13 +483,13 @@ class BudgetController extends Controller
             // get budget limit in this period for this currency.
             $limit = $this->blRepository->find($budget, $currency, $currentStart, $currentEnd);
             if (null !== $limit) {
-                $chartData[1]['entries'][$title] = round((float) $limit->amount, $currency->decimal_places);
+                $chartData[1]['entries'][$title] = app('steam')->bcround($limit->amount, $currency->decimal_places);
             }
 
             // get spent amount in this period for this currency.
             $sum                             = $this->opsRepository->sumExpenses($currentStart, $currentEnd, $accounts, new Collection([$budget]), $currency);
             $amount                          = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
-            $chartData[0]['entries'][$title] = round((float) $amount, $currency->decimal_places);
+            $chartData[0]['entries'][$title] = app('steam')->bcround($amount, $currency->decimal_places);
 
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();
@@ -534,7 +534,7 @@ class BudgetController extends Controller
             $title             = $currentStart->isoFormat($titleFormat);
             $sum               = $this->nbRepository->sumExpenses($currentStart, $currentEnd, $accounts, $currency);
             $amount            = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
-            $chartData[$title] = round((float) $amount, $currency->decimal_places);
+            $chartData[$title] = app('steam')->bcround($amount, $currency->decimal_places);
             $currentStart      = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
         }
 
