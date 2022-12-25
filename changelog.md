@@ -12,12 +12,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Most if not all remaining float values removed. None were used in financial math.
 - Expand Laravel Passport settings.
 
-### Deprecated
-- Initial release.
-
-### Removed
-- Initial release.
-
 ### Fixed
 - [Issue 6597](https://github.com/firefly-iii/firefly-iii/issues/6597) Edit existing split transaction's source did not work properly.
 - [Issue 6610](https://github.com/firefly-iii/firefly-iii/issues/6610) Fix search for attachments
