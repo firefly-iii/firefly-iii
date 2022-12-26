@@ -89,7 +89,7 @@ class UpdatePiggybank implements ActionInterface
 
         if ((int)$source->account_id === (int)$piggyBank->account_id) {
             Log::debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
-            $this->removeAmount($journal, $piggyBank, $destination->amount);
+            $this->removeAmount($piggyBank, $journalObj, $destination->amount);
 
             event(new TriggeredAuditLog($this->action->rule, $journalObj, 'remove_from_piggy', null, ['currency_symbol' => $journalObj->transactionCurrency->symbol, 'decimal_places' => $journalObj->transactionCurrency->decimal_places, 'amount' => $destination->amount, 'piggy' => $piggyBank->name]));
 
@@ -97,7 +97,7 @@ class UpdatePiggybank implements ActionInterface
         }
         if ((int)$destination->account_id === (int)$piggyBank->account_id) {
             Log::debug('Piggy bank account is linked to source, so add amount to piggy bank.');
-            $this->addAmount($journal, $piggyBank, $destination->amount);
+            $this->addAmount($piggyBank, $journalObj, $destination->amount);
 
             event(new TriggeredAuditLog($this->action->rule, $journalObj, 'add_to_piggy', null, ['currency_symbol' => $journalObj->transactionCurrency->symbol, 'decimal_places' => $journalObj->transactionCurrency->decimal_places, 'amount' => $destination->amount, 'piggy' => $piggyBank->name]));
 
