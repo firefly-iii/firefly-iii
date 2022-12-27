@@ -100,7 +100,7 @@ class RecurrenceFormRequest extends FormRequest
         ];
 
         // fill in foreign currency data
-        if (null !== $this->convertFloat('foreign_amount')) {
+        if (null !== $this->convertFloat('foreign_amount')) { // intentional float, used because it defaults to null.
             $return['transactions'][0]['foreign_amount']      = $this->convertString('foreign_amount');
             $return['transactions'][0]['foreign_currency_id'] = $this->convertInteger('foreign_currency_id');
         }
@@ -229,7 +229,7 @@ class RecurrenceFormRequest extends FormRequest
             $rules['repetitions'] = 'required|numeric|between:0,254';
         }
         // if foreign amount, currency must be  different.
-        if (null !== $this->convertFloat('foreign_amount')) {
+        if (null !== $this->convertFloat('foreign_amount')) { // intentional float, used because it defaults to null.
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id|different:transaction_currency_id';
         }
 

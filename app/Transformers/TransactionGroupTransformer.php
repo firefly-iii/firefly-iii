@@ -364,7 +364,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $bill            = $this->getBill($journal->bill);
 
         if (null !== $foreignAmount && null !== $foreignCurrency) {
-            $foreignAmount = number_format((float) $foreignAmount, $foreignCurrency['decimal_places'] ?? 0, '.', '');
+            $foreignAmount = app('steam')->bcround($foreignAmount, $foreignCurrency['decimal_places'] ?? 0);
         }
 
         $longitude = null;
@@ -394,7 +394,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'foreign_currency_symbol'         => $foreignCurrency['symbol'],
             'foreign_currency_decimal_places' => $foreignCurrency['decimal_places'],
 
-            'amount'         => number_format((float) $amount, $currency->decimal_places, '.', ''),
+            'amount'         => app('steam')->bcround($amount, $currency->decimal_places),
             'foreign_amount' => $foreignAmount,
 
             'description' => $journal->description,
@@ -462,7 +462,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         $result = $journal->transactions->first(
             static function (Transaction $transaction) {
-                return (float) $transaction->amount < 0;
+                return (float) $transaction->amount < 0; // lame but it works.
             }
         );
         if (null === $result) {
@@ -482,7 +482,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         $result = $journal->transactions->first(
             static function (Transaction $transaction) {
-                return (float) $transaction->amount > 0;
+                return (float) $transaction->amount > 0; // lame but it works
             }
         );
         if (null === $result) {

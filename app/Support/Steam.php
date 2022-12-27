@@ -104,13 +104,19 @@ class Steam
      */
     public function bcround(?string $number, int $precision = 0): string
     {
+
         if(null === $number) {
             return '0';
         }
         if('' === trim($number)) {
             return '0';
         }
-        Log::debug(sprintf('Trying bcround("%",%d)', $number, $precision));
+        // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
+        if(false !== stripos($number,'e')) {
+            $number = sprintf('%.24f',$number);
+        }
+
+        Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ($number[0] !== '-') {
                 return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
@@ -584,8 +590,10 @@ class Steam
             if ($mantis < 0) {
                 $post += abs((int)$mantis);
             }
+            // TODO careless float could break financial math.
             return number_format((float)$value, $post, '.', '');
         }
+        // TODO careless float could break financial math.
         return number_format((float)$value, 0, '.', '');
     }
 
