@@ -206,7 +206,7 @@ class AccountFactory
         if ('' === (string) $databaseData['virtual_balance']) {
             $databaseData['virtual_balance'] = null;
         }
-        // remove virtual balance when not an asset account or a liability
+        // remove virtual balance when not an asset account
         if (!in_array($type->type, $this->canHaveVirtual, true)) {
             $databaseData['virtual_balance'] = null;
         }
@@ -217,14 +217,14 @@ class AccountFactory
         $data = $this->cleanMetaDataArray($account, $data);
         $this->storeMetaData($account, $data);
 
-        // create opening balance
+        // create opening balance (only asset accounts)
         try {
             $this->storeOpeningBalance($account, $data);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
         }
 
-        // create credit liability data (if relevant)
+        // create credit liability data (only liabilities)
         try {
             $this->storeCreditLiability($account, $data);
         } catch (FireflyException $e) {
@@ -352,16 +352,17 @@ class AccountFactory
         $accountType = $account->accountType->type;
         $direction   = $this->accountRepository->getMetaValue($account, 'liability_direction');
         $valid       = config('firefly.valid_liabilities');
-        if (in_array($accountType, $valid, true) && 'credit' === $direction) {
-            Log::debug('Is a liability with credit direction.');
+        if (in_array($accountType, $valid, true)) {
+            Log::debug('Is a liability with credit ("i am owed") direction.');
             if ($this->validOBData($data)) {
                 Log::debug('Has valid CL data.');
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
-                $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
+                // store credit transaction.
+                $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
             }
             if (!$this->validOBData($data)) {
-                Log::debug('Has NOT valid CL data.');
+                Log::debug('Does NOT have valid CL data, deletr any CL transaction.');
                 $this->deleteCreditTransaction($account);
             }
         }

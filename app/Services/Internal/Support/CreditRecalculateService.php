@@ -62,9 +62,11 @@ class CreditRecalculateService
             return;
         }
         if (null !== $this->group && null === $this->account) {
+            Log::debug('Have to handle a group.');
             $this->processGroup();
         }
         if (null !== $this->account && null === $this->group) {
+            Log::debug('Have to handle an account.');
             // work based on account.
             $this->processAccount();
         }
@@ -213,7 +215,6 @@ class CreditRecalculateService
         }
         $factory->crud($account, 'current_debt', $leftOfDebt);
 
-
         Log::debug(sprintf('Done with %s(#%d)', __METHOD__, $account->id));
     }
 
@@ -252,16 +253,16 @@ class CreditRecalculateService
         Log::debug(sprintf('Processing group #%d, journal #%d of type "%s"', $journal->id, $groupId, $type));
 
         // it's a withdrawal into this liability (from asset).
-        // if it's a credit, we don't care, because sending more money
-        // to a credit-liability doesn't increase the amount (yet)
+        // if it's a credit ("I am owed"), this increases the amount due,
+        // because we're lending person X more money
         if (
             $type === TransactionType::WITHDRAWAL
             && (int)$account->id === (int)$transaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
-            Log::debug(sprintf('Is withdrawal into credit liability #%d, does not influence the amount due.', $transaction->account_id));
-
+            $amount = bcadd($amount, app('steam')->positive($usedAmount));
+            Log::debug(sprintf('Is withdrawal (%s) into credit liability #%d, will increase amount due to %s.', $transaction->account_id, $usedAmount, $amount));
             return $amount;
         }
 

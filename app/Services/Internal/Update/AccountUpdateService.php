@@ -324,7 +324,7 @@ class AccountUpdateService
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
                 if ('credit' === $direction) {
-                    $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
+                    $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
                 }
             }
 

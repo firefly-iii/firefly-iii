@@ -364,7 +364,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                      ->where('transactions.account_id', $account->id)
-                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
                                      ->first(['transaction_journals.*']);
         if (null === $journal) {
             return null;
@@ -388,7 +388,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                      ->where('transactions.account_id', $account->id)
-                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
+                                     ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
                                      ->first(['transaction_journals.*']);
         if (null === $journal) {
             return null;
