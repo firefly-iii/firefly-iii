@@ -266,15 +266,17 @@ class CreditRecalculateService
             return $amount;
         }
 
-        // likewise deposit into a credit debt does not change the amount
+        // it's a deposit out of this liability (to asset).
+        // if it's a credit ("I am owed") this decreases the amount due.
+        // because the person is paying us back.
         if (
             $type === TransactionType::DEPOSIT
             && (int)$account->id === (int)$transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
-            Log::debug(sprintf('Is deposit from liability #%d,does not influence the amount left.', $transaction->account_id));
-
+            $amount = bcsub($amount, app('steam')->positive($usedAmount));
+            Log::debug(sprintf('Is deposit (%s) from credit liability #%d, will decrease amount due to %s.', $transaction->account_id, $usedAmount, $amount));
             return $amount;
         }
 
