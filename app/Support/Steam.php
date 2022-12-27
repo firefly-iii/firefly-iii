@@ -110,6 +110,7 @@ class Steam
         if('' === trim($number)) {
             return '0';
         }
+        Log::debug(sprintf('Trying bcround("%",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ($number[0] !== '-') {
                 return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
