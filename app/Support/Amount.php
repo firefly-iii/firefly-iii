@@ -72,20 +72,20 @@ class Amount
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
     {
         $locale = app('steam')->getLocale();
-
+        $rounded = app('steam')->bcround($amount, $decimalPlaces);
         $coloured = $coloured ?? true;
 
         $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = $fmt->format((float)app('steam')->bcround($amount, $decimalPlaces)); // intentional float
+        $result = $fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
-            if (1 === bccomp($amount, '0')) {
+            if (1 === bccomp($rounded, '0')) {
                 return sprintf('<span class="text-success">%s</span>', $result);
             }
-            if (-1 === bccomp($amount, '0')) {
+            if (-1 === bccomp($rounded, '0')) {
                 return sprintf('<span class="text-danger">%s</span>', $result);
             }
 

@@ -116,7 +116,7 @@ class Steam
         if(false !== stripos($number,'e')) {
             $number = sprintf('%.24f',$number);
         }
-        
+
         Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ($number[0] !== '-') {
