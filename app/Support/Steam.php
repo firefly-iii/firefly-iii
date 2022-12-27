@@ -105,15 +105,18 @@ class Steam
      */
     public function bcround(?string $number, int $precision = 0): string
     {
+
         if(null === $number) {
             return '0';
         }
         if('' === trim($number)) {
             return '0';
         }
+        // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
         if(false !== stripos($number,'e')) {
             $number = sprintf('%.24f',$number);
         }
+        
         Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ($number[0] !== '-') {
