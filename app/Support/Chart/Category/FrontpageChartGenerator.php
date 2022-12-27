@@ -152,7 +152,7 @@ class FrontpageChartGenerator
             $tempData[] = [
                 'name'        => trans('firefly.no_category'),
                 'sum'         => $currency['sum'],
-                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places'] ?? 2),
+                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places'] ?? 2), // intentional float
                 'currency_id' => (int) $currency['currency_id'],
             ];
         }

@@ -53,7 +53,7 @@ class PiggyBankTransformer extends AbstractTransformer
     /**
      * Transform the piggy bank.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return array
      * @throws \FireflyIII\Exceptions\FireflyException
@@ -81,44 +81,44 @@ class PiggyBankTransformer extends AbstractTransformer
         /** @var ObjectGroup $objectGroup */
         $objectGroup = $piggyBank->objectGroups->first();
         if (null !== $objectGroup) {
-            $objectGroupId    = (int) $objectGroup->id;
-            $objectGroupOrder = (int) $objectGroup->order;
+            $objectGroupId    = (int)$objectGroup->id;
+            $objectGroupOrder = (int)$objectGroup->order;
             $objectGroupTitle = $objectGroup->title;
         }
 
         // get currently saved amount:
         $currentAmountStr = $this->piggyRepos->getCurrentAmount($piggyBank);
-        $currentAmount    = number_format((float) $currentAmountStr, $currency->decimal_places, '.', '');
+        $currentAmount    = app('steam')->bcround($currentAmountStr, $currency->decimal_places);
 
         // Amounts, depending on 0.0 state of target amount
         $percentage         = null;
         $targetAmountString = null;
         $leftToSaveString   = null;
         $savePerMonth       = null;
-        if (0.000 !== (float) $piggyBank->targetamount) {
+        if (0 !== bccomp(app('steam')->bcround($currentAmountStr, $currency->decimal_places), '0')) {
             $leftToSave         = bcsub($piggyBank->targetamount, $currentAmountStr);
-            $targetAmount       = (string) $piggyBank->targetamount;
+            $targetAmount       = (string)$piggyBank->targetamount;
             $targetAmount       = 1 === bccomp('0.01', $targetAmount) ? '0.01' : $targetAmount;
-            $percentage         = (int) (0 !== bccomp('0', $currentAmountStr) ? $currentAmountStr / $targetAmount * 100 : 0);
-            $targetAmountString = number_format((float) $targetAmount, $currency->decimal_places, '.', '');
-            $leftToSaveString   = number_format((float) $leftToSave, $currency->decimal_places, '.', '');
-            $savePerMonth       = number_format((float) $this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places, '.', '');
+            $percentage         = (int)(0 !== bccomp('0', $currentAmountStr) ? $currentAmountStr / $targetAmount * 100 : 0);
+            $targetAmountString = app('steam')->bcround($targetAmount, $currency->decimal_places);
+            $leftToSaveString   = app('steam')->bcround($leftToSave, $currency->decimal_places);
+            $savePerMonth       = app('steam')->bcround($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places);
         }
         $startDate  = $piggyBank->startdate?->toAtomString();
         $targetDate = $piggyBank->targetdate?->toAtomString();
 
 
         return [
-            'id'                      => (string) $piggyBank->id,
+            'id'                      => (string)$piggyBank->id,
             'created_at'              => $piggyBank->created_at->toAtomString(),
             'updated_at'              => $piggyBank->updated_at->toAtomString(),
-            'account_id'              => (string) $piggyBank->account_id,
+            'account_id'              => (string)$piggyBank->account_id,
             'account_name'            => $piggyBank->account->name,
             'name'                    => $piggyBank->name,
-            'currency_id'             => (string) $currency->id,
+            'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int) $currency->decimal_places,
+            'currency_decimal_places' => (int)$currency->decimal_places,
             'target_amount'           => $targetAmountString,
             'percentage'              => $percentage,
             'current_amount'          => $currentAmount,
@@ -126,16 +126,16 @@ class PiggyBankTransformer extends AbstractTransformer
             'save_per_month'          => $savePerMonth,
             'start_date'              => $startDate,
             'target_date'             => $targetDate,
-            'order'                   => (int) $piggyBank->order,
+            'order'                   => (int)$piggyBank->order,
             'active'                  => true,
             'notes'                   => $notes,
-            'object_group_id'         => $objectGroupId ? (string) $objectGroupId : null,
+            'object_group_id'         => $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'      => $objectGroupOrder,
             'object_group_title'      => $objectGroupTitle,
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_banks/' . $piggyBank->id,
+                    'uri' => '/piggy_banks/'.$piggyBank->id,
                 ],
             ],
         ];

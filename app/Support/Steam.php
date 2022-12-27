@@ -590,8 +590,10 @@ class Steam
             if ($mantis < 0) {
                 $post += abs((int)$mantis);
             }
+            // TODO careless float could break financial math.
             return number_format((float)$value, $post, '.', '');
         }
+        // TODO careless float could break financial math.
         return number_format((float)$value, 0, '.', '');
     }
 

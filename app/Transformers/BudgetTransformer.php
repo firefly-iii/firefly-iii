@@ -84,7 +84,7 @@ class BudgetTransformer extends AbstractTransformer
             $abCurrencyId   = (string) $autoBudget->transactionCurrency->id;
             $abCurrencyCode = $autoBudget->transactionCurrency->code;
             $abType         = $types[$autoBudget->auto_budget_type];
-            $abAmount       = number_format((float) $autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
+            $abAmount       = app('steam')->bcround($autoBudget->amount, $autoBudget->transactionCurrency->decimal_places);
             $abPeriod       = $autoBudget->period;
         }
 
@@ -120,7 +120,7 @@ class BudgetTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = number_format((float) $data['sum'], (int) $data['currency_decimal_places'], '.', '');
+            $data['sum'] = app('steam')->bcround($data['sum'], (int) $data['currency_decimal_places']);
             $return[]    = $data;
         }
 

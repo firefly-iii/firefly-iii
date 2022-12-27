@@ -71,8 +71,8 @@ class Amount
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
     {
-        $locale = app('steam')->getLocale();
-        $rounded = app('steam')->bcround($amount, $decimalPlaces);
+        $locale   = app('steam')->getLocale();
+        $rounded  = app('steam')->bcround($amount, $decimalPlaces);
         $coloured = $coloured ?? true;
 
         $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
