@@ -183,7 +183,7 @@ class NetWorth implements NetWorthInterface
      */
     private function getAccounts(): Collection
     {
-        $accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::DEFAULT, AccountType::CREDITCARD]);
+        $accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         $filtered = new Collection();
         /** @var Account $account */
         foreach ($accounts as $account) {

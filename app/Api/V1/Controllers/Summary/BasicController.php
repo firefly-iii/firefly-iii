@@ -358,7 +358,7 @@ class BasicController extends Controller
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUser($user);
-        $allAccounts = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]);
+        $allAccounts = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
 
         // filter list on preference of being included.
         $filtered = $allAccounts->filter(
