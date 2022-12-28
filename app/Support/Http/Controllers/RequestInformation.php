@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Helpers\Help\HelpInterface;
+use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\User;
@@ -60,7 +61,7 @@ trait RequestInformation
     /**
      * Get a list of triggers.
      *
-     * @param TestRuleFormRequest $request
+     * @param  TestRuleFormRequest  $request
      *
      * @return array
      */
@@ -70,14 +71,15 @@ trait RequestInformation
         $data     = $request->get('triggers');
         if (is_array($data)) {
             foreach ($data as $triggerInfo) {
-                $triggers[] = [
+                $current    = [
                     'type'            => $triggerInfo['type'] ?? '',
                     'value'           => $triggerInfo['value'] ?? '',
-                    'stop_processing' => 1 === (int) ($triggerInfo['stop_processing'] ?? '0'),
+                    'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
                 ];
+                $current    = RuleFormRequest::replaceAmountTrigger($current);
+                $triggers[] = $current;
             }
         }
-
         return $triggers;
     }
 
@@ -127,13 +129,13 @@ trait RequestInformation
      */
     final protected function getSpecificPageName(): string // get request info
     {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
+        return null === RouteFacade::current()->parameter('objectType') ? '' : '_'.RouteFacade::current()->parameter('objectType');
     }
 
     /**
      * Check if date is outside session range.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return bool
      *
@@ -159,7 +161,7 @@ trait RequestInformation
     /**
      * Parses attributes from URL
      *
-     * @param array $attributes
+     * @param  array  $attributes
      *
      * @return array
      */
@@ -189,9 +191,9 @@ trait RequestInformation
     /**
      * Validate users new password.
      *
-     * @param User   $user
-     * @param string $current
-     * @param string $new
+     * @param  User  $user
+     * @param  string  $current
+     * @param  string  $new
      *
      * @return bool
      *
@@ -200,11 +202,11 @@ trait RequestInformation
     final protected function validatePassword(User $user, string $current, string $new): bool //get request info
     {
         if (!Hash::check($current, $user->password)) {
-            throw new ValidationException((string) trans('firefly.invalid_current_password'));
+            throw new ValidationException((string)trans('firefly.invalid_current_password'));
         }
 
         if ($current === $new) {
-            throw new ValidationException((string) trans('firefly.should_change'));
+            throw new ValidationException((string)trans('firefly.should_change'));
         }
 
         return true;
@@ -213,7 +215,7 @@ trait RequestInformation
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return ValidatorContract
      * @codeCoverageIgnore
