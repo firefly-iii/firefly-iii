@@ -35,15 +35,20 @@ trait TransactionFilter
     /**
      * All the types you can request.
      *
-     * @param string $type
+     * @param  string  $type
      *
      * @return array
      */
     protected function mapTransactionTypes(string $type): array
     {
         $types = [
-            'all'             => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE,
-                                  TransactionType::RECONCILIATION,],
+            'all'             => [
+                TransactionType::WITHDRAWAL,
+                TransactionType::DEPOSIT,
+                TransactionType::TRANSFER,
+                TransactionType::OPENING_BALANCE,
+                TransactionType::RECONCILIATION,
+            ],
             'withdrawal'      => [TransactionType::WITHDRAWAL,],
             'withdrawals'     => [TransactionType::WITHDRAWAL,],
             'expense'         => [TransactionType::WITHDRAWAL,],

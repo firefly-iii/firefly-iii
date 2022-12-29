@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OperationsController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -28,7 +29,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use JsonException;
 use Log;
 use Throwable;
 
@@ -62,9 +62,9 @@ class OperationsController extends Controller
     /**
      * View of income and expense.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return mixed|string
      */
@@ -97,9 +97,9 @@ class OperationsController extends Controller
     /**
      * View of income.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
      */
@@ -132,9 +132,9 @@ class OperationsController extends Controller
     /**
      * Overview of income and expense.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return mixed|string
      */
@@ -159,15 +159,15 @@ class OperationsController extends Controller
         foreach ($keys as $currencyId) {
             $currencyInfo             = $incomes['sums'][$currencyId] ?? $expenses['sums'][$currencyId];
             $sums[$currencyId]        = $sums[$currencyId] ?? [
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $currencyInfo['currency_name'],
-                    'currency_code'           => $currencyInfo['currency_code'],
-                    'currency_symbol'         => $currencyInfo['currency_symbol'],
-                    'currency_decimal_places' => $currencyInfo['currency_decimal_places'],
-                    'in'                      => $incomes['sums'][$currencyId]['sum'] ?? '0',
-                    'out'                     => $expenses['sums'][$currencyId]['sum'] ?? '0',
-                    'sum'                     => '0',
-                ];
+                'currency_id'             => $currencyId,
+                'currency_name'           => $currencyInfo['currency_name'],
+                'currency_code'           => $currencyInfo['currency_code'],
+                'currency_symbol'         => $currencyInfo['currency_symbol'],
+                'currency_decimal_places' => $currencyInfo['currency_decimal_places'],
+                'in'                      => $incomes['sums'][$currencyId]['sum'] ?? '0',
+                'out'                     => $expenses['sums'][$currencyId]['sum'] ?? '0',
+                'sum'                     => '0',
+            ];
             $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['in'], $sums[$currencyId]['out']);
         }
 

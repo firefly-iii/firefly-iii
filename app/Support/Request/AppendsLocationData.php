@@ -42,9 +42,9 @@ trait AppendsLocationData
     /**
      * Read the submitted Request data and add new or updated Location data to the array.
      *
-     * @param array       $data
+     * @param  array  $data
      *
-     * @param string|null $prefix
+     * @param  string|null  $prefix
      *
      * @return array
      */
@@ -100,8 +100,8 @@ trait AppendsLocationData
     }
 
     /**
-     * @param string|null $prefix
-     * @param string      $key
+     * @param  string|null  $prefix
+     * @param  string  $key
      *
      * @return string
      */
@@ -115,7 +115,7 @@ trait AppendsLocationData
     }
 
     /**
-     * @param string|null $prefix
+     * @param  string|null  $prefix
      *
      * @return bool
      */
@@ -167,7 +167,7 @@ trait AppendsLocationData
     /**
      * Abstract method.
      *
-     * @param mixed ...$patterns
+     * @param  mixed  ...$patterns
      *
      * @return mixed
      */
@@ -176,15 +176,15 @@ trait AppendsLocationData
     /**
      * Abstract method stolen from "InteractsWithInput".
      *
-     * @param null $key
-     * @param bool $default
+     * @param  null  $key
+     * @param  bool  $default
      *
      * @return mixed
      */
     abstract public function boolean($key = null, $default = false);
 
     /**
-     * @param string|null $prefix
+     * @param  string|null  $prefix
      *
      * @return bool
      */
@@ -229,7 +229,7 @@ trait AppendsLocationData
     }
 
     /**
-     * @param string|null $prefix
+     * @param  string|null  $prefix
      *
      * @return bool
      */
@@ -245,7 +245,7 @@ trait AppendsLocationData
             && null === $this->get($zoomLevelKey))
                && (
                    'PUT' === $this->method()
-            || ('POST' === $this->method() && $this->routeIs('*.update'))
+                   || ('POST' === $this->method() && $this->routeIs('*.update'))
                );
     }
 }

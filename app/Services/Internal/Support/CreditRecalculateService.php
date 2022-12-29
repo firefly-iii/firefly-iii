@@ -262,7 +262,9 @@ class CreditRecalculateService
             && 'credit' === $direction
         ) {
             $amount = bcadd($amount, app('steam')->positive($usedAmount));
-            Log::debug(sprintf('Is withdrawal (%s) into credit liability #%d, will increase amount due to %s.', $transaction->account_id, $usedAmount, $amount));
+            Log::debug(
+                sprintf('Is withdrawal (%s) into credit liability #%d, will increase amount due to %s.', $transaction->account_id, $usedAmount, $amount)
+            );
             return $amount;
         }
 

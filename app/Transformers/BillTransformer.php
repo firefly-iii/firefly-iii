@@ -52,7 +52,7 @@ class BillTransformer extends AbstractTransformer
     /**
      * Transform the bill.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return array
      */
@@ -72,8 +72,8 @@ class BillTransformer extends AbstractTransformer
         /** @var ObjectGroup $objectGroup */
         $objectGroup = $bill->objectGroups->first();
         if (null !== $objectGroup) {
-            $objectGroupId    = (int) $objectGroup->id;
-            $objectGroupOrder = (int) $objectGroup->order;
+            $objectGroupId    = (int)$objectGroup->id;
+            $objectGroupOrder = (int)$objectGroup->order;
             $objectGroupTitle = $objectGroup->title;
         }
 
@@ -107,13 +107,13 @@ class BillTransformer extends AbstractTransformer
         unset($temp, $temp2);
 
         return [
-            'id'                       => (int) $bill->id,
+            'id'                       => (int)$bill->id,
             'created_at'               => $bill->created_at->toAtomString(),
             'updated_at'               => $bill->updated_at->toAtomString(),
-            'currency_id'              => (string) $bill->transaction_currency_id,
+            'currency_id'              => (string)$bill->transaction_currency_id,
             'currency_code'            => $currency->code,
             'currency_symbol'          => $currency->symbol,
-            'currency_decimal_places'  => (int) $currency->decimal_places,
+            'currency_decimal_places'  => (int)$currency->decimal_places,
             'name'                     => $bill->name,
             'amount_min'               => app('steam')->bcround($bill->amount_min, $currency->decimal_places),
             'amount_max'               => app('steam')->bcround($bill->amount_max, $currency->decimal_places),
@@ -121,11 +121,11 @@ class BillTransformer extends AbstractTransformer
             'end_date'                 => $bill->end_date?->toAtomString(),
             'extension_date'           => $bill->extension_date?->toAtomString(),
             'repeat_freq'              => $bill->repeat_freq,
-            'skip'                     => (int) $bill->skip,
+            'skip'                     => (int)$bill->skip,
             'active'                   => $bill->active,
-            'order'                    => (int) $bill->order,
+            'order'                    => (int)$bill->order,
             'notes'                    => $notes,
-            'object_group_id'          => $objectGroupId ? (string) $objectGroupId : null,
+            'object_group_id'          => $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'       => $objectGroupOrder,
             'object_group_title'       => $objectGroupTitle,
 
@@ -137,7 +137,7 @@ class BillTransformer extends AbstractTransformer
             'links'                    => [
                 [
                     'rel' => 'self',
-                    'uri' => '/bills/' . $bill->id,
+                    'uri' => '/bills/'.$bill->id,
                 ],
             ],
         ];
@@ -146,7 +146,7 @@ class BillTransformer extends AbstractTransformer
     /**
      * Get the data the bill was paid and predict the next expected match.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return array
      */
@@ -203,8 +203,8 @@ class BillTransformer extends AbstractTransformer
         $result = [];
         foreach ($set as $entry) {
             $result[] = [
-                'transaction_group_id'   => (int) $entry->transaction_group_id,
-                'transaction_journal_id' => (int) $entry->id,
+                'transaction_group_id'   => (int)$entry->transaction_group_id,
+                'transaction_journal_id' => (int)$entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
             ];
         }
@@ -220,8 +220,8 @@ class BillTransformer extends AbstractTransformer
     /**
      * Returns the latest date in the set, or start when set is empty.
      *
-     * @param Collection $dates
-     * @param Carbon     $default
+     * @param  Collection  $dates
+     * @param  Carbon  $default
      *
      * @return Carbon
      */
@@ -242,7 +242,7 @@ class BillTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return array
      */
@@ -285,8 +285,8 @@ class BillTransformer extends AbstractTransformer
      * Given a bill and a date, this method will tell you at which moment this bill expects its next
      * transaction. Whether or not it is there already, is not relevant.
      *
-     * @param Bill   $bill
-     * @param Carbon $date
+     * @param  Bill  $bill
+     * @param  Carbon  $date
      *
      * @return Carbon
      */

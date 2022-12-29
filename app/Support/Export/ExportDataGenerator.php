@@ -56,6 +56,8 @@ use Illuminate\Support\Collection;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Exception;
 use League\Csv\Writer;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ExportDataGenerator
@@ -141,8 +143,25 @@ class ExportDataGenerator
      */
     private function exportAccounts(): string
     {
-        $header = ['user_id', 'account_id', 'created_at', 'updated_at', 'type', 'name', 'virtual_balance', 'iban', 'number', 'active', 'currency_code', 'role',
-                   'cc_type', 'cc_payment_date', 'in_net_worth', 'interest', 'interest_period',];
+        $header = [
+            'user_id',
+            'account_id',
+            'created_at',
+            'updated_at',
+            'type',
+            'name',
+            'virtual_balance',
+            'iban',
+            'number',
+            'active',
+            'currency_code',
+            'role',
+            'cc_type',
+            'cc_payment_date',
+            'in_net_worth',
+            'interest',
+            'interest_period',
+        ];
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
@@ -195,6 +214,14 @@ class ExportDataGenerator
     }
 
     /**
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @return string
      * @throws FireflyException
      */
@@ -204,8 +231,20 @@ class ExportDataGenerator
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($this->user);
         $bills   = $repository->getBills();
-        $header  = ['user_id', 'bill_id', 'created_at', 'updated_at', 'currency_code', 'name', 'amount_min', 'amount_max', 'date', 'repeat_freq', 'skip',
-                    'active',];
+        $header  = [
+            'user_id',
+            'bill_id',
+            'created_at',
+            'updated_at',
+            'currency_code',
+            'name',
+            'amount_min',
+            'amount_max',
+            'date',
+            'repeat_freq',
+            'skip',
+            'active',
+        ];
         $records = [];
 
         /** @var Bill $bill */
@@ -374,9 +413,22 @@ class ExportDataGenerator
         $accountRepos = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
-        $header  = ['user_id', 'piggy_bank_id', 'created_at', 'updated_at', 'account_name', 'account_type', 'name',
-                    'currency_code', 'target_amount', 'current_amount', 'start_date', 'target_date', 'order',
-                    'active'];
+        $header  = [
+            'user_id',
+            'piggy_bank_id',
+            'created_at',
+            'updated_at',
+            'account_name',
+            'account_type',
+            'name',
+            'currency_code',
+            'target_amount',
+            'current_amount',
+            'start_date',
+            'target_date',
+            'order',
+            'active',
+        ];
         $records = [];
         $piggies = $piggyRepos->getPiggyBanks();
 
@@ -435,14 +487,39 @@ class ExportDataGenerator
         $recurringRepos->setUser($this->user);
         $header      = [
             // recurrence:
-            'user_id', 'recurrence_id', 'row_contains', 'created_at', 'updated_at', 'type', 'title', 'description', 'first_date', 'repeat_until',
-            'latest_date', 'repetitions', 'apply_rules', 'active',
+            'user_id',
+            'recurrence_id',
+            'row_contains',
+            'created_at',
+            'updated_at',
+            'type',
+            'title',
+            'description',
+            'first_date',
+            'repeat_until',
+            'latest_date',
+            'repetitions',
+            'apply_rules',
+            'active',
 
             // repetition info:
-            'type', 'moment', 'skip', 'weekend',
+            'type',
+            'moment',
+            'skip',
+            'weekend',
             // transactions + meta:
-            'currency_code', 'foreign_currency_code', 'source_name', 'source_type', 'destination_name', 'destination_type', 'amount', 'foreign_amount',
-            'category', 'budget', 'piggy_bank', 'tags',
+            'currency_code',
+            'foreign_currency_code',
+            'source_name',
+            'source_type',
+            'destination_name',
+            'destination_type',
+            'amount',
+            'foreign_amount',
+            'category',
+            'budget',
+            'piggy_bank',
+            'tags',
         ];
         $records     = [];
         $recurrences = $recurringRepos->getAll();
@@ -471,10 +548,25 @@ class ExportDataGenerator
                 $records[] = [
                     // recurrence
                     $this->user->id,
-                    $recurrence->id, 'repetition', null, null, null, null, null, null, null, null, null, null, null,
+                    $recurrence->id,
+                    'repetition',
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
 
                     // repetition:
-                    $repetition->repetition_type, $repetition->repetition_moment, $repetition->repetition_skip, $repetition->weekend,
+                    $repetition->repetition_type,
+                    $repetition->repetition_moment,
+                    $repetition->repetition_skip,
+                    $repetition->weekend,
                 ];
             }
             /** @var RecurrenceTransaction $transaction */
@@ -487,16 +579,39 @@ class ExportDataGenerator
                 $records[] = [
                     // recurrence
                     $this->user->id,
-                    $recurrence->id, 'transaction', null, null, null, null, null, null, null, null, null, null, null,
+                    $recurrence->id,
+                    'transaction',
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
 
                     // repetition:
-                    null, null, null, null,
+                    null,
+                    null,
+                    null,
+                    null,
 
                     // transaction:
-                    $transaction->transactionCurrency->code, $transaction->foreignCurrency?->code,
-                    $transaction->sourceAccount->name, $transaction->sourceAccount->accountType->type, $transaction->destinationAccount->name,
-                    $transaction->destinationAccount->accountType->type, $transaction->amount, $transaction->foreign_amount,
-                    $categoryName, $budgetId, $piggyBankId, implode(',', $tags),
+                    $transaction->transactionCurrency->code,
+                    $transaction->foreignCurrency?->code,
+                    $transaction->sourceAccount->name,
+                    $transaction->sourceAccount->accountType->type,
+                    $transaction->destinationAccount->name,
+                    $transaction->destinationAccount->accountType->type,
+                    $transaction->amount,
+                    $transaction->foreign_amount,
+                    $categoryName,
+                    $budgetId,
+                    $piggyBankId,
+                    implode(',', $tags),
                 ];
             }
         }
@@ -528,9 +643,31 @@ class ExportDataGenerator
      */
     private function exportRules(): string
     {
-        $header    = ['user_id', 'rule_id', 'row_contains', 'created_at', 'updated_at', 'group_id', 'group_name', 'title', 'description', 'order', 'active',
-                      'stop_processing', 'strict', 'trigger_type', 'trigger_value', 'trigger_order', 'trigger_active', 'trigger_stop_processing', 'action_type',
-                      'action_value', 'action_order', 'action_active', 'action_stop_processing',];
+        $header    = [
+            'user_id',
+            'rule_id',
+            'row_contains',
+            'created_at',
+            'updated_at',
+            'group_id',
+            'group_name',
+            'title',
+            'description',
+            'order',
+            'active',
+            'stop_processing',
+            'strict',
+            'trigger_type',
+            'trigger_value',
+            'trigger_order',
+            'trigger_active',
+            'trigger_stop_processing',
+            'action_type',
+            'action_value',
+            'action_order',
+            'action_active',
+            'action_stop_processing',
+        ];
         $ruleRepos = app(RuleRepositoryInterface::class);
         $ruleRepos->setUser($this->user);
         $rules   = $ruleRepos->getAll();
@@ -538,31 +675,70 @@ class ExportDataGenerator
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $records[] = [
-                $this->user->id, $rule->id, 'rule',
-                $rule->created_at->toAtomString(), $rule->updated_at->toAtomString(),
-                $rule->ruleGroup->id, $rule->ruleGroup->title,
-                $rule->title, $rule->description, $rule->order, $rule->active, $rule->stop_processing, $rule->strict,
+                $this->user->id,
+                $rule->id,
+                'rule',
+                $rule->created_at->toAtomString(),
+                $rule->updated_at->toAtomString(),
+                $rule->ruleGroup->id,
+                $rule->ruleGroup->title,
+                $rule->title,
+                $rule->description,
+                $rule->order,
+                $rule->active,
+                $rule->stop_processing,
+                $rule->strict,
             ];
             /** @var RuleTrigger $trigger */
             foreach ($rule->ruleTriggers as $trigger) {
                 $records[] = [
-                    $this->user->id, $rule->id, 'trigger',
-                    null, null,
-                    null, null,
-                    null, null, null, null, null, null,
-                    $trigger->trigger_type, $trigger->trigger_value, $trigger->order, $trigger->active, $trigger->stop_processing,
+                    $this->user->id,
+                    $rule->id,
+                    'trigger',
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $trigger->trigger_type,
+                    $trigger->trigger_value,
+                    $trigger->order,
+                    $trigger->active,
+                    $trigger->stop_processing,
                 ];
             }
 
             /** @var RuleAction $action */
             foreach ($rule->ruleActions as $action) {
                 $records[] = [
-                    $this->user->id, $rule->id, 'action',
-                    null, null,
-                    null, null,
-                    null, null, null, null, null, null,
-                    null, null, null, null, null,
-                    $action->action_type, $action->action_value, $action->order, $action->active, $action->stop_processing,
+                    $this->user->id,
+                    $rule->id,
+                    'action',
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $action->action_type,
+                    $action->action_value,
+                    $action->order,
+                    $action->active,
+                    $action->stop_processing,
                 ];
             }
         }
@@ -592,8 +768,8 @@ class ExportDataGenerator
     /**
      * @return string
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function exportTags(): string
     {
@@ -648,10 +824,33 @@ class ExportDataGenerator
     private function exportTransactions(): string
     {
         // TODO better place for keys?
-        $header = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'amount', 'foreign_amount', 'currency_code',
-                   'foreign_currency_code', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban',
-                   'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes',
-                   // all optional meta fields:
+        $header = [
+            'user_id',
+            'group_id',
+            'journal_id',
+            'created_at',
+            'updated_at',
+            'group_title',
+            'type',
+            'amount',
+            'foreign_amount',
+            'currency_code',
+            'foreign_currency_code',
+            'description',
+            'date',
+            'source_name',
+            'source_iban',
+            'source_type',
+            'destination_name',
+            'destination_iban',
+            'destination_type',
+            'reconciled',
+            'category',
+            'budget',
+            'bill',
+            'tags',
+            'notes',
+            // all optional meta fields:
         ];
 
         $metaFields = config('firefly.journal_meta_fields');
@@ -761,7 +960,15 @@ class ExportDataGenerator
     }
 
     /**
-     * @param array $tags
+     * @param  Collection  $accounts
+     */
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    /**
+     * @param  array  $tags
      *
      * @return string
      */
@@ -779,15 +986,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param Collection $accounts
-     */
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
-    /**
-     * @param Carbon $end
+     * @param  Carbon  $end
      */
     public function setEnd(Carbon $end): void
     {
@@ -795,7 +994,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportAccounts
+     * @param  bool  $exportAccounts
      */
     public function setExportAccounts(bool $exportAccounts): void
     {
@@ -803,7 +1002,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportBills
+     * @param  bool  $exportBills
      */
     public function setExportBills(bool $exportBills): void
     {
@@ -811,7 +1010,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportBudgets
+     * @param  bool  $exportBudgets
      */
     public function setExportBudgets(bool $exportBudgets): void
     {
@@ -819,7 +1018,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportCategories
+     * @param  bool  $exportCategories
      */
     public function setExportCategories(bool $exportCategories): void
     {
@@ -827,7 +1026,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportPiggies
+     * @param  bool  $exportPiggies
      */
     public function setExportPiggies(bool $exportPiggies): void
     {
@@ -835,7 +1034,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportRecurring
+     * @param  bool  $exportRecurring
      */
     public function setExportRecurring(bool $exportRecurring): void
     {
@@ -843,7 +1042,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportRules
+     * @param  bool  $exportRules
      */
     public function setExportRules(bool $exportRules): void
     {
@@ -851,7 +1050,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportTags
+     * @param  bool  $exportTags
      */
     public function setExportTags(bool $exportTags): void
     {
@@ -859,7 +1058,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @param bool $exportTransactions
+     * @param  bool  $exportTransactions
      */
     public function setExportTransactions(bool $exportTransactions): void
     {
@@ -867,18 +1066,10 @@ class ExportDataGenerator
     }
 
     /**
-     * @param Carbon $start
+     * @param  Carbon  $start
      */
     public function setStart(Carbon $start): void
     {
         $this->start = $start;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
     }
 }

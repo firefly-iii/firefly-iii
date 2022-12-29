@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TestRuleFormRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -48,7 +49,7 @@ class TestRuleFormRequest extends FormRequest
         $validTriggers = $this->getTriggers();
 
         return [
-            'rule-trigger.*'       => 'required|min:1|in:' . implode(',', $validTriggers),
+            'rule-trigger.*'       => 'required|min:1|in:'.implode(',', $validTriggers),
             'rule-trigger-value.*' => 'required|min:1|ruleTriggerValue',
         ];
     }

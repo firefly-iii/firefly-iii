@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CurrencyCode.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,8 +33,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CurrencyCode implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return TransactionCurrency
      * @throws NotFoundHttpException

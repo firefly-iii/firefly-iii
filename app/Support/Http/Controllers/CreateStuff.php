@@ -42,8 +42,8 @@ trait CreateStuff
     /**
      * Creates an asset account.
      *
-     * @param NewUserFormRequest  $request
-     * @param TransactionCurrency $currency
+     * @param  NewUserFormRequest  $request
+     * @param  TransactionCurrency  $currency
      *
      * @return bool
      */
@@ -72,8 +72,8 @@ trait CreateStuff
     /**
      * Creates a cash wallet.
      *
-     * @param TransactionCurrency $currency
-     * @param string              $language
+     * @param  TransactionCurrency  $currency
+     * @param  string  $language
      *
      * @return bool
      */
@@ -82,7 +82,7 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         $assetAccount = [
-            'name'                 => (string) trans('firefly.cash_wallet', [], $language),
+            'name'                 => (string)trans('firefly.cash_wallet', [], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'virtual_balance'      => 0,
@@ -138,9 +138,9 @@ trait CreateStuff
     /**
      * Create a savings account.
      *
-     * @param NewUserFormRequest  $request
-     * @param TransactionCurrency $currency
-     * @param string              $language
+     * @param  NewUserFormRequest  $request
+     * @param  TransactionCurrency  $currency
+     * @param  string  $language
      *
      * @return bool
      */
@@ -149,7 +149,7 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository     = app(AccountRepositoryInterface::class);
         $savingsAccount = [
-            'name'                 => (string) trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
+            'name'                 => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'account_type_id'      => null,
@@ -168,7 +168,7 @@ trait CreateStuff
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return User
      */

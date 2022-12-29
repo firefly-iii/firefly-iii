@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SetDescription.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,7 @@ class SetDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -52,7 +53,7 @@ class SetDescription implements ActionInterface
     {
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        $before  = $object->description;
+        $before = $object->description;
 
         DB::table('transaction_journals')
           ->where('id', '=', $journal['transaction_journal_id'])

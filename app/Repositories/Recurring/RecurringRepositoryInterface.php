@@ -39,18 +39,18 @@ use Illuminate\Support\Collection;
 interface RecurringRepositoryInterface
 {
     /**
-     * Destroy a recurring transaction.
-     *
-     * @param  Recurrence  $recurrence
-     */
-    public function destroy(Recurrence $recurrence): void;
-
-    /**
      * @param  Recurrence  $recurrence
      * @param  Carbon  $date
      * @return bool
      */
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool;
+
+    /**
+     * Destroy a recurring transaction.
+     *
+     * @param  Recurrence  $recurrence
+     */
+    public function destroy(Recurrence $recurrence): void;
 
     /**
      * Destroy all recurring transactions.

@@ -37,10 +37,10 @@ use Throwable;
 trait FormSupport
 {
     /**
-     * @param string     $name
-     * @param array|null $list
-     * @param mixed      $selected
-     * @param array|null $options
+     * @param  string  $name
+     * @param  array|null  $list
+     * @param  mixed  $selected
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -63,8 +63,8 @@ trait FormSupport
     }
 
     /**
-     * @param string     $name
-     * @param array|null $options
+     * @param  string  $name
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -76,13 +76,13 @@ trait FormSupport
         }
         $name = str_replace('[]', '', $name);
 
-        return (string) trans('form.' . $name);
+        return (string)trans('form.'.$name);
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $label
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $label
+     * @param  array|null  $options
      *
      * @return array
      */
@@ -91,7 +91,7 @@ trait FormSupport
         $options                 = $options ?? [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
-        $options['id']           = 'ffInput_' . $name;
+        $options['id']           = 'ffInput_'.$name;
         $options['autocomplete'] = 'off';
         $options['placeholder']  = ucfirst($label);
 
@@ -99,7 +99,7 @@ trait FormSupport
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      *
      * @return string
      */
@@ -118,8 +118,8 @@ trait FormSupport
     }
 
     /**
-     * @param string     $name
-     * @param mixed|null $value
+     * @param  string  $name
+     * @param  mixed|null  $value
      *
      * @return mixed
      */

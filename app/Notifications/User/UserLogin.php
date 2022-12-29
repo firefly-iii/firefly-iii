@@ -47,25 +47,27 @@ class UserLogin extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
+     * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable)
+    public function toArray($notifiable)
     {
-        return ['mail', 'slack'];
+        return [
+            //
+        ];
     }
 
     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
-        $time = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
+        $time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
         $host = '';
         try {
             $hostName = gethostbyaddr($this->ip);
@@ -78,13 +80,13 @@ class UserLogin extends Notification
 
         return (new MailMessage())
             ->markdown('emails.new-ip', ['time' => $time, 'ipAddress' => $this->ip, 'host' => $host])
-            ->subject((string) trans('email.login_from_new_ip'));
+            ->subject((string)trans('email.login_from_new_ip'));
     }
 
     /**
      * Get the Slack representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return SlackMessage
      */
     public function toSlack($notifiable)
@@ -99,19 +101,17 @@ class UserLogin extends Notification
             $host = $hostName;
         }
 
-        return (new SlackMessage())->content((string) trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
+        return (new SlackMessage())->content((string)trans('email.slack_login_from_new_ip', ['host' => $host, 'ip' => $this->ip]));
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the notification's delivery channels.
      *
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function via($notifiable)
     {
-        return [
-            //
-        ];
+        return ['mail', 'slack'];
     }
 }

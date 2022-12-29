@@ -45,7 +45,7 @@ class ConvertToWithdrawal implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -127,7 +127,7 @@ class ConvertToWithdrawal implements ActionInterface
      * Input is a transfer from A to B.
      * Output is a withdrawal from A to C.
      *
-     * @param array $journal
+     * @param  array  $journal
      *
      * @return bool
      * @throws FireflyException

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TransactionJournalMeta.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,14 +33,14 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\TransactionJournalMeta
  *
- * @property int                     $id
- * @property Carbon|null             $created_at
- * @property Carbon|null             $updated_at
- * @property int                     $transaction_journal_id
- * @property string                  $name
- * @property mixed                   $data
- * @property string                  $hash
- * @property Carbon|null             $deleted_at
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property int $transaction_journal_id
+ * @property string $name
+ * @property mixed $data
+ * @property string $hash
+ * @property Carbon|null $deleted_at
  * @property-read TransactionJournal $transactionJournal
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newQuery()
@@ -80,7 +81,7 @@ class TransactionJournalMeta extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return mixed
      */
@@ -92,7 +93,7 @@ class TransactionJournalMeta extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setDataAttribute($value): void
     {

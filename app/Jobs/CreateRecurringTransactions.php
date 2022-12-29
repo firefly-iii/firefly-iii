@@ -61,10 +61,10 @@ class CreateRecurringTransactions implements ShouldQueue
     private Carbon                              $date;
     private bool                                $force;
     private TransactionGroupRepositoryInterface $groupRepository;
-    private JournalRepositoryInterface          $journalRepository;
-    private RecurringRepositoryInterface        $repository;
-    private Collection                          $recurrences;
     private Collection                          $groups;
+    private JournalRepositoryInterface          $journalRepository;
+    private Collection                          $recurrences;
+    private RecurringRepositoryInterface        $repository;
 
     /**
      * Create a new job instance.
@@ -95,6 +95,14 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->groups            = new Collection();
 
         Log::debug(sprintf('Created new CreateRecurringTransactions("%s")', $this->date->format('Y-m-d')));
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
     }
 
     /**
@@ -519,13 +527,5 @@ class CreateRecurringTransactions implements ShouldQueue
     public function setRecurrences(Collection $recurrences): void
     {
         $this->recurrences = $recurrences;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getGroups(): Collection
-    {
-        return $this->groups;
     }
 }

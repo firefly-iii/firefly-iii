@@ -42,7 +42,7 @@ trait ModelInformation
     /**
      * Get actions based on a bill.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return array
      */
@@ -80,13 +80,13 @@ trait ModelInformation
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         // types of liability:
-        $debt     = $repository->getAccountTypeByType(AccountType::DEBT);
-        $loan     = $repository->getAccountTypeByType(AccountType::LOAN);
-        $mortgage = $repository->getAccountTypeByType(AccountType::MORTGAGE);
+        $debt           = $repository->getAccountTypeByType(AccountType::DEBT);
+        $loan           = $repository->getAccountTypeByType(AccountType::LOAN);
+        $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         $liabilityTypes = [
-            $debt->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
-            $loan->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
-            $mortgage->id => (string) trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
+            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
+            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
+            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
         ];
         asort($liabilityTypes);
 
@@ -101,7 +101,7 @@ trait ModelInformation
     {
         $roles = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string) trans(sprintf('firefly.account_role_%s', $role));
+            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
         }
 
         return $roles;
@@ -110,7 +110,7 @@ trait ModelInformation
     /**
      * Create fake triggers to match the bill's properties
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return array
      */
@@ -121,7 +121,7 @@ trait ModelInformation
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
@@ -161,7 +161,7 @@ trait ModelInformation
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return array
      */
@@ -172,7 +172,7 @@ trait ModelInformation
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ClearNotes.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,7 @@ class ClearNotes implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -51,7 +52,7 @@ class ClearNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        $notes   = $object->notes()->first();
+        $notes  = $object->notes()->first();
         if (null === $notes) {
             Log::debug(sprintf('RuleAction ClearNotes, journal #%d has no notes.', $journal['transaction_journal_id']));
             return false;

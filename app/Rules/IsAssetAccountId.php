@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IsAssetAccountId.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -46,14 +47,14 @@ class IsAssetAccountId implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      */
     public function passes($attribute, $value): bool
     {
-        $accountId = (int) $value;
+        $accountId = (int)$value;
         $account   = Account::with('accountType')->find($accountId);
         if (null === $account) {
             return false;

@@ -33,8 +33,8 @@ use Log;
 class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
     /**
-     * @param TransactionType|null $type
-     * @param string|null          $typeString
+     * @param  TransactionType|null  $type
+     * @param  string|null  $typeString
      *
      * @return TransactionType
      */
@@ -57,7 +57,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      *
      * @return TransactionType|null
      */
@@ -69,8 +69,8 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
     }
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */

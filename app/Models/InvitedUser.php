@@ -24,28 +24,46 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class InvitedUser
  *
  * @property-read User $user
- * @method static \Illuminate\Database\Eloquent\Builder|InvitedUser newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|InvitedUser newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|InvitedUser query()
- * @mixin \Eloquent
+ * @method static Builder|InvitedUser newModelQuery()
+ * @method static Builder|InvitedUser newQuery()
+ * @method static Builder|InvitedUser query()
+ * @mixin Eloquent
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property int $user_id
+ * @property string $email
+ * @property string $invite_code
+ * @property Carbon $expires
+ * @property bool $redeemed
+ * @method static Builder|InvitedUser whereCreatedAt($value)
+ * @method static Builder|InvitedUser whereEmail($value)
+ * @method static Builder|InvitedUser whereExpires($value)
+ * @method static Builder|InvitedUser whereId($value)
+ * @method static Builder|InvitedUser whereInviteCode($value)
+ * @method static Builder|InvitedUser whereRedeemed($value)
+ * @method static Builder|InvitedUser whereUpdatedAt($value)
+ * @method static Builder|InvitedUser whereUserId($value)
  */
 class InvitedUser extends Model
 {
-    protected $fillable = ['user_id', 'email', 'invite_code', 'expires', 'redeemed'];
-
     protected $casts
         = [
             'expires'  => 'datetime',
             'redeemed' => 'boolean',
         ];
+    protected $fillable = ['user_id', 'email', 'invite_code', 'expires', 'redeemed'];
 
     /**
      * @codeCoverageIgnore

@@ -32,7 +32,7 @@ namespace FireflyIII\Support\Logging;
 class AuditProcessor
 {
     /**
-     * @param array $record
+     * @param  array  $record
      *
      * @return array
      */

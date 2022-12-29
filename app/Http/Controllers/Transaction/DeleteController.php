@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -57,7 +56,7 @@ class DeleteController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 $this->repository = app(TransactionGroupRepositoryInterface::class);
@@ -70,7 +69,7 @@ class DeleteController extends Controller
     /**
      * Shows the form that allows a user to delete a transaction journal.
      *
-     * @param TransactionGroup $group
+     * @param  TransactionGroup  $group
      *
      * @return Factory|View|Redirector|RedirectResponse
      */
@@ -87,7 +86,7 @@ class DeleteController extends Controller
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle   = (string) trans('firefly.delete_' . $objectType, ['description' => $group->title ?? $journal->description]);
+        $subTitle   = (string)trans('firefly.delete_'.$objectType, ['description' => $group->title ?? $journal->description]);
         $previous   = app('steam')->getSafePreviousUrl(route('index'));
         // put previous url in session
         Log::debug('Will try to remember previous URL');
@@ -99,7 +98,7 @@ class DeleteController extends Controller
     /**
      * Actually destroys the journal.
      *
-     * @param TransactionGroup $group
+     * @param  TransactionGroup  $group
      *
      * @return RedirectResponse
      */
@@ -114,7 +113,7 @@ class DeleteController extends Controller
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        session()->flash('success', (string) trans('firefly.deleted_' . strtolower($objectType), ['description' => $group->title ?? $journal->description]));
+        session()->flash('success', (string)trans('firefly.deleted_'.strtolower($objectType), ['description' => $group->title ?? $journal->description]));
 
         // grab asset account(s) from group:
         $accounts = [];

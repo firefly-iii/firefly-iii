@@ -43,8 +43,8 @@ class Installer
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request  $request
+     * @param  Closure  $next
      *
      * @return mixed
      *
@@ -118,7 +118,7 @@ class Installer
     /**
      * Is access denied error.
      *
-     * @param string $message
+     * @param  string  $message
      *
      * @return bool
      */
@@ -130,7 +130,7 @@ class Installer
     /**
      * Is no tables exist error.
      *
-     * @param string $message
+     * @param  string  $message
      *
      * @return bool
      */
@@ -147,8 +147,8 @@ class Installer
     private function oldDBVersion(): bool
     {
         // older version in config than database?
-        $configVersion = (int) config('firefly.db_version');
-        $dbVersion     = (int) app('fireflyconfig')->getFresh('db_version', 1)->data;
+        $configVersion = (int)config('firefly.db_version');
+        $dbVersion     = (int)app('fireflyconfig')->getFresh('db_version', 1)->data;
         if ($configVersion > $dbVersion) {
             app('log')->warning(
                 sprintf(
@@ -174,8 +174,8 @@ class Installer
     private function oldVersion(): bool
     {
         // version compare thing.
-        $configVersion = (string) config('firefly.version');
-        $dbVersion     = (string) app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
+        $configVersion = (string)config('firefly.version');
+        $dbVersion     = (string)app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
         if (1 === version_compare($configVersion, $dbVersion)) {
             app('log')->warning(
                 sprintf(

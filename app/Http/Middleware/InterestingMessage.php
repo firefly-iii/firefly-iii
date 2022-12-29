@@ -40,8 +40,8 @@ class InterestingMessage
     /**
      * Flashes the user an interesting message if the URL parameters warrant it.
      *
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request  $request
+     * @param  Closure  $next
      *
      * @return mixed
      *
@@ -82,7 +82,7 @@ class InterestingMessage
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return bool
      */
@@ -96,7 +96,7 @@ class InterestingMessage
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      */
     private function handleGroupMessage(Request $request): void
     {
@@ -106,7 +106,7 @@ class InterestingMessage
 
         // send message about newly created transaction group.
         /** @var TransactionGroup $group */
-        $group = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int) $transactionGroupId);
+        $group = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int)$transactionGroupId);
 
         if (null === $group) {
             return;
@@ -122,22 +122,22 @@ class InterestingMessage
         $title = $count > 1 ? $group->title : $journal->description;
         if ('created' === $message) {
             session()->flash('success_url', route('transactions.show', [$transactionGroupId]));
-            session()->flash('success', (string) trans('firefly.stored_journal', ['description' => $title]));
+            session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $title]));
         }
         if ('updated' === $message) {
             $type = strtolower($journal->transactionType->type);
             session()->flash('success_url', route('transactions.show', [$transactionGroupId]));
-            session()->flash('success', (string) trans(sprintf('firefly.updated_%s', $type), ['description' => $title]));
+            session()->flash('success', (string)trans(sprintf('firefly.updated_%s', $type), ['description' => $title]));
         }
         if ('no_change' === $message) {
             $type = strtolower($journal->transactionType->type);
             session()->flash('warning_url', route('transactions.show', [$transactionGroupId]));
-            session()->flash('warning', (string) trans(sprintf('firefly.no_changes_%s', $type), ['description' => $title]));
+            session()->flash('warning', (string)trans(sprintf('firefly.no_changes_%s', $type), ['description' => $title]));
         }
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return bool
      */
@@ -151,7 +151,7 @@ class InterestingMessage
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      */
     private function handleAccountMessage(Request $request): void
     {
@@ -166,18 +166,18 @@ class InterestingMessage
             return;
         }
         if ('deleted' === $message) {
-            session()->flash('success', (string) trans('firefly.account_deleted', ['name' => $account->name]));
+            session()->flash('success', (string)trans('firefly.account_deleted', ['name' => $account->name]));
         }
         if ('created' === $message) {
-            session()->flash('success', (string) trans('firefly.stored_new_account', ['name' => $account->name]));
+            session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         }
         if ('updated' === $message) {
-            session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
+            session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
         }
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return bool
      */
@@ -189,22 +189,9 @@ class InterestingMessage
 
         return null !== $billId && null !== $message;
     }
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
-    private function webhookMessage(Request $request): bool
-    {
-        // get parameters from request.
-        $billId  = $request->get('webhook_id');
-        $message = $request->get('message');
-
-        return null !== $billId && null !== $message;
-    }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      */
     private function handleBillMessage(Request $request): void
     {
@@ -219,21 +206,35 @@ class InterestingMessage
             return;
         }
         if ('deleted' === $message) {
-            session()->flash('success', (string) trans('firefly.deleted_bill', ['name' => $bill->name]));
+            session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $bill->name]));
         }
         if ('created' === $message) {
-            session()->flash('success', (string) trans('firefly.stored_new_bill', ['name' => $bill->name]));
+            session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
         }
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
+     *
+     * @return bool
+     */
+    private function webhookMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $billId  = $request->get('webhook_id');
+        $message = $request->get('message');
+
+        return null !== $billId && null !== $message;
+    }
+
+    /**
+     * @param  Request  $request
      */
     private function handleWebhookMessage(Request $request): void
     {
         // get parameters from request.
-        $webhookId  = $request->get('webhook_id');
-        $message = $request->get('message');
+        $webhookId = $request->get('webhook_id');
+        $message   = $request->get('message');
 
         /** @var Webhook $webhook */
         $webhook = auth()->user()->webhooks()->withTrashed()->find($webhookId);
@@ -242,13 +243,13 @@ class InterestingMessage
             return;
         }
         if ('deleted' === $message) {
-            session()->flash('success', (string) trans('firefly.deleted_webhook', ['title' => $webhook->title]));
+            session()->flash('success', (string)trans('firefly.deleted_webhook', ['title' => $webhook->title]));
         }
         if ('updated' === $message) {
-            session()->flash('success', (string) trans('firefly.updated_webhook', ['title' => $webhook->title]));
+            session()->flash('success', (string)trans('firefly.updated_webhook', ['title' => $webhook->title]));
         }
         if ('created' === $message) {
-            session()->flash('success', (string) trans('firefly.stored_new_webhook', ['title' => $webhook->title]));
+            session()->flash('success', (string)trans('firefly.stored_new_webhook', ['title' => $webhook->title]));
         }
     }
 }

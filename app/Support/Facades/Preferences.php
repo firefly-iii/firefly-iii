@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Preferences.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -26,7 +27,6 @@ use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
-use Log;
 
 /**
  * @codeCoverageIgnore

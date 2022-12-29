@@ -32,7 +32,7 @@ use FireflyIII\Models\ObjectGroup;
 trait CreatesObjectGroups
 {
     /**
-     * @param int $groupId
+     * @param  int  $groupId
      *
      * @return ObjectGroup|null
      */
@@ -42,7 +42,7 @@ trait CreatesObjectGroups
     }
 
     /**
-     * @param string $title
+     * @param  string  $title
      *
      * @return ObjectGroup|null
      */
@@ -67,11 +67,11 @@ trait CreatesObjectGroups
      */
     protected function getObjectGroupMaxOrder(): int
     {
-        return (int) $this->user->objectGroups()->max('order');
+        return (int)$this->user->objectGroups()->max('order');
     }
 
     /**
-     * @param string $title
+     * @param  string  $title
      *
      * @return bool
      */
@@ -81,7 +81,7 @@ trait CreatesObjectGroups
     }
 
     /**
-     * @param string $title
+     * @param  string  $title
      *
      * @return null|ObjectGroup
      */

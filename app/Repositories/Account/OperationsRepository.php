@@ -43,9 +43,9 @@ class OperationsRepository implements OperationsRepositoryInterface
      * which have the specified accounts. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
      *
      * @return array
      */
@@ -59,10 +59,10 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * Collect transactions with some parameters
      *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     * @param string     $type
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
+     * @param  string  $type
      *
      * @return array
      */
@@ -78,8 +78,16 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param array  $journals
-     * @param string $direction
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param  array  $journals
+     * @param  string  $direction
      *
      * @return array
      */
@@ -87,20 +95,20 @@ class OperationsRepository implements OperationsRepositoryInterface
     {
         $array = [];
         foreach ($journals as $journal) {
-            $currencyId         = (int) $journal['currency_id'];
-            $journalId          = (int) $journal['transaction_journal_id'];
+            $currencyId         = (int)$journal['currency_id'];
+            $journalId          = (int)$journal['transaction_journal_id'];
             $array[$currencyId] = $array[$currencyId] ?? [
 
-                    'currency_id'             => $journal['currency_id'],
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                    'transaction_journals'    => [],
-                ];
+                'currency_id'             => $journal['currency_id'],
+                'currency_name'           => $journal['currency_name'],
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'transaction_journals'    => [],
+            ];
 
             $array[$currencyId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->$direction((string) $journal['amount']),
+                'amount'                   => app('steam')->$direction((string)$journal['amount']),
                 'date'                     => $journal['date'],
                 'transaction_journal_id'   => $journalId,
                 'budget_name'              => $journal['budget_name'],
@@ -125,9 +133,9 @@ class OperationsRepository implements OperationsRepositoryInterface
      * which have the specified accounts. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
      *
      * @return array
      */
@@ -136,14 +144,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         $journals = $this->getTransactions($start, $end, $accounts, TransactionType::DEPOSIT);
 
         return $this->sortByCurrency($journals, 'positive');
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
     }
 
     /**
@@ -162,12 +162,12 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param Collection|null          $opposing
-     * @param TransactionCurrency|null $currency
-     * @param string                   $type
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $opposing
+     * @param  TransactionCurrency|null  $currency
+     * @param  string  $type
      *
      * @return array
      */
@@ -246,8 +246,8 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param array  $journals
-     * @param string $direction
+     * @param  array  $journals
+     * @param  string  $direction
      *
      * @return array
      */
@@ -256,28 +256,28 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int) $journal['currency_id'];
+            $currencyId                = (int)$journal['currency_id'];
             $array[$currencyId]        = $array[$currencyId] ?? [
-                    'sum'                     => '0',
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
+                'sum'                     => '0',
+                'currency_id'             => $currencyId,
+                'currency_name'           => $journal['currency_name'],
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_decimal_places' => $journal['currency_decimal_places'],
+            ];
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$direction($journal['amount']));
 
             // also do foreign amount:
-            $foreignId = (int) $journal['foreign_currency_id'];
+            $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
                 $array[$foreignId]        = $array[$foreignId] ?? [
-                        'sum'                     => '0',
-                        'currency_id'             => $foreignId,
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                    ];
+                    'sum'                     => '0',
+                    'currency_id'             => $foreignId,
+                    'currency_name'           => $journal['foreign_currency_name'],
+                    'currency_symbol'         => $journal['foreign_currency_symbol'],
+                    'currency_code'           => $journal['foreign_currency_code'],
+                    'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
+                ];
                 $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->$direction($journal['foreign_amount']));
             }
         }
@@ -301,9 +301,9 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param array  $journals
-     * @param string $direction
-     * @param string $method
+     * @param  array  $journals
+     * @param  string  $direction
+     * @param  string  $method
      *
      * @return array
      */
@@ -316,31 +316,31 @@ class OperationsRepository implements OperationsRepositoryInterface
         foreach ($journals as $journal) {
             $key                = sprintf('%s-%s', $journal[$idKey], $journal['currency_id']);
             $array[$key]        = $array[$key] ?? [
+                'id'                      => $journal[$idKey],
+                'name'                    => $journal[$nameKey],
+                'sum'                     => '0',
+                'currency_id'             => $journal['currency_id'],
+                'currency_name'           => $journal['currency_name'],
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_decimal_places' => $journal['currency_decimal_places'],
+            ];
+            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['amount']));
+
+            // also do foreign amount:
+            if (0 !== (int)$journal['foreign_currency_id']) {
+                $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
+                $array[$key]        = $array[$key] ?? [
                     'id'                      => $journal[$idKey],
                     'name'                    => $journal[$nameKey],
                     'sum'                     => '0',
-                    'currency_id'             => $journal['currency_id'],
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'currency_id'             => $journal['foreign_currency_id'],
+                    'currency_name'           => $journal['foreign_currency_name'],
+                    'currency_symbol'         => $journal['foreign_currency_symbol'],
+                    'currency_code'           => $journal['foreign_currency_code'],
+                    'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string) $journal['amount']));
-
-            // also do foreign amount:
-            if (0 !== (int) $journal['foreign_currency_id']) {
-                $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
-                $array[$key]        = $array[$key] ?? [
-                        'id'                      => $journal[$idKey],
-                        'name'                    => $journal[$nameKey],
-                        'sum'                     => '0',
-                        'currency_id'             => $journal['foreign_currency_id'],
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                    ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string) $journal['foreign_amount']));
+                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['foreign_amount']));
             }
         }
 
@@ -418,7 +418,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param array $journals
+     * @param  array  $journals
      *
      * @return array
      */
@@ -431,9 +431,9 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         $final = [];
         foreach ($return as $array) {
-            $array['difference_float'] = (float) $array['difference'];
-            $array['in_float']         = (float) $array['in'];
-            $array['out_float']        = (float) $array['out'];
+            $array['difference_float'] = (float)$array['difference'];
+            $array['in_float']         = (float)$array['in'];
+            $array['out_float']        = (float)$array['out'];
             $final[]                   = $array;
         }
 
@@ -441,8 +441,8 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param array $return
-     * @param array $journal
+     * @param  array  $return
+     * @param  array  $journal
      *
      * @return array
      */
@@ -457,31 +457,31 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // source first
         $return[$sourceKey] = $return[$sourceKey] ?? [
-                'id'               => (string) $sourceId,
-                'name'             => $journal['source_account_name'],
-                'difference'       => '0',
-                'difference_float' => 0,
-                'in'               => '0',
-                'in_float'         => 0,
-                'out'              => '0',
-                'out_float'        => 0,
-                'currency_id'      => (string) $currencyId,
-                'currency_code'    => $journal['currency_code'],
-            ];
+            'id'               => (string)$sourceId,
+            'name'             => $journal['source_account_name'],
+            'difference'       => '0',
+            'difference_float' => 0,
+            'in'               => '0',
+            'in_float'         => 0,
+            'out'              => '0',
+            'out_float'        => 0,
+            'currency_id'      => (string)$currencyId,
+            'currency_code'    => $journal['currency_code'],
+        ];
 
         // dest next:
         $return[$destKey] = $return[$destKey] ?? [
-                'id'               => (string) $destinationId,
-                'name'             => $journal['destination_account_name'],
-                'difference'       => '0',
-                'difference_float' => 0,
-                'in'               => '0',
-                'in_float'         => 0,
-                'out'              => '0',
-                'out_float'        => 0,
-                'currency_id'      => (string) $currencyId,
-                'currency_code'    => $journal['currency_code'],
-            ];
+            'id'               => (string)$destinationId,
+            'name'             => $journal['destination_account_name'],
+            'difference'       => '0',
+            'difference_float' => 0,
+            'in'               => '0',
+            'in_float'         => 0,
+            'out'              => '0',
+            'out_float'        => 0,
+            'currency_id'      => (string)$currencyId,
+            'currency_code'    => $journal['currency_code'],
+        ];
 
         // source account? money goes out!
         $return[$sourceKey]['out']        = bcadd($return[$sourceKey]['out'], app('steam')->negative($amount));
@@ -501,31 +501,31 @@ class OperationsRepository implements OperationsRepositoryInterface
             // same as above:
             // source first
             $return[$sourceKey] = $return[$sourceKey] ?? [
-                    'id'               => (string) $sourceId,
-                    'name'             => $journal['source_account_name'],
-                    'difference'       => '0',
-                    'difference_float' => 0,
-                    'in'               => '0',
-                    'in_float'         => 0,
-                    'out'              => '0',
-                    'out_float'        => 0,
-                    'currency_id'      => (string) $currencyId,
-                    'currency_code'    => $journal['foreign_currency_code'],
-                ];
+                'id'               => (string)$sourceId,
+                'name'             => $journal['source_account_name'],
+                'difference'       => '0',
+                'difference_float' => 0,
+                'in'               => '0',
+                'in_float'         => 0,
+                'out'              => '0',
+                'out_float'        => 0,
+                'currency_id'      => (string)$currencyId,
+                'currency_code'    => $journal['foreign_currency_code'],
+            ];
 
             // dest next:
             $return[$destKey] = $return[$destKey] ?? [
-                    'id'               => (string) $destinationId,
-                    'name'             => $journal['destination_account_name'],
-                    'difference'       => '0',
-                    'difference_float' => 0,
-                    'in'               => '0',
-                    'in_float'         => 0,
-                    'out'              => '0',
-                    'out_float'        => 0,
-                    'currency_id'      => (string) $currencyId,
-                    'currency_code'    => $journal['foreign_currency_code'],
-                ];
+                'id'               => (string)$destinationId,
+                'name'             => $journal['destination_account_name'],
+                'difference'       => '0',
+                'difference_float' => 0,
+                'in'               => '0',
+                'in_float'         => 0,
+                'out'              => '0',
+                'out_float'        => 0,
+                'currency_id'      => (string)$currencyId,
+                'currency_code'    => $journal['foreign_currency_code'],
+            ];
             // source account? money goes out! (same as above)
             $return[$sourceKey]['out']        = bcadd($return[$sourceKey]['out'], app('steam')->negative($amount));
             $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], $return[$sourceKey]['in']);

@@ -38,14 +38,14 @@ class LessThanPiggyTarget implements Rule
      */
     public function message(): string
     {
-        return (string) trans('validation.current_target_amount');
+        return (string)trans('validation.current_target_amount');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      */

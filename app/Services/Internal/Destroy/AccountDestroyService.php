@@ -41,8 +41,8 @@ use stdClass;
 class AccountDestroyService
 {
     /**
-     * @param Account      $account
-     * @param Account|null $moveTo
+     * @param  Account  $account
+     * @param  Account|null  $moveTo
      *
      * @return void
      */
@@ -76,7 +76,7 @@ class AccountDestroyService
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      */
     private function destroyOpeningBalance(Account $account): void
     {
@@ -87,13 +87,13 @@ class AccountDestroyService
                        ->where('transaction_types.type', TransactionType::OPENING_BALANCE)
                        ->get(['transactions.transaction_journal_id']);
         if ($set->count() > 0) {
-            $journalId = (int) $set->first()->transaction_journal_id;
+            $journalId = (int)$set->first()->transaction_journal_id;
             Log::debug(sprintf('Found opening balance journal with ID #%d', $journalId));
 
             // get transactions with this journal (should be just one):
             $transactions = Transaction::where('transaction_journal_id', $journalId)
-                ->where('account_id', '!=', $account->id)
-                ->get();
+                                       ->where('account_id', '!=', $account->id)
+                                       ->get();
             /** @var Transaction $transaction */
             foreach ($transactions as $transaction) {
                 Log::debug(sprintf('Found transaction with ID #%d', $transaction->id));
@@ -112,8 +112,8 @@ class AccountDestroyService
     }
 
     /**
-     * @param Account $account
-     * @param Account $moveTo
+     * @param  Account  $account
+     * @param  Account  $moveTo
      */
     public function moveTransactions(Account $account, Account $moveTo): void
     {
@@ -132,8 +132,8 @@ class AccountDestroyService
         $user    = $account->user;
         /** @var stdClass $row */
         foreach ($collection as $row) {
-            if ((int) $row->the_count > 1) {
-                $journalId = (int) $row->transaction_journal_id;
+            if ((int)$row->the_count > 1) {
+                $journalId = (int)$row->transaction_journal_id;
                 $journal   = $user->transactionJournals()->find($journalId);
                 if (null !== $journal) {
                     Log::debug(sprintf('Deleted journal #%d because it has the same source as destination.', $journal->id));
@@ -144,8 +144,8 @@ class AccountDestroyService
     }
 
     /**
-     * @param Account $account
-     * @param Account $moveTo
+     * @param  Account  $account
+     * @param  Account  $moveTo
      */
     private function updateRecurrences(Account $account, Account $moveTo): void
     {
@@ -154,28 +154,28 @@ class AccountDestroyService
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      */
     private function destroyJournals(Account $account): void
     {
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
 
-        Log::debug('Now trigger account delete response #' . $account->id);
+        Log::debug('Now trigger account delete response #'.$account->id);
         /** @var Transaction $transaction */
         foreach ($account->transactions()->get() as $transaction) {
-            Log::debug('Now at transaction #' . $transaction->id);
+            Log::debug('Now at transaction #'.$transaction->id);
             /** @var TransactionJournal $journal */
             $journal = $transaction->transactionJournal()->first();
             if (null !== $journal) {
-                Log::debug('Call for deletion of journal #' . $journal->id);
+                Log::debug('Call for deletion of journal #'.$journal->id);
                 $service->destroy($journal);
             }
         }
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      */
     private function destroyRecurrences(Account $account): void
     {
@@ -189,7 +189,7 @@ class AccountDestroyService
         /** @var RecurrenceDestroyService $destroyService */
         $destroyService = app(RecurrenceDestroyService::class);
         foreach ($recurrences as $recurrenceId) {
-            $destroyService->destroyById((int) $recurrenceId);
+            $destroyService->destroyById((int)$recurrenceId);
         }
     }
 }

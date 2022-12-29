@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ExpandedForm.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -42,9 +43,9 @@ class ExpandedForm
     use FormSupport;
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -74,10 +75,10 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param int|null   $value
-     * @param mixed      $checked
-     * @param array|null $options
+     * @param  string  $name
+     * @param  int|null  $value
+     * @param  mixed  $checked
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -110,9 +111,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -135,8 +136,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param array|null $options
+     * @param  string  $name
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -158,9 +159,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -184,9 +185,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -209,7 +210,7 @@ class ExpandedForm
     }
 
     /**
-     * @param Collection $set
+     * @param  Collection  $set
      *
      * @return array
      *
@@ -221,7 +222,7 @@ class ExpandedForm
         $fields        = ['title', 'name', 'description'];
         /** @var Eloquent $entry */
         foreach ($set as $entry) {
-            $entryId = (int) $entry->id;
+            $entryId = (int)$entry->id;
             $current = $entry->toArray();
             $title   = null;
             foreach ($fields as $field) {
@@ -236,9 +237,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -268,9 +269,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -294,8 +295,8 @@ class ExpandedForm
     }
 
     /**
-     * @param null       $value
-     * @param array|null $options
+     * @param  null  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -324,8 +325,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string $type
-     * @param string $name
+     * @param  string  $type
+     * @param  string  $name
      *
      * @return string
      *
@@ -344,8 +345,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param array|null $options
+     * @param  string  $name
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -368,9 +369,9 @@ class ExpandedForm
     /**
      * Function to render a percentage.
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -394,9 +395,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -417,9 +418,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -441,9 +442,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */

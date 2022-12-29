@@ -42,7 +42,7 @@ class MoveDescriptionToNotes implements ActionInterface
      *
      * @codeCoverageIgnore
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -69,11 +69,11 @@ class MoveDescriptionToNotes implements ActionInterface
         $before            = $note->text;
         $beforeDescription = $object->description;
         if ('' !== $note->text) {
-            $note->text           = trim(sprintf("%s  \n%s", $note->text, $object->description));
+            $note->text          = trim(sprintf("%s  \n%s", $note->text, $object->description));
             $object->description = '(no description)';
         }
         if ('' === $note->text) {
-            $note->text           = (string) $object->description;
+            $note->text          = (string)$object->description;
             $object->description = '(no description)';
         }
         $after = $note->text;

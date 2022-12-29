@@ -1,4 +1,5 @@
 <?php
+
 /**
  * LinkTypeRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,29 +35,29 @@ use Illuminate\Support\Collection;
 interface LinkTypeRepositoryInterface
 {
     /**
-     * @param LinkType $linkType
+     * @param  LinkType  $linkType
      *
      * @return int
      */
     public function countJournals(LinkType $linkType): int;
 
     /**
-     * @param LinkType      $linkType
-     * @param LinkType|null $moveTo
+     * @param  LinkType  $linkType
+     * @param  LinkType|null  $moveTo
      *
      * @return bool
      */
     public function destroy(LinkType $linkType, LinkType $moveTo = null): bool;
 
     /**
-     * @param TransactionJournalLink $link
+     * @param  TransactionJournalLink  $link
      *
      * @return bool
      */
     public function destroyLink(TransactionJournalLink $link): bool;
 
     /**
-     * @param int $linkTypeId
+     * @param  int  $linkTypeId
      *
      * @return LinkType|null
      */
@@ -65,7 +66,7 @@ interface LinkTypeRepositoryInterface
     /**
      * Find link type by name.
      *
-     * @param string|null $name
+     * @param  string|null  $name
      *
      * @return LinkType|null
      */
@@ -74,8 +75,8 @@ interface LinkTypeRepositoryInterface
     /**
      * Check if link exists between journals.
      *
-     * @param TransactionJournal $one
-     * @param TransactionJournal $two
+     * @param  TransactionJournal  $one
+     * @param  TransactionJournal  $two
      *
      * @return bool
      */
@@ -84,9 +85,9 @@ interface LinkTypeRepositoryInterface
     /**
      * See if such a link already exists (and get it).
      *
-     * @param LinkType           $linkType
-     * @param TransactionJournal $inward
-     * @param TransactionJournal $outward
+     * @param  LinkType  $linkType
+     * @param  TransactionJournal  $inward
+     * @param  TransactionJournal  $outward
      *
      * @return TransactionJournalLink|null
      */
@@ -100,14 +101,14 @@ interface LinkTypeRepositoryInterface
     /**
      * Return array of all journal ID's for this type of link.
      *
-     * @param LinkType $linkType
+     * @param  LinkType  $linkType
      *
      * @return array
      */
     public function getJournalIds(LinkType $linkType): array;
 
     /**
-     * @param LinkType|null $linkType
+     * @param  LinkType|null  $linkType
      *
      * @return Collection
      */
@@ -116,7 +117,7 @@ interface LinkTypeRepositoryInterface
     /**
      * Return list of existing connections.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Collection
      */
@@ -125,12 +126,12 @@ interface LinkTypeRepositoryInterface
     /**
      * Set the user for this instance.
      *
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void;
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return LinkType
      */
@@ -139,31 +140,31 @@ interface LinkTypeRepositoryInterface
     /**
      * Store link between two journals.
      *
-     * @param array              $information
-     * @param TransactionJournal $inward
-     * @param TransactionJournal $outward
+     * @param  array  $information
+     * @param  TransactionJournal  $inward
+     * @param  TransactionJournal  $outward
      *
      * @return TransactionJournalLink|null
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink;
 
     /**
-     * @param TransactionJournalLink $link
+     * @param  TransactionJournalLink  $link
      *
      * @return bool
      */
     public function switchLink(TransactionJournalLink $link): bool;
 
     /**
-     * @param int $linkId
+     * @param  int  $linkId
      *
      * @return bool
      */
     public function switchLinkById(int $linkId): bool;
 
     /**
-     * @param LinkType $linkType
-     * @param array    $data
+     * @param  LinkType  $linkType
+     * @param  array  $data
      *
      * @return LinkType
      */
@@ -172,8 +173,8 @@ interface LinkTypeRepositoryInterface
     /**
      * Update an existing transaction journal link.
      *
-     * @param TransactionJournalLink $journalLink
-     * @param array                  $data
+     * @param  TransactionJournalLink  $journalLink
+     * @param  array  $data
      *
      * @return TransactionJournalLink
      */

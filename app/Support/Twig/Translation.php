@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Translation.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -40,7 +41,7 @@ class Translation extends AbstractExtension
             new TwigFilter(
                 '_',
                 static function ($name) {
-                    return (string) trans(sprintf('firefly.%s', $name));
+                    return (string)trans(sprintf('firefly.%s', $name));
                 },
                 ['is_safe' => ['html']]
             ),

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TransactionType.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,13 +35,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionType
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property string                               $type
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property string $type
  * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
+ * @property-read int|null $transaction_journals_count
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newQuery()
  * @method static Builder|TransactionType onlyTrashed()
@@ -57,6 +58,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TransactionType extends Model
 {
     use SoftDeletes;
+
     public const DEPOSIT          = 'Deposit';
     public const INVALID          = 'Invalid';
     public const LIABILITY_CREDIT = 'Liability credit';
@@ -76,7 +78,7 @@ class TransactionType extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $type
+     * @param  string  $type
      *
      * @return TransactionType
      * @throws NotFoundHttpException

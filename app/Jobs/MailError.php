@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MailError.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -48,10 +49,10 @@ class MailError extends Job implements ShouldQueue
     /**
      * MailError constructor.
      *
-     * @param array  $userData
-     * @param string $destination
-     * @param string $ipAddress
-     * @param array  $exceptionData
+     * @param  array  $userData
+     * @param  string  $destination
+     * @param  string  $ipAddress
+     * @param  array  $exceptionData
      */
     public function __construct(array $userData, string $destination, string $ipAddress, array $exceptionData)
     {
@@ -70,7 +71,7 @@ class MailError extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $email            = (string) config('firefly.site_owner');
+        $email            = (string)config('firefly.site_owner');
         $args             = $this->exception;
         $args['loggedIn'] = $this->userData['id'] > 0;
         $args['user']     = $this->userData;
@@ -83,12 +84,12 @@ class MailError extends Job implements ShouldQueue
                     $args,
                     function (Message $message) use ($email) {
                         if ('mail@example.com' !== $email) {
-                            $message->to($email, $email)->subject((string) trans('email.error_subject'));
+                            $message->to($email, $email)->subject((string)trans('email.error_subject'));
                         }
                     }
                 );
             } catch (Exception $e) {
-                Log::error('Exception when mailing: ' . $e->getMessage());
+                Log::error('Exception when mailing: '.$e->getMessage());
             }
         }
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PrependDescription.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -37,7 +38,7 @@ class PrependDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {

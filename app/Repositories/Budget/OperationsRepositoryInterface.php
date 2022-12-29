@@ -38,17 +38,17 @@ interface OperationsRepositoryInterface
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
      *
-     * @param Budget $budget
+     * @param  Budget  $budget
      *
      * @return string
      */
     public function budgetedPerDay(Budget $budget): string;
 
     /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $budgets
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @deprecated
@@ -60,17 +60,17 @@ interface OperationsRepositoryInterface
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $budgets
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $budgets
      *
      * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void;
 
@@ -78,10 +78,10 @@ interface OperationsRepositoryInterface
     /**
      * Return multi-currency spent information.
      *
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $budgets
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @deprecated
@@ -89,14 +89,14 @@ interface OperationsRepositoryInterface
     public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
-     * @deprecated
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param Collection|null          $budgets
-     * @param TransactionCurrency|null $currency
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $budgets
+     * @param  TransactionCurrency|null  $currency
      *
      * @return array
+     * @deprecated
      */
     public function sumExpenses(
         Carbon $start,

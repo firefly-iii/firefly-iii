@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RuleGroupFormRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -68,7 +69,7 @@ class RuleGroupFormRequest extends FormRequest
         $ruleGroup = $this->route()->parameter('ruleGroup');
 
         if (null !== $ruleGroup) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id;
+            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id;
         }
 
         return [

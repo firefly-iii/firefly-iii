@@ -1,4 +1,5 @@
 <?php
+
 /**
  * General.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -85,15 +86,15 @@ class General extends AbstractExtension
             static function (int $size): string {
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2) . ' MB';
+                    return round($size / (1024 * 1024), 2).' MB';
                 }
 
                 // less than one MB
                 if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2) . ' KB';
+                    return round($size / 1024, 2).' KB';
                 }
 
-                return $size . ' bytes';
+                return $size.' bytes';
             }
         );
     }
@@ -192,7 +193,7 @@ class General extends AbstractExtension
                     ]
                 );
 
-                return (string) $converter->convert($text);
+                return (string)$converter->convert($text);
             },
             ['is_safe' => ['html']]
         );
@@ -208,8 +209,8 @@ class General extends AbstractExtension
         return new TwigFilter(
             'phphost',
             static function (string $string): string {
-                $proto = (string) parse_url($string, PHP_URL_SCHEME);
-                $host  = (string) parse_url($string, PHP_URL_HOST);
+                $proto = (string)parse_url($string, PHP_URL_SCHEME);
+                $host  = (string)parse_url($string, PHP_URL_HOST);
 
                 return e(sprintf('%s://%s', $proto, $host));
             }
@@ -406,7 +407,7 @@ class General extends AbstractExtension
         return new TwigFunction(
             'getRootSearchOperator',
             static function (string $operator): string {
-                $result =  OperatorQuerySearch::getRootOperator($operator);
+                $result = OperatorQuerySearch::getRootOperator($operator);
                 return str_replace('-', 'not_', $result);
             }
         );

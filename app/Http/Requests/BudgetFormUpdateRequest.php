@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BudgetFormRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -69,7 +70,7 @@ class BudgetFormUpdateRequest extends FormRequest
         $budget = $this->route()->parameter('budget');
 
         if (null !== $budget) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,' . $budget->id;
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,'.$budget->id;
         }
 
         return [
@@ -85,7 +86,7 @@ class BudgetFormUpdateRequest extends FormRequest
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */

@@ -45,7 +45,7 @@ class ConvertToDeposit implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -94,7 +94,7 @@ class ConvertToDeposit implements ActionInterface
      * Input is a withdrawal from A to B
      * Is converted to a deposit from C to A.
      *
-     * @param array $journal
+     * @param  array  $journal
      *
      * @return bool
      * @throws FireflyException
@@ -142,7 +142,7 @@ class ConvertToDeposit implements ActionInterface
      * Input is a transfer from A to B.
      * Output is a deposit from C to B.
      *
-     * @param array $journal
+     * @param  array  $journal
      *
      * @return bool
      * @throws FireflyException

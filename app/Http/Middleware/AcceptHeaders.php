@@ -27,7 +27,6 @@ namespace FireflyIII\Http\Middleware;
 use FireflyIII\Exceptions\BadHttpHeaderException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Log;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -38,8 +37,8 @@ class AcceptHeaders
     /**
      * Handle the incoming requests.
      *
-     * @param Request $request
-     * @param callable $next
+     * @param  Request  $request
+     * @param  callable  $next
      * @return Response
      * @throws BadHttpHeaderException
      */
@@ -50,7 +49,7 @@ class AcceptHeaders
         if ('GET' === $method && !$request->accepts(['application/json', 'application/vdn.api+json'])) {
             throw new BadHttpHeaderException('Your request must accept either application/json or application/vdn.api+json.');
         }
-        $allowed = ['application/x-www-form-urlencoded','application/json'];
+        $allowed   = ['application/x-www-form-urlencoded', 'application/json'];
         $submitted = (string)$request->header('Content-Type');
         if (('POST' === $method || 'PUT' === $method) && !in_array($submitted, $allowed, true)) {
             $error             = new BadHttpHeaderException(sprintf('Content-Type cannot be "%s"', $submitted));

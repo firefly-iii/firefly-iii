@@ -74,11 +74,11 @@ class OperatorQuerySearch implements SearchInterface
     private int                         $limit;
     private Collection                  $operators;
     private int                         $page;
+    private array                       $prohibitedWords;
     private float                       $startTime;
     private TagRepositoryInterface      $tagRepository;
     private array                       $validOperators;
     private array                       $words;
-    private array                       $prohibitedWords;
 
     /**
      * OperatorQuerySearch constructor.
@@ -175,7 +175,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param Node $searchNode
+     * @param  Node  $searchNode
      *
      * @throws FireflyException
      */
@@ -202,7 +202,7 @@ class OperatorQuerySearch implements SearchInterface
             case Emoticon::class:
             case Emoji::class:
             case Mention::class:
-                $allWords = (string) $searchNode->getValue();
+                $allWords = (string)$searchNode->getValue();
                 Log::debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $allWords, $class));
                 $this->words[] = $allWords;
                 break;
@@ -223,11 +223,11 @@ class OperatorQuerySearch implements SearchInterface
                 // must be valid operator:
                 if (
                     in_array($operator, $this->validOperators, true) &&
-                    $this->updateCollector($operator, (string) $value, $prohibited)) {
+                    $this->updateCollector($operator, (string)$value, $prohibited)) {
                     $this->operators->push(
                         [
                             'type'       => self::getRootOperator($operator),
-                            'value'      => (string) $value,
+                            'value'      => (string)$value,
                             'prohibited' => $prohibited,
                         ]
                     );
@@ -237,15 +237,15 @@ class OperatorQuerySearch implements SearchInterface
                     Log::debug(sprintf('Added INVALID operator type "%s"', $operator));
                     $this->invalidOperators[] = [
                         'type'  => $operator,
-                        'value' => (string) $value,
+                        'value' => (string)$value,
                     ];
                 }
         }
     }
 
     /**
-     * @param string $operator
-     * @param string $value
+     * @param  string  $operator
+     * @param  string  $value
      *
      * @return bool
      * @throws FireflyException
@@ -371,7 +371,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 1, 3, true);
                 break;
             case 'source_account_id':
-                $account = $this->accountRepository->find((int) $value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection([$account]));
                 }
@@ -381,7 +381,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             case '-source_account_id':
-                $account = $this->accountRepository->find((int) $value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->excludeSourceAccounts(new Collection([$account]));
                 }
@@ -455,7 +455,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 2, 3, true);
                 break;
             case 'destination_account_id':
-                $account = $this->accountRepository->find((int) $value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
@@ -464,7 +464,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             case '-destination_account_id':
-                $account = $this->accountRepository->find((int) $value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->excludeDestinationAccounts(new Collection([$account]));
                 }
@@ -476,7 +476,7 @@ class OperatorQuerySearch implements SearchInterface
                 $parts      = explode(',', $value);
                 $collection = new Collection();
                 foreach ($parts as $accountId) {
-                    $account = $this->accountRepository->find((int) $accountId);
+                    $account = $this->accountRepository->find((int)$accountId);
                     if (null !== $account) {
                         $collection->push($account);
                     }
@@ -492,7 +492,7 @@ class OperatorQuerySearch implements SearchInterface
                 $parts      = explode(',', $value);
                 $collection = new Collection();
                 foreach ($parts as $accountId) {
-                    $account = $this->accountRepository->find((int) $accountId);
+                    $account = $this->accountRepository->find((int)$accountId);
                     if (null !== $account) {
                         $collection->push($account);
                     }
@@ -928,7 +928,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'amount_is':
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
-                $value  = str_replace(',', '.', (string) $value);
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
@@ -936,7 +936,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-amount_is':
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
-                $value  = str_replace(',', '.', (string) $value);
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIsNot($amount);
@@ -944,7 +944,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'foreign_amount_is':
 
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string) $value);
+                $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -953,7 +953,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-foreign_amount_is':
 
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string) $value);
+                $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -962,7 +962,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-amount_more':
             case 'amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string) $value);
+                $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -971,7 +971,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-foreign_amount_more':
             case 'foreign_amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string) $value);
+                $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -981,7 +981,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', (string) $value);
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
@@ -990,7 +990,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'foreign_amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', (string) $value);
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountMore($amount);
@@ -1325,7 +1325,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $operator
+     * @param  string  $operator
      *
      * @return string
      * @throws FireflyException
@@ -1361,10 +1361,10 @@ class OperatorQuerySearch implements SearchInterface
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
-     * @param string $value
-     * @param int    $searchDirection
-     * @param int    $stringPosition
-     * @param bool   $prohibited
+     * @param  string  $value
+     * @param  int  $searchDirection
+     * @param  int  $stringPosition
+     * @param  bool  $prohibited
      */
     private function searchAccount(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
     {
@@ -1437,10 +1437,10 @@ class OperatorQuerySearch implements SearchInterface
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
-     * @param string $value
-     * @param int    $searchDirection
-     * @param int    $stringPosition
-     * @param bool   $prohibited
+     * @param  string  $value
+     * @param  int  $searchDirection
+     * @param  int  $stringPosition
+     * @param  bool  $prohibited
      */
     private function searchAccountNr(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
     {
@@ -1500,7 +1500,7 @@ class OperatorQuerySearch implements SearchInterface
         $filtered = $accounts->filter(
             function (Account $account) use ($value, $stringMethod) {
                 // either IBAN or account number
-                $ibanMatch      = $stringMethod(strtolower((string) $account->iban), strtolower((string) $value));
+                $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower((string)$value));
                 $accountNrMatch = false;
                 /** @var AccountMeta $meta */
                 foreach ($account->accountMeta as $meta) {
@@ -1532,7 +1532,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return TransactionCurrency|null
      */
@@ -1552,7 +1552,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return array
      * @throws FireflyException
@@ -1571,14 +1571,14 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param array $range
+     * @param  array  $range
      *
      * @throws FireflyException
      */
     private function setExactDateParams(array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -1630,14 +1630,14 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param array $range
+     * @param  array  $range
      *
      * @throws FireflyException
      */
     private function setDateBeforeParams(array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -1669,14 +1669,14 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param array $range
+     * @param  array  $range
      *
      * @throws FireflyException
      */
     private function setDateAfterParams(array $range, bool $prohibited = false)
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -1708,8 +1708,8 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      * @return void
      * @throws FireflyException
      */
@@ -1717,7 +1717,7 @@ class OperatorQuerySearch implements SearchInterface
     {
         Log::debug('Now in setExactMetaDateParams()');
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -1770,15 +1770,15 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      * @return void
      * @throws FireflyException
      */
     private function setMetaDateBeforeParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -1810,15 +1810,15 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      * @return void
      * @throws FireflyException
      */
     private function setMetaDateAfterParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -1850,15 +1850,15 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      * @return void
      * @throws FireflyException
      */
     private function setExactObjectDateParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -1911,15 +1911,15 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      *
      * @throws FireflyException
      */
     private function setObjectDateBeforeParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -1951,15 +1951,15 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      *
      * @throws FireflyException
      */
     private function setObjectDateAfterParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
@@ -2020,7 +2020,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      */
     public function setDate(Carbon $date): void
     {
@@ -2052,11 +2052,11 @@ class OperatorQuerySearch implements SearchInterface
         $this->collector->setUser($user);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
-        $this->setLimit((int) app('preferences')->getForUser($user, 'listPageSize', 50)->data);
+        $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);
     }
 
     /**
-     * @param int $limit
+     * @param  int  $limit
      */
     public function setLimit(int $limit): void
     {

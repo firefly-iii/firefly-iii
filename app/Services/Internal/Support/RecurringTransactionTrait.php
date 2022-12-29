@@ -41,6 +41,7 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
+use JsonException;
 use Log;
 
 /**
@@ -50,8 +51,8 @@ use Log;
 trait RecurringTransactionTrait
 {
     /**
-     * @param Recurrence $recurrence
-     * @param string     $note
+     * @param  Recurrence  $recurrence
+     * @param  string  $note
      *
      * @return bool
      */
@@ -81,8 +82,8 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param Recurrence $recurrence
-     * @param array      $repetitions
+     * @param  Recurrence  $recurrence
+     * @param  array  $repetitions
      */
     protected function createRepetitions(Recurrence $recurrence, array $repetitions): void
     {
@@ -103,11 +104,11 @@ trait RecurringTransactionTrait
     /**
      * Store transactions of a recurring transactions. It's complex but readable.
      *
-     * @param Recurrence $recurrence
-     * @param array      $transactions
+     * @param  Recurrence  $recurrence
+     * @param  array  $transactions
      *
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     protected function createTransactions(Recurrence $recurrence, array $transactions): void
     {
@@ -144,7 +145,7 @@ trait RecurringTransactionTrait
             if (!$validator->validateDestination(['id' => $destination->id])) {
                 throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError));
             }
-            if (array_key_exists('foreign_amount', $array) && '' === (string) $array['foreign_amount']) {
+            if (array_key_exists('foreign_amount', $array) && '' === (string)$array['foreign_amount']) {
                 unset($array['foreign_amount']);
             }
             // TODO typeOverrule. The account validator may have a different opinion on the type of the transaction.
@@ -156,25 +157,25 @@ trait RecurringTransactionTrait
                     'source_id'               => $source->id,
                     'destination_id'          => $destination->id,
                     'amount'                  => $array['amount'],
-                    'foreign_amount'          => array_key_exists('foreign_amount', $array) ? (string) $array['foreign_amount'] : null,
+                    'foreign_amount'          => array_key_exists('foreign_amount', $array) ? (string)$array['foreign_amount'] : null,
                     'description'             => $array['description'],
                 ]
             );
             $transaction->save();
 
             if (array_key_exists('budget_id', $array)) {
-                $this->setBudget($transaction, (int) $array['budget_id']);
+                $this->setBudget($transaction, (int)$array['budget_id']);
             }
             if (array_key_exists('bill_id', $array)) {
-                $this->setBill($transaction, (int) $array['bill_id']);
+                $this->setBill($transaction, (int)$array['bill_id']);
             }
             if (array_key_exists('category_id', $array)) {
-                $this->setCategory($transaction, (int) $array['category_id']);
+                $this->setCategory($transaction, (int)$array['category_id']);
             }
 
             // same for piggy bank
             if (array_key_exists('piggy_bank_id', $array)) {
-                $this->updatePiggyBank($transaction, (int) $array['piggy_bank_id']);
+                $this->updatePiggyBank($transaction, (int)$array['piggy_bank_id']);
             }
 
             if (array_key_exists('tags', $array) && is_array($array['tags'])) {
@@ -184,23 +185,23 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param array       $expectedTypes
-     * @param int|null    $accountId
-     * @param string|null $accountName
+     * @param  array  $expectedTypes
+     * @param  int|null  $accountId
+     * @param  string|null  $accountName
      *
      * @return Account
      */
     protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
     {
         $result      = null;
-        $accountId   = (int) $accountId;
-        $accountName = (string) $accountName;
+        $accountId   = (int)$accountId;
+        $accountName = (string)$accountName;
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
 
         // if user has submitted an account ID, search for it.
-        $result = $repository->find((int) $accountId);
+        $result = $repository->find((int)$accountId);
         if (null !== $result) {
             return $result;
         }
@@ -234,8 +235,8 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param RecurrenceTransaction $transaction
-     * @param int                   $budgetId
+     * @param  RecurrenceTransaction  $transaction
+     * @param  int  $budgetId
      */
     private function setBudget(RecurrenceTransaction $transaction, int $budgetId): void
     {
@@ -257,8 +258,8 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param RecurrenceTransaction $transaction
-     * @param int                   $billId
+     * @param  RecurrenceTransaction  $transaction
+     * @param  int  $billId
      */
     private function setBill(RecurrenceTransaction $transaction, int $billId): void
     {
@@ -280,8 +281,8 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param RecurrenceTransaction $transaction
-     * @param int                   $categoryId
+     * @param  RecurrenceTransaction  $transaction
+     * @param  int  $categoryId
      *
      * @throws FireflyException
      */
@@ -309,8 +310,8 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param RecurrenceTransaction $transaction
-     * @param int                   $piggyId
+     * @param  RecurrenceTransaction  $transaction
+     * @param  int  $piggyId
      */
     protected function updatePiggyBank(RecurrenceTransaction $transaction, int $piggyId): void
     {
@@ -334,8 +335,8 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param RecurrenceTransaction $transaction
-     * @param array                 $tags
+     * @param  RecurrenceTransaction  $transaction
+     * @param  array  $tags
      */
     protected function updateTags(RecurrenceTransaction $transaction, array $tags): void
     {
@@ -355,7 +356,7 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param Recurrence $recurrence
+     * @param  Recurrence  $recurrence
      *
      * @codeCoverageIgnore
      */
@@ -365,7 +366,7 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param Recurrence $recurrence
+     * @param  Recurrence  $recurrence
      *
      * @codeCoverageIgnore
      */

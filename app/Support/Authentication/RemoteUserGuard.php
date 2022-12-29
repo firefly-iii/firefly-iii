@@ -44,8 +44,8 @@ class RemoteUserGuard implements Guard
     /**
      * Create a new authentication guard.
      *
-     * @param UserProvider $provider
-     * @param Application  $app
+     * @param  UserProvider  $provider
+     * @param  Application  $app
      */
     public function __construct(UserProvider $provider, Application $app)
     {
@@ -81,7 +81,7 @@ class RemoteUserGuard implements Guard
         $header = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
+            $emailAddress = (string)(request()->server($header) ?? apache_request_headers()[$header] ?? null);
             $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {

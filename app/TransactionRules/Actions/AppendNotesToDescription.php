@@ -43,7 +43,7 @@ class AppendNotesToDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -71,8 +71,8 @@ class AppendNotesToDescription implements ActionInterface
         }
         // only append if there is something to append
         if ('' !== $note->text) {
-            $before               = $object->description;
-            $object->description = trim(sprintf("%s %s", $object->description, (string) $this->clearString($note->text, false)));
+            $before              = $object->description;
+            $object->description = trim(sprintf("%s %s", $object->description, (string)$this->clearString($note->text, false)));
             $object->save();
             Log::debug(sprintf('Journal description is updated to "%s".', $object->description));
 

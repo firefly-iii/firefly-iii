@@ -89,7 +89,7 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * Finds the transactions a strict rule will execute on.
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return Collection
      */
@@ -152,7 +152,7 @@ class SearchRuleEngine implements RuleEngineInterface
      * one search operator for "journal_id" it means the date ranges
      * in the search may need to be updated.
      *
-     * @param array $array
+     * @param  array  $array
      *
      * @return bool
      */
@@ -178,7 +178,7 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param array $array
+     * @param  array  $array
      *
      * @return Carbon
      */
@@ -188,7 +188,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $journalId = 0;
         foreach ($array as $triggerName => $values) {
             if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
-                $journalId = (int) trim(($values[0] ?? '"0"'), '"'); // follows format "123".
+                $journalId = (int)trim(($values[0] ?? '"0"'), '"'); // follows format "123".
                 Log::debug(sprintf('Found journal ID #%d', $journalId));
             }
         }
@@ -209,7 +209,16 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param Rule $rule
+     * @inheritDoc
+     */
+    public function setUser(User $user): void
+    {
+        $this->user      = $user;
+        $this->operators = [];
+    }
+
+    /**
+     * @param  Rule  $rule
      *
      * @return Collection
      */
@@ -320,7 +329,7 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * Returns true if the rule has been triggered.
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return bool
      * @throws FireflyException
@@ -346,7 +355,7 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * Return true if the rule is fired (the collection is larger than zero).
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return bool
      * @throws FireflyException
@@ -371,8 +380,8 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param Rule       $rule
-     * @param Collection $collection
+     * @param  Rule  $rule
+     * @param  Collection  $collection
      *
      * @throws FireflyException
      */
@@ -386,8 +395,8 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $group
+     * @param  Rule  $rule
+     * @param  array  $group
      *
      * @throws FireflyException
      */
@@ -401,8 +410,8 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $transaction
+     * @param  Rule  $rule
+     * @param  array  $transaction
      *
      * @throws FireflyException
      */
@@ -423,8 +432,8 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param RuleAction $ruleAction
-     * @param array      $transaction
+     * @param  RuleAction  $ruleAction
+     * @param  array  $transaction
      *
      * @return bool
      * @throws FireflyException
@@ -463,7 +472,7 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * Return true if the rule is fired (the collection is larger than zero).
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return bool
      * @throws FireflyException
@@ -480,7 +489,7 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param RuleGroup $group
+     * @param  RuleGroup  $group
      *
      * @return void
      * @throws FireflyException
@@ -540,14 +549,5 @@ class SearchRuleEngine implements RuleEngineInterface
                 $this->rules->push($rule);
             }
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setUser(User $user): void
-    {
-        $this->user      = $user;
-        $this->operators = [];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BudgetFormStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -75,7 +76,7 @@ class BudgetFormStoreRequest extends FormRequest
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */

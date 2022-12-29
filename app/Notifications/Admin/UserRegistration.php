@@ -50,44 +50,9 @@ class UserRegistration extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     * @return array
-     */
-    public function via($notifiable)
-    {
-        return ['mail', 'slack'];
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage())
-            ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id])
-            ->subject((string) trans('email.registered_subject_admin'));
-    }
-
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     * @return SlackMessage
-     */
-    public function toSlack($notifiable)
-    {
-        return (new SlackMessage())->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
-    }
-
-    /**
      * Get the array representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function toArray($notifiable)
@@ -95,5 +60,40 @@ class UserRegistration extends Notification
         return [
             //
         ];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage())
+            ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id])
+            ->subject((string)trans('email.registered_subject_admin'));
+    }
+
+    /**
+     * Get the Slack representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        return (new SlackMessage())->content((string)trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        return ['mail', 'slack'];
     }
 }

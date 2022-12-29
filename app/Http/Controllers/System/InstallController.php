@@ -127,22 +127,22 @@ class InstallController extends Controller
     public function index()
     {
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
+        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
 
         // set new DB version.
-        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
+        app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
 
         return view('install.index');
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
      */
     public function runCommand(Request $request): JsonResponse
     {
-        $requestIndex = (int) $request->get('index');
+        $requestIndex = (int)$request->get('index');
         $response     = [
             'hasNextCommand' => false,
             'done'           => true,
@@ -156,7 +156,7 @@ class InstallController extends Controller
         $index = 0;
         /**
          * @var string $command
-         * @var array  $args
+         * @var array $args
          */
         foreach ($this->upgradeCommands as $command => $args) {
             Log::debug(sprintf('Current command is "%s", index is %d', $command, $index));
@@ -182,8 +182,8 @@ class InstallController extends Controller
     }
 
     /**
-     * @param string $command
-     * @param array  $args
+     * @param  string  $command
+     * @param  array  $args
      *
      * @return bool
      */

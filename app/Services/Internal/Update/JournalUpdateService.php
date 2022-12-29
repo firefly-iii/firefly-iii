@@ -82,14 +82,26 @@ class JournalUpdateService
         $this->tagFactory             = app(TagFactory::class);
         $this->accountRepository      = app(AccountRepositoryInterface::class);
         $this->currencyRepository     = app(CurrencyRepositoryInterface::class);
-        $this->metaString             = ['sepa_cc', 'sepa_ct_op', 'sepa_ct_id', 'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id',
-                                         'recurrence_id',
-                                         'internal_reference', 'bunq_payment_id', 'external_id', 'external_url'];
+        $this->metaString             = [
+            'sepa_cc',
+            'sepa_ct_op',
+            'sepa_ct_id',
+            'sepa_db',
+            'sepa_country',
+            'sepa_ep',
+            'sepa_ci',
+            'sepa_batch_id',
+            'recurrence_id',
+            'internal_reference',
+            'bunq_payment_id',
+            'external_id',
+            'external_url',
+        ];
         $this->metaDate               = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date',];
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      */
     public function setData(array $data): void
     {
@@ -97,7 +109,7 @@ class JournalUpdateService
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      */
     public function setTransactionGroup(TransactionGroup $transactionGroup): void
     {
@@ -114,7 +126,7 @@ class JournalUpdateService
     }
 
     /**
-     * @param TransactionJournal $transactionJournal
+     * @param  TransactionJournal  $transactionJournal
      */
     public function setTransactionJournal(TransactionJournal $transactionJournal): void
     {
@@ -226,7 +238,7 @@ class JournalUpdateService
     }
 
     /**
-     * @param array $fields
+     * @param  array  $fields
      *
      * @return bool
      */
@@ -360,7 +372,7 @@ class JournalUpdateService
         }
 
         $sourceInfo = [
-            'id'     => (int) ($this->data['source_id'] ?? null),
+            'id'     => (int)($this->data['source_id'] ?? null),
             'name'   => $this->data['source_name'] ?? null,
             'iban'   => $this->data['source_iban'] ?? null,
             'number' => $this->data['source_number'] ?? null,
@@ -425,7 +437,7 @@ class JournalUpdateService
         }
 
         $destInfo = [
-            'id'     => (int) ($this->data['destination_id'] ?? null),
+            'id'     => (int)($this->data['destination_id'] ?? null),
             'name'   => $this->data['destination_name'] ?? null,
             'iban'   => $this->data['destination_iban'] ?? null,
             'number' => $this->data['destination_number'] ?? null,
@@ -490,8 +502,8 @@ class JournalUpdateService
         )
         && TransactionType::WITHDRAWAL === $type
         ) {
-            $billId                            = (int) ($this->data['bill_id'] ?? 0);
-            $billName                          = (string) ($this->data['bill_name'] ?? '');
+            $billId                            = (int)($this->data['bill_id'] ?? 0);
+            $billName                          = (string)($this->data['bill_name'] ?? '');
             $bill                              = $this->billRepository->findBill($billId, $billName);
             $this->transactionJournal->bill_id = $bill?->id;
             Log::debug('Updated bill ID');
@@ -501,11 +513,11 @@ class JournalUpdateService
     /**
      * Update journal generic field. Cannot be set to NULL.
      *
-     * @param string $fieldName
+     * @param  string  $fieldName
      */
     private function updateField(string $fieldName): void
     {
-        if (array_key_exists($fieldName, $this->data) && '' !== (string) $this->data[$fieldName]) {
+        if (array_key_exists($fieldName, $this->data) && '' !== (string)$this->data[$fieldName]) {
             $value = $this->data[$fieldName];
 
             if ('date' === $fieldName) {
@@ -582,7 +594,7 @@ class JournalUpdateService
     {
         // update notes.
         if ($this->hasFields(['notes'])) {
-            $notes = '' === (string) $this->data['notes'] ? null : $this->data['notes'];
+            $notes = '' === (string)$this->data['notes'] ? null : $this->data['notes'];
             $this->storeNotes($this->transactionJournal, $notes);
         }
     }
@@ -639,7 +651,7 @@ class JournalUpdateService
         foreach ($this->metaDate as $field) {
             if ($this->hasFields([$field])) {
                 try {
-                    $value = '' === (string) $this->data[$field] ? null : new Carbon($this->data[$field]);
+                    $value = '' === (string)$this->data[$field] ? null : new Carbon($this->data[$field]);
                 } catch (Exception $e) {
                     Log::debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
 

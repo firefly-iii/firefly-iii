@@ -35,7 +35,7 @@ use FireflyIII\Models\TransactionGroup;
 class TransactionGroupDestroyService
 {
     /**
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      */
     public function destroy(TransactionGroup $transactionGroup): void
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TagRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -41,7 +42,7 @@ interface TagRepositoryInterface
     /**
      * This method destroys a tag.
      *
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return bool
      */
@@ -53,30 +54,30 @@ interface TagRepositoryInterface
     public function destroyAll(): void;
 
     /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Tag  $tag
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
     public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): array;
 
     /**
-     * @param int $tagId
+     * @param  int  $tagId
      *
      * @return Tag|null
      */
     public function find(int $tagId): ?Tag;
 
     /**
-     * @param string $tag
+     * @param  string  $tag
      *
      * @return Tag|null
      */
     public function findByTag(string $tag): ?Tag;
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return Carbon|null
      */
@@ -90,7 +91,7 @@ interface TagRepositoryInterface
     public function get(): Collection;
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return Collection
      */
@@ -99,30 +100,30 @@ interface TagRepositoryInterface
     /**
      * Return location, or NULL.
      *
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return Location|null
      */
     public function getLocation(Tag $tag): ?Location;
 
     /**
-     * @param int|null $year
+     * @param  int|null  $year
      *
      * @return array
      */
     public function getTagsInYear(?int $year): array;
 
     /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Tag  $tag
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
     public function incomeInPeriod(Tag $tag, Carbon $start, Carbon $end): array;
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return Carbon|null
      */
@@ -145,7 +146,7 @@ interface TagRepositoryInterface
     /**
      * Find one or more tags based on the query.
      *
-     * @param string $query
+     * @param  string  $query
      *
      * @return Collection
      */
@@ -154,22 +155,22 @@ interface TagRepositoryInterface
     /**
      * Search the users tags.
      *
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function searchTags(string $query, int $limit): Collection;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 
     /**
      * This method stores a tag.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return Tag
      */
@@ -178,18 +179,18 @@ interface TagRepositoryInterface
     /**
      * Calculates various amounts in tag.
      *
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Tag  $tag
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return array
      */
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array;
 
     /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Tag  $tag
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -198,8 +199,8 @@ interface TagRepositoryInterface
     /**
      * Update a tag.
      *
-     * @param Tag   $tag
-     * @param array $data
+     * @param  Tag  $tag
+     * @param  array  $data
      *
      * @return Tag
      */

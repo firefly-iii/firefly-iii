@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Account.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -39,36 +40,36 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Account
  *
- * @property int                             $id
+ * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int                             $user_id
- * @property int                             $account_type_id
- * @property string                          $name
- * @property string|null                     $virtual_balance
- * @property string|null                     $iban
- * @property bool                            $active
- * @property bool                            $encrypted
- * @property int                             $order
- * @property-read Collection|AccountMeta[]   $accountMeta
- * @property-read int|null                   $account_meta_count
- * @property AccountType                     $accountType
- * @property-read Collection|Attachment[]    $attachments
- * @property-read int|null                   $attachments_count
- * @property-read string                     $account_number
- * @property-read string                     $edit_name
- * @property-read Collection|Location[]      $locations
- * @property-read int|null                   $locations_count
- * @property-read Collection|Note[]          $notes
- * @property-read int|null                   $notes_count
- * @property-read Collection|ObjectGroup[]   $objectGroups
- * @property-read int|null                   $object_groups_count
- * @property-read Collection|PiggyBank[]     $piggyBanks
- * @property-read int|null                   $piggy_banks_count
- * @property-read Collection|Transaction[]   $transactions
- * @property-read int|null                   $transactions_count
- * @property-read User                       $user
+ * @property int $user_id
+ * @property int $account_type_id
+ * @property string $name
+ * @property string|null $virtual_balance
+ * @property string|null $iban
+ * @property bool $active
+ * @property bool $encrypted
+ * @property int $order
+ * @property-read Collection|AccountMeta[] $accountMeta
+ * @property-read int|null $account_meta_count
+ * @property AccountType $accountType
+ * @property-read Collection|Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read string $account_number
+ * @property-read string $edit_name
+ * @property-read Collection|Location[] $locations
+ * @property-read int|null $locations_count
+ * @property-read Collection|Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read Collection|ObjectGroup[] $objectGroups
+ * @property-read int|null $object_groups_count
+ * @property-read Collection|PiggyBank[] $piggyBanks
+ * @property-read int|null $piggy_banks_count
+ * @property-read Collection|Transaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @property-read User $user
  * @method static EloquentBuilder|Account accountTypeIn($types)
  * @method static EloquentBuilder|Account newModelQuery()
  * @method static EloquentBuilder|Account newQuery()
@@ -89,17 +90,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Account withTrashed()
  * @method static Builder|Account withoutTrashed()
  * @mixin Eloquent
- * @property Carbon                          $lastActivityDate
- * @property string                          $startBalance
- * @property string                          $endBalance
- * @property string                          $difference
- * @property string                          $interest
- * @property string                          $interestPeriod
- * @property string                          $accountTypeString
- * @property string                          $location
- * @property string                          $liability_direction
- * @property string                          $current_debt
- * @property int|null                        $user_group_id
+ * @property Carbon $lastActivityDate
+ * @property string $startBalance
+ * @property string $endBalance
+ * @property string $difference
+ * @property string $interest
+ * @property string $interestPeriod
+ * @property string $accountTypeString
+ * @property string $location
+ * @property string $liability_direction
+ * @property string $current_debt
+ * @property int|null $user_group_id
  * @method static EloquentBuilder|Account whereUserGroupId($value)
  */
 class Account extends Model
@@ -124,13 +125,13 @@ class Account extends Model
     /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array Hidden from view */
-    protected $hidden = ['encrypted'];
+    protected $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return Account
      * @throws NotFoundHttpException
@@ -138,7 +139,7 @@ class Account extends Model
     public static function routeBinder(string $value): Account
     {
         if (auth()->check()) {
-            $accountId = (int) $value;
+            $accountId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Account $account */
@@ -148,6 +149,15 @@ class Account extends Model
             }
         }
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @return BelongsTo
+     * @codeCoverageIgnore
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -245,8 +255,8 @@ class Account extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param EloquentBuilder $query
-     * @param array           $types
+     * @param  EloquentBuilder  $query
+     * @param  array  $types
      */
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types): void
     {
@@ -260,13 +270,13 @@ class Account extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @codeCoverageIgnore
      */
     public function setVirtualBalanceAttribute($value): void
     {
-        $value = (string) $value;
+        $value = (string)$value;
         if ('' === $value) {
             $value = null;
         }
@@ -280,14 +290,5 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
-    }
-
-    /**
-     * @return BelongsTo
-     * @codeCoverageIgnore
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

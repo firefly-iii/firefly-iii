@@ -37,7 +37,7 @@ class AppendDescriptionToNotes implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -66,7 +66,7 @@ class AppendDescriptionToNotes implements ActionInterface
             $note->text = trim(sprintf("%s  \n%s", $note->text, $object->description));
         }
         if ('' === $note->text) {
-            $note->text = (string) $object->description;
+            $note->text = (string)$object->description;
         }
         $after = $note->text;
 

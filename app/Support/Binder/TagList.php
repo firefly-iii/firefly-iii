@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TagList.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -35,8 +36,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TagList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return Collection
      * @throws NotFoundHttpException
@@ -68,7 +69,7 @@ class TagList implements BinderInterface
                     if (in_array(strtolower($tag->tag), $list, true)) {
                         return true;
                     }
-                    if (in_array((string) $tag->id, $list, true)) {
+                    if (in_array((string)$tag->id, $list, true)) {
                         return true;
                     }
 

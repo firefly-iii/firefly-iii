@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AppServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -22,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Laravel\Sanctum\Sanctum;
 use URL;
-use Illuminate\Support\Facades\Response;
 
 /**
  * @codeCoverageIgnore
@@ -49,9 +50,9 @@ class AppServiceProvider extends ServiceProvider
 
         Response::macro('api', function (array $value) {
             $headers = [
-                'Cache-Control' => 'no-store'
+                'Cache-Control' => 'no-store',
             ];
-            $uuid = (string) request()->header('X-Trace-Id');
+            $uuid    = (string)request()->header('X-Trace-Id');
             if ('' !== trim($uuid) && (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)) === 1)) {
                 $headers['X-Trace-Id'] = $uuid;
             }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountTaskerInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,34 +33,34 @@ use Illuminate\Support\Collection;
 interface AccountTaskerInterface
 {
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
      *
      * @return array
      */
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
      *
      * @return array
      */
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 }

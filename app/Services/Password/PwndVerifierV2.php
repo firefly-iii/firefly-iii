@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PwndVerifierV2.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,7 @@ class PwndVerifierV2 implements Verifier
     /**
      * Verify the given password against (some) service.
      *
-     * @param string $password
+     * @param  string  $password
      *
      * @return bool
      */
@@ -54,7 +55,8 @@ class PwndVerifierV2 implements Verifier
                 'User-Agent'  => sprintf('Firefly III v%s', config('firefly.version')),
                 'Add-Padding' => 'true',
             ],
-            'timeout' => 3.1415];
+            'timeout' => 3.1415,
+        ];
 
         Log::debug(sprintf('hash prefix is %s', $prefix));
         Log::debug(sprintf('rest is %s', $rest));

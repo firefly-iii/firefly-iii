@@ -33,6 +33,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use stdClass;
 use Str;
 use ValueError;
@@ -96,38 +98,6 @@ class Steam
     }
 
     /**
-     * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
-     *
-     * @param null|string  $number
-     * @param  int  $precision
-     * @return string
-     */
-    public function bcround(?string $number, int $precision = 0): string
-    {
-        if (null === $number) {
-            return '0';
-        }
-        if ('' === trim($number)) {
-            return '0';
-        }
-        // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
-        if (false !== stripos($number, 'e')) {
-            $number = sprintf('%.24f', $number);
-        }
-
-        Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
-        if (str_contains($number, '.')) {
-            if ($number[0] !== '-') {
-                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
-            }
-
-            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
-        }
-
-        return $number;
-    }
-
-    /**
      * Gets the balance for the given account during the whole range, using this format:.
      *
      * [yyyy-mm-dd] => 123,2
@@ -182,11 +152,11 @@ class Steam
                        ->whereNull('transaction_journals.deleted_at')
                        ->get(
                            [
-                              'transaction_journals.date',
-                              'transactions.transaction_currency_id',
-                              DB::raw('SUM(transactions.amount) AS modified'),
-                              'transactions.foreign_currency_id',
-                              DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
+                               'transaction_journals.date',
+                               'transactions.transaction_currency_id',
+                               DB::raw('SUM(transactions.amount) AS modified'),
+                               'transactions.foreign_currency_id',
+                               DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
                            ]
                        );
 
@@ -364,6 +334,38 @@ class Steam
     }
 
     /**
+     * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
+     *
+     * @param  null|string  $number
+     * @param  int  $precision
+     * @return string
+     */
+    public function bcround(?string $number, int $precision = 0): string
+    {
+        if (null === $number) {
+            return '0';
+        }
+        if ('' === trim($number)) {
+            return '0';
+        }
+        // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
+        if (false !== stripos($number, 'e')) {
+            $number = sprintf('%.24f', $number);
+        }
+
+        Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
+        if (str_contains($number, '.')) {
+            if ($number[0] !== '-') {
+                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
+            }
+
+            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
+        }
+
+        return $number;
+    }
+
+    /**
      * @param  string  $string
      *
      * @return string
@@ -453,8 +455,8 @@ class Steam
      *
      * @return string
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getLocale(): string // get preference
     {
@@ -476,8 +478,8 @@ class Steam
      *
      * @return string
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getLanguage(): string // get preference
     {

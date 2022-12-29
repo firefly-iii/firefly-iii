@@ -37,8 +37,8 @@ class NullArrayObject extends ArrayObject
     /**
      * NullArrayObject constructor.
      *
-     * @param array $array
-     * @param null  $default
+     * @param  array  $array
+     * @param  null  $default
      */
     public function __construct(array $array, $default = null)
     {
@@ -47,7 +47,7 @@ class NullArrayObject extends ArrayObject
     }
 
     /**
-     * @param mixed $key
+     * @param  mixed  $key
      *
      * @return mixed|null
      */

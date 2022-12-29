@@ -36,9 +36,9 @@ use Illuminate\Support\Collection;
 class WholePeriodChartGenerator
 {
     /**
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param  Category  $category
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -77,14 +77,14 @@ class WholePeriodChartGenerator
             $code                                     = $currency['currency_code'];
             $name                                     = $currency['currency_name'];
             $chartData[sprintf('spent-in-%s', $code)] = [
-                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $name]),
+                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
             ];
 
             $chartData[sprintf('earned-in-%s', $code)] = [
-                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency' => $name]),
+                'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
@@ -117,8 +117,8 @@ class WholePeriodChartGenerator
     /**
      * TODO this method is duplicated
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
      */
@@ -143,7 +143,7 @@ class WholePeriodChartGenerator
      * Loop array of spent/earned info, and extract which currencies are present.
      * Key is the currency ID.
      *
-     * @param array $array
+     * @param  array  $array
      *
      * @return array
      */
@@ -153,12 +153,12 @@ class WholePeriodChartGenerator
         foreach ($array as $block) {
             foreach ($block as $currencyId => $currencyRow) {
                 $return[$currencyId] = $return[$currencyId] ?? [
-                        'currency_id'             => $currencyId,
-                        'currency_name'           => $currencyRow['currency_name'],
-                        'currency_symbol'         => $currencyRow['currency_symbol'],
-                        'currency_code'           => $currencyRow['currency_code'],
-                        'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-                    ];
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $currencyRow['currency_name'],
+                    'currency_symbol'         => $currencyRow['currency_symbol'],
+                    'currency_code'           => $currencyRow['currency_code'],
+                    'currency_decimal_places' => $currencyRow['currency_decimal_places'],
+                ];
             }
         }
 

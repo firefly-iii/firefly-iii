@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CurrencyExchangeRate.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -24,39 +25,43 @@ namespace FireflyIII\Models;
 
 use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class CurrencyExchangeRate
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string|null $deleted_at
  * @property int $user_id
  * @property int $from_currency_id
  * @property int $to_currency_id
- * @property \Illuminate\Support\Carbon $date
+ * @property Carbon $date
  * @property string $rate
  * @property string|null $user_rate
- * @property-read \FireflyIII\Models\TransactionCurrency $fromCurrency
- * @property-read \FireflyIII\Models\TransactionCurrency $toCurrency
+ * @property-read TransactionCurrency $fromCurrency
+ * @property-read TransactionCurrency $toCurrency
  * @property-read User $user
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate query()
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereFromCurrencyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereToCurrencyId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CurrencyExchangeRate whereUserRate($value)
+ * @method static Builder|CurrencyExchangeRate newModelQuery()
+ * @method static Builder|CurrencyExchangeRate newQuery()
+ * @method static Builder|CurrencyExchangeRate query()
+ * @method static Builder|CurrencyExchangeRate whereCreatedAt($value)
+ * @method static Builder|CurrencyExchangeRate whereDate($value)
+ * @method static Builder|CurrencyExchangeRate whereDeletedAt($value)
+ * @method static Builder|CurrencyExchangeRate whereFromCurrencyId($value)
+ * @method static Builder|CurrencyExchangeRate whereId($value)
+ * @method static Builder|CurrencyExchangeRate whereRate($value)
+ * @method static Builder|CurrencyExchangeRate whereToCurrencyId($value)
+ * @method static Builder|CurrencyExchangeRate whereUpdatedAt($value)
+ * @method static Builder|CurrencyExchangeRate whereUserId($value)
+ * @method static Builder|CurrencyExchangeRate whereUserRate($value)
  * @mixin Eloquent
+ * @property int|null $user_group_id
+ * @method static Builder|CurrencyExchangeRate whereUserGroupId($value)
  */
 class CurrencyExchangeRate extends Model
 {

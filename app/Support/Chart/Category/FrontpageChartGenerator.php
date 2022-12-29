@@ -52,8 +52,8 @@ class FrontpageChartGenerator
     /**
      * FrontpageChartGenerator constructor.
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      */
     public function __construct(Carbon $start, Carbon $end)
     {
@@ -99,8 +99,8 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
+     * @param  Category  $category
+     * @param  Collection  $accounts
      *
      * @return array
      */
@@ -113,8 +113,8 @@ class FrontpageChartGenerator
             $tempData[] = [
                 'name'        => $category->name,
                 'sum'         => $currency['sum'],
-                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places']),
-                'currency_id' => (int) $currency['currency_id'],
+                'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places']),
+                'currency_id' => (int)$currency['currency_id'],
             ];
         }
 
@@ -122,23 +122,23 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param array $currency
+     * @param  array  $currency
      */
     private function addCurrency(array $currency): void
     {
-        $currencyId = (int) $currency['currency_id'];
+        $currencyId = (int)$currency['currency_id'];
 
         $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
-                'currency_id'             => $currencyId,
-                'currency_name'           => $currency['currency_name'],
-                'currency_symbol'         => $currency['currency_symbol'],
-                'currency_code'           => $currency['currency_code'],
-                'currency_decimal_places' => $currency['currency_decimal_places'],
-            ];
+            'currency_id'             => $currencyId,
+            'currency_name'           => $currency['currency_name'],
+            'currency_symbol'         => $currency['currency_symbol'],
+            'currency_code'           => $currency['currency_code'],
+            'currency_decimal_places' => $currency['currency_decimal_places'],
+        ];
     }
 
     /**
-     * @param Collection $accounts
+     * @param  Collection  $accounts
      *
      * @return array
      */
@@ -151,8 +151,8 @@ class FrontpageChartGenerator
             $tempData[] = [
                 'name'        => trans('firefly.no_category'),
                 'sum'         => $currency['sum'],
-                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places'] ?? 2), // intentional float
-                'currency_id' => (int) $currency['currency_id'],
+                'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places'] ?? 2), // intentional float
+                'currency_id' => (int)$currency['currency_id'],
             ];
         }
 
@@ -160,7 +160,7 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return array
      */
@@ -174,7 +174,7 @@ class FrontpageChartGenerator
         foreach ($this->currencies as $currencyId => $currency) {
             $key          = sprintf('spent-%d', $currencyId);
             $return[$key] = [
-                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currency['currency_name']),
+                'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currency['currency_name']),
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
                 'entries'         => $names,
@@ -185,8 +185,8 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param array $currencyData
-     * @param array $monetaryData
+     * @param  array  $currencyData
+     * @param  array  $monetaryData
      *
      * @return array
      */

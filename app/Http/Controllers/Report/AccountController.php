@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -28,7 +29,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use JsonException;
 use Log;
 use Throwable;
 
@@ -40,9 +40,9 @@ class AccountController extends Controller
     /**
      * Show partial overview for account balances.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return mixed|string
      */

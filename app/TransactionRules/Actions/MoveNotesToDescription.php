@@ -41,7 +41,7 @@ class MoveNotesToDescription implements ActionInterface
      *
      * @codeCoverageIgnore
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -69,9 +69,9 @@ class MoveNotesToDescription implements ActionInterface
             $note->delete();
             return false;
         }
-        $before               = $object->description;
-        $beforeNote           = $note->text;
-        $object->description = (string) $this->clearString($note->text, false);
+        $before              = $object->description;
+        $beforeNote          = $note->text;
+        $object->description = (string)$this->clearString($note->text, false);
         $object->save();
         $note->delete();
 

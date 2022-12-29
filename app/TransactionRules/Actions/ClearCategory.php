@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ClearCategory.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,7 @@ class ClearCategory implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -51,7 +52,7 @@ class ClearCategory implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var TransactionJournal $object */
-        $object  = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object   = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         $category = $object->categories()->first();
         if (null === $category) {
             Log::debug(sprintf('RuleAction ClearCategory, no category in journal #%d.', $journal['transaction_journal_id']));

@@ -38,9 +38,46 @@ trait ConvertsExchangeRates
     private ?bool $enabled = null;
 
     /**
+     * @param  array  $set
+     * @return array
+     */
+    public function cerChartSet(array $set): array
+    {
+        if (null === $this->enabled) {
+            $this->getPreference();
+        }
+
+        // if not enabled, return the same array but without conversion:
+        if (false === $this->enabled) {
+            $set['converted'] = false;
+            return $set;
+        }
+
+        $set['converted'] = true;
+        /** @var TransactionCurrency $native */
+        $native   = app('amount')->getDefaultCurrency();
+        $currency = $this->getCurrency((int)$set['currency_id']);
+        if ($native->id === $currency->id) {
+            $set['native_id']             = (string)$currency->id;
+            $set['native_code']           = $currency->code;
+            $set['native_symbol']         = $currency->symbol;
+            $set['native_decimal_places'] = $currency->decimal_places;
+            return $set;
+        }
+        foreach ($set['entries'] as $date => $entry) {
+            $carbon = Carbon::createFromFormat(DateTimeInterface::ATOM, $date);
+            $rate   = $this->getRate($currency, $native, $carbon);
+            $rate   = '0' === $rate ? '1' : $rate;
+            Log::debug(sprintf('bcmul("%s", "%s")', (string)$entry, $rate));
+            $set['entries'][$date] = (float)bcmul((string)$entry, $rate);
+        }
+        return $set;
+    }
+
+    /**
      * For a sum of entries, get the exchange rate to the native currency of
      * the user.
-     * @param array $entries
+     * @param  array  $entries
      * @return array
      */
     public function cerSum(array $entries): array
@@ -66,12 +103,12 @@ trait ConvertsExchangeRates
         $return = [];
         /** @var array $entry */
         foreach ($entries as $entry) {
-            $currency = $this->getCurrency((int) $entry['id']);
+            $currency = $this->getCurrency((int)$entry['id']);
             if ($currency->id !== $native->id) {
                 $amount                         = $this->convertAmount($entry['sum'], $currency, $native);
                 $entry['converted']             = true;
                 $entry['native_sum']            = $amount;
-                $entry['native_id']             = (string) $native->id;
+                $entry['native_id']             = (string)$native->id;
                 $entry['native_name']           = $native->name;
                 $entry['native_symbol']         = $native->symbol;
                 $entry['native_code']           = $native->code;
@@ -80,7 +117,7 @@ trait ConvertsExchangeRates
             if ($currency->id === $native->id) {
                 $entry['converted']             = false;
                 $entry['native_sum']            = $entry['sum'];
-                $entry['native_id']             = (string) $native->id;
+                $entry['native_id']             = (string)$native->id;
                 $entry['native_name']           = $native->name;
                 $entry['native_symbol']         = $native->symbol;
                 $entry['native_code']           = $native->code;
@@ -92,44 +129,15 @@ trait ConvertsExchangeRates
     }
 
     /**
-     * @param array $set
-     * @return array
+     * @return void
      */
-    public function cerChartSet(array $set): array
+    private function getPreference(): void
     {
-        if (null === $this->enabled) {
-            $this->getPreference();
-        }
-
-        // if not enabled, return the same array but without conversion:
-        if (false === $this->enabled) {
-            $set['converted'] = false;
-            return $set;
-        }
-
-        $set['converted'] = true;
-        /** @var TransactionCurrency $native */
-        $native   = app('amount')->getDefaultCurrency();
-        $currency = $this->getCurrency((int) $set['currency_id']);
-        if ($native->id === $currency->id) {
-            $set['native_id']             = (string) $currency->id;
-            $set['native_code']           = $currency->code;
-            $set['native_symbol']         = $currency->symbol;
-            $set['native_decimal_places'] = $currency->decimal_places;
-            return $set;
-        }
-        foreach ($set['entries'] as $date => $entry) {
-            $carbon                = Carbon::createFromFormat(DateTimeInterface::ATOM, $date);
-            $rate                  = $this->getRate($currency, $native, $carbon);
-            $rate                  = '0' === $rate ? '1' : $rate;
-            Log::debug(sprintf('bcmul("%s", "%s")', (string) $entry, $rate));
-            $set['entries'][$date] = (float) bcmul((string) $entry, $rate);
-        }
-        return $set;
+        $this->enabled = true;
     }
 
     /**
-     * @param int $currencyId
+     * @param  int  $currencyId
      * @return TransactionCurrency
      */
     private function getCurrency(int $currencyId): TransactionCurrency
@@ -142,9 +150,9 @@ trait ConvertsExchangeRates
     }
 
     /**
-     * @param string              $amount
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
+     * @param  string  $amount
+     * @param  TransactionCurrency  $from
+     * @param  TransactionCurrency  $to
      * @return string
      */
     private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string
@@ -157,9 +165,9 @@ trait ConvertsExchangeRates
     }
 
     /**
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon              $date
+     * @param  TransactionCurrency  $from
+     * @param  TransactionCurrency  $to
+     * @param  Carbon  $date
      * @return string
      */
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
@@ -174,7 +182,7 @@ trait ConvertsExchangeRates
                         ->orderBy('date', 'DESC')
                         ->first();
         if (null !== $result) {
-            $rate = (string) $result->rate;
+            $rate = (string)$result->rate;
             Log::debug(sprintf('Rate is %s', $rate));
             return $rate;
         }
@@ -188,7 +196,7 @@ trait ConvertsExchangeRates
                         ->orderBy('date', 'DESC')
                         ->first();
         if (null !== $result) {
-            $rate = bcdiv('1', (string) $result->rate);
+            $rate = bcdiv('1', (string)$result->rate);
             Log::debug(sprintf('Reversed rate is %s', $rate));
             return $rate;
         }
@@ -213,8 +221,8 @@ trait ConvertsExchangeRates
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $date
+     * @param  TransactionCurrency  $currency
+     * @param  Carbon  $date
      * @return string
      */
     private function getEuroRate(TransactionCurrency $currency, Carbon $date): string
@@ -236,7 +244,7 @@ trait ConvertsExchangeRates
                         ->orderBy('date', 'DESC')
                         ->first();
         if (null !== $result) {
-            $rate = (string) $result->rate;
+            $rate = (string)$result->rate;
             Log::debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
         }
@@ -250,20 +258,12 @@ trait ConvertsExchangeRates
                         ->orderBy('date', 'DESC')
                         ->first();
         if (null !== $result) {
-            $rate = bcdiv('1', (string) $result->rate);
+            $rate = bcdiv('1', (string)$result->rate);
             Log::debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
         }
 
         Log::debug(sprintf('No rate for %s to EUR.', $currency->code));
         return '0';
-    }
-
-    /**
-     * @return void
-     */
-    private function getPreference(): void
-    {
-        $this->enabled = true;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ClearBudget.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,7 @@ class ClearBudget implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -52,7 +53,7 @@ class ClearBudget implements ActionInterface
     {
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        $budget  = $object->budgets()->first();
+        $budget = $object->budgets()->first();
         if (null === $budget) {
             Log::debug(sprintf('RuleAction ClearBudget, no budget in journal #%d.', $journal['transaction_journal_id']));
             return false;

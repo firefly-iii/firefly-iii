@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AvailableBudget.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,17 +35,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\AvailableBudget
  *
- * @property int                      $id
- * @property Carbon|null              $created_at
- * @property Carbon|null              $updated_at
- * @property Carbon|null              $deleted_at
- * @property int                      $user_id
- * @property int                      $transaction_currency_id
- * @property string                   $amount
- * @property Carbon                   $start_date
- * @property Carbon                   $end_date
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int $transaction_currency_id
+ * @property string $amount
+ * @property Carbon $start_date
+ * @property Carbon $end_date
  * @property-read TransactionCurrency $transactionCurrency
- * @property-read User                $user
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newQuery()
  * @method static Builder|AvailableBudget onlyTrashed()
@@ -61,7 +62,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|AvailableBudget withTrashed()
  * @method static Builder|AvailableBudget withoutTrashed()
  * @mixin Eloquent
- * @property int|null                 $user_group_id
+ * @property int|null $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserGroupId($value)
  */
 class AvailableBudget extends Model
@@ -88,7 +89,7 @@ class AvailableBudget extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return AvailableBudget
      * @throws NotFoundHttpException
@@ -96,7 +97,7 @@ class AvailableBudget extends Model
     public static function routeBinder(string $value): AvailableBudget
     {
         if (auth()->check()) {
-            $availableBudgetId = (int) $value;
+            $availableBudgetId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var AvailableBudget $availableBudget */
@@ -112,17 +113,17 @@ class AvailableBudget extends Model
      * @codeCoverageIgnore
      * @return BelongsTo
      */
-    public function transactionCurrency(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(TransactionCurrency::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
      * @codeCoverageIgnore
      * @return BelongsTo
      */
-    public function user(): BelongsTo
+    public function transactionCurrency(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(TransactionCurrency::class);
     }
 }

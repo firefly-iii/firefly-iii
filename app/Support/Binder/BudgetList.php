@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BudgetList.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -25,7 +26,6 @@ namespace FireflyIII\Support\Binder;
 use FireflyIII\Models\Budget;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -34,8 +34,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BudgetList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return Collection
      * @throws NotFoundHttpException

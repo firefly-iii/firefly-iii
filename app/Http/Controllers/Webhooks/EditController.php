@@ -24,12 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Webhook;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
@@ -52,7 +49,7 @@ class EditController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-bolt');
                 app('view')->share('subTitleIcon', 'fa-pencil');
-                app('view')->share('title', (string) trans('firefly.webhooks'));
+                app('view')->share('title', (string)trans('firefly.webhooks'));
 
                 return $next($request);
             }
@@ -62,13 +59,13 @@ class EditController extends Controller
     /**
      * Delete account screen.
      *
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
     public function index(Webhook $webhook)
     {
-        $subTitle = (string) trans('firefly.edit_webhook', ['title' => $webhook->title]);
+        $subTitle = (string)trans('firefly.edit_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.delete.url');
 
         return view('webhooks.edit', compact('webhook', 'subTitle'));

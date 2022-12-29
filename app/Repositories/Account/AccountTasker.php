@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountTasker.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,12 +24,14 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -40,13 +43,13 @@ class AccountTasker implements AccountTaskerInterface
     private $user;
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -70,14 +73,15 @@ class AccountTasker implements AccountTaskerInterface
             $id                            = $account->id;
             $currency                      = $repository->getAccountCurrency($account) ?? $defaultCurrency;
             $return['sums'][$currency->id] = $return['sums'][$currency->id] ?? [
-                    'start'                   => '0',
-                    'end'                     => '0',
-                    'difference'              => '0',
-                    'currency_id'             => $currency->id,
-                    'currency_code'           => $currency->code,
-                    'currency_symbol'         => $currency->symbol,
-                    'currency_name'           => $currency->name,
-                    'currency_decimal_places' => $currency->decimal_places,];
+                'start'                   => '0',
+                'end'                     => '0',
+                'difference'              => '0',
+                'currency_id'             => $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_name'           => $currency->name,
+                'currency_decimal_places' => $currency->decimal_places,
+            ];
             $entry                         = [
                 'name'                    => $account->name,
                 'id'                      => $account->id,
@@ -114,9 +118,9 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
      *
      * @return array
      */
@@ -140,7 +144,7 @@ class AccountTasker implements AccountTaskerInterface
         // Obtain a list of columns
         $sum = [];
         foreach ($report['accounts'] as $accountId => $row) {
-            $sum[$accountId] = (float) $row['sum']; // intentional float
+            $sum[$accountId] = (float)$row['sum']; // intentional float
         }
 
         array_multisort($sum, SORT_ASC, $report['accounts']);
@@ -149,11 +153,11 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param array $array
+     * @param  array  $array
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function groupExpenseByDestination(array $array): array
     {
@@ -168,22 +172,22 @@ class AccountTasker implements AccountTaskerInterface
 
         /** @var array $journal */
         foreach ($array as $journal) {
-            $sourceId                        = (int) $journal['destination_account_id'];
-            $currencyId                      = (int) $journal['currency_id'];
+            $sourceId                        = (int)$journal['destination_account_id'];
+            $currencyId                      = (int)$journal['currency_id'];
             $key                             = sprintf('%s-%s', $sourceId, $currencyId);
             $currencies[$currencyId]         = $currencies[$currencyId] ?? $currencyRepos->find($currencyId);
             $report['accounts'][$key]        = $report['accounts'][$key] ?? [
-                    'id'                      => $sourceId,
-                    'name'                    => $journal['destination_account_name'],
-                    'sum'                     => '0',
-                    'average'                 => '0',
-                    'count'                   => 0,
-                    'currency_id'             => $currencies[$currencyId]->id,
-                    'currency_name'           => $currencies[$currencyId]->name,
-                    'currency_symbol'         => $currencies[$currencyId]->symbol,
-                    'currency_code'           => $currencies[$currencyId]->code,
-                    'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
-                ];
+                'id'                      => $sourceId,
+                'name'                    => $journal['destination_account_name'],
+                'sum'                     => '0',
+                'average'                 => '0',
+                'count'                   => 0,
+                'currency_id'             => $currencies[$currencyId]->id,
+                'currency_name'           => $currencies[$currencyId]->name,
+                'currency_symbol'         => $currencies[$currencyId]->symbol,
+                'currency_code'           => $currencies[$currencyId]->code,
+                'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
+            ];
             $report['accounts'][$key]['sum'] = bcadd($report['accounts'][$key]['sum'], $journal['amount']);
 
             Log::debug(sprintf('Sum for %s is now %s', $journal['destination_account_name'], $report['accounts'][$key]['sum']));
@@ -194,17 +198,17 @@ class AccountTasker implements AccountTaskerInterface
         // do averages and sums.
         foreach (array_keys($report['accounts']) as $key) {
             if ($report['accounts'][$key]['count'] > 1) {
-                $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string) $report['accounts'][$key]['count']);
+                $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string)$report['accounts'][$key]['count']);
             }
             $currencyId                         = $report['accounts'][$key]['currency_id'];
             $report['sums'][$currencyId]        = $report['sums'][$currencyId] ?? [
-                    'sum'                     => '0',
-                    'currency_id'             => $report['accounts'][$key]['currency_id'],
-                    'currency_name'           => $report['accounts'][$key]['currency_name'],
-                    'currency_symbol'         => $report['accounts'][$key]['currency_symbol'],
-                    'currency_code'           => $report['accounts'][$key]['currency_code'],
-                    'currency_decimal_places' => $report['accounts'][$key]['currency_decimal_places'],
-                ];
+                'sum'                     => '0',
+                'currency_id'             => $report['accounts'][$key]['currency_id'],
+                'currency_name'           => $report['accounts'][$key]['currency_name'],
+                'currency_symbol'         => $report['accounts'][$key]['currency_symbol'],
+                'currency_code'           => $report['accounts'][$key]['currency_code'],
+                'currency_decimal_places' => $report['accounts'][$key]['currency_decimal_places'],
+            ];
             $report['sums'][$currencyId]['sum'] = bcadd($report['sums'][$currencyId]['sum'], $report['accounts'][$key]['sum']);
         }
 
@@ -212,9 +216,9 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
      *
      * @return array
      */
@@ -235,7 +239,7 @@ class AccountTasker implements AccountTaskerInterface
         // Obtain a list of columns
         $sum = [];
         foreach ($report['accounts'] as $accountId => $row) {
-            $sum[$accountId] = (float) $row['sum']; // intentional float
+            $sum[$accountId] = (float)$row['sum']; // intentional float
         }
 
         array_multisort($sum, SORT_DESC, $report['accounts']);
@@ -244,11 +248,11 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param array $array
+     * @param  array  $array
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function groupIncomeBySource(array $array): array
     {
@@ -263,8 +267,8 @@ class AccountTasker implements AccountTaskerInterface
 
         /** @var array $journal */
         foreach ($array as $journal) {
-            $sourceId   = (int) $journal['source_account_id'];
-            $currencyId = (int) $journal['currency_id'];
+            $sourceId   = (int)$journal['source_account_id'];
+            $currencyId = (int)$journal['currency_id'];
             $key        = sprintf('%s-%s', $sourceId, $currencyId);
             if (!array_key_exists($key, $report['accounts'])) {
                 $currencies[$currencyId]  = $currencies[$currencyId] ?? $currencyRepos->find($currencyId);
@@ -288,17 +292,17 @@ class AccountTasker implements AccountTaskerInterface
         // do averages and sums.
         foreach (array_keys($report['accounts']) as $key) {
             if ($report['accounts'][$key]['count'] > 1) {
-                $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string) $report['accounts'][$key]['count']);
+                $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string)$report['accounts'][$key]['count']);
             }
             $currencyId                         = $report['accounts'][$key]['currency_id'];
             $report['sums'][$currencyId]        = $report['sums'][$currencyId] ?? [
-                    'sum'                     => '0',
-                    'currency_id'             => $report['accounts'][$key]['currency_id'],
-                    'currency_name'           => $report['accounts'][$key]['currency_name'],
-                    'currency_symbol'         => $report['accounts'][$key]['currency_symbol'],
-                    'currency_code'           => $report['accounts'][$key]['currency_code'],
-                    'currency_decimal_places' => $report['accounts'][$key]['currency_decimal_places'],
-                ];
+                'sum'                     => '0',
+                'currency_id'             => $report['accounts'][$key]['currency_id'],
+                'currency_name'           => $report['accounts'][$key]['currency_name'],
+                'currency_symbol'         => $report['accounts'][$key]['currency_symbol'],
+                'currency_code'           => $report['accounts'][$key]['currency_code'],
+                'currency_decimal_places' => $report['accounts'][$key]['currency_decimal_places'],
+            ];
             $report['sums'][$currencyId]['sum'] = bcadd($report['sums'][$currencyId]['sum'], $report['accounts'][$key]['sum']);
         }
 
@@ -306,7 +310,7 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

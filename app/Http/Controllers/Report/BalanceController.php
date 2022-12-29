@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BalanceController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -61,9 +62,9 @@ class BalanceController extends Controller
     /**
      * Show overview of budget balances.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
      */
@@ -104,25 +105,25 @@ class BalanceController extends Controller
                 $sourceAccount                  = $journal['source_account_id'];
                 $currencyId                     = $journal['currency_id'];
                 $spent[$sourceAccount]          = $spent[$sourceAccount] ?? [
-                        'source_account_id'       => $sourceAccount,
-                        'currency_id'             => $journal['currency_id'],
-                        'currency_code'           => $journal['currency_code'],
-                        'currency_name'           => $journal['currency_name'],
-                        'currency_symbol'         => $journal['currency_symbol'],
-                        'currency_decimal_places' => $journal['currency_decimal_places'],
-                        'spent'                   => '0',
-                    ];
+                    'source_account_id'       => $sourceAccount,
+                    'currency_id'             => $journal['currency_id'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'spent'                   => '0',
+                ];
                 $spent[$sourceAccount]['spent'] = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
 
                 // also fix sum:
                 $report['sums'][$budgetId][$currencyId]        = $report['sums'][$budgetId][$currencyId] ?? [
-                        'sum'                     => '0',
-                        'currency_id'             => $journal['currency_id'],
-                        'currency_code'           => $journal['currency_code'],
-                        'currency_name'           => $journal['currency_name'],
-                        'currency_symbol'         => $journal['currency_symbol'],
-                        'currency_decimal_places' => $journal['currency_decimal_places'],
-                    ];
+                    'sum'                     => '0',
+                    'currency_id'             => $journal['currency_id'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
                 $report['sums'][$budgetId][$currencyId]['sum'] = bcadd($report['sums'][$budgetId][$currencyId]['sum'], $journal['amount']);
                 $report['accounts'][$sourceAccount]['sum']     = bcadd($report['accounts'][$sourceAccount]['sum'], $journal['amount']);
 

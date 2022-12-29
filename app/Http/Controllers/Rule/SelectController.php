@@ -59,7 +59,7 @@ class SelectController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 return $next($request);
@@ -70,8 +70,8 @@ class SelectController extends Controller
     /**
      * Execute the given rule on a set of existing transactions.
      *
-     * @param SelectTransactionsRequest $request
-     * @param Rule                      $rule
+     * @param  SelectTransactionsRequest  $request
+     * @param  Rule  $rule
      *
      * @return RedirectResponse
      */
@@ -98,7 +98,7 @@ class SelectController extends Controller
         $newRuleEngine->fire();
         $resultCount = $newRuleEngine->getResults();
 
-        session()->flash('success', (string) trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
+        session()->flash('success', (string)trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
 
         return redirect()->route('rules.index');
     }
@@ -106,7 +106,7 @@ class SelectController extends Controller
     /**
      * View to select transactions by a rule.
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return Factory|View
      */
@@ -120,7 +120,7 @@ class SelectController extends Controller
         // does the user have shared accounts?
         $first    = session('first', Carbon::now()->subYear())->format('Y-m-d');
         $today    = Carbon::now()->format('Y-m-d');
-        $subTitle = (string) trans('firefly.apply_rule_selection', ['title' => $rule->title]);
+        $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
         return view('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
     }
@@ -129,7 +129,7 @@ class SelectController extends Controller
      * This method allows the user to test a certain set of rule triggers. The rule triggers are passed along
      * using the URL parameters (GET), and are usually put there using a Javascript thing.
      *
-     * @param TestRuleFormRequest $request
+     * @param  TestRuleFormRequest  $request
      *
      * @return JsonResponse
      *
@@ -146,7 +146,7 @@ class SelectController extends Controller
 
         // warn if nothing.
         if (0 === count($textTriggers)) {
-            return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]);
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]);
         }
 
         foreach ($textTriggers as $textTrigger) {
@@ -170,7 +170,7 @@ class SelectController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if (0 === count($collection)) {
-            $warning = (string) trans('firefly.warning_no_matching_transactions');
+            $warning = (string)trans('firefly.warning_no_matching_transactions');
         }
 
         // Return json response
@@ -191,7 +191,7 @@ class SelectController extends Controller
      * This method allows the user to test a certain set of rule triggers. The rule triggers are grabbed from
      * the rule itself.
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return JsonResponse
      *
@@ -201,7 +201,7 @@ class SelectController extends Controller
         $triggers = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
-            return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]);
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]);
         }
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
@@ -213,7 +213,7 @@ class SelectController extends Controller
 
         $warning = '';
         if (0 === count($collection)) {
-            $warning = (string) trans('firefly.warning_no_matching_transactions');
+            $warning = (string)trans('firefly.warning_no_matching_transactions');
         }
 
         // Return json response

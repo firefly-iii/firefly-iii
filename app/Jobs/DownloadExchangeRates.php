@@ -47,9 +47,9 @@ class DownloadExchangeRates implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    private array                       $active;
     private Carbon                      $date;
     private CurrencyRepositoryInterface $repository;
-    private array                       $active;
     private Collection                  $users;
 
     /**
@@ -57,7 +57,7 @@ class DownloadExchangeRates implements ShouldQueue
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon|null $date
+     * @param  Carbon|null  $date
      */
     public function __construct(?Carbon $date)
     {
@@ -92,23 +92,13 @@ class DownloadExchangeRates implements ShouldQueue
     }
 
     /**
-     * @param Carbon $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $newDate = clone $date;
-        $newDate->startOfDay();
-        $this->date = $newDate;
-    }
-
-    /**
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      * @return void
      */
     private function downloadRates(TransactionCurrency $currency): void
     {
         Log::debug(sprintf('Now downloading new exchange rates for currency %s.', $currency->code));
-        $base       = sprintf('%s/%s/%s', (string) config('cer.url'), $this->date->year, $this->date->isoWeek);
+        $base       = sprintf('%s/%s/%s', (string)config('cer.url'), $this->date->year, $this->date->isoWeek);
         $client     = new Client();
         $url        = sprintf('%s/%s.json', $base, $currency->code);
         $res        = $client->get($url);
@@ -117,7 +107,7 @@ class DownloadExchangeRates implements ShouldQueue
             app('log')->warning(sprintf('Trying to grab "%s" resulted in status code %d.', $url, $statusCode));
             return;
         }
-        $body = (string) $res->getBody();
+        $body = (string)$res->getBody();
         $json = json_decode($body, true);
         if (false === $json || null === $json) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));
@@ -128,8 +118,8 @@ class DownloadExchangeRates implements ShouldQueue
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * @param array               $rates
+     * @param  TransactionCurrency  $currency
+     * @param  array  $rates
      * @return void
      */
     private function saveRates(TransactionCurrency $currency, Carbon $date, array $rates): void
@@ -146,7 +136,7 @@ class DownloadExchangeRates implements ShouldQueue
     }
 
     /**
-     * @param string $code
+     * @param  string  $code
      * @return TransactionCurrency|null
      */
     private function getCurrency(string $code): ?TransactionCurrency
@@ -184,5 +174,15 @@ class DownloadExchangeRates implements ShouldQueue
                 $this->repository->setExchangeRate($from, $to, $date, $rate);
             }
         }
+    }
+
+    /**
+     * @param  Carbon  $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $newDate = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
     }
 }

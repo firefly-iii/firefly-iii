@@ -43,40 +43,6 @@ class NewAccessToken extends Notification
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function via($notifiable)
-    {
-        return ['mail', 'slack'];
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage())
-            ->markdown('emails.token-created')
-            ->subject((string) trans('email.access_token_created_subject'));
-    }
-    /**
-     * Get the Slack representation of the notification.
-     *
-     * @param mixed $notifiable
-     * @return SlackMessage
-     */
-    public function toSlack($notifiable)
-    {
-        return (new SlackMessage())->content((string) trans('email.access_token_created_body'));
-    }
-
-    /**
      * Get the array representation of the notification.
      *
      * @param  mixed  $notifiable
@@ -87,5 +53,40 @@ class NewAccessToken extends Notification
         return [
             //
         ];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage())
+            ->markdown('emails.token-created')
+            ->subject((string)trans('email.access_token_created_subject'));
+    }
+
+    /**
+     * Get the Slack representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable)
+    {
+        return (new SlackMessage())->content((string)trans('email.access_token_created_body'));
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function via($notifiable)
+    {
+        return ['mail', 'slack'];
     }
 }

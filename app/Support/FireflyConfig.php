@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FireflyConfig.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -36,11 +37,11 @@ use Illuminate\Database\QueryException;
 class FireflyConfig
 {
     /**
-     * @param string $name
+     * @param  string  $name
      */
     public function delete(string $name): void
     {
-        $fullName = 'ff-config-' . $name;
+        $fullName = 'ff-config-'.$name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -52,15 +53,25 @@ class FireflyConfig
     }
 
     /**
-     * @param string               $name
-     * @param bool|string|int|null $default
+     * @param  string  $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool
+    {
+        return Configuration::where('name', $name)->count() === 1;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  bool|string|int|null  $default
      *
      * @return Configuration|null
      * @throws FireflyException
      */
     public function get(string $name, $default = null): ?Configuration
     {
-        $fullName = 'ff-config-' . $name;
+        $fullName = 'ff-config-'.$name;
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
@@ -86,8 +97,8 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
+     * @param  string  $name
+     * @param  mixed  $value
      *
      * @return Configuration
      */
@@ -108,20 +119,20 @@ class FireflyConfig
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            Cache::forget('ff-config-' . $name);
+            Cache::forget('ff-config-'.$name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        Cache::forget('ff-config-' . $name);
+        Cache::forget('ff-config-'.$name);
 
         return $config;
     }
 
     /**
-     * @param string $name
-     * @param mixed  $default
+     * @param  string  $name
+     * @param  mixed  $default
      *
      * @return Configuration|null
      */
@@ -140,18 +151,8 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function has(string $name): bool
-    {
-        return Configuration::where('name', $name)->count() === 1;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
+     * @param  string  $name
+     * @param  mixed  $value
      *
      * @return Configuration
      */

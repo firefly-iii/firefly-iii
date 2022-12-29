@@ -55,7 +55,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon|null $date
+     * @param  Carbon|null  $date
      */
     public function __construct(?Carbon $date)
     {
@@ -83,7 +83,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget $autoBudget
+     * @param  AutoBudget  $autoBudget
      *
      * @throws FireflyException
      */
@@ -133,7 +133,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // find budget limit:
         $budgetLimit = $this->findBudgetLimit($autoBudget->budget, $start, $end);
 
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_RESET === (int) $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_RESET === (int)$autoBudget->auto_budget_type) {
             // that's easy: create one.
             // do nothing else.
             $this->createBudgetLimit($autoBudget, $start, $end);
@@ -142,7 +142,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             return;
         }
 
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ROLLOVER === (int) $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ROLLOVER === (int)$autoBudget->auto_budget_type) {
             // budget limit exists already,
             $this->createRollover($autoBudget);
             Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
@@ -153,7 +153,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget $autoBudget
+     * @param  AutoBudget  $autoBudget
      *
      * @return bool
      * @throws FireflyException
@@ -190,9 +190,9 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Budget  $budget
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return BudgetLimit|null
      */
@@ -214,10 +214,10 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget  $autoBudget
-     * @param Carbon      $start
-     * @param Carbon      $end
-     * @param string|null $amount
+     * @param  AutoBudget  $autoBudget
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  string|null  $amount
      */
     private function createBudgetLimit(AutoBudget $autoBudget, Carbon $start, Carbon $end, ?string $amount = null)
     {
@@ -239,7 +239,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget $autoBudget
+     * @param  AutoBudget  $autoBudget
      *
      * @throws FireflyException
      */
@@ -280,7 +280,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $repository = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
         $spent       = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
-        $currencyId  = (int) $autoBudget->transaction_currency_id;
+        $currencyId  = (int)$autoBudget->transaction_currency_id;
         $spentAmount = $spent[$currencyId]['sum'] ?? '0';
         Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
 
@@ -304,7 +304,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      */
     public function setDate(Carbon $date): void
     {

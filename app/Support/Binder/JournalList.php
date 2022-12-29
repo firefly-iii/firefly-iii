@@ -1,4 +1,5 @@
 <?php
+
 /**
  * JournalList.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,8 +34,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class JournalList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return array
      *
@@ -62,7 +63,7 @@ class JournalList implements BinderInterface
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return array
      */

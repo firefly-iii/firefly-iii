@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AdminTestMail.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -56,6 +57,6 @@ class AdminTestMail extends Mailable
     {
         return $this
             ->markdown('emails.admin-test')
-            ->subject((string) trans('email.admin_test_subject'));
+            ->subject((string)trans('email.admin_test_subject'));
     }
 }

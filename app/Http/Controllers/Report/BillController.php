@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use JsonException;
 use Log;
 use Throwable;
 
@@ -39,9 +38,9 @@ use Throwable;
 class BillController extends Controller
 {
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return mixed|string
      */

@@ -45,9 +45,9 @@ class AccountForm
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -57,8 +57,8 @@ class AccountForm
         $repository               = $this->getAccountRepository();
         $grouped                  = $this->getAccountsGrouped($types, $repository);
         $cash                     = $repository->getCashAccount();
-        $key                      = (string) trans('firefly.cash_account_type');
-        $grouped[$key][$cash->id] = sprintf('(%s)', (string) trans('firefly.cash'));
+        $key                      = (string)trans('firefly.cash_account_type');
+        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -74,7 +74,7 @@ class AccountForm
 
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $role = (string) $repository->getMetaValue($account, 'account_role');
+            $role = (string)$repository->getMetaValue($account, 'account_role');
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = sprintf('l_%s', $account->accountType->type);
             } elseif ('' === $role) {
@@ -86,7 +86,7 @@ class AccountForm
                     $role = 'no_account_type';
                 }
             }
-            $key                         = (string) trans(sprintf('firefly.opt_group_%s', $role));
+            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
             $grouped[$key][$account->id] = $account->name;
         }
 
@@ -96,9 +96,9 @@ class AccountForm
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -109,8 +109,8 @@ class AccountForm
         $grouped    = $this->getAccountsGrouped($types, $repository);
 
         $cash                     = $repository->getCashAccount();
-        $key                      = (string) trans('firefly.cash_account_type');
-        $grouped[$key][$cash->id] = sprintf('(%s)', (string) trans('firefly.cash'));
+        $key                      = (string)trans('firefly.cash_account_type');
+        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -118,8 +118,8 @@ class AccountForm
     /**
      * Check list of asset accounts.
      *
-     * @param string     $name
-     * @param array|null $options
+     * @param  string  $name
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -150,9 +150,9 @@ class AccountForm
     /**
      * Basic list of asset accounts.
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -167,9 +167,9 @@ class AccountForm
     /**
      * Same list but all liabilities as well.
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */

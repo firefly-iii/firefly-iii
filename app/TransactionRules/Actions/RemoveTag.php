@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RemoveTag.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -39,7 +40,7 @@ class RemoveTag implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -64,7 +65,9 @@ class RemoveTag implements ActionInterface
         }
         $count = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
         if (0 === $count) {
-            Log::debug(sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.', $name, $journal['transaction_journal_id']));
+            Log::debug(
+                sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.', $name, $journal['transaction_journal_id'])
+            );
             return false;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PrependNotes.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,7 @@ class PrependNotes implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -50,12 +51,12 @@ class PrependNotes implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $dbNote = Note::where('noteable_id', (int) $journal['transaction_journal_id'])
-            ->where('noteable_type', TransactionJournal::class)
-            ->first(['notes.*']);
+        $dbNote = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
+                      ->where('noteable_type', TransactionJournal::class)
+                      ->first(['notes.*']);
         if (null === $dbNote) {
             $dbNote                = new Note();
-            $dbNote->noteable_id   = (int) $journal['transaction_journal_id'];
+            $dbNote->noteable_id   = (int)$journal['transaction_journal_id'];
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }

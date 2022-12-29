@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TagFormRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -68,7 +69,7 @@ class TagFormRequest extends FormRequest
         $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag';
         if (null !== $tag) {
             $idRule  = 'belongsToUser:tags';
-            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $tag->id;
+            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,'.$tag->id;
         }
 
         $rules = [

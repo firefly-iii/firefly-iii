@@ -45,7 +45,7 @@ class ConvertToTransfer implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -114,8 +114,8 @@ class ConvertToTransfer implements ActionInterface
      * A withdrawal is from Asset to Expense.
      * We replace the Expense with another asset.
      *
-     * @param array   $journal
-     * @param Account $asset
+     * @param  array  $journal
+     * @param  Account  $asset
      *
      * @return bool
      */
@@ -154,8 +154,8 @@ class ConvertToTransfer implements ActionInterface
      * A deposit is from Revenue to Asset.
      * We replace the Revenue with another asset.
      *
-     * @param array   $journal
-     * @param Account $asset
+     * @param  array  $journal
+     * @param  Account  $asset
      *
      * @return bool
      */

@@ -36,6 +36,14 @@ class ALERepository implements ALERepositoryInterface
     /**
      * @inheritDoc
      */
+    public function getForObject(Model $model): Collection
+    {
+        return AuditLogEntry::where('auditable_id', $model->id)->where('auditable_type', get_class($model))->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function store(array $data): AuditLogEntry
     {
         $auditLogEntry = new AuditLogEntry();
@@ -47,13 +55,5 @@ class ALERepository implements ALERepositoryInterface
         $auditLogEntry->after  = $data['after'];
         $auditLogEntry->save();
         return $auditLogEntry;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getForObject(Model $model): Collection
-    {
-        return AuditLogEntry::where('auditable_id', $model->id)->where('auditable_type', get_class($model))->get();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ChartColour.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -54,7 +55,7 @@ class ChartColour
         ];
 
     /**
-     * @param int $index
+     * @param  int  $index
      *
      * @return string
      */

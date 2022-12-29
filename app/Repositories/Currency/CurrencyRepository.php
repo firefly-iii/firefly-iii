@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CurrencyRepository.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -50,7 +51,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     private User $user;
 
     /**
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      *
      * @return bool
      * @throws FireflyException
@@ -63,7 +64,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      *
      * @return string|null
      * @throws FireflyException
@@ -86,7 +87,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is being used in accounts:
-        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string) $currency->id))->count();
+        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string)$currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -113,8 +114,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         // is being used in accounts (as integer)
         $meta = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
-            ->whereNull('accounts.deleted_at')
-            ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode((int) $currency->id))->count();
+                           ->whereNull('accounts.deleted_at')
+                           ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode((int)$currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -151,7 +152,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      *
      * @return int
      */
@@ -172,7 +173,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+    }
+
+    /**
+     * @param  TransactionCurrency  $currency
      *
      * @return bool
      */
@@ -192,7 +201,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Disables a currency
      *
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      */
     public function disable(TransactionCurrency $currency): void
     {
@@ -220,10 +229,20 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @param  TransactionCurrency  $currency
+     * Enables a currency
+     */
+    public function enable(TransactionCurrency $currency): void
+    {
+        $currency->enabled = true;
+        $currency->save();
+    }
+
+    /**
      * Find by currency code, return NULL if unfound.
      * Used in Import Currency!
      *
-     * @param string $currencyCode
+     * @param  string  $currencyCode
      *
      * @return TransactionCurrency|null
      * @deprecated
@@ -236,7 +255,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by currency name.
      *
-     * @param string $currencyName
+     * @param  string  $currencyName
      *
      * @return TransactionCurrency|null
      */
@@ -249,7 +268,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * Find by currency name or return null.
      * Used in Import Currency!
      *
-     * @param string $currencyName
+     * @param  string  $currencyName
      *
      * @return TransactionCurrency|null
      * @deprecated
@@ -262,7 +281,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by currency symbol.
      *
-     * @param string $currencySymbol
+     * @param  string  $currencySymbol
      *
      * @return TransactionCurrency|null
      */
@@ -275,7 +294,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * Find by currency symbol or return NULL
      * Used in Import Currency!
      *
-     * @param string $currencySymbol
+     * @param  string  $currencySymbol
      *
      * @return TransactionCurrency|null
      * @deprecated
@@ -288,8 +307,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns user default or system default.
      *
-     * @param int|null    $currencyId
-     * @param string|null $currencyCode
+     * @param  int|null  $currencyId
+     * @param  string|null  $currencyCode
      *
      * @return TransactionCurrency
      * @throws FireflyException
@@ -320,18 +339,18 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns NULL if nothing found.
      *
-     * @param int|null    $currencyId
-     * @param string|null $currencyCode
+     * @param  int|null  $currencyId
+     * @param  string|null  $currencyCode
      *
      * @return TransactionCurrency|null
      */
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
         Log::debug('Now in findCurrencyNull()');
-        $result = $this->find((int) $currencyId);
+        $result = $this->find((int)$currencyId);
         if (null === $result) {
             Log::debug(sprintf('Searching for currency with code %s...', $currencyCode));
-            $result = $this->findByCode((string) $currencyCode);
+            $result = $this->findByCode((string)$currencyCode);
         }
         if (null !== $result && false === $result->enabled) {
             Log::debug(sprintf('Also enabled currency %s', $result->code));
@@ -344,7 +363,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by ID, return NULL if not found.
      *
-     * @param int $currencyId
+     * @param  int  $currencyId
      *
      * @return TransactionCurrency|null
      */
@@ -356,7 +375,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by currency code, return NULL if unfound.
      *
-     * @param string $currencyCode
+     * @param  string  $currencyCode
      *
      * @return TransactionCurrency|null
      */
@@ -366,25 +385,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * Enables a currency
-     */
-    public function enable(TransactionCurrency $currency): void
-    {
-        $currency->enabled = true;
-        $currency->save();
-    }
-
-    /**
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
-    }
-
-    /**
-     * @param array $ids
+     * @param  array  $ids
      *
      * @return Collection
      */
@@ -394,7 +395,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param Preference $preference
+     * @param  Preference  $preference
      *
      * @return TransactionCurrency
      */
@@ -411,9 +412,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Get currency exchange rate.
      *
-     * @param TransactionCurrency $fromCurrency
-     * @param TransactionCurrency $toCurrency
-     * @param Carbon              $date
+     * @param  TransactionCurrency  $fromCurrency
+     * @param  TransactionCurrency  $toCurrency
+     * @param  Carbon  $date
      *
      * @return CurrencyExchangeRate|null
      */
@@ -441,11 +442,35 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function isFallbackCurrency(TransactionCurrency $currency): bool
+    {
+        return $currency->code === config('firefly.default_currency', 'EUR');
+    }
+
+    /**
+     * @param  string  $search
+     * @param  int  $limit
+     *
+     * @return Collection
+     */
+    public function searchCurrency(string $search, int $limit): Collection
+    {
+        $query = TransactionCurrency::where('enabled', true);
+        if ('' !== $search) {
+            $query->where('name', 'LIKE', sprintf('%%%s%%', $search));
+        }
+
+        return $query->take($limit)->get();
+    }
+
+    /**
      * TODO must be a factory
-     * @param TransactionCurrency $fromCurrency
-     * @param TransactionCurrency $toCurrency
-     * @param Carbon              $date
-     * @param float               $rate
+     * @param  TransactionCurrency  $fromCurrency
+     * @param  TransactionCurrency  $toCurrency
+     * @param  Carbon  $date
+     * @param  float  $rate
      * @return CurrencyExchangeRate
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate
@@ -462,31 +487,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function isFallbackCurrency(TransactionCurrency $currency): bool
-    {
-        return $currency->code === config('firefly.default_currency', 'EUR');
-    }
-
-    /**
-     * @param string $search
-     * @param int    $limit
-     *
-     * @return Collection
-     */
-    public function searchCurrency(string $search, int $limit): Collection
-    {
-        $query = TransactionCurrency::where('enabled', true);
-        if ('' !== $search) {
-            $query->where('name', 'LIKE', sprintf('%%%s%%', $search));
-        }
-
-        return $query->take($limit)->get();
-    }
-
-    /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {
@@ -494,7 +495,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return TransactionCurrency
      * @throws FireflyException
@@ -513,8 +514,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * @param array               $data
+     * @param  TransactionCurrency  $currency
+     * @param  array  $data
      *
      * @return TransactionCurrency
      */

@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -50,8 +49,8 @@ class DeleteController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-bolt');
                 app('view')->share('subTitleIcon', 'fa-trash');
-                app('view')->share('title', (string) trans('firefly.webhooks'));
-                app('view')->share('subTitle', (string) trans('firefly.delete_webhook'));
+                app('view')->share('title', (string)trans('firefly.webhooks'));
+                app('view')->share('subTitle', (string)trans('firefly.delete_webhook'));
 
                 return $next($request);
             }
@@ -61,13 +60,13 @@ class DeleteController extends Controller
     /**
      * Delete account screen.
      *
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
     public function index(Webhook $webhook)
     {
-        $subTitle = (string) trans('firefly.delete_webhook', ['title' => $webhook->name]);
+        $subTitle = (string)trans('firefly.delete_webhook', ['title' => $webhook->name]);
         $this->rememberPreviousUrl('webhooks.delete.url');
 
         return view('webhooks.delete', compact('webhook', 'subTitle'));

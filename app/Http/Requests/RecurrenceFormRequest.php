@@ -191,7 +191,7 @@ class RecurrenceFormRequest extends FormRequest
         $rules    = [
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
-            'first_date'              => 'required|date|after:' . $today->format('Y-m-d'),
+            'first_date'              => 'required|date|after:'.$today->format('Y-m-d'),
             'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'between:1,20'],
             'skip'                    => 'required|numeric|integer|gte:0|lte:31',
 
@@ -235,7 +235,7 @@ class RecurrenceFormRequest extends FormRequest
 
         // if ends at date X, set another rule.
         if ('until_date' === $this->convertString('repetition_end')) {
-            $rules['repeat_until'] = 'required|date|after:' . $tomorrow->format('Y-m-d');
+            $rules['repeat_until'] = 'required|date|after:'.$tomorrow->format('Y-m-d');
         }
 
         // switch on type to expand rules for source and destination accounts:
@@ -263,7 +263,7 @@ class RecurrenceFormRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
         if ($recurrence instanceof Recurrence) {
             $rules['id']         = 'required|numeric|exists:recurrences,id';
-            $rules['title']      = 'required|between:1,255|uniqueObjectForUser:recurrences,title,' . $recurrence->id;
+            $rules['title']      = 'required|between:1,255|uniqueObjectForUser:recurrences,title,'.$recurrence->id;
             $rules['first_date'] = 'required|date';
         }
 
@@ -273,7 +273,7 @@ class RecurrenceFormRequest extends FormRequest
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -290,7 +290,7 @@ class RecurrenceFormRequest extends FormRequest
     /**
      * Validates the given account information. Switches on given transaction type.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @throws FireflyException
      */
@@ -314,16 +314,16 @@ class RecurrenceFormRequest extends FormRequest
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
             case 'withdrawal':
-                $sourceId      = (int) $data['source_id'];
-                $destinationId = (int) $data['withdrawal_destination_id'];
+                $sourceId      = (int)$data['source_id'];
+                $destinationId = (int)$data['withdrawal_destination_id'];
                 break;
             case 'deposit':
-                $sourceId      = (int) $data['deposit_source_id'];
-                $destinationId = (int) $data['destination_id'];
+                $sourceId      = (int)$data['deposit_source_id'];
+                $destinationId = (int)$data['destination_id'];
                 break;
             case 'transfer':
-                $sourceId      = (int) $data['source_id'];
-                $destinationId = (int) $data['destination_id'];
+                $sourceId      = (int)$data['source_id'];
+                $destinationId = (int)$data['destination_id'];
                 break;
         }
         // validate source account.
@@ -331,7 +331,7 @@ class RecurrenceFormRequest extends FormRequest
 
         // do something with result:
         if (false === $validSource) {
-            $message = (string) trans('validation.generic_invalid_source');
+            $message = (string)trans('validation.generic_invalid_source');
             $validator->errors()->add('source_id', $message);
             $validator->errors()->add('deposit_source_id', $message);
 
@@ -342,7 +342,7 @@ class RecurrenceFormRequest extends FormRequest
         $validDestination = $accountValidator->validateDestination(['id' => $destinationId,]);
         // do something with result:
         if (false === $validDestination) {
-            $message = (string) trans('validation.generic_invalid_destination');
+            $message = (string)trans('validation.generic_invalid_destination');
             $validator->errors()->add('destination_id', $message);
             $validator->errors()->add('withdrawal_destination_id', $message);
         }

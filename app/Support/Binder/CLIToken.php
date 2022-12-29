@@ -35,8 +35,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CLIToken implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return mixed
      * @throws FireflyException
@@ -48,7 +48,7 @@ class CLIToken implements BinderInterface
         $users      = $repository->all();
 
         // check for static token
-        if ($value === config('firefly.static_cron_token') && 32 === strlen((string) config('firefly.static_cron_token'))) {
+        if ($value === config('firefly.static_cron_token') && 32 === strlen((string)config('firefly.static_cron_token'))) {
             return $value;
         }
 

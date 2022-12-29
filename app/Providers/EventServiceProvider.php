@@ -173,6 +173,23 @@ class EventServiceProvider extends ServiceProvider
     }
 
     /**
+     * TODO needs a dedicated (static) method.
+     */
+    protected function registerCreateEvents(): void
+    {
+        PiggyBank::created(
+            static function (PiggyBank $piggyBank) {
+                $repetition = new PiggyBankRepetition();
+                $repetition->piggyBank()->associate($piggyBank);
+                $repetition->startdate     = $piggyBank->startdate;
+                $repetition->targetdate    = $piggyBank->targetdate;
+                $repetition->currentamount = 0;
+                $repetition->save();
+            }
+        );
+    }
+
+    /**
      * TODO needs a dedicated method.
      */
     protected function registerBudgetEvents(): void
@@ -223,22 +240,5 @@ class EventServiceProvider extends ServiceProvider
 
         BudgetLimit::created($func);
         BudgetLimit::updated($func);
-    }
-
-    /**
-     * TODO needs a dedicated (static) method.
-     */
-    protected function registerCreateEvents(): void
-    {
-        PiggyBank::created(
-            static function (PiggyBank $piggyBank) {
-                $repetition = new PiggyBankRepetition();
-                $repetition->piggyBank()->associate($piggyBank);
-                $repetition->startdate     = $piggyBank->startdate;
-                $repetition->targetdate    = $piggyBank->targetdate;
-                $repetition->currentamount = 0;
-                $repetition->save();
-            }
-        );
     }
 }

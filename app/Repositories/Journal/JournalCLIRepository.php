@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use JsonException;
 use stdClass;
 
 /**
@@ -44,22 +43,22 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Get all transaction journals with a specific type, regardless of user.
      *
-     * @param array $types
+     * @param  array  $types
      *
      * @return Collection
      */
     public function getAllJournals(array $types): Collection
     {
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereIn('transaction_types.type', $types)
-            ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
-            ->get(['transaction_journals.*']);
+                                 ->whereIn('transaction_types.type', $types)
+                                 ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
+                                 ->get(['transaction_journals.*']);
     }
 
     /**
      * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return int
      */
@@ -80,7 +79,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return int
      */
@@ -111,8 +110,8 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return Carbon value of a meta field (or NULL).
      *
-     * @param TransactionJournal $journal
-     * @param string             $field
+     * @param  TransactionJournal  $journal
+     * @param  string  $field
      *
      * @return null|Carbon
      */
@@ -154,8 +153,8 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return value of a meta field (or NULL) as a string.
      *
-     * @param TransactionJournal $journal
-     * @param string             $field
+     * @param  TransactionJournal  $journal
+     * @param  string  $field
      *
      * @return null|string
      */
@@ -185,7 +184,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         }
 
         // return when something else:
-        $return = (string) $value;
+        $return = (string)$value;
         try {
             $cache->store($return);
         } catch (Exception $e) {
@@ -198,7 +197,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return text of a note attached to journal, or NULL
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return string|null
      */
@@ -221,25 +220,25 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     public function getSplitJournals(): Collection
     {
         $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->groupBy('transaction_journals.id');
+                                        ->groupBy('transaction_journals.id');
         $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]);
         $journalIds = [];
         /** @var stdClass $row */
         foreach ($result as $row) {
-            if ((int) $row->transaction_count > 2) {
-                $journalIds[] = (int) $row->id;
+            if ((int)$row->transaction_count > 2) {
+                $journalIds[] = (int)$row->id;
             }
         }
         $journalIds = array_unique($journalIds);
 
         return TransactionJournal::with(['transactions'])
-            ->whereIn('id', $journalIds)->get();
+                                 ->whereIn('id', $journalIds)->get();
     }
 
     /**
      * Return all tags as strings in an array.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return array
      */
@@ -249,7 +248,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

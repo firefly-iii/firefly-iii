@@ -37,9 +37,9 @@ use Log;
 trait BillServiceTrait
 {
     /**
-     * @param Bill   $bill
-     * @param string $oldName
-     * @param string $newName
+     * @param  Bill  $bill
+     * @param  string  $oldName
+     * @param  string  $newName
      */
     public function updateBillActions(Bill $bill, string $oldName, string $newName): void
     {
@@ -60,8 +60,8 @@ trait BillServiceTrait
     }
 
     /**
-     * @param Bill   $bill
-     * @param string $note
+     * @param  Bill  $bill
+     * @param  string  $note
      *
      * @return bool
      */

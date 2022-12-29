@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountMeta.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,12 +33,12 @@ use JsonException;
 /**
  * Class AccountMeta
  *
- * @property int          $id
- * @property Carbon|null  $created_at
- * @property Carbon|null  $updated_at
- * @property int          $account_id
- * @property string       $name
- * @property mixed        $data
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property int $account_id
+ * @property string $name
+ * @property mixed $data
  * @property-read Account $account
  * @method static Builder|AccountMeta newModelQuery()
  * @method static Builder|AccountMeta newQuery()
@@ -77,7 +78,7 @@ class AccountMeta extends Model
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return mixed
      * @throws JsonException
@@ -89,7 +90,7 @@ class AccountMeta extends Model
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @codeCoverageIgnore
      */

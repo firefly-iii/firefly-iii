@@ -36,7 +36,7 @@ class RecurrenceDestroyService
     /**
      * Delete recurrence by ID
      *
-     * @param int $recurrenceId
+     * @param  int  $recurrenceId
      */
     public function destroyById(int $recurrenceId): void
     {
@@ -50,7 +50,7 @@ class RecurrenceDestroyService
     /**
      * Delete recurrence.
      *
-     * @param Recurrence $recurrence
+     * @param  Recurrence  $recurrence
      *
      */
     public function destroy(Recurrence $recurrence): void

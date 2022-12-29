@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SetSourceAccount.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -44,7 +45,7 @@ class SetSourceAccount implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -59,7 +60,7 @@ class SetSourceAccount implements ActionInterface
         $user = User::find($journal['user_id']);
         $type = $journal['transaction_type_type'];
         /** @var TransactionJournal|null $object */
-        $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
+        $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
         if (null === $object) {
             Log::error('Could not find journal.');
@@ -93,7 +94,7 @@ class SetSourceAccount implements ActionInterface
 
             return false;
         }
-        if (null !== $newAccount && (int) $newAccount->id === (int) $destination->account_id) {
+        if (null !== $newAccount && (int)$newAccount->id === (int)$destination->account_id) {
             Log::error(
                 sprintf(
                     'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
@@ -127,7 +128,7 @@ class SetSourceAccount implements ActionInterface
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      *
      * @return Account|null
      */

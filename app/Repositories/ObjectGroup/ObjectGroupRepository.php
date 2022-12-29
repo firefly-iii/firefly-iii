@@ -118,7 +118,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         $index = 1;
         /** @var ObjectGroup $objectGroup */
         foreach ($list as $objectGroup) {
-            if ($index !== (int) $objectGroup->order) {
+            if ($index !== (int)$objectGroup->order) {
                 Log::debug(
                     sprintf('objectGroup #%d ("%s"): order should %d be but is %d.', $objectGroup->id, $objectGroup->title, $index, $objectGroup->order)
                 );
@@ -130,8 +130,8 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     }
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
@@ -151,7 +151,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {
@@ -168,7 +168,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         }
 
         if (array_key_exists('order', $data)) {
-            $this->setOrder($objectGroup, (int) $data['order']);
+            $this->setOrder($objectGroup, (int)$data['order']);
         }
 
         $objectGroup->save();
@@ -181,7 +181,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
      */
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup
     {
-        $oldOrder = (int) $objectGroup->order;
+        $oldOrder = (int)$objectGroup->order;
 
         if ($newOrder > $oldOrder) {
             $this->user->objectGroups()->where('object_groups.order', '<=', $newOrder)->where('object_groups.order', '>', $oldOrder)
