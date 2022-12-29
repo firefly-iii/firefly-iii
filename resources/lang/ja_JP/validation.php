@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => '続行するには、有効な預け入れ口座 ID および（または）有効な預け入れ口座名を取得する必要があります。',
     'withdrawal_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ口座が見つかりませんでした。',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => 'ID「:id」、名称「:name」で検索した結果、有効な引き出し元口座が見つかりませんでした。',
 
     'deposit_source_need_data' => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',

@@ -335,9 +335,13 @@ return [
     'search_modifier_external_id_is'                      => '外部 ID 为“:value”',
     'search_modifier_not_external_id_is'                  => '外部 ID 不为“:value”',
     'search_modifier_no_external_url'                     => '交易没有外部链接',
+    'search_modifier_no_external_id'                      => 'The transaction has no external ID',
     'search_modifier_not_any_external_url'                => '交易没有外部链接',
+    'search_modifier_not_any_external_id'                 => 'The transaction has no external ID',
     'search_modifier_any_external_url'                    => '交易必须有一个（或任意多个）外部链接',
+    'search_modifier_any_external_id'                     => 'The transaction must have a (any) external ID',
     'search_modifier_not_no_external_url'                 => '交易必须有一个（或任意多个）外部链接',
+    'search_modifier_not_no_external_id'                  => 'The transaction must have a (any) external ID',
     'search_modifier_internal_reference_is'               => '内部引用为“:value”',
     'search_modifier_not_internal_reference_is'           => '内部引用不为“:value”',
     'search_modifier_description_starts'                  => '描述开头为“:value”',
@@ -675,6 +679,7 @@ return [
     'search_modifier_not_attachment_notes_contains'       => 'Any attachment\'s notes do not contain ":value"',
     'search_modifier_not_attachment_notes_starts'         => 'Any attachment\'s notes start with ":value"',
     'search_modifier_not_attachment_notes_ends'           => 'Any attachment\'s notes do not end with ":value"',
+    'search_modifier_sepa_ct_is'                          => 'SEPA CT is ":value"',
     'update_rule_from_query'                              => '从搜索语句更新规则“:rule”',
     'create_rule_from_query'                              => '从搜索语句创建新规则',
     'rule_from_search_words'                              => '规则引擎无法处理“:string”。符合搜索语句的建议规则可能会给出不同的结果，请仔细确认规则触发条件。',
@@ -898,6 +903,8 @@ return [
     'rule_trigger_no_external_url_choice'                 => '交易没有外部链接',
     'rule_trigger_id_choice'                              => '交易ID为...',
     'rule_trigger_id'                                     => '交易ID为":trigger_value"',
+    'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
+    'rule_trigger_sepa_ct_is'                             => 'SEPA CT is ":trigger_value"',
 
     // new values:
     'rule_trigger_user_action_choice'                     => 'User action is ":trigger_value"',
@@ -1487,7 +1494,7 @@ return [
     'title_transfer'                            => '转账',
     'title_transfers'                           => '转账',
     'submission_options'                        => 'Submission options',
-    'apply_rules_checkbox'                     => '应用规则',
+    'apply_rules_checkbox'                      => '应用规则',
     'fire_webhooks_checkbox'                    => '触发 webhook',
 
     // convert stuff:
@@ -2185,6 +2192,7 @@ return [
     'no_tags'                                   => '(无标签)',
 
     // piggy banks:
+    'event_history'                             => 'Event history',
     'add_money_to_piggy'                        => '存入存钱罐 “:name”',
     'piggy_bank'                                => '存钱罐',
     'new_piggy_bank'                            => '新存钱罐',
@@ -2443,6 +2451,8 @@ return [
     'no_bills_create_default'               => '创建账单',
 
     // recurring transactions
+    'create_right_now'                      => 'Create right now',
+    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => '定期交易',
     'repeat_until_in_past'                  => '此定期交易已于 :date 停止重复。',
     'recurring_calendar_view'               => '日历',

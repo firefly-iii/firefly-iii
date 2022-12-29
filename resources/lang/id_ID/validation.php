@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => 'Perlu untuk mendapatkan sebuah ID akun tujuan yang valid dan/atau nama akun tujuan yang valid untuk melanjutkan.',
     'withdrawal_dest_bad_data'    => 'Tidak dapat menemukan sebuah akun tujuan yang valid saat mencari ID ":id" atau nama ":name".',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => 'Tidak dapat menemukan sebuah akun sumber yang valid saat mencari ID ":id" atau nama ":name".',
 
     'deposit_source_need_data' => 'Perlu untuk mendapatkan sebuah ID akun sumber yang valid dan/atau nama akun sumber yang valid untuk melanjutkan.',

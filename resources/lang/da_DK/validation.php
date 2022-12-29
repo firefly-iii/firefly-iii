@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => 'Det er nødvendigt at have et gyldigt destinationskonto ID og/eller gyldigt destinationskontonavn for at fortsætte.',
     'withdrawal_dest_bad_data'    => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller navn ":name".',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => 'Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller kontonavn ":name".',
 
     'deposit_source_need_data' => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',

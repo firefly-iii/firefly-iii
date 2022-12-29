@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => 'Egy érvényes célszámla azonosító és/vagy egy érvényes célszámla név kell a folytatáshoz.',
     'withdrawal_dest_bad_data'    => 'Nem található érvényes célszámla ":id" azonosító vagy ":name" név keresésekor.',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Egy érvényes forrásszámla azonosító és/vagy egy érvényes forrásszámla név kell a folytatáshoz.',

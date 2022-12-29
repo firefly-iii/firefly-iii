@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => 'Щоб продовжити, необхідно вказати дійсний ID рахунку і/або його назву.',
     'withdrawal_dest_bad_data'    => 'Не вдалося знайти дійсний рахунок з ID ":id" або іменем ":name".',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Щоб продовжити, необхідно вказати дійсний ID вихідного рахунку і/або його назву.',

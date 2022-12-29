@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
     'withdrawal_dest_bad_data'    => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
 
     'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
