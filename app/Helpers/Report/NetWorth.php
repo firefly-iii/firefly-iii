@@ -32,8 +32,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  *
@@ -44,7 +44,7 @@ class NetWorth implements NetWorthInterface
     private AccountRepositoryInterface $accountRepository;
 
     private CurrencyRepositoryInterface $currencyRepos;
-    private User $user;
+    private User                        $user;
 
     /**
      * Returns the user's net worth in an array with the following layout:
@@ -57,8 +57,8 @@ class NetWorth implements NetWorthInterface
      * This repeats for each currency the user has transactions in.
      * Result of this method is cached.
      *
-     * @param Collection $accounts
-     * @param Carbon     $date
+     * @param  Collection  $accounts
+     * @param  Carbon  $date
      *
      * @return array
      * @throws JsonException
@@ -89,7 +89,7 @@ class NetWorth implements NetWorthInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d: "%s"', $account->id, $account->name));
-            $currencyId = (int) $this->accountRepository->getMetaValue($account, 'currency_id');
+            $currencyId = (int)$this->accountRepository->getMetaValue($account, 'currency_id');
             $currencyId = 0 === $currencyId ? $default->id : $currencyId;
 
             Log::debug(sprintf('Currency ID is #%d', $currencyId));
@@ -100,7 +100,7 @@ class NetWorth implements NetWorthInterface
             Log::debug(sprintf('Balance for %s is %s', $date->format('Y-m-d'), $balance));
 
             // always subtract virtual balance.
-            $virtualBalance = (string) $account->virtual_balance;
+            $virtualBalance = (string)$account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance = bcsub($balance, $virtualBalance);
             }
@@ -129,7 +129,7 @@ class NetWorth implements NetWorthInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {
@@ -159,19 +159,19 @@ class NetWorth implements NetWorthInterface
             $balance  = $balances[$account->id] ?? '0';
 
             // always subtract virtual balance.
-            $virtualBalance = (string) $account->virtual_balance;
+            $virtualBalance = (string)$account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance = bcsub($balance, $virtualBalance);
             }
 
             $return[$currency->id]        = $return[$currency->id] ?? [
-                    'id'             => (string) $currency->id,
-                    'name'           => $currency->name,
-                    'symbol'         => $currency->symbol,
-                    'code'           => $currency->code,
-                    'decimal_places' => $currency->decimal_places,
-                    'sum'            => '0',
-                ];
+                'id'             => (string)$currency->id,
+                'name'           => $currency->name,
+                'symbol'         => $currency->symbol,
+                'code'           => $currency->code,
+                'decimal_places' => $currency->decimal_places,
+                'sum'            => '0',
+            ];
             $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $balance);
         }
 
@@ -187,7 +187,7 @@ class NetWorth implements NetWorthInterface
         $filtered = new Collection();
         /** @var Account $account */
         foreach ($accounts as $account) {
-            if (1 === (int) $this->accountRepository->getMetaValue($account, 'include_net_worth')) {
+            if (1 === (int)$this->accountRepository->getMetaValue($account, 'include_net_worth')) {
                 $filtered->push($account);
             }
         }

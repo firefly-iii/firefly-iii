@@ -81,14 +81,14 @@ class DebugController extends Controller
     /**
      * Clear log and session.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
      */
     public function flush(Request $request)
     {
         app('preferences')->mark();
-        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range','temp-mfa-secret','temp-mfa-codes']);
+        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
         Log::debug('Call cache:clear...');
         Artisan::call('cache:clear');
         Log::debug('Call config:clear...');
@@ -112,7 +112,7 @@ class DebugController extends Controller
     /**
      * Show debug info.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return Factory|View
      * @throws FireflyException
@@ -142,10 +142,10 @@ class DebugController extends Controller
         $logChannel      = config('logging.default');
         $appLogLevel     = config('logging.level');
         $displayErrors   = ini_get('display_errors');
-        $errorReporting  = $this->errorReporting((int) ini_get('error_reporting'));
+        $errorReporting  = $this->errorReporting((int)ini_get('error_reporting'));
         $interface       = PHP_SAPI;
-        $defaultLanguage = (string) config('firefly.default_language');
-        $defaultLocale   = (string) config('firefly.default_locale');
+        $defaultLanguage = (string)config('firefly.default_language');
+        $defaultLocale   = (string)config('firefly.default_locale');
         $bcscale         = bcscale();
         $drivers         = implode(', ', DB::availableDrivers());
         $currentDriver   = DB::getDriverName();
@@ -196,7 +196,7 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
+            $logContent = 'Truncated from this point <----|'.substr($logContent, -8192);
         }
 
         return view(
@@ -247,21 +247,59 @@ class DebugController extends Controller
     public function routes(): string
     {
         $set    = RouteFacade::getRoutes();
-        $ignore = ['chart.', 'javascript.', 'json.', 'report-data.', 'popup.', 'debugbar.', 'attachments.download', 'attachments.preview',
-                   'bills.rescan', 'budgets.income', 'currencies.def', 'error', 'flush', 'help.show',
-                   'login', 'logout', 'password.reset', 'profile.confirm-email-change', 'profile.undo-email-change',
-                   'register', 'report.options', 'routes', 'rule-groups.down', 'rule-groups.up', 'rules.up', 'rules.down',
-                   'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
-                   'two-factor.lost', 'reports.options', 'debug',
-                   'preferences.delete-code', 'rules.test-triggers', 'piggy-banks.remove-money', 'piggy-banks.add-money',
-                   'accounts.reconcile.transactions', 'accounts.reconcile.overview',
-                   'transactions.clone', 'two-factor.index', 'api.v1', 'installer.', 'attachments.view', 'recurring.events',
-                   'recurring.suggest',
+        $ignore = [
+            'chart.',
+            'javascript.',
+            'json.',
+            'report-data.',
+            'popup.',
+            'debugbar.',
+            'attachments.download',
+            'attachments.preview',
+            'bills.rescan',
+            'budgets.income',
+            'currencies.def',
+            'error',
+            'flush',
+            'help.show',
+            'login',
+            'logout',
+            'password.reset',
+            'profile.confirm-email-change',
+            'profile.undo-email-change',
+            'register',
+            'report.options',
+            'routes',
+            'rule-groups.down',
+            'rule-groups.up',
+            'rules.up',
+            'rules.down',
+            'rules.select',
+            'search.search',
+            'test-flash',
+            'transactions.link.delete',
+            'transactions.link.switch',
+            'two-factor.lost',
+            'reports.options',
+            'debug',
+            'preferences.delete-code',
+            'rules.test-triggers',
+            'piggy-banks.remove-money',
+            'piggy-banks.add-money',
+            'accounts.reconcile.transactions',
+            'accounts.reconcile.overview',
+            'transactions.clone',
+            'two-factor.index',
+            'api.v1',
+            'installer.',
+            'attachments.view',
+            'recurring.events',
+            'recurring.suggest',
         ];
         $return = '&nbsp;';
         /** @var Route $route */
         foreach ($set as $route) {
-            $name = (string) $route->getName();
+            $name = (string)$route->getName();
             if (in_array('GET', $route->methods(), true)) {
                 $found = false;
                 foreach ($ignore as $string) {
@@ -271,7 +309,7 @@ class DebugController extends Controller
                     }
                 }
                 if (false === $found) {
-                    $return .= 'touch ' . $route->getName() . '.md;';
+                    $return .= 'touch '.$route->getName().'.md;';
                 }
             }
         }
@@ -282,7 +320,7 @@ class DebugController extends Controller
     /**
      * Flash all types of messages.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
      */

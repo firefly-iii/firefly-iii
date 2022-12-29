@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FiscalHelper.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -25,6 +26,8 @@ namespace FireflyIII\Helpers\Fiscal;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class FiscalHelper.
@@ -43,12 +46,12 @@ class FiscalHelper implements FiscalHelperInterface
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return Carbon date object
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function endOfFiscalYear(Carbon $date): Carbon
     {
@@ -68,12 +71,12 @@ class FiscalHelper implements FiscalHelperInterface
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return Carbon date object
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function startOfFiscalYear(Carbon $date): Carbon
     {
@@ -82,7 +85,7 @@ class FiscalHelper implements FiscalHelperInterface
         if (true === $this->useCustomFiscalYear) {
             $prefStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
             [$mth, $day] = explode('-', $prefStartStr);
-            $startDate->day((int) $day)->month((int) $mth);
+            $startDate->day((int)$day)->month((int)$mth);
 
             // if start date is after passed date, sub 1 year.
             if ($startDate > $date) {

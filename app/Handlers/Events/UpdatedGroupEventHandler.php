@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UpdatedGroupEventHandler.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -30,7 +31,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
@@ -45,7 +45,7 @@ class UpdatedGroupEventHandler
     /**
      * This method will check all the rules when a journal is updated.
      *
-     * @param UpdatedTransactionGroup $updatedGroupEvent
+     * @param  UpdatedTransactionGroup  $updatedGroupEvent
      */
     public function processRules(UpdatedTransactionGroup $updatedGroupEvent): void
     {
@@ -79,7 +79,7 @@ class UpdatedGroupEventHandler
     }
 
     /**
-     * @param UpdatedTransactionGroup $event
+     * @param  UpdatedTransactionGroup  $event
      */
     public function recalculateCredit(UpdatedTransactionGroup $event): void
     {
@@ -91,7 +91,7 @@ class UpdatedGroupEventHandler
     }
 
     /**
-     * @param UpdatedTransactionGroup $updatedGroupEvent
+     * @param  UpdatedTransactionGroup  $updatedGroupEvent
      */
     public function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
     {
@@ -116,7 +116,7 @@ class UpdatedGroupEventHandler
     /**
      * This method will make sure all source / destination accounts are the same.
      *
-     * @param UpdatedTransactionGroup $updatedGroupEvent
+     * @param  UpdatedTransactionGroup  $updatedGroupEvent
      */
     public function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
     {

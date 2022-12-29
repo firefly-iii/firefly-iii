@@ -36,7 +36,7 @@ use Illuminate\Http\Request;
 class ShowController extends Controller
 {
     /**
-     * @param Account $account
+     * @param  Account  $account
      * @return JsonResponse
      */
     public function show(Request $request, Account $account): JsonResponse

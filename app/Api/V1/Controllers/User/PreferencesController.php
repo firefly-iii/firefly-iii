@@ -59,12 +59,12 @@ class PreferencesController extends Controller
         $collection  = app('preferences')->all();
         $manager     = $this->getManager();
         $count       = $collection->count();
-        $pageSize    = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize    = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $preferences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.preferences.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.preferences.index').$this->buildParams());
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
@@ -82,7 +82,7 @@ class PreferencesController extends Controller
      *
      * Return a single preference by name.
      *
-     * @param Preference $preference
+     * @param  Preference  $preference
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -103,7 +103,7 @@ class PreferencesController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/preferences/storePreference
      *
-     * @param PreferenceStoreRequest $request
+     * @param  PreferenceStoreRequest  $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -127,8 +127,8 @@ class PreferencesController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/preferences/updatePreference
      *
-     * @param PreferenceUpdateRequest $request
-     * @param Preference              $preference
+     * @param  PreferenceUpdateRequest  $request
+     * @param  Preference  $preference
      *
      * @return JsonResponse
      * @throws FireflyException

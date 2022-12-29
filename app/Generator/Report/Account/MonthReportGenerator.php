@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MonthReportGenerator.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -43,8 +44,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Generate the report.
-     * @throws FireflyException
      * @return string
+     * @throws FireflyException
      */
     public function generate(): string
     {
@@ -80,7 +81,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set accounts.
      *
-     * @param Collection $accounts
+     * @param  Collection  $accounts
      *
      * @return ReportGeneratorInterface
      */
@@ -94,7 +95,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set budgets.
      *
-     * @param Collection $budgets
+     * @param  Collection  $budgets
      *
      * @return ReportGeneratorInterface
      */
@@ -106,7 +107,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set categories.
      *
-     * @param Collection $categories
+     * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
      */
@@ -118,7 +119,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set end date.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -132,7 +133,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set expense collection.
      *
-     * @param Collection $expense
+     * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
      */
@@ -146,7 +147,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set start date.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -160,7 +161,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set collection of tags.
      *
-     * @param Collection $tags
+     * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
      */

@@ -48,8 +48,8 @@ class GracefulNotFoundHandler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param Request   $request
-     * @param Throwable $e
+     * @param  Request  $request
+     * @param  Throwable  $e
      *
      * @return Application|JsonResponse|\Illuminate\Http\Response|Redirector|RedirectResponse|Response
      * @throws Throwable
@@ -135,8 +135,8 @@ class GracefulNotFoundHandler extends ExceptionHandler
     }
 
     /**
-     * @param Request   $request
-     * @param Throwable $exception
+     * @param  Request  $request
+     * @param  Throwable  $exception
      *
      * @return Redirector|Response
      * @throws Throwable
@@ -145,14 +145,14 @@ class GracefulNotFoundHandler extends ExceptionHandler
     {
         Log::debug('404 page is probably a deleted account. Redirect to overview of account types.');
         /** @var User $user */
-        $user      = auth()->user();
-        $route     = $request->route();
+        $user  = auth()->user();
+        $route = $request->route();
         $param = $route->parameter('account');
         if ($param instanceof Account) {
-            $accountId = (int) $param->id;
+            $accountId = (int)$param->id;
         }
         if (!($param instanceof Account)) {
-            $accountId = (int) $param;
+            $accountId = (int)$param;
         }
         /** @var Account $account */
         $account = $user->accounts()->with(['accountType'])->withTrashed()->find($accountId);
@@ -169,8 +169,8 @@ class GracefulNotFoundHandler extends ExceptionHandler
     }
 
     /**
-     * @param Request   $request
-     * @param Throwable $exception
+     * @param  Request  $request
+     * @param  Throwable  $exception
      *
      * @return RedirectResponse|\Illuminate\Http\Response|Redirector|Response
      * @throws Throwable
@@ -181,7 +181,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var User $user */
         $user    = auth()->user();
         $route   = $request->route();
-        $groupId = (int) $route->parameter('transactionGroup');
+        $groupId = (int)$route->parameter('transactionGroup');
 
         /** @var TransactionGroup $group */
         $group = $user->transactionGroups()->withTrashed()->find($groupId);
@@ -208,8 +208,8 @@ class GracefulNotFoundHandler extends ExceptionHandler
     }
 
     /**
-     * @param Request   $request
-     * @param Throwable $exception
+     * @param  Request  $request
+     * @param  Throwable  $exception
      *
      * @return RedirectResponse|Redirector|Response
      * @throws Throwable
@@ -220,7 +220,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var User $user */
         $user         = auth()->user();
         $route        = $request->route();
-        $attachmentId = (int) $route->parameter('attachment');
+        $attachmentId = (int)$route->parameter('attachment');
         /** @var Attachment $attachment */
         $attachment = $user->attachments()->withTrashed()->find($attachmentId);
         if (null === $attachment) {

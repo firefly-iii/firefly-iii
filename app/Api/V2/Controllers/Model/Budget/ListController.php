@@ -30,7 +30,6 @@ use FireflyIII\Transformers\V2\BudgetTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class ListController extends Controller
 {
@@ -52,8 +51,8 @@ class ListController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $collection  = $this->repository->getActiveBudgets();
-        $total = $collection->count();
+        $collection = $this->repository->getActiveBudgets();
+        $total      = $collection->count();
         $collection->slice($this->pageSize * $this->parameters->get('page'), $this->pageSize);
 
         $paginator   = new LengthAwarePaginator($collection, $total, $this->pageSize, $this->parameters->get('page'));

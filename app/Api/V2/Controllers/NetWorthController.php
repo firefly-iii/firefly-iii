@@ -57,7 +57,7 @@ class NetWorthController extends Controller
     }
 
     /**
-     * @param SingleDateRequest $request
+     * @param  SingleDateRequest  $request
      * @return JsonResponse
      */
     public function get(SingleDateRequest $request): JsonResponse

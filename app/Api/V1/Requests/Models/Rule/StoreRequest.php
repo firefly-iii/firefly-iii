@@ -79,8 +79,8 @@ class StoreRequest extends FormRequest
                 $return[] = [
                     'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -100,8 +100,8 @@ class StoreRequest extends FormRequest
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -129,12 +129,12 @@ class StoreRequest extends FormRequest
             'rule_group_id'              => 'belongsToUser:rule_groups|required_without:rule_group_title',
             'rule_group_title'           => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
             'trigger'                    => 'required|in:store-journal,update-journal',
-            'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
-            'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue',
+            'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
+            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue',
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
-            'actions.*.type'             => 'required|in:' . implode(',', $validActions),
-            'actions.*.value'            => 'required_if:actions.*.type,' . $contextActions . '|ruleActionValue',
+            'actions.*.type'             => 'required|in:'.implode(',', $validActions),
+            'actions.*.value'            => 'required_if:actions.*.type,'.$contextActions.'|ruleActionValue',
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
             'strict'                     => [new IsBoolean()],
@@ -146,7 +146,7 @@ class StoreRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -165,7 +165,7 @@ class StoreRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no triggers in the array of data.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function atLeastOneTrigger(Validator $validator): void
     {
@@ -173,14 +173,14 @@ class StoreRequest extends FormRequest
         $triggers = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
 
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function atLeastOneAction(Validator $validator): void
     {
@@ -188,14 +188,14 @@ class StoreRequest extends FormRequest
         $actions = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }
 
     /**
      * Adds an error to the validator when there are no ACTIVE triggers in the array of data.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function atLeastOneActiveTrigger(Validator $validator): void
     {
@@ -217,14 +217,14 @@ class StoreRequest extends FormRequest
             }
         }
         if (true === $allInactive) {
-            $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_trigger'));
+            $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_trigger'));
         }
     }
 
     /**
      * Adds an error to the validator when there are no ACTIVE actions in the array of data.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function atLeastOneActiveAction(Validator $validator): void
     {
@@ -246,7 +246,7 @@ class StoreRequest extends FormRequest
             }
         }
         if (true === $allInactive) {
-            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
+            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_action'));
         }
     }
 }

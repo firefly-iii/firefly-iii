@@ -1,4 +1,5 @@
 <?php
+
 /**
  * YearReportGenerator.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -71,7 +72,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Set the accounts.
      *
-     * @param Collection $accounts
+     * @param  Collection  $accounts
      *
      * @return ReportGeneratorInterface
      */
@@ -85,7 +86,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Unused budget setter.
      *
-     * @param Collection $budgets
+     * @param  Collection  $budgets
      *
      * @return ReportGeneratorInterface
      */
@@ -97,7 +98,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Unused categories setter.
      *
-     * @param Collection $categories
+     * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
      */
@@ -109,7 +110,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Set the end date.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -123,7 +124,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Set the expenses used.
      *
-     * @param Collection $expense
+     * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
      */
@@ -135,7 +136,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Set the start date.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -149,7 +150,7 @@ class YearReportGenerator implements ReportGeneratorInterface
     /**
      * Unused tags setter.
      *
-     * @param Collection $tags
+     * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
      */

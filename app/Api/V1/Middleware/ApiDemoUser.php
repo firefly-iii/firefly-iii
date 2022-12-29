@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ApiDemoUser.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,8 +35,8 @@ class ApiDemoUser
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request  $request
+     * @param  Closure  $next
      *
      * @return mixed
      */

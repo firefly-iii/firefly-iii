@@ -36,7 +36,7 @@ class TagFactory
     private User $user;
 
     /**
-     * @param string $tag
+     * @param  string  $tag
      *
      * @return Tag|null
      */
@@ -73,15 +73,15 @@ class TagFactory
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Tag|null
      */
     public function create(array $data): ?Tag
     {
-        $zoomLevel = 0 === (int) $data['zoom_level'] ? null : (int) $data['zoom_level'];
-        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude']; // intentional float
-        $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude']; // intentional float
+        $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
+        $latitude  = 0.0 === (float)$data['latitude'] ? null : (float)$data['latitude'];   // intentional float
+        $longitude = 0.0 === (float)$data['longitude'] ? null : (float)$data['longitude']; // intentional float
         $array     = [
             'user_id'     => $this->user->id,
             'tag'         => trim($data['tag']),
@@ -107,7 +107,7 @@ class TagFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

@@ -37,6 +37,7 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -90,7 +91,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      */
     private function runWebhook(Webhook $webhook): void
     {
@@ -102,10 +103,10 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param Webhook $webhook
-     * @param Model   $model
+     * @param  Webhook  $webhook
+     * @param  Model  $model
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
@@ -178,7 +179,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return Collection
      */
@@ -197,8 +198,8 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param Webhook $webhook
-     * @param array   $message
+     * @param  Webhook  $webhook
+     * @param  array  $message
      *
      * @return void
      */
@@ -215,7 +216,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param Collection $objects
+     * @param  Collection  $objects
      */
     public function setObjects(Collection $objects): void
     {
@@ -223,7 +224,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param int $trigger
+     * @param  int  $trigger
      */
     public function setTrigger(int $trigger): void
     {
@@ -231,7 +232,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

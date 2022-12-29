@@ -86,7 +86,7 @@ class UpdateRequest extends FormRequest
         $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
 
         /** @var Webhook $webhook */
-        $webhook    = $this->route()->parameter('webhook');
+        $webhook = $this->route()->parameter('webhook');
 
         return [
             'title'    => sprintf('between:1,512|uniqueObjectForUser:webhooks,title,%d', $webhook->id),

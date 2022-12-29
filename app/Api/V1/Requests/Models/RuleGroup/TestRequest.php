@@ -50,7 +50,7 @@ class TestRequest extends FormRequest
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
      *
      * @return Carbon|null
      */

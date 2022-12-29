@@ -80,33 +80,6 @@ class UserEventHandler
     }
 
     /**
-     * @param  InvitationCreated  $event
-     * @return void
-     */
-    public function sendRegistrationInvite(InvitationCreated $event): void
-    {
-        $invitee = $event->invitee->email;
-        $admin   = $event->invitee->user->email;
-        $url     = route('invite', [$event->invitee->invite_code]);
-        try {
-            Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-    }
-
-    /**
-     * @param  RegisteredUser  $event
-     * @return bool
-     */
-    public function createExchangeRates(RegisteredUser $event): void
-    {
-        $seeder = new ExchangeRateSeeder();
-        $seeder->run();
-    }
-
-    /**
      * Fires to see if a user is admin.
      *
      * @param  Login  $event
@@ -136,6 +109,16 @@ class UserEventHandler
             // give user the role
             $repository->attachRole($user, 'owner');
         }
+    }
+
+    /**
+     * @param  RegisteredUser  $event
+     * @return bool
+     */
+    public function createExchangeRates(RegisteredUser $event): void
+    {
+        $seeder = new ExchangeRateSeeder();
+        $seeder->run();
     }
 
     /**
@@ -233,6 +216,24 @@ class UserEventHandler
     }
 
     /**
+     * @param  RegisteredUser  $event
+     */
+    public function sendAdminRegistrationNotification(RegisteredUser $event): void
+    {
+        $sendMail = FireflyConfig::get('notification_admin_new_reg', true)->data;
+        if ($sendMail) {
+            /** @var UserRepositoryInterface $repository */
+            $repository = app(UserRepositoryInterface::class);
+            $all        = $repository->all();
+            foreach ($all as $user) {
+                if ($repository->hasRole($user, 'owner')) {
+                    Notification::send($user, new AdminRegistrationNotification($event->user));
+                }
+            }
+        }
+    }
+
+    /**
      * Send email to confirm email change. Will not be made into a notification, because
      * this requires some custom fields from the user and not just the "user" object.
      *
@@ -290,6 +291,23 @@ class UserEventHandler
     }
 
     /**
+     * @param  InvitationCreated  $event
+     * @return void
+     */
+    public function sendRegistrationInvite(InvitationCreated $event): void
+    {
+        $invitee = $event->invitee->email;
+        $admin   = $event->invitee->user->email;
+        $url     = route('invite', [$event->invitee->invite_code]);
+        try {
+            Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            throw new FireflyException($e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
      * This method will send the user a registration mail, welcoming him or her to Firefly III.
      * This message is only sent when the configuration of Firefly III says so.
      *
@@ -301,24 +319,6 @@ class UserEventHandler
         $sendMail = FireflyConfig::get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             Notification::send($event->user, new UserRegistrationNotification());
-        }
-    }
-
-    /**
-     * @param  RegisteredUser  $event
-     */
-    public function sendAdminRegistrationNotification(RegisteredUser $event): void
-    {
-        $sendMail = FireflyConfig::get('notification_admin_new_reg', true)->data;
-        if ($sendMail) {
-            /** @var UserRepositoryInterface $repository */
-            $repository = app(UserRepositoryInterface::class);
-            $all        = $repository->all();
-            foreach ($all as $user) {
-                if ($repository->hasRole($user, 'owner')) {
-                    Notification::send($user, new AdminRegistrationNotification($event->user));
-                }
-            }
         }
     }
 

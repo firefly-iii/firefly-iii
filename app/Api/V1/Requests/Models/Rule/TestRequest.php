@@ -56,11 +56,11 @@ class TestRequest extends FormRequest
      */
     private function getPage(): int
     {
-        return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
+        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
      *
      * @return Carbon|null
      */

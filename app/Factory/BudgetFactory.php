@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BudgetFactory.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,15 +34,15 @@ class BudgetFactory
     private User $user;
 
     /**
-     * @param int|null    $budgetId
-     * @param null|string $budgetName
+     * @param  int|null  $budgetId
+     * @param  null|string  $budgetName
      *
      * @return Budget|null
      */
     public function find(?int $budgetId, ?string $budgetName): ?Budget
     {
-        $budgetId   = (int) $budgetId;
-        $budgetName = (string) $budgetName;
+        $budgetId   = (int)$budgetId;
+        $budgetName = (string)$budgetName;
 
         if (0 === $budgetId && '' === $budgetName) {
             return null;
@@ -67,7 +68,7 @@ class BudgetFactory
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      *
      * @return Budget|null
      */
@@ -77,7 +78,7 @@ class BudgetFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

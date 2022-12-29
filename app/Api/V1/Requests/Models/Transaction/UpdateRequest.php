@@ -49,9 +49,9 @@ class UpdateRequest extends FormRequest
     private array $arrayFields;
     private array $booleanFields;
     private array $dateFields;
+    private array $floatFields;
     private array $integerFields;
     private array $stringFields;
-    private array $floatFields;
     private array $textareaFields;
 
     /**
@@ -89,8 +89,8 @@ class UpdateRequest extends FormRequest
         ];
 
         $this->floatFields = [ // not really floats, for validation.
-            'amount',
-            'foreign_amount',
+                               'amount',
+                               'foreign_amount',
         ];
 
         $this->stringFields  = [
@@ -180,8 +180,8 @@ class UpdateRequest extends FormRequest
     /**
      * For each field, add it to the array if a reference is present in the request:
      *
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -189,7 +189,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->integerFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
             }
         }
 
@@ -197,8 +197,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -206,7 +206,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->stringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string) $transaction[$fieldName], false);
+                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName], false);
             }
         }
 
@@ -214,8 +214,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -223,7 +223,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->textareaFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName]);
             }
         }
 
@@ -231,8 +231,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -241,8 +241,8 @@ class UpdateRequest extends FormRequest
         foreach ($this->dateFields as $fieldName) {
             Log::debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                Log::debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
-                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
+                Log::debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
+                $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
             }
         }
 
@@ -250,8 +250,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -259,7 +259,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->booleanFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
             }
         }
 
@@ -267,8 +267,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -277,6 +277,28 @@ class UpdateRequest extends FormRequest
         foreach ($this->arrayFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
                 $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param  array  $current
+     * @param  array  $transaction
+     * @return array
+     */
+    private function getFloatData(array $current, array $transaction): array
+    {
+        foreach ($this->floatFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $value = $transaction[$fieldName];
+                if (is_float($value)) {
+                    $current[$fieldName] = sprintf('%.24f', $value);
+                }
+                if (!is_float($value)) {
+                    $current[$fieldName] = (string)$value;
+                }
             }
         }
 
@@ -368,7 +390,7 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -395,27 +417,5 @@ class UpdateRequest extends FormRequest
                 $this->validateAccountInformationUpdate($validator, $transactionGroup);
             }
         );
-    }
-
-    /**
-     * @param array $current
-     * @param array $transaction
-     * @return array
-     */
-    private function getFloatData(array $current, array $transaction): array
-    {
-        foreach ($this->floatFields as $fieldName) {
-            if (array_key_exists($fieldName, $transaction)) {
-                $value = $transaction[$fieldName];
-                if (is_float($value)) {
-                    $current[$fieldName] = sprintf('%.24f', $value);
-                }
-                if (!is_float($value)) {
-                    $current[$fieldName] = (string) $value;
-                }
-            }
-        }
-
-        return $current;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReportHelper.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -43,7 +44,7 @@ class ReportHelper implements ReportHelperInterface
     /**
      * ReportHelper constructor.
      *
-     * @param BudgetRepositoryInterface $budgetRepository
+     * @param  BudgetRepositoryInterface  $budgetRepository
      */
     public function __construct(BudgetRepositoryInterface $budgetRepository)
     {
@@ -56,9 +57,9 @@ class ReportHelper implements ReportHelperInterface
      *
      * Excludes bills which have not had a payment on the mentioned accounts.
      *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
      *
      * @return array
      */
@@ -112,7 +113,7 @@ class ReportHelper implements ReportHelperInterface
     /**
      * Generate a list of months for the report.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return array
      */
@@ -141,7 +142,7 @@ class ReportHelper implements ReportHelperInterface
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             $months[$year]['months'][] = [
-                'formatted' => $start->isoFormat((string) trans('config.month_js')),
+                'formatted' => $start->isoFormat((string)trans('config.month_js')),
                 'start'     => $start->format('Y-m-d'),
                 'end'       => $currentEnd->format('Y-m-d'),
                 'month'     => $start->month,

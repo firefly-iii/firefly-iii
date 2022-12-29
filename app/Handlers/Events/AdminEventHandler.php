@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AdminEventHandler.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -31,9 +32,6 @@ use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Notification;
-use Log;
-use Mail;
-use Session;
 
 /**
  * Class AdminEventHandler.
@@ -41,26 +39,7 @@ use Session;
 class AdminEventHandler
 {
     /**
-     * Sends a test message to an administrator.
-     *
-     * @param AdminRequestedTestMessage $event
-     *
-     * @return void
-     */
-    public function sendTestMessage(AdminRequestedTestMessage $event): void
-    {
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-
-        if (!$repository->hasRole($event->user, 'owner')) {
-            return;
-        }
-
-        Notification::send($event->user, new TestNotification($event->user->email));
-    }
-
-    /**
-     * @param InvitationCreated $event
+     * @param  InvitationCreated  $event
      * @return void
      */
     public function sendInvitationNotification(InvitationCreated $event): void
@@ -83,7 +62,7 @@ class AdminEventHandler
     /**
      * Send new version message to admin.
      *
-     * @param NewVersionAvailable $event
+     * @param  NewVersionAvailable  $event
      * @return void
      */
     public function sendNewVersion(NewVersionAvailable $event): void
@@ -101,5 +80,24 @@ class AdminEventHandler
                 Notification::send($user, new VersionCheckResult($event->message));
             }
         }
+    }
+
+    /**
+     * Sends a test message to an administrator.
+     *
+     * @param  AdminRequestedTestMessage  $event
+     *
+     * @return void
+     */
+    public function sendTestMessage(AdminRequestedTestMessage $event): void
+    {
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+
+        if (!$repository->hasRole($event->user, 'owner')) {
+            return;
+        }
+
+        Notification::send($event->user, new TestNotification($event->user->email));
     }
 }

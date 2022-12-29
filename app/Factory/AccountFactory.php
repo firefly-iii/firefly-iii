@@ -70,8 +70,8 @@ class AccountFactory
     }
 
     /**
-     * @param string $accountName
-     * @param string $accountType
+     * @param  string  $accountName
+     * @param  string  $accountType
      *
      * @return Account
      * @throws FireflyException
@@ -106,7 +106,7 @@ class AccountFactory
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Account
      * @throws FireflyException
@@ -132,14 +132,14 @@ class AccountFactory
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return AccountType|null
      * @throws FireflyException
      */
     protected function getAccountType(array $data): ?AccountType
     {
-        $accountTypeId   = array_key_exists('account_type_id', $data) ? (int) $data['account_type_id'] : 0;
+        $accountTypeId   = array_key_exists('account_type_id', $data) ? (int)$data['account_type_id'] : 0;
         $accountTypeName = array_key_exists('account_type_name', $data) ? $data['account_type_name'] : null;
         $result          = null;
         // find by name or ID
@@ -167,8 +167,8 @@ class AccountFactory
     }
 
     /**
-     * @param string $accountName
-     * @param string $accountType
+     * @param  string  $accountName
+     * @param  string  $accountType
      *
      * @return Account|null
      */
@@ -180,8 +180,8 @@ class AccountFactory
     }
 
     /**
-     * @param AccountType $type
-     * @param array       $data
+     * @param  AccountType  $type
+     * @param  array  $data
      *
      * @return Account
      * @throws FireflyException
@@ -194,16 +194,17 @@ class AccountFactory
         // create it:
         $virtualBalance = array_key_exists('virtual_balance', $data) ? $data['virtual_balance'] : null;
         $active         = array_key_exists('active', $data) ? $data['active'] : true;
-        $databaseData   = ['user_id'         => $this->user->id,
-                           'account_type_id' => $type->id,
-                           'name'            => $data['name'],
-                           'order'           => 25000,
-                           'virtual_balance' => $virtualBalance,
-                           'active'          => $active,
-                           'iban'            => $data['iban'],
+        $databaseData   = [
+            'user_id'         => $this->user->id,
+            'account_type_id' => $type->id,
+            'name'            => $data['name'],
+            'order'           => 25000,
+            'virtual_balance' => $virtualBalance,
+            'active'          => $active,
+            'iban'            => $data['iban'],
         ];
         // fix virtual balance when it's empty
-        if ('' === (string) $databaseData['virtual_balance']) {
+        if ('' === (string)$databaseData['virtual_balance']) {
             $databaseData['virtual_balance'] = null;
         }
         // remove virtual balance when not an asset account
@@ -248,16 +249,16 @@ class AccountFactory
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @return array
      */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
-        $currencyId   = array_key_exists('currency_id', $data) ? (int) $data['currency_id'] : 0;
-        $currencyCode = array_key_exists('currency_code', $data) ? (string) $data['currency_code'] : '';
-        $accountRole  = array_key_exists('account_role', $data) ? (string) $data['account_role'] : null;
+        $currencyId   = array_key_exists('currency_id', $data) ? (int)$data['currency_id'] : 0;
+        $currencyCode = array_key_exists('currency_code', $data) ? (string)$data['currency_code'] : '';
+        $accountRole  = array_key_exists('account_role', $data) ? (string)$data['account_role'] : null;
         $currency     = $this->getCurrency($currencyId, $currencyCode);
 
         // only asset account may have a role:
@@ -275,8 +276,8 @@ class AccountFactory
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      */
     private function storeMetaData(Account $account, array $data): void
     {
@@ -312,14 +313,14 @@ class AccountFactory
                     $data[$field] = 1;
                 }
 
-                $factory->crud($account, $field, (string) $data[$field]);
+                $factory->crud($account, $field, (string)$data[$field]);
             }
         }
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @throws FireflyException
      */
@@ -340,8 +341,8 @@ class AccountFactory
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @throws FireflyException
      */
@@ -369,8 +370,8 @@ class AccountFactory
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @throws FireflyException
      */
@@ -383,7 +384,7 @@ class AccountFactory
             $order = $maxOrder + 1;
         }
         if (array_key_exists('order', $data)) {
-            $order = (int) ($data['order'] > $maxOrder ? $maxOrder + 1 : $data['order']);
+            $order = (int)($data['order'] > $maxOrder ? $maxOrder + 1 : $data['order']);
             $order = 0 === $order ? $maxOrder + 1 : $order;
         }
 
@@ -393,7 +394,7 @@ class AccountFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

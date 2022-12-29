@@ -55,7 +55,7 @@ class TransactionTypeController extends Controller
      * This endpoint is documented at
      * https://api-docs.firefly-iii.org/#/autocomplete/getTransactionTypesAC
      *
-     * @param AutocompleteRequest $request
+     * @param  AutocompleteRequest  $request
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -70,7 +70,7 @@ class TransactionTypeController extends Controller
         foreach ($types as $type) {
             // different key for consistency.
             $array[] = [
-                'id'   => (string) $type->id,
+                'id'   => (string)$type->id,
                 'name' => $type->type,
                 'type' => $type->type,
             ];

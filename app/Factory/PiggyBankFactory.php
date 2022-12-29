@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PiggyBankFactory.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,15 +34,15 @@ class PiggyBankFactory
     private User $user;
 
     /**
-     * @param int|null    $piggyBankId
-     * @param null|string $piggyBankName
+     * @param  int|null  $piggyBankId
+     * @param  null|string  $piggyBankName
      *
      * @return PiggyBank|null
      */
     public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
-        $piggyBankId   = (int) $piggyBankId;
-        $piggyBankName = (string) $piggyBankName;
+        $piggyBankId   = (int)$piggyBankId;
+        $piggyBankName = (string)$piggyBankName;
         if ('' === $piggyBankName && 0 === $piggyBankId) {
             return null;
         }
@@ -67,7 +68,7 @@ class PiggyBankFactory
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      *
      * @return PiggyBank|null
      */
@@ -77,7 +78,7 @@ class PiggyBankFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

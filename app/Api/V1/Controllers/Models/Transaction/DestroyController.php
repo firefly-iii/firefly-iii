@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -41,8 +40,8 @@ use Log;
  */
 class DestroyController extends Controller
 {
-    private JournalRepositoryInterface $repository;
     private TransactionGroupRepository $groupRepository;
+    private JournalRepositoryInterface $repository;
 
     /**
      * TransactionController constructor.
@@ -74,7 +73,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -114,7 +113,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param TransactionJournal $transactionJournal
+     * @param  TransactionJournal  $transactionJournal
      *
      * @codeCoverageIgnore
      * @return JsonResponse

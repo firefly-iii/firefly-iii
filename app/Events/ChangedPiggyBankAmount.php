@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /*
  * ChangedPiggyBankAmount.php
@@ -35,10 +36,10 @@ class ChangedPiggyBankAmount extends Event
 {
     use SerializesModels;
 
-    public PiggyBank           $piggyBank;
-    public ?TransactionJournal $transactionJournal;
-    public ?TransactionGroup   $transactionGroup;
     public string              $amount;
+    public PiggyBank           $piggyBank;
+    public ?TransactionGroup   $transactionGroup;
+    public ?TransactionJournal $transactionJournal;
 
     /**
      * Create a new event instance.

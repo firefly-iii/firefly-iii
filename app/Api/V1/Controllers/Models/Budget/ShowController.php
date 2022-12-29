@@ -78,7 +78,7 @@ class ShowController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getBudgets();
@@ -87,7 +87,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.index').$this->buildParams());
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
@@ -102,7 +102,7 @@ class ShowController extends Controller
     /**
      * Show a budget.
      *
-     * @param Budget $budget
+     * @param  Budget  $budget
      *
      * @return JsonResponse
      * @codeCoverageIgnore

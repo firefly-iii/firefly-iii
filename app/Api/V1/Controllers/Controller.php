@@ -33,7 +33,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -88,8 +87,8 @@ abstract class Controller extends BaseController
         if ($page < 1) {
             $page = 1;
         }
-        if ($page > (2^16)) {
-            $page = (2^16);
+        if ($page > (2 ^ 16)) {
+            $page = (2 ^ 16);
         }
         $bag->set('page', $page);
 
@@ -101,7 +100,7 @@ abstract class Controller extends BaseController
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse($date);
-                } catch (InvalidDateException | InvalidFormatException $e) {
+                } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
                     app('log')->warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', $date, $e->getMessage()));
                 }
@@ -123,7 +122,7 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * @param ParameterBag $bag
+     * @param  ParameterBag  $bag
      *
      * @return ParameterBag
      */
@@ -172,7 +171,7 @@ abstract class Controller extends BaseController
             $params[$key] = $value;
         }
 
-        return $return . http_build_query($params);
+        return $return.http_build_query($params);
     }
 
     /**
@@ -182,7 +181,7 @@ abstract class Controller extends BaseController
     {
         // create some objects:
         $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         return $manager;

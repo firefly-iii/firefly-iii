@@ -98,7 +98,7 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -108,11 +108,11 @@ class UpdateRequest extends FormRequest
             static function (Validator $validator) {
                 $data = $validator->getData();
                 if (array_key_exists('amount_min', $data) && array_key_exists('amount_max', $data)) {
-                    $min  = $data['amount_min'] ?? '0';
-                    $max  = $data['amount_max'] ?? '0';
+                    $min = $data['amount_min'] ?? '0';
+                    $max = $data['amount_max'] ?? '0';
 
                     if (1 === bccomp($min, $max)) {
-                        $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
+                        $validator->errors()->add('amount_min', (string)trans('validation.amount_min_over_max'));
                     }
                 }
             }

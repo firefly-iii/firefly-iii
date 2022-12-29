@@ -57,7 +57,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportAccounts
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -70,7 +70,7 @@ class ExportController extends Controller
     }
 
     /**
-     * @param string $key
+     * @param  string  $key
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -86,13 +86,13 @@ class ExportController extends Controller
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')
-            ->header('Content-Disposition', 'attachment; filename=' . $fileName)
+            ->header('Content-Disposition', 'attachment; filename='.$fileName)
             ->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string) strlen($data[$key]));
+            ->header('Content-Length', (string)strlen($data[$key]));
 
         return $response;
     }
@@ -101,7 +101,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportBills
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -117,7 +117,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportBudgets
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -133,7 +133,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportCategories
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -149,7 +149,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportPiggies
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -165,7 +165,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportRecurring
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -181,7 +181,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportRules
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -197,7 +197,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportTags
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -213,7 +213,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/exportTransactions
      *
-     * @param ExportRequest $request
+     * @param  ExportRequest  $request
      *
      * @return LaravelResponse
      * @throws FireflyException

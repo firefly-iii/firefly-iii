@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Database\QueryException;
 use Log;
@@ -35,7 +34,7 @@ use Log;
 class TransactionJournalMetaFactory
 {
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return TransactionJournalMeta|null
      */
@@ -60,7 +59,7 @@ class TransactionJournalMetaFactory
             Log::debug('Is a carbon object.');
             $value = $data['data']->toW3cString();
         }
-        if ('' === (string) $value) {
+        if ('' === (string)$value) {
             // Log::debug('Is an empty string.');
             // don't store blank strings.
             if (null !== $entry) {

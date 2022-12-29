@@ -53,7 +53,7 @@ class SumController extends Controller
     }
 
     /**
-     * @param DateRequest $request
+     * @param  DateRequest  $request
      * @return JsonResponse
      */
     public function budgeted(DateRequest $request): JsonResponse
@@ -66,7 +66,7 @@ class SumController extends Controller
     }
 
     /**
-     * @param DateRequest $request
+     * @param  DateRequest  $request
      * @return JsonResponse
      */
     public function spent(DateRequest $request): JsonResponse

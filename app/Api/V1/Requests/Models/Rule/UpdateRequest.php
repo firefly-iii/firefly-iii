@@ -114,8 +114,8 @@ class UpdateRequest extends FormRequest
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -134,7 +134,7 @@ class UpdateRequest extends FormRequest
         $validActions  = array_keys(config('firefly.rule-actions'));
 
         /** @var Rule $rule */
-        $rule          = $this->route()->parameter('rule');
+        $rule = $this->route()->parameter('rule');
 
         // some triggers and actions require text:
         $contextTriggers = implode(',', $this->getTriggersWithContext());
@@ -146,12 +146,12 @@ class UpdateRequest extends FormRequest
             'rule_group_id'              => 'belongsToUser:rule_groups',
             'rule_group_title'           => 'nullable|between:1,255|belongsToUser:rule_groups,title',
             'trigger'                    => 'in:store-journal,update-journal',
-            'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
-            'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue',
+            'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
+            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue',
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
-            'actions.*.type'             => 'required|in:' . implode(',', $validActions),
-            'actions.*.value'            => 'required_if:actions.*.type,' . $contextActions . '|ruleActionValue',
+            'actions.*.type'             => 'required|in:'.implode(',', $validActions),
+            'actions.*.value'            => 'required_if:actions.*.type,'.$contextActions.'|ruleActionValue',
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
             'strict'                     => [new IsBoolean()],
@@ -164,7 +164,7 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -183,7 +183,7 @@ class UpdateRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function atLeastOneTrigger(Validator $validator): void
     {
@@ -191,14 +191,14 @@ class UpdateRequest extends FormRequest
         $triggers = $data['triggers'] ?? null;
         // need at least one trigger
         if (is_array($triggers) && 0 === count($triggers)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
 
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function atLeastOneValidTrigger(Validator $validator): void
     {
@@ -220,14 +220,14 @@ class UpdateRequest extends FormRequest
             }
         }
         if (true === $allInactive) {
-            $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_trigger'));
+            $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_trigger'));
         }
     }
 
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function atLeastOneAction(Validator $validator): void
     {
@@ -235,14 +235,14 @@ class UpdateRequest extends FormRequest
         $actions = $data['actions'] ?? null;
         // need at least one action
         if (is_array($actions) && 0 === count($actions)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }
 
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function atLeastOneValidAction(Validator $validator): void
     {
@@ -265,7 +265,7 @@ class UpdateRequest extends FormRequest
             }
         }
         if (true === $allInactive) {
-            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
+            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_action'));
         }
     }
 }

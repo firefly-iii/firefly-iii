@@ -76,7 +76,7 @@ class AccountController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/charts/getChartAccountOverview
      *
-     * @param DateRequest $request
+     * @param  DateRequest  $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -115,7 +115,7 @@ class AccountController extends Controller
             }
             $currentSet   = [
                 'label'                   => $account->name,
-                'currency_id'             => (string) $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -128,7 +128,7 @@ class AccountController extends Controller
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
             // 2022-10-11 this method no longer converts to float.
-            $previous     = array_values($range)[0];
+            $previous = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
                 $label    = $currentStart->toAtomString();

@@ -58,7 +58,7 @@ class AccountController extends Controller
     /**
      * This endpoint is deprecated and not documented.
      *
-     * @param MoveTransactionsRequest $request
+     * @param  MoveTransactionsRequest  $request
      *
      * @return JsonResponse
      * @deprecated

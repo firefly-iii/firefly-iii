@@ -29,7 +29,6 @@ use FireflyIII\Api\V2\Request\Transaction\ListRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Support\Http\Api\TransactionFilter;
-use FireflyIII\Transformers\V2\PreferenceTransformer;
 use FireflyIII\Transformers\V2\TransactionGroupTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -42,16 +41,16 @@ class AccountController extends Controller
     use TransactionFilter;
 
     /**
-     * @param ListRequest $request
-     * @param Account     $account
+     * @param  ListRequest  $request
+     * @param  Account  $account
      * @return JsonResponse
      */
     public function listTransactions(ListRequest $request, Account $account): JsonResponse
     {
         // collect transactions:
         $type  = $request->get('type') ?? 'default';
-        $limit = (int) $request->get('limit');
-        $page  = (int) $request->get('page');
+        $limit = (int)$request->get('limit');
+        $page  = (int)$request->get('page');
         $page  = max($page, 1);
 
         if ($limit > 0 && $limit <= $this->pageSize) {

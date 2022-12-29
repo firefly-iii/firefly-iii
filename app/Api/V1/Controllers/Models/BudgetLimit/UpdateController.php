@@ -67,16 +67,16 @@ class UpdateController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateRequest $request
-     * @param Budget        $budget
-     * @param BudgetLimit   $budgetLimit
+     * @param  UpdateRequest  $request
+     * @param  Budget  $budget
+     * @param  BudgetLimit  $budgetLimit
      *
      * @return JsonResponse
      * @throws FireflyException
      */
     public function update(UpdateRequest $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
-        if ((int) $budget->id !== (int) $budgetLimit->budget_id) {
+        if ((int)$budget->id !== (int)$budgetLimit->budget_id) {
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
         $data              = $request->getAll();

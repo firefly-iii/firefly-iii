@@ -35,7 +35,7 @@ use Illuminate\Http\JsonResponse;
 class PreferencesController extends Controller
 {
     /**
-     * @param Preference $preference
+     * @param  Preference  $preference
      * @return JsonResponse
      */
     public function get(Preference $preference): JsonResponse

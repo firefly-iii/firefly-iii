@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kernel.php
  * Copyright (c) 2019 james@firefly-iii.org

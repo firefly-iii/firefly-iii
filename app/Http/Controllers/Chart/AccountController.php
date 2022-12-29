@@ -42,6 +42,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountController.
@@ -130,7 +132,7 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
-                        'diff_float'  => (float) $diff, // intentional float
+                        'diff_float'  => (float)$diff, // intentional float
                         'currency_id' => $currencyId,
                     ];
                 }
@@ -327,8 +329,8 @@ class AccountController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function frontpage(AccountRepositoryInterface $repository): JsonResponse
     {
@@ -580,7 +582,7 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => $diff,
-                        'diff_float'  => (float) $diff, // intentional float
+                        'diff_float'  => (float)$diff, // intentional float
                         'currency_id' => $currencyId,
                     ];
                 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * HomeController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,6 +35,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class HomeController.
@@ -56,13 +59,13 @@ class HomeController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index()
     {
         Log::channel('audit')->info('User visits admin index.');
-        $title         = (string) trans('firefly.administration');
+        $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
         $email         = auth()->user()->email;
         $pref          = app('preferences')->get('remote_guard_alt_email');
@@ -89,7 +92,7 @@ class HomeController extends Controller
             }
             FireflyConfig::set(sprintf('notification_%s', $item), $value);
         }
-        $url = (string) $request->get('slackUrl');
+        $url = (string)$request->get('slackUrl');
         if ('' === $url) {
             FireflyConfig::delete('slack_webhook_url');
         }
@@ -97,14 +100,14 @@ class HomeController extends Controller
             FireflyConfig::set('slack_webhook_url', $url);
         }
 
-        session()->flash('success', (string) trans('firefly.notification_settings_saved'));
+        session()->flash('success', (string)trans('firefly.notification_settings_saved'));
         return redirect(route('admin.index'));
     }
 
     /**
      * Send a test message to the admin.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
      */
@@ -115,7 +118,7 @@ class HomeController extends Controller
         $user = auth()->user();
         Log::debug('Now in testMessage() controller.');
         event(new AdminRequestedTestMessage($user));
-        session()->flash('info', (string) trans('firefly.send_test_triggered'));
+        session()->flash('info', (string)trans('firefly.send_test_triggered'));
 
         return redirect(route('admin.index'));
     }

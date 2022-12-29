@@ -72,7 +72,7 @@ class TransactionRequest extends FormRequest
     }
 
     /**
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */

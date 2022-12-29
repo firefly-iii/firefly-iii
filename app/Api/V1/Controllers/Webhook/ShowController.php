@@ -72,13 +72,13 @@ class ShowController extends Controller
     {
         $manager    = $this->getManager();
         $collection = $this->repository->all();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $count      = $collection->count();
         $webhooks   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.webhooks.index').$this->buildParams());
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
@@ -96,7 +96,7 @@ class ShowController extends Controller
      *
      * Show single instance.
      *
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return JsonResponse
      */

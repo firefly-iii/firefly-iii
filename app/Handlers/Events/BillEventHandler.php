@@ -29,7 +29,6 @@ use FireflyIII\Notifications\User\BillReminder;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use Mail;
 
 /**
  * Class BillEventHandler
@@ -37,7 +36,7 @@ use Mail;
 class BillEventHandler
 {
     /**
-     * @param WarnUserAboutBill $event
+     * @param  WarnUserAboutBill  $event
      * @return void
      */
     public function warnAboutBill(WarnUserAboutBill $event): void

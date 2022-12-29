@@ -63,7 +63,7 @@ class ReconcileController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
                 $this->repository    = app(JournalRepositoryInterface::class);
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -76,10 +76,10 @@ class ReconcileController extends Controller
     /**
      * Overview of reconciliation.
      *
-     * @param Request      $request
-     * @param Account|null $account
-     * @param Carbon|null  $start
-     * @param Carbon|null  $end
+     * @param  Request  $request
+     * @param  Account|null  $account
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -176,10 +176,10 @@ class ReconcileController extends Controller
     }
 
     /**
-     * @param Account             $account
-     * @param TransactionCurrency $currency
-     * @param array               $journal
-     * @param string              $amount
+     * @param  Account  $account
+     * @param  TransactionCurrency  $currency
+     * @param  array  $journal
+     * @param  string  $amount
      *
      * @return string
      */
@@ -218,9 +218,9 @@ class ReconcileController extends Controller
     /**
      * Returns a list of transactions in a modal.
      *
-     * @param Account     $account
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Account  $account
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -274,8 +274,8 @@ class ReconcileController extends Controller
     /**
      * "fix" amounts to make it easier on the reconciliation overview:
      *
-     * @param Account $account
-     * @param array   $array
+     * @param  Account  $account
+     * @param  array  $array
      *
      * @return array
      */

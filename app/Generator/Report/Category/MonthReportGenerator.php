@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MonthReportGenerator.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -90,23 +91,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
-     * Set the involved accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface
-    {
-        $this->accounts = $accounts;
-
-        return $this;
-    }
-
-    /**
      * Empty budget setter.
      *
-     * @param Collection $budgets
+     * @param  Collection  $budgets
      *
      * @return ReportGeneratorInterface
      */
@@ -116,23 +103,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
-     * Set the categories involved in this report.
-     *
-     * @param Collection $categories
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setCategories(Collection $categories): ReportGeneratorInterface
-    {
-        $this->categories = $categories;
-
-        return $this;
-    }
-
-    /**
      * Set the end date for this report.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -146,7 +119,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the expenses involved in this report.
      *
-     * @param Collection $expense
+     * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
      */
@@ -158,7 +131,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the start date for this report.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -172,7 +145,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused tag setter.
      *
-     * @param Collection $tags
+     * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
      */
@@ -204,6 +177,34 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $this->expenses = $transactions;
 
         return $transactions;
+    }
+
+    /**
+     * Set the categories involved in this report.
+     *
+     * @param  Collection  $categories
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setCategories(Collection $categories): ReportGeneratorInterface
+    {
+        $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Set the involved accounts.
+     *
+     * @param  Collection  $accounts
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setAccounts(Collection $accounts): ReportGeneratorInterface
+    {
+        $this->accounts = $accounts;
+
+        return $this;
     }
 
     /**

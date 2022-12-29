@@ -313,7 +313,7 @@ class TransactionJournalFactory
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
         $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
         if (false === $json) {
-            $json = json_encode((string) microtime(), JSON_THROW_ON_ERROR);
+            $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR);
             Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
         }
         $hash = hash('sha256', $json);
@@ -397,6 +397,52 @@ class TransactionJournalFactory
         if (false === $validDestination) {
             throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError));
         }
+    }
+
+    /**
+     * Set the user.
+     *
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->currencyRepository->setUser($this->user);
+        $this->tagFactory->setUser($user);
+        $this->billRepository->setUser($this->user);
+        $this->budgetRepository->setUser($this->user);
+        $this->categoryRepository->setUser($this->user);
+        $this->piggyRepository->setUser($this->user);
+        $this->accountRepository->setUser($this->user);
+    }
+
+    /**
+     * @param  Account|null  $sourceAccount
+     * @param  Account|null  $destinationAccount
+     * @return array
+     */
+    private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        if (null !== $sourceAccount && null !== $destinationAccount) {
+            Log::debug('Both accounts exist, simply return them.');
+            return [$sourceAccount, $destinationAccount];
+        }
+        if (null !== $sourceAccount && null === $destinationAccount) {
+            Log::debug('Destination account is NULL, source account is not.');
+            $account = $this->accountRepository->getReconciliation($sourceAccount);
+            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+            return [$sourceAccount, $account];
+        }
+
+        if (null === $sourceAccount && null !== $destinationAccount) {
+            Log::debug('Source account is NULL, destination account is not.');
+            $account = $this->accountRepository->getReconciliation($destinationAccount);
+            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+            return [$account, $destinationAccount];
+        }
+        Log::debug('Unused fallback');
+        return [$sourceAccount, $destinationAccount];
     }
 
     /**
@@ -584,51 +630,5 @@ class TransactionJournalFactory
         if (true === $errorOnHash) {
             Log::info('Will trigger duplication alert for this journal.');
         }
-    }
-
-    /**
-     * Set the user.
-     *
-     * @param  User  $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->currencyRepository->setUser($this->user);
-        $this->tagFactory->setUser($user);
-        $this->billRepository->setUser($this->user);
-        $this->budgetRepository->setUser($this->user);
-        $this->categoryRepository->setUser($this->user);
-        $this->piggyRepository->setUser($this->user);
-        $this->accountRepository->setUser($this->user);
-    }
-
-    /**
-     * @param Account|null $sourceAccount
-     * @param Account|null $destinationAccount
-     * @return array
-     */
-    private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        if (null !== $sourceAccount && null !== $destinationAccount) {
-            Log::debug('Both accounts exist, simply return them.');
-            return [$sourceAccount, $destinationAccount];
-        }
-        if (null !== $sourceAccount && null === $destinationAccount) {
-            Log::debug('Destination account is NULL, source account is not.');
-            $account = $this->accountRepository->getReconciliation($sourceAccount);
-            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
-            return [$sourceAccount, $account];
-        }
-
-        if (null === $sourceAccount && null !== $destinationAccount) {
-            Log::debug('Source account is NULL, destination account is not.');
-            $account = $this->accountRepository->getReconciliation($destinationAccount);
-            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
-            return [$account, $destinationAccount];
-        }
-        Log::debug('Unused fallback');
-        return [$sourceAccount, $destinationAccount];
     }
 }

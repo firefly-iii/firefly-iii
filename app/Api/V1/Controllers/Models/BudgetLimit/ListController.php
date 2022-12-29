@@ -71,9 +71,9 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/#/budgets/listTransactionByBudgetLimit
      * Show all transactions.
      *
-     * @param Request     $request
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
+     * @param  Request  $request
+     * @param  Budget  $budget
+     * @param  BudgetLimit  $budgetLimit
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -81,7 +81,7 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -110,7 +110,7 @@ class ListController extends Controller
         $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         $collector->setTypes($types);
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.budgets.limits.transactions', [$budget->id, $budgetLimit->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.limits.transactions', [$budget->id, $budgetLimit->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

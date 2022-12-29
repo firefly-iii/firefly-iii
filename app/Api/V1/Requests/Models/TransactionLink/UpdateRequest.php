@@ -74,7 +74,7 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -88,7 +88,7 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     private function validateUpdate(Validator $validator): void
     {
@@ -105,8 +105,8 @@ class UpdateRequest extends FormRequest
 
         $inwardId  = $data['inward_id'] ?? $existing->source_id;
         $outwardId = $data['outward_id'] ?? $existing->destination_id;
-        $inward    = $journalRepos->find((int) $inwardId);
-        $outward   = $journalRepos->find((int) $outwardId);
+        $inward    = $journalRepos->find((int)$inwardId);
+        $outward   = $journalRepos->find((int)$outwardId);
         if (null === $inward) {
             $inward = $existing->source;
         }

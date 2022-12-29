@@ -37,9 +37,9 @@ class AccountMetaFactory
     /**
      * Create update or delete meta data.
      *
-     * @param Account $account
-     * @param string  $field
-     * @param string  $value
+     * @param  Account  $account
+     * @param  string  $field
+     * @param  string  $value
      *
      * @return AccountMeta|null
      */
@@ -75,7 +75,7 @@ class AccountMetaFactory
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return AccountMeta|null
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * VersionCheckEventHandler.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -28,6 +29,8 @@ use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class VersionCheckEventHandler
@@ -39,11 +42,11 @@ class VersionCheckEventHandler
     /**
      * Checks with GitHub to see if there is a new version.
      *
-     * @param RequestedVersionCheckStatus $event
+     * @param  RequestedVersionCheckStatus  $event
      *
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @deprecated ?
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
@@ -52,7 +55,7 @@ class VersionCheckEventHandler
 
         // should not check for updates:
         $permission = app('fireflyconfig')->get('permission_update_check', -1);
-        $value      = (int) $permission->data;
+        $value      = (int)$permission->data;
         if (1 !== $value) {
             Log::info('Update check is not enabled.');
             $this->warnToCheckForUpdates($event);
@@ -88,11 +91,11 @@ class VersionCheckEventHandler
     }
 
     /**
-     * @param RequestedVersionCheckStatus $event
+     * @param  RequestedVersionCheckStatus  $event
      *
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {
@@ -118,7 +121,7 @@ class VersionCheckEventHandler
         // last check time was more than a week ago.
         Log::debug('Have warned about a new version in four weeks!');
 
-        session()->flash('info', (string) trans('firefly.disabled_but_check'));
+        session()->flash('info', (string)trans('firefly.disabled_but_check'));
         app('fireflyconfig')->set('last_update_warning', time());
     }
 }

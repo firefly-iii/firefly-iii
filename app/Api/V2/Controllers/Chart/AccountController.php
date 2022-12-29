@@ -56,7 +56,7 @@ class AccountController extends Controller
     }
 
     /**
-     * @param DateRequest $request
+     * @param  DateRequest  $request
      * @return JsonResponse
      */
     public function dashboard(DateRequest $request): JsonResponse
@@ -88,7 +88,7 @@ class AccountController extends Controller
             }
             $currentSet   = [
                 'label'                   => $account->name,
-                'currency_id'             => (string) $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -107,7 +107,7 @@ class AccountController extends Controller
 
             // 2022-10-11: this method no longer converts to floats
 
-            $previous     = array_values($range)[0];
+            $previous = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
                 $label    = $currentStart->toAtomString();
@@ -116,7 +116,7 @@ class AccountController extends Controller
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;
             }
-            $currentSet = $this->cerChartSet($currentSet);
+            $currentSet  = $this->cerChartSet($currentSet);
             $chartData[] = $currentSet;
         }
 

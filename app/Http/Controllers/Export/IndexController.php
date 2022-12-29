@@ -53,7 +53,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-life-bouy');
-                app('view')->share('title', (string) trans('firefly.export_data_title'));
+                app('view')->share('title', (string)trans('firefly.export_data_title'));
                 $this->journalRepository = app(JournalRepositoryInterface::class);
                 $this->middleware(IsDemoUser::class)->except(['index']);
 
@@ -92,7 +92,7 @@ class IndexController extends Controller
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'text/x-csv')
-            ->header('Content-Disposition', 'attachment; filename=' . $quoted)
+            ->header('Content-Disposition', 'attachment; filename='.$quoted)
             //->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MonthReportGenerator.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -82,37 +83,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
-     * Set the involved accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface
-    {
-        $this->accounts = $accounts;
-
-        return $this;
-    }
-
-    /**
-     * Set the involved budgets.
-     *
-     * @param Collection $budgets
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setBudgets(Collection $budgets): ReportGeneratorInterface
-    {
-        $this->budgets = $budgets;
-
-        return $this;
-    }
-
-    /**
      * Unused category setter.
      *
-     * @param Collection $categories
+     * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
      */
@@ -124,7 +97,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the end date of the report.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -138,7 +111,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused expense setter.
      *
-     * @param Collection $expense
+     * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
      */
@@ -150,7 +123,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the start date of the report.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -164,7 +137,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused tags setter.
      *
-     * @param Collection $tags
+     * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
      */
@@ -198,5 +171,33 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $this->expenses = $journals;
 
         return $journals;
+    }
+
+    /**
+     * Set the involved budgets.
+     *
+     * @param  Collection  $budgets
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
+        $this->budgets = $budgets;
+
+        return $this;
+    }
+
+    /**
+     * Set the involved accounts.
+     *
+     * @param  Collection  $accounts
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setAccounts(Collection $accounts): ReportGeneratorInterface
+    {
+        $this->accounts = $accounts;
+
+        return $this;
     }
 }

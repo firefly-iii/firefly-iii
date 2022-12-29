@@ -23,18 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
 use FireflyIII\Events\RequestedReportOnJournals;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Mail\ReportNewJournalsMail;
 use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Facades\Notification;
 use Log;
-use Mail;
 
 /**
  * Class AutomationHandler
@@ -44,7 +39,7 @@ class AutomationHandler
     /**
      * Respond to the creation of X journals.
      *
-     * @param RequestedReportOnJournals $event
+     * @param  RequestedReportOnJournals  $event
      */
     public function reportJournals(RequestedReportOnJournals $event): void
     {
@@ -64,7 +59,7 @@ class AutomationHandler
         // transform groups into array:
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
-        $groups = [];
+        $groups      = [];
         /** @var TransactionGroup $group */
         foreach ($event->groups as $group) {
             $groups[] = $transformer->transformObject($group);

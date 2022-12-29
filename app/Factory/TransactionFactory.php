@@ -58,8 +58,8 @@ class TransactionFactory
     /**
      * Create transaction with negative amount (for source accounts).
      *
-     * @param string      $amount
-     * @param string|null $foreignAmount
+     * @param  string  $amount
+     * @param  string|null  $foreignAmount
      *
      * @return Transaction
      * @throws FireflyException
@@ -77,8 +77,8 @@ class TransactionFactory
     }
 
     /**
-     * @param string      $amount
-     * @param string|null $foreignAmount
+     * @param  string  $amount
+     * @param  string|null  $foreignAmount
      *
      * @return Transaction
      * @throws FireflyException
@@ -138,8 +138,8 @@ class TransactionFactory
     /**
      * Create transaction with positive amount (for destination accounts).
      *
-     * @param string      $amount
-     * @param string|null $foreignAmount
+     * @param  string  $amount
+     * @param  string|null  $foreignAmount
      *
      * @return Transaction
      * @throws FireflyException
@@ -157,7 +157,7 @@ class TransactionFactory
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      *
      * @codeCoverageIgnore
      */
@@ -167,7 +167,7 @@ class TransactionFactory
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      *
      * @codeCoverageIgnore
      */
@@ -177,7 +177,7 @@ class TransactionFactory
     }
 
     /**
-     * @param TransactionCurrency|null $foreignCurrency |null
+     * @param  TransactionCurrency|null  $foreignCurrency  |null
      *
      * @codeCoverageIgnore
      */
@@ -187,7 +187,7 @@ class TransactionFactory
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @codeCoverageIgnore
      */
@@ -197,7 +197,7 @@ class TransactionFactory
     }
 
     /**
-     * @param bool $reconciled
+     * @param  bool  $reconciled
      *
      * @codeCoverageIgnore
      */
@@ -207,7 +207,7 @@ class TransactionFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @codeCoverageIgnore
      */

@@ -34,7 +34,7 @@ use Log;
 class TransactionCurrencyFactory
 {
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return TransactionCurrency
      * @throws FireflyException
@@ -71,15 +71,15 @@ class TransactionCurrencyFactory
     }
 
     /**
-     * @param int|null    $currencyId
-     * @param null|string $currencyCode
+     * @param  int|null  $currencyId
+     * @param  null|string  $currencyCode
      *
      * @return TransactionCurrency|null
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        $currencyCode = (string) $currencyCode;
-        $currencyId   = (int) $currencyId;
+        $currencyCode = (string)$currencyCode;
+        $currencyId   = (int)$currencyId;
 
         if ('' === $currencyCode && 0 === $currencyId) {
             Log::debug('Cannot find anything on empty currency code and empty currency ID!');

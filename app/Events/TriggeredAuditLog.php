@@ -34,11 +34,11 @@ class TriggeredAuditLog extends Event
 {
     use SerializesModels;
 
-    public Model  $changer;
-    public Model  $auditable;
-    public string $field;
-    public mixed  $before;
     public mixed  $after;
+    public Model  $auditable;
+    public mixed  $before;
+    public Model  $changer;
+    public string $field;
 
     /**
      * Create a new event instance.

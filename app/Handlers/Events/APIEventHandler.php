@@ -23,17 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Mail\AccessTokenCreatedMail;
-use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Log;
-use Mail;
-use Session;
 
 /**
  * Class APIEventHandler
@@ -43,7 +38,7 @@ class APIEventHandler
     /**
      * Respond to the creation of an access token.
      *
-     * @param AccessTokenCreated $event
+     * @param  AccessTokenCreated  $event
      *
      * @throws FireflyException
      */
@@ -52,7 +47,7 @@ class APIEventHandler
         Log::debug(__METHOD__);
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find((int) $event->userId);
+        $user       = $repository->find((int)$event->userId);
 
         if (null !== $user) {
             Notification::send($user, new NewAccessToken());

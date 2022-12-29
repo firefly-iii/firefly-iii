@@ -32,7 +32,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
-use JsonException;
 
 /**
  * Class TransactionController
@@ -52,8 +51,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
      */
@@ -78,13 +77,13 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
-            $budget                 = $journal['budget_name'] ?? (string) trans('firefly.no_budget');
+            $budget                 = $journal['budget_name'] ?? (string)trans('firefly.no_budget');
             $title                  = sprintf('%s (%s)', $budget, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
-                    'amount'          => '0',
-                    'currency_symbol' => $journal['currency_symbol'],
-                    'currency_code'   => $journal['currency_code'],
-                ];
+                'amount'          => '0',
+                'currency_symbol' => $journal['currency_symbol'],
+                'currency_code'   => $journal['currency_code'],
+            ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
@@ -94,9 +93,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param string $objectType
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  string  $objectType
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -132,13 +131,13 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
-            $category               = $journal['category_name'] ?? (string) trans('firefly.no_category');
+            $category               = $journal['category_name'] ?? (string)trans('firefly.no_category');
             $title                  = sprintf('%s (%s)', $category, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
-                    'amount'          => '0',
-                    'currency_symbol' => $journal['currency_symbol'],
-                    'currency_code'   => $journal['currency_code'],
-                ];
+                'amount'          => '0',
+                'currency_symbol' => $journal['currency_symbol'],
+                'currency_code'   => $journal['currency_code'],
+            ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
@@ -148,9 +147,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param string $objectType
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  string  $objectType
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -189,10 +188,10 @@ class TransactionController extends Controller
             $name                   = $journal['destination_account_name'];
             $title                  = sprintf('%s (%s)', $name, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
-                    'amount'          => '0',
-                    'currency_symbol' => $journal['currency_symbol'],
-                    'currency_code'   => $journal['currency_code'],
-                ];
+                'amount'          => '0',
+                'currency_symbol' => $journal['currency_symbol'],
+                'currency_code'   => $journal['currency_code'],
+            ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
         $chart = $this->generator->multiCurrencyPieChart($data);
@@ -202,9 +201,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param string $objectType
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  string  $objectType
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -243,10 +242,10 @@ class TransactionController extends Controller
             $name                   = $journal['source_account_name'];
             $title                  = sprintf('%s (%s)', $name, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
-                    'amount'          => '0',
-                    'currency_symbol' => $journal['currency_symbol'],
-                    'currency_code'   => $journal['currency_code'],
-                ];
+                'amount'          => '0',
+                'currency_symbol' => $journal['currency_symbol'],
+                'currency_code'   => $journal['currency_code'],
+            ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
         $chart = $this->generator->multiCurrencyPieChart($data);

@@ -41,7 +41,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  *
@@ -68,7 +71,7 @@ class IndexController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository         = app(BudgetRepositoryInterface::class);
                 $this->opsRepository      = app(OperationsRepositoryInterface::class);
@@ -85,23 +88,23 @@ class IndexController extends Controller
     /**
      * Show all budgets.
      *
-     * @param Request     $request
+     * @param  Request  $request
      *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null) // @phpstan-ignore-line
     {
         Log::debug('Start of IndexController::index()');
 
         // collect some basic vars:
-        $range           = (string) app('preferences')->get('viewRange', '1M')->data;
+        $range           = (string)app('preferences')->get('viewRange', '1M')->data;
         $start           = $start ?? session('start', Carbon::now()->startOfMonth());
         $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -160,8 +163,8 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -192,10 +195,10 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param Collection          $currencies
-     * @param TransactionCurrency $defaultCurrency
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $currencies
+     * @param  TransactionCurrency  $defaultCurrency
      *
      * @return array
      */
@@ -250,7 +253,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @param array $budgets
+     * @param  array  $budgets
      *
      * @return array
      */
@@ -312,8 +315,8 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request                   $request
-     * @param BudgetRepositoryInterface $repository
+     * @param  Request  $request
+     * @param  BudgetRepositoryInterface  $repository
      *
      * @return JsonResponse
      */
@@ -322,7 +325,7 @@ class IndexController extends Controller
         $budgetIds = $request->get('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int) $budgetId;
+            $budgetId = (int)$budgetId;
             $budget   = $repository->find($budgetId);
             if (null !== $budget) {
                 Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));

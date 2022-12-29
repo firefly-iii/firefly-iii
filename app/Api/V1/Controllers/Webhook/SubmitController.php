@@ -58,7 +58,7 @@ class SubmitController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return JsonResponse
      * @codeCoverageIgnore

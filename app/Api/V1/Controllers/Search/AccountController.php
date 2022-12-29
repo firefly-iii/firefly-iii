@@ -61,7 +61,7 @@ class AccountController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/search/searchAccounts
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse|Response
      * @throws JsonException
@@ -70,8 +70,8 @@ class AccountController extends Controller
     {
         Log::debug('Now in account search()');
         $manager = $this->getManager();
-        $query   = trim((string) $request->get('query'));
-        $field   = trim((string) $request->get('field'));
+        $query   = trim((string)$request->get('query'));
+        $field   = trim((string)$request->get('field'));
         $type    = $request->get('type') ?? 'all';
         if ('' === $query || !in_array($field, $this->validFields, true)) {
             return response(null, 422);

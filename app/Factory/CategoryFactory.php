@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CategoryFactory.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -36,16 +37,16 @@ class CategoryFactory
     private User $user;
 
     /**
-     * @param int|null    $categoryId
-     * @param null|string $categoryName
+     * @param  int|null  $categoryId
+     * @param  null|string  $categoryName
      *
      * @return Category|null
      * @throws FireflyException
      */
     public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
     {
-        $categoryId   = (int) $categoryId;
-        $categoryName = (string) $categoryName;
+        $categoryId   = (int)$categoryId;
+        $categoryName = (string)$categoryName;
 
         Log::debug(sprintf('Going to find category with ID %d and name "%s"', $categoryId, $categoryName));
 
@@ -83,7 +84,7 @@ class CategoryFactory
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      *
      * @return Category|null
      */
@@ -93,7 +94,7 @@ class CategoryFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

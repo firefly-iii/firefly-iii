@@ -19,7 +19,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-$finder = PhpCsFixer\Finder::create();
+$current = __DIR__;
+
+$paths = [
+    $current . '/../../app',
+    $current . '/../../config',
+    $current . '/../../database',
+    $current . '/../../routes',
+    $current . '/../../tests',
+    $current . '/../../resources/lang',
+];
+
+$finder = PhpCsFixer\Finder::create()
+                           ->in($paths);
+
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([

@@ -50,7 +50,7 @@ class TriggerRequest extends FormRequest
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
      *
      * @return Carbon|null
      */

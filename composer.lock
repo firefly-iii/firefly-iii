@@ -9368,16 +9368,16 @@
         },
         {
             "name": "nunomaduro/larastan",
-            "version": "2.3.1",
+            "version": "2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/larastan.git",
-                "reference": "2217d0725884fd68f029fe22919edd3f910683d3"
+                "reference": "f5103aaa9ebe050689b7c4f7870563bb2de33f92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/2217d0725884fd68f029fe22919edd3f910683d3",
-                "reference": "2217d0725884fd68f029fe22919edd3f910683d3",
+                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/f5103aaa9ebe050689b7c4f7870563bb2de33f92",
+                "reference": "f5103aaa9ebe050689b7c4f7870563bb2de33f92",
                 "shasum": ""
             },
             "require": {
@@ -9441,7 +9441,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nunomaduro/larastan/issues",
-                "source": "https://github.com/nunomaduro/larastan/tree/2.3.1"
+                "source": "https://github.com/nunomaduro/larastan/tree/2.3.2"
             },
             "funding": [
                 {
@@ -9461,7 +9461,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-12-23T14:56:31+00:00"
+            "time": "2022-12-29T10:58:10+00:00"
         },
         {
             "name": "phar-io/manifest",

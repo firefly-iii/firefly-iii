@@ -36,9 +36,9 @@ use Illuminate\Support\Collection;
 class AutoSum
 {
     /**
-     * @param Collection $objects
-     * @param Closure    $getCurrency
-     * @param Closure    $getSum
+     * @param  Collection  $objects
+     * @param  Closure  $getCurrency
+     * @param  Closure  $getSum
      * @return array
      */
     public function autoSum(Collection $objects, Closure $getCurrency, Closure $getSum): array
@@ -52,13 +52,13 @@ class AutoSum
             $amount = $getSum($object);
 
             $return[$currency->id] = $return[$currency->id] ?? [
-                    'id'             => (string) $currency->id,
-                    'name'           => $currency->name,
-                    'symbol'         => $currency->symbol,
-                    'code'           => $currency->code,
-                    'decimal_places' => $currency->decimal_places,
-                    'sum'            => '0',
-                ];
+                'id'             => (string)$currency->id,
+                'name'           => $currency->name,
+                'symbol'         => $currency->symbol,
+                'code'           => $currency->code,
+                'decimal_places' => $currency->decimal_places,
+                'sum'            => '0',
+            ];
 
             $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
         }

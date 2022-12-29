@@ -38,8 +38,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -64,14 +64,14 @@ class Handler extends ExceptionHandler
             LaravelOAuthException::class,
             TokenMismatchException::class,
             HttpException::class,
-            SuspiciousOperationException::class
+            SuspiciousOperationException::class,
         ];
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param Request   $request
-     * @param Throwable $e
+     * @param  Request  $request
+     * @param  Throwable  $e
      *
      * @return mixed
      * @throws Throwable
@@ -154,7 +154,7 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param Throwable $e
+     * @param  Throwable  $e
      *
      * @return void
      * @throws Throwable
@@ -200,14 +200,14 @@ class Handler extends ExceptionHandler
 
         // create job that will mail.
         $ipAddress = request()->ip() ?? '0.0.0.0';
-        $job       = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
+        $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);
     }
 
     /**
-     * @param Throwable $e
+     * @param  Throwable  $e
      *
      * @return bool
      */
@@ -226,8 +226,8 @@ class Handler extends ExceptionHandler
     /**
      * Convert a validation exception into a response.
      *
-     * @param Request                    $request
-     * @param LaravelValidationException $exception
+     * @param  Request  $request
+     * @param  LaravelValidationException  $exception
      *
      * @return Application|RedirectResponse|Redirector
      */
@@ -245,7 +245,7 @@ class Handler extends ExceptionHandler
     /**
      * Only return the redirectTo property from the exception if it is a valid URL. Return NULL otherwise.
      *
-     * @param LaravelValidationException $exception
+     * @param  LaravelValidationException  $exception
      *
      * @return string|null
      */

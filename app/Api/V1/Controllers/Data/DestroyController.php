@@ -58,7 +58,7 @@ class DestroyController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/data/destroyData
      *
-     * @param DestroyRequest $request
+     * @param  DestroyRequest  $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -97,24 +97,32 @@ class DestroyController extends Controller
             case 'accounts':
                 $this->destroyAccounts(
                     [
-                        AccountType::ASSET, AccountType::DEFAULT,
-                        AccountType::BENEFICIARY, AccountType::EXPENSE,
-                        AccountType::REVENUE, AccountType::INITIAL_BALANCE,
-                        AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD,
+                        AccountType::ASSET,
+                        AccountType::DEFAULT,
+                        AccountType::BENEFICIARY,
+                        AccountType::EXPENSE,
+                        AccountType::REVENUE,
+                        AccountType::INITIAL_BALANCE,
+                        AccountType::DEBT,
+                        AccountType::LOAN,
+                        AccountType::MORTGAGE,
+                        AccountType::CREDITCARD,
                     ]
                 );
                 break;
             case 'asset_accounts':
                 $this->destroyAccounts(
                     [
-                        AccountType::ASSET, AccountType::DEFAULT,
+                        AccountType::ASSET,
+                        AccountType::DEFAULT,
                     ]
                 );
                 break;
             case 'expense_accounts':
                 $this->destroyAccounts(
                     [
-                        AccountType::BENEFICIARY, AccountType::EXPENSE,
+                        AccountType::BENEFICIARY,
+                        AccountType::EXPENSE,
                     ]
                 );
                 break;
@@ -128,7 +136,10 @@ class DestroyController extends Controller
             case 'liabilities':
                 $this->destroyAccounts(
                     [
-                        AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD,
+                        AccountType::DEBT,
+                        AccountType::LOAN,
+                        AccountType::MORTGAGE,
+                        AccountType::CREDITCARD,
                     ]
                 );
                 break;
@@ -256,7 +267,7 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param array $types
+     * @param  array  $types
      */
     private function destroyAccounts(array $types): void
     {
@@ -281,7 +292,7 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param array $types
+     * @param  array  $types
      */
     private function destroyTransactions(array $types): void
     {

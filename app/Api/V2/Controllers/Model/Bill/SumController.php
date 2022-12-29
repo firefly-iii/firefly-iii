@@ -36,6 +36,7 @@ use Illuminate\Http\JsonResponse;
 class SumController extends Controller
 {
     use ConvertsExchangeRates;
+
     private BillRepositoryInterface $repository;
 
     /**
@@ -52,13 +53,13 @@ class SumController extends Controller
     }
 
     /**
-     * @param DateRequest $request
+     * @param  DateRequest  $request
      * @return JsonResponse
      */
-    public function unpaid(DateRequest $request): JsonResponse
+    public function paid(DateRequest $request): JsonResponse
     {
         $dates     = $request->getAll();
-        $result    = $this->repository->sumUnpaidInRange($dates['start'], $dates['end']);
+        $result    = $this->repository->sumPaidInRange($dates['start'], $dates['end']);
         $converted = $this->cerSum($result);
 
         // convert to JSON response:
@@ -66,13 +67,13 @@ class SumController extends Controller
     }
 
     /**
-     * @param DateRequest $request
+     * @param  DateRequest  $request
      * @return JsonResponse
      */
-    public function paid(DateRequest $request): JsonResponse
+    public function unpaid(DateRequest $request): JsonResponse
     {
         $dates     = $request->getAll();
-        $result    = $this->repository->sumPaidInRange($dates['start'], $dates['end']);
+        $result    = $this->repository->sumUnpaidInRange($dates['start'], $dates['end']);
         $converted = $this->cerSum($result);
 
         // convert to JSON response:

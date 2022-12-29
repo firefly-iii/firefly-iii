@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
-use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -37,6 +37,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use JsonException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShowController
@@ -64,7 +67,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -77,16 +80,16 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param Request     $request
-     * @param Account     $account
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Request  $request
+     * @param  Account  $account
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return RedirectResponse|Redirector|Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FireflyException
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null) // @phpstan-ignore-line
     {
@@ -108,19 +111,19 @@ class ShowController extends Controller
         $attachments      = $this->repository->getAttachments($account);
         $today            = today(config('app.timezone'));
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $page             = (int) $request->get('page');
-        $pageSize         = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page             = (int)$request->get('page');
+        $pageSize         = (int)app('preferences')->get('listPageSize', 50)->data;
         $currency         = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
-        $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $subTitle         = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
         // if layout = v2, overrule the page title.
         if ('v1' !== config('firefly.layout')) {
-            $subTitle = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
+            $subTitle = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         }
 
 
@@ -162,14 +165,14 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param Request $request
-     * @param Account $account
+     * @param  Request  $request
+     * @param  Account  $account
      *
      * @return RedirectResponse|Redirector|Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FireflyException
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request, Account $account)
     {
@@ -183,11 +186,11 @@ class ShowController extends Controller
         $end          = today(config('app.timezone'));
         $today        = today(config('app.timezone'));
         $start        = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $page         = (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $subTitle     = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods      = new Collection();
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

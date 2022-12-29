@@ -90,7 +90,7 @@ class UserUpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -103,7 +103,7 @@ class UserUpdateRequest extends FormRequest
                 $isAdmin = auth()->user()->hasRole('owner');
                 // not admin, and not own user?
                 if (auth()->check() && false === $isAdmin && $current?->id !== auth()->user()->id) {
-                    $validator->errors()->add('email', (string) trans('validation.invalid_selection'));
+                    $validator->errors()->add('email', (string)trans('validation.invalid_selection'));
                 }
             }
         );
