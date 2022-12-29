@@ -57,7 +57,7 @@ class TransactionJournalMetaFactory
         }
 
         if ($data['data'] instanceof Carbon) {
-            //Log::debug('Is a carbon object.');
+            Log::debug('Is a carbon object.');
             $value = $data['data']->toW3cString();
         }
         if ('' === (string) $value) {

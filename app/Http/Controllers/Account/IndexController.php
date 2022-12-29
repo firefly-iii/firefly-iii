@@ -166,7 +166,6 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-
                 $interest = (string)$this->repository->getMetaValue($account, 'interest');
                 $interest = '' === $interest ? '0' : $interest;
 

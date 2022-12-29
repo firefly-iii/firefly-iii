@@ -485,7 +485,7 @@ trait AccountServiceTrait
         $sourceName = trans('firefly.liability_credit_description', ['account' => $account->name], $language);
         $destId     = $account->id;
         $destName   = null;
-        if(-1 === bccomp($openingBalance, '0')) {
+        if (-1 === bccomp($openingBalance, '0')) {
             // amount is negative, reverse it
             $sourceId   = $account->id;
             $sourceName = null;

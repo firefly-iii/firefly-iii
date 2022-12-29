@@ -77,7 +77,7 @@ class AmountController extends Controller
         $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, today(config('app.timezone')));
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $maxAmount     = $leftOnAccount;
-        if (0 !== bccomp($piggyBank->targetamount,'0')) {
+        if (0 !== bccomp($piggyBank->targetamount, '0')) {
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = min($leftOnAccount, $leftToSave);
         }
@@ -101,7 +101,7 @@ class AmountController extends Controller
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $maxAmount     = $leftOnAccount;
 
-        if (0 !== bccomp($piggyBank->targetamount,'0')) {
+        if (0 !== bccomp($piggyBank->targetamount, '0')) {
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = min($leftOnAccount, $leftToSave);
         }

@@ -718,6 +718,7 @@ Route::group(
         Route::post('store', ['uses' => 'Recurring\CreateController@store', 'as' => 'store']);
         Route::post('update/{recurrence}', ['uses' => 'Recurring\EditController@update', 'as' => 'update']);
         Route::post('destroy/{recurrence}', ['uses' => 'Recurring\DeleteController@destroy', 'as' => 'destroy']);
+        Route::post('trigger/{recurrence}', ['uses' => 'Recurring\TriggerController@trigger', 'as' => 'trigger']);
 
         // JSON routes:
         Route::get('events', ['uses' => 'Json\RecurrenceController@events', 'as' => 'events']);
