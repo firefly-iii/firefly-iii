@@ -48,7 +48,6 @@ class General extends AbstractExtension
             $this->formatFilesize(),
             $this->mimeIcon(),
             $this->markdown(),
-            $this->floatval(),
             $this->phpHostName(),
         ];
     }
@@ -196,19 +195,6 @@ class General extends AbstractExtension
                 return (string) $converter->convert($text);
             },
             ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return TwigFilter
-     */
-    protected function floatval(): TwigFilter
-    {
-        return new TwigFilter(
-            'floatval',
-            static function ($value): float {
-                return (float) $value;
-            }
         );
     }
 
