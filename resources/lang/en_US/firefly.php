@@ -335,9 +335,13 @@ return [
     'search_modifier_external_id_is'                      => 'External ID is ":value"',
     'search_modifier_not_external_id_is'                  => 'External ID is not ":value"',
     'search_modifier_no_external_url'                     => 'The transaction has no external URL',
+    'search_modifier_no_external_id'                      => 'The transaction has no external ID',
     'search_modifier_not_any_external_url'                => 'The transaction has no external URL',
+    'search_modifier_not_any_external_id'                 => 'The transaction has no external ID',
     'search_modifier_any_external_url'                    => 'The transaction must have a (any) external URL',
+    'search_modifier_any_external_id'                     => 'The transaction must have a (any) external ID',
     'search_modifier_not_no_external_url'                 => 'The transaction must have a (any) external URL',
+    'search_modifier_not_no_external_id'                  => 'The transaction must have a (any) external ID',
     'search_modifier_internal_reference_is'               => 'Internal reference is ":value"',
     'search_modifier_not_internal_reference_is'           => 'Internal reference is not ":value"',
     'search_modifier_description_starts'                  => 'Description starts with ":value"',
@@ -1490,7 +1494,7 @@ return [
     'title_transfer'                            => 'Transfers',
     'title_transfers'                           => 'Transfers',
     'submission_options'                        => 'Submission options',
-    'apply_rules_checkbox'                     => 'Apply rules',
+    'apply_rules_checkbox'                      => 'Apply rules',
     'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:

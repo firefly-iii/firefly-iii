@@ -1306,11 +1306,18 @@ interface GroupCollectorInterface
     public function withCategoryInformation(): GroupCollectorInterface;
 
     /**
-     * Transactions with an external URL
+     * Transactions with any external URL
      *
      * @return GroupCollectorInterface
      */
     public function withExternalUrl(): GroupCollectorInterface;
+
+    /**
+     * Transactions with any external ID
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withExternalId(): GroupCollectorInterface;
 
     /**
      * Transaction must have meta date field X.
@@ -1361,6 +1368,13 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function withoutExternalUrl(): GroupCollectorInterface;
+
+    /**
+     * Transactions without an external ID
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutExternalId(): GroupCollectorInterface;
 
     /**
      * @return GroupCollectorInterface

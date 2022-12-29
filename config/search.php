@@ -232,5 +232,8 @@ return [
         'attachment_notes_end'            => ['alias' => true, 'alias_for' => 'attachment_notes_ends', 'needs_context' => true],
         'exists'                          => ['alias' => false, 'needs_context' => false,],
         'sepa_ct_is'                      => ['alias' => false, 'needs_context' => true],
+        'no_external_id'                  => ['alias' => false, 'needs_context' => false],
+        'any_external_id'                 => ['alias' => false, 'needs_context' => false],
+
     ],
 ];

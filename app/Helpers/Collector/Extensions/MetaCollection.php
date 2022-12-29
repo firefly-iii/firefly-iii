@@ -931,6 +931,18 @@ trait MetaCollection
     }
 
     /**
+     * @inheritDoc
+     */
+    public function withExternalId(): GroupCollectorInterface
+    {
+        $this->joinMetaDataTables();
+        $this->query->where('journal_meta.name', '=', 'external_id');
+        $this->query->whereNotNull('journal_meta.data');
+
+        return $this;
+    }
+
+    /**
      * Limit results to a transactions without a bill.
      *
      * @return GroupCollectorInterface
@@ -981,6 +993,26 @@ trait MetaCollection
                 $q2->whereNull('journal_meta.data');
             })->orWhere(function (Builder $q3) {
                 $q3->where('journal_meta.name', '!=', 'external_url');
+            })->orWhere(function (Builder $q4) {
+                $q4->whereNull('journal_meta.name');
+            });
+        });
+
+        return $this;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function withoutExternalId(): GroupCollectorInterface
+    {
+        $this->joinMetaDataTables();
+        // TODO not sure if this will work properly.
+        $this->query->where(function (Builder $q1) {
+            $q1->where(function (Builder $q2) {
+                $q2->where('journal_meta.name', '=', 'external_id');
+                $q2->whereNull('journal_meta.data');
+            })->orWhere(function (Builder $q3) {
+                $q3->where('journal_meta.name', '!=', 'external_id');
             })->orWhere(function (Builder $q4) {
                 $q4->whereNull('journal_meta.name');
             });
