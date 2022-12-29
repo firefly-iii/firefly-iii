@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => '需要一个有效的目标账户 ID 和/或目标账户名称才能继续',
     'withdrawal_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',
 
     'deposit_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',

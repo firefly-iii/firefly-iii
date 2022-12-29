@@ -130,8 +130,8 @@ trait ModelInformation
         $billTriggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
         $values       = [
             $bill->transactionCurrency()->first()->name,
-            round((float) $bill->amount_min, 24),
-            round((float) $bill->amount_max, 24),
+            $bill->amount_min,
+            $bill->amount_max,
             $bill->name,
         ];
         foreach ($billTriggers as $index => $trigger) {

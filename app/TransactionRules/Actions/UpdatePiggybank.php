@@ -88,13 +88,13 @@ class UpdatePiggybank implements ActionInterface
 
         if ((int)$source->account_id === (int)$piggyBank->account_id) {
             Log::debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
-            $this->removeAmount($journal, $piggyBank, $destination->amount);
+            $this->removeAmount($piggyBank, $journalObj, $destination->amount);
 
             return true;
         }
         if ((int)$destination->account_id === (int)$piggyBank->account_id) {
             Log::debug('Piggy bank account is linked to source, so add amount to piggy bank.');
-            $this->addAmount($journal, $piggyBank, $destination->amount);
+            $this->addAmount($piggyBank, $journalObj, $destination->amount);
 
             return true;
         }
@@ -106,7 +106,7 @@ class UpdatePiggybank implements ActionInterface
             )
         );
 
-        return true;
+        return false;
     }
 
     /**
@@ -140,14 +140,14 @@ class UpdatePiggybank implements ActionInterface
 
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {
-            Log::warning('Amount left is zero, stop.');
+            app('log')->warning('Amount left is zero, stop.');
 
             return;
         }
 
         // make sure we can remove amount:
         if (false === $repository->canRemoveAmount($piggyBank, $amount)) {
-            Log::warning(sprintf('Cannot remove %s from piggy bank.', $amount));
+            app('log')->warning(sprintf('Cannot remove %s from piggy bank.', $amount));
 
             return;
         }
@@ -177,14 +177,14 @@ class UpdatePiggybank implements ActionInterface
 
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {
-            Log::warning('Amount left is zero, stop.');
+            app('log')->warning('Amount left is zero, stop.');
 
             return;
         }
 
         // make sure we can add amount:
         if (false === $repository->canAddAmount($piggyBank, $amount)) {
-            Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
+            app('log')->warning(sprintf('Cannot add %s to piggy bank.', $amount));
 
             return;
         }

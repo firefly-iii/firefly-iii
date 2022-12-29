@@ -335,9 +335,13 @@ return [
     'search_modifier_external_id_is'                      => '外部 ID が「:value」',
     'search_modifier_not_external_id_is'                  => 'External ID is not ":value"',
     'search_modifier_no_external_url'                     => '外部 URL がない取引',
+    'search_modifier_no_external_id'                      => 'The transaction has no external ID',
     'search_modifier_not_any_external_url'                => 'The transaction has no external URL',
+    'search_modifier_not_any_external_id'                 => 'The transaction has no external ID',
     'search_modifier_any_external_url'                    => '外部 URL がある取引',
+    'search_modifier_any_external_id'                     => 'The transaction must have a (any) external ID',
     'search_modifier_not_no_external_url'                 => 'The transaction must have a (any) external URL',
+    'search_modifier_not_no_external_id'                  => 'The transaction must have a (any) external ID',
     'search_modifier_internal_reference_is'               => '内部参照が「:value」',
     'search_modifier_not_internal_reference_is'           => 'Internal reference is not ":value"',
     'search_modifier_description_starts'                  => 'Description starts with ":value"',
@@ -675,6 +679,7 @@ return [
     'search_modifier_not_attachment_notes_contains'       => 'Any attachment\'s notes do not contain ":value"',
     'search_modifier_not_attachment_notes_starts'         => 'Any attachment\'s notes start with ":value"',
     'search_modifier_not_attachment_notes_ends'           => 'Any attachment\'s notes do not end with ":value"',
+    'search_modifier_sepa_ct_is'                          => 'SEPA CT is ":value"',
     'update_rule_from_query'                              => '検索クエリからルール「:rule」を更新',
     'create_rule_from_query'                              => '検索クエリから新しいルールを作成',
     'rule_from_search_words'                              => 'ルールエンジンは「:string」をうまく扱えません。 検索クエリに提案されたルールは、異なる結果をもたらす可能性があります。ルールのトリガーは慎重に検証してください。',
@@ -898,6 +903,8 @@ return [
     'rule_trigger_no_external_url_choice'                 => '取引に外部 URL がない',
     'rule_trigger_id_choice'                              => '取引 ID が…',
     'rule_trigger_id'                                     => '取引 ID が「:trigger_value」',
+    'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
+    'rule_trigger_sepa_ct_is'                             => 'SEPA CT is ":trigger_value"',
 
     // new values:
     'rule_trigger_user_action_choice'                     => 'ユーザーアクションが「:trigger_value」',
@@ -1487,7 +1494,7 @@ return [
     'title_transfer'                            => '送金',
     'title_transfers'                           => '送金',
     'submission_options'                        => 'Submission options',
-    'apply_rules_checkbox'                     => 'Apply rules',
+    'apply_rules_checkbox'                      => 'Apply rules',
     'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
@@ -2185,6 +2192,7 @@ return [
     'no_tags'                                   => '(タグなし)',
 
     // piggy banks:
+    'event_history'                             => 'Event history',
     'add_money_to_piggy'                        => '貯金箱「:name」にお金を追加',
     'piggy_bank'                                => '貯金箱',
     'new_piggy_bank'                            => '新しい貯金箱',
@@ -2443,6 +2451,8 @@ return [
     'no_bills_create_default'               => '請求を作成',
 
     // recurring transactions
+    'create_right_now'                      => 'Create right now',
+    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => '定期的な取引',
     'repeat_until_in_past'                  => 'この繰り返し取引は :date で繰り返し処理を停止しました。',
     'recurring_calendar_view'               => 'カレンダー',

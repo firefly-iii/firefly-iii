@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => 'Om door te gaan moet een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
     'withdrawal_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
 
     'deposit_source_need_data' => 'Om door te gaan moet een geldige bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',

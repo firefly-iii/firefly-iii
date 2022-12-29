@@ -76,7 +76,7 @@ class AccountTransformer extends AbstractTransformer
         [$openingBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType);
         [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
 
-        $openingBalance  = number_format((float) $openingBalance, $decimalPlaces, '.', '');
+        $openingBalance  = app('steam')->bcround($openingBalance, $decimalPlaces);
         $includeNetWorth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
         $longitude       = null;
         $latitude        = null;
@@ -107,7 +107,7 @@ class AccountTransformer extends AbstractTransformer
             'currency_code'           => $currencyCode,
             'currency_symbol'         => $currencySymbol,
             'currency_decimal_places' => $decimalPlaces,
-            'current_balance'         => number_format((float) app('steam')->balance($account, $date), $decimalPlaces, '.', ''),
+            'current_balance'         => app('steam')->bcround(app('steam')->balance($account, $date), $decimalPlaces),
             'current_balance_date'    => $date->toAtomString(),
             'notes'                   => $this->repository->getNoteText($account),
             'monthly_payment_date'    => $monthlyPaymentDate,
@@ -115,7 +115,7 @@ class AccountTransformer extends AbstractTransformer
             'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
             'iban'                    => '' === $account->iban ? null : $account->iban,
             'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
-            'virtual_balance'         => number_format((float) $account->virtual_balance, $decimalPlaces, '.', ''),
+            'virtual_balance'         => app('steam')->bcround($account->virtual_balance, $decimalPlaces),
             'opening_balance'         => $openingBalance,
             'opening_balance_date'    => $openingBalanceDate,
             'liability_type'          => $liabilityType,

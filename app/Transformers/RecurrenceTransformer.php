@@ -198,10 +198,10 @@ class RecurrenceTransformer extends AbstractTransformer
                 $destinationType = $destinationAccount->accountType->type;
                 $destinationIban = $destinationAccount->iban;
             }
-            $amount        = number_format((float) $transaction->amount, $transaction->transactionCurrency->decimal_places, '.', '');
+            $amount        = app('steam')->bcround($transaction->amount, $transaction->transactionCurrency->decimal_places);
             $foreignAmount = null;
             if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
-                $foreignAmount = number_format((float) $transaction->foreign_amount, $foreignCurrencyDp, '.', '');
+                $foreignAmount = app('steam')->bcround($transaction->foreign_amount, $foreignCurrencyDp);
             }
             $transactionArray = [
                 'currency_id'                     => (string) $transaction->transaction_currency_id,

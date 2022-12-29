@@ -194,6 +194,8 @@ return [
     'withdrawal_dest_need_data'   => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
     'withdrawal_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
 
+    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+
     'generic_source_bad_data' => 'Không thể tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
 
     'deposit_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',

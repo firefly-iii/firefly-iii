@@ -335,9 +335,13 @@ return [
     'search_modifier_external_id_is'                      => 'O ID externo é ":value"',
     'search_modifier_not_external_id_is'                  => 'ID Externo não é ":value"',
     'search_modifier_no_external_url'                     => 'A transação não tem URL externa',
+    'search_modifier_no_external_id'                      => 'The transaction has no external ID',
     'search_modifier_not_any_external_url'                => 'A transação não tem URL externa',
+    'search_modifier_not_any_external_id'                 => 'The transaction has no external ID',
     'search_modifier_any_external_url'                    => 'A transação deve ter uma URL externa (qualquer)',
+    'search_modifier_any_external_id'                     => 'The transaction must have a (any) external ID',
     'search_modifier_not_no_external_url'                 => 'A transação deve ter uma URL externa (qualquer)',
+    'search_modifier_not_no_external_id'                  => 'The transaction must have a (any) external ID',
     'search_modifier_internal_reference_is'               => 'A referência interna é ":value"',
     'search_modifier_not_internal_reference_is'           => 'Referência interna não é ":value"',
     'search_modifier_description_starts'                  => 'Descrição começa com ":value"',
@@ -675,6 +679,7 @@ return [
     'search_modifier_not_attachment_notes_contains'       => 'Any attachment\'s notes do not contain ":value"',
     'search_modifier_not_attachment_notes_starts'         => 'Any attachment\'s notes start with ":value"',
     'search_modifier_not_attachment_notes_ends'           => 'Any attachment\'s notes do not end with ":value"',
+    'search_modifier_sepa_ct_is'                          => 'SEPA CT is ":value"',
     'update_rule_from_query'                              => 'Atualizar regra ":rule" da pesquisa',
     'create_rule_from_query'                              => 'Criar nova regra a partir da pesquisa',
     'rule_from_search_words'                              => 'O mecanismo de regra tem dificuldade para tratar ":string". A regra sugerida que se encaixa na sua pesquisa pode retornar resultados diferentes. Por favor, verifique os gatilhos das regras cuidadosamente.',
@@ -898,6 +903,8 @@ return [
     'rule_trigger_no_external_url_choice'                 => 'A transação não tem um link externo',
     'rule_trigger_id_choice'                              => 'O identificador da transação é..',
     'rule_trigger_id'                                     => 'O identificador da transação é ":trigger_value"',
+    'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
+    'rule_trigger_sepa_ct_is'                             => 'SEPA CT is ":trigger_value"',
 
     // new values:
     'rule_trigger_user_action_choice'                     => 'Ação do usuário é ":trigger_value"',
@@ -1487,7 +1494,7 @@ return [
     'title_transfer'                            => 'Transferências',
     'title_transfers'                           => 'Transferências',
     'submission_options'                        => 'Opções de envio',
-    'apply_rules_checkbox'                     => 'Aplicar regras',
+    'apply_rules_checkbox'                      => 'Aplicar regras',
     'fire_webhooks_checkbox'                    => 'Acionar webhooks',
 
     // convert stuff:
@@ -2185,6 +2192,7 @@ return [
     'no_tags'                                   => '(sem etiquetas)',
 
     // piggy banks:
+    'event_history'                             => 'Event history',
     'add_money_to_piggy'                        => 'Adicionar dinheiro ao cofrinho ":name"',
     'piggy_bank'                                => 'Cofrinho',
     'new_piggy_bank'                            => 'Nova poupança',
@@ -2443,6 +2451,8 @@ return [
     'no_bills_create_default'               => 'Criar uma conta',
 
     // recurring transactions
+    'create_right_now'                      => 'Create right now',
+    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Transações recorrentes',
     'repeat_until_in_past'                  => 'Esta transação recorrente parou de repetir em :date.',
     'recurring_calendar_view'               => 'Calendário',

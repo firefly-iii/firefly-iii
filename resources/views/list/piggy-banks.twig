@@ -77,6 +77,7 @@
 
 
                     <td class="hidden-sm hidden-xs" style="width:40px;">
+
                         {% if piggy.left_to_save > 0 or null == piggy.left_to_save %}
                             <a href="{{ route('piggy-banks.add-money', piggy.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggy.id }}">
                                 <span data-id="{{ piggy.id }}" class="fa fa-plus"></span></a>

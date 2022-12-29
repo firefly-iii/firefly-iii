@@ -85,7 +85,7 @@ class UpdateRequest extends FormRequest
             'notes',
         ];
 
-        $this->floatFields = [
+        $this->floatFields = [ // not really floats, for validation.
             'amount',
             'foreign_amount',
         ];
@@ -406,8 +406,7 @@ class UpdateRequest extends FormRequest
             if (array_key_exists($fieldName, $transaction)) {
                 $value = $transaction[$fieldName];
                 if (is_float($value)) {
-                    // TODO this effectively limits the max number of decimals in currencies to 14.
-                    $current[$fieldName] = sprintf('%.14f', $value);
+                    $current[$fieldName] = sprintf('%.24f', $value);
                 }
                 if (!is_float($value)) {
                     $current[$fieldName] = (string) $value;

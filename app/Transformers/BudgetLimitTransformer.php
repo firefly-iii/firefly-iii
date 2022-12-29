@@ -80,7 +80,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             $currencySymbol        = $currency->symbol;
             $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $amount = number_format((float) $amount, $currencyDecimalPlaces, '.', '');
+        $amount = app('steam')->bcround($amount, $currencyDecimalPlaces);
 
         return [
             'id'                      => (string) $budgetLimit->id,
