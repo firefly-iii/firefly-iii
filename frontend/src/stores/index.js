@@ -18,8 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { store } from 'quasar/wrappers'
-import { createPinia } from 'pinia'
+import {store} from 'quasar/wrappers'
+import {createPinia} from 'pinia'
 
 /*
  * If not building with SSR mode, you can

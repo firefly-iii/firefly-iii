@@ -52,6 +52,7 @@ export default class Api {
     }
     return api.get(url);
   }
+
   /**
    *
    * @param object

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\BudgetLimit;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default test set:
         $defaultSet        = new FieldSet();
@@ -74,8 +75,8 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optional tests
-        $fieldSet               = new FieldSet;
-        $field                  = new Field;
+        $fieldSet               = new FieldSet();
+        $field                  = new Field();
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
         $field->ignorableFields = ['currency_code'];
@@ -83,8 +84,8 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
-        $field                  = new Field;
+        $fieldSet               = new FieldSet();
+        $field                  = new Field();
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
         $field->ignorableFields = ['currency_id'];
@@ -92,21 +93,21 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_code', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field = Field::createBasic('start', 'random-date-two-year');
         $field->ignorableFields = ['spent'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('start', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field = Field::createBasic('end', 'random-date-one-year');
         $field->ignorableFields = ['spent'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('end', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('amount', 'random-amount'));
         $configuration->addOptionalFieldSet('amount', $fieldSet);
@@ -133,5 +134,4 @@ class StoreControllerTest extends TestCase
         $address = route('api.v1.budgets.limits.store', [1]);
         $this->assertPOST($address, $submission);
     }
-
 }

@@ -52,8 +52,8 @@ export default {
     }
   },
   created() {
-      this.id = parseInt(this.$route.params.id);
-      this.getWebhook();
+    this.id = parseInt(this.$route.params.id);
+    this.getWebhook();
   },
   methods: {
     getWebhook: function () {

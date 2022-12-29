@@ -20,8 +20,8 @@
 
 <template>
   <div class="row">
-    <div class="col q-mr-sm" v-for="(account) in accounts">
-      <TransactionList :account-id="account" />
+    <div v-for="(account) in accounts" class="col q-mr-sm">
+      <TransactionList :account-id="account"/>
     </div>
   </div>
 </template>
@@ -44,13 +44,13 @@ export default {
     this.getAccounts();
   },
   methods: {
-    getAccounts: function() {
+    getAccounts: function () {
       (new Preferences).get('frontpageAccounts').then((response) => this.parseAccounts(response.data));
     },
-    parseAccounts: function(data) {
+    parseAccounts: function (data) {
       const content = data.data.attributes.data;
-      for(let i in content) {
-        if(content.hasOwnProperty(i)) {
+      for (let i in content) {
+        if (content.hasOwnProperty(i)) {
           this.accounts.push(content[i]);
         }
       }

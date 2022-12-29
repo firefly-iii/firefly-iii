@@ -20,7 +20,7 @@
 
 <template>
   <q-page>
-    <div class="row q-mx-md" v-if="!canReconcile">
+    <div v-if="!canReconcile" class="row q-mx-md">
       <div class="col-12">
         <q-card bordered>
           <q-card-section>
@@ -38,28 +38,28 @@
           <q-card-section>
             <div class="row">
               <div class="col-3 q-pr-xs">
-                <q-input outlined v-model="startDate" hint="Start date" type="date" dense>
+                <q-input v-model="startDate" dense hint="Start date" outlined type="date">
                   <template v-slot:prepend>
                     <q-icon name="far fa-calendar"/>
                   </template>
                 </q-input>
               </div>
               <div class="col-3 q-px-xs">
-                <q-input outlined v-model="startBalance" hint="Start balance" step="0.00" type="number" dense>
+                <q-input v-model="startBalance" dense hint="Start balance" outlined step="0.00" type="number">
                   <template v-slot:prepend>
                     <q-icon name="fas fa-coins"/>
                   </template>
                 </q-input>
               </div>
               <div class="col-3">
-                <q-input outlined v-model="endDate" hint="End date" type="date" dense>
+                <q-input v-model="endDate" dense hint="End date" outlined type="date">
                   <template v-slot:prepend>
                     <q-icon name="far fa-calendar"/>
                   </template>
                 </q-input>
               </div>
               <div class="col-3 q-px-xs">
-                <q-input outlined v-model="endBalance" hint="End Balance" step="0.00" type="number" dense>
+                <q-input v-model="endBalance" dense hint="End Balance" outlined step="0.00" type="number">
                   <template v-slot:prepend>
                     <q-icon name="fas fa-coins"/>
                   </template>
@@ -170,7 +170,7 @@
 
       </div>
     </div>
-    <q-page-scroller position="bottom-right" :offset="[16,16]" scroll-offset="120" v-if="canReconcile">
+    <q-page-scroller v-if="canReconcile" :offset="[16,16]" position="bottom-right" scroll-offset="120">
       <div class="bg-primary text-white q-px-xl q-pa-md rounded-borders">EUR {{ balanceDiff }}</div>
     </q-page-scroller>
   </q-page>
@@ -209,7 +209,7 @@ export default {
     this.collectBalances();
   },
   methods: {
-    initReconciliation: function() {
+    initReconciliation: function () {
       this.$q.dialog({
         title: 'Todo',
         message: 'This function does not work yet.',

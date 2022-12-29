@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 
 export const useCounterStore = defineStore('counter', {
   state: () => ({
@@ -26,13 +26,13 @@ export const useCounterStore = defineStore('counter', {
   }),
 
   getters: {
-    doubleCount (state) {
+    doubleCount(state) {
       return state.counter * 2
     }
   },
 
   actions: {
-    increment () {
+    increment() {
       this.counter++
     }
   }

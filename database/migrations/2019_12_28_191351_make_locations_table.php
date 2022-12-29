@@ -51,18 +51,19 @@ class MakeLocationsTable extends Migration
     public function up()
     {
         Schema::create(
-            'locations', static function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
-            $table->softDeletes();
+            'locations',
+            static function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->timestamps();
+                $table->softDeletes();
 
-            $table->integer('locatable_id', false, true);
-            $table->string('locatable_type', 255);
+                $table->integer('locatable_id', false, true);
+                $table->string('locatable_type', 255);
 
-            $table->decimal('latitude', 36, 24)->nullable();
-            $table->decimal('longitude', 36, 24)->nullable();
-            $table->smallInteger('zoom_level', false, true)->nullable();
-        }
+                $table->decimal('latitude', 36, 24)->nullable();
+                $table->decimal('longitude', 36, 24)->nullable();
+                $table->smallInteger('zoom_level', false, true)->nullable();
+            }
         );
     }
 }

@@ -40,9 +40,10 @@ class FixLdapConfiguration extends Migration
     public function down(): void
     {
         Schema::table(
-            'users', static function (Blueprint $table) {
-            $table->dropColumn(['objectguid']);
-        }
+            'users',
+            static function (Blueprint $table) {
+                $table->dropColumn(['objectguid']);
+            }
         );
     }
 
@@ -59,9 +60,10 @@ class FixLdapConfiguration extends Migration
          * now. To support this, we add the column.
          */
         Schema::table(
-            'users', static function (Blueprint $table) {
-            $table->uuid('objectguid')->nullable()->after('id');
-        }
+            'users',
+            static function (Blueprint $table) {
+                $table->uuid('objectguid')->nullable()->after('id');
+            }
         );
     }
 }

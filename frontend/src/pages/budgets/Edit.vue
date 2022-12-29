@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -41,10 +41,10 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.name"
-                  :error="hasSubmissionErrors.name"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="name" :label="$t('form.name')"
-                  outlined/>
+                  v-model="name"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.name" :error-message="submissionErrors.name" :label="$t('form.name')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
           </q-card-section>
@@ -63,7 +63,7 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label label="Return here"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here" left-label/>
               </div>
             </div>
           </q-card-section>
@@ -106,11 +106,11 @@ export default {
     this.collectBudget();
   },
   methods: {
-    collectBudget: function() {
+    collectBudget: function () {
       let get = new Get;
       get.get(this.id).then((response) => this.parseBudget(response));
     },
-    parseBudget: function(response) {
+    parseBudget: function (response) {
       this.name = response.data.data.attributes.name;
     },
     resetErrors: function () {

@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -64,32 +64,36 @@
                 <div class="row">
                   <div class="col-12 q-mb-xs">
                     <q-input
-                      :error-message="submissionErrors[index].description"
-                      :error="hasSubmissionErrors[index].description"
-                      bottom-slots :disable="disabledInput" type="text" clearable v-model="transaction.description" :label="$t('firefly.description')"
-                      outlined/>
+                      v-model="transaction.description"
+                      :disable="disabledInput"
+                      :error="hasSubmissionErrors[index].description" :error-message="submissionErrors[index].description" :label="$t('firefly.description')" bottom-slots clearable
+                      outlined
+                      type="text"/>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-4 q-mb-xs q-pr-xs">
                     <q-input
-                      :error-message="submissionErrors[index].source"
-                      :error="hasSubmissionErrors[index].source"
-                      bottom-slots :disable="disabledInput" clearable v-model="transaction.source" :label="$t('firefly.source_account')" outlined/>
+                      v-model="transaction.source"
+                      :disable="disabledInput"
+                      :error="hasSubmissionErrors[index].source" :error-message="submissionErrors[index].source" :label="$t('firefly.source_account')" bottom-slots
+                      clearable outlined/>
                   </div>
                   <div class="col-4 q-px-xs">
                     <q-input
-                      :error-message="submissionErrors[index].amount"
-                      :error="hasSubmissionErrors[index].amount"
-                      bottom-slots :disable="disabledInput" clearable mask="#.##" reverse-fill-mask hint="Expects #.##" fill-mask="0"
                       v-model="transaction.amount"
-                      :label="$t('firefly.amount')" outlined/>
+                      :disable="disabledInput"
+                      :error="hasSubmissionErrors[index].amount" :error-message="submissionErrors[index].amount" :label="$t('firefly.amount')" bottom-slots clearable fill-mask="0"
+                      hint="Expects #.##"
+                      mask="#.##"
+                      outlined reverse-fill-mask/>
                   </div>
                   <div class="col-4 q-pl-xs">
                     <q-input
-                      :error-message="submissionErrors[index].destination"
-                      :error="hasSubmissionErrors[index].destination"
-                      bottom-slots :disable="disabledInput" clearable v-model="transaction.destination" :label="$t('firefly.destination_account')"
+                      v-model="transaction.destination"
+                      :disable="disabledInput"
+                      :error="hasSubmissionErrors[index].destination" :error-message="submissionErrors[index].destination" :label="$t('firefly.destination_account')" bottom-slots
+                      clearable
                       outlined/>
                   </div>
                 </div>
@@ -106,12 +110,14 @@
                     <div class="row">
                       <div class="col">
                         <q-input
-                          :error-message="submissionErrors[index].date"
-                          :error="hasSubmissionErrors[index].date"
-                          bottom-slots :disable="disabledInput" v-model="transaction.date" outlined type="date" :hint="$t('firefly.date')"/>
+                          v-model="transaction.date"
+                          :disable="disabledInput"
+                          :error="hasSubmissionErrors[index].date" :error-message="submissionErrors[index].date" :hint="$t('firefly.date')" bottom-slots outlined
+                          type="date"/>
                       </div>
                       <div class="col">
-                        <q-input bottom-slots :disable="disabledInput" v-model="transaction.time" outlined type="time" :hint="$t('firefly.time')"/>
+                        <q-input v-model="transaction.time" :disable="disabledInput" :hint="$t('firefly.time')" bottom-slots outlined
+                                 type="time"/>
                       </div>
                     </div>
                   </div>
@@ -222,9 +228,11 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label label="Return here to create another one"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
+                            left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" left-label :disable="!doReturnHere || disabledInput" label="Reset form after submission"/>
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                            left-label/>
               </div>
             </div>
           </q-card-section>
@@ -238,7 +246,6 @@
 import format from 'date-fns/format';
 import formatISO from 'date-fns/formatISO';
 import Post from "../../api/transactions/post";
-import { useQuasar } from 'quasar';
 
 export default {
   name: 'Create',
@@ -314,19 +321,19 @@ export default {
         action: {
           show: true,
           text: 'Go to transaction',
-          link: { name: 'transactions.show', params: {id: parseInt(response.data.data.id)} }
+          link: {name: 'transactions.show', params: {id: parseInt(response.data.data.id)}}
         }
       };
       // store flash
       this.$q.localStorage.set('flash', message);
-      if(this.doReturnHere) {
+      if (this.doReturnHere) {
         window.dispatchEvent(new CustomEvent('flash', {
           detail: {
             flash: this.$q.localStorage.getItem('flash')
           }
         }));
       }
-      if(!this.doReturnHere) {
+      if (!this.doReturnHere) {
         // return to previous page.
         this.$router.go(-1);
       }

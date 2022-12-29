@@ -27,7 +27,7 @@
         </q-item-section>
       </q-item>
       <q-separator/>
-      <ApexChart ref="chart" height="350" type="line" :options="options" :series="series"></ApexChart>
+      <ApexChart ref="chart" :options="options" :series="series" height="350" type="line"></ApexChart>
     </q-card>
   </div>
   <div>
@@ -107,11 +107,11 @@ export default {
   },
   methods: {
     numberFormatter: function (value, index) {
-      if(index instanceof Object) {
+      if (index instanceof Object) {
         let currencyCode = this.currencies[index.seriesIndex] ?? 'EUR';
         return Intl.NumberFormat(this.locale, {style: 'currency', currency: currencyCode}).format(value);
       }
-      if(Number.isInteger(index)) {
+      if (Number.isInteger(index)) {
         let currencyCode = this.currencies[index] ?? 'EUR';
         return Intl.NumberFormat(this.locale, {style: 'currency', currency: currencyCode}).format(value);
       }
@@ -142,10 +142,10 @@ export default {
           series = {};
           series.name = data[i].label;
           series.data = [];
-          if(!data[i].converted) {
+          if (!data[i].converted) {
             this.currencies.push(data[i].currency_code);
           }
-          if(data[i].converted) {
+          if (data[i].converted) {
             this.currencies.push(data[i].native_code);
           }
           for (let ii in data[i].entries) {

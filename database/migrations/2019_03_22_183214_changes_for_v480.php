@@ -50,15 +50,17 @@ class ChangesForV480 extends Migration
             }
         );
         Schema::table(
-            'rule_groups', static function (Blueprint $table) {
-            $table->dropColumn('stop_processing');
-        }
+            'rule_groups',
+            static function (Blueprint $table) {
+                $table->dropColumn('stop_processing');
+            }
         );
 
         Schema::table(
-            'users', static function (Blueprint $table) {
-            $table->dropColumn('mfa_secret');
-        }
+            'users',
+            static function (Blueprint $table) {
+                $table->dropColumn('mfa_secret');
+            }
         );
     }
 
@@ -84,14 +86,16 @@ class ChangesForV480 extends Migration
             }
         );
         Schema::table(
-            'rule_groups', static function (Blueprint $table) {
-            $table->boolean('stop_processing')->default(false);
-        }
+            'rule_groups',
+            static function (Blueprint $table) {
+                $table->boolean('stop_processing')->default(false);
+            }
         );
         Schema::table(
-            'users', static function (Blueprint $table) {
-            $table->string('mfa_secret', 50)->nullable();
-        }
+            'users',
+            static function (Blueprint $table) {
+                $table->string('mfa_secret', 50)->nullable();
+            }
         );
     }
 }

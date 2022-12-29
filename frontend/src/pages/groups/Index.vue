@@ -21,14 +21,14 @@
 <template>
   <q-page>
     <q-table
-      :title="$t('firefly.object_groups')"
-      :rows="rows"
+      v-model:pagination="pagination"
       :columns="columns"
+      :loading="loading"
+      :rows="rows"
+      :title="$t('firefly.object_groups')"
+      class="q-ma-md"
       row-key="id"
       @request="onRequest"
-      v-model:pagination="pagination"
-      :loading="loading"
-      class="q-ma-md"
     >
       <template v-slot:header="props">
         <q-tr :props="props">
@@ -51,12 +51,12 @@
           <q-td key="menu" :props="props">
             <q-btn-dropdown color="primary" label="Actions" size="sm">
               <q-list>
-                <q-item clickable v-close-popup :to="{name: 'groups.edit', params: {id: props.row.id}}">
+                <q-item v-close-popup :to="{name: 'groups.edit', params: {id: props.row.id}}" clickable>
                   <q-item-section>
                     <q-item-label>Edit</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="deleteGroup(props.row.id, props.row.title)">
+                <q-item v-close-popup clickable @click="deleteGroup(props.row.id, props.row.title)">
                   <q-item-section>
                     <q-item-label>Delete</q-item-label>
                   </q-item-section>

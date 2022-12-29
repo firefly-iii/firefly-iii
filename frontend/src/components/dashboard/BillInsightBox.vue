@@ -33,10 +33,10 @@
       <q-card-section horizontal>
         <q-card-section>
           <q-circular-progress
-            :value="percentage"
-            size="50px"
             :thickness="0.22"
+            :value="percentage"
             color="positive"
+            size="50px"
             track-color="negative"
           />
         </q-card-section>
@@ -52,10 +52,12 @@
               {{ formatAmount(item.code, item.sum) }}<span v-if="index+1 !== unpaid.length"> + </span></span>
           </span>
           <br/>
-          <span v-if="paid.length > 0" :title="formatAmount(this.currency, this.paidAmount)">{{ $t('firefly.bills_paid') }}:</span>
+          <span v-if="paid.length > 0" :title="formatAmount(this.currency, this.paidAmount)">{{
+              $t('firefly.bills_paid')
+            }}:</span>
           <span v-for="(item, index) in paid">
             <span :title="formatAmount(item.native_code, item.native_sum)">
-              {{formatAmount(item.code, item.sum) }}
+              {{ formatAmount(item.code, item.sum) }}
             </span>
             <span v-if="index+1 !== paid.length"> + </span></span>
         </q-card-section>

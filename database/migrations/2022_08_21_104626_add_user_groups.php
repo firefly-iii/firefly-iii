@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-return new class extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -38,13 +38,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table(
-            'currency_exchange_rates', function (Blueprint $table) {
-
-            if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
-                $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
-                $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+            'currency_exchange_rates',
+            function (Blueprint $table) {
+                if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
+                    $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
+                    $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                }
             }
-        }
         );
     }
 
@@ -56,13 +56,13 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table(
-            'currency_exchange_rates', function (Blueprint $table) {
-
-            $table->dropForeign('cer_to_ugi');
-            if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
-                $table->dropColumn('user_group_id');
+            'currency_exchange_rates',
+            function (Blueprint $table) {
+                $table->dropForeign('cer_to_ugi');
+                if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
+                    $table->dropColumn('user_group_id');
+                }
             }
-        }
         );
     }
 };

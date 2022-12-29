@@ -25,7 +25,7 @@
         <q-item-section>
           <q-item-label><strong>{{ accountName }}</strong>
             <span v-if="accountCurrencyCode !== ''">
-              ({{ formatAmount(accountCurrencyCode,accountBalance) }})
+              ({{ formatAmount(accountCurrencyCode, accountBalance) }})
             </span>
           </q-item-label>
         </q-item-section>
@@ -52,8 +52,8 @@
                     {{ tr.description }}
                   <br/>
                   </span>
-                  <router-link :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }"
-                               v-if="transaction.transactions.length === 1">
+                  <router-link v-if="transaction.transactions.length === 1"
+                               :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }">
                     {{ tr.description }}
                   </router-link>
                 </span>
@@ -86,8 +86,13 @@
 
               <!-- show foreign amount if present and not converted (may lead to double amounts) -->
               <span v-if="null !== tr.foreign_amount">
-                    <span v-if="false === tr.foreign_currency_converted"> ({{ formatAmount(tr.foreign_currency_code, tr.foreign_amount) }})</span>
-                    <span v-if="true === tr.foreign_currency_converted" :title="formatAmount(tr.foreign_currency_code, tr.foreign_amount)"> ({{ formatAmount(tr.native_currency_code, tr.native_foreign_amount) }})</span>
+                    <span v-if="false === tr.foreign_currency_converted"> ({{
+                        formatAmount(tr.foreign_currency_code, tr.foreign_amount)
+                      }})</span>
+                    <span v-if="true === tr.foreign_currency_converted"
+                          :title="formatAmount(tr.foreign_currency_code, tr.foreign_amount)"> ({{
+                        formatAmount(tr.native_currency_code, tr.native_foreign_amount)
+                      }})</span>
               </span>
             <br v-if="transaction.transactions.length > 1"/>
             </span>

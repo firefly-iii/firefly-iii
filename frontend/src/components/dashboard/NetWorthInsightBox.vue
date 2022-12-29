@@ -32,14 +32,16 @@
       <q-separator/>
       <q-card-section horizontal>
         <q-card-section>
-          <q-icon name="fas fa-chart-line" size="50px" :color="primary > 0 ? 'positive' : 'negative'"/>
+          <q-icon :color="primary > 0 ? 'positive' : 'negative'" name="fas fa-chart-line" size="50px"/>
         </q-card-section>
         <q-separator vertical/>
         <q-card-section>
           <strong>{{ formatAmount(currency, primary) }}</strong><br/>
           <small>
              <span v-for="(item, index) in netWorth">
-                <span :title="formatAmount(item.native_code, item.native_sum)">{{ formatAmount(item.code, item.sum) }}</span>
+                <span :title="formatAmount(item.native_code, item.native_sum)">{{
+                    formatAmount(item.code, item.sum)
+                  }}</span>
                 <span v-if="index+1 !== netWorth.length"> + </span></span>
           </small>
         </q-card-section>
@@ -104,7 +106,7 @@ export default {
           if (!current.converted) {
             this.primary = this.primary + parseFloat(current.sum);
           }
-          if(parseFloat(current.sum) !== 0.0) {
+          if (parseFloat(current.sum) !== 0.0) {
             this.netWorth.push(
               {
                 sum: current.sum,
@@ -120,7 +122,10 @@ export default {
     },
     // TODO this method is recycled a lot.
     formatAmount: function (currencyCode, amount) {
-      return Intl.NumberFormat(this.store?.getLocale ?? 'en-US', {style: 'currency', currency: currencyCode}).format(amount);
+      return Intl.NumberFormat(this.store?.getLocale ?? 'en-US', {
+        style: 'currency',
+        currency: currencyCode
+      }).format(amount);
     },
   },
 }

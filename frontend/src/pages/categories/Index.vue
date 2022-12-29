@@ -21,14 +21,14 @@
 <template>
   <q-page>
     <q-table
-      :title="$t('firefly.categories')"
-      :rows="rows"
+      v-model:pagination="pagination"
       :columns="columns"
+      :loading="loading"
+      :rows="rows"
+      :title="$t('firefly.categories')"
+      class="q-ma-md"
       row-key="id"
       @request="onRequest"
-      v-model:pagination="pagination"
-      :loading="loading"
-      class="q-ma-md"
     >
       <template v-slot:header="props">
         <q-tr :props="props">
@@ -51,12 +51,12 @@
           <q-td key="menu" :props="props">
             <q-btn-dropdown color="primary" label="Actions" size="sm">
               <q-list>
-                <q-item clickable v-close-popup :to="{name: 'categories.edit', params: {id: props.row.id}}">
+                <q-item v-close-popup :to="{name: 'categories.edit', params: {id: props.row.id}}" clickable>
                   <q-item-section>
                     <q-item-label>Edit</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="deleteCategory(props.row.id, props.row.name)">
+                <q-item v-close-popup clickable @click="deleteCategory(props.row.id, props.row.name)">
                   <q-item-section>
                     <q-item-label>Delete</q-item-label>
                   </q-item-section>
@@ -70,17 +70,18 @@
     <p>
       <q-btn :to="{name: 'categories.show', params: {id: 0}}">Transactions without a category</q-btn>
     </p>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
         label="Actions"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'categories.create'}" icon="fas fa-exchange-alt" label="New category"/>
+        <q-fab-action :to="{ name: 'categories.create'}" color="primary" icon="fas fa-exchange-alt" label="New category"
+                      square/>
       </q-fab>
     </q-page-sticky>
   </q-page>

@@ -139,8 +139,8 @@ export default {
     },
     parseBudgetLimits: function (data, budget) {
       console.log('Parse for ' + budget.name);
-      for(let i in data) {
-        if(data.hasOwnProperty(i)) {
+      for (let i in data) {
+        if (data.hasOwnProperty(i)) {
           const current = data[i];
           budget.limits.push(
             {
@@ -149,7 +149,7 @@ export default {
               end: new Date(current.attributes.end),
             }
           );
-          console.log('A ' +  new Date(current.attributes.start));
+          console.log('A ' + new Date(current.attributes.start));
           console.log('B ' + this.store.getRange.start);
         }
       }

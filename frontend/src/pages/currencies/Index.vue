@@ -21,14 +21,14 @@
 <template>
   <q-page>
     <q-table
-      :title="$t('firefly.currencies')"
-      :rows="rows"
+      v-model:pagination="pagination"
       :columns="columns"
+      :loading="loading"
+      :rows="rows"
+      :title="$t('firefly.currencies')"
+      class="q-ma-md"
       row-key="id"
       @request="onRequest"
-      v-model:pagination="pagination"
-      :loading="loading"
-      class="q-ma-md"
     >
       <template v-slot:header="props">
         <q-tr :props="props">
@@ -49,17 +49,17 @@
             </router-link>
           </q-td>
           <q-td key="name" :props="props">
-              {{ props.row.code }}
+            {{ props.row.code }}
           </q-td>
           <q-td key="menu" :props="props">
             <q-btn-dropdown color="primary" label="Actions" size="sm">
               <q-list>
-                <q-item clickable v-close-popup :to="{name: 'currencies.edit', params: {code: props.row.code}}">
+                <q-item v-close-popup :to="{name: 'currencies.edit', params: {code: props.row.code}}" clickable>
                   <q-item-section>
                     <q-item-label>Edit</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="deleteCurrency(props.row.code, props.row.name)">
+                <q-item v-close-popup clickable @click="deleteCurrency(props.row.code, props.row.name)">
                   <q-item-section>
                     <q-item-label>Delete</q-item-label>
                   </q-item-section>
@@ -70,17 +70,18 @@
         </q-tr>
       </template>
     </q-table>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
         label="Actions"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'currencies.create'}" icon="fas fa-exchange-alt" label="New currency"/>
+        <q-fab-action :to="{ name: 'currencies.create'}" color="primary" icon="fas fa-exchange-alt" label="New currency"
+                      square/>
       </q-fab>
     </q-page-sticky>
   </q-page>

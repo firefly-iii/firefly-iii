@@ -21,14 +21,14 @@
 <template>
   <q-page>
     <q-table
-      :title="$t('firefly.' + this.type + '_accounts')"
-      :rows="rows"
-      :columns="columns"
-      row-key="id"
-      :dense="$q.screen.lt.md"
       v-model:pagination="pagination"
+      :columns="columns"
+      :dense="$q.screen.lt.md"
       :loading="loading"
+      :rows="rows"
+      :title="$t('firefly.' + this.type + '_accounts')"
       class="q-ma-md"
+      row-key="id"
     >
       <template v-slot:header="props">
         <q-tr :props="props">
@@ -47,14 +47,14 @@
             <router-link :to="{ name: 'accounts.show', params: {id: props.row.id} }" class="text-primary">
               {{ props.row.name }}
             </router-link>
-            <q-popup-edit v-model="props.row.name" v-slot="scope">
-              <q-input v-model="scope.value" dense autofocus counter />
+            <q-popup-edit v-slot="scope" v-model="props.row.name">
+              <q-input v-model="scope.value" autofocus counter dense/>
             </q-popup-edit>
           </q-td>
           <q-td key="iban" :props="props">
             {{ formatIban(props.row.iban) }}
-            <q-popup-edit v-model="props.row.iban" v-slot="scope">
-              <q-input v-model="scope.value" dense autofocus counter />
+            <q-popup-edit v-slot="scope" v-model="props.row.iban">
+              <q-input v-model="scope.value" autofocus counter dense/>
             </q-popup-edit>
           </q-td>
           <q-td key="current_balance" :props="props">
@@ -67,19 +67,20 @@
             C
           </q-td>
           <q-td key="menu" :props="props">
-            <q-btn-dropdown color="primary" :label="$t('firefly.actions')" size="sm">
+            <q-btn-dropdown :label="$t('firefly.actions')" color="primary" size="sm">
               <q-list>
-                <q-item clickable v-close-popup :to="{name: 'accounts.edit', params: {id: props.row.id}}">
+                <q-item v-close-popup :to="{name: 'accounts.edit', params: {id: props.row.id}}" clickable>
                   <q-item-section>
                     <q-item-label>{{ $t('firefly.edit') }}</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup :to="{name: 'accounts.reconcile', params: {id: props.row.id}}" v-if="'asset' === props.row.type">
+                <q-item v-if="'asset' === props.row.type" v-close-popup :to="{name: 'accounts.reconcile', params: {id: props.row.id}}"
+                        clickable>
                   <q-item-section>
                     <q-item-label>{{ $t('firefly.reconcile') }}</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="deleteAccount(props.row.id, props.row.name)">
+                <q-item v-close-popup clickable @click="deleteAccount(props.row.id, props.row.name)">
                   <q-item-section>
                     <q-item-label>{{ $t('firefly.delete') }}</q-item-label>
                   </q-item-section>
@@ -90,19 +91,20 @@
         </q-tr>
       </template>
     </q-table>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
         :label="$t('firefly.actions')"
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
         <!-- TODO -->
         <!--<q-fab-action color="primary" square :to="{ name: 'accounts.create', params: {type: 'liability'} }" icon="fas fa-long-arrow-alt-right" label="New liability"/>-->
-        <q-fab-action color="primary" square :to="{ name: 'accounts.create', params: {type: 'asset'} }" icon="fas fa-exchange-alt" :label="$t('firefly.create_new_asset')"/>
+        <q-fab-action :label="$t('firefly.create_new_asset')" :to="{ name: 'accounts.create', params: {type: 'asset'} }" color="primary"
+                      icon="fas fa-exchange-alt" square/>
       </q-fab>
     </q-page-sticky>
   </q-page>
@@ -161,7 +163,6 @@ export default {
     this.type = this.$route.params.type;
 
 
-
     if (null === this.store.getRange.start || null === this.store.getRange.end) {
       // subscribe, then update:
       this.store.$onAction(
@@ -183,17 +184,17 @@ export default {
   methods: {
     deleteAccount: function (id, name) {
       this.$q.dialog({
-                       title: this.$t('firefly.confirm_action'),
-                       message: 'Do you want to delete account "' + name + '"? Any and all transactions linked to this account will ALSO be deleted.',
-                       cancel: true,
-                       persistent: true
-                     }).onOk(() => {
+        title: this.$t('firefly.confirm_action'),
+        message: 'Do you want to delete account "' + name + '"? Any and all transactions linked to this account will ALSO be deleted.',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
         this.destroyAccount(id);
       });
     },
     destroyAccount: function (id) {
       (new Destroy('accounts')).destroy(id).then(() => {
-        this.rows=  [];
+        this.rows = [];
         this.store.refreshCacheKey().then(() => {
           this.triggerUpdate();
         });
@@ -218,7 +219,7 @@ export default {
       return string.replace(NON_ALPHANUM, '').toUpperCase().replace(EVERY_FOUR_CHARS, "$1 ");
     },
     triggerUpdate: function () {
-      this.rows=  [];
+      this.rows = [];
       if (true === this.loading) {
         return;
       }

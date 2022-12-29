@@ -25,21 +25,21 @@
         <q-card bordered>
           <q-card-section>
             <div class="text-h6">Language and locale
-              <span class="text-secondary" v-if="true === isOk.language"><span
+              <span v-if="true === isOk.language" class="text-secondary"><span
                 class="far fa-check-circle"></span></span>
-              <span class="text-blue" v-if="true === isLoading.language"><span
+              <span v-if="true === isLoading.language" class="text-blue"><span
                 class="fas fa-spinner fa-spin"></span></span>
-              <span class="text-red" v-if="true === isFailure.language"><span
+              <span v-if="true === isFailure.language" class="text-red"><span
                 class="fas fa-skull-crossbones"></span> <small>Please refresh the page...</small></span>
             </div>
           </q-card-section>
           <q-card-section>
 
             <q-select
-              bottom-slots
-              outlined
-              v-model="language" emit-value
-              map-options :options="languages" label="I prefer the following language"/>
+              v-model="language"
+              :options="languages"
+              bottom-slots emit-value
+              label="I prefer the following language" map-options outlined/>
           </q-card-section>
         </q-card>
       </div>
@@ -48,22 +48,22 @@
           <q-card-section>
             <div class="text-h6">Accounts on the home screen
 
-              <span class="text-secondary" v-if="true === isOk.accounts"><span
+              <span v-if="true === isOk.accounts" class="text-secondary"><span
                 class="far fa-check-circle"></span></span>
-              <span class="text-blue" v-if="true === isLoading.accounts"><span
+              <span v-if="true === isLoading.accounts" class="text-blue"><span
                 class="fas fa-spinner fa-spin"></span></span>
-              <span class="text-red" v-if="true === isFailure.accounts"><span
+              <span v-if="true === isFailure.accounts" class="text-red"><span
                 class="fas fa-skull-crossbones"></span> <small>Please refresh the page...</small></span>
             </div>
           </q-card-section>
           <q-card-section>
             <q-select
+              v-model="accounts"
+              :options="allAccounts"
               bottom-slots
-              outlined
-              multiple
-              use-chips
-              v-model="accounts" emit-value
-              map-options :options="allAccounts" label="I want to see these accounts on the dashboard"/>
+              emit-value
+              label="I want to see these accounts on the dashboard" map-options
+              multiple outlined use-chips/>
           </q-card-section>
         </q-card>
       </div>
@@ -72,24 +72,24 @@
           <q-card-section>
             <div class="text-h6">View range and list size
 
-              <span class="text-secondary" v-if="true === isOk.pageSize"><span
+              <span v-if="true === isOk.pageSize" class="text-secondary"><span
                 class="far fa-check-circle"></span></span>
-              <span class="text-blue" v-if="true === isLoading.pageSize"><span
+              <span v-if="true === isLoading.pageSize" class="text-blue"><span
                 class="fas fa-spinner fa-spin"></span></span>
-              <span class="text-red" v-if="true === isFailure.pageSize"><span
+              <span v-if="true === isFailure.pageSize" class="text-red"><span
                 class="fas fa-skull-crossbones"></span> <small>Please refresh the page...</small></span>
             </div>
           </q-card-section>
           <q-card-section>
-            <q-input outlined v-model="pageSize" type="number" step="1" label="Page size"/>
+            <q-input v-model="pageSize" label="Page size" outlined step="1" type="number"/>
           </q-card-section>
           <q-card-section>
             <q-select
-              bottom-slots
-              outlined
               v-model="viewRange"
+              :options="viewRanges"
+              bottom-slots
               emit-value
-              map-options :options="viewRanges" label="Default period and view range"/>
+              label="Default period and view range" map-options outlined/>
           </q-card-section>
         </q-card>
       </div>
@@ -98,41 +98,41 @@
           <q-card-section>
             <div class="text-h6">Optional transaction fields
 
-              <span class="text-secondary" v-if="true === isOk.transactionFields"><span
+              <span v-if="true === isOk.transactionFields" class="text-secondary"><span
                 class="far fa-check-circle"></span></span>
-              <span class="text-blue" v-if="true === isLoading.transactionFields"><span
+              <span v-if="true === isLoading.transactionFields" class="text-blue"><span
                 class="fas fa-spinner fa-spin"></span></span>
-              <span class="text-red" v-if="true === isFailure.transactionFields"><span
+              <span v-if="true === isFailure.transactionFields" class="text-red"><span
                 class="fas fa-skull-crossbones"></span> <small>Please refresh the page...</small></span>
             </div>
           </q-card-section>
           <q-tabs
             v-model="tab" dense
           >
-            <q-tab name="date" label="Date fields"/>
-            <q-tab name="meta" label="Meta data fields"/>
-            <q-tab name="ref" label="Reference fields"/>
+            <q-tab label="Date fields" name="date"/>
+            <q-tab label="Meta data fields" name="meta"/>
+            <q-tab label="Reference fields" name="ref"/>
           </q-tabs>
           <q-tab-panels v-model="tab" animated swipeable>
             <q-tab-panel name="date">
               <q-option-group
+                v-model="transactionFields.date"
                 :options="allTransactionFields.date"
                 type="checkbox"
-                v-model="transactionFields.date"
               />
             </q-tab-panel>
             <q-tab-panel name="meta">
               <q-option-group
+                v-model="transactionFields.meta"
                 :options="allTransactionFields.meta"
                 type="checkbox"
-                v-model="transactionFields.meta"
               />
             </q-tab-panel>
             <q-tab-panel name="ref">
               <q-option-group
+                v-model="transactionFields.ref"
                 :options="allTransactionFields.ref"
                 type="checkbox"
-                v-model="transactionFields.ref"
               />
             </q-tab-panel>
           </q-tab-panels>
@@ -317,13 +317,13 @@ export default {
         }
       });
     },
-    submitTransactionFields: function() {
+    submitTransactionFields: function () {
       let submission = {};
-      for(let i in this.transactionFields) {
-        if(this.transactionFields.hasOwnProperty(i)) {
+      for (let i in this.transactionFields) {
+        if (this.transactionFields.hasOwnProperty(i)) {
           let set = this.transactionFields[i];
-          for(let ii in set) {
-            if(set.hasOwnProperty(ii)) {
+          for (let ii in set) {
+            if (set.hasOwnProperty(ii)) {
               let value = set[ii];
               submission[value] = true;
             }

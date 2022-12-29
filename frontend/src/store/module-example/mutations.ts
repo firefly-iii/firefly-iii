@@ -18,11 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { MutationTree } from 'vuex';
-import { ExampleStateInterface } from './state';
+import {MutationTree} from 'vuex';
+import {ExampleStateInterface} from './state';
 
 const mutation: MutationTree<ExampleStateInterface> = {
-  someMutation (/* state: ExampleStateInterface */) {
+  someMutation(/* state: ExampleStateInterface */) {
     // your code
   }
 };

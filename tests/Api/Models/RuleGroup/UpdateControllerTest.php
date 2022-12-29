@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\RuleGroup;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -69,27 +71,27 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('title', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('title', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('description', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('description', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('order', 'low-order');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('active', 'boolean');
         $fieldSet->addField($field);

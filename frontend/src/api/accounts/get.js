@@ -33,7 +33,7 @@ export default class Get extends Api {
    */
   get(identifier, date) {
     let params = {date: date};
-    if(!date) {
+    if (!date) {
       return this.apiGet(identifier);
     }
     return this.apiGet(identifier, params);

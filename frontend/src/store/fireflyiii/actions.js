@@ -24,8 +24,6 @@ export function someAction (context) {
 */
 
 
-import {endOfDay, endOfMonth, endOfQuarter, endOfWeek, startOfDay, startOfMonth, startOfQuarter, startOfWeek, startOfYear, subDays} from "date-fns";
-
 export function refreshCacheKey(context) {
   let cacheKey = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
   context.commit('setCacheKey', cacheKey);

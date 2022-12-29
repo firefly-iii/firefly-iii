@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\PiggyBank;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default test set:
         $defaultSet        = new FieldSet();
@@ -74,29 +75,29 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // add optional set
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('current_amount', 'random-amount-min'));
         $configuration->addOptionalFieldSet('current_amount', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('start_date', 'random-past-date'));
         $configuration->addOptionalFieldSet('start_date', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('target_date', 'random-future-date'));
         $configuration->addOptionalFieldSet('target_date', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('order', 'order'));
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'object_group_id';
         $field->fieldType       = 'random-og-id';
         $field->ignorableFields = ['object_group_title'];
@@ -104,9 +105,9 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('object_group_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'object_group_title';
         $field->fieldType       = 'uuid';
         $field->ignorableFields = ['object_group_id'];
@@ -114,7 +115,7 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('object_group_title', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
@@ -142,5 +143,4 @@ class StoreControllerTest extends TestCase
         $address = route('api.v1.piggy_banks.store');
         $this->assertPOST($address, $submission);
     }
-
 }

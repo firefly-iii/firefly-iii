@@ -18,12 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { GetterTree } from 'vuex';
-import { StateInterface } from '../index';
-import { ExampleStateInterface } from './state';
+import {GetterTree} from 'vuex';
+import {StateInterface} from '../index';
+import {ExampleStateInterface} from './state';
 
 const getters: GetterTree<ExampleStateInterface, StateInterface> = {
-  someAction (/* context */) {
+  someAction(/* context */) {
     // your code
   }
 };

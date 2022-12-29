@@ -18,8 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { store } from 'quasar/wrappers'
-import { createStore } from 'vuex'
+import {store} from 'quasar/wrappers'
+import {createStore} from 'vuex'
 
 // import example from './module-example'
 import fireflyiii from './fireflyiii'

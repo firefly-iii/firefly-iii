@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Category;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default test set:
         $defaultSet        = new FieldSet();
@@ -72,7 +73,7 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // add optional set
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
@@ -99,5 +100,4 @@ class StoreControllerTest extends TestCase
         $address = route('api.v1.categories.store');
         $this->assertPOST($address, $submission);
     }
-
 }

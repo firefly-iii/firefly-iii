@@ -33,10 +33,10 @@
       <q-card-section horizontal>
         <q-card-section>
           <q-circular-progress
-            :value="percentage"
-            size="50px"
             :thickness="0.22"
+            :value="percentage"
             color="negative"
+            size="50px"
             track-color="positive"
           />
         </q-card-section>
@@ -48,14 +48,20 @@
           <span :title="formatAmount(this.currency, this.budgetedAmount)">{{ $t('firefly.budgeted') }}</span>:
           <!-- list budgeted -->
           <span v-for="(item, index) in budgeted">
-            <span :title="formatAmount(item.native_code, item.native_sum)">{{ formatAmount(item.code, item.sum) }}</span>
+            <span :title="formatAmount(item.native_code, item.native_sum)">{{
+                formatAmount(item.code, item.sum)
+              }}</span>
             <span v-if="index+1 !== budgeted.length"> + </span>
           </span>
-          <br />
-          <span v-if="spent.length > 0" :title="formatAmount(this.currency, this.spentAmount)">{{ $t('firefly.spent') }}: </span>
+          <br/>
+          <span v-if="spent.length > 0" :title="formatAmount(this.currency, this.spentAmount)">{{
+              $t('firefly.spent')
+            }}: </span>
           <!-- list spent -->
           <span v-for="(item, index) in spent">
-            <span :title="formatAmount(item.native_code, item.native_sum)">{{ formatAmount(item.code, item.sum) }}</span>
+            <span :title="formatAmount(item.native_code, item.native_sum)">{{
+                formatAmount(item.code, item.sum)
+              }}</span>
             <span v-if="index+1 !== spent.length"> + </span></span>
         </q-card-section>
       </q-card-section>

@@ -28,35 +28,36 @@
           </q-card-section>
           <q-card-section>
             <q-select
-              bottom-slots
-              outlined
               v-model="type"
-              emit-value class="q-pr-xs"
-              map-options :options="types" label="Report type"/>
+              :options="types"
+              bottom-slots
+              class="q-pr-xs" emit-value
+              label="Report type" map-options outlined/>
 
             <q-select
-              bottom-slots
-              outlined
-              :disable="loading"
               v-model="selectedAccounts"
+              :disable="loading"
+              :options="accounts"
+              bottom-slots
               class="q-pr-xs"
-              multiple
               emit-value
-              use-chips
-              map-options :options="accounts" label="Included accounts"/>
+              label="Included accounts"
+              map-options
+              multiple outlined use-chips/>
             <q-input
-              bottom-slots
-              type="date" v-model="start_date" :label="$t('form.start_date')"
-              hint="Start date"
-              outlined/>
+              v-model="start_date"
+              :label="$t('form.start_date')" bottom-slots hint="Start date"
+              outlined
+              type="date"/>
             <q-input
-              bottom-slots
-              type="date" v-model="end_date" :label="$t('form.start_date')"
-              hint="Start date"
-              outlined/>
+              v-model="end_date"
+              :label="$t('form.start_date')" bottom-slots hint="Start date"
+              outlined
+              type="date"/>
           </q-card-section>
           <q-card-actions>
-            <q-btn :disable="loading || selectedAccounts.length < 1" @click="submit" color="primary" label="View report"/>
+            <q-btn :disable="loading || selectedAccounts.length < 1" color="primary" label="View report"
+                   @click="submit"/>
           </q-card-actions>
         </q-card>
       </div>
@@ -66,9 +67,8 @@
 
 <script>
 import List from "../../api/accounts/list";
-import {startOfMonth} from "date-fns";
-import {format} from "date-fns";
-import {endOfMonth} from "date-fns";
+import {endOfMonth, format, startOfMonth} from "date-fns";
+
 export default {
   name: 'Index',
   created() {
@@ -99,13 +99,14 @@ export default {
     }
   },
   methods: {
-    submit: function() {
-      let start = this.start_date.replace('-','');
-      let end = this.end_date.replace('-','');
+    submit: function () {
+      let start = this.start_date.replace('-', '');
+      let end = this.end_date.replace('-', '');
       let accounts = this.selectedAccounts.join(',');
-      if('default' === this.type) {
+      if ('default' === this.type) {
         this.$router.push(
-          {name: 'reports.default',
+          {
+            name: 'reports.default',
             params:
               {
                 accounts: accounts,
@@ -113,7 +114,7 @@ export default {
                 end: end
               }
           }
-          );
+        );
       }
     },
     // duplicate function

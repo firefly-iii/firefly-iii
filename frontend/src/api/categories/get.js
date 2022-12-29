@@ -23,12 +23,14 @@ import {api} from "boot/axios";
 export default class Get {
   get(identifier) {
     let url = '/api/v1/categories/' + identifier;
-      return api.get(url);
+    return api.get(url);
   }
+
   transactions(identifier, page, cacheKey) {
     let url = '/api/v1/categories/' + identifier + '/transactions';
     return api.get(url, {params: {page: page, cache: cacheKey}});
   }
+
   transactionsWithoutCategory(page, cacheKey) {
     let url = '/api/v1/categories/transactions-without-category';
     return api.get(url, {params: {page: page, cache: cacheKey}});

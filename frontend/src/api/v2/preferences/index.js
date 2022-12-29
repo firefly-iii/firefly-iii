@@ -24,6 +24,7 @@ export default class Preferences {
   get(name) {
     return api.get('/api/v2/preferences/' + name);
   }
+
   // postByName(name, value) {
   //   return api.post('/api/v1/preferences', {name: name, data: value});
   // }

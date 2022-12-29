@@ -29,13 +29,14 @@
             <div class="text-h6">Email address</div>
           </q-card-section>
           <q-card-section>
-            <q-input outlined type="email" required v-model="emailAddress" label="Email address">
+            <q-input v-model="emailAddress" label="Email address" outlined required type="email">
               <template v-slot:prepend>
                 <q-icon name="fas fa-envelope"/>
               </template>
             </q-input>
             <p class="text-primary">
-              If you change your email address you will be logged out. You must confirm your address change before you can login again.
+              If you change your email address you will be logged out. You must confirm your address change before you
+              can login again.
             </p>
           </q-card-section>
           <q-card-actions v-if="emailTouched">
@@ -95,16 +96,16 @@
     -->
     </div>
 
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
-        label="Actions"
-        square
-        vertical-actions-align="right"
-        label-position="left"
         color="green"
+        direction="up"
         icon="fas fa-chevron-up"
-        direction="up">
-        <q-fab-action color="primary" square :to="{ name: 'profile.data' }" icon="fas fa-database" label="Manage data"/>
+        label="Actions"
+        label-position="left"
+        square
+        vertical-actions-align="right">
+        <q-fab-action :to="{ name: 'profile.data' }" color="primary" icon="fas fa-database" label="Manage data" square/>
       </q-fab>
     </q-page-sticky>
   </q-page>
@@ -145,11 +146,11 @@ export default {
     },
     confirmAddressChange: function () {
       this.$q.dialog({
-                       title: 'Confirm',
-                       message: 'Are you sure?',
-                       cancel: true,
-                       persistent: false
-                     }).onOk(() => {
+        title: 'Confirm',
+        message: 'Are you sure?',
+        cancel: true,
+        persistent: false
+      }).onOk(() => {
         this.submitAddressChange();
       }).onCancel(() => {
         // console.log('>>>> Cancel')
@@ -159,9 +160,9 @@ export default {
     },
     submitAddressChange: function () {
       (new AboutUser).put(this.id, {email: this.emailAddress})
-      .then((response) =>  {
-        (new AboutUser).logout();
-      });
+        .then((response) => {
+          (new AboutUser).logout();
+        });
     }
   },
 }

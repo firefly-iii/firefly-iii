@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Attachment;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default asset account test set:
         $defaultAssetSet        = new FieldSet();
@@ -74,11 +75,11 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultAssetSet);
 
         // optional field sets
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('title', 'uuid'));
         $configuration->addOptionalFieldSet('title', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 

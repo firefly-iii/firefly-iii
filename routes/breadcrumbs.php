@@ -1268,7 +1268,6 @@ try {
             $breadcrumbs->push(trans('firefly.edit_webhook', ['title' => limitStringLength($webhook->title)]), route('webhooks.edit', [$webhook->id]));
         }
     );
-
 } catch (DuplicateBreadcrumbException $e) {
     // @ignoreException
 }

@@ -22,14 +22,15 @@
   <div class="q-pa-xs">
     <div>
       <!-- <DatePicker v-model="range" is-range :is-dark="darkMode" :model-config="modelConfig"/> -->
-      <q-date v-model="localRange" range minimal mask="YYYY-MM-DD"/>
+      <q-date v-model="localRange" mask="YYYY-MM-DD" minimal range/>
     </div>
     <div class="q-mt-xs">
-      <span class="q-mr-xs"><q-btn @click="resetRange" size="sm" color="primary" label="Reset"/></span>
-      <q-btn color="primary" size="sm" label="Change range" icon-right="fas fa-caret-down" title="More options in preferences">
+      <span class="q-mr-xs"><q-btn color="primary" label="Reset" size="sm" @click="resetRange"/></span>
+      <q-btn color="primary" icon-right="fas fa-caret-down" label="Change range" size="sm"
+             title="More options in preferences">
         <q-menu>
           <q-list style="min-width: 100px">
-            <q-item clickable v-close-popup v-for="choice in rangeChoices" @click="setViewRange(choice)">
+            <q-item v-for="choice in rangeChoices" v-close-popup clickable @click="setViewRange(choice)">
               <q-item-section>{{ $t('firefly.pref_' + choice.value) }}</q-item-section>
             </q-item>
           </q-list>

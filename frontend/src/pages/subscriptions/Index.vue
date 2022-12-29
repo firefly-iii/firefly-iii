@@ -21,14 +21,14 @@
 <template>
   <q-page>
     <q-table
-      :title="$t('firefly.subscriptions')"
-      :rows="rows"
+      v-model:pagination="pagination"
       :columns="columns"
+      :loading="loading"
+      :rows="rows"
+      :title="$t('firefly.subscriptions')"
+      class="q-ma-md"
       row-key="id"
       @request="onRequest"
-      v-model:pagination="pagination"
-      :loading="loading"
-      class="q-ma-md"
     >
       <template v-slot:header="props">
         <q-tr :props="props">
@@ -51,34 +51,35 @@
           <q-td key="menu" :props="props">
             <q-btn-dropdown color="primary" label="Actions" size="sm">
               <q-list>
-                <q-item clickable v-close-popup :to="{name: 'subscriptions.edit', params: {id: props.row.id}}">
+                <q-item v-close-popup :to="{name: 'subscriptions.edit', params: {id: props.row.id}}" clickable>
                   <q-item-section>
                     <q-item-label>Edit</q-item-label>
                   </q-item-section>
                 </q-item>
-    <q-item clickable v-close-popup @click="deleteSubscription(props.row.id, props.row.name)">
-      <q-item-section>
-        <q-item-label>Delete</q-item-label>
-      </q-item-section>
-    </q-item>
+                <q-item v-close-popup clickable @click="deleteSubscription(props.row.id, props.row.name)">
+                  <q-item-section>
+                    <q-item-label>Delete</q-item-label>
+                  </q-item-section>
+                </q-item>
               </q-list>
             </q-btn-dropdown>
           </q-td>
         </q-tr>
       </template>
     </q-table>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
         label="Actions"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'subscriptions.create', params: {type: 'asset'} }" icon="fas fa-exchange-alt"
-                      label="New subscription"/>
+        <q-fab-action :to="{ name: 'subscriptions.create', params: {type: 'asset'} }" color="primary" icon="fas fa-exchange-alt"
+                      label="New subscription"
+                      square/>
       </q-fab>
     </q-page-sticky>
   </q-page>
@@ -145,11 +146,11 @@ export default {
     },
     deleteSubscription: function (id, name) {
       this.$q.dialog({
-                       title: 'Confirm',
-                       message: 'Do you want to delete subscriptions "' + name + '"? Transactions linked to this subscription will not be deleted.',
-                       cancel: true,
-                       persistent: true
-                     }).onOk(() => {
+        title: 'Confirm',
+        message: 'Do you want to delete subscriptions "' + name + '"? Transactions linked to this subscription will not be deleted.',
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
         this.destroySubscription(id);
       });
     },

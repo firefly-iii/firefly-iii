@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\AvailableBudget;
+
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
@@ -37,7 +38,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -72,12 +74,12 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // optional field sets (for all test configs)
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
         $field->ignorableFields = ['currency_code', 'currency_symbol'];
@@ -85,9 +87,9 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
         $field->ignorableFields = ['currency_id', 'currency_symbol'];
@@ -95,22 +97,22 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('amount', 'random-amount'));
         $configuration->addOptionalFieldSet('amount', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('start', 'random-date-two-year'));
         $configuration->addOptionalFieldSet('start', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('end', 'random-date-one-year'));
         $configuration->addOptionalFieldSet('end', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('start', 'random-date-two-year'));
         $fieldSet->addField(Field::createBasic('end', 'random-date-one-year'));

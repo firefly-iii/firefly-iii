@@ -353,7 +353,6 @@ class TestConfiguration
             $newIgnore = array_unique($ignore + $field->ignorableFields);
             $ignore    = $newIgnore;
             $this->debugMsg(sprintf('Merged! ignores %s + %s = %s', json_encode($ignore), json_encode($field->ignorableFields), json_encode($newIgnore)));
-
         }
         $this->ignores[]    = array_values($ignore);
         $this->expected[]   = $expectedValue;
@@ -637,7 +636,7 @@ class TestConfiguration
      * @param int   $index
      * @param array $customFields
      */
-    function updateIgnorables(int $index, array $customFields): void
+    public function updateIgnorables(int $index, array $customFields): void
     {
         if (!empty($customFields)) {
             /** @var Field $field */
@@ -690,5 +689,4 @@ class TestConfiguration
     {
         $this->optionalFieldSet = $optionalFieldSet;
     }
-
 }

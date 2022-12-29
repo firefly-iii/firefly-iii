@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Webhook;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -69,39 +71,39 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('active', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('title', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('title', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('trigger', 'webhook-trigger');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('trigger', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('response', 'webhook-response');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('response', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('delivery', 'webhook-delivery');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('delivery', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('url', 'secure-url');
         $fieldSet->addField($field);

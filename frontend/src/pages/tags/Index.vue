@@ -23,7 +23,7 @@
     <q-card>
       <q-card-section>
         <span v-for="tag in tags">
-              <q-badge outline class="q-ma-xs" color="blue">
+              <q-badge class="q-ma-xs" color="blue" outline>
                 <router-link :to="{ name: 'tags.show', params: {id: tag.id} }">
                 {{ tag.attributes.tag }}
                 </router-link>
@@ -32,17 +32,17 @@
         </span>
       </q-card-section>
     </q-card>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
         label="Actions"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'tags.create'}" icon="fas fa-exchange-alt" label="New tag"/>
+        <q-fab-action :to="{ name: 'tags.create'}" color="primary" icon="fas fa-exchange-alt" label="New tag" square/>
       </q-fab>
     </q-page-sticky>
   </q-page>

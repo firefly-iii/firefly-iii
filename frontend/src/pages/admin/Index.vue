@@ -59,11 +59,11 @@
         <q-card bordered>
           <q-card-section>
             <div class="text-h6">Is demo site?
-              <span class="text-secondary" v-if="true === isOk.is_demo_site"><span
+              <span v-if="true === isOk.is_demo_site" class="text-secondary"><span
                 class="far fa-check-circle"></span></span>
-              <span class="text-blue" v-if="true === isLoading.is_demo_site"><span
+              <span v-if="true === isLoading.is_demo_site" class="text-blue"><span
                 class="fas fa-spinner fa-spin"></span></span>
-              <span class="text-red" v-if="true === isFailure.is_demo_site"><span
+              <span v-if="true === isFailure.is_demo_site" class="text-red"><span
                 class="fas fa-skull-crossbones"></span> <small>Please refresh the page...</small></span>
             </div>
           </q-card-section>
@@ -77,11 +77,11 @@
         <q-card bordered>
           <q-card-section>
             <div class="text-h6">Single user mode?
-              <span class="text-secondary" v-if="true === isOk.single_user_mode"><span
+              <span v-if="true === isOk.single_user_mode" class="text-secondary"><span
                 class="far fa-check-circle"></span></span>
-              <span class="text-blue" v-if="true === isLoading.single_user_mode"><span
+              <span v-if="true === isLoading.single_user_mode" class="text-blue"><span
                 class="fas fa-spinner fa-spin"></span></span>
-              <span class="text-red" v-if="true === isFailure.single_user_mode"><span
+              <span v-if="true === isFailure.single_user_mode" class="text-red"><span
                 class="fas fa-skull-crossbones"></span> <small>Please refresh the page...</small></span>
             </div>
           </q-card-section>
@@ -95,20 +95,20 @@
         <q-card bordered>
           <q-card-section>
             <div class="text-h6">Check for updates?
-              <span class="text-secondary" v-if="true === isOk.update_check"><span
+              <span v-if="true === isOk.update_check" class="text-secondary"><span
                 class="far fa-check-circle"></span></span>
-              <span class="text-blue" v-if="true === isLoading.update_check"><span
+              <span v-if="true === isLoading.update_check" class="text-blue"><span
                 class="fas fa-spinner fa-spin"></span></span>
-              <span class="text-red" v-if="true === isFailure.update_check"><span
+              <span v-if="true === isFailure.update_check" class="text-red"><span
                 class="fas fa-skull-crossbones"></span> <small>Please refresh the page...</small></span>
             </div>
           </q-card-section>
           <q-card-section>
             <q-select
-              bottom-slots
-              outlined
-              v-model="permissionUpdateCheck" emit-value
-              map-options :options="permissions" label="Check for updates"/>
+              v-model="permissionUpdateCheck"
+              :options="permissions"
+              bottom-slots emit-value
+              label="Check for updates" map-options outlined/>
           </q-card-section>
         </q-card>
       </div>

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\TransactionCurrency;
+
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
@@ -38,7 +39,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -71,37 +73,37 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = ['RMB'];
         $fieldSet->addField(Field::createBasic('name', 'uuid'));
         $configuration->addOptionalFieldSet('name', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = ['RMB'];
         $fieldSet->addField(Field::createBasic('symbol', 'random-new-currency-symbol'));
         $configuration->addOptionalFieldSet('symbol', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = ['RMB'];
         $field                = Field::createBasic('enabled', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('enabled', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = ['RMB'];
         $field                = Field::createBasic('default', 'boolean-true');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('default', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = ['RMB'];
         $field                = Field::createBasic('decimal_places', 'currency-dp');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('decimal_places', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = ['RMB'];
         $fieldSet->addField(Field::createBasic('symbol', 'random-new-currency-code'));
         $configuration->addOptionalFieldSet('code', $fieldSet);

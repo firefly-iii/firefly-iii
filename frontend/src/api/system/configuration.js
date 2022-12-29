@@ -1,4 +1,3 @@
-
 /*
  * configuration.js
  * Copyright (c) 2022 james@firefly-iii.org
@@ -22,11 +21,11 @@
 import {api} from "boot/axios";
 
 export default class Configuration {
-  get (identifier) {
+  get(identifier) {
     return api.get('/api/v1/configuration/' + identifier);
   }
 
-  put (identifier, value) {
+  put(identifier, value) {
     return api.put('/api/v1/configuration/' + identifier, value);
   }
 }

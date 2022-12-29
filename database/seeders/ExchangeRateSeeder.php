@@ -72,7 +72,7 @@ class ExchangeRateSeeder extends Seeder
     }
 
     /**
-     * @param string $code
+     * @param  string  $code
      * @return TransactionCurrency|null
      */
     private function getCurrency(string $code): ?TransactionCurrency
@@ -81,10 +81,10 @@ class ExchangeRateSeeder extends Seeder
     }
 
     /**
-     * @param User                $user
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param string              $date
+     * @param  User  $user
+     * @param  TransactionCurrency  $from
+     * @param  TransactionCurrency  $to
+     * @param  string  $date
      * @return bool
      */
     private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool
@@ -97,11 +97,11 @@ class ExchangeRateSeeder extends Seeder
     }
 
     /**
-     * @param User                $user
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param string              $date
-     * @param float               $rate
+     * @param  User  $user
+     * @param  TransactionCurrency  $from
+     * @param  TransactionCurrency  $to
+     * @param  string  $date
+     * @param  float  $rate
      * @return void
      */
     private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void

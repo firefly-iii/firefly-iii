@@ -77,7 +77,7 @@ export default defineComponent(
 
       const getLocale = function () {
         return (new Prefs).get('locale').then(data => {
-          const locale = data.data.data.attributes.data.replace('_','-');
+          const locale = data.data.data.attributes.data.replace('_', '-');
 
           ffStore.setLocale(locale);
         }).catch((err) => {

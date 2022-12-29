@@ -41,9 +41,10 @@ class ChangesForV530a extends Migration
     public function down(): void
     {
         Schema::table(
-            'bills', static function (Blueprint $table) {
-            $table->dropColumn('order');
-        }
+            'bills',
+            static function (Blueprint $table) {
+                $table->dropColumn('order');
+            }
         );
     }
 
@@ -55,9 +56,10 @@ class ChangesForV530a extends Migration
     public function up(): void
     {
         Schema::table(
-            'bills', static function (Blueprint $table) {
-            $table->integer('order', false, true)->default(0);
-        }
+            'bills',
+            static function (Blueprint $table) {
+                $table->integer('order', false, true)->default(0);
+            }
         );
     }
 }

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Rule;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default test set:
         $defaultSet        = new FieldSet();
@@ -89,31 +90,31 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // add optional set
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('order', 'low-order'));
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('strict', 'boolean'));
         $configuration->addOptionalFieldSet('strict', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('stop_processing', 'boolean'));
         $configuration->addOptionalFieldSet('stop_processing', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('triggers/0/stop_processing', 'boolean'));
         $configuration->addOptionalFieldSet('stop_processingX', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('triggers/0/active', 'boolean'));
         $configuration->addOptionalFieldSet('activeX', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('actions/0/active', 'boolean'));
         $configuration->addOptionalFieldSet('activeXX', $fieldSet);
         return $configuration->generateAll();
@@ -139,5 +140,4 @@ class StoreControllerTest extends TestCase
         $address = route('api.v1.rules.store');
         $this->assertPOST($address, $submission);
     }
-
 }

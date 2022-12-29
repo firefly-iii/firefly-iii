@@ -20,7 +20,7 @@
 
 <template>
   <div>
-    <ApexChart width="100%" ref="chart" height="350" type="line" :options="options" :series="series"></ApexChart>
+    <ApexChart ref="chart" :options="options" :series="series" height="350" type="line" width="100%"></ApexChart>
   </div>
 </template>
 
@@ -34,8 +34,7 @@ import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "HomeChart",
-  computed: {
-  },
+  computed: {},
   data() {
     return {
       range: {

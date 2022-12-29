@@ -23,6 +23,6 @@ import {api} from "boot/axios";
 export default class Get {
   get(identifier) {
     let url = '/api/v1/recurrences/' + identifier;
-      return api.get(url);
+    return api.get(url);
   }
 }

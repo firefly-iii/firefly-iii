@@ -21,6 +21,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tests\Objects;
 
 use Closure;
@@ -56,12 +57,11 @@ class Field
      */
     public static function createBasic(string $title, string $type): self
     {
-        $field             = new self;
+        $field             = new self();
         $field->title      = $title;
         $field->fieldTitle = $title;
         $field->fieldType  = $type;
 
         return $field;
     }
-
 }

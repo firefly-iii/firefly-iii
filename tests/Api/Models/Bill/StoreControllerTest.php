@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Bill;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default asset account test set:
         $defaultAssetSet        = new FieldSet();
@@ -76,8 +77,8 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultAssetSet);
 
         // optional field sets
-        $fieldSet               = new FieldSet;
-        $field                  = new Field;
+        $fieldSet               = new FieldSet();
+        $field                  = new Field();
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
         $field->ignorableFields = ['currency_code'];
@@ -85,8 +86,8 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
-        $field                  = new Field;
+        $fieldSet               = new FieldSet();
+        $field                  = new Field();
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
         $field->ignorableFields = ['currency_id'];
@@ -94,48 +95,48 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_code', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('name', 'uuid'));
         $configuration->addOptionalFieldSet('name', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('amount_min', 'random-amount-min'));
         $configuration->addOptionalFieldSet('amount_min', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('amount_max', 'random-amount-max'));
         $configuration->addOptionalFieldSet('amount_max', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('date', 'random-past-date'));
         $configuration->addOptionalFieldSet('date', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('repeat_freq', 'random-bill-repeat-freq'));
         $configuration->addOptionalFieldSet('repeat_freq', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('skip', 'random-skip'));
         $configuration->addOptionalFieldSet('skip', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'object_group_id';
         $field->fieldType       = 'random-og-id';
         $field->ignorableFields = ['object_group_title', 'object_group_order'];
@@ -143,9 +144,9 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('object_group_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'object_group_title';
         $field->fieldType       = 'uuid';
         $field->ignorableFields = ['object_group_id', 'object_group_order'];
@@ -175,5 +176,4 @@ class StoreControllerTest extends TestCase
         $address = route('api.v1.bills.store');
         $this->assertPOST($address, $submission);
     }
-
 }

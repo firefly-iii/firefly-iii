@@ -154,7 +154,10 @@ export default {
     triggerUpdate: function () {
       if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
         const basic = new Basic;
-        basic.list({start: this.store.getRange.start, end: this.store.getRange.end}, this.store.getCacheKey).then(data => {
+        basic.list({
+          start: this.store.getRange.start,
+          end: this.store.getRange.end
+        }, this.store.getCacheKey).then(data => {
           this.netWorth = this.getKeyedEntries(data.data, 'net-worth-in-');
           this.leftToSpend = this.getKeyedEntries(data.data, 'left-to-spend-in-');
           this.billsPaid = this.getKeyedEntries(data.data, 'bills-paid-in-');
