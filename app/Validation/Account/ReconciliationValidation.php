@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use Log;
 
 /**
@@ -37,7 +36,7 @@ trait ReconciliationValidation
     public ?Account $source;
 
     /**
-     * @param array $array
+     * @param  array  $array
      *
      * @return bool
      */
@@ -60,7 +59,7 @@ trait ReconciliationValidation
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         $search     = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->sourceError = (string) trans('validation.reconciliation_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string)trans('validation.reconciliation_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             app('log')->warning('Not a valid source. Cant find it.', $validTypes);
 
             return false;
@@ -73,7 +72,7 @@ trait ReconciliationValidation
 
     /**
      * Basically the same check
-     * @param array $array
+     * @param  array  $array
      *
      * @return bool
      */
@@ -97,7 +96,7 @@ trait ReconciliationValidation
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         $search     = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->sourceError = (string) trans('validation.reconciliation_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string)trans('validation.reconciliation_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             app('log')->warning('Not a valid source. Cant find it.', $validTypes);
 
             return false;

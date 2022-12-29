@@ -44,13 +44,21 @@ class BudgetTransformer extends AbstractTransformer
     {
         //$this->opsRepository = app(OperationsRepositoryInterface::class);
         //$this->repository    = app(BudgetRepositoryInterface::class);
-        $this->parameters    = new ParameterBag();
+        $this->parameters = new ParameterBag();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function collectMetaData(Collection $objects): void
+    {
+        // TODO: Implement collectMetaData() method.
     }
 
     /**
      * Transform a budget.
      *
-     * @param Budget $budget
+     * @param  Budget  $budget
      *
      * @return array
      */
@@ -86,7 +94,7 @@ class BudgetTransformer extends AbstractTransformer
 //        }
 
         return [
-            'id'         => (string) $budget->id,
+            'id'         => (string)$budget->id,
             'created_at' => $budget->created_at->toAtomString(),
             'updated_at' => $budget->updated_at->toAtomString(),
             'active'     => $budget->active,
@@ -109,7 +117,7 @@ class BudgetTransformer extends AbstractTransformer
     }
 
     /**
-     * @param array $array
+     * @param  array  $array
      *
      * @return array
      */
@@ -117,18 +125,10 @@ class BudgetTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = number_format((float) $data['sum'], (int) $data['currency_decimal_places'], '.', '');
+            $data['sum'] = number_format((float)$data['sum'], (int)$data['currency_decimal_places'], '.', '');
             $return[]    = $data;
         }
 
         return $return;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function collectMetaData(Collection $objects): void
-    {
-        // TODO: Implement collectMetaData() method.
     }
 }

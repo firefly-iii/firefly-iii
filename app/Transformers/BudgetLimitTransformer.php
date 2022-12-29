@@ -42,7 +42,7 @@ class BudgetLimitTransformer extends AbstractTransformer
     /**
      * Include Budget
      *
-     * @param BudgetLimit $limit
+     * @param  BudgetLimit  $limit
      *
      * @return Item
      */
@@ -54,7 +54,7 @@ class BudgetLimitTransformer extends AbstractTransformer
     /**
      * Transform the note.
      *
-     * @param BudgetLimit $budgetLimit
+     * @param  BudgetLimit  $budgetLimit
      *
      * @return array
      */
@@ -78,7 +78,7 @@ class BudgetLimitTransformer extends AbstractTransformer
         $currencySymbol        = null;
         if (null !== $currency) {
             $amount                = $budgetLimit->amount;
-            $currencyId            = (int) $currency->id;
+            $currencyId            = (int)$currency->id;
             $currencyName          = $currency->name;
             $currencyCode          = $currency->code;
             $currencySymbol        = $currency->symbol;
@@ -87,13 +87,13 @@ class BudgetLimitTransformer extends AbstractTransformer
         $amount = app('steam')->bcround($amount, $currencyDecimalPlaces);
 
         return [
-            'id'                      => (string) $budgetLimit->id,
+            'id'                      => (string)$budgetLimit->id,
             'created_at'              => $budgetLimit->created_at->toAtomString(),
             'updated_at'              => $budgetLimit->updated_at->toAtomString(),
             'start'                   => $budgetLimit->start_date->toAtomString(),
             'end'                     => $budgetLimit->end_date->endOfDay()->toAtomString(),
-            'budget_id'               => (string) $budgetLimit->budget_id,
-            'currency_id'             => (string) $currencyId,
+            'budget_id'               => (string)$budgetLimit->budget_id,
+            'currency_id'             => (string)$currencyId,
             'currency_code'           => $currencyCode,
             'currency_name'           => $currencyName,
             'currency_decimal_places' => $currencyDecimalPlaces,
@@ -104,7 +104,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/limits/' . $budgetLimit->id,
+                    'uri' => '/budgets/limits/'.$budgetLimit->id,
                 ],
             ],
         ];

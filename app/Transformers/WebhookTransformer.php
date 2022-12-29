@@ -46,14 +46,14 @@ class WebhookTransformer extends AbstractTransformer
     /**
      * Transform webhook.
      *
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return array
      */
     public function transform(Webhook $webhook): array
     {
         return [
-            'id'         => (int) $webhook->id,
+            'id'         => (int)$webhook->id,
             'created_at' => $webhook->created_at->toAtomString(),
             'updated_at' => $webhook->updated_at->toAtomString(),
             'active'     => $webhook->active,
@@ -73,8 +73,8 @@ class WebhookTransformer extends AbstractTransformer
     }
 
     /**
-     * @param string $type
-     * @param int    $value
+     * @param  string  $type
+     * @param  int  $value
      * @return string
      */
     private function getEnum(string $type, int $value): string

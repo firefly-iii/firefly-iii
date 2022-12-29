@@ -53,7 +53,7 @@ class BudgetTransformer extends AbstractTransformer
     /**
      * Transform a budget.
      *
-     * @param Budget $budget
+     * @param  Budget  $budget
      *
      * @return array
      */
@@ -81,7 +81,7 @@ class BudgetTransformer extends AbstractTransformer
         ];
 
         if (null !== $autoBudget) {
-            $abCurrencyId   = (string) $autoBudget->transactionCurrency->id;
+            $abCurrencyId   = (string)$autoBudget->transactionCurrency->id;
             $abCurrencyCode = $autoBudget->transactionCurrency->code;
             $abType         = $types[$autoBudget->auto_budget_type];
             $abAmount       = app('steam')->bcround($autoBudget->amount, $autoBudget->transactionCurrency->decimal_places);
@@ -89,7 +89,7 @@ class BudgetTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                        => (string) $budget->id,
+            'id'                        => (string)$budget->id,
             'created_at'                => $budget->created_at->toAtomString(),
             'updated_at'                => $budget->updated_at->toAtomString(),
             'active'                    => $budget->active,
@@ -105,14 +105,14 @@ class BudgetTransformer extends AbstractTransformer
             'links'                     => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/' . $budget->id,
+                    'uri' => '/budgets/'.$budget->id,
                 ],
             ],
         ];
     }
 
     /**
-     * @param array $array
+     * @param  array  $array
      *
      * @return array
      */
@@ -120,7 +120,7 @@ class BudgetTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = app('steam')->bcround($data['sum'], (int) $data['currency_decimal_places']);
+            $data['sum'] = app('steam')->bcround($data['sum'], (int)$data['currency_decimal_places']);
             $return[]    = $data;
         }
 

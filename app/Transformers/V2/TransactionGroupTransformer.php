@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers\V2;
 
 use Carbon\Carbon;
-use FireflyIII\Factory\TransactionFactory;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
@@ -46,7 +44,42 @@ class TransactionGroupTransformer extends AbstractTransformer
     private array               $meta;
 
     /**
-     * @param array $group
+     * @inheritDoc
+     */
+    public function collectMetaData(Collection $objects): void
+    {
+        // start with currencies:
+        $currencies = [];
+        $journals   = [];
+        /** @var array $object */
+        foreach ($objects as $object) {
+            foreach ($object['sums'] as $sum) {
+                $id = $sum['currency_id'];
+                if (!array_key_exists($id, $currencies)) {
+                    $currencyObject  = TransactionCurrency::find($sum['currency_id']);
+                    $currencies[$id] = $currencyObject;
+                }
+            }
+            /** @var array $transaction */
+            foreach ($object['transactions'] as $transaction) {
+                $id            = $transaction['transaction_journal_id'];
+                $journals[$id] = [];
+            }
+        }
+        $this->currencies = $currencies;
+        $this->default    = app('amount')->getDefaultCurrency();
+
+        // grab meta for all journals:
+        $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
+        /** @var TransactionJournalMeta $entry */
+        foreach ($meta as $entry) {
+            $id                            = (int)$entry->transaction_journal_id;
+            $this->meta[$id][$entry->name] = $entry->data;
+        }
+    }
+
+    /**
+     * @param  array  $group
      *
      * @return array
      */
@@ -54,10 +87,10 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         $first = reset($group['transactions']);
         return [
-            'id'           => (string) $group['id'],
+            'id'           => (string)$group['id'],
             'created_at'   => $first['created_at']->toAtomString(),
             'updated_at'   => $first['updated_at']->toAtomString(),
-            'user'         => (string) $first['user_id'],
+            'user'         => (string)$first['user_id'],
             'group_title'  => $group['title'] ?? null,
             'transactions' => $this->transformTransactions($group['transactions'] ?? []),
             'links'        => [
@@ -70,7 +103,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param array $transactions
+     * @param  array  $transactions
      * @return array
      */
     private function transformTransactions(array $transactions): array
@@ -86,10 +119,10 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function transformTransaction(array $transaction): array
     {
         $transaction         = new NullArrayObject($transaction);
-        $journalId           = (int) $transaction['transaction_journal_id'];
+        $journalId           = (int)$transaction['transaction_journal_id'];
         $meta                = new NullArrayObject($this->meta[$journalId] ?? []);
         $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $amount              = app('steam')->positive((string) ($transaction['amount'] ?? '0'));
+        $amount              = app('steam')->positive((string)($transaction['amount'] ?? '0'));
         $foreignAmount       = null;
         $nativeForeignAmount = null;
         if (null !== $transaction['foreign_amount']) {
@@ -108,24 +141,24 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'user'                           => (string) $transaction['user_id'],
-            'transaction_journal_id'         => (string) $transaction['transaction_journal_id'],
+            'user'                           => (string)$transaction['user_id'],
+            'transaction_journal_id'         => (string)$transaction['transaction_journal_id'],
             'type'                           => strtolower($type),
             'date'                           => $transaction['date']->toAtomString(),
             'order'                          => $transaction['order'],
-            'currency_id'                    => (string) $transaction['currency_id'],
+            'currency_id'                    => (string)$transaction['currency_id'],
             'currency_code'                  => $transaction['currency_code'],
             'currency_name'                  => $transaction['currency_name'],
             'currency_symbol'                => $transaction['currency_symbol'],
-            'currency_decimal_places'        => (int) $transaction['currency_decimal_places'],
+            'currency_decimal_places'        => (int)$transaction['currency_decimal_places'],
 
             // converted to native currency
             'native_currency_converted'      => $transaction['currency_id'] !== $this->default->id,
-            'native_currency_id'             => (string) $this->default->id,
+            'native_currency_id'             => (string)$this->default->id,
             'native_currency_code'           => $this->default->code,
             'native_currency_name'           => $this->default->name,
             'native_currency_symbol'         => $this->default->symbol,
-            'native_currency_decimal_places' => (int) $this->default->decimal_places,
+            'native_currency_decimal_places' => (int)$this->default->decimal_places,
 
             'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
             'foreign_currency_code'           => $transaction['foreign_currency_code'],
@@ -141,11 +174,11 @@ class TransactionGroupTransformer extends AbstractTransformer
             'foreign_amount'        => $foreignAmount,
             'native_foreign_amount' => $nativeForeignAmount,
             'description'           => $transaction['description'],
-            'source_id'             => (string) $transaction['source_account_id'],
+            'source_id'             => (string)$transaction['source_account_id'],
             'source_name'           => $transaction['source_account_name'],
             'source_iban'           => $transaction['source_account_iban'],
             'source_type'           => $transaction['source_account_type'],
-            'destination_id'        => (string) $transaction['destination_account_id'],
+            'destination_id'        => (string)$transaction['destination_account_id'],
             'destination_name'      => $transaction['destination_account_name'],
             'destination_iban'      => $transaction['destination_account_iban'],
             'destination_type'      => $transaction['destination_account_type'],
@@ -197,9 +230,9 @@ class TransactionGroupTransformer extends AbstractTransformer
     /**
      * TODO also in the old transformer.
      *
-     * @param NullArrayObject $array
-     * @param string          $key
-     * @param string|null     $default
+     * @param  NullArrayObject  $array
+     * @param  string  $key
+     * @param  string|null  $default
      *
      * @return string|null
      */
@@ -209,7 +242,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             return null;
         }
         if (null !== $array[$key]) {
-            return (string) $array[$key];
+            return (string)$array[$key];
         }
 
         if (null !== $default) {
@@ -220,42 +253,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @inheritDoc
-     */
-    public function collectMetaData(Collection $objects): void
-    {
-        // start with currencies:
-        $currencies = [];
-        $journals   = [];
-        /** @var array $object */
-        foreach ($objects as $object) {
-            foreach ($object['sums'] as $sum) {
-                $id = $sum['currency_id'];
-                if (!array_key_exists($id, $currencies)) {
-                    $currencyObject  = TransactionCurrency::find($sum['currency_id']);
-                    $currencies[$id] = $currencyObject;
-                }
-            }
-            /** @var array $transaction */
-            foreach ($object['transactions'] as $transaction) {
-                $id            = $transaction['transaction_journal_id'];
-                $journals[$id] = [];
-            }
-        }
-        $this->currencies = $currencies;
-        $this->default    = app('amount')->getDefaultCurrency();
-
-        // grab meta for all journals:
-        $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
-        /** @var TransactionJournalMeta $entry */
-        foreach ($meta as $entry) {
-            $id                            = (int) $entry->transaction_journal_id;
-            $this->meta[$id][$entry->name] = $entry->data;
-        }
-    }
-
-    /**
-     * @param string|null $string
+     * @param  string|null  $string
      * @return Carbon|null
      */
     private function date(?string $string): ?Carbon

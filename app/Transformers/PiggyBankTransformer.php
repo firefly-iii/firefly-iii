@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use JsonException;
 
 /**
  * Class PiggyBankTransformer
@@ -56,8 +58,8 @@ class PiggyBankTransformer extends AbstractTransformer
      * @param  PiggyBank  $piggyBank
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function transform(PiggyBank $piggyBank): array
     {

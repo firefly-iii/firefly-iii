@@ -37,15 +37,46 @@ use Illuminate\Support\Collection;
  */
 class AccountTransformer extends AbstractTransformer
 {
-    private array                $currencies;
     private array                $accountMeta;
-    private ?TransactionCurrency $currency;
     private array                $balances;
+    private array                $currencies;
+    private ?TransactionCurrency $currency;
+
+    /**
+     * @inheritDoc
+     * @throws FireflyException
+     */
+    public function collectMetaData(Collection $objects): void
+    {
+        $this->currency    = null;
+        $this->currencies  = [];
+        $this->accountMeta = [];
+        $this->balances    = app('steam')->balancesByAccounts($objects, $this->getDate());
+        $repository        = app(CurrencyRepositoryInterface::class);
+        $this->currency    = app('amount')->getDefaultCurrency();
+
+        // get currencies:
+        $accountIds  = $objects->pluck('id')->toArray();
+        $meta        = AccountMeta::whereIn('account_id', $accountIds)
+                                  ->where('name', 'currency_id')
+                                  ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
+        $currencyIds = $meta->pluck('data')->toArray();
+
+        $currencies = $repository->getByIds($currencyIds);
+        foreach ($currencies as $currency) {
+            $id                    = (int)$currency->id;
+            $this->currencies[$id] = $currency;
+        }
+        foreach ($meta as $entry) {
+            $id                                   = (int)$entry->account_id;
+            $this->accountMeta[$id][$entry->name] = $entry->data;
+        }
+    }
 
     /**
      * Transform the account.
      *
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return array
      */
@@ -53,16 +84,16 @@ class AccountTransformer extends AbstractTransformer
     {
         //$fullType    = $account->accountType->type;
         //$accountType = (string) config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
-        $id = (int) $account->id;
+        $id = (int)$account->id;
 
         // no currency? use default
         $currency = $this->currency;
-        if (0 !== (int) $this->accountMeta[$id]['currency_id']) {
-            $currency = $this->currencies[(int) $this->accountMeta[$id]['currency_id']];
+        if (0 !== (int)$this->accountMeta[$id]['currency_id']) {
+            $currency = $this->currencies[(int)$this->accountMeta[$id]['currency_id']];
         }
 
         return [
-            'id'                      => (string) $account->id,
+            'id'                      => (string)$account->id,
             'created_at'              => $account->created_at->toAtomString(),
             'updated_at'              => $account->updated_at->toAtomString(),
             'active'                  => $account->active,
@@ -97,7 +128,7 @@ class AccountTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/' . $account->id,
+                    'uri' => '/accounts/'.$account->id,
                 ],
             ],
         ];
@@ -114,36 +145,5 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return $date;
-    }
-
-    /**
-     * @inheritDoc
-     * @throws FireflyException
-     */
-    public function collectMetaData(Collection $objects): void
-    {
-        $this->currency    = null;
-        $this->currencies  = [];
-        $this->accountMeta = [];
-        $this->balances    = app('steam')->balancesByAccounts($objects, $this->getDate());
-        $repository        = app(CurrencyRepositoryInterface::class);
-        $this->currency    = app('amount')->getDefaultCurrency();
-
-        // get currencies:
-        $accountIds  = $objects->pluck('id')->toArray();
-        $meta        = AccountMeta::whereIn('account_id', $accountIds)
-            ->where('name', 'currency_id')
-            ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
-        $currencyIds = $meta->pluck('data')->toArray();
-
-        $currencies = $repository->getByIds($currencyIds);
-        foreach ($currencies as $currency) {
-            $id                    = (int) $currency->id;
-            $this->currencies[$id] = $currency;
-        }
-        foreach ($meta as $entry) {
-            $id                                   = (int) $entry->account_id;
-            $this->accountMeta[$id][$entry->name] = $entry->data;
-        }
     }
 }
