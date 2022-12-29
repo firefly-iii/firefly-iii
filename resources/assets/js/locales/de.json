@@ -135,9 +135,9 @@
         "payment_date": "Zahlungsdatum",
         "invoice_date": "Rechnungsdatum",
         "internal_reference": "Interner Verweis",
-        "webhook_response": "Response",
+        "webhook_response": "Antwort",
         "webhook_trigger": "Ausl\u00f6ser",
-        "webhook_delivery": "Delivery"
+        "webhook_delivery": "Zustellung"
     },
     "list": {
         "active": "Aktiv?",

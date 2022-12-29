@@ -141,8 +141,8 @@ return [
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
     'unique_object_group'            => 'Der Gruppenname muss eindeutig sein',
     'starts_with'                    => 'Der Wert muss mit :values beginnen.',
-    'unique_webhook'                 => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'        => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
+    'unique_webhook'                 => 'Sie haben bereits einen Webhook mit dieser Kombination aus URL, Trigger, Antwort und Auslieferung.',
+    'unique_existing_webhook'        => 'Sie haben bereits einen weiteren Webhook mit dieser Kombination aus URL, Trigger, Antwort und Auslieferung.',
     'same_account_type'              => 'Beide Konten müssen vom selben Kontotyp sein',
     'same_account_currency'          => 'Beiden Konten muss die gleiche Währung zugeordnet sein',
 
@@ -194,7 +194,7 @@ return [
     'withdrawal_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
     'withdrawal_dest_bad_data'    => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
 
-    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+    'reconciliation_source_bad_data' => 'Bei der Suche nach ID „:id” oder Name „:name” konnte kein gültiges Ausgleichskonto gefunden werden.',
 
     'generic_source_bad_data' => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
 

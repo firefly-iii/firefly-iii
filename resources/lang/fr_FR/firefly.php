@@ -142,7 +142,7 @@ return [
     'left_in_budget_limit'                 => 'Reste à dépenser selon budget',
     'current_period'                       => 'Période en cours',
     'show_the_current_period_and_overview' => 'Afficher l’exercice en cours et sa vue d’ensemble',
-    'pref_languages_locale'                => 'Pour une langue autre que l’anglais et pour fonctionner correctement, votre système d’exploitation doit être équipé avec les paramètres régionaux correctes. Si ils ne sont pas présents, les données de devises, les dates et les montants peuvent être mal formatés.',
+    'pref_languages_locale'                => 'Pour une langue autre que l’anglais et pour fonctionner correctement, votre système d’exploitation doit être équipé avec les paramètres régionaux corrects. S\'ils ne sont pas présents, les données de devises, les dates et les montants peuvent être mal formatés.',
     'budget_in_period'                     => 'Toutes les opérations pour le budget ":name" entre :start et :end dans la monnaie :currency',
     'chart_budget_in_period'               => 'Graphique pour toutes les opérations pour le budget ":name" entre :start et :end dans :currency',
     'chart_budget_in_period_only_currency' => 'Le montant que vous avez budgété était en :currency, ce graphique ne montrera donc que les opérations en :currency.',

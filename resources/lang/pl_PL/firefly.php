@@ -335,7 +335,7 @@ return [
     'search_modifier_external_id_is'                      => 'Zewnętrzne ID to ":value"',
     'search_modifier_not_external_id_is'                  => 'Zewnętrzne ID to nie ":value"',
     'search_modifier_no_external_url'                     => 'Transakcja nie ma zewnętrznego adresu URL',
-    'search_modifier_no_external_id'                      => 'The transaction has no external ID',
+    'search_modifier_no_external_id'                      => 'Transakcja nie ma zewnętrznego ID',
     'search_modifier_not_any_external_url'                => 'Transakcja nie ma zewnętrznego adresu URL',
     'search_modifier_not_any_external_id'                 => 'The transaction has no external ID',
     'search_modifier_any_external_url'                    => 'Transakcja musi mieć (dowolny) zewnętrzny adres URL',
