@@ -335,9 +335,13 @@ return [
     'search_modifier_external_id_is'                      => 'Eksternt ID er ":value"',
     'search_modifier_not_external_id_is'                  => 'Eksternt ID er ikke ":value"',
     'search_modifier_no_external_url'                     => 'Transaktionen har ikke noget eksternt URL',
+    'search_modifier_no_external_id'                      => 'The transaction has no external ID',
     'search_modifier_not_any_external_url'                => 'Transaktionen har ikke noget eksternt URL',
+    'search_modifier_not_any_external_id'                 => 'The transaction has no external ID',
     'search_modifier_any_external_url'                    => 'Transaktionen skal have et (vilkårligt) eksternt URL',
+    'search_modifier_any_external_id'                     => 'The transaction must have a (any) external ID',
     'search_modifier_not_no_external_url'                 => 'Transaktionen skal have et (vilkårligt) eksternt URL',
+    'search_modifier_not_no_external_id'                  => 'The transaction must have a (any) external ID',
     'search_modifier_internal_reference_is'               => 'Intern reference er ":value"',
     'search_modifier_not_internal_reference_is'           => 'Intern reference er ikke ":value"',
     'search_modifier_description_starts'                  => 'Beskrivelsen starter med ":value"',
@@ -675,6 +679,7 @@ return [
     'search_modifier_not_attachment_notes_contains'       => 'Any attachment\'s notes do not contain ":value"',
     'search_modifier_not_attachment_notes_starts'         => 'Any attachment\'s notes start with ":value"',
     'search_modifier_not_attachment_notes_ends'           => 'Any attachment\'s notes do not end with ":value"',
+    'search_modifier_sepa_ct_is'                          => 'SEPA CT is ":value"',
     'update_rule_from_query'                              => 'Opdater regel ":rule" fra søgeforespørgsel',
     'create_rule_from_query'                              => 'Opret ny regel fra søgeforespørgsel',
     'rule_from_search_words'                              => 'Der er problemer med at håndtere forespørgslen ":string". Den foreslåede regel, der passer til din søgeforespørgsel, kan give forskellige resultater. Kontroller venligst omhyggeligt de udløsende hændelser.',
@@ -898,6 +903,8 @@ return [
     'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
     'rule_trigger_id_choice'                              => 'Transaction ID is..',
     'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
+    'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
+    'rule_trigger_sepa_ct_is'                             => 'SEPA CT is ":trigger_value"',
 
     // new values:
     'rule_trigger_user_action_choice'                     => 'User action is ":trigger_value"',
@@ -1487,7 +1494,7 @@ return [
     'title_transfer'                            => 'Overførsler',
     'title_transfers'                           => 'Overførsler',
     'submission_options'                        => 'Submission options',
-    'apply_rules_checkbox'                     => 'Apply rules',
+    'apply_rules_checkbox'                      => 'Apply rules',
     'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
@@ -2185,6 +2192,7 @@ return [
     'no_tags'                                   => '(ingen mærker)',
 
     // piggy banks:
+    'event_history'                             => 'Event history',
     'add_money_to_piggy'                        => 'Tilføj penge til sparegrisen ":name"',
     'piggy_bank'                                => 'Sparegris',
     'new_piggy_bank'                            => 'Ny sparegris',
@@ -2443,6 +2451,8 @@ return [
     'no_bills_create_default'               => 'Opret ny regning',
 
     // recurring transactions
+    'create_right_now'                      => 'Create right now',
+    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Recurring transactions',
     'repeat_until_in_past'                  => 'This recurring transaction stopped repeating on :date.',
     'recurring_calendar_view'               => 'Calendar',

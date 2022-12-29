@@ -335,9 +335,13 @@ return [
     'search_modifier_external_id_is'                      => 'Зовнішній ID - ":value"',
     'search_modifier_not_external_id_is'                  => 'Зовнішній ідентифікатор не ":value"',
     'search_modifier_no_external_url'                     => 'Операція не має зовнішнього URL',
+    'search_modifier_no_external_id'                      => 'The transaction has no external ID',
     'search_modifier_not_any_external_url'                => 'Операція не має зовнішнього URL',
+    'search_modifier_not_any_external_id'                 => 'The transaction has no external ID',
     'search_modifier_any_external_url'                    => 'Операція повинна мати зовнішні URL-адреси (будь-який)',
+    'search_modifier_any_external_id'                     => 'The transaction must have a (any) external ID',
     'search_modifier_not_no_external_url'                 => 'Операція повинна мати (будь-які) зовнішні URL-адреси',
+    'search_modifier_not_no_external_id'                  => 'The transaction must have a (any) external ID',
     'search_modifier_internal_reference_is'               => 'Внутрішнє посилання - ":value"',
     'search_modifier_not_internal_reference_is'           => 'Внутрішнє посилання не ":value"',
     'search_modifier_description_starts'                  => 'Опис починається з ":value"',
@@ -675,6 +679,7 @@ return [
     'search_modifier_not_attachment_notes_contains'       => 'Будь-які примітки вкладення не містять ":value"',
     'search_modifier_not_attachment_notes_starts'         => 'Будь-які примітки до вкладення починаються з ":value"',
     'search_modifier_not_attachment_notes_ends'           => 'Примітки до вкладення не закінчуються на ":value"',
+    'search_modifier_sepa_ct_is'                          => 'SEPA CT is ":value"',
     'update_rule_from_query'                              => 'Оновити правило ":rule" із пошукового запиту',
     'create_rule_from_query'                              => 'Створити нове правило з пошукового запиту',
     'rule_from_search_words'                              => 'Рушію правил важко обробити ":string". Пропоноване правило, яке відповідає вашому запиту, може дати різні результати. Будь ласка, уважно перевіряйте умови.',
@@ -898,6 +903,8 @@ return [
     'rule_trigger_no_external_url_choice'                 => 'Операція не має зовнішньої URL-адреси',
     'rule_trigger_id_choice'                              => 'Ідентифікатор операції..',
     'rule_trigger_id'                                     => 'Ідентифікатор операції: ":trigger_value"',
+    'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
+    'rule_trigger_sepa_ct_is'                             => 'SEPA CT is ":trigger_value"',
 
     // new values:
     'rule_trigger_user_action_choice'                     => 'Дія користувача: ":trigger_value"',
@@ -1487,7 +1494,7 @@ return [
     'title_transfer'                            => 'Переказ',
     'title_transfers'                           => 'Перекази',
     'submission_options'                        => 'Submission options',
-    'apply_rules_checkbox'                     => 'Apply rules',
+    'apply_rules_checkbox'                      => 'Apply rules',
     'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
@@ -2185,6 +2192,7 @@ return [
     'no_tags'                                   => '(no tags)',
 
     // piggy banks:
+    'event_history'                             => 'Event history',
     'add_money_to_piggy'                        => 'Add money to piggy bank ":name"',
     'piggy_bank'                                => 'Piggy bank',
     'new_piggy_bank'                            => 'New piggy bank',
@@ -2443,6 +2451,8 @@ return [
     'no_bills_create_default'               => 'Create a bill',
 
     // recurring transactions
+    'create_right_now'                      => 'Create right now',
+    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Recurring transactions',
     'repeat_until_in_past'                  => 'This recurring transaction stopped repeating on :date.',
     'recurring_calendar_view'               => 'Calendar',

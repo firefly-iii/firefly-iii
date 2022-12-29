@@ -335,9 +335,13 @@ return [
     'search_modifier_external_id_is'                      => 'Externe ID is ":value"',
     'search_modifier_not_external_id_is'                  => 'Externe ID is niet ":value"',
     'search_modifier_no_external_url'                     => 'De transactie heeft geen externe URL',
+    'search_modifier_no_external_id'                      => 'The transaction has no external ID',
     'search_modifier_not_any_external_url'                => 'De transactie heeft geen externe URL',
+    'search_modifier_not_any_external_id'                 => 'The transaction has no external ID',
     'search_modifier_any_external_url'                    => 'De transactie heeft een (welke dan ook) externe URL',
+    'search_modifier_any_external_id'                     => 'The transaction must have a (any) external ID',
     'search_modifier_not_no_external_url'                 => 'De transactie heeft een (welke dan ook) externe URL',
+    'search_modifier_not_no_external_id'                  => 'The transaction must have a (any) external ID',
     'search_modifier_internal_reference_is'               => 'Interne referentie is ":value"',
     'search_modifier_not_internal_reference_is'           => 'Interne referentie is niet ":value"',
     'search_modifier_description_starts'                  => 'Omschrijving begint met ":value"',
@@ -675,6 +679,7 @@ return [
     'search_modifier_not_attachment_notes_contains'       => 'Er is een bijlage waarvan de notitie niet ":value" bevatten',
     'search_modifier_not_attachment_notes_starts'         => 'Er is een bijlage waarvan de notitie begint met ":value"',
     'search_modifier_not_attachment_notes_ends'           => 'Er is een bijlage waarvan de notitie niet eindigt op ":value"',
+    'search_modifier_sepa_ct_is'                          => 'SEPA CT is ":value"',
     'update_rule_from_query'                              => 'Update regel ":rule" middels zoekquery',
     'create_rule_from_query'                              => 'Nieuwe regel op basis van zoekquery',
     'rule_from_search_words'                              => 'Firefly III heeft moeite met deze query: ":string". De voorgestelde regel die past bij je zoekquery kan afwijken. Controleer de regel zorgvuldig.',
@@ -898,6 +903,8 @@ return [
     'rule_trigger_no_external_url_choice'                 => 'De transactie heeft geen externe URL',
     'rule_trigger_id_choice'                              => 'Transactie-ID is..',
     'rule_trigger_id'                                     => 'Transactie-ID is ":trigger_value"',
+    'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
+    'rule_trigger_sepa_ct_is'                             => 'SEPA CT is ":trigger_value"',
 
     // new values:
     'rule_trigger_user_action_choice'                     => 'Gebruikersactie is ":trigger_value"',
@@ -1487,7 +1494,7 @@ return [
     'title_transfer'                            => 'Overschrijvingen',
     'title_transfers'                           => 'Overschrijvingen',
     'submission_options'                        => 'Submission options',
-    'apply_rules_checkbox'                     => 'Apply rules',
+    'apply_rules_checkbox'                      => 'Apply rules',
     'fire_webhooks_checkbox'                    => 'Fire webhooks',
 
     // convert stuff:
@@ -2185,6 +2192,7 @@ return [
     'no_tags'                                   => '(geen tags)',
 
     // piggy banks:
+    'event_history'                             => 'Event history',
     'add_money_to_piggy'                        => 'Stop geld in spaarpotje ":name"',
     'piggy_bank'                                => 'Spaarpotje',
     'new_piggy_bank'                            => 'Nieuw spaarpotje',
@@ -2443,6 +2451,8 @@ return [
     'no_bills_create_default'               => 'Maak een contract',
 
     // recurring transactions
+    'create_right_now'                      => 'Create right now',
+    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Periodieke transacties',
     'repeat_until_in_past'                  => 'Deze periodieke transactie stopte met herhalen op :date.',
     'recurring_calendar_view'               => 'Kalender',
