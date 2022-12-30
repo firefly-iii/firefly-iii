@@ -5,7 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 5.8.0-alpha.1 2023-01-01
 
 This is the first release of the new 5.8.0 series of Firefly III. It should upgrade the database automatically BUT 
-make a backup of your database first! I guarantee nothing. 
+make a backup of your database first! I guarantee nothing.
+
+### Warnings
+
+- ⚠️ Make a backup of your database first!
+- ⚠️ This version requires **PHP 8.1** and there is a good chance the final version jumps to **PHP 8.2**.
+- ⚠️ The new layout is not yet finished. Use it to change your data at your own risk. 
 
 ### Added
 
@@ -26,6 +32,7 @@ Lots of new stuff that I invite you to test and break.
 - New authentication screens that support dark mode.
 
 ### Changed
+- Firefly III requires PHP 8.1
 - Liabilities are no longer part of your net worth.
 - Liabilities no longer need two transactions to be managed properly (see the documentation)
 
