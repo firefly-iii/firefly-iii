@@ -39,7 +39,7 @@ class BudgetDestroyService
      */
     public function destroy(Budget $budget): void
     {
-            $budget->delete();
+        $budget->delete();
 
         // also delete auto budget:
         foreach ($budget->autoBudgets()->get() as $autoBudget) {

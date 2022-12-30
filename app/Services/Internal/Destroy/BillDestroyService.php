@@ -37,6 +37,6 @@ class BillDestroyService
      */
     public function destroy(Bill $bill): void
     {
-            $bill->delete();
+        $bill->delete();
     }
 }

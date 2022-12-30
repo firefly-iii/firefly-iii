@@ -331,7 +331,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             return;
         }
         if (null !== $dbNote) {
-                $dbNote->delete();
+            $dbNote->delete();
         }
     }
 

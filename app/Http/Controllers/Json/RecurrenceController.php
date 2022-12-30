@@ -107,17 +107,16 @@ class RecurrenceController extends Controller
         $repetition->weekend           = (int)$request->get('weekend');
         $actualEnd                     = clone $end;
 
-        if('until_date' === $endsAt) {
+        if ('until_date' === $endsAt) {
             $actualEnd   = $endDate ?? clone $end;
             $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
         }
-        if('times' === $endsAt) {
+        if ('times' === $endsAt) {
             $occurrences = $this->recurring->getXOccurrences($repetition, $actualStart, $repetitions);
         }
-        if('times' !== $endsAt && 'until_date' !== $endsAt) {
+        if ('times' !== $endsAt && 'until_date' !== $endsAt) {
             // 'forever'
             $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
-
         }
 
         /** @var Carbon $current */

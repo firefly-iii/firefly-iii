@@ -315,22 +315,22 @@ class RecurrenceFormRequest extends FormRequest
         // TODO either use 'withdrawal' or the strtolower() variant, not both.
         $type = $this->convertString('transaction_type');
         $throwError = true;
-        if('withdrawal' === $type) {
+        if ('withdrawal' === $type) {
             $throwError = false;
             $sourceId      = (int)$data['source_id'];
             $destinationId = (int)$data['withdrawal_destination_id'];
         }
-        if('deposit' === $type) {
+        if ('deposit' === $type) {
             $throwError = false;
             $sourceId      = (int)$data['deposit_source_id'];
             $destinationId = (int)$data['destination_id'];
         }
-        if('transfer' === $type) {
+        if ('transfer' === $type) {
             $throwError = false;
             $sourceId      = (int)$data['source_id'];
             $destinationId = (int)$data['destination_id'];
         }
-        if(true === $throwError) {
+        if (true === $throwError) {
             throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
         }
 

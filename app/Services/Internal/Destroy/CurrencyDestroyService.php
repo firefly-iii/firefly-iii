@@ -38,6 +38,6 @@ class CurrencyDestroyService
      */
     public function destroy(TransactionCurrency $currency): void
     {
-            $currency->delete();
+        $currency->delete();
     }
 }

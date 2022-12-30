@@ -132,7 +132,7 @@ class RecurrenceUpdateService
             return;
         }
         if (null !== $dbNote && '' === $text) {
-                $dbNote->delete();
+            $dbNote->delete();
         }
     }
 

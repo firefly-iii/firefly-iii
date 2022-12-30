@@ -113,7 +113,7 @@ class Preferences
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-            Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
+        Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
 
         return true;
     }
@@ -145,7 +145,7 @@ class Preferences
         $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref && null === $value) {
-                $pref->delete();
+            $pref->delete();
 
             return new Preference();
         }

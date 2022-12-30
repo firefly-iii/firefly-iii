@@ -61,7 +61,7 @@ trait RecurringTransactionTrait
         if ('' === $note) {
             $dbNote = $recurrence->notes()->first();
             if (null !== $dbNote) {
-                    $dbNote->delete();
+                $dbNote->delete();
             }
 
             return true;
@@ -373,8 +373,7 @@ trait RecurringTransactionTrait
         foreach ($recurrence->recurrenceTransactions as $transaction) {
             $transaction->recurrenceTransactionMeta()->delete();
 
-                $transaction->delete();
-
+            $transaction->delete();
         }
     }
 }

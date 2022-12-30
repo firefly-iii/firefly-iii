@@ -46,7 +46,7 @@ class FireflyConfig
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-            Configuration::where('name', $name)->forceDelete();
+        Configuration::where('name', $name)->forceDelete();
     }
 
     /**

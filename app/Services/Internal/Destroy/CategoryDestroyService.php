@@ -39,7 +39,7 @@ class CategoryDestroyService
      */
     public function destroy(Category $category): void
     {
-            $category->delete();
+        $category->delete();
 
         // also delete all relations between categories and transaction journals:
         DB::table('category_transaction_journal')->where('category_id', (int)$category->id)->delete();
