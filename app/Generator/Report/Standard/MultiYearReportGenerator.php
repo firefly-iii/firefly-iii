@@ -65,8 +65,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
             $result = sprintf('Could not render report view: %s', $e->getMessage());
             throw new FireflyException($result, 0, $e);
         }
-
-        return $result;
     }
 
     /**

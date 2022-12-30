@@ -40,26 +40,26 @@
             <table class="table table-hover">
               <tbody>
               <tr>
-                <td style="width:40%;">Title</td>
+                <th style="width:40%;">Title</th>
                 <td>{{ title }}</td>
               </tr>
               <tr>
-                <td>{{ $t('list.active') }}</td>
+                <th>{{ $t('list.active') }}</th>
                 <td>
                   <em class="fa fa-check text-success" v-if="active"></em>
                   <em class="fa fa-times text-danger" v-if="!active"></em>
                 </td>
               </tr>
               <tr>
-                <td>{{ $t('list.trigger') }}</td>
+                <th>{{ $t('list.trigger') }}</th>
                 <td> {{ trigger }}</td>
               </tr>
               <tr>
-                <td>{{ $t('list.response') }}</td>
+                <th>{{ $t('list.response') }}</th>
                 <td> {{ response }}</td>
               </tr>
               <tr>
-                <td>{{ $t('list.delivery') }}</td>
+                <th>{{ $t('list.delivery') }}</th>
                 <td> {{ delivery }}</td>
               </tr>
               </tbody>
@@ -85,7 +85,7 @@
             <table class="table table-hover">
               <tbody>
               <tr>
-                <td style="width:40%;">{{ $t('list.url') }}</td>
+                <th style="width:40%;">{{ $t('list.url') }}</th>
                 <td><input type="text" readonly class="form-control" :value=url></td>
               </tr>
               <tr>
@@ -128,7 +128,7 @@
             </p>
           </div>
           <div class="box-body no-padding" v-if="messages.length > 0">
-            <table class="table table-hover">
+            <table class="table table-hover" aria-label="A table">
               <thead>
               <tr>
                 <th>

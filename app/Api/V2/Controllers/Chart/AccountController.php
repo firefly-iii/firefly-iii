@@ -121,6 +121,5 @@ class AccountController extends Controller
         }
 
         return response()->json($chartData);
-        return response()->json(['x']);
     }
 }

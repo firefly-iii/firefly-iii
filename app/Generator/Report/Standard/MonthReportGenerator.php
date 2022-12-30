@@ -61,8 +61,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $result = 'Could not render report view.';
             throw new FireflyException($result, 0, $e);
         }
-
-        return $result;
     }
 
     /**

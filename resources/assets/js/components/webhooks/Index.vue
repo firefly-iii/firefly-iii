@@ -32,7 +32,7 @@
             <a href="webhooks/create" class="btn btn-success"><span class="fa fa-plus fa-fw"></span>{{ $t('firefly.create_new_webhook') }}</a>
           </div>
 
-          <table class="table table-responsive table-hover" v-if="webhooks.length > 0">
+          <table class="table table-responsive table-hover" v-if="webhooks.length > 0" aria-label="A table.">
             <thead>
             <tr>
               <th>Title</th>
