@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Exception;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
@@ -70,11 +69,7 @@ trait BillServiceTrait
         if ('' === $note) {
             $dbNote = $bill->notes()->first();
             if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) {
-                    // @ignoreException
-                }
+                $dbNote->delete();
             }
 
             return true;

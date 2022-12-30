@@ -85,11 +85,7 @@ class Preferences
     {
         $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
         if (null !== $preference && null === $preference->data) {
-            try {
-                $preference->delete();
-            } catch (Exception $e) {
-                throw new FireflyException(sprintf('Could not delete preference #%d: %s', $preference->id, $e->getMessage()), 0, $e);
-            }
+            $preference->delete();
             $preference = null;
         }
 
@@ -117,11 +113,7 @@ class Preferences
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        try {
             Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
-        } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not delete preference: %s', $e->getMessage()), 0, $e);
-        }
 
         return true;
     }
@@ -153,11 +145,7 @@ class Preferences
         $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref && null === $value) {
-            try {
                 $pref->delete();
-            } catch (Exception $e) {
-                throw new FireflyException(sprintf('Could not delete preference: %s', $e->getMessage()), 0, $e);
-            }
 
             return new Preference();
         }

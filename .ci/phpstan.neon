@@ -10,6 +10,11 @@ parameters:
     - '#is neither abstract nor final#'
     - '#has a nullable return type declaration#'
     - '#with a nullable type declaration#'
+    - '#with null as default value#'
+    -
+        message: '#but containers should not be injected#'
+        paths:
+            - ../app/Support/Authentication/RemoteUserGuard.php
     -
         message: '#Control structures using switch should not be used.#'
         paths:
@@ -18,6 +23,17 @@ parameters:
             - ../app/Console/Commands/Upgrade/OtherCurrenciesCorrections.php
             - ../app/Exceptions/GracefulNotFoundHandler.php
             - ../app/Generator/Webhook/StandardMessageGenerator.php
+            - ../app/Support/Amount.php
+            - ../app/Support/Navigation.php
+            - ../app/Support/ParseDateString.php
+            - ../app/Support/Search/AccountSearch.php
+            - ../app/Support/Search/OperatorQuerySearch.php
+            - ../app/Support/Twig/General.php
+            - ../app/Transformers/RecurrenceTransformer.php
+            - ../app/Validation/AccountValidator.php
+            - ../app/Validation/RecurrenceValidation.php
+            - ../app/Validation/TransactionValidation.php
+
     -
         message: '#Function compact\(\) should not be used#'
         paths:
@@ -32,12 +48,21 @@ parameters:
             - ../app/Http/Controllers/Account/*.php
             - ../app/Http/Controllers/Admin/*.php
             - ../app/Http/Controllers/*.php
+            - ../app/Support/ExpandedForm.php
+            - ../app/Support/Form/AccountForm.php
+            - ../app/Support/Form/CurrencyForm.php
+            - ../app/Support/Form/FormSupport.php
+    -
+        message: '#Either catch a more specific exception#'
+        paths:
+            - ../app/Support/Form/FormSupport.php
 
   paths:
     - ../app
     - ../database
     - ../routes
+    - ../config
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 1
+  level: 2

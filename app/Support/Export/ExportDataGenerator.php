@@ -53,6 +53,7 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Exception;
 use League\Csv\Writer;
@@ -206,7 +207,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -280,7 +282,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -344,7 +347,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -392,7 +396,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -469,7 +474,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -630,7 +636,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -758,7 +765,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -810,7 +818,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -952,7 +961,8 @@ class ExportDataGenerator
 
         try {
             $string = $csv->toString();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
+            Log::error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -1071,5 +1081,21 @@ class ExportDataGenerator
     public function setStart(Carbon $start): void
     {
         $this->start = $start;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has(mixed $key): mixed
+    {
+        return null;
     }
 }

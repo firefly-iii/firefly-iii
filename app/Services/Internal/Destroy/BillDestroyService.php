@@ -37,10 +37,6 @@ class BillDestroyService
      */
     public function destroy(Bill $bill): void
     {
-        try {
             $bill->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
     }
 }

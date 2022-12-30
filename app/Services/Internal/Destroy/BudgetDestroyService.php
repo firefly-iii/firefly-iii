@@ -39,11 +39,7 @@ class BudgetDestroyService
      */
     public function destroy(Budget $budget): void
     {
-        try {
             $budget->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
 
         // also delete auto budget:
         foreach ($budget->autoBudgets()->get() as $autoBudget) {

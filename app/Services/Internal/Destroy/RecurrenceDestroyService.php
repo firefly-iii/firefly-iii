@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use Exception;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 
@@ -55,30 +54,18 @@ class RecurrenceDestroyService
      */
     public function destroy(Recurrence $recurrence): void
     {
-        try {
-            // delete all meta data
-            $recurrence->recurrenceMeta()->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
+        // delete all meta data
+        $recurrence->recurrenceMeta()->delete();
         // delete all transactions.
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
             $transaction->recurrenceTransactionMeta()->delete();
-            try {
-                $transaction->delete();
-            } catch (Exception $e) {
-                // @ignoreException
-            }
+            $transaction->delete();
         }
         // delete all repetitions
         $recurrence->recurrenceRepetitions()->delete();
 
         // delete recurrence
-        try {
-            $recurrence->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
+        $recurrence->delete();
     }
 }

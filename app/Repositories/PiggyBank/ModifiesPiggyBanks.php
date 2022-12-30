@@ -339,13 +339,7 @@ trait ModifiesPiggyBanks
     {
         if ('' === $note) {
             $dbNote = $piggyBank->notes()->first();
-            if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) {
-                    // @ignoreException
-                }
-            }
+            $dbNote?->delete();
 
             return true;
         }

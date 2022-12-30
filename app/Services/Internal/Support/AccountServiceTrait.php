@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Support;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
@@ -173,11 +172,7 @@ trait AccountServiceTrait
         if ('' === $note) {
             $dbNote = $account->notes()->first();
             if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) {
-                    // @ignoreException
-                }
+                $dbNote->delete();
             }
 
             return true;

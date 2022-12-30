@@ -207,11 +207,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function cleanupBudgets(): bool
     {
         // delete limits with amount 0:
-        try {
-            BudgetLimit::where('amount', 0)->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
+        BudgetLimit::where('amount', 0)->delete();
         $budgets = $this->getActiveBudgets();
         /**
          * @var int $index
@@ -335,11 +331,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             return;
         }
         if (null !== $dbNote) {
-            try {
                 $dbNote->delete();
-            } catch (Exception $e) {
-                // @ignoreException
-            }
         }
     }
 

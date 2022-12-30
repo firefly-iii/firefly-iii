@@ -209,7 +209,7 @@ class InstallController extends Controller
                 Artisan::call($command, $args);
                 Log::debug(Artisan::output());
             }
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
         // clear cache as well.

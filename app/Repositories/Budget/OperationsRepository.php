@@ -117,7 +117,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'entries'                 => [],
             ];
             $date                         = $journal['date']->format($carbonFormat);
-            $data[$key]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $journal['amount']);
+            $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date] ?? '0', $journal['amount']);
         }
 
         return $data;

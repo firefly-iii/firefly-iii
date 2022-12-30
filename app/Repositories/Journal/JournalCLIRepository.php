@@ -25,7 +25,6 @@ namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
 use DB;
-use Exception;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
@@ -124,28 +123,15 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
 
         if ($cache->has()) {
             $result = null;
-            try {
-                $result = new Carbon($cache->get());
-            } catch (Exception $e) {
-                // @ignoreException
-            }
-
-            return $result;
+            return new Carbon($cache->get());
         }
 
         $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
         if (null === $entry) {
             return null;
         }
-        $value = null;
-        try {
-            $value = new Carbon($entry->data);
-        } catch (Exception $e) {
-            // @ignoreException
-        }
-        if (null !== $value) {
-            $cache->store($value);
-        }
+        $value = new Carbon($entry->data);
+        $cache->store($value);
 
         return $value;
     }
@@ -185,11 +171,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
 
         // return when something else:
         $return = (string)$value;
-        try {
-            $cache->store($return);
-        } catch (Exception $e) {
-            // @ignoreException
-        }
+        $cache->store($return);
 
         return $return;
     }

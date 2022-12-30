@@ -33,6 +33,24 @@ use Log;
 trait ConvertsDataTypes
 {
     /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param  string  $key
+     * @param  mixed|null  $default
+     * @return mixed
+     */
+    abstract public function get(string $key, mixed $default = null): mixed;
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param mixed $key
+     * @return mixed
+     */
+    abstract public function has(mixed $key): mixed;
+    /**
      * Return integer value.
      *
      * @param  string  $field

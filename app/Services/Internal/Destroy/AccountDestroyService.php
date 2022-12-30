@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Destroy;
 
 use DB;
-use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RecurrenceTransaction;
@@ -68,11 +67,7 @@ class AccountDestroyService
         // delete account meta:
         $account->accountMeta()->delete();
         // delete account.
-        try {
-            $account->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
+        $account->delete();
     }
 
     /**

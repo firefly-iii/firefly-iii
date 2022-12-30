@@ -415,7 +415,7 @@ trait PeriodOverview
         $range = app('preferences')->get('viewRange', '1M')->data;
         $first = $this->journalRepos->firstNull();
         $start = null === $first ? new Carbon() : $first->date;
-        $end   = $theDate ?? today(config('app.timezone'));
+        $end   = clone $theDate;
 
         Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));

@@ -654,17 +654,17 @@ class Navigation
 
             return $fiscalHelper->endOfFiscalYear($end);
         }
-        switch ($range) {
-            default:
-                break;
-            case 'last7':
-            case 'last30':
-            case 'last90':
-            case 'last365':
-            case 'YTD':
-            case 'QTD':
-            case 'MTD':
-                return $end;
+        $list = [
+            'last7',
+            'last30',
+            'last90',
+            'last365',
+            'YTD',
+            'QTD',
+            'MTD',
+        ];
+        if (in_array($range, $list, true)) {
+            return $end;
         }
 
         throw new FireflyException(sprintf('updateEndDate cannot handle range "%s"', $range));

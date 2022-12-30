@@ -74,7 +74,6 @@ trait OBValidation
                 $result            = true;
             }
         }
-        $result = $result ?? false;
         Log::debug(sprintf('validateOBDestination(%d, "%s") will return %s', $accountId, $accountName, var_export($result, true)));
 
         return $result;

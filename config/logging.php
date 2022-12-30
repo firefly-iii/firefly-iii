@@ -62,10 +62,6 @@ return [
             'driver'   => 'stack',
             'channels' => ['audit_daily', 'audit_stdout'],
         ],
-        'scoped'       => [
-            'driver' => 'custom',
-            'via'    => FireflyIII\Logging\CreateCustomLogger::class,
-        ],
         'papertrail'   => [
             'driver'       => 'monolog',
             'level'        => envNonEmpty('APP_LOG_LEVEL', 'info'),

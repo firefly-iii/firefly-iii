@@ -155,7 +155,7 @@ class ReportFormRequest extends FormRequest
             if (preg_match($pattern, $string)) {
                 try {
                     $date = new Carbon($parts[1]);
-                } catch (Exception $e) {
+                } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     Log::error($error);
                     throw new FireflyException($error, 0, $e);
@@ -189,7 +189,7 @@ class ReportFormRequest extends FormRequest
             if (preg_match($pattern, $string)) {
                 try {
                     $date = new Carbon($parts[0]);
-                } catch (Exception $e) {
+                } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     Log::error($error);
                     throw new FireflyException($error, 0, $e);

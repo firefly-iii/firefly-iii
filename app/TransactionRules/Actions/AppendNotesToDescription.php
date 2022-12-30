@@ -82,4 +82,20 @@ class AppendNotesToDescription implements ActionInterface
         }
         return false;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has(mixed $key): mixed
+    {
+        return null;
+    }
 }

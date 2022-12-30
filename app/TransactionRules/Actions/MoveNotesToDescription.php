@@ -80,4 +80,20 @@ class MoveNotesToDescription implements ActionInterface
 
         return true;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has(mixed $key): mixed
+    {
+        return null;
+    }
 }

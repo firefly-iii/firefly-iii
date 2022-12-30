@@ -90,7 +90,7 @@ class MailError extends Job implements ShouldQueue
                         }
                     }
                 );
-            } catch (Exception $e) {
+            } catch (Exception $e) { // intentional generic exception
                 throw new FireflyException($e->getMessage(), 0, $e);
             }
         }

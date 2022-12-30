@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Update;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidDateException;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TagFactory;
@@ -652,9 +653,8 @@ class JournalUpdateService
             if ($this->hasFields([$field])) {
                 try {
                     $value = '' === (string)$this->data[$field] ? null : new Carbon($this->data[$field]);
-                } catch (Exception $e) {
+                } catch (InvalidDateException $e) {
                     Log::debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
-
                     return;
                 }
                 Log::debug(sprintf('Field "%s" is present ("%s"), try to update it.', $field, $value));

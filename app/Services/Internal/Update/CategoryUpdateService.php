@@ -153,11 +153,9 @@ class CategoryUpdateService
         if ('' === $note) {
             $dbNote = $category->notes()->first();
             if (null !== $dbNote) {
-                try {
+
                     $dbNote->delete();
-                } catch (Exception $e) {
-                    // @ignoreException
-                }
+
             }
 
             return;

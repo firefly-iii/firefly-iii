@@ -28,6 +28,7 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\QueryException;
+use Log;
 
 /**
  * Class FireflyConfig.
@@ -45,11 +46,7 @@ class FireflyConfig
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        try {
             Configuration::where('name', $name)->forceDelete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
     }
 
     /**
@@ -80,7 +77,7 @@ class FireflyConfig
             /** @var Configuration|null $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         } catch (QueryException|Exception $e) {
-            throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()));
+            throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
         if (null !== $config) {
@@ -106,7 +103,8 @@ class FireflyConfig
     {
         try {
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
-        } catch (QueryException|Exception $e) {
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
             $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;

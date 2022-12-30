@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TagFactory;
@@ -395,11 +394,7 @@ trait JournalServiceTrait
         }
         if ('' === $notes && null !== $note) {
             // try to delete existing notes.
-            try {
-                $note->delete();
-            } catch (Exception $e) {
-                // @ignoreException
-            }
+            $note->delete();
         }
     }
 

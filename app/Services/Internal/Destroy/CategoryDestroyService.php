@@ -39,11 +39,7 @@ class CategoryDestroyService
      */
     public function destroy(Category $category): void
     {
-        try {
             $category->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
 
         // also delete all relations between categories and transaction journals:
         DB::table('category_transaction_journal')->where('category_id', (int)$category->id)->delete();

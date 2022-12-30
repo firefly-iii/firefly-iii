@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Budget;
@@ -124,11 +123,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      */
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void
     {
-        try {
-            $budgetLimit->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
+        $budgetLimit->delete();
     }
 
     /**
@@ -424,11 +419,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         // 1 if the left_operand is larger than the right_operand, -1 otherwise.
         if (null !== $limit && bccomp($amount, '0') <= 0) {
             Log::debug(sprintf('%s is zero, delete budget limit #%d', $amount, $limit->id));
-            try {
-                $limit->delete();
-            } catch (Exception $e) {
-                // @ignoreException
-            }
+            $limit->delete();
 
             return null;
         }

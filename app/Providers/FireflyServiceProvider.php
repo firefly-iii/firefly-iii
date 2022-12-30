@@ -31,8 +31,6 @@ use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelper;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Helpers\Help\Help;
-use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Helpers\Report\NetWorth;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Helpers\Report\PopupReport;
@@ -217,7 +215,6 @@ class FireflyServiceProvider extends ServiceProvider
 
         // more generators:
         $this->app->bind(PopupReportInterface::class, PopupReport::class);
-        $this->app->bind(HelpInterface::class, Help::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);

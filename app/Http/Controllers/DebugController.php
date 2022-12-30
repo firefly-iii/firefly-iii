@@ -98,8 +98,8 @@ class DebugController extends Controller
         Log::debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
+        } catch (Exception $e) {  // intentional generic exception
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         Log::debug('Call view:clear...');
@@ -186,11 +186,7 @@ class DebugController extends Controller
             if ($handler instanceof RotatingFileHandler) {
                 $logFile = $handler->getUrl();
                 if (null !== $logFile) {
-                    try {
-                        $logContent = file_get_contents($logFile);
-                    } catch (Exception $e) { // @phpstan-ignore-line
-                        // @ignoreException
-                    }
+                    $logContent = file_get_contents($logFile);
                 }
             }
         }

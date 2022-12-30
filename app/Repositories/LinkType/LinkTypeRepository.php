@@ -331,13 +331,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
 
             return;
         }
-        if (null !== $dbNote && '' === $text) {
-            try {
-                $dbNote->delete();
-            } catch (Exception $e) {
-                // @ignoreException
-            }
-        }
+        $dbNote?->delete();
     }
 
     /**

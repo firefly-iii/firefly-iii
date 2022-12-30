@@ -573,7 +573,7 @@ class GroupCollector implements GroupCollectorInterface
             $result['date']->setTimezone(config('app.timezone'));
             $result['created_at']->setTimezone(config('app.timezone'));
             $result['updated_at']->setTimezone(config('app.timezone'));
-        } catch (Exception $e) {
+        } catch (Exception $e) { // intentional generic exception
             Log::error($e->getMessage());
             throw new FireflyException($e->getMessage(), 0, $e);
         }

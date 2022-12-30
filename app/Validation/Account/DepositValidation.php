@@ -74,7 +74,6 @@ trait DepositValidation
                 $result            = true;
             }
         }
-        $result = $result ?? false;
         Log::debug(sprintf('validateDepositDestination will return %s', var_export($result, true)));
 
         return $result;

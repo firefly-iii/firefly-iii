@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Form;
 
 use Carbon\Carbon;
-use Exception;
+use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
-use RuntimeException;
 use Throwable;
 
 /**
@@ -130,13 +129,8 @@ trait FormSupport
             $value     = array_key_exists($name, $preFilled) && null === $value ? $preFilled[$name] : $value;
         }
 
-        try {
-            if (null !== request()->old($name)) {
-                $value = request()->old($name);
-            }
-        } catch (RuntimeException $e) {
-            // don't care about session errors.
-            Log::debug(sprintf('Run time: %s', $e->getMessage()));
+        if (null !== request()->old($name)) {
+            $value = request()->old($name);
         }
 
         if ($value instanceof Carbon) {
@@ -163,8 +157,8 @@ trait FormSupport
         $date = null;
         try {
             $date = today(config('app.timezone'));
-        } catch (Exception $e) {
-            // @ignoreException
+        } catch (InvalidDateException $e) {
+            Log::error($e->getMessage());
         }
 
         return $date;

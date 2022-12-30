@@ -40,6 +40,7 @@ class NullArrayObject extends ArrayObject
      * @param  array  $array
      * @param  null  $default
      */
+    /* @phpstan-ignore-next-line */
     public function __construct(array $array, $default = null)
     {
         parent::__construct($array);
@@ -49,9 +50,9 @@ class NullArrayObject extends ArrayObject
     /**
      * @param  mixed  $key
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         if ($this->offsetExists($key)) {
             return parent::offsetGet($key);

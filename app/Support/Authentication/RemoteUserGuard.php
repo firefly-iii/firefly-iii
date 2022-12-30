@@ -124,9 +124,9 @@ class RemoteUserGuard implements Guard
     /**
      * @inheritDoc
      */
-    public function hasUser()
+    public function hasUser(): bool
     {
-        // TODO: Implement hasUser() method.
+        throw new FireflyException(sprintf('%s is not implemented', __METHOD__));
     }
 
     /**
