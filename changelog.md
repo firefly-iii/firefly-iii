@@ -23,6 +23,7 @@ Lots of new stuff that I invite you to test and break.
 - #6526 Option to disable rules and/or webhooks when saving transactions
 - #6605 You can search for external ID values
 - Working beta of the new layout under `/v3/`
+- New authentication screens that support dark mode.
 
 ### Changed
 - Liabilities are no longer part of your net worth.
