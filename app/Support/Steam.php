@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use DB;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -666,5 +667,20 @@ class Steam
         }
 
         return $amount;
+    }
+
+    /**
+     * @param  string  $ipAddress
+     * @return string
+     * @throws FireflyException
+     */
+    public function getHostName(string $ipAddress): string
+    {
+        try {
+            $hostName = gethostbyaddr($ipAddress);
+        } catch (Exception $e) {
+            throw new FireflyException($e->getMessage(), 0, $e);
+        }
+        return $hostName;
     }
 }

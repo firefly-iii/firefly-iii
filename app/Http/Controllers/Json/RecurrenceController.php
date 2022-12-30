@@ -71,6 +71,7 @@ class RecurrenceController extends Controller
      */
     public function events(Request $request): JsonResponse
     {
+        $occurrences = [];
         $return           = [];
         $start            = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end              = Carbon::createFromFormat('Y-m-d', $request->get('end'));
@@ -106,20 +107,19 @@ class RecurrenceController extends Controller
         $repetition->weekend           = (int)$request->get('weekend');
         $actualEnd                     = clone $end;
 
-        switch ($endsAt) {
-            default:
-            case 'forever':
-                // simply generate up until $end. No change from default behavior.
-                $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
-                break;
-            case 'until_date':
-                $actualEnd   = $endDate ?? clone $end;
-                $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
-                break;
-            case 'times':
-                $occurrences = $this->recurring->getXOccurrences($repetition, $actualStart, $repetitions);
-                break;
+        if('until_date' === $endsAt) {
+            $actualEnd   = $endDate ?? clone $end;
+            $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
         }
+        if('times' === $endsAt) {
+            $occurrences = $this->recurring->getXOccurrences($repetition, $actualStart, $repetitions);
+        }
+        if('times' !== $endsAt && 'until_date' !== $endsAt) {
+            // 'forever'
+            $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);
+
+        }
+
         /** @var Carbon $current */
         foreach ($occurrences as $current) {
             if ($current->gte($start)) {

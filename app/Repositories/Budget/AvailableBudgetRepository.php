@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -52,11 +51,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void
     {
-        try {
-            $availableBudget->delete();
-        } catch (Exception $e) {
-            // @ignoreException
-        }
+        $availableBudget->delete();
     }
 
     /**

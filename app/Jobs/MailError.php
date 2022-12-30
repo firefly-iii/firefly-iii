@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
@@ -68,6 +69,7 @@ class MailError extends Job implements ShouldQueue
 
     /**
      * Execute the job.
+     * @throws FireflyException
      */
     public function handle()
     {
@@ -89,7 +91,7 @@ class MailError extends Job implements ShouldQueue
                     }
                 );
             } catch (Exception $e) {
-                Log::error('Exception when mailing: '.$e->getMessage());
+                throw new FireflyException($e->getMessage(), 0, $e);
             }
         }
     }

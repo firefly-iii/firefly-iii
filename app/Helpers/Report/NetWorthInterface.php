@@ -34,6 +34,8 @@ use Illuminate\Support\Collection;
 interface NetWorthInterface
 {
     /**
+     * TODO unsure why this is deprecated.
+     *
      * Returns the user's net worth in an array with the following layout:
      *
      * -

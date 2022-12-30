@@ -109,27 +109,34 @@ class RecurrenceFormRequest extends FormRequest
         $return['transactions'][0]['source_name']      = null;
         $return['transactions'][0]['destination_id']   = null;
         $return['transactions'][0]['destination_name'] = null;
-        // fill in source and destination account data
-        switch ($this->convertString('transaction_type')) {
-            default:
-                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
-            case 'withdrawal':
-                $return['transactions'][0]['source_id']      = $this->convertInteger('source_id');
-                $return['transactions'][0]['destination_id'] = $this->convertInteger('withdrawal_destination_id');
-                break;
-            case 'deposit':
-                $return['transactions'][0]['source_id']      = $this->convertInteger('deposit_source_id');
-                $return['transactions'][0]['destination_id'] = $this->convertInteger('destination_id');
-                break;
-            case 'transfer':
-                $return['transactions'][0]['source_id']      = $this->convertInteger('source_id');
-                $return['transactions'][0]['destination_id'] = $this->convertInteger('destination_id');
-                break;
+        $throwError                                    = true;
+        $type                                          = $this->convertString('transaction_type');
+        if ('withdrawal' === $type) {
+            $throwError                                  = false;
+            $return['transactions'][0]['source_id']      = $this->convertInteger('source_id');
+            $return['transactions'][0]['destination_id'] = $this->convertInteger('withdrawal_destination_id');
+        }
+        if ('deposit' === $type) {
+            $throwError                                  = false;
+            $return['transactions'][0]['source_id']      = $this->convertInteger('deposit_source_id');
+            $return['transactions'][0]['destination_id'] = $this->convertInteger('destination_id');
+        }
+        if ('transfer' === $type) {
+            $throwError                                  = false;
+            $return['transactions'][0]['source_id']      = $this->convertInteger('source_id');
+            $return['transactions'][0]['destination_id'] = $this->convertInteger('destination_id');
+        }
+        if (true === $throwError) {
+            throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
         }
 
         // replace category name with a new category:
         $factory = app(CategoryFactory::class);
         $factory->setUser(auth()->user());
+        /**
+         * @var int $index
+         * @var array $transaction
+         */
         foreach ($return['transactions'] as $index => $transaction) {
             $categoryName = $transaction['category_name'] ?? null;
             if (null !== $categoryName) {
@@ -239,23 +246,19 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // switch on type to expand rules for source and destination accounts:
-        switch ($this->convertString('transaction_type')) {
-            case strtolower(TransactionType::WITHDRAWAL):
-                $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
-                $rules['destination_name'] = 'between:1,255|nullable';
-                break;
-            case strtolower(TransactionType::DEPOSIT):
-                $rules['source_name']    = 'between:1,255|nullable';
-                $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
-                break;
-            case strtolower(TransactionType::TRANSFER):
-                // this may not work:
-                $rules['source_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_id';
-                $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_id';
-
-                break;
-            default:
-                throw new FireflyException(sprintf('Cannot handle transaction type of type "%s"', $this->convertString('transaction_type')));
+        $type = strtolower($this->convertString('transaction_type'));
+        if (strtolower(TransactionType::WITHDRAWAL) === $type) {
+            $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
+            $rules['destination_name'] = 'between:1,255|nullable';
+        }
+        if (strtolower(TransactionType::DEPOSIT) === $type) {
+            $rules['source_name']    = 'between:1,255|nullable';
+            $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
+        }
+        if (strtolower(TransactionType::TRANSFER) === $type) {
+            // this may not work:
+            $rules['source_id']      = 'required|exists:accounts,id|belongsToUser:accounts|different:destination_id';
+            $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:source_id';
         }
 
         // update some rules in case the user is editing a post:
@@ -309,23 +312,28 @@ class RecurrenceFormRequest extends FormRequest
         $destinationId = null;
 
         // TODO typeOverrule: the account validator may have another opinion the transaction type.
-
-        switch ($this->convertString('transaction_type')) {
-            default:
-                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
-            case 'withdrawal':
-                $sourceId      = (int)$data['source_id'];
-                $destinationId = (int)$data['withdrawal_destination_id'];
-                break;
-            case 'deposit':
-                $sourceId      = (int)$data['deposit_source_id'];
-                $destinationId = (int)$data['destination_id'];
-                break;
-            case 'transfer':
-                $sourceId      = (int)$data['source_id'];
-                $destinationId = (int)$data['destination_id'];
-                break;
+        // TODO either use 'withdrawal' or the strtolower() variant, not both.
+        $type = $this->convertString('transaction_type');
+        $throwError = true;
+        if('withdrawal' === $type) {
+            $throwError = false;
+            $sourceId      = (int)$data['source_id'];
+            $destinationId = (int)$data['withdrawal_destination_id'];
         }
+        if('deposit' === $type) {
+            $throwError = false;
+            $sourceId      = (int)$data['deposit_source_id'];
+            $destinationId = (int)$data['destination_id'];
+        }
+        if('transfer' === $type) {
+            $throwError = false;
+            $sourceId      = (int)$data['source_id'];
+            $destinationId = (int)$data['destination_id'];
+        }
+        if(true === $throwError) {
+            throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
+        }
+
         // validate source account.
         $validSource = $accountValidator->validateSource(['id' => $sourceId,]);
 

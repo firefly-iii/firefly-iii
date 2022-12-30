@@ -160,33 +160,36 @@ class CreateAutoBudgetLimits implements ShouldQueue
      */
     private function isMagicDay(AutoBudget $autoBudget): bool
     {
-        switch ($autoBudget->period) {
-            default:
-                throw new FireflyException(sprintf('isMagicDay() can\'t handle period "%s"', $autoBudget->period));
-            case 'daily':
-                // every day is magic!
-                return true;
-            case 'weekly':
-                // fire on Monday.
-                return $this->date->isMonday();
-            case 'monthly':
-                return 1 === $this->date->day;
-            case 'quarterly':
-                $format = 'm-d';
-                $value  = $this->date->format($format);
-
-                return in_array($value, ['01-01', '04-01', '07-01', '10-01'], true);
-            case 'half_year':
-                $format = 'm-d';
-                $value  = $this->date->format($format);
-
-                return in_array($value, ['01-01', '07-01'], true);
-            case 'yearly':
-                $format = 'm-d';
-                $value  = $this->date->format($format);
-
-                return '01-01' === $value;
+        if ('daily' === $autoBudget->period) {
+            return true;
         }
+
+        if ('weekly' === $autoBudget->period) {
+            return $this->date->isMonday();
+        }
+
+        if ('monthly' === $autoBudget->period) {
+            return 1 === $this->date->day;
+        }
+        if ('quarterly' === $autoBudget->period) {
+            $format = 'm-d';
+            $value  = $this->date->format($format);
+
+            return in_array($value, ['01-01', '04-01', '07-01', '10-01'], true);
+        }
+        if ('half_year' === $autoBudget->period) {
+            $format = 'm-d';
+            $value  = $this->date->format($format);
+
+            return in_array($value, ['01-01', '07-01'], true);
+        }
+        if ('yearly' === $autoBudget->period) {
+            $format = 'm-d';
+            $value  = $this->date->format($format);
+
+            return '01-01' === $value;
+        }
+        throw new FireflyException(sprintf('isMagicDay() can\'t handle period "%s"', $autoBudget->period));
     }
 
     /**

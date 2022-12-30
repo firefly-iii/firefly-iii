@@ -170,9 +170,10 @@ class EditController extends Controller
                     ]
                 )->render();
             } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                $message = sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage());
+                Log::debug($message);
                 Log::error($e->getTraceAsString());
-                throw new FireflyException($result, 0, $e);
+                throw new FireflyException($message, 0, $e);
             }
             $index++;
         }

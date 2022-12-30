@@ -383,6 +383,8 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * TODO unsure why this is deprecated.
+     *
      * Get the total amount of money paid for the users active bills in the date range given.
      * This amount will be negative (they're expenses). This method is equal to
      * getBillsUnpaidInRange. So the debug comments are gone.
@@ -412,6 +414,8 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * TODO unsure why this is deprecated.
+     *
      * Get the total amount of money paid for the users active bills in the date range given,
      * grouped per currency.
      * @param  Carbon  $start
@@ -442,6 +446,8 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * TODO unsure why this is deprecated.
+     *
      * Get the total amount of money due for the users active bills in the date range given. This amount will be positive.
      *
      * @param  Carbon  $start
@@ -474,6 +480,8 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * TODO unsure why this is deprecated.
+     *
      * Get the total amount of money due for the users active bills in the date range given.
      *
      * @param  Carbon  $start

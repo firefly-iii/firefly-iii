@@ -24,10 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Mail;
 
-use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 /**
  * Class NewIPAddressWarningMail
@@ -61,8 +62,9 @@ class NewIPAddressWarningMail extends Mailable
         $this->time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
         $this->host = '';
         try {
-            $hostName = gethostbyaddr($this->ipAddress);
-        } catch (Exception $e) {
+            $hostName = app('steam')->getHostName($this->ipAddress);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
             $hostName = $this->ipAddress;
         }
         if ($hostName !== $this->ipAddress) {

@@ -34,6 +34,9 @@ use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToDeleteFile;
+use LogicException;
+use Log;
 
 /**
  * Class AttachmentRepository.
@@ -58,7 +61,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $path = $helper->getAttachmentLocation($attachment);
         try {
             Storage::disk('upload')->delete($path);
-        } catch (Exception $e) {
+        } catch (UnableToDeleteFile $e) {
             // @ignoreException
         }
         $attachment->delete();
@@ -161,7 +164,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param  array  $data
      *
      * @return Attachment
-     * @throws Exception
      */
     public function update(Attachment $attachment, array $data): Attachment
     {
@@ -193,7 +195,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param  string  $note
      *
      * @return bool
-     * @throws Exception
      */
     public function updateNote(Attachment $attachment, string $note): bool
     {
@@ -202,8 +203,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) {
-                    // @ignoreException
+                } catch (LogicException $e) {
+                    Log::error($e->getMessage());
                 }
             }
 

@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\System;
 use Artisan;
 use Cache;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
@@ -165,7 +166,17 @@ class InstallController extends Controller
                 $index++;
                 continue;
             }
-            $result = $this->executeCommand($command, $args);
+            try {
+                $result = $this->executeCommand($command, $args);
+            } catch (FireflyException $e) {
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+                if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                    $this->lastError = self::BASEDIR_ERROR;
+                }
+                $result          = false;
+                $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
+            }
             if (false === $result) {
                 $response['errorMessage'] = $this->lastError;
                 $response['error']        = true;
@@ -184,7 +195,7 @@ class InstallController extends Controller
     /**
      * @param  string  $command
      * @param  array  $args
-     *
+     * @throws FireflyException
      * @return bool
      */
     private function executeCommand(string $command, array $args): bool
@@ -199,16 +210,7 @@ class InstallController extends Controller
                 Log::debug(Artisan::output());
             }
         } catch (Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
-                $this->lastError = self::BASEDIR_ERROR;
-
-                return false;
-            }
-            $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
-
-            return false;
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
         // clear cache as well.
         Cache::clear();

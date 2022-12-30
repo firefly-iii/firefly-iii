@@ -89,6 +89,7 @@ interface OperationsRepositoryInterface
     public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
+     * TODO this method was marked as deprecated but I'm not sure why.
      * @param  Carbon  $start
      * @param  Carbon  $end
      * @param  Collection|null  $accounts
@@ -96,7 +97,7 @@ interface OperationsRepositoryInterface
      * @param  TransactionCurrency|null  $currency
      *
      * @return array
-     * @deprecated
+     *
      */
     public function sumExpenses(
         Carbon $start,

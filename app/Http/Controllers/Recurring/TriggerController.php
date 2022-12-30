@@ -67,7 +67,7 @@ class TriggerController extends Controller
         foreach ($groups as $group) {
             /** @var TransactionJournal $journal */
             foreach ($group->transactionJournals as $journal) {
-                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id, $date));
+                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
                 $journal->date = Carbon::today();
                 $journal->save();
             }

@@ -25,10 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\User;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class UserLogin extends Notification
 {
@@ -70,8 +72,9 @@ class UserLogin extends Notification
         $time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
         $host = '';
         try {
-            $hostName = gethostbyaddr($this->ip);
-        } catch (Exception $e) {
+            $hostName = app('steam')->getHostName($this->ip);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
             $hostName = $this->ip;
         }
         if ($hostName !== $this->ip) {
@@ -93,8 +96,9 @@ class UserLogin extends Notification
     {
         $host = '';
         try {
-            $hostName = gethostbyaddr($this->ip);
-        } catch (Exception $e) {
+            $hostName = app('steam')->getHostName($this->ip);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
             $hostName = $this->ip;
         }
         if ($hostName !== $this->ip) {

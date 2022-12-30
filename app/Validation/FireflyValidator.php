@@ -126,9 +126,9 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateIban($attribute, $value): bool
+    public function validateIban(mixed $attribute, mixed $value): bool
     {
-        if (null === $value || !is_string($value) || strlen($value) < 6) {
+        if (!is_string($value) || strlen($value) < 6) {
             return false;
         }
         // strip spaces
