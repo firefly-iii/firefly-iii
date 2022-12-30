@@ -2,6 +2,50 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.8.0-alpha.1 2023-01-01
+
+This is the first release of the new 5.8.0 series of Firefly III. It should upgrade the database automatically BUT 
+make a backup of your database first! I guarantee nothing. 
+
+### Added
+
+Lots of new stuff that I invite you to test and break.
+
+- #4975 Rules can copy/move description to notes and vice versa
+- #5031 You can invite users to your installation when registration is off
+- #5213 You can trigger recurring transactions
+- #5592 Transactions have a little history box to show how rules changed them
+- #5752 Firefly III can send Slack notifications instead of emails
+- #5862 search can filter on reconciled transactions
+- #6086 All search filters can be negative by putting `-` in front of them
+- #6441 Buttons to purge deleted data, which is easy for data imports
+- #6457 Rule trigger 'transaction exists', that will always trigger
+- #6526 Option to disable rules and/or webhooks when saving transactions
+- #6605 You can search for external ID values
+- Working beta of the new layout under `/v3/`
+
+### Changed
+- Liabilities are no longer part of your net worth.
+- Liabilities no longer need two transactions to be managed properly (see the documentation)
+
+### Removed
+- #4198 The total available budget amount bar on the `/budgets` page is no longer manageable but will be auto-calculated
+
+### Fixed
+
+Not many bugfixes (yet).
+
+- #6581 Fields were not cleared in the transaction screen in some cases
+
+### API
+
+New `/v2/` endpoints are being implemented that prepare the application for (among other things) the ability
+to manage multiple financial administrations. The documentation for these endpoints will be at 
+https://api-docs.firefly-iii.org/.
+
+- #6130 You can now create a reconciliation transaction
+
+
 ## 5.7.17 - 2022-12-30
 
 ### Fixed
