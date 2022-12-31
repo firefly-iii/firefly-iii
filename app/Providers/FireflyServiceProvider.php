@@ -179,7 +179,7 @@ class FireflyServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var ObjectGroupRepository $repository */
                 $repository = app(ObjectGroupRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }
 
@@ -192,7 +192,7 @@ class FireflyServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var WebhookRepository $repository */
                 $repository = app(WebhookRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }
 
@@ -205,7 +205,7 @@ class FireflyServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var SearchRuleEngine $engine */
                 $engine = app(SearchRuleEngine::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $engine->setUser(auth()->user());
                 }
 

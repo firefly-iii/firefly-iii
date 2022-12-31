@@ -93,14 +93,14 @@ class Authenticate
                 if ($this->auth->check()) {
                     // do an extra check on user object.
                     /** @var User $user */
-                    $user = $this->auth->authenticate();
+                    $user = $this->auth->authenticate(); // @phpstan-ignore-line (thinks function returns void)
                     if (1 === (int)$user->blocked) {
                         $message = (string)trans('firefly.block_account_logout');
                         if ('email_changed' === $user->blocked_code) {
                             $message = (string)trans('firefly.email_changed_logout');
                         }
                         app('session')->flash('logoutMessage', $message);
-                        $this->auth->logout();
+                        $this->auth->logout(); // @phpstan-ignore-line (thinks function is undefined)
 
                         throw new AuthenticationException('Blocked account.', $guards);
                     }
@@ -116,7 +116,7 @@ class Authenticate
                 );
             }
 
-            return $this->auth->authenticate();
+            return $this->auth->authenticate(); // @phpstan-ignore-line (thinks function returns void)
         }
 
 

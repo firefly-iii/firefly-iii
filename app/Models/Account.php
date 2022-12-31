@@ -97,7 +97,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $interest
  * @property string $interestPeriod
  * @property string $accountTypeString
- * @property string $location
+ * @property Location $location
  * @property string $liability_direction
  * @property string $current_debt
  * @property int|null $user_group_id

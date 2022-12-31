@@ -51,7 +51,7 @@ class SearchServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var OperatorQuerySearch $search */
                 $search = app(OperatorQuerySearch::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $search->setUser(auth()->user());
                 }
 

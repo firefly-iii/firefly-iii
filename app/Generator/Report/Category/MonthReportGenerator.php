@@ -26,7 +26,6 @@ namespace FireflyIII\Generator\Report\Category;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -41,26 +40,20 @@ use Throwable;
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
-    /** @var Collection The included accounts */
-    private $accounts;
-    /** @var Collection The included categories */
-    private $categories;
-    /** @var Carbon The end date */
-    private $end;
-    /** @var array The expenses */
-    private $expenses;
-    /** @var array The income in the report. */
-    private $income;
-    /** @var Carbon The start date. */
-    private $start;
+    private Collection $accounts;
+    private Collection $categories;
+    private Carbon     $end;
+    private array      $expenses;
+    private array      $income;
+    private Carbon     $start;
 
     /**
      * MonthReportGenerator constructor.
      */
     public function __construct()
     {
-        $this->income   = new Collection();
-        $this->expenses = new Collection();
+        $this->income   = [];
+        $this->expenses = [];
     }
 
     /**

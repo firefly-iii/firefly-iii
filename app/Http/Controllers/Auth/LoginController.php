@@ -165,7 +165,7 @@ class LoginController extends Controller
      *
      * @param  Request  $request
      *
-     * @return Response
+     * @return RedirectResponse|Redirector|Response
      */
     public function logout(Request $request)
     {

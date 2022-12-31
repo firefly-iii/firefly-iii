@@ -577,7 +577,7 @@ class ExportDataGenerator
             }
             /** @var RecurrenceTransaction $transaction */
             foreach ($recurrence->recurrenceTransactions as $transaction) {
-                $categoryName = $recurringRepos->getCategory($transaction);
+                $categoryName = $recurringRepos->getCategoryName($transaction);
                 $budgetId     = $recurringRepos->getBudget($transaction);
                 $piggyBankId  = $recurringRepos->getPiggyBank($transaction);
                 $tags         = $recurringRepos->getTags($transaction);

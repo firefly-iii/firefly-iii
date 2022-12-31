@@ -53,7 +53,7 @@ use Throwable;
 class Handler extends ExceptionHandler
 {
     /**
-     * @var array
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport
         = [

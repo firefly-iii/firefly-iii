@@ -54,12 +54,14 @@ class BudgetServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // reference to auth is not understood by phpstan.
+
         $this->app->bind(
             BudgetRepositoryInterface::class,
             static function (Application $app) {
                 /** @var BudgetRepositoryInterface $repository */
                 $repository = app(BudgetRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -73,7 +75,7 @@ class BudgetServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var AvailableBudgetRepositoryInterface $repository */
                 $repository = app(AvailableBudgetRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -87,7 +89,7 @@ class BudgetServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var BudgetLimitRepositoryInterface $repository */
                 $repository = app(BudgetLimitRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -101,7 +103,7 @@ class BudgetServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var NoBudgetRepositoryInterface $repository */
                 $repository = app(NoBudgetRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -115,7 +117,7 @@ class BudgetServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var OperationsRepositoryInterface $repository */
                 $repository = app(OperationsRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 

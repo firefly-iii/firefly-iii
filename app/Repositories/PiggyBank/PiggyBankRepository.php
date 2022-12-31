@@ -331,7 +331,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanks(): Collection
     {
-        return $this->user->piggyBanks()->with(['account', 'objectGroups'])->orderBy('order', 'ASC')->get();
+        return $this->user
+            ->piggyBanks()
+            ->with(
+                ['account',
+                 'objectGroups']) // @phpstan-ignore-line (phpstan does not recognize objectGroups)
+            ->orderBy('order', 'ASC')->get();
     }
 
     /**

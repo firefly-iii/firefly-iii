@@ -179,7 +179,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $current                  = $attachment->toArray();
             $current['file_exists']   = true;
             $current['notes']         = $repository->getNoteText($attachment);
-            $current['journal_title'] = $attachment->attachable->description;
+            // already determined that this attachable is a TransactionJournal.
+            $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
             $result[$journalId][]     = $current;
         }
 
@@ -239,6 +240,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $journalId          = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
             $return[$journalId] = $return[$journalId] ?? [];
 
+            // phpstan: the editable field is provided by the query.
+
             if ($journalId === $entry->source_id) {
                 $amount               = $this->getFormattedAmount($entry->destination);
                 $foreignAmount        = $this->getFormattedForeignAmount($entry->destination);
@@ -247,7 +250,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->outward,
                     'group'          => $entry->destination->transaction_group_id,
                     'description'    => $entry->destination->description,
-                    'editable'       => 1 === $entry->editable,
+                    'editable'       => 1 === (int)$entry->editable, // @phpstan-ignore-line
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
@@ -260,7 +263,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'link'           => $entry->inward,
                     'group'          => $entry->source->transaction_group_id,
                     'description'    => $entry->source->description,
-                    'editable'       => 1 === $entry->editable,
+                    'editable'       => 1 === (int)$entry->editable, // @phpstan-ignore-line
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];

@@ -52,7 +52,7 @@ class RecurringServiceProvider extends ServiceProvider
                 /** @var RecurringRepositoryInterface $repository */
                 $repository = app(RecurringRepository::class);
 
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }
 

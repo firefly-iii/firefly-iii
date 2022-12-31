@@ -51,7 +51,8 @@ class CurrencyServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var CurrencyRepository $repository */
                 $repository = app(CurrencyRepository::class);
-                if ($app->auth->check()) {
+                // phpstan does not get the reference to auth
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 

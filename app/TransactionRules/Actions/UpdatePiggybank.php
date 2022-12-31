@@ -83,8 +83,8 @@ class UpdatePiggybank implements ActionInterface
         Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
 
         /** @var Transaction $source */
-        /** @var Transaction $destination */
         $source      = $journalObj->transactions()->where('amount', '<', 0)->first();
+        /** @var Transaction $destination */
         $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
         if ((int)$source->account_id === (int)$piggyBank->account_id) {

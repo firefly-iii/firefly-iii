@@ -26,7 +26,6 @@ namespace FireflyIII\Generator\Report\Tag;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Generator\Report\Support;
 use Illuminate\Support\Collection;
 use Log;
 use Throwable;
@@ -38,27 +37,22 @@ use Throwable;
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
-    /** @var Collection The accounts involved */
-    private $accounts;
-    /** @var Carbon The end date */
-    private $end;
-    /** @var array The expenses involved */
-    private $expenses;
-    /** @var array The income involved */
-    private $income;
-    /** @var Carbon The start date */
-    private $start;
-    /** @var Collection The tags involved. */
-    private $tags;
+    private Collection $accounts;
+    private Carbon     $end;
+    private array      $expenses;
+    private array      $income;
+    private Carbon     $start;
+    private Collection $tags;
 
     /**
      * MonthReportGenerator constructor.
      */
     public function __construct()
     {
-        $this->expenses = new Collection();
-        $this->income   = new Collection();
+        $this->expenses = [];
+        $this->income   = [];
         $this->tags     = new Collection();
+        $this->accounts = new Collection();
     }
 
     /**

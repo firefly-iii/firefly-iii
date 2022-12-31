@@ -1158,6 +1158,12 @@ interface GroupCollectorInterface
     public function setSearchWords(array $array): GroupCollectorInterface;
 
     /**
+     * @param  string  $sepaCT
+     * @return GroupCollectorInterface
+     */
+    public function setSepaCT(string $sepaCT): GroupCollectorInterface;
+
+    /**
      * Set source accounts.
      *
      * @param  Collection  $accounts

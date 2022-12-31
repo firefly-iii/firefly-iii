@@ -50,8 +50,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $amount_min
  * @property string $amount_max
  * @property Carbon $date
- * @property string|null $end_date
- * @property string|null $extension_date
+ * @property Carbon|null $end_date
+ * @property Carbon|null $extension_date
  * @property string $repeat_freq
  * @property int $skip
  * @property bool $automatch
