@@ -232,10 +232,10 @@ class AttachmentHelper implements AttachmentHelperInterface
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
         if (false !== $validation) {
-            $class = get_class($model);
-            $user  = $model->user;
-            if (PiggyBank::class === $class) {
-                $user = $model->account->user;
+            $user  = $model->user; // @phpstan-ignore-line
+            // ignore lines about polymorphic calls.
+            if ($model instanceof PiggyBank) {
+                $user = $model->account->user; // @phpstan-ignore-line
             }
 
             $attachment = new Attachment(); // create Attachment object.
@@ -372,11 +372,12 @@ class AttachmentHelper implements AttachmentHelperInterface
         $name  = $file->getClientOriginalName();
         $class = get_class($model);
         $count = 0;
-        if (PiggyBank::class === $class) {
-            $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
+        // ignore lines about polymorphic calls.
+        if ($model instanceof PiggyBank) {
+            $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(); // @phpstan-ignore-line
         }
-        if (PiggyBank::class !== $class) {
-            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
+        if ($model instanceof PiggyBank) {
+            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(); // @phpstan-ignore-line
         }
         $result = false;
         if ($count > 0) {

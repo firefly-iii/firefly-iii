@@ -180,7 +180,8 @@ class DebugController extends Controller
 
         // get latest log file:
         $logger     = Log::driver();
-        $handlers   = $logger->getHandlers();
+        // PHPstan doesn't recognize the method because of its polymorphic nature.
+        $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
         $logContent = '';
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {

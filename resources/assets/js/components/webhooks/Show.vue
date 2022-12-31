@@ -37,29 +37,29 @@
             <h3 class="box-title">{{ title }}</h3>
           </div>
           <div class="box-body no-padding">
-            <table class="table table-hover">
+            <table class="table table-hover" aria-label="A table">
               <tbody>
               <tr>
-                <th style="width:40%;">Title</th>
+                <th scope="row" style="width:40%;">Title</th>
                 <td>{{ title }}</td>
               </tr>
               <tr>
-                <th>{{ $t('list.active') }}</th>
+                <th scope="row">{{ $t('list.active') }}</th>
                 <td>
                   <em class="fa fa-check text-success" v-if="active"></em>
                   <em class="fa fa-times text-danger" v-if="!active"></em>
                 </td>
               </tr>
               <tr>
-                <th>{{ $t('list.trigger') }}</th>
+                <th scope="row">{{ $t('list.trigger') }}</th>
                 <td> {{ trigger }}</td>
               </tr>
               <tr>
-                <th>{{ $t('list.response') }}</th>
+                <th scope="row">{{ $t('list.response') }}</th>
                 <td> {{ response }}</td>
               </tr>
               <tr>
-                <th>{{ $t('list.delivery') }}</th>
+                <th scope="row">{{ $t('list.delivery') }}</th>
                 <td> {{ delivery }}</td>
               </tr>
               </tbody>
@@ -82,7 +82,7 @@
             <h3 class="box-title">{{ $t('firefly.meta_data') }}</h3>
           </div>
           <div class="box-body no-padding">
-            <table class="table table-hover">
+            <table class="table table-hover" aria-label="A table">
               <tbody>
               <tr>
                 <th style="width:40%;">{{ $t('list.url') }}</th>

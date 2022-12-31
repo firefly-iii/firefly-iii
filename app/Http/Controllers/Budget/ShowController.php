@@ -87,7 +87,7 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)// @phpstan-ignore-line
+    public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
     {
         /** @var Carbon $start */
         $start = $start ?? session('start');

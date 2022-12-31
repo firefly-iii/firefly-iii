@@ -64,8 +64,6 @@ class UserEventHandler
      * This method will bestow upon a user the "owner" role if he is the first user in the system.
      *
      * @param  RegisteredUser  $event
-     *
-     * @return bool
      */
     public function attachUserRole(RegisteredUser $event): void
     {
@@ -83,8 +81,6 @@ class UserEventHandler
      * Fires to see if a user is admin.
      *
      * @param  Login  $event
-     *
-     * @return bool
      */
     public function checkSingleUserIsAdmin(Login $event): void
     {
@@ -113,7 +109,6 @@ class UserEventHandler
 
     /**
      * @param  RegisteredUser  $event
-     * @return bool
      */
     public function createExchangeRates(RegisteredUser $event): void
     {
@@ -124,7 +119,6 @@ class UserEventHandler
     /**
      * @param  RegisteredUser  $event
      *
-     * @return bool
      * @throws FireflyException
      */
     public function createGroupMembership(RegisteredUser $event): void
@@ -330,7 +324,6 @@ class UserEventHandler
     {
         Log::debug('Now in storeUserIPAddress');
         $user = $event->user;
-        /** @var array $preference */
 
         if ($user->hasRole('demo')) {
             Log::debug('Do not log demo user logins');
@@ -338,6 +331,7 @@ class UserEventHandler
         }
 
         try {
+            /** @var array $preference */
             $preference = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
         } catch (FireflyException $e) {
             // don't care.

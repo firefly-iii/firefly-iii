@@ -122,7 +122,8 @@ class Authenticate
 
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
-                return $this->auth->shouldUse($guard);
+                // According to PHPstan the method returns void, but we'll see.
+                return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
         }
 

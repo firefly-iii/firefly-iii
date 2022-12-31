@@ -85,7 +85,7 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null) // @phpstan-ignore-line
+    public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null) 
     {
         /** @var Carbon $start */
         $start = $start ?? session('start', Carbon::now()->startOfMonth());

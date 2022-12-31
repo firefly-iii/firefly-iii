@@ -44,7 +44,7 @@ class IntroController extends Controller
      *
      * @return JsonResponse
      */
-    public function getIntroSteps(string $route, string $specificPage = null): JsonResponse // @phpstan-ignore-line
+    public function getIntroSteps(string $route, string $specificPage = null): JsonResponse 
     {
         Log::debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
         $specificPage  = $specificPage ?? '';
@@ -105,7 +105,7 @@ class IntroController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function postEnable(string $route, string $specialPage = null): JsonResponse // @phpstan-ignore-line
+    public function postEnable(string $route, string $specialPage = null): JsonResponse 
     {
         $specialPage = $specialPage ?? '';
         $route       = str_replace('.', '_', $route);
@@ -129,7 +129,7 @@ class IntroController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function postFinished(string $route, string $specialPage = null): JsonResponse // @phpstan-ignore-line
+    public function postFinished(string $route, string $specialPage = null): JsonResponse 
     {
         $specialPage = $specialPage ?? '';
         $key         = 'shown_demo_'.$route;

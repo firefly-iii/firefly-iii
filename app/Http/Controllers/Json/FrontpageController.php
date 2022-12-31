@@ -54,7 +54,7 @@ class FrontpageController extends Controller
                 // percentage!
                 $pct = 0;
                 if (0 !== bccomp($piggyBank->targetamount, '0')) {
-                    $pct = round(($amount / $piggyBank->targetamount) * 100);
+                    $pct = (int)bcmul(bcdiv($amount, $piggyBank->targetamount), '100');
                 }
 
                 $entry = [

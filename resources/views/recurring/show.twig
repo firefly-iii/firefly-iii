@@ -70,11 +70,11 @@
                                 {% endif %}
                             </strong>
                         </p>
-                        <table class="table">
+                        <table class="table" aria-label="Table">
                             <tbody>
                             {% for occ in rep.occurrences %}
                                 <tr>
-                                    <td>{{ occ.date.isoFormat(trans('config.month_and_date_day_js')) }}</td>
+                                    <th scope="row">{{ occ.date.isoFormat(trans('config.month_and_date_day_js')) }}</th>
                                     <td>
                                         {% if not occ.fired %}
                                         <form action="{{ route('recurring.trigger', [recurrence.id]) }}" method="post" style="display: inline;">

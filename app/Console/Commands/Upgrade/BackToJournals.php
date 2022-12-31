@@ -86,9 +86,6 @@ class BackToJournals extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function isMigrated(): bool
     {

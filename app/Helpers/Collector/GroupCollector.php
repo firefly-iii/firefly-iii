@@ -517,19 +517,22 @@ class GroupCollector implements GroupCollectorInterface
                 $groupArray                             = [
                     'id'               => (int)$augumentedJournal->transaction_group_id,
                     'user_id'          => (int)$augumentedJournal->user_id,
-                    'title'            => $augumentedJournal->transaction_group_title,
+                    // Field transaction_group_title was added by the query.
+                    'title'            => $augumentedJournal->transaction_group_title, // @phpstan-ignore-line
                     'transaction_type' => $parsedGroup['transaction_type_type'],
                     'count'            => 1,
                     'sums'             => [],
                     'transactions'     => [],
                 ];
-                $journalId                              = (int)$augumentedJournal->transaction_journal_id;
+                // Field transaction_journal_id was added by the query.
+                $journalId                              = (int)$augumentedJournal->transaction_journal_id; // @phpstan-ignore-line
                 $groupArray['transactions'][$journalId] = $parsedGroup;
                 $groups[$groupId]                       = $groupArray;
                 continue;
             }
             // or parse the rest.
-            $journalId = (int)$augumentedJournal->transaction_journal_id;
+            // Field transaction_journal_id was added by the query.
+            $journalId = (int)$augumentedJournal->transaction_journal_id; // @phpstan-ignore-line
             if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
                 // append data to existing group + journal (for multiple tags or multiple attachments)
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
@@ -770,7 +773,6 @@ class GroupCollector implements GroupCollectorInterface
     {
         $currentCollection = $collection;
         /**
-         * @var int $i
          * @var Closure $function
          */
         foreach ($this->postFilters as $function) {
@@ -779,7 +781,7 @@ class GroupCollector implements GroupCollectorInterface
             // and save it (or not) in the new collection.
             // that new collection is the next current collection
             /**
-             * @var int $index
+             * @var int $ii
              * @var array $item
              */
             foreach ($currentCollection as $ii => $item) {

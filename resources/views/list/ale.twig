@@ -1,7 +1,7 @@
-<table class="table">
+<table class="table" aria-label="Table">
     {% for logEntry in logEntries %}
         <tr>
-            <td style="width:20%;">
+            <th style="width:20%;" scope="row">
                 {# link to object: #}
                 {% if 'FireflyIII\\Models\\Rule' == logEntry.changer_type %}
                     <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
@@ -9,7 +9,7 @@
                 {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""}) }}
                 #{{ logEntry.changer_id }}
                     </a>
-            </td>
+            </th>
             <td style="width:30%;">
                 {{ trans('firefly.ale_action_'~logEntry.action) }}
             </td>

@@ -99,7 +99,7 @@ class IndexController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function index(Request $request, Carbon $start = null, Carbon $end = null) // @phpstan-ignore-line
+    public function index(Request $request, Carbon $start = null, Carbon $end = null) 
     {
         Log::debug('Start of IndexController::index()');
 

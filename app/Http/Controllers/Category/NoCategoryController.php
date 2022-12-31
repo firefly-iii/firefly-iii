@@ -83,7 +83,7 @@ class NoCategoryController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Carbon $start = null, Carbon $end = null)// @phpstan-ignore-line
+    public function show(Request $request, Carbon $start = null, Carbon $end = null)
     {
         Log::debug('Start of noCategory()');
         /** @var Carbon $start */

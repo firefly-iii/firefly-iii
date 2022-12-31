@@ -62,7 +62,8 @@ class VerifySecurityAlerts extends Command
         // check for security advisories.
         $version = config('firefly.version');
         $disk    = Storage::disk('resources');
-        if (!$disk->has('alerts.json')) {
+        // Next line is ignored because it's a Laravel Facade.
+        if (!$disk->has('alerts.json')) { // @phpstan-ignore-line
             Log::debug('No alerts.json file present.');
 
             return 0;

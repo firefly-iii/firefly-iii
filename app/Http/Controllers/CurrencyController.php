@@ -300,7 +300,7 @@ class CurrencyController extends Controller
 
     /**
      * @param  Request  $request
-     * @return RedirectResponse|Redirector
+     * @return JsonResponse
      */
     public function enableCurrency(Request $request): JsonResponse
     {
