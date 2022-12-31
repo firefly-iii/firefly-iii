@@ -11,6 +11,7 @@ parameters:
     - '#has a nullable return type declaration#'
     - '#with a nullable type declaration#'
     - '#with null as default value#'
+    - '#is not covariant with PHPDoc type array#'
     -
         message: '#but containers should not be injected#'
         paths:
@@ -65,4 +66,5 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 2
+  level: 4
+

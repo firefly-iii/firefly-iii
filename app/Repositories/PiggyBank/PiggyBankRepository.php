@@ -95,7 +95,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function find(int $piggyBankId): ?PiggyBank
     {
-        return $this->user->piggyBanks()->find($piggyBankId);
+        // phpstan doesn't get the Model.
+        return $this->user->piggyBanks()->find($piggyBankId); // @phpstan-ignore-line
     }
 
     /**
@@ -124,7 +125,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
+                $attachment->notes       = $notes ? $notes->text : ''; // TODO setting the text to the 'notes' field doesn't work.
 
                 return $attachment;
             }
@@ -331,11 +332,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanks(): Collection
     {
-        return $this->user
+        return $this->user  // @phpstan-ignore-line (phpstan does not recognize objectGroups)
             ->piggyBanks()
             ->with(
                 ['account',
-                 'objectGroups']) // @phpstan-ignore-line (phpstan does not recognize objectGroups)
+                 'objectGroups'])
             ->orderBy('order', 'ASC')->get();
     }
 

@@ -54,6 +54,8 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     }
 
     /**
+     * TODO pretty sure method duplicated.
+     *
      * Return all attachments for journal.
      *
      * @param  TransactionJournal  $journal
@@ -71,7 +73,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
+                $attachment->notes       = $notes ? $notes->text : ''; // TODO should not set notes like this.
 
                 return $attachment;
             }
