@@ -30,7 +30,7 @@
           <input v-model=active :name="name" @change="handleInput" type="checkbox" value="1">
         </label>
       </div>
-      <p class="help-block" v-html="$t('firefly.webhook_active_form_help')"></p>
+      <p class="help-block" v-text="$t('firefly.webhook_active_form_help')"></p>
     </div>
   </div>
 </template>

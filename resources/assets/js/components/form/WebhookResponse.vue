@@ -37,7 +37,7 @@
                 :value="response.id">{{ response.name }}
         </option>
       </select>
-      <p class="help-block" v-html="$t('firefly.webhook_response_form_help')"></p>
+      <p class="help-block" v-text="$t('firefly.webhook_response_form_help')"></p>
       <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>

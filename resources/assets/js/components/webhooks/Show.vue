@@ -85,7 +85,7 @@
             <table class="table table-hover" aria-label="A table">
               <tbody>
               <tr>
-                <th style="width:40%;">{{ $t('list.url') }}</th>
+                <th  scope="row" style="width:40%;">{{ $t('list.url') }}</th>
                 <td><input type="text" readonly class="form-control" :value=url></td>
               </tr>
               <tr>
