@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'guard' => 'web',
+    'guard' => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
 
     /*
     |--------------------------------------------------------------------------
