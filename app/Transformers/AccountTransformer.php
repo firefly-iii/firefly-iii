@@ -115,7 +115,7 @@ class AccountTransformer extends AbstractTransformer
             'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
             'iban'                    => '' === $account->iban ? null : $account->iban,
             'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
-            'virtual_balance'         => app('steam')->bcround((string)$account->virtual_balance, $decimalPlaces),
+            'virtual_balance'         => app('steam')->bcround($account->virtual_balance, $decimalPlaces),
             'opening_balance'         => $openingBalance,
             'opening_balance_date'    => $openingBalanceDate,
             'liability_type'          => $liabilityType,
