@@ -39,14 +39,14 @@ use Log;
 class RemoteUserGuard implements Guard
 {
     protected Application $application;
-    protected             $provider;
-    protected             $user;
+    protected $provider;
+    protected $user;
 
     /**
      * Create a new authentication guard.
      *
-     * @param UserProvider $provider
-     * @param Application  $app
+     * @param  UserProvider  $provider
+     * @param  Application  $app
      */
     // @phpstan-ignore-next-line
     public function __construct(UserProvider $provider, Application $app) // @phpstan-ignore-line
@@ -62,7 +62,8 @@ class RemoteUserGuard implements Guard
     /**
      * @return bool
      */
-    public function viaRemember(): bool {
+    public function viaRemember(): bool
+    {
         Log::debug(sprintf('Now at %s', __METHOD__));
         return false;
     }
@@ -80,7 +81,10 @@ class RemoteUserGuard implements Guard
         }
         // Get the user identifier from $_SERVER or apache filtered headers
         $header = config('auth.guard_header', 'REMOTE_USER');
-        $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
+        $userID = request()->server($header) ?? null;
+        if (function_exists('apache_request_headers')) {
+            $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
+        }
         if (null === $userID) {
             Log::error(sprintf('No user in header "%s".', $header));
             throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
@@ -93,7 +97,7 @@ class RemoteUserGuard implements Guard
         $header = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
+            $emailAddress = (string)(request()->server($header) ?? apache_request_headers()[$header] ?? null);
             $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {
