@@ -40,10 +40,8 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
-    /** @var AttachmentHelperInterface Helper for attachments. */
-    private $attachments;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    private AttachmentHelperInterface $attachments;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * EditController constructor.

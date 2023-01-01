@@ -29,8 +29,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  * Class Authenticate
@@ -87,13 +87,22 @@ class Authenticate
      */
     protected function authenticate($request, array $guards)
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         if (0 === count($guards)) {
-            try {
-                // go for default guard:
-                if ($this->auth->check()) {
-                    // do an extra check on user object.
-                    /** @var User $user */
-                    $user = $this->auth->authenticate(); // @phpstan-ignore-line (thinks function returns void)
+            Log::debug('No guards present.');
+            // go for default guard:
+            /** @noinspection PhpUndefinedMethodInspection */
+            if ($this->auth->check()) {
+                Log::debug('Default guard says user is authenticated.');
+                // do an extra check on user object.
+                /** @noinspection PhpUndefinedMethodInspection */
+                /** @var User $user */
+                $user = $this->auth->authenticate();
+                if (null === $user) {
+                    Log::warning('User is null, throw exception?');
+                }
+                if (null !== $user) {
+                    Log::debug(get_class($user));
                     if (1 === (int)$user->blocked) {
                         $message = (string)trans('firefly.block_account_logout');
                         if ('email_changed' === $user->blocked_code) {
@@ -105,20 +114,11 @@ class Authenticate
                         throw new AuthenticationException('Blocked account.', $guards);
                     }
                 }
-            } catch (QueryException $e) {
-                throw new FireflyException(
-                    sprintf(
-                        'It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands? Error: %s',
-                        $e->getMessage()
-                    ),
-                    0,
-                    $e
-                );
             }
 
             return $this->auth->authenticate(); // @phpstan-ignore-line (thinks function returns void)
         }
-
+        Log::debug('Guard array is not empty.');
 
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {

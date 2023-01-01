@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -290,5 +291,17 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Get the virtual balance
+     *
+     * @return Attribute
+     */
+    protected function virtualBalance(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
     }
 }

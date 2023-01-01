@@ -178,13 +178,15 @@ class Kernel extends HttpKernel
                 CreateFreshApiToken::class,
             ],
 
+            // full API authentication
             'api'  => [
                 AcceptHeaders::class,
                 EnsureFrontendRequestsAreStateful::class,
                 'auth:api,sanctum',
                 'bindings',
             ],
-            'apiY' => [
+            // do only bindings, no auth
+            'api_basic' => [
                 'bindings',
             ],
         ];
