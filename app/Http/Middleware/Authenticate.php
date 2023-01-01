@@ -121,6 +121,8 @@ class Authenticate
         Log::debug('Guard array is not empty.');
 
         foreach ($guards as $guard) {
+            Log::debug(sprintf('Now in guard loop, guard is "%s"', $guard));
+            $this->auth->guard($guard)->authenticate();
             if ($this->auth->guard($guard)->check()) {
                 // According to PHPstan the method returns void, but we'll see.
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line

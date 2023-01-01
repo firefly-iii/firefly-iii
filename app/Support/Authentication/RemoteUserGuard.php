@@ -118,7 +118,6 @@ class RemoteUserGuard implements Guard
     public function guest(): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        $this->authenticate();
         return !$this->check();
     }
 
@@ -128,7 +127,6 @@ class RemoteUserGuard implements Guard
     public function check(): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        $this->authenticate();
         return !is_null($this->user());
     }
 
@@ -138,7 +136,7 @@ class RemoteUserGuard implements Guard
     public function user(): ?User
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        $this->authenticate();
+        //$this->authenticate();
         return $this->user;
     }
 
