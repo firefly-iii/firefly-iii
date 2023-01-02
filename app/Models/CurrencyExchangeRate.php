@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -98,5 +99,25 @@ class CurrencyExchangeRate extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function rate(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function userRate(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => (string) $value,
+        );
     }
 }
