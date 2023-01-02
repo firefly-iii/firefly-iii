@@ -336,7 +336,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             ->piggyBanks()
             ->with(
                 ['account',
-                 'objectGroups'])
+                 'objectGroups']
+            )
             ->orderBy('order', 'ASC')->get();
     }
 

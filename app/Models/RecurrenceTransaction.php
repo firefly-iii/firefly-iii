@@ -180,7 +180,7 @@ class RecurrenceTransaction extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string) $value,
         );
     }
 
@@ -190,7 +190,7 @@ class RecurrenceTransaction extends Model
     protected function foreignAmount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string) $value,
         );
     }
 }

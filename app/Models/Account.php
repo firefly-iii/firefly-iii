@@ -301,7 +301,7 @@ class Account extends Model
     protected function virtualBalance(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string) $value,
         );
     }
 }
