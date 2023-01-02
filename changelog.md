@@ -53,6 +53,11 @@ https://api-docs.firefly-iii.org/.
 
 - #6130 You can now create a reconciliation transaction
 
+## 5.7.18 - 2023-01-03
+
+### Fixed
+- [Issue 6775](https://github.com/firefly-iii/firefly-iii/issues/6775) OAuth authentication was broken for Authelia and other remote user providers.
+- [Issue 6787](https://github.com/firefly-iii/firefly-iii/issues/6787) SQLite value conversion broke several functions
 
 ## 5.7.17 - 2022-12-30
 
