@@ -49,7 +49,7 @@ trait ConvertsDataTypes
      * @param mixed $key
      * @return mixed
      */
-    abstract public function has(mixed $key): mixed;
+    abstract public function has($key): mixed;
     /**
      * Return integer value.
      *
