@@ -58,6 +58,7 @@ class BillController extends Controller
     /**
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/#/autocomplete/getBillsAC
+     * TODO expand API to add active field.
      *
      * @param  AutocompleteRequest  $request
      *
@@ -72,6 +73,7 @@ class BillController extends Controller
                 return [
                     'id'   => (string)$item->id,
                     'name' => $item->name,
+                    'active' => $item->active
                 ];
             }
         );
