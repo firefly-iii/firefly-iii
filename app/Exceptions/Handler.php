@@ -177,10 +177,7 @@ class Handler extends ExceptionHandler
             $userData['email'] = auth()->user()->email;
         }
 
-        $headers = [];
-        if (request()->headers) {
-            $headers = request()->headers->all();
-        }
+        $headers = request()->headers->all();
 
         $data = [
             'class'        => get_class($e),

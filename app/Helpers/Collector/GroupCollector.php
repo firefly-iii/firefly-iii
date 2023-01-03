@@ -25,6 +25,7 @@ namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Carbon\Exceptions\InvalidFormatException;
 use Closure;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -602,7 +603,7 @@ class GroupCollector implements GroupCollectorInterface
             $tagDate = null;
             try {
                 $tagDate = Carbon::parse($augumentedJournal['tag_date']);
-            } catch (InvalidDateException $e) {
+            } catch (InvalidFormatException $e) {
                 Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
             }
 
@@ -682,7 +683,7 @@ class GroupCollector implements GroupCollectorInterface
             $tagDate = null;
             try {
                 $tagDate = Carbon::parse($newArray['tag_date']);
-            } catch (InvalidDateException $e) {
+            } catch (InvalidFormatException $e) {
                 Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
             }
 
@@ -754,10 +755,7 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd(
-                        $groups[$groudId]['sums'][$currencyId]['amount'],
-                        $transaction['foreign_amount'] ?? '0'
-                    );
+                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount']);
                 }
             }
         }

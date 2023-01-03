@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use Illuminate\Console\Command;
@@ -124,6 +125,7 @@ class MigrateRecurrenceMeta extends Command
      */
     private function migrateEntry(RecurrenceMeta $meta): int
     {
+        /** @var Recurrence|null $recurrence */
         $recurrence = $meta->recurrence;
         if (null === $recurrence) {
             return 0;

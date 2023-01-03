@@ -197,9 +197,9 @@ class ProfileController extends Controller
      *
      * @param  Request  $request
      *
-     * @return Application|RedirectResponse|Redirector
+     * @return View|RedirectResponse
      */
-    public function deleteAccount(Request $request): Application|RedirectResponse|Redirector
+    public function deleteAccount(Request $request): View|RedirectResponse
     {
         if (!$this->internalAuth || !$this->internalIdentity) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));

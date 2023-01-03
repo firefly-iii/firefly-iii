@@ -28,7 +28,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -44,9 +43,8 @@ class EditController extends Controller
 {
     use ModelInformation;
 
-    private AttachmentHelperInterface   $attachments;
-    private CurrencyRepositoryInterface $currencyRepos;
-    private AccountRepositoryInterface  $repository;
+    private AttachmentHelperInterface  $attachments;
+    private AccountRepositoryInterface $repository;
 
     /**
      * EditController constructor.
@@ -61,9 +59,8 @@ class EditController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', (string)trans('firefly.accounts'));
 
-                $this->repository    = app(AccountRepositoryInterface::class);
-                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-                $this->attachments   = app(AttachmentHelperInterface::class);
+                $this->repository  = app(AccountRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
             }

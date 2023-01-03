@@ -146,11 +146,7 @@ class DeleteOrphanedTransactions extends Command
             // delete journals
             $journal = TransactionJournal::find((int)$transaction->transaction_journal_id);
             if ($journal) {
-                try {
-                    $journal->delete();
-                } catch (QueryException $e) {
-                    Log::info(sprintf('Could not delete journal %s', $e->getMessage()));
-                }
+                $journal->delete();
             }
             Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
             $this->line(

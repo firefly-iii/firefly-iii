@@ -28,9 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
@@ -49,10 +46,7 @@ class BudgetController extends Controller
 {
     use BasicDataSupport;
 
-    private BudgetLimitRepositoryInterface $blRepository;
-    private NoBudgetRepositoryInterface    $nbRepository;
-    private OperationsRepositoryInterface  $opsRepository;
-    private BudgetRepositoryInterface      $repository;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * ExpenseReportController constructor.
@@ -65,9 +59,6 @@ class BudgetController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
-                $this->repository    = app(BudgetRepositoryInterface::class);
-                $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
-                $this->nbRepository  = app(NoBudgetRepositoryInterface::class);
 
                 return $next($request);
             }

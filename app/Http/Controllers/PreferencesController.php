@@ -88,7 +88,7 @@ class PreferencesController extends Controller
                 $role = sprintf('opt_group_l_%s', $type);
             }
 
-            if ('' === $role || 'opt_group_' === $role) {
+            if ('opt_group_' === $role) {
                 $role = 'opt_group_defaultAsset';
             }
             $groupedAccounts[trans(sprintf('firefly.%s', $role))][$account->id] = $account->name;

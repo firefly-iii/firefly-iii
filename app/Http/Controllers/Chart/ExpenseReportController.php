@@ -185,6 +185,7 @@ class ExpenseReportController extends Controller
         // remove all empty entries to prevent cluttering:
         $newSet = [];
         foreach ($chartData as $key => $entry) {
+            // TODO not sure, this is a bad comparison.
             if (0 === !array_sum($entry['entries'])) {
                 $newSet[$key] = $entry;
             }

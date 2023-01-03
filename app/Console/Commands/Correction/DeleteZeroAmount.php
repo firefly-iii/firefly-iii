@@ -60,11 +60,7 @@ class DeleteZeroAmount extends Command
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->info(sprintf('Deleted transaction journal #%d because the amount is zero (0.00).', $journal->id));
-            try {
-                $journal->delete();
-            } catch (QueryException $e) {
-                $this->line($e->getMessage());
-            }
+            $journal->delete();
 
             Transaction::where('transaction_journal_id', $journal->id)->delete();
         }

@@ -43,7 +43,6 @@ class TransactionFactory
     private ?TransactionCurrency $foreignCurrency;
     private TransactionJournal   $journal;
     private bool                 $reconciled;
-    private User                 $user;
 
     /**
      * Constructor.
@@ -85,7 +84,6 @@ class TransactionFactory
      */
     private function create(string $amount, ?string $foreignAmount): Transaction
     {
-        $result = null;
         if ('' === $foreignAmount) {
             $foreignAmount = null;
         }
@@ -101,6 +99,7 @@ class TransactionFactory
             'identifier'              => 0,
         ];
         try {
+            /** @var Transaction|null $result */
             $result = Transaction::create($data);
         } catch (QueryException $e) {
             Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
@@ -112,25 +111,23 @@ class TransactionFactory
             throw new FireflyException('Transaction is NULL.');
         }
 
-        if (null !== $result) {
-            Log::debug(
-                sprintf(
-                    'Created transaction #%d (%s %s, account %s), part of journal #%d',
-                    $result->id,
-                    $this->currency->code,
-                    $amount,
-                    $this->account->name,
-                    $this->journal->id
-                )
-            );
+        Log::debug(
+            sprintf(
+                'Created transaction #%d (%s %s, account %s), part of journal #%d',
+                $result->id,
+                $this->currency->code,
+                $amount,
+                $this->account->name,
+                $this->journal->id
+            )
+        );
 
-            // do foreign currency thing: add foreign currency info to $one and $two if necessary.
-            if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
-                $result->foreign_currency_id = $this->foreignCurrency->id;
-                $result->foreign_amount      = $foreignAmount;
-            }
-            $result->save();
+        // do foreign currency thing: add foreign currency info to $one and $two if necessary.
+        if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
+            $result->foreign_currency_id = $this->foreignCurrency->id;
+            $result->foreign_amount      = $foreignAmount;
         }
+        $result->save();
 
         return $result;
     }
@@ -213,6 +210,6 @@ class TransactionFactory
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
+        // empty function.
     }
 }

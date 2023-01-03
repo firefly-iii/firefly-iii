@@ -138,7 +138,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param  Request  $request
      * @param  Throwable  $exception
      *
-     * @return Redirector|Response
+     * @return Response
      * @throws Throwable
      */
     private function handleAccount(Request $request, Throwable $exception)
@@ -154,7 +154,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         if (!($param instanceof Account)) {
             $accountId = (int)$param;
         }
-        /** @var Account $account */
+        /** @var Account|null $account */
         $account = $user->accounts()->with(['accountType'])->withTrashed()->find($accountId);
         if (null === $account) {
             Log::error(sprintf('Could not find account %d, so give big fat error.', $accountId));
@@ -172,7 +172,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param  Request  $request
      * @param  Throwable  $exception
      *
-     * @return RedirectResponse|\Illuminate\Http\Response|Redirector|Response
+     * @return Response
      * @throws Throwable
      */
     private function handleGroup(Request $request, Throwable $exception)
@@ -183,14 +183,14 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $route   = $request->route();
         $groupId = (int)$route->parameter('transactionGroup');
 
-        /** @var TransactionGroup $group */
+        /** @var TransactionGroup|null $group */
         $group = $user->transactionGroups()->withTrashed()->find($groupId);
         if (null === $group) {
             Log::error(sprintf('Could not find group %d, so give big fat error.', $groupId));
 
             return parent::render($request, $exception);
         }
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->withTrashed()->first();
         if (null === $journal) {
             Log::error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
@@ -211,7 +211,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param  Request  $request
      * @param  Throwable  $exception
      *
-     * @return RedirectResponse|Redirector|Response
+     * @return Response
      * @throws Throwable
      */
     private function handleAttachment(Request $request, Throwable $exception)

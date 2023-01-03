@@ -163,16 +163,16 @@ class BackToJournals extends Command
     private function migrateBudgetsForJournal(TransactionJournal $journal): void
     {
         // grab category from first transaction
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
         }
-        /** @var Budget $budget */
+        /** @var Budget|null $budget */
         $budget = $transaction->budgets->first();
-        /** @var Budget $journalBudget */
+        /** @var Budget|null $journalBudget */
         $journalBudget = $journal->budgets->first();
 
         // both have a budget, but they don't match.
@@ -239,16 +239,16 @@ class BackToJournals extends Command
     private function migrateCategoriesForJournal(TransactionJournal $journal): void
     {
         // grab category from first transaction
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
         }
-        /** @var Category $category */
+        /** @var Category|null $category */
         $category = $transaction->categories->first();
-        /** @var Category $journalCategory */
+        /** @var Category|null $journalCategory */
         $journalCategory = $journal->categories->first();
 
         // both have a category, but they don't match.

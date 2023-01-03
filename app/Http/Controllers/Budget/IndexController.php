@@ -305,6 +305,10 @@ class IndexController extends Controller
             }
         }
         // final calculation for 'left':
+        /**
+         * @var int $currencyId
+         * @var array $info
+         */
         foreach ($sums['budgeted'] as $currencyId => $info) {
             $spent                               = $sums['spent'][$currencyId]['amount'] ?? '0';
             $budgeted                            = $sums['budgeted'][$currencyId]['amount'] ?? '0';

@@ -134,6 +134,7 @@ class CreateGroupMemberships extends Command
             throw new FireflyException('Firefly III could not find a user role. Please make sure all validations have run.');
         }
 
+        /** @var GroupMembership|null $membership */
         $membership = GroupMembership::create(
             [
                 'user_id'       => $user->id,

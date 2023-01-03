@@ -146,6 +146,7 @@ class FixTransactionTypes extends Command
         }
         /** @var Transaction $transaction */
         $transaction = $collection->first();
+        /** @var Account|null $account */
         $account     = $transaction->account;
         if (null === $account) {
             throw new FireflyException(sprintf('Journal #%d, transaction #%d has no source account.', $journal->id, $transaction->id));
@@ -175,6 +176,7 @@ class FixTransactionTypes extends Command
         }
         /** @var Transaction $transaction */
         $transaction = $collection->first();
+        /** @var Account|null $account */
         $account     = $transaction->account;
         if (null === $account) {
             throw new FireflyException(sprintf('Journal #%d, transaction #%d has no destination account.', $journal->id, $transaction->id));

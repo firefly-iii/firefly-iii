@@ -47,8 +47,6 @@ use Throwable;
 class ReconcileController extends Controller
 {
     private AccountRepositoryInterface  $accountRepos;
-    private CurrencyRepositoryInterface $currencyRepos;
-    private JournalRepositoryInterface  $repository;
 
     /**
      * ReconcileController constructor.
@@ -64,9 +62,7 @@ class ReconcileController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', (string)trans('firefly.accounts'));
-                $this->repository    = app(JournalRepositoryInterface::class);
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
-                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
 
                 return $next($request);
             }

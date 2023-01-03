@@ -81,11 +81,7 @@ class MigrateJournalNotes extends Command
             $note->text = $meta->data;
             $note->save();
             Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
-            try {
-                $meta->delete();
-            } catch (QueryException $e) {
-                Log::error(sprintf('Could not delete old meta entry #%d: %s', $meta->id, $e->getMessage()));
-            }
+            $meta->delete();
 
             $count++;
         }

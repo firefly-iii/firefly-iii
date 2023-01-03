@@ -57,8 +57,6 @@ class TransactionIdentifier extends Command
     private $cliRepository;
     /** @var int */
     private $count;
-    /** @var JournalRepositoryInterface */
-    private $journalRepository;
 
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
@@ -117,7 +115,6 @@ class TransactionIdentifier extends Command
      */
     private function stupidLaravel(): void
     {
-        $this->journalRepository = app(JournalRepositoryInterface::class);
         $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
         $this->count             = 0;
     }

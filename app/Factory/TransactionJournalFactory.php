@@ -28,6 +28,7 @@ use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -45,7 +46,6 @@ use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use JsonException;
 use Log;
@@ -312,10 +312,6 @@ class TransactionJournalFactory
 
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
         $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
-        if (false === $json) {
-            $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR);
-            Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
-        }
         $hash = hash('sha256', $json);
         Log::debug(sprintf('The hash is: %s', $hash), $dataRow);
 
@@ -336,15 +332,12 @@ class TransactionJournalFactory
         if (false === $this->errorOnHash) {
             return;
         }
-        $result = null;
-        if ($this->errorOnHash) {
-            Log::debug('Will verify duplicate!');
-            /** @var TransactionJournalMeta $result */
-            $result = TransactionJournalMeta::withTrashed()
-                                            ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
-                                            ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
-                                            ->first();
-        }
+        Log::debug('Will verify duplicate!');
+        /** @var TransactionJournalMeta|null $result */
+        $result = TransactionJournalMeta::withTrashed()
+                                        ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
+                                        ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
+                                        ->first();
         if (null !== $result) {
             app('log')->warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
             $journal = $result->transactionJournal()->withTrashed()->first();
@@ -474,6 +467,7 @@ class TransactionJournalFactory
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
         Log::debug('Now in getCurrency()');
+        /** @var Preference|null $preference */
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && null === $currency) {
             // return user's default:
@@ -555,13 +549,7 @@ class TransactionJournalFactory
      */
     private function forceTrDelete(Transaction $transaction): void
     {
-        try {
-            $transaction->delete();
-        } catch (QueryException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            Log::error('Could not delete negative transaction.');
-        }
+        $transaction->delete();
     }
 
     /**

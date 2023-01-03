@@ -351,7 +351,7 @@ class MigrateToGroups extends Command
         Log::debug('Now in getTransactionBudget()');
 
         // try to get a budget ID from the left transaction:
-        /** @var Budget $budget */
+        /** @var Budget|null $budget */
         $budget = $left->budgets()->first();
         if (null !== $budget) {
             Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
@@ -360,7 +360,7 @@ class MigrateToGroups extends Command
         }
 
         // try to get a budget ID from the right transaction:
-        /** @var Budget $budget */
+        /** @var Budget|null $budget */
         $budget = $right->budgets()->first();
         if (null !== $budget) {
             Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
@@ -384,7 +384,7 @@ class MigrateToGroups extends Command
         Log::debug('Now in getTransactionCategory()');
 
         // try to get a category ID from the left transaction:
-        /** @var Category $category */
+        /** @var Category|null $category */
         $category = $left->categories()->first();
         if (null !== $category) {
             Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
@@ -393,7 +393,7 @@ class MigrateToGroups extends Command
         }
 
         // try to get a category ID from the left transaction:
-        /** @var Category $category */
+        /** @var Category|null $category */
         $category = $right->categories()->first();
         if (null !== $category) {
             Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));

@@ -30,8 +30,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 
@@ -42,16 +40,9 @@ class BudgetController extends Controller
 {
     use DateCalculation;
 
-    /** @var AvailableBudgetRepositoryInterface */
-    private $abRepository;
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    private AvailableBudgetRepositoryInterface $abRepository;
+    private BudgetLimitRepositoryInterface     $blRepository;
+    private BudgetRepositoryInterface          $repository;
 
     /**
      * IndexController constructor.
@@ -66,11 +57,9 @@ class BudgetController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
-                $this->repository         = app(BudgetRepositoryInterface::class);
-                $this->opsRepository      = app(OperationsRepositoryInterface::class);
-                $this->abRepository       = app(AvailableBudgetRepositoryInterface::class);
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->blRepository       = app(BudgetLimitRepositoryInterface::class);
+                $this->repository   = app(BudgetRepositoryInterface::class);
+                $this->abRepository = app(AvailableBudgetRepositoryInterface::class);
+                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
                 $this->repository->cleanupBudgets();
 
                 return $next($request);

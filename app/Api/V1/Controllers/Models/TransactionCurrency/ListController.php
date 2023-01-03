@@ -67,8 +67,6 @@ class ListController extends Controller
     use TransactionFilter;
 
     private CurrencyRepositoryInterface $repository;
-    private UserRepositoryInterface     $userRepository;
-
     /**
      * CurrencyRepository constructor.
      *
@@ -80,7 +78,6 @@ class ListController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository     = app(CurrencyRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);

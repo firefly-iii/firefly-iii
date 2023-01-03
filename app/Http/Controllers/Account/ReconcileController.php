@@ -33,7 +33,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -50,12 +49,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class ReconcileController extends Controller
 {
-    /** @var AccountRepositoryInterface The account repository */
-    private $accountRepos;
-    /** @var CurrencyRepositoryInterface The currency repository */
-    private $currencyRepos;
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $repository;
+    private AccountRepositoryInterface $accountRepos;
+    private JournalRepositoryInterface $repository;
 
     /**
      * ReconcileController constructor.
@@ -71,9 +66,8 @@ class ReconcileController extends Controller
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', (string)trans('firefly.accounts'));
-                $this->repository    = app(JournalRepositoryInterface::class);
-                $this->accountRepos  = app(AccountRepositoryInterface::class);
-                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+                $this->repository   = app(JournalRepositoryInterface::class);
+                $this->accountRepos = app(AccountRepositoryInterface::class);
 
                 return $next($request);
             }

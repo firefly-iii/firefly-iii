@@ -143,7 +143,7 @@ class UserEventHandler
                 throw new FireflyException('Email address can no longer be used for registrations.');
             }
         }
-        /** @var UserRole $role */
+        /** @var UserRole|null $role */
         $role = UserRole::where('title', UserRole::OWNER)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
@@ -366,6 +366,7 @@ class UserEventHandler
             ];
         }
         $preference = array_values($preference);
+        /** @var bool $send */
         $send       = app('preferences')->getForUser($user, 'notification_user_login', true)->data;
         app('preferences')->setForUser($user, 'login_ip_history', $preference);
 

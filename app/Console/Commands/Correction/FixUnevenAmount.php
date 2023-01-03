@@ -93,7 +93,7 @@ class FixUnevenAmount extends Command
         if (!$journal) {
             return;
         }
-        /** @var Transaction $source */
+        /** @var Transaction|null $source */
         $source = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
@@ -113,7 +113,7 @@ class FixUnevenAmount extends Command
         $amount = bcmul('-1', (string)$source->amount);
 
         // fix amount of destination:
-        /** @var Transaction $destination */
+        /** @var Transaction|null $destination */
         $destination = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {

@@ -83,7 +83,7 @@ class PiggyBankController extends Controller
         // get first event or start date of piggy bank or today
         $startDate = $piggyBank->startdate ?? today(config('app.timezone'));
 
-        /** @var PiggyBankEvent $firstEvent */
+        /** @var PiggyBankEvent|null $firstEvent */
         $firstEvent = $set->first();
         $firstDate  = null === $firstEvent ? new Carbon() : $firstEvent->date;
 

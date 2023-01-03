@@ -125,7 +125,7 @@ class UpdatedGroupEventHandler
             return;
         }
         // first journal:
-        /** @var TransactionJournal $first */
+        /** @var TransactionJournal|null $first */
         $first = $group->transactionJournals()
                        ->orderBy('transaction_journals.date', 'DESC')
                        ->orderBy('transaction_journals.order', 'ASC')

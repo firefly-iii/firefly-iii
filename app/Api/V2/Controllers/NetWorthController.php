@@ -38,7 +38,6 @@ class NetWorthController extends Controller
     use ConvertsExchangeRates;
 
     private NetWorthInterface          $netWorth;
-    private AccountRepositoryInterface $repository;
 
     /**
      *
@@ -48,7 +47,6 @@ class NetWorthController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(AccountRepositoryInterface::class);
                 $this->netWorth   = app(NetWorthInterface::class);
                 $this->netWorth->setUser(auth()->user());
                 return $next($request);

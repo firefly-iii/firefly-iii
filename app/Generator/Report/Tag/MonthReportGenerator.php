@@ -39,8 +39,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 {
     private Collection $accounts;
     private Carbon     $end;
-    private array      $expenses;
-    private array      $income;
     private Carbon     $start;
     private Collection $tags;
 
@@ -49,8 +47,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function __construct()
     {
-        $this->expenses = [];
-        $this->income   = [];
         $this->tags     = new Collection();
         $this->accounts = new Collection();
     }

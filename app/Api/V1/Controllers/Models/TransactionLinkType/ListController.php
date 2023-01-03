@@ -46,7 +46,6 @@ class ListController extends Controller
     use TransactionFilter;
 
     private LinkTypeRepositoryInterface $repository;
-    private UserRepositoryInterface     $userRepository;
 
     /**
      * LinkTypeController constructor.
@@ -61,7 +60,6 @@ class ListController extends Controller
                 /** @var User $user */
                 $user                 = auth()->user();
                 $this->repository     = app(LinkTypeRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);

@@ -42,15 +42,11 @@ class TransactionJournalMetaFactory
     {
         //Log::debug('In updateOrCreate()');
         $value = $data['data'];
-        /** @var TransactionJournalMeta $entry */
+        /** @var TransactionJournalMeta|null $entry */
         $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
         if (null === $value && null !== $entry) {
             //Log::debug('Value is empty, delete meta value.');
-            try {
-                $entry->delete();
-            } catch (QueryException $e) {
-                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage()));
-            }
+            $entry->delete();
 
             return null;
         }
@@ -64,11 +60,7 @@ class TransactionJournalMetaFactory
             // don't store blank strings.
             if (null !== $entry) {
                 Log::debug('Will not store empty strings, delete meta value');
-                try {
-                    $entry->delete();
-                } catch (QueryException $e) {
-                    Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage()));
-                }
+                $entry->delete();
             }
 
             return null;

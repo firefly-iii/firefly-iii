@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -49,8 +48,7 @@ class ShowController extends Controller
 {
     use PeriodOverview;
 
-    private CurrencyRepositoryInterface $currencyRepos;
-    private AccountRepositoryInterface  $repository;
+    private AccountRepositoryInterface $repository;
 
     /**
      * ShowController constructor.
@@ -69,8 +67,7 @@ class ShowController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
                 app('view')->share('title', (string)trans('firefly.accounts'));
 
-                $this->repository    = app(AccountRepositoryInterface::class);
-                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+                $this->repository = app(AccountRepositoryInterface::class);
 
                 return $next($request);
             }
