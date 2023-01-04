@@ -281,6 +281,8 @@ export default {
         $('#triggerButton').prop('disabled', true).addClass('disabled');
 
         this.success_message = this.$t('firefly.webhook_was_triggered');
+        // TODO actually trigger the webhook.
+        axios.post('./api/v1/webhooks/' + this.id + '/trigger', {id: journalId});
       }
 
       if (e) {

@@ -122,8 +122,12 @@ class Authenticate
 
         foreach ($guards as $guard) {
             Log::debug(sprintf('Now in guard loop, guard is "%s"', $guard));
-            $this->auth->guard($guard)->authenticate();
-            if ($this->auth->guard($guard)->check()) {
+            if('api' !== $guard) {
+                $this->auth->guard($guard)->authenticate();
+            }
+            $result = $this->auth->guard($guard)->check();
+            Log::debug(sprintf('Result is %s', var_export($result, true)));
+            if ($result) {
                 // According to PHPstan the method returns void, but we'll see.
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }

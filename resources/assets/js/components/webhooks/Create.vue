@@ -135,6 +135,7 @@ export default {
         response: this.response,
         delivery: this.delivery,
         url: this.url,
+        active: this.active,
       };
 
       // post!
