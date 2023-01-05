@@ -42,6 +42,7 @@ class JournalDestroyService
      */
     public function destroy(TransactionJournal $journal): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));

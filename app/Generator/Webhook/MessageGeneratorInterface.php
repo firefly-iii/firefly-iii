@@ -47,6 +47,12 @@ interface MessageGeneratorInterface
     public function setObjects(Collection $objects): void;
 
     /**
+     * @param  Collection  $webhooks
+     * @return void
+     */
+    public function setWebhooks(Collection $webhooks): void;
+
+    /**
      * @param  int  $trigger
      */
     public function setTrigger(int $trigger): void;

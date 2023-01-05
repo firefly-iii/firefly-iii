@@ -68,7 +68,8 @@
           <div class="box-footer">
             <div class="btn-group pull-right">
               <a :href=edit_url class="btn btn-default"><em class="fa fa-pencil"></em> {{ $t('firefly.edit') }}</a>
-              <a id="triggerButton" href="#" @click="submitTest" class="btn btn-default"><em class="fa fa-bolt"></em>
+              <a id="triggerButton" v-if="active" href="#" @click="submitTest" class="btn btn-default"><em
+                  class="fa fa-bolt"></em>
                 {{ $t('list.trigger') }}
               </a>
               <a :href=delete_url class="btn btn-danger"><em class="fa fa-trash"></em> {{ $t('firefly.delete') }}</a>
@@ -85,7 +86,7 @@
             <table class="table table-hover" aria-label="A table">
               <tbody>
               <tr>
-                <th  scope="row" style="width:40%;">{{ $t('list.url') }}</th>
+                <th scope="row" style="width:40%;">{{ $t('list.url') }}</th>
                 <td><input type="text" readonly class="form-control" :value=url></td>
               </tr>
               <tr>
@@ -116,123 +117,129 @@
         </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-lg-12">
         <div class="box">
           <div class="box-header with-border">
             <h3 class="box-title">{{ $t('firefly.webhook_messages') }}</h3>
           </div>
-          <div class="box-body" v-if="messages.length === 0">
-            <p>
-              {{ $t('firefly.no_webhook_messages') }}
-            </p>
-          </div>
-          <div class="box-body no-padding" v-if="messages.length > 0">
-            <table class="table table-hover" aria-label="A table">
-              <thead>
-              <tr>
-                <th>
-                  Date and time
-                </th>
-                <th>
-                  UID
-                </th>
-                <th>
-                  Success?
-                </th>
-                <th>
-                  More details
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="message in messages">
-                <td>
-                  {{ message.created_at }}
-                </td>
-                <td>
-                  {{ message.uuid }}
-                </td>
-                <td>
-                  <em class="fa fa-check text-success" v-if="message.success"></em>
-                  <em class="fa fa-times text-danger" v-if="!message.success"></em>
-                </td>
-                <td>
-                  <a @click="showWebhookMessage(message.id)" class="btn btn-default">
-                    <em class="fa fa-envelope"></em>
-                    {{ $t('firefly.view_message') }}
-                  </a>
-                  <a @click="showWebhookAttempts(message.id)" class="btn btn-default">
-                    <em class="fa fa-cloud-upload"></em>
-                    {{ $t('firefly.view_attempts') }}
-                  </a>
-                </td>
-              </tr>
-              </tbody>
+          <div class="box-body" v-if="messages.length === 0 && !loading">
+          <p>
+            {{ $t('firefly.no_webhook_messages') }}
+          </p>
+        </div>
+        <div class="box-body" v-if="loading">
+          <p class="text-center">
+            <em class="fa fa-spin fa-spinner"></em>
+          </p>
+        </div>
+        <div class="box-body no-padding" v-if="messages.length > 0 && !loading">
+          <table class="table table-hover" aria-label="A table">
+            <thead>
+            <tr>
+              <th>
+                Date and time
+              </th>
+              <th>
+                UID
+              </th>
+              <th>
+                Success?
+              </th>
+              <th>
+                More details
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="message in messages">
+              <td>
+                {{ message.created_at }}
+              </td>
+              <td>
+                {{ message.uuid }}
+              </td>
+              <td>
+                <em class="fa fa-check text-success" v-if="message.success"></em>
+                <em class="fa fa-times text-danger" v-if="!message.success"></em>
+              </td>
+              <td>
+                <a @click="showWebhookMessage(message.id)" class="btn btn-default">
+                  <em class="fa fa-envelope"></em>
+                  {{ $t('firefly.view_message') }}
+                </a>
+                <a @click="showWebhookAttempts(message.id)" class="btn btn-default">
+                  <em class="fa fa-cloud-upload"></em>
+                  {{ $t('firefly.view_attempts') }}
+                </a>
+              </td>
+            </tr>
+            </tbody>
 
-            </table>
-          </div>
+          </table>
         </div>
       </div>
     </div>
-    <!-- modal for message content -->
-    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">{{ $t('firefly.message_content_title') }}</h4>
-          </div>
-          <div class="modal-body">
-            <p>
-              {{ $t('firefly.message_content_help') }}
-            </p>
-            <textarea class="form-control" rows="10" readonly>{{ message_content }}</textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
-          </div>
+  </div>
+  <!-- modal for message content -->
+  <div class="modal fade" id="messageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{ $t('firefly.message_content_title') }}</h4>
+        </div>
+        <div class="modal-body">
+          <p>
+            {{ $t('firefly.message_content_help') }}
+          </p>
+          <textarea class="form-control" rows="10" readonly>{{ message_content }}</textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- modal for message attempts -->
-    <div class="modal fade" id="attemptModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">{{ $t('firefly.attempt_content_title') }}</h4>
-          </div>
-          <div class="modal-body">
+  <!-- modal for message attempts -->
+  <div class="modal fade" id="attemptModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{ $t('firefly.attempt_content_title') }}</h4>
+        </div>
+        <div class="modal-body">
+          <p>
+            {{ $t('firefly.attempt_content_help') }}
+          </p>
+          <p v-if="0===message_attempts.length">
+            <em>
+              {{ $t('firefly.no_attempts') }}
+            </em>
+          </p>
+          <div v-for="message in message_attempts" style="border:1px #eee solid;margin-bottom:0.5em;">
+            <strong>
+              {{ $t('firefly.webhook_attempt_at', {moment: message.created_at}) }}
+              <span class="text-danger">({{ message.status_code }})</span>
+            </strong>
             <p>
-              {{ $t('firefly.attempt_content_help') }}
+              {{ $t('firefly.logs') }}: <br/>
+              <textarea class="form-control" rows="5" readonly>{{ message.logs }}</textarea>
             </p>
-            <p v-if="0===message_attempts.length">
-              <em>
-                {{ $t('firefly.no_attempts') }}
-              </em>
+            <p v-if="null !== message.response">
+              {{ $t('firefly.response') }}: <br/>
+              <textarea class="form-control" rows="5" readonly>{{ message.response }}</textarea>
             </p>
-            <div v-for="message in message_attempts" style="border:1px #eee solid;margin-bottom:0.5em;">
-              <strong>
-                {{ $t('firefly.webhook_attempt_at', {moment: message.created_at}) }}
-                <span class="text-danger">({{ message.status_code }})</span>
-              </strong>
-              <p>
-                {{ $t('firefly.logs') }}: <br/>
-                <textarea class="form-control" rows="5" readonly>{{ message.logs }}</textarea>
-              </p>
-              <p v-if="null !== message.response">
-                {{ $t('firefly.response') }}: <br/>
-                <textarea class="form-control" rows="5" readonly>{{ message.response }}</textarea>
-              </p>
-            </div>
+          </div>
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('firefly.close') }}</button>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -253,6 +260,7 @@ export default {
       secret: '',
       show_secret: false,
       trigger: '',
+      loading: true,
       response: '',
       message_content: '',
       message_attempts: [],
@@ -266,6 +274,7 @@ export default {
   },
   methods: {
     getWebhook() {
+      this.loading = true;
       const page = window.location.href.split('/');
       this.id = page[page.length - 1]
       this.downloadWebhook();
@@ -278,11 +287,19 @@ export default {
       let journalId = parseInt(prompt('Enter a transaction ID'));
       if (journalId !== null && journalId > 0 && journalId <= 2 ^ 24) {
         // disable button. Add informative message.
-        $('#triggerButton').prop('disabled', true).addClass('disabled');
+        let button = $('#triggerButton');
+        button.prop('disabled', true).addClass('disabled');
 
         this.success_message = this.$t('firefly.webhook_was_triggered');
         // TODO actually trigger the webhook.
-        axios.post('./api/v1/webhooks/' + this.id + '/trigger', {id: journalId});
+        axios.post('./api/v1/webhooks/' + this.id + '/trigger-transaction/' + journalId, {});
+        button.prop('disabled', false).removeClass('disabled');
+
+        // set a time-outs.
+        this.loading = true;
+        setTimeout(() => {
+          this.getWebhook();
+        }, 2000);
       }
 
       if (e) {
@@ -310,6 +327,7 @@ export default {
             });
           }
         }
+        this.loading = false;
       });
     },
     showWebhookMessage: function (id) {
@@ -357,7 +375,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -56,8 +56,6 @@ class SubmitController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/webhooks/submitWebook
      *
-     * Remove the specified resource from storage.
-     *
      * @param  Webhook  $webhook
      *
      * @return JsonResponse

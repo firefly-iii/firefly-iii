@@ -30,6 +30,7 @@ Lots of new stuff that I invite you to test and break.
 - #6605 You can search for external ID values
 - Working beta of the new layout under `/v3/`
 - New authentication screens that support dark mode.
+- There is a page for webhooks.
 
 ### Changed
 - Firefly III requires PHP 8.1

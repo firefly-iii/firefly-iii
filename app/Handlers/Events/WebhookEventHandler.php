@@ -37,9 +37,9 @@ class WebhookEventHandler
      */
     public function sendWebhookMessages(): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // kick off the job!
-        $messages = WebhookMessage::where('webhook_messages.sent', 0)
-            //->where('webhook_messages.errored', 0)
+        $messages = WebhookMessage::where('webhook_messages.sent',false)
                                   ->get(['webhook_messages.*'])
                                   ->filter(
                                       function (WebhookMessage $message) {
@@ -48,7 +48,13 @@ class WebhookEventHandler
                                   )->splice(0, 5);
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));
         foreach ($messages as $message) {
-            SendWebhookMessage::dispatch($message)->afterResponse();
+            if (false === $message->sent) {
+                Log::debug(sprintf('Send message #%d', $message->id));
+                SendWebhookMessage::dispatch($message)->afterResponse();
+            }
+            if (false !== $message->sent) {
+                Log::debug(sprintf('Skip message #%d', $message->id));
+            }
         }
     }
 }

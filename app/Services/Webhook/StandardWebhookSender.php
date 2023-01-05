@@ -56,7 +56,8 @@ class StandardWebhookSender implements WebhookSenderInterface
         // have the signature generator generate a signature. If it fails, the error thrown will
         // end up in send() to be caught.
         $signatureGenerator = app(SignatureGeneratorInterface::class);
-
+        $this->message->sent = true;
+        $this->message->save();
         try {
             $signature = $signatureGenerator->generate($this->message);
         } catch (FireflyException $e) {
@@ -108,7 +109,6 @@ class StandardWebhookSender implements WebhookSenderInterface
         $client  = new Client();
         try {
             $res                 = $client->request('POST', $this->message->webhook->url, $options);
-            $this->message->sent = true;
         } catch (RequestException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -127,6 +127,7 @@ class StandardWebhookSender implements WebhookSenderInterface
 
             return;
         }
+        $this->message->sent = true;
         $this->message->save();
 
         Log::debug(sprintf('Webhook message #%d was sent. Status code %d', $this->message->id, $res->getStatusCode()));

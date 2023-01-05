@@ -643,6 +643,7 @@ Route::group(
         Route::get('{webhook}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::put('{webhook}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::post('{webhook}/submit', ['uses' => 'SubmitController@submit', 'as' => 'submit']);
+        Route::post('{webhook}/trigger-transaction/{transactionGroup}', ['uses' => 'ShowController@triggerTransaction', 'as' => 'trigger-transaction']);
         Route::delete('{webhook}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
 
         // webhook messages

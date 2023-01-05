@@ -85,6 +85,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function destroy(TransactionGroup $group): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $service = new TransactionGroupDestroyService();
         $service->destroy($group);
     }

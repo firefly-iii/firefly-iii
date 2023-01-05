@@ -80,6 +80,7 @@ class DestroyController extends Controller
      */
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // grab asset account(s) from group:
         $accounts = [];
         /** @var TransactionJournal $journal */
