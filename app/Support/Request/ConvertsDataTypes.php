@@ -236,7 +236,7 @@ trait ConvertsDataTypes
         }
         $carbon = null;
         try {
-            $carbon = new Carbon($string);
+            $carbon = new Carbon($string, config('app.timezone'));
         } catch (InvalidFormatException $e) {
             // @ignoreException
         }

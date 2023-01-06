@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
@@ -218,6 +219,8 @@ class TransactionJournalFactory
         $foreignCurrency = $this->compareCurrencies($currency, $foreignCurrency);
         $foreignCurrency = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
         $description     = $this->getDescription($description);
+
+        Log::debug(sprintf('Date: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()->getName()));
 
         /** Create a basic journal. */
         $journal = TransactionJournal::create(
@@ -601,8 +604,13 @@ class TransactionJournalFactory
             'name'    => $field,
             'data'    => (string)($data[$field] ?? ''),
         ];
+        if ($data[$field] instanceof Carbon) {
+            $data[$field]->setTimezone(config('app.timezone'));
+            Log::debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
+            $set['data'] = $data[$field]->format('Y-m-d H:i:s');
+        }
 
-        //Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
+        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
 
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);
