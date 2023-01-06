@@ -94,7 +94,7 @@ class UpdateRequest extends FormRequest
             'trigger'  => sprintf('in:%s', $triggers),
             'response' => sprintf('in:%s', $responses),
             'delivery' => sprintf('in:%s', $deliveries),
-            'url'      => ['url', 'starts_with:https://', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+            'url'      => ['url', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
         ];
     }
 }

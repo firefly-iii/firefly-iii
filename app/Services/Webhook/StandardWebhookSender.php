@@ -28,6 +28,7 @@ use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use JsonException;
 use Log;
@@ -109,7 +110,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         $client  = new Client();
         try {
             $res                 = $client->request('POST', $this->message->webhook->url, $options);
-        } catch (RequestException $e) {
+        } catch (RequestException|ConnectException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
 
