@@ -109,7 +109,7 @@
         "webhook_delivery_form_help": "Hvilket format webhook skal levere data i.",
         "webhook_active_form_help": "Webhooken skal v\u00e6re aktiv, ellers vil den ikke blive kaldt.",
         "edit_webhook_js": "Rediger webhook \"{title}\"",
-        "webhook_was_triggered": "Webhooken blev udl\u00f8st p\u00e5 den angivne transaktion. Du kan opdatere denne side for at se resultaterne.",
+        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. Please wait for results to appear.",
         "view_message": "Vis besked",
         "view_attempts": "Vis mislykkede fors\u00f8g",
         "message_content_title": "Webhook-beskedindhold",

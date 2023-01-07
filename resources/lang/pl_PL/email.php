@@ -34,16 +34,16 @@ return [
     'admin_test_body'                         => 'To jest wiadomość testowa z twojej instancji Firefly III. Została wysłana na :email.',
 
     // invite
-    'invitation_created_subject'              => 'An invitation has been created',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
-    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
-    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+    'invitation_created_subject'              => 'Zaproszenie zostało utworzone',
+    'invitation_created_body'                 => 'Administrator ":email" utworzył zaproszenie dla użytkownika, które może być użyte przez każdego, kto ma dostęp do adresu e-mail ":invitee". Zaproszenie będzie ważne przez 48 godzin.',
+    'invite_user_subject'                     => 'Zostałeś zaproszony do utworzenia konta Firefly III.',
+    'invitation_introduction'                 => 'Zostałeś zaproszony do utworzenia konta Firefly III na **:host**. Firefly III jest osobistym, samodzielnie hostowanym menedżerem finansów prywatnych. Wszystkie fajne dzieciaki go używają.',
+    'invitation_invited_by'                   => 'Zostałeś zaproszony przez ":admin" i to zaproszenie zostało wysłane do ":invitee". To ty, prawda?',
+    'invitation_url'                          => 'Zaproszenie jest ważne przez 48 godzin i można je wykorzystać przez zasurfowanie do [Firefly III](:url). Przyjemnego używania!',
 
     // new IP
     'login_from_new_ip'                       => 'Nowe logowanie do Firefly III',
-    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
+    'slack_login_from_new_ip'                 => 'Nowe logowanie do Firefly III z IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III wykrył nowe logowanie na Twoim koncie z nieznanego adresu IP. Jeśli nigdy nie zalogowałeś się z poniższego adresu IP lub minęło ponad sześć miesięcy od ostatniego logowania, Firefly III ostrzeże Cię o tym.',
     'new_ip_warning'                          => 'Jeśli rozpoznajesz ten adres IP lub logowanie, możesz zignorować tę wiadomość. Jeśli nie logowałeś się lub jeśli nie masz pojęcia, o co w tym chodzi, zweryfikuj bezpieczeństwo hasła, zmień je i wyloguj wszystkie inne sesje. Aby to zrobić, przejdź na stronę Profil. Oczywiście masz już włączone 2FA, prawda? Bądź bezpieczny!',
     'ip_address'                              => 'Adres IP',
@@ -58,8 +58,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Witaj w Firefly III!',
-    'registered_subject_admin'                => 'A new user has registered',
-    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
+    'registered_subject_admin'                => 'Zarejestrował się nowy użytkownik',
+    'admin_new_user_registered'               => 'Zarejestrował się nowy użytkownik. Użytkownik **:email** otrzymał ID użytkownika #:id.',
     'registered_welcome'                      => 'Witaj w [Firefly III](:address). Twoja rejestracja przebiegła pomyślnie, a ten e-mail jest tutaj, aby to potwierdzić. Yay!',
     'registered_pw'                           => 'Jeśli już zapomniałeś swojego hasła, zresetuj je używając [narzędzia do resetowania hasła](:address/password/reset).',
     'registered_help'                         => 'W prawym górnym rogu każdej strony jest ikonka pomocy. Jeśli potrzebujesz pomocy, kliknij ją!',
@@ -71,7 +71,7 @@ return [
     'registered_doc_link'                     => 'Dokumentacja:',
 
     // new version
-    'new_version_email_subject'               => 'A new Firefly III version is available',
+    'new_version_email_subject'               => 'Dostępna jest nowa wersja Firefly III',
 
     // email change
     'email_change_subject'                    => 'Twój adres e-mail Firefly III został zmieniony',

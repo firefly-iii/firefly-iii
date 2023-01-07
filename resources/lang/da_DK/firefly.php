@@ -253,7 +253,7 @@ return [
     'updated_webhook'                      => 'Opdaterede webhook ":title"',
     'edit_webhook_js'                      => 'Rediger webhook "{title}"',
     'show_webhook'                         => 'Webhook ":title"',
-    'webhook_was_triggered'                => 'Webhooken blev udløst på den angivne transaktion. Du kan opdatere denne side for at se resultaterne.',
+    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
     'webhook_messages'                     => 'Webhook-besked',
     'view_message'                         => 'Vis besked',
     'view_attempts'                        => 'Vis mislykkede forsøg',

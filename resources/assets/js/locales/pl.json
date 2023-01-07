@@ -109,15 +109,15 @@
         "webhook_delivery_form_help": "W jakim formacie webhook musi dostarcza\u0107 dane.",
         "webhook_active_form_help": "Webhook musi by\u0107 aktywny lub nie zostanie wywo\u0142any.",
         "edit_webhook_js": "Edytuj webhook \"{title}\"",
-        "webhook_was_triggered": "Webhook zosta\u0142 uruchomiony we wskazanej transakcji. Mo\u017cesz od\u015bwie\u017cy\u0107 stron\u0119, aby zobaczy\u0107 wyniki.",
+        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. Please wait for results to appear.",
         "view_message": "Podgl\u0105d wiadomo\u015bci",
         "view_attempts": "Podgl\u0105d nieudanych pr\u00f3b",
         "message_content_title": "Tre\u015b\u0107 wiadomo\u015bci webhook'a",
         "message_content_help": "To jest zawarto\u015b\u0107 wiadomo\u015bci, kt\u00f3ra zosta\u0142a wys\u0142ana (lub pr\u00f3bowano wys\u0142a\u0107) za pomoc\u0105 tego webhooka.",
-        "attempt_content_title": "Webhook attempts",
-        "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
+        "attempt_content_title": "Pr\u00f3by dost\u0119pu do webhook",
+        "attempt_content_help": "To s\u0105 wszystkie nieudane pr\u00f3by przes\u0142ania tej wiadomo\u015bci webhooka do skonfigurowanego adresu URL. Po pewnym czasie Firefly III przestanie pr\u00f3bowa\u0107.",
         "no_attempts": "Nie ma nieudanych pr\u00f3b. To dobrze!",
-        "webhook_attempt_at": "Attempt at {moment}",
+        "webhook_attempt_at": "Pr\u00f3ba o {moment}",
         "logs": "Logi",
         "response": "Odpowied\u017a",
         "visit_webhook_url": "Odwied\u017a adres URL webhooka",
@@ -149,6 +149,6 @@
     },
     "config": {
         "html_language": "pl",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "do MMMM yyyy @ HH:mm:ss"
     }
 }

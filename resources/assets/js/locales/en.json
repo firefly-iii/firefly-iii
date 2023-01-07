@@ -109,7 +109,7 @@
         "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
         "webhook_active_form_help": "The webhook must be active or it won't be called.",
         "edit_webhook_js": "Edit webhook \"{title}\"",
-        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. You can refresh this page to see the results.",
+        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. Please wait for results to appear.",
         "view_message": "View message",
         "view_attempts": "View failed attempts",
         "message_content_title": "Webhook message content",

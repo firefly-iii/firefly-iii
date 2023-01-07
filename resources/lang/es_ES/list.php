@@ -126,7 +126,7 @@ return [
     'attached_to'             => 'Adjunto a',
     'file_exists'             => 'El fichero existe',
     'spectre_bank'            => 'Banco',
-    'spectre_last_use'        => 'Ultimó acceso',
+    'spectre_last_use'        => 'Último acceso',
     'spectre_status'          => 'Estado',
     'bunq_payment_id'         => 'ID de pago bunq',
     'repetitions'             => 'Repeticiones',

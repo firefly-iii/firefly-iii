@@ -109,7 +109,7 @@
         "webhook_delivery_form_help": "Which format the webhook must deliver data in.",
         "webhook_active_form_help": "Webhook \u5fc5\u987b\u662f\u6fc0\u6d3b\u72b6\u6001\uff0c\u5426\u5219\u4e0d\u4f1a\u88ab\u8c03\u7528\u3002",
         "edit_webhook_js": "\u7f16\u8f91 webhook \u201c{title}\u201d",
-        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. You can refresh this page to see the results.",
+        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. Please wait for results to appear.",
         "view_message": "\u67e5\u770b\u6d88\u606f",
         "view_attempts": "\u67e5\u770b\u5931\u8d25\u7684\u5c1d\u8bd5",
         "message_content_title": "Webhook \u6d88\u606f\u5185\u5bb9",

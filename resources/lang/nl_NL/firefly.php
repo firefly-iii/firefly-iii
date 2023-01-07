@@ -253,7 +253,7 @@ return [
     'updated_webhook'                      => 'Webhook ":title" bijgewerkt',
     'edit_webhook_js'                      => 'Webhook "{title}" wijzigen',
     'show_webhook'                         => 'Webhook ":title"',
-    'webhook_was_triggered'                => 'De webhook is getriggerd voor de aangegeven transactie. Je kan deze pagina vernieuwen om de resultaten te bekijken.',
+    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
     'webhook_messages'                     => 'Webhook-bericht',
     'view_message'                         => 'Bekijk bericht',
     'view_attempts'                        => 'Bekijk mislukte pogingen',
