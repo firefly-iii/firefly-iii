@@ -26,7 +26,7 @@ use DB;
 use FireflyIII\Models\RuleAction;
 
 /**
- * Class ReplaceFirstDescription.
+ * Class RemoveFirstFromDescription.
  */
 class RemoveFirstFromDescription.php implements ActionInterface
 {
