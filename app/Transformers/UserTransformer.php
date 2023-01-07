@@ -37,7 +37,7 @@ class UserTransformer extends AbstractTransformer
     /**
      * Transform user.
      *
-     * @param User $user
+     * @param  User  $user
      *
      * @return array
      */
@@ -46,20 +46,19 @@ class UserTransformer extends AbstractTransformer
         $this->repository = $this->repository ?? app(UserRepositoryInterface::class);
 
         return [
-            'id'           => (int) $user->id,
+            'id'           => (int)$user->id,
             'created_at'   => $user->created_at->toAtomString(),
             'updated_at'   => $user->updated_at->toAtomString(),
             'email'        => $user->email,
-            'blocked'      => 1 === (int) $user->blocked,
+            'blocked'      => 1 === (int)$user->blocked,
             'blocked_code' => '' === $user->blocked_code ? null : $user->blocked_code,
             'role'         => $this->repository->getRoleByUser($user),
             'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => '/users/' . $user->id,
+                    'uri' => '/users/'.$user->id,
                 ],
             ],
         ];
     }
-
 }

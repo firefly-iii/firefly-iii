@@ -25,10 +25,13 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use Illuminate\Console\Command;
 use JsonException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateRecurrenceMeta
@@ -84,14 +87,14 @@ class MigrateRecurrenceMeta extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -115,13 +118,14 @@ class MigrateRecurrenceMeta extends Command
     }
 
     /**
-     * @param RecurrenceMeta $meta
+     * @param  RecurrenceMeta  $meta
      *
      * @return int
      * @throws JsonException
      */
     private function migrateEntry(RecurrenceMeta $meta): int
     {
+        /** @var Recurrence|null $recurrence */
         $recurrence = $meta->recurrence;
         if (null === $recurrence) {
             return 0;

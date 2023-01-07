@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateJournalNotes
@@ -79,12 +81,7 @@ class MigrateJournalNotes extends Command
             $note->text = $meta->data;
             $note->save();
             Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
-            try {
-                $meta->delete();
-
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::error(sprintf('Could not delete old meta entry #%d: %s', $meta->id, $e->getMessage()));
-            }
+            $meta->delete();
 
             $count++;
         }
@@ -106,14 +103,14 @@ class MigrateJournalNotes extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;

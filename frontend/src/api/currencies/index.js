@@ -20,9 +20,12 @@
 
 import {api} from "boot/axios";
 import Authenticate from '../authenticate/index';
+
 export default class Currencies {
   default() {
     let auth = new Authenticate();
-    return auth.authenticate().then(() => {return api.get('/api/v1/currencies/default')});
+    return auth.authenticate().then(() => {
+      return api.get('/api/v1/currencies/default')
+    });
   }
 }

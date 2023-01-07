@@ -121,12 +121,13 @@ class BudgetLimitController extends Controller
     }
 
     /**
+     * TODO why redirect AND json response?
      * @param  Request  $request
      *
-     * @return JsonResponse
+     * @return RedirectResponse|JsonResponse
      * @throws FireflyException
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         Log::debug('Going to store new budget-limit.', $request->all());
         // first search for existing one and update it if necessary.

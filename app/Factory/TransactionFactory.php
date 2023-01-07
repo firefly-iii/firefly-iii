@@ -43,7 +43,6 @@ class TransactionFactory
     private ?TransactionCurrency $foreignCurrency;
     private TransactionJournal   $journal;
     private bool                 $reconciled;
-    private User                 $user;
 
     /**
      * Constructor.
@@ -58,8 +57,8 @@ class TransactionFactory
     /**
      * Create transaction with negative amount (for source accounts).
      *
-     * @param string      $amount
-     * @param string|null $foreignAmount
+     * @param  string  $amount
+     * @param  string|null  $foreignAmount
      *
      * @return Transaction
      * @throws FireflyException
@@ -77,15 +76,14 @@ class TransactionFactory
     }
 
     /**
-     * @param string      $amount
-     * @param string|null $foreignAmount
+     * @param  string  $amount
+     * @param  string|null  $foreignAmount
      *
      * @return Transaction
      * @throws FireflyException
      */
     private function create(string $amount, ?string $foreignAmount): Transaction
     {
-        $result = null;
         if ('' === $foreignAmount) {
             $foreignAmount = null;
         }
@@ -101,8 +99,8 @@ class TransactionFactory
             'identifier'              => 0,
         ];
         try {
+            /** @var Transaction|null $result */
             $result = Transaction::create($data);
-
         } catch (QueryException $e) {
             Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
             Log::error($e->getMessage());
@@ -113,25 +111,23 @@ class TransactionFactory
             throw new FireflyException('Transaction is NULL.');
         }
 
-        if (null !== $result) {
-            Log::debug(
-                sprintf(
-                    'Created transaction #%d (%s %s, account %s), part of journal #%d',
-                    $result->id,
-                    $this->currency->code,
-                    $amount,
-                    $this->account->name,
-                    $this->journal->id
-                )
-            );
+        Log::debug(
+            sprintf(
+                'Created transaction #%d (%s %s, account %s), part of journal #%d',
+                $result->id,
+                $this->currency->code,
+                $amount,
+                $this->account->name,
+                $this->journal->id
+            )
+        );
 
-            // do foreign currency thing: add foreign currency info to $one and $two if necessary.
-            if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
-                $result->foreign_currency_id = $this->foreignCurrency->id;
-                $result->foreign_amount      = $foreignAmount;
-            }
-            $result->save();
+        // do foreign currency thing: add foreign currency info to $one and $two if necessary.
+        if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
+            $result->foreign_currency_id = $this->foreignCurrency->id;
+            $result->foreign_amount      = $foreignAmount;
         }
+        $result->save();
 
         return $result;
     }
@@ -139,8 +135,8 @@ class TransactionFactory
     /**
      * Create transaction with positive amount (for destination accounts).
      *
-     * @param string      $amount
-     * @param string|null $foreignAmount
+     * @param  string  $amount
+     * @param  string|null  $foreignAmount
      *
      * @return Transaction
      * @throws FireflyException
@@ -158,7 +154,7 @@ class TransactionFactory
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      *
      * @codeCoverageIgnore
      */
@@ -168,7 +164,7 @@ class TransactionFactory
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      *
      * @codeCoverageIgnore
      */
@@ -178,7 +174,7 @@ class TransactionFactory
     }
 
     /**
-     * @param TransactionCurrency|null $foreignCurrency |null
+     * @param  TransactionCurrency|null  $foreignCurrency  |null
      *
      * @codeCoverageIgnore
      */
@@ -188,7 +184,7 @@ class TransactionFactory
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @codeCoverageIgnore
      */
@@ -198,7 +194,7 @@ class TransactionFactory
     }
 
     /**
-     * @param bool $reconciled
+     * @param  bool  $reconciled
      *
      * @codeCoverageIgnore
      */
@@ -208,12 +204,12 @@ class TransactionFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @codeCoverageIgnore
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
+        // empty function.
     }
 }

@@ -18,15 +18,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Models\TransactionJournalMeta;
+use Illuminate\Database\QueryException;
 use Log;
 
 /**
@@ -35,7 +34,7 @@ use Log;
 class TransactionJournalMetaFactory
 {
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return TransactionJournalMeta|null
      */
@@ -43,33 +42,25 @@ class TransactionJournalMetaFactory
     {
         //Log::debug('In updateOrCreate()');
         $value = $data['data'];
-        /** @var TransactionJournalMeta $entry */
+        /** @var TransactionJournalMeta|null $entry */
         $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
         if (null === $value && null !== $entry) {
             //Log::debug('Value is empty, delete meta value.');
-            try {
-                $entry->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage()));
-            }
+            $entry->delete();
 
             return null;
         }
 
         if ($data['data'] instanceof Carbon) {
-            //Log::debug('Is a carbon object.');
+            Log::debug('Is a carbon object.');
             $value = $data['data']->toW3cString();
         }
-        if ('' === (string) $value) {
+        if ('' === (string)$value) {
             // Log::debug('Is an empty string.');
             // don't store blank strings.
             if (null !== $entry) {
                 Log::debug('Will not store empty strings, delete meta value');
-                try {
-                    $entry->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
-                    Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage()));
-                }
+                $entry->delete();
             }
 
             return null;
@@ -88,5 +79,4 @@ class TransactionJournalMetaFactory
 
         return $entry;
     }
-
 }

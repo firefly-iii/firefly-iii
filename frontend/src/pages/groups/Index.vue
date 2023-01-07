@@ -21,14 +21,14 @@
 <template>
   <q-page>
     <q-table
-      :title="$t('firefly.object_groups')"
-      :rows="rows"
+      v-model:pagination="pagination"
       :columns="columns"
+      :loading="loading"
+      :rows="rows"
+      :title="$t('firefly.object_groups')"
+      class="q-ma-md"
       row-key="id"
       @request="onRequest"
-      v-model:pagination="pagination"
-      :loading="loading"
-      class="q-ma-md"
     >
       <template v-slot:header="props">
         <q-tr :props="props">
@@ -51,12 +51,12 @@
           <q-td key="menu" :props="props">
             <q-btn-dropdown color="primary" label="Actions" size="sm">
               <q-list>
-                <q-item clickable v-close-popup :to="{name: 'groups.edit', params: {id: props.row.id}}">
+                <q-item v-close-popup :to="{name: 'groups.edit', params: {id: props.row.id}}" clickable>
                   <q-item-section>
                     <q-item-label>Edit</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="deleteGroup(props.row.id, props.row.title)">
+                <q-item v-close-popup clickable @click="deleteGroup(props.row.id, props.row.title)">
                   <q-item-section>
                     <q-item-label>Delete</q-item-label>
                   </q-item-section>
@@ -71,9 +71,10 @@
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import Destroy from "../../api/generic/destroy";
 import List from "../../api/groups/list";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Index',
@@ -101,29 +102,35 @@ export default {
       columns: [
         {name: 'title', label: 'Title', field: 'title', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
-      ]
+      ],
+      store: null
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
   },
   created() {
     this.pagination.rowsPerPage = this.getListPageSize;
+    this.store = useFireflyIIIStore();
   },
   mounted() {
     this.type = this.$route.params.type;
-    if (null === this.getRange.start || null === this.getRange.end) {
+    if (null === this.store.getRange.start || null === this.store.getRange.end) {
+
       // subscribe, then update:
-      const $store = useStore();
-      $store.subscribe((mutation, state) => {
-        if ('fireflyiii/setRange' === mutation.type) {
-          this.range = {start: mutation.payload.start, end: mutation.payload.end};
-          this.triggerUpdate();
+      this.store.$onAction(
+        ({name, $store, args, after, onError,}) => {
+          after((result) => {
+            if (name === 'setRange') {
+              this.range = result;
+              this.triggerUpdate();
+            }
+          })
         }
-      });
+      )
     }
-    if (null !== this.getRange.start && null !== this.getRange.end) {
-      this.range = {start: this.getRange.start, end: this.getRange.end};
+    if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
+      this.range = {start: this.store.getRange.start, end: this.store.getRange.end};
       this.triggerUpdate();
     }
   },
@@ -141,7 +148,7 @@ export default {
     },
     destroyGroup: function (identifier) {
       (new Destroy('object_groups')).destroy(identifier).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },

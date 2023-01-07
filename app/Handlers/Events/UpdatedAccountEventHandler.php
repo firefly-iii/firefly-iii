@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 
@@ -34,7 +33,7 @@ use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 class UpdatedAccountEventHandler
 {
     /**
-     * @param UpdatedAccount $event
+     * @param  UpdatedAccount  $event
      */
     public function recalculateCredit(UpdatedAccount $event): void
     {

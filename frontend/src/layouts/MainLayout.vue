@@ -21,24 +21,24 @@
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header elevated class="bg-primary text-white">
+    <q-header class="bg-primary text-white" elevated>
       <q-toolbar>
-        <q-btn dense flat round icon="fas fa-bars" @click="toggleLeftDrawer"/>
+        <q-btn dense flat icon="fas fa-bars" round @click="toggleLeftDrawer"/>
 
         <q-toolbar-title>
           <q-avatar>
-            <img src="maskable-icon.svg" alt="Firefly III Logo" title="Firefly III">
+            <img alt="Firefly III Logo" src="maskable-icon.svg" title="Firefly III">
           </q-avatar>
           Firefly III
         </q-toolbar-title>
 
 
         <q-select
-          ref="search" dark dense standout use-input hide-selected
-          class="q-mx-xs"
-          color="black" :stack-label="false" label="Search"
-          v-model="search"
+          ref="search" v-model="search" :stack-label="false" class="q-mx-xs" color="black" dark
+          dense
+          hide-selected label="Search" standout
           style="width: 250px"
+          use-input
         >
 
           <template v-slot:append>
@@ -47,8 +47,8 @@
 
           <template v-slot:option="scope">
             <q-item
-              v-bind="scope.itemProps"
               class=""
+              v-bind="scope.itemProps"
             >
               <q-item-section side>
                 <q-icon name="collections_bookmark"/>
@@ -56,8 +56,8 @@
               <q-item-section>
                 <q-item-label v-html="scope.opt.label"/>
               </q-item-section>
-              <q-item-section side class="default-type">
-                <q-btn outline dense no-caps text-color="blue-grey-5" size="12px" class="bg-grey-1 q-px-sm">
+              <q-item-section class="default-type" side>
+                <q-btn class="bg-grey-1 q-px-sm" dense no-caps outline size="12px" text-color="blue-grey-5">
                   {{ 'Jump to' }}
                   <q-icon name="subdirectory_arrow_left" size="14px"/>
                 </q-btn>
@@ -66,50 +66,49 @@
           </template>
         </q-select>
 
-        <q-separator dark vertical inset/>
-        <q-btn flat icon="fas fa-skull-crossbones" :to="{name: 'development.index'}" class="q-mx-xs"/>
-        <q-separator dark vertical inset/>
-        <q-btn flat icon="fas fa-question-circle" @click="showHelpBox" class="q-mx-xs"/>
-        <q-separator dark vertical inset/>
+        <q-separator dark inset vertical/>
+        <q-btn :to="{name: 'development.index'}" class="q-mx-xs" flat icon="fas fa-skull-crossbones"/>
+        <q-separator dark inset vertical/>
+        <q-btn class="q-mx-xs" flat icon="fas fa-question-circle" @click="showHelpBox"/>
+        <q-separator dark inset vertical/>
 
         <!-- TODO notifications -->
 
-
         <!-- date range -->
-        <q-btn v-if="$q.screen.gt.xs && $route.meta.dateSelector" flat class="q-mx-xs">
+        <q-btn v-if="$q.screen.gt.xs && $route.meta.dateSelector" class="q-mx-xs" flat>
           <div class="row items-center no-wrap">
             <q-icon name="fas fa-calendar" size="20px"/>
-            <q-icon name="fas fa-caret-down" size="12px" right/>
+            <q-icon name="fas fa-caret-down" right size="12px"/>
           </div>
           <q-menu>
             <DateRange></DateRange>
           </q-menu>
         </q-btn>
-        <q-separator dark vertical inset v-if="$route.meta.dateSelector"/>
+        <q-separator v-if="$route.meta.dateSelector" dark inset vertical/>
 
         <!-- specials -->
-        <q-btn v-if="$q.screen.gt.xs" flat class="q-mx-xs">
+        <q-btn v-if="$q.screen.gt.xs" class="q-mx-xs" flat>
           <div class="row items-center no-wrap">
             <q-icon name="fas fa-dragon" size="20px"/>
-            <q-icon name="fas fa-caret-down" size="12px" right/>
+            <q-icon name="fas fa-caret-down" right size="12px"/>
           </div>
           <q-menu auto-close>
             <q-list style="min-width: 120px">
-              <q-item clickable :to="{ name: 'webhooks.index' }">
+              <q-item :to="{ name: 'webhooks.index' }" clickable>
                 <q-item-section>Webhooks</q-item-section>
               </q-item>
-              <q-item clickable :to="{ name: 'currencies.index' }">
+              <q-item :to="{ name: 'currencies.index' }" clickable>
                 <q-item-section>Currencies</q-item-section>
               </q-item>
-              <q-item clickable :to="{ name: 'admin.index' }">
+              <q-item :to="{ name: 'admin.index' }" clickable>
                 <q-item-section>Administration</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
         </q-btn>
-        <q-separator dark vertical inset/>
+        <q-separator dark inset vertical/>
         <!-- profile -->
-        <q-btn v-if="$q.screen.gt.xs" flat class="q-mx-xs">
+        <q-btn v-if="$q.screen.gt.xs" class="q-mx-xs" flat>
           <div class="row items-center no-wrap">
             <q-icon name="fas fa-user-circle" size="20px"/>
             <q-icon name="fas fa-caret-down" right size="12px"/>
@@ -117,20 +116,20 @@
           <q-menu auto-close>
             <q-list style="min-width: 180px">
 
-              <q-item clickable :to="{ name: 'profile.index' }">
+              <q-item :to="{ name: 'profile.index' }" clickable>
                 <q-item-section> Profile</q-item-section>
               </q-item>
-              <q-item clickable :to="{ name: 'profile.daa' }">
+              <q-item :to="{ name: 'profile.daa' }" clickable>
                 <q-item-section> Data management</q-item-section>
               </q-item>
-              <q-item clickable :to="{ name: 'preferences.index' }">
+              <q-item :to="{ name: 'preferences.index' }" clickable>
                 <q-item-section>Preferences</q-item-section>
               </q-item>
-              <q-item clickable :to="{ name: 'export.index' }">
+              <q-item :to="{ name: 'export.index' }" clickable>
                 <q-item-section>Export data</q-item-section>
               </q-item>
               <q-separator/>
-              <q-item clickable :to="{ name: 'logout' }">
+              <q-item :to="{ name: 'logout' }" clickable>
                 <q-item-section>Logout</q-item-section>
               </q-item>
             </q-list>
@@ -138,11 +137,11 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
+    <q-drawer v-model="leftDrawerOpen" bordered show-if-above side="left">
       <q-scroll-area class="fit">
         <div class="q-pa-md">
           <q-list>
-            <q-item clickable v-ripple :to="{ name: 'index' }">
+            <q-item v-ripple :to="{ name: 'index' }" clickable>
               <q-item-section avatar>
                 <q-icon name="fas fa-tachometer-alt"/>
               </q-item-section>
@@ -150,7 +149,7 @@
                 Dashboard
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple :to="{ name: 'budgets.index' }">
+            <q-item v-ripple :to="{ name: 'budgets.index' }" clickable>
               <q-item-section avatar>
                 <q-icon name="fas fa-chart-pie"/>
               </q-item-section>
@@ -158,7 +157,7 @@
                 Budgets
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple :to="{ name: 'subscriptions.index' }">
+            <q-item v-ripple :to="{ name: 'subscriptions.index' }" clickable>
               <q-item-section avatar>
                 <q-icon name="far fa-calendar-alt"/>
               </q-item-section>
@@ -166,7 +165,7 @@
                 Subscriptions
               </q-item-section>
             </q-item>
-            <q-item clickable v-ripple :to="{ name: 'piggy-banks.index' }">
+            <q-item v-ripple :to="{ name: 'piggy-banks.index' }" clickable>
               <q-item-section avatar>
                 <q-icon name="fas fa-piggy-bank"/>
               </q-item-section>
@@ -176,22 +175,25 @@
             </q-item>
 
             <q-expansion-item
+              :default-opened="this.$route.name === 'transactions.index' || this.$route.name === 'transactions.show'"
               expand-separator
               icon="fas fa-exchange-alt"
               label="Transactions"
-              :default-opened="this.$route.name === 'transactions.index' || this.$route.name === 'transactions.show'"
             >
-              <q-item :inset-level="1" clickable v-ripple :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
+                      clickable>
                 <q-item-section>
                   Withdrawals
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'deposit'} }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'deposit'} }"
+                      clickable>
                 <q-item-section>
                   Deposits
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'transfers'} }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'transfers'} }"
+                      clickable>
 
                 <q-item-section>
                   Transfers
@@ -203,17 +205,17 @@
 
 
             <q-expansion-item
+              default-unopened
               expand-separator
               icon="fas fa-microchip"
               label="Automation"
-              default-unopened
             >
-              <q-item :inset-level="1" clickable v-ripple :to="{ name: 'rules.index' }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'rules.index' }" clickable>
                 <q-item-section>
                   Rules
                 </q-item-section>
               </q-item>
-              <q-item :inset-level="1" clickable v-ripple :to="{ name: 'recurring.index' }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'recurring.index' }" clickable>
                 <q-item-section>
                   Recurring transactions
                 </q-item-section>
@@ -222,27 +224,28 @@
             </q-expansion-item>
 
             <q-expansion-item
+              :default-opened="this.$route.name === 'accounts.index' || this.$route.name === 'accounts.show'"
               expand-separator
               icon="fas fa-credit-card"
               label="Accounts"
-              :default-opened="this.$route.name === 'accounts.index' || this.$route.name === 'accounts.show'"
             >
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
                 <q-item-section>
                   Asset accounts
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'expense'} }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'expense'} }" clickable>
                 <q-item-section>
                   Expense accounts
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'revenue'} }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'revenue'} }" clickable>
                 <q-item-section>
                   Revenue accounts
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'liabilities'} }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'liabilities'} }"
+                      clickable>
                 <q-item-section>
                   Liabilities
                 </q-item-section>
@@ -251,28 +254,28 @@
             </q-expansion-item>
 
             <q-expansion-item
+              default-unopened
               expand-separator
               icon="fas fa-tags"
               label="Classification"
-              default-unopened
             >
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'categories.index' }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'categories.index' }" clickable>
                 <q-item-section>
                   Categories
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'tags.index' }">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'tags.index' }" clickable>
                 <q-item-section>
                   Tags
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple :inset-level="1" :to="{ name: 'groups.index'}">
+              <q-item v-ripple :inset-level="1" :to="{ name: 'groups.index'}" clickable>
                 <q-item-section>
                   Groups
                 </q-item-section>
               </q-item>
             </q-expansion-item>
-            <q-item clickable v-ripple :to="{ name: 'reports.index'}">
+            <q-item v-ripple :to="{ name: 'reports.index'}" clickable>
               <q-item-section avatar>
                 <q-icon name="far fa-chart-bar"/>
               </q-item-section>
@@ -297,7 +300,7 @@
           </div>
           <div class="col-6">
             <q-breadcrumbs align="right">
-              <q-breadcrumbs-el label="Home" :to="{ name: 'index' }"/>
+              <q-breadcrumbs-el :to="{ name: 'index' }" label="Home"/>
               <q-breadcrumbs-el v-for="step in $route.meta.breadcrumbs" :label="$t('breadcrumbs.' + step.title)"
                                 :to="step.route ? {name: step.route, params: step.params} : ''"/>
             </q-breadcrumbs>
@@ -308,7 +311,7 @@
       <router-view/>
     </q-page-container>
 
-    <q-footer elevated class="bg-grey-8 text-white">
+    <q-footer class="bg-grey-8 text-white" elevated>
       <q-toolbar>
         <div>
           <small>Firefly III v TODO &copy; James Cole, AGPL-3.0-or-later.</small>
@@ -345,11 +348,11 @@ export default defineComponent(
         },
         showHelpBox() {
           $q.dialog({
-                      title: 'Help',
-                      message: 'The relevant help page will open in a new screen. Doesn\'t work yet.',
-                      cancel: true,
-                      persistent: false
-                    }).onOk(() => {
+            title: 'Help',
+            message: 'The relevant help page will open in a new screen. Doesn\'t work yet.',
+            cancel: true,
+            persistent: false
+          }).onOk(() => {
             // console.log('>>>> OK')
           }).onCancel(() => {
             // console.log('>>>> Cancel')

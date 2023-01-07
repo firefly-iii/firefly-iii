@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UserStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Logged in + owner
@@ -75,10 +76,9 @@ class UserStoreRequest extends FormRequest
     {
         return [
             'email'        => 'required|email|unique:users,email',
-            'blocked'      => [new IsBoolean],
+            'blocked'      => [new IsBoolean()],
             'blocked_code' => 'in:email_changed',
             'role'         => 'in:owner,demo',
         ];
     }
-
 }

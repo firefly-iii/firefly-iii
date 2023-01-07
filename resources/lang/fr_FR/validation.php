@@ -194,7 +194,7 @@ return [
     'withdrawal_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'withdrawal_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
-    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+    'reconciliation_source_bad_data' => 'Impossible de trouver un compte de rapprochement valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
     'generic_source_bad_data' => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 

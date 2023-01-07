@@ -21,7 +21,7 @@
 import {api} from "boot/axios";
 import Api from "src/api/root/api";
 
-export default class List extends Api{
+export default class List extends Api {
   constructor() {
     super('accounts');
   }

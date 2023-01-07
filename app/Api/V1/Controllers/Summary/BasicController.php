@@ -90,7 +90,7 @@ class BasicController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/summary/getBasicSummary
      *
-     * @param DateRequest $request
+     * @param  DateRequest  $request
      *
      * @return JsonResponse
      * @throws Exception
@@ -122,8 +122,8 @@ class BasicController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -148,10 +148,11 @@ class BasicController extends Controller
         $set = $collector->getExtractedJournals();
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
-            $currencyId           = (int) $transactionJournal['currency_id'];
+            $currencyId           = (int)$transactionJournal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId],
-                                          bcmul($transactionJournal['amount'], '-1')
+            $incomes[$currencyId] = bcadd(
+                $incomes[$currencyId],
+                bcmul($transactionJournal['amount'], '-1')
             );
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
             $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transactionJournal['amount'], '-1'));
@@ -170,7 +171,7 @@ class BasicController extends Controller
 
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
-            $currencyId            = (int) $transactionJournal['currency_id'];
+            $currencyId            = (int)$transactionJournal['currency_id'];
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';
@@ -188,15 +189,15 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          =>  $sums[$currencyId] ?? '0',
+                'monetary_value'          => $sums[$currencyId] ?? '0',
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
                 'value_parsed'            => app('amount')->formatAnything($currency, $sums[$currencyId] ?? '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false) .
-                                             ' + ' . app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
+                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false).
+                                             ' + '.app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -228,8 +229,8 @@ class BasicController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -244,14 +245,14 @@ class BasicController extends Controller
         $return       = [];
         foreach ($paidAmount as $currencyId => $amount) {
             $amount   = bcmul($amount, '-1');
-            $currency = $this->currencyRepos->find((int) $currencyId);
+            $currency = $this->currencyRepos->find((int)$currencyId);
             if (null === $currency) {
                 continue;
             }
             $return[] = [
                 'key'                     => sprintf('bills-paid-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          =>  $amount,
+                'monetary_value'          => $amount,
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -264,7 +265,7 @@ class BasicController extends Controller
 
         foreach ($unpaidAmount as $currencyId => $amount) {
             $amount   = bcmul($amount, '-1');
-            $currency = $this->currencyRepos->find((int) $currencyId);
+            $currency = $this->currencyRepos->find((int)$currencyId);
             if (null === $currency) {
                 continue;
             }
@@ -286,8 +287,8 @@ class BasicController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @throws Exception
@@ -309,27 +310,29 @@ class BasicController extends Controller
             $days   = $today->diffInDays($end) + 1;
             $perDay = '0';
             if (0 !== $days && bccomp($leftToSpend, '0') > -1) {
-                $perDay = bcdiv($leftToSpend, (string) $days);
+                $perDay = bcdiv($leftToSpend, (string)$days);
             }
 
             $return[] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
-                'monetary_value'          =>  $leftToSpend,
+                'monetary_value'          => $leftToSpend,
                 'currency_id'             => $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
                 'currency_decimal_places' => $row['currency_decimal_places'],
                 'value_parsed'            => app('amount')->formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $leftToSpend, false),
                 'local_icon'              => 'money',
-                'sub_title'               => (string) trans(
+                'sub_title'               => (string)trans(
                     'firefly.box_spend_per_day',
-                    ['amount' => app('amount')->formatFlat(
-                        $row['currency_symbol'],
-                        $row['currency_decimal_places'],
-                        $perDay,
-                        false
-                    )]
+                    [
+                        'amount' => app('amount')->formatFlat(
+                            $row['currency_symbol'],
+                            $row['currency_decimal_places'],
+                            $perDay,
+                            false
+                        ),
+                    ]
                 ),
             ];
         }
@@ -338,8 +341,8 @@ class BasicController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -357,7 +360,7 @@ class BasicController extends Controller
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUser($user);
-        $allAccounts = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]);
+        $allAccounts = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
 
         // filter list on preference of being included.
         $filtered = $allAccounts->filter(
@@ -373,7 +376,7 @@ class BasicController extends Controller
         foreach ($netWorthSet as $data) {
             /** @var TransactionCurrency $currency */
             $currency = $data['currency'];
-            $amount   =  $data['balance'];
+            $amount   = $data['balance'];
             if (0 === bccomp($amount, '0')) {
                 continue;
             }
@@ -398,10 +401,10 @@ class BasicController extends Controller
     /**
      * Check if date is outside session range.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return bool
      */

@@ -19,14 +19,14 @@
   -->
 
 <template>
-  <div class="q-ma-md" v-if="showAlert">
+  <div v-if="showAlert" class="q-ma-md">
     <div class="row">
       <div class="col-12">
         <q-banner :class="alertClass" inline-actions>
           {{ message }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" color="white" label="Dismiss"/>
-            <q-btn flat color="white" v-if="showAction" :to="actionLink" :label="actionText"/>
+            <q-btn color="white" flat label="Dismiss" @click="dismissBanner"/>
+            <q-btn v-if="showAction" :label="actionText" :to="actionLink" color="white" flat/>
           </template>
         </q-banner>
       </div>
@@ -90,7 +90,7 @@ export default {
       }
       this.$q.localStorage.set('flash', false);
     },
-    dismissBanner: function() {
+    dismissBanner: function () {
       this.showAlert = false;
     }
   }

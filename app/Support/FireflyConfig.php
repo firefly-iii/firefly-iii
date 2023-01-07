@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FireflyConfig.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -27,6 +28,7 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\QueryException;
+use Log;
 
 /**
  * Class FireflyConfig.
@@ -35,33 +37,38 @@ use Illuminate\Database\QueryException;
  */
 class FireflyConfig
 {
-
     /**
-     * @param string $name
+     * @param  string  $name
      */
     public function delete(string $name): void
     {
-        $fullName = 'ff-config-' . $name;
+        $fullName = 'ff-config-'.$name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
-        try {
-            Configuration::where('name', $name)->forceDelete();
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
+        Configuration::where('name', $name)->forceDelete();
     }
 
     /**
-     * @param string               $name
-     * @param bool|string|int|null $default
+     * @param  string  $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool
+    {
+        return Configuration::where('name', $name)->count() === 1;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  bool|string|int|null  $default
      *
      * @return Configuration|null
      * @throws FireflyException
      */
     public function get(string $name, $default = null): ?Configuration
     {
-        $fullName = 'ff-config-' . $name;
+        $fullName = 'ff-config-'.$name;
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
@@ -69,8 +76,8 @@ class FireflyConfig
         try {
             /** @var Configuration|null $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (QueryException|Exception $e) { // @phpstan-ignore-line
-            throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()));
+        } catch (QueryException|Exception $e) {
+            throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
         if (null !== $config) {
@@ -87,8 +94,8 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
+     * @param  string  $name
+     * @param  mixed  $value
      *
      * @return Configuration
      */
@@ -96,8 +103,9 @@ class FireflyConfig
     {
         try {
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
-        } catch (QueryException|Exception $e) { // @phpstan-ignore-line
-            $item       = new Configuration;
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;
 
@@ -105,33 +113,31 @@ class FireflyConfig
         }
 
         if (null === $config) {
-            $item       = new Configuration;
+            $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            Cache::forget('ff-config-' . $name);
+            Cache::forget('ff-config-'.$name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        Cache::forget('ff-config-' . $name);
+        Cache::forget('ff-config-'.$name);
 
         return $config;
     }
 
     /**
-     * @param string $name
-     * @param mixed  $default
+     * @param  string  $name
+     * @param  mixed  $default
      *
      * @return Configuration|null
      */
     public function getFresh(string $name, $default = null): ?Configuration
     {
-
         $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         if ($config) {
-
             return $config;
         }
         // no preference found and default is null:
@@ -143,18 +149,8 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function has(string $name): bool
-    {
-        return Configuration::where('name', $name)->count() === 1;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
+     * @param  string  $name
+     * @param  mixed  $value
      *
      * @return Configuration
      */

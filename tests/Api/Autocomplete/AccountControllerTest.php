@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Autocomplete;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -59,5 +60,4 @@ class AccountControllerTest extends TestCase
     {
         $this->assertTrue(true);
     }
-
 }

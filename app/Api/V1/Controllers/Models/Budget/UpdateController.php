@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update a budget.
      *
-     * @param UpdateRequest $request
-     * @param Budget        $budget
+     * @param  UpdateRequest  $request
+     * @param  Budget  $budget
      *
      * @return JsonResponse
      */
@@ -80,6 +80,5 @@ class UpdateController extends Controller
         $resource = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

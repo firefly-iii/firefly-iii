@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IndexController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,6 +34,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -58,7 +61,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
 
                 $this->recurringRepos = app(RecurringRepositoryInterface::class);
 
@@ -68,20 +71,20 @@ class IndexController extends Controller
     }
 
     /**
-     * See reference nr. 70
+     * TODO the notes of a recurrence are pretty pointless at this moment.
      * Show all recurring transactions.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(Request $request)
     {
-        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurringRepos->get();
         $today      = today(config('app.timezone'));
         $year       = today(config('app.timezone'));
@@ -92,12 +95,11 @@ class IndexController extends Controller
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag);
+        $transformer->setParameters(new ParameterBag());
 
         $recurring = [];
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
-
             $year->addYear();
             if ($recurrence->first_date > $today) {
                 $today = clone $recurrence->first_date;
@@ -128,5 +130,4 @@ class IndexController extends Controller
 
         return view('recurring.index', compact('paginator', 'today', 'page', 'pageSize', 'total'));
     }
-
 }

@@ -199,19 +199,19 @@ export default {
           if (this.transactionType.toString() !== '' && this.index > 0) {
             if (this.transactionType.toString().toLowerCase() === 'transfer') {
               this.inputDisabled = true;
-// See reference nr. 2
+              // TODO needs to copy value from very first input.
 
               return;
             }
 
             if (this.transactionType.toString().toLowerCase() === 'withdrawal' && this.inputName.substr(0, 6).toLowerCase() === 'source') {
-// See reference nr. 3
+              // TODO also clear value?
               this.inputDisabled = true;
               return;
             }
 
             if (this.transactionType.toString().toLowerCase() === 'deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
-// See reference nr. 4
+              // TODO also clear valye?
               this.inputDisabled = true;
             }
           }
@@ -241,7 +241,7 @@ export default {
           this.$emit('clear:value')
         },
         handleEnter: function (e) {
-// See reference nr. 5
+          // TODO feels sloppy. Can be removed.
           if (e.keyCode === 13) {
             //e.preventDefault();
           }

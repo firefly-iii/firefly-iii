@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserRepository.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -22,9 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
@@ -43,8 +46,8 @@ class UserRepository implements UserRepositoryInterface
      * This updates the users email address and records some things so it can be confirmed or undone later.
      * The user is blocked until the change is confirmed.
      *
-     * @param User   $user
-     * @param string $newEmail
+     * @param  User  $user
+     * @param  string  $newEmail
      *
      * @return bool
      * @throws Exception
@@ -57,7 +60,7 @@ class UserRepository implements UserRepositoryInterface
 
         // save old email as pref
         app('preferences')->setForUser($user, 'previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'previous_email_'.date('Y-m-d-H-i-s'), $oldEmail);
 
         // set undo and confirm token:
         app('preferences')->setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
@@ -73,8 +76,8 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param User   $user
-     * @param string $password
+     * @param  User  $user
+     * @param  string  $password
      *
      * @return bool
      */
@@ -87,9 +90,9 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param User   $user
-     * @param bool   $isBlocked
-     * @param string $code
+     * @param  User  $user
+     * @param  bool  $isBlocked
+     * @param  string  $code
      *
      * @return bool
      */
@@ -104,25 +107,9 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @return int
-     */
-    public function count(): int
-    {
-        return $this->all()->count();
-    }
-
-    /**
-     * @return Collection
-     */
-    public function all(): Collection
-    {
-        return User::orderBy('id', 'DESC')->get(['users.*']);
-    }
-
-    /**
-     * @param string $name
-     * @param string $displayName
-     * @param string $description
+     * @param  string  $name
+     * @param  string  $displayName
+     * @param  string  $description
      *
      * @return Role
      */
@@ -132,7 +119,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @return bool
      * @throws Exception
@@ -165,7 +152,23 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param int $userId
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->all()->count();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        return User::orderBy('id', 'DESC')->get(['users.*']);
+    }
+
+    /**
+     * @param  int  $userId
      *
      * @return User|null
      */
@@ -175,7 +178,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param string $email
+     * @param  string  $email
      *
      * @return User|null
      */
@@ -195,7 +198,15 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param User $user
+     * @inheritDoc
+     */
+    public function getInvitedUsers(): Collection
+    {
+        return InvitedUser::with('user')->get();
+    }
+
+    /**
+     * @param  User  $user
      *
      * @return string|null
      */
@@ -213,7 +224,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Return basic user information.
      *
-     * @param User $user
+     * @param  User  $user
      *
      * @return array
      */
@@ -224,7 +235,7 @@ class UserRepository implements UserRepositoryInterface
         // two factor:
         $return['has_2fa']             = $user->mfa_secret !== null;
         $return['is_admin']            = $this->hasRole($user, 'owner');
-        $return['blocked']             = 1 === (int) $user->blocked;
+        $return['blocked']             = 1 === (int)$user->blocked;
         $return['blocked_code']        = $user->blocked_code;
         $return['accounts']            = $user->accounts()->count();
         $return['journals']            = $user->transactionJournals()->count();
@@ -248,8 +259,8 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param User   $user
-     * @param string $role
+     * @param  User  $user
+     * @param  string  $role
      *
      * @return bool
      */
@@ -266,10 +277,40 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function inviteUser(User $user, string $email): InvitedUser
+    {
+        $now = Carbon::now();
+        $now->addDays(2);
+        $invitee = new InvitedUser();
+        $invitee->user()->associate($user);
+        $invitee->invite_code = Str::random(64);
+        $invitee->email       = $email;
+        $invitee->redeemed    = false;
+        $invitee->expires     = $now;
+        $invitee->save();
+
+        return $invitee;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function redeemCode(string $code): void
+    {
+        $obj = InvitedUser::where('invite_code', $code)->where('redeemed', 0)->first();
+        if ($obj) {
+            $obj->redeemed = true;
+            $obj->save();
+        }
+    }
+
+    /**
      * Set MFA code.
      *
-     * @param User        $user
-     * @param string|null $code
+     * @param  User  $user
+     * @param  string|null  $code
      */
     public function setMFACode(User $user, ?string $code): void
     {
@@ -278,7 +319,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return User
      */
@@ -301,8 +342,8 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param User   $user
-     * @param string $role
+     * @param  User  $user
+     * @param  string  $role
      *
      * @return bool
      */
@@ -326,21 +367,20 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function unblockUser(User $user): void
     {
         $user->blocked      = false;
         $user->blocked_code = '';
         $user->save();
-
     }
 
     /**
      * Update user info.
      *
-     * @param User  $user
-     * @param array $data
+     * @param  User  $user
+     * @param  array  $data
      *
      * @return User
      * @throws FireflyException
@@ -368,8 +408,8 @@ class UserRepository implements UserRepositoryInterface
      * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the undo/confirm routine can't catch this one.
      * The user is NOT blocked.
      *
-     * @param User   $user
-     * @param string $newEmail
+     * @param  User  $user
+     * @param  string  $newEmail
      *
      * @return bool
      * @throws FireflyException
@@ -384,7 +424,7 @@ class UserRepository implements UserRepositoryInterface
 
         // save old email as pref
         app('preferences')->setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'admin_previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'admin_previous_email_'.date('Y-m-d-H-i-s'), $oldEmail);
 
         $user->email = $newEmail;
         $user->save();
@@ -395,8 +435,8 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Remove any role the user has.
      *
-     * @param User   $user
-     * @param string $role
+     * @param  User  $user
+     * @param  string  $role
      */
     public function removeRole(User $user, string $role): void
     {
@@ -408,12 +448,22 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param string $role
+     * @param  string  $role
      *
      * @return Role|null
      */
     public function getRole(string $role): ?Role
     {
         return Role::where('name', $role)->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validateInviteCode(string $code): bool
+    {
+        $now     = Carbon::now();
+        $invitee = InvitedUser::where('invite_code', $code)->where('expires', '>', $now->format('Y-m-d H:i:s'))->where('redeemed', 0)->first();
+        return null !== $invitee;
     }
 }

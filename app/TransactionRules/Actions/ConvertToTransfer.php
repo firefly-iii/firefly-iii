@@ -24,9 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
@@ -43,7 +45,7 @@ class ConvertToTransfer implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -55,6 +57,13 @@ class ConvertToTransfer implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        if ($groupCount > 1) {
+            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
+            return false;
+        }
+
+
         $type = $journal['transaction_type_type'];
         $user = User::find($journal['user_id']);
         if (TransactionType::TRANSFER === $type) {
@@ -73,8 +82,10 @@ class ConvertToTransfer implements ActionInterface
         if (null === $asset) {
             Log::error(
                 sprintf(
-                    'Journal #%d cannot be converted because no asset with name "%s" exists (rule #%d).', $journal['transaction_journal_id'],
-                    $this->action->action_value, $this->action->rule_id
+                    'Journal #%d cannot be converted because no asset with name "%s" exists (rule #%d).',
+                    $journal['transaction_journal_id'],
+                    $this->action->action_value,
+                    $this->action->rule_id
                 )
             );
 
@@ -82,11 +93,16 @@ class ConvertToTransfer implements ActionInterface
         }
         if (TransactionType::WITHDRAWAL === $type) {
             Log::debug('Going to transform a withdrawal to a transfer.');
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::TRANSFER));
 
             return $this->convertWithdrawalArray($journal, $asset);
         }
         if (TransactionType::DEPOSIT === $type) {
             Log::debug('Going to transform a deposit to a transfer.');
+
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
 
             return $this->convertDepositArray($journal, $asset);
         }
@@ -98,8 +114,8 @@ class ConvertToTransfer implements ActionInterface
      * A withdrawal is from Asset to Expense.
      * We replace the Expense with another asset.
      *
-     * @param array   $journal
-     * @param Account $asset
+     * @param  array  $journal
+     * @param  Account  $asset
      *
      * @return bool
      */
@@ -138,8 +154,8 @@ class ConvertToTransfer implements ActionInterface
      * A deposit is from Revenue to Asset.
      * We replace the Revenue with another asset.
      *
-     * @param array   $journal
-     * @param Account $asset
+     * @param  array  $journal
+     * @param  Account  $asset
      *
      * @return bool
      */
@@ -173,5 +189,4 @@ class ConvertToTransfer implements ActionInterface
 
         return true;
     }
-
 }

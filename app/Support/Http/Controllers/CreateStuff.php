@@ -39,12 +39,11 @@ use phpseclib3\Crypt\RSA;
  */
 trait CreateStuff
 {
-
     /**
      * Creates an asset account.
      *
-     * @param NewUserFormRequest  $request
-     * @param TransactionCurrency $currency
+     * @param  NewUserFormRequest  $request
+     * @param  TransactionCurrency  $currency
      *
      * @return bool
      */
@@ -61,7 +60,7 @@ trait CreateStuff
             'active'               => true,
             'account_role'         => 'defaultAsset',
             'opening_balance'      => $request->input('bank_balance'),
-            'opening_balance_date' => new Carbon,
+            'opening_balance_date' => new Carbon(),
             'currency_id'          => $currency->id,
         ];
 
@@ -73,8 +72,8 @@ trait CreateStuff
     /**
      * Creates a cash wallet.
      *
-     * @param TransactionCurrency $currency
-     * @param string              $language
+     * @param  TransactionCurrency  $currency
+     * @param  string  $language
      *
      * @return bool
      */
@@ -83,7 +82,7 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         $assetAccount = [
-            'name'                 => (string) trans('firefly.cash_wallet', [], $language),
+            'name'                 => (string)trans('firefly.cash_wallet', [], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'virtual_balance'      => 0,
@@ -120,7 +119,7 @@ trait CreateStuff
         if (class_exists(LegacyRSA::class)) {
             // PHP 7
             Log::info('Will run PHP7 code.');
-            $keys = (new LegacyRSA)->createKey(4096);
+            $keys = (new LegacyRSA())->createKey(4096);
         }
 
         if (!class_exists(LegacyRSA::class)) {
@@ -139,9 +138,9 @@ trait CreateStuff
     /**
      * Create a savings account.
      *
-     * @param NewUserFormRequest  $request
-     * @param TransactionCurrency $currency
-     * @param string              $language
+     * @param  NewUserFormRequest  $request
+     * @param  TransactionCurrency  $currency
+     * @param  string  $language
      *
      * @return bool
      */
@@ -150,7 +149,7 @@ trait CreateStuff
         /** @var AccountRepositoryInterface $repository */
         $repository     = app(AccountRepositoryInterface::class);
         $savingsAccount = [
-            'name'                 => (string) trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
+            'name'                 => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'account_type_id'      => null,
@@ -158,7 +157,7 @@ trait CreateStuff
             'active'               => true,
             'account_role'         => 'savingAsset',
             'opening_balance'      => $request->input('savings_balance'),
-            'opening_balance_date' => new Carbon,
+            'opening_balance_date' => new Carbon(),
             'currency_id'          => $currency->id,
         ];
         $repository->store($savingsAccount);
@@ -169,7 +168,7 @@ trait CreateStuff
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return User
      */
@@ -182,5 +181,4 @@ trait CreateStuff
             ]
         );
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AdminTestMail.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -35,18 +36,16 @@ use Illuminate\Queue\SerializesModels;
  */
 class AdminTestMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public string $email;
 
     /**
-     * ConfirmEmailChangeMail constructor.
-     *
-     * @param string $email
+     * AdminTestMail constructor.
      */
-    public function __construct(string $email)
+    public function __construct()
     {
-        $this->email = $email;
     }
 
     /**
@@ -58,6 +57,6 @@ class AdminTestMail extends Mailable
     {
         return $this
             ->markdown('emails.admin-test')
-            ->subject((string) trans('email.admin_test_subject'));
+            ->subject((string)trans('email.admin_test_subject'));
     }
 }

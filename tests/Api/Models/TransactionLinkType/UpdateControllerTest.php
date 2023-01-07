@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\TransactionLinkType;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -69,24 +71,23 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [5];
         $fieldSet->addField(Field::createBasic('name', 'uuid'));
         $configuration->addOptionalFieldSet('name', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [5];
         $fieldSet->addField(Field::createBasic('inward', 'uuid'));
         $configuration->addOptionalFieldSet('inward', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [5];
         $fieldSet->addField(Field::createBasic('outward', 'uuid'));
         $configuration->addOptionalFieldSet('outward', $fieldSet);
 
         return $configuration->generateAll();
-
     }
 }

@@ -40,7 +40,7 @@
                 :value="cBill.id">{{ cBill.name }}
         </option>
       </select>
-      <p v-if="this.bills.length === 1" class="help-block" v-html="$t('firefly.no_bill_pointer')"></p>
+      <p v-if="this.bills.length === 1" class="help-block" v-text="$t('firefly.no_bill_pointer')"></p>
       <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
@@ -98,9 +98,17 @@ export default {
         ];
         for (const key in res.data) {
           if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-            this.bills.push(res.data[key]);
+            let current = res.data[key];
+            if(current.active) {
+              this.bills.push(res.data[key]);
+            }
           }
         }
+        this.bills.sort(function(a, b) {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        });
       });
     }
   }

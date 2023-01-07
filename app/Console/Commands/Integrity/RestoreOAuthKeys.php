@@ -80,7 +80,7 @@ class RestoreOAuthKeys extends Command
 
                 return;
             }
-            Log::warning('Could not restore keys. Will create new ones.');
+            app('log')->warning('Could not restore keys. Will create new ones.');
             $this->generateKeys();
             $this->storeKeysInDB();
             $this->line('Generated and stored new keys.');

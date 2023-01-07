@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AttachmentHelperInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,7 +35,7 @@ interface AttachmentHelperInterface
     /**
      * Get content of an attachment.
      *
-     * @param Attachment $attachment
+     * @param  Attachment  $attachment
      *
      * @return string
      */
@@ -43,7 +44,7 @@ interface AttachmentHelperInterface
     /**
      * Get the location of an attachment.
      *
-     * @param Attachment $attachment
+     * @param  Attachment  $attachment
      *
      * @return string
      */
@@ -73,8 +74,8 @@ interface AttachmentHelperInterface
     /**
      * Uploads a file as a string.
      *
-     * @param Attachment $attachment
-     * @param string     $content
+     * @param  Attachment  $attachment
+     * @param  string  $content
      *
      * @return bool
      */
@@ -83,8 +84,8 @@ interface AttachmentHelperInterface
     /**
      * Save attachments that got uploaded.
      *
-     * @param object     $model
-     * @param null|array $files
+     * @param  object  $model
+     * @param  null|array  $files
      *
      * @return bool
      */

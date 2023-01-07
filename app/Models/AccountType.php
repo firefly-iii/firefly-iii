@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountType.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,12 +33,12 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\AccountType
  *
- * @property int                       $id
- * @property Carbon|null               $created_at
- * @property Carbon|null               $updated_at
- * @property string                    $type
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string $type
  * @property-read Collection|Account[] $accounts
- * @property-read int|null             $accounts_count
+ * @property-read int|null $accounts_count
  * @method static Builder|AccountType newModelQuery()
  * @method static Builder|AccountType newQuery()
  * @method static Builder|AccountType query()
@@ -49,34 +50,22 @@ use Illuminate\Support\Carbon;
  */
 class AccountType extends Model
 {
-    /** @var string */
-    public const ASSET = 'Asset account';
-    /** @var string */
-    public const BENEFICIARY = 'Beneficiary account';
-    /** @var string */
-    public const CASH = 'Cash account';
-    /** @var string */
-    public const CREDITCARD = 'Credit card';
-    /** @var string */
-    public const DEBT = 'Debt';
-    /** @var string */
-    public const DEFAULT = 'Default account';
-    /** @var string */
-    public const EXPENSE = 'Expense account';
-    /** @var string */
-    public const IMPORT = 'Import account';
-    /** @var string */
-    public const INITIAL_BALANCE = 'Initial balance account';
-    /** @var string */
+    public const ASSET            = 'Asset account';
+    public const BENEFICIARY      = 'Beneficiary account';
+    public const CASH             = 'Cash account';
+    public const CREDITCARD       = 'Credit card';
+    public const DEBT             = 'Debt';
+    public const DEFAULT          = 'Default account';
+    public const EXPENSE          = 'Expense account';
+    public const IMPORT           = 'Import account';
+    public const INITIAL_BALANCE  = 'Initial balance account';
     public const LIABILITY_CREDIT = 'Liability credit account';
-    /** @var string */
-    public const LOAN = 'Loan';
-    /** @var string */
-    public const MORTGAGE = 'Mortgage';
-    /** @var string */
-    public const RECONCILIATION = 'Reconciliation account';
-    /** @var string */
-    public const REVENUE = 'Revenue account';
+    public const LOAN             = 'Loan';
+    public const MORTGAGE         = 'Mortgage';
+    public const RECONCILIATION   = 'Reconciliation account';
+    public const REVENUE          = 'Revenue account';
+
+
     /**
      * The attributes that should be casted to native types.
      *

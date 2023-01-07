@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReconcileController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -18,13 +19,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection CallableParameterUseCaseInTypeContextInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
@@ -34,26 +33,24 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ReconcileController.
  */
 class ReconcileController extends Controller
 {
-    /** @var AccountRepositoryInterface The account repository */
-    private $accountRepos;
-    /** @var CurrencyRepositoryInterface The currency repository */
-    private $currencyRepos;
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $repository;
+    private AccountRepositoryInterface $accountRepos;
+    private JournalRepositoryInterface $repository;
 
     /**
      * ReconcileController constructor.
@@ -68,10 +65,9 @@ class ReconcileController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
-                $this->repository    = app(JournalRepositoryInterface::class);
-                $this->accountRepos  = app(AccountRepositoryInterface::class);
-                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+                app('view')->share('title', (string)trans('firefly.accounts'));
+                $this->repository   = app(JournalRepositoryInterface::class);
+                $this->accountRepos = app(AccountRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -81,15 +77,15 @@ class ReconcileController extends Controller
     /**
      * Reconciliation overview.
      *
-     * @param Account     $account
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Account  $account
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return Factory|RedirectResponse|Redirector|View
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
@@ -97,11 +93,9 @@ class ReconcileController extends Controller
             return $this->redirectAccountToAccount($account);
         }
         if (AccountType::ASSET !== $account->accountType->type) {
-
-            session()->flash('error', (string) trans('firefly.must_be_asset_account'));
+            session()->flash('error', (string)trans('firefly.must_be_asset_account'));
 
             return redirect(route('accounts.index', [config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type))]));
-
         }
         $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
@@ -111,11 +105,10 @@ class ReconcileController extends Controller
         // get start and end
 
         if (null === $start && null === $end) {
-
             /** @var Carbon $start */
-            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
+            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon(), $range));
             /** @var Carbon $end */
-            $end = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
+            $end = clone session('end', app('navigation')->endOfPeriod(new Carbon(), $range));
         }
         if (null === $end) {
             /** @var Carbon $end */
@@ -129,9 +122,9 @@ class ReconcileController extends Controller
         $startDate = clone $start;
         $startDate->subDay();
         $startBalance = app('steam')->bcround(app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance   = app('steam')->bcround( app('steam')->balance($account, $end), $currency->decimal_places);
+        $endBalance   = app('steam')->bcround(app('steam')->balance($account, $end), $currency->decimal_places);
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $subTitle     = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
+        $subTitle     = (string)trans('firefly.reconcile_account', ['account' => $account->name]);
 
         // various links
         $transactionsUrl = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
@@ -161,10 +154,10 @@ class ReconcileController extends Controller
     /**
      * Submit a new reconciliation.
      *
-     * @param ReconciliationStoreRequest $request
-     * @param Account                    $account
-     * @param Carbon                     $start
-     * @param Carbon                     $end
+     * @param  ReconciliationStoreRequest  $request
+     * @param  Account  $account
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return RedirectResponse|Redirector
      * @throws DuplicateTransactionException
@@ -180,7 +173,7 @@ class ReconcileController extends Controller
 
         /** @var string $journalId */
         foreach ($data['journals'] as $journalId) {
-            $this->repository->reconcileById((int) $journalId);
+            $this->repository->reconcileById((int)$journalId);
         }
         Log::debug('Reconciled all transactions.');
 
@@ -197,10 +190,10 @@ class ReconcileController extends Controller
         Log::debug('End of routine.');
         app('preferences')->mark();
         if ('' === $result) {
-            session()->flash('success', (string) trans('firefly.reconciliation_stored'));
+            session()->flash('success', (string)trans('firefly.reconciliation_stored'));
         }
         if ('' !== $result) {
-            session()->flash('error', (string) trans('firefly.reconciliation_error', ['error' => $result]));
+            session()->flash('error', (string)trans('firefly.reconciliation_error', ['error' => $result]));
         }
 
         return redirect(route('accounts.show', [$account->id]));
@@ -209,10 +202,10 @@ class ReconcileController extends Controller
     /**
      * Creates a reconciliation group.
      *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     * @param string  $difference
+     * @param  Account  $account
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  string  $difference
      *
      * @return RedirectResponse|Redirector|string
      * @throws DuplicateTransactionException
@@ -240,8 +233,10 @@ class ReconcileController extends Controller
         // title:
         $description = trans(
             'firefly.reconciliation_transaction_title',
-            ['from' => $start->isoFormat($this->monthAndDayFormat),
-             'to'   => $end->isoFormat($this->monthAndDayFormat)]
+            [
+                'from' => $start->isoFormat($this->monthAndDayFormat),
+                'to'   => $end->isoFormat($this->monthAndDayFormat),
+            ]
         );
         $submission  = [
             'user'         => auth()->user()->id,

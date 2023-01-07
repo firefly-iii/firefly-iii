@@ -31,7 +31,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use JetBrains\PhpStorm\ArrayShape;
 use JsonException;
 use Log;
 use Throwable;
@@ -68,25 +67,42 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $defaultShow = ['icon', 'description', 'balance_before', 'amount', 'balance_after', 'date', 'to'];
         $reportType  = 'audit';
         $accountIds  = implode(',', $this->accounts->pluck('id')->toArray());
-        $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
+        $hideable    = [
+            'buttons',
+            'icon',
+            'description',
+            'balance_before',
+            'amount',
+            'balance_after',
+            'date',
 
-                        'from', 'to', 'budget', 'category', 'bill',
+            'from',
+            'to',
+            'budget',
+            'category',
+            'bill',
 
-                        // more new optional fields
-                        'create_date', 'update_date',
+            // more new optional fields
+            'create_date',
+            'update_date',
 
-                        // date fields.
-                        'interest_date', 'book_date', 'process_date',
-                        'due_date', 'payment_date', 'invoice_date',
+            // date fields.
+            'interest_date',
+            'book_date',
+            'process_date',
+            'due_date',
+            'payment_date',
+            'invoice_date',
         ];
         try {
             $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
                 ->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -95,15 +111,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Get the audit report.
      *
-     * @param Account $account
-     * @param Carbon  $date
+     * @param  Account  $account
+     * @param  Carbon  $date
      *
      * @return array
      * @throws FireflyException
      * @throws JsonException
      */
-    #[ArrayShape(['journals'         => "array", 'currency' => "mixed", 'exists' => "bool", 'end' => "string", 'endBalance' => "mixed", 'dayBefore' => "string",
-                  'dayBeforeBalance' => "mixed"])] public function getAuditReport(Account $account, Carbon $date): array
+    public function getAuditReport(Account $account, Carbon $date): array
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
@@ -151,17 +166,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $journals[$index]['due_date']      = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
             $journals[$index]['payment_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
             $journals[$index]['invoice_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
-
         }
         $locale = app('steam')->getLocale();
 
         return [
             'journals'         => $journals,
             'currency'         => $currency,
-            'exists'           => !empty($journals),
-            'end'              => $this->end->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
+            'exists'           => 0 !== count($journals),
+            'end'              => $this->end->isoFormat((string)trans('config.month_and_day_moment_js', [], $locale)),
             'endBalance'       => app('steam')->balance($account, $this->end),
-            'dayBefore'        => $date->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
+            'dayBefore'        => $date->isoFormat((string)trans('config.month_and_day_moment_js', [], $locale)),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];
     }
@@ -169,7 +183,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Account collection setter.
      *
-     * @param Collection $accounts
+     * @param  Collection  $accounts
      *
      * @return ReportGeneratorInterface
      * @codeCoverageIgnore
@@ -184,7 +198,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Budget collection setter.
      *
-     * @param Collection $budgets
+     * @param  Collection  $budgets
      *
      * @return ReportGeneratorInterface
      * @codeCoverageIgnore
@@ -197,7 +211,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Category collection setter.
      *
-     * @param Collection $categories
+     * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
      * @codeCoverageIgnore
@@ -210,7 +224,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * End date setter.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      * @codeCoverageIgnore
@@ -225,7 +239,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Expenses collection setter.
      *
-     * @param Collection $expense
+     * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
      * @codeCoverageIgnore
@@ -239,7 +253,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Start date collection setter.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      * @codeCoverageIgnore
@@ -254,7 +268,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Tags collection setter.
      *
-     * @param Collection $tags
+     * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
      * @codeCoverageIgnore

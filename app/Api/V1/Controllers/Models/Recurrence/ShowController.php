@@ -74,7 +74,7 @@ class ShowController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->get();
@@ -83,7 +83,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.recurrences.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.recurrences.index').$this->buildParams());
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
@@ -93,7 +93,6 @@ class ShowController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -102,7 +101,7 @@ class ShowController extends Controller
      *
      * List single resource.
      *
-     * @param Recurrence $recurrence
+     * @param  Recurrence  $recurrence
      *
      * @return JsonResponse
      * @codeCoverageIgnore

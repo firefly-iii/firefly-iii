@@ -18,8 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { store } from 'quasar/wrappers'
-import { createStore } from 'vuex'
+import {store} from 'quasar/wrappers'
+import {createStore} from 'vuex'
 
 // import example from './module-example'
 import fireflyiii from './fireflyiii'
@@ -33,7 +33,7 @@ import fireflyiii from './fireflyiii'
  */
 
 export default store(function (/* { ssrContext } */) {
-  const Store = createStore({
+  return createStore({
     modules: {
       // example
       fireflyiii
@@ -43,6 +43,4 @@ export default store(function (/* { ssrContext } */) {
     // for dev mode and --debug builds only
     strict: process.env.DEBUGGING
   })
-
-  return Store
 })

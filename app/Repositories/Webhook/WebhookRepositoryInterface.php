@@ -42,36 +42,36 @@ interface WebhookRepositoryInterface
     public function all(): Collection;
 
     /**
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      */
     public function destroy(Webhook $webhook): void;
 
     /**
-     * @param WebhookAttempt $attempt
+     * @param  WebhookAttempt  $attempt
      */
     public function destroyAttempt(WebhookAttempt $attempt): void;
 
     /**
-     * @param WebhookMessage $message
+     * @param  WebhookMessage  $message
      */
     public function destroyMessage(WebhookMessage $message): void;
 
     /**
-     * @param WebhookMessage $webhookMessage
+     * @param  WebhookMessage  $webhookMessage
      *
      * @return Collection
      */
     public function getAttempts(WebhookMessage $webhookMessage): Collection;
 
     /**
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return Collection
      */
     public function getMessages(Webhook $webhook): Collection;
 
     /**
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return Collection
      */
@@ -80,23 +80,22 @@ interface WebhookRepositoryInterface
     /**
      * Set user.
      *
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void;
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Webhook
      */
     public function store(array $data): Webhook;
 
     /**
-     * @param Webhook $webhook
-     * @param array   $data
+     * @param  Webhook  $webhook
+     * @param  array  $data
      *
      * @return Webhook
      */
     public function update(Webhook $webhook, array $data): Webhook;
-
 }

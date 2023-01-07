@@ -35,6 +35,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class OtherCurrenciesCorrections
@@ -54,18 +56,12 @@ class OtherCurrenciesCorrections extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
-    /** @var array */
-    private $accountCurrencies;
-    /** @var AccountRepositoryInterface */
-    private $accountRepos;
-    /** @var JournalCLIRepositoryInterface */
-    private $cliRepos;
-    /** @var int */
-    private $count;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepos;
-    /** @var JournalRepositoryInterface */
-    private $journalRepos;
+    private array                         $accountCurrencies;
+    private AccountRepositoryInterface    $accountRepos;
+    private JournalCLIRepositoryInterface $cliRepos;
+    private int                           $count;
+    private CurrencyRepositoryInterface   $currencyRepos;
+    private JournalRepositoryInterface    $journalRepos;
 
     /**
      * Execute the console command.
@@ -115,14 +111,14 @@ class OtherCurrenciesCorrections extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -147,7 +143,7 @@ class OtherCurrenciesCorrections extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      */
     private function updateJournalCurrency(TransactionJournal $journal): void
     {
@@ -159,26 +155,25 @@ class OtherCurrenciesCorrections extends Command
         $leadTransaction = $this->getLeadTransaction($journal);
 
         if (null === $leadTransaction) {
-
             $this->error(sprintf('Could not reliably determine which transaction is in the lead for transaction journal #%d.', $journal->id));
 
             return;
-
         }
 
         $account  = $leadTransaction->account;
         $currency = $this->getCurrency($account);
         if (null === $currency) {
-
             $this->error(
                 sprintf(
-                    'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected', $account->id, $account->name, $journal->id
+                    'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
+                    $account->id,
+                    $account->name,
+                    $journal->id
                 )
             );
             $this->count++;
 
             return;
-
         }
         // fix each transaction:
         $journal->transactions->each(
@@ -189,8 +184,8 @@ class OtherCurrenciesCorrections extends Command
                 }
 
                 // when mismatch in transaction:
-                if ((int) $transaction->transaction_currency_id !== (int) $currency->id) {
-                    $transaction->foreign_currency_id     = (int) $transaction->transaction_currency_id;
+                if ((int)$transaction->transaction_currency_id !== (int)$currency->id) {
+                    $transaction->foreign_currency_id     = (int)$transaction->transaction_currency_id;
                     $transaction->foreign_amount          = $transaction->amount;
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();
@@ -207,7 +202,7 @@ class OtherCurrenciesCorrections extends Command
      * Gets the transaction that determines the transaction that "leads" and will determine
      * the currency to be used by all transactions, and the journal itself.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Transaction|null
      */
@@ -227,13 +222,19 @@ class OtherCurrenciesCorrections extends Command
             case TransactionType::OPENING_BALANCE:
                 // whichever isn't an initial balance account:
                 $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
-                    'account_types', 'accounts.account_type_id', '=', 'account_types.id'
+                    'account_types',
+                    'accounts.account_type_id',
+                    '=',
+                    'account_types.id'
                 )->where('account_types.type', '!=', AccountType::INITIAL_BALANCE)->first(['transactions.*']);
                 break;
             case TransactionType::RECONCILIATION:
                 // whichever isn't the reconciliation account:
                 $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
-                    'account_types', 'accounts.account_type_id', '=', 'account_types.id'
+                    'account_types',
+                    'accounts.account_type_id',
+                    '=',
+                    'account_types.id'
                 )->where('account_types.type', '!=', AccountType::RECONCILIATION)->first(['transactions.*']);
                 break;
         }
@@ -242,7 +243,7 @@ class OtherCurrenciesCorrections extends Command
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return TransactionCurrency|null
      */
@@ -257,11 +258,9 @@ class OtherCurrenciesCorrections extends Command
         }
         $currency = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
-
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
-
         }
         $this->accountCurrencies[$accountId] = $currency;
 

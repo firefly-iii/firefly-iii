@@ -31,7 +31,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class DynamicConfigKey
 {
-
     public static array $accepted
         = [
             'configuration.is_demo_site',
@@ -41,8 +40,8 @@ class DynamicConfigKey
         ];
 
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return string
      * @throws NotFoundHttpException
@@ -52,7 +51,6 @@ class DynamicConfigKey
         if (in_array($value, self::$accepted, true)) {
             return $value;
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
-
 }

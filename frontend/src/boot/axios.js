@@ -23,9 +23,9 @@ import axios from 'axios'
 import {setupCache} from 'axios-cache-adapter'
 
 const cache = setupCache({
-                           maxAge: 15 * 60 * 1000,
-                           exclude: { query: false }
-                         })
+  maxAge: 15 * 60 * 1000,
+  exclude: {query: false}
+})
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;

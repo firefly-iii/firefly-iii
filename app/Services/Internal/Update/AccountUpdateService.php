@@ -35,7 +35,7 @@ use Log;
 
 /**
  * Class AccountUpdateService
- * See reference nr. 90
+ * TODO this service is messy and convoluted.
  */
 class AccountUpdateService
 {
@@ -63,18 +63,10 @@ class AccountUpdateService
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
      * Update account data.
      *
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @return Account
      * @throws FireflyException
@@ -89,7 +81,7 @@ class AccountUpdateService
 
         // find currency, or use default currency instead.
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
-            $currency = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
+            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
             unset($data['currency_code'], $data['currency_id']);
             $data['currency_id'] = $currency->id;
         }
@@ -108,7 +100,7 @@ class AccountUpdateService
 
         // update note:
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
-            $this->updateNote($account, (string) $data['notes']);
+            $this->updateNote($account, (string)$data['notes']);
         }
 
         // update preferences if inactive:
@@ -120,8 +112,16 @@ class AccountUpdateService
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @return Account
      */
@@ -135,19 +135,19 @@ class AccountUpdateService
             $account->active = $data['active'];
         }
         if (array_key_exists('iban', $data)) {
-            $account->iban = app('steam')->filterSpaces((string) $data['iban']);
+            $account->iban = app('steam')->filterSpaces((string)$data['iban']);
         }
 
         // set liability, but account must already be a liability.
         //$liabilityType = $data['liability_type'] ?? '';
         if ($this->isLiability($account) && array_key_exists('liability_type', $data)) {
-            $type = $this->getAccountType($data['liability_type']);
+            $type                     = $this->getAccountType($data['liability_type']);
             $account->account_type_id = $type->id;
         }
         // set liability, alternative method used in v1 layout:
 
         if ($this->isLiability($account) && array_key_exists('account_type_id', $data)) {
-            $type = AccountType::find((int) $data['account_type_id']);
+            $type = AccountType::find((int)$data['account_type_id']);
 
             if (null !== $type && in_array($type->type, config('firefly.valid_liabilities'), true)) {
                 $account->account_type_id = $type->id;
@@ -165,7 +165,7 @@ class AccountUpdateService
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return bool
      */
@@ -177,7 +177,7 @@ class AccountUpdateService
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      *
      * @return AccountType
      */
@@ -187,8 +187,8 @@ class AccountUpdateService
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @return Account
      */
@@ -208,7 +208,7 @@ class AccountUpdateService
             return $account;
         }
         // get account type ID's because a join and an update is hard:
-        $oldOrder = (int) $account->order;
+        $oldOrder = (int)$account->order;
         $newOrder = $data['order'];
         Log::debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
         $list = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
@@ -246,15 +246,15 @@ class AccountUpdateService
         foreach ($array as $type) {
             /** @var AccountType $type */
             $type     = AccountType::whereType($type)->first();
-            $return[] = (int) $type->id;
+            $return[] = (int)$type->id;
         }
 
         return $return;
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      */
     private function updateLocation(Account $account, array $data): void
     {
@@ -270,7 +270,7 @@ class AccountUpdateService
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
                 $location = $this->accountRepository->getLocation($account);
                 if (null === $location) {
-                    $location = new Location;
+                    $location = new Location();
                     $location->locatable()->associate($account);
                 }
 
@@ -283,8 +283,8 @@ class AccountUpdateService
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @throws FireflyException
      */
@@ -308,8 +308,8 @@ class AccountUpdateService
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @throws FireflyException
      */
@@ -324,7 +324,7 @@ class AccountUpdateService
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
                 if ('credit' === $direction) {
-                    $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
+                    $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
                 }
             }
 
@@ -338,7 +338,7 @@ class AccountUpdateService
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      *
      * @throws FireflyException
      */
@@ -355,12 +355,12 @@ class AccountUpdateService
         $array = $preference->data;
         Log::debug('Old array is: ', $array);
         Log::debug(sprintf('Must remove : %d', $account->id));
-        $removeAccountId = (int) $account->id;
+        $removeAccountId = (int)$account->id;
         $new             = [];
         foreach ($array as $value) {
-            if ((int) $value !== $removeAccountId) {
+            if ((int)$value !== $removeAccountId) {
                 Log::debug(sprintf('Will include: %d', $value));
-                $new[] = (int) $value;
+                $new[] = (int)$value;
             }
         }
         Log::debug('Final new array is', $new);

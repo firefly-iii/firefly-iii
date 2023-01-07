@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
+use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -33,16 +34,17 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class CreateRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array
      */
     public function getData(): array
     {
-        $triggers   = array_flip(config('firefly.webhooks.triggers'));
-        $responses  = array_flip(config('firefly.webhooks.responses'));
-        $deliveries = array_flip(config('firefly.webhooks.deliveries'));
+        $triggers   = Webhook::getTriggersForValidation();
+        $responses  = Webhook::getResponsesForValidation();
+        $deliveries = Webhook::getDeliveriesForValidation();
 
         $fields = [
             'title'    => ['title', 'convertString'],
@@ -55,9 +57,9 @@ class CreateRequest extends FormRequest
 
         // this is the way.
         $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? 0;
-        $return['response'] = $responses[$return['response']] ?? 0;
-        $return['delivery'] = $deliveries[$return['delivery']] ?? 0;
+        $return['trigger']  = $triggers[$return['trigger']] ?? intval($return['trigger']);
+        $return['response'] = $responses[$return['response']] ?? intval($return['response']);
+        $return['delivery'] = $deliveries[$return['delivery']] ?? intval($return['delivery']);
 
         return $return;
     }
@@ -69,17 +71,17 @@ class CreateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers   = implode(',', array_values(config('firefly.webhooks.triggers')));
-        $responses  = implode(',', array_values(config('firefly.webhooks.responses')));
-        $deliveries = implode(',', array_values(config('firefly.webhooks.deliveries')));
+        $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
+        $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
+        $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
 
         return [
             'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
-            'active'   => [new IsBoolean],
+            'active'   => [new IsBoolean()],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),
             'delivery' => sprintf('required|in:%s', $deliveries),
-            'url'      => ['required', 'url', 'starts_with:https://', 'uniqueWebhook'],
+            'url'      => ['required', 'url', 'uniqueWebhook'],
         ];
     }
 }

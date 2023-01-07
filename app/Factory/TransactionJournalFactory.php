@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -106,12 +108,12 @@ class TransactionJournalFactory
         $dataObject = new NullArrayObject($data);
 
         Log::debug('Start of TransactionJournalFactory::create()');
-        $collection   = new Collection;
+        $collection   = new Collection();
         $transactions = $dataObject['transactions'] ?? [];
-        if (empty($transactions)) {
+        if (0 === count($transactions)) {
             Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
-            return new Collection;
+            return new Collection();
         }
         try {
             /** @var array $row */
@@ -126,13 +128,13 @@ class TransactionJournalFactory
                 }
             }
         } catch (DuplicateTransactionException $e) {
-            Log::warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
+            app('log')->warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         } catch (FireflyException $e) {
-            Log::warning('TransactionJournalFactory::create() caught an exception.');
+            app('log')->warning('TransactionJournalFactory::create() caught an exception.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
@@ -207,10 +209,18 @@ class TransactionJournalFactory
         Log::debug('Now calling getAccount for the destination.');
         $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
         Log::debug('Done with getAccount(2x)');
+
+        // this is the moment for a reconciliation sanity check (again).
+        if (TransactionType::RECONCILIATION === $type->type) {
+            [$sourceAccount, $destinationAccount] = $this->reconciliationSanityCheck($sourceAccount, $destinationAccount);
+        }
+
         $currency        = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
         $foreignCurrency = $this->compareCurrencies($currency, $foreignCurrency);
         $foreignCurrency = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
         $description     = $this->getDescription($description);
+
+        Log::debug(sprintf('Date: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()->getName()));
 
         /** Create a basic journal. */
         $journal = TransactionJournal::create(
@@ -261,7 +271,7 @@ class TransactionJournalFactory
             Log::error('Exception creating positive transaction.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            Log::warning('Delete negative transaction.');
+            app('log')->warning('Delete negative transaction.');
             $this->forceTrDelete($negative);
             $this->forceDeleteOnError(new Collection([$journal]));
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -305,10 +315,6 @@ class TransactionJournalFactory
 
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
         $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
-        if (false === $json) {
-            $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR);
-            Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
-        }
         $hash = hash('sha256', $json);
         Log::debug(sprintf('The hash is: %s', $hash), $dataRow);
 
@@ -329,17 +335,14 @@ class TransactionJournalFactory
         if (false === $this->errorOnHash) {
             return;
         }
-        $result = null;
-        if ($this->errorOnHash) {
-            Log::debug('Will verify duplicate!');
-            /** @var TransactionJournalMeta $result */
-            $result = TransactionJournalMeta::withTrashed()
-                                            ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
-                                            ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
-                                            ->first();
-        }
+        Log::debug('Will verify duplicate!');
+        /** @var TransactionJournalMeta|null $result */
+        $result = TransactionJournalMeta::withTrashed()
+                                        ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
+                                        ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
+                                        ->first();
         if (null !== $result) {
-            Log::warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
+            app('log')->warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
             $journal = $result->transactionJournal()->withTrashed()->first();
             $group   = $journal?->transactionGroup()->withTrashed()->first();
             $groupId = $group?->id;
@@ -393,6 +396,52 @@ class TransactionJournalFactory
     }
 
     /**
+     * Set the user.
+     *
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->currencyRepository->setUser($this->user);
+        $this->tagFactory->setUser($user);
+        $this->billRepository->setUser($this->user);
+        $this->budgetRepository->setUser($this->user);
+        $this->categoryRepository->setUser($this->user);
+        $this->piggyRepository->setUser($this->user);
+        $this->accountRepository->setUser($this->user);
+    }
+
+    /**
+     * @param  Account|null  $sourceAccount
+     * @param  Account|null  $destinationAccount
+     * @return array
+     */
+    private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        if (null !== $sourceAccount && null !== $destinationAccount) {
+            Log::debug('Both accounts exist, simply return them.');
+            return [$sourceAccount, $destinationAccount];
+        }
+        if (null !== $sourceAccount && null === $destinationAccount) {
+            Log::debug('Destination account is NULL, source account is not.');
+            $account = $this->accountRepository->getReconciliation($sourceAccount);
+            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+            return [$sourceAccount, $account];
+        }
+
+        if (null === $sourceAccount && null !== $destinationAccount) {
+            Log::debug('Source account is NULL, destination account is not.');
+            $account = $this->accountRepository->getReconciliation($destinationAccount);
+            Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
+            return [$account, $destinationAccount];
+        }
+        Log::debug('Unused fallback');
+        return [$sourceAccount, $destinationAccount];
+    }
+
+    /**
      * @param  string  $type
      * @param  TransactionCurrency|null  $currency
      * @param  Account  $source
@@ -421,6 +470,7 @@ class TransactionJournalFactory
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
         Log::debug('Now in getCurrency()');
+        /** @var Preference|null $preference */
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && null === $currency) {
             // return user's default:
@@ -502,13 +552,7 @@ class TransactionJournalFactory
      */
     private function forceTrDelete(Transaction $transaction): void
     {
-        try {
-            $transaction->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            Log::error('Could not delete negative transaction.');
-        }
+        $transaction->delete();
     }
 
     /**
@@ -560,8 +604,13 @@ class TransactionJournalFactory
             'name'    => $field,
             'data'    => (string)($data[$field] ?? ''),
         ];
+        if ($data[$field] instanceof Carbon) {
+            $data[$field]->setTimezone(config('app.timezone'));
+            Log::debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
+            $set['data'] = $data[$field]->format('Y-m-d H:i:s');
+        }
 
-        //Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
+        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
 
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);
@@ -577,22 +626,5 @@ class TransactionJournalFactory
         if (true === $errorOnHash) {
             Log::info('Will trigger duplication alert for this journal.');
         }
-    }
-
-    /**
-     * Set the user.
-     *
-     * @param  User  $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->currencyRepository->setUser($this->user);
-        $this->tagFactory->setUser($user);
-        $this->billRepository->setUser($this->user);
-        $this->budgetRepository->setUser($this->user);
-        $this->categoryRepository->setUser($this->user);
-        $this->piggyRepository->setUser($this->user);
-        $this->accountRepository->setUser($this->user);
     }
 }

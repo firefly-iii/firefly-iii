@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Date.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Binder;
 
 use Carbon\Carbon;
-use Exception;
+use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use Illuminate\Routing\Route;
 use Log;
@@ -35,8 +36,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Date implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return Carbon
      * @throws NotFoundHttpException
@@ -71,9 +72,10 @@ class Date implements BinderInterface
 
         try {
             $result = new Carbon($value);
-        } catch (Exception $e) { // @phpstan-ignore-line
-            Log::error(sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage()));
-            throw new NotFoundHttpException;
+        } catch (InvalidDateException $e) {
+            $message = sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage());
+            Log::error($message);
+            throw new NotFoundHttpException($message, $e);
         }
 
         return $result;

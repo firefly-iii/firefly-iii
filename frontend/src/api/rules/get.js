@@ -23,7 +23,7 @@ import {api} from "boot/axios";
 export default class Get {
   get(identifier, date) {
     let url = '/api/v1/rules/' + identifier;
-    if(!date) {
+    if (!date) {
       return api.get(url);
     }
     return api.get(url, {params: {date: date}});

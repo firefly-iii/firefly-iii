@@ -49,7 +49,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 $this->ruleRepos = app(RuleRepositoryInterface::class);
@@ -62,13 +62,13 @@ class DeleteController extends Controller
     /**
      * Delete a given rule.
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return Factory|View
      */
     public function delete(Rule $rule)
     {
-        $subTitle = (string) trans('firefly.delete_rule', ['title' => $rule->title]);
+        $subTitle = (string)trans('firefly.delete_rule', ['title' => $rule->title]);
 
         // put previous url in session
         $this->rememberPreviousUrl('rules.delete.url');
@@ -79,7 +79,7 @@ class DeleteController extends Controller
     /**
      * Actually destroy the given rule.
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return RedirectResponse
      */
@@ -88,10 +88,9 @@ class DeleteController extends Controller
         $title = $rule->title;
         $this->ruleRepos->destroy($rule);
 
-        session()->flash('success', (string) trans('firefly.deleted_rule', ['title' => $title]));
+        session()->flash('success', (string)trans('firefly.deleted_rule', ['title' => $title]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUrl('rules.delete.url'));
     }
-
 }

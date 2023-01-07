@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -40,44 +40,46 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.name"
-                  :error="hasSubmissionErrors.name"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="name" :label="$t('form.name')"
-                  outlined/>
+                  v-model="name"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.name" :error-message="submissionErrors.name" :label="$t('form.name')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.date"
-                  :error="hasSubmissionErrors.date"
-                  bottom-slots :disable="disabledInput" type="date" v-model="date" :label="$t('form.date')"
-                  hint="The next date you expect the subscription to hit"
-                  outlined/>
+                  v-model="date"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.date" :error-message="submissionErrors.date" :label="$t('form.date')" bottom-slots hint="The next date you expect the subscription to hit"
+                  outlined
+                  type="date"/>
               </div>
             </div>
             <div class="row">
               <div class="col-6 q-mb-xs q-pr-xs">
                 <q-input
-                  :error-message="submissionErrors.amount_min"
-                  :error="hasSubmissionErrors.amount_min"
-                  bottom-slots :disable="disabledInput" type="number" v-model="amount_min" :label="$t('form.amount_min')"
-                  outlined/>
+                  v-model="amount_min"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.amount_min" :error-message="submissionErrors.amount_min" :label="$t('form.amount_min')" bottom-slots
+                  outlined
+                  type="number"/>
               </div>
               <div class="col-6 q-mb-xs q-pl-xs">
                 <q-input
-                  :error-message="submissionErrors.amount_max"
+                  v-model="amount_max"
+                  :disable="disabledInput"
                   :error="hasSubmissionErrors.amount_max"
-                  :rules="[ val => parseFloat(val) >= parseFloat(amount_min) || 'Must be more than minimum amount']"
-                  bottom-slots :disable="disabledInput" type="number" v-model="amount_max" :label="$t('form.amount_max')"
-                  outlined/>
+                  :error-message="submissionErrors.amount_max" :label="$t('form.amount_max')" :rules="[ val => parseFloat(val) >= parseFloat(amount_min) || 'Must be more than minimum amount']" bottom-slots
+                  outlined
+                  type="number"/>
               </div>
               <div class="row">
                 <div class="col-12 q-mb-xs">
                   <q-select
-                    :error-message="submissionErrors.repeat_freq"
+                    v-model="repeat_freq"
                     :error="hasSubmissionErrors.repeat_freq"
-                    outlined v-model="repeat_freq" :options="repeatFrequencies" label="Outlined"/>
+                    :error-message="submissionErrors.repeat_freq" :options="repeatFrequencies" label="Outlined" outlined/>
                 </div>
               </div>
             </div>
@@ -97,9 +99,11 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label label="Return here to create another one"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
+                            left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" left-label :disable="!doReturnHere || disabledInput" label="Reset form after submission"/>
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                            left-label/>
               </div>
             </div>
           </q-card-section>

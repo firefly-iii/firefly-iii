@@ -25,6 +25,7 @@ export default class Get {
     let url = '/api/v1/bills/' + identifier;
     return api.get(url);
   }
+
   transactions(identifier, page, cacheKey) {
     let url = '/api/v1/bills/' + identifier + '/transactions';
     return api.get(url, {params: {page: page, cache: cacheKey}});

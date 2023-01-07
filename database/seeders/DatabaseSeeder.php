@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DatabaseSeeder.php
  * Copyright (c) 2019 james@firefly-iii.org.
@@ -41,5 +42,6 @@ class DatabaseSeeder extends Seeder
         $this->call(LinkTypeSeeder::class);
         $this->call(ConfigSeeder::class);
         $this->call(UserRoleSeeder::class);
+        $this->call(ExchangeRateSeeder::class);
     }
 }

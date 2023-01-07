@@ -33,20 +33,18 @@ class PreferenceTransformer extends AbstractTransformer
     /**
      * Transform the preference
      *
-     * @param Preference $preference
+     * @param  Preference  $preference
      *
      * @return array
      */
     public function transform(Preference $preference): array
     {
         return [
-            'id'         => (int) $preference->id,
+            'id'         => (int)$preference->id,
             'created_at' => $preference->created_at->toAtomString(),
             'updated_at' => $preference->updated_at->toAtomString(),
             'name'       => $preference->name,
             'data'       => $preference->data,
         ];
-
     }
-
 }

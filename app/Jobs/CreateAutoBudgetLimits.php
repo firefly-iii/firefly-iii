@@ -43,7 +43,10 @@ use Log;
  */
 class CreateAutoBudgetLimits implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private Carbon $date;
 
@@ -52,7 +55,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon|null $date
+     * @param  Carbon|null  $date
      */
     public function __construct(?Carbon $date)
     {
@@ -80,7 +83,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget $autoBudget
+     * @param  AutoBudget  $autoBudget
      *
      * @throws FireflyException
      */
@@ -130,7 +133,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // find budget limit:
         $budgetLimit = $this->findBudgetLimit($autoBudget->budget, $start, $end);
 
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_RESET === (int) $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_RESET === (int)$autoBudget->auto_budget_type) {
             // that's easy: create one.
             // do nothing else.
             $this->createBudgetLimit($autoBudget, $start, $end);
@@ -139,7 +142,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             return;
         }
 
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ROLLOVER === (int) $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ROLLOVER === (int)$autoBudget->auto_budget_type) {
             // budget limit exists already,
             $this->createRollover($autoBudget);
             Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
@@ -150,46 +153,49 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget $autoBudget
+     * @param  AutoBudget  $autoBudget
      *
      * @return bool
      * @throws FireflyException
      */
     private function isMagicDay(AutoBudget $autoBudget): bool
     {
-        switch ($autoBudget->period) {
-            default:
-                throw new FireflyException(sprintf('isMagicDay() can\'t handle period "%s"', $autoBudget->period));
-            case 'daily':
-                // every day is magic!
-                return true;
-            case 'weekly':
-                // fire on Monday.
-                return $this->date->isMonday();
-            case 'monthly':
-                return 1 === $this->date->day;
-            case 'quarterly':
-                $format = 'm-d';
-                $value  = $this->date->format($format);
-
-                return in_array($value, ['01-01', '04-01', '07-01', '10-01'], true);
-            case 'half_year':
-                $format = 'm-d';
-                $value  = $this->date->format($format);
-
-                return in_array($value, ['01-01', '07-01'], true);
-            case 'yearly':
-                $format = 'm-d';
-                $value  = $this->date->format($format);
-
-                return '01-01' === $value;
+        if ('daily' === $autoBudget->period) {
+            return true;
         }
+
+        if ('weekly' === $autoBudget->period) {
+            return $this->date->isMonday();
+        }
+
+        if ('monthly' === $autoBudget->period) {
+            return 1 === $this->date->day;
+        }
+        if ('quarterly' === $autoBudget->period) {
+            $format = 'm-d';
+            $value  = $this->date->format($format);
+
+            return in_array($value, ['01-01', '04-01', '07-01', '10-01'], true);
+        }
+        if ('half_year' === $autoBudget->period) {
+            $format = 'm-d';
+            $value  = $this->date->format($format);
+
+            return in_array($value, ['01-01', '07-01'], true);
+        }
+        if ('yearly' === $autoBudget->period) {
+            $format = 'm-d';
+            $value  = $this->date->format($format);
+
+            return '01-01' === $value;
+        }
+        throw new FireflyException(sprintf('isMagicDay() can\'t handle period "%s"', $autoBudget->period));
     }
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Budget  $budget
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return BudgetLimit|null
      */
@@ -211,10 +217,10 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget  $autoBudget
-     * @param Carbon      $start
-     * @param Carbon      $end
-     * @param string|null $amount
+     * @param  AutoBudget  $autoBudget
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  string|null  $amount
      */
     private function createBudgetLimit(AutoBudget $autoBudget, Carbon $start, Carbon $end, ?string $amount = null)
     {
@@ -222,7 +228,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         if (null !== $amount) {
             Log::debug(sprintf('Amount is overruled and will be set to %s', $amount));
         }
-        $budgetLimit = new BudgetLimit;
+        $budgetLimit = new BudgetLimit();
         $budgetLimit->budget()->associate($autoBudget->budget);
         $budgetLimit->transactionCurrency()->associate($autoBudget->transactionCurrency);
         $budgetLimit->start_date = $start;
@@ -236,7 +242,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget $autoBudget
+     * @param  AutoBudget  $autoBudget
      *
      * @throws FireflyException
      */
@@ -277,17 +283,22 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $repository = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
         $spent       = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
-        $currencyId  = (int) $autoBudget->transaction_currency_id;
+        $currencyId  = (int)$autoBudget->transaction_currency_id;
         $spentAmount = $spent[$currencyId]['sum'] ?? '0';
         Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
 
-        // previous budget limit + this period + spent
-        $totalAmount = bcadd(bcadd($budgetLimit->amount, $autoBudget->amount), $spentAmount);
-        Log::debug(sprintf('Total amount for current budget period will be %s', $totalAmount));
+        // if you spent more in previous budget period, than whatever you had previous budget period, the amount resets
+        // previous budget limit + spent
+        $budgetLeft  = bcadd($budgetLimit->amount, $spentAmount);
+        $totalAmount = $autoBudget->amount;
+        Log::debug(sprintf('Total amount left for previous budget period is %s', $budgetLeft));
 
-        if (1 !== bccomp($totalAmount, '0')) {
-            Log::info(sprintf('The total amount is negative, so it will be reset to %s.', $totalAmount));
-            $totalAmount = $autoBudget->amount;
+        if (-1 !== bccomp('0', $budgetLeft)) {
+            Log::info(sprintf('The amount left is negative, so it will be reset to %s.', $totalAmount));
+        }
+        if (1 !== bccomp('0', $budgetLeft)) {
+            $totalAmount = bcadd($budgetLeft, $budgetLimit->amount);
+            Log::info(sprintf('The amount left is positive, so the new amount will be %s.', $totalAmount));
         }
 
         // create budget limit:
@@ -296,7 +307,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      */
     public function setDate(Carbon $date): void
     {

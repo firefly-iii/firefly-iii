@@ -58,8 +58,8 @@ class UpdateController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/webhooks/updateWebhook
      *
-     * @param Webhook       $webhook
-     * @param UpdateRequest $request
+     * @param  Webhook  $webhook
+     * @param  UpdateRequest  $request
      *
      * @return JsonResponse
      */
@@ -76,5 +76,4 @@ class UpdateController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

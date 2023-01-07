@@ -52,8 +52,8 @@ export default {
     }
   },
   created() {
-      this.id = parseInt(this.$route.params.id);
-      this.getPiggyBank();
+    this.id = parseInt(this.$route.params.id);
+    this.getPiggyBank();
   },
   methods: {
     onRequest: function (payload) {

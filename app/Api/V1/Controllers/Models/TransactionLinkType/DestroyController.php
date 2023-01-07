@@ -70,7 +70,7 @@ class DestroyController extends Controller
      *
      * Delete the resource.
      *
-     * @param LinkType $linkType
+     * @param  LinkType  $linkType
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -86,5 +86,4 @@ class DestroyController extends Controller
 
         return response()->json([], 204);
     }
-
 }

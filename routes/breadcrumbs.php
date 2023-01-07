@@ -40,6 +40,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
+use FireflyIII\Models\Webhook;
 use FireflyIII\User;
 use Illuminate\Support\Arr;
 
@@ -1134,13 +1135,13 @@ try {
                 $title = limitStringLength((string) $group->title);
             }
             if ('opening balance' === $type) {
-// See reference nr. 1
+                // TODO link to account
                 $breadcrumbs->push($title, route('transactions.show', [$group->id]));
 
                 return;
             }
             if ('reconciliation' === $type) {
-// See reference nr. 2
+                // TODO link to account
                 $breadcrumbs->push($title, route('transactions.show', [$group->id]));
 
                 return;
@@ -1166,7 +1167,7 @@ try {
     Breadcrumbs::for(
         'transactions.mass.edit',
         static function (Generator $breadcrumbs, array $journals): void {
-            if (!empty($journals)) {
+            if (0 !== count($journals)) {
                 $objectType = strtolower(reset($journals)['transaction_type_type']);
                 $breadcrumbs->parent('transactions.index', $objectType);
                 $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', ['']));
@@ -1190,7 +1191,7 @@ try {
     Breadcrumbs::for(
         'transactions.bulk.edit',
         static function (Generator $breadcrumbs, array $journals): void {
-            if (!empty($journals)) {
+            if (0 !== count($journals)) {
                 $ids   = Arr::pluck($journals, 'transaction_journal_id');
                 $first = reset($journals);
                 $breadcrumbs->parent('transactions.index', strtolower($first['transaction_type_type']));
@@ -1228,6 +1229,45 @@ try {
         }
     );
 
+    // webhooks
+    Breadcrumbs::for(
+        'webhooks.index',
+        static function (Generator $breadcrumbs): void {
+            $breadcrumbs->parent('index');
+            $breadcrumbs->push(trans('firefly.webhooks_breadcrumb'), route('webhooks.index'));
+        }
+    );
+    Breadcrumbs::for(
+        'webhooks.create',
+        static function (Generator $breadcrumbs): void {
+            $breadcrumbs->parent('webhooks.index');
+            $breadcrumbs->push(trans('firefly.webhooks_create_breadcrumb'), route('webhooks.create'));
+        }
+    );
+
+    Breadcrumbs::for(
+        'webhooks.show',
+        static function (Generator $breadcrumbs, Webhook $webhook) {
+            $breadcrumbs->parent('webhooks.index');
+            $breadcrumbs->push(limitStringLength($webhook->title), route('webhooks.show', [$webhook->id]));
+        }
+    );
+
+    Breadcrumbs::for(
+        'webhooks.delete',
+        static function (Generator $breadcrumbs, Webhook $webhook) {
+            $breadcrumbs->parent('webhooks.show', $webhook);
+            $breadcrumbs->push(trans('firefly.delete_webhook', ['title' => limitStringLength($webhook->title)]), route('webhooks.delete', [$webhook->id]));
+        }
+    );
+
+    Breadcrumbs::for(
+        'webhooks.edit',
+        static function (Generator $breadcrumbs, Webhook $webhook) {
+            $breadcrumbs->parent('webhooks.show', $webhook);
+            $breadcrumbs->push(trans('firefly.edit_webhook', ['title' => limitStringLength($webhook->title)]), route('webhooks.edit', [$webhook->id]));
+        }
+    );
 } catch (DuplicateBreadcrumbException $e) {
     // @ignoreException
 }

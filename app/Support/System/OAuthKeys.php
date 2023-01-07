@@ -72,8 +72,8 @@ class OAuthKeys
         // better check if keys are in the database:
         if (app('fireflyconfig')->has(self::PRIVATE_KEY) && app('fireflyconfig')->has(self::PUBLIC_KEY)) {
             try {
-                $privateKey = (string) app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
-                $publicKey  = (string) app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+                $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
+                $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
             } catch (ContainerExceptionInterface|NotFoundExceptionInterface|FireflyException $e) {
                 Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
@@ -125,8 +125,8 @@ class OAuthKeys
      */
     public static function restoreKeysFromDB(): bool
     {
-        $privateKey = (string) app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
-        $publicKey  = (string) app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+        $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
+        $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
         try {
             $privateContent = Crypt::decrypt($privateKey);
             $publicContent  = Crypt::decrypt($publicKey);
@@ -146,5 +146,4 @@ class OAuthKeys
         file_put_contents($public, $publicContent);
         return true;
     }
-
 }

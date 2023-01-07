@@ -33,7 +33,7 @@ use Log;
  */
 class ParseDateString
 {
-    private $keywords
+    private array $keywords
         = [
             'today',
             'yesterday',
@@ -49,7 +49,7 @@ class ParseDateString
         ];
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return bool
      */
@@ -73,13 +73,14 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return Carbon
      * @throws FireflyException
      */
     public function parseDate(string $date): Carbon
     {
+        Log::debug(sprintf('parseDate("%s")', $date));
         $date = strtolower($date);
         // parse keywords:
         if (in_array($date, $this->keywords, true)) {
@@ -94,7 +95,6 @@ class ParseDateString
 
         // if + or -:
         if (str_starts_with($date, '+') || str_starts_with($date, '-')) {
-
             return $this->parseRelativeDate($date);
         }
         if ('xxxx-xx-xx' === strtolower($date)) {
@@ -114,15 +114,15 @@ class ParseDateString
             return new Carbon('1984-09-17');
         }
         // maybe a year, nothing else?
-        if (4 === strlen($date) && is_numeric($date) && (int) $date > 1000 && (int) $date <= 3000) {
+        if (4 === strlen($date) && is_numeric($date) && (int)$date > 1000 && (int)$date <= 3000) {
             return new Carbon(sprintf('%d-01-01', $date));
         }
 
-        throw new FireflyException(sprintf('[d]Not a recognised date format: "%s"', $date));
+        throw new FireflyException(sprintf('[d] Not a recognised date format: "%s"', $date));
     }
 
     /**
-     * @param string $keyword
+     * @param  string  $keyword
      *
      * @return Carbon
      */
@@ -146,7 +146,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return Carbon
      */
@@ -156,7 +156,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return Carbon
      */
@@ -172,7 +172,8 @@ class ParseDateString
                 'm' => 'subMonths',
                 'q' => 'subQuarters',
                 'y' => 'subYears',
-            ], [
+            ],
+            [
                 'd' => 'addDays',
                 'w' => 'addWeeks',
                 'm' => 'addMonths',
@@ -194,7 +195,7 @@ class ParseDateString
             }
             $direction = str_starts_with($part, '+') ? 1 : 0;
             $period    = $part[strlen($part) - 1];
-            $number    = (int) substr($part, 1, -1);
+            $number    = (int)substr($part, 1, -1);
             if (!array_key_exists($period, $functions[$direction])) {
                 Log::error(sprintf('No method for direction %d and period "%s".', $direction, $period));
                 continue;
@@ -203,14 +204,13 @@ class ParseDateString
             Log::debug(sprintf('Will now do %s(%d) on %s', $func, $number, $today->format('Y-m-d')));
             $today->$func($number);
             Log::debug(sprintf('Resulting date is %s', $today->format('Y-m-d')));
-
         }
 
         return $today;
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return array
      */
@@ -247,7 +247,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return bool
      */
@@ -268,7 +268,7 @@ class ParseDateString
     /**
      * format of string is xxxx-xx-DD
      *
-     * @param string $date
+     * @param  string  $date
      *
      * @return array
      */
@@ -282,7 +282,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return bool
      */
@@ -303,7 +303,7 @@ class ParseDateString
     /**
      * format of string is xxxx-MM-xx
      *
-     * @param string $date
+     * @param  string  $date
      *
      * @return array
      */
@@ -318,7 +318,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return bool
      */
@@ -339,7 +339,7 @@ class ParseDateString
     /**
      * format of string is YYYY-xx-xx
      *
-     * @param string $date
+     * @param  string  $date
      *
      * @return array
      */
@@ -354,7 +354,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return bool
      */
@@ -375,7 +375,7 @@ class ParseDateString
     /**
      * format of string is xxxx-MM-DD
      *
-     * @param string $date
+     * @param  string  $date
      *
      * @return array
      */
@@ -391,7 +391,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return bool
      */
@@ -412,7 +412,7 @@ class ParseDateString
     /**
      * format of string is YYYY-xx-DD
      *
-     * @param string $date
+     * @param  string  $date
      *
      * @return array
      */
@@ -428,7 +428,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
+     * @param  string  $date
      *
      * @return bool
      */
@@ -449,7 +449,7 @@ class ParseDateString
     /**
      * format of string is YYYY-MM-xx
      *
-     * @param string $date
+     * @param  string  $date
      *
      * @return array
      */
@@ -463,5 +463,4 @@ class ParseDateString
             'month' => $parts[1],
         ];
     }
-
 }

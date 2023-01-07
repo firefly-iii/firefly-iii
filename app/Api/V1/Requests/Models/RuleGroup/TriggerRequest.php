@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TriggerRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * @return array
@@ -49,7 +50,7 @@ class TriggerRequest extends FormRequest
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
      *
      * @return Carbon|null
      */
@@ -76,5 +77,4 @@ class TriggerRequest extends FormRequest
             'end'   => 'date|after_or_equal:start',
         ];
     }
-
 }

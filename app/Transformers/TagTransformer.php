@@ -31,13 +31,12 @@ use FireflyIII\Models\Tag;
  */
 class TagTransformer extends AbstractTransformer
 {
-
     /**
      * Transform a tag.
      *
-     * See reference nr. 21
+     * TODO add spent, earned, transferred, etc.
      *
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return array
      */
@@ -52,11 +51,11 @@ class TagTransformer extends AbstractTransformer
         if (null !== $location) {
             $latitude  = $location->latitude;
             $longitude = $location->longitude;
-            $zoomLevel = (int) $location->zoom_level;
+            $zoomLevel = (int)$location->zoom_level;
         }
 
         return [
-            'id'          => (int) $tag->id,
+            'id'          => (int)$tag->id,
             'created_at'  => $tag->created_at->toAtomString(),
             'updated_at'  => $tag->updated_at->toAtomString(),
             'tag'         => $tag->tag,
@@ -68,10 +67,9 @@ class TagTransformer extends AbstractTransformer
             'links'       => [
                 [
                     'rel' => 'self',
-                    'uri' => '/tags/' . $tag->id,
+                    'uri' => '/tags/'.$tag->id,
                 ],
             ],
         ];
     }
-
 }

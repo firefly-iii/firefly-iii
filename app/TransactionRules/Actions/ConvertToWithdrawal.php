@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Log;
@@ -43,7 +45,7 @@ class ConvertToWithdrawal implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -55,6 +57,12 @@ class ConvertToWithdrawal implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        if ($groupCount > 1) {
+            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
+            return false;
+        }
+
         $type = $journal['transaction_type_type'];
         if (TransactionType::WITHDRAWAL === $type) {
             Log::error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
@@ -64,11 +72,15 @@ class ConvertToWithdrawal implements ActionInterface
 
         if (TransactionType::DEPOSIT === $type) {
             Log::debug('Going to transform a deposit to a withdrawal.');
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::WITHDRAWAL));
 
             return $this->convertDepositArray($journal);
         }
         if (TransactionType::TRANSFER === $type) {
             Log::debug('Going to transform a transfer to a withdrawal.');
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
 
             return $this->convertTransferArray($journal);
         }
@@ -109,14 +121,13 @@ class ConvertToWithdrawal implements ActionInterface
         Log::debug('Converted deposit to withdrawal.');
 
         return true;
-
     }
 
     /**
      * Input is a transfer from A to B.
      * Output is a withdrawal from A to C.
      *
-     * @param array $journal
+     * @param  array  $journal
      *
      * @return bool
      * @throws FireflyException

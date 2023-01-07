@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Bill;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Attachment;
@@ -41,6 +42,8 @@ use Illuminate\View\View;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -63,7 +66,7 @@ class ShowController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
+                app('view')->share('title', (string)trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->repository = app(BillRepositoryInterface::class);
 
@@ -75,8 +78,8 @@ class ShowController extends Controller
     /**
      * Rescan bills for transactions.
      *
-     * @param Request $request
-     * @param Bill    $bill
+     * @param  Request  $request
+     * @param  Bill  $bill
      *
      * @return RedirectResponse|Redirector
      */
@@ -84,17 +87,17 @@ class ShowController extends Controller
     {
         $total = 0;
         if (false === $bill->active) {
-            $request->session()->flash('warning', (string) trans('firefly.cannot_scan_inactive_bill'));
+            $request->session()->flash('warning', (string)trans('firefly.cannot_scan_inactive_bill'));
 
             return redirect(route('bills.show', [$bill->id]));
         }
-        $set = new Collection;
+        $set = new Collection();
         if (true === $bill->active) {
             $set   = $this->repository->getRulesForBill($bill);
             $total = 0;
         }
         if (0 === $set->count()) {
-            $request->session()->flash('error', (string) trans('firefly.no_rules_for_bill'));
+            $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
 
             return redirect(route('bills.show', [$bill->id]));
         }
@@ -110,7 +113,7 @@ class ShowController extends Controller
         // file the rule(s)
         $ruleEngine->fire();
 
-        $request->session()->flash('success', (string) trans_choice('firefly.rescanned_bill', $total));
+        $request->session()->flash('success', (string)trans_choice('firefly.rescanned_bill', $total));
         app('preferences')->mark();
 
         return redirect(route('bills.show', [$bill->id]));
@@ -119,13 +122,13 @@ class ShowController extends Controller
     /**
      * Show a bill.
      *
-     * @param Request $request
-     * @param Bill    $bill
+     * @param  Request  $request
+     * @param  Bill  $bill
      *
      * @return Factory|View
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Bill $bill)
     {
@@ -137,8 +140,8 @@ class ShowController extends Controller
         /** @var Carbon $end */
         $end            = session('end');
         $year           = $start->year;
-        $page           = (int) $request->get('page');
-        $pageSize       = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page           = (int)$request->get('page');
+        $pageSize       = (int)app('preferences')->get('listPageSize', 50)->data;
         $yearAverage    = $this->repository->getYearAverage($bill, $start);
         $overallAverage = $this->repository->getOverallAverage($bill);
         $manager        = new Manager();
@@ -167,7 +170,7 @@ class ShowController extends Controller
 
         // transform any attachments as well.
         $collection  = $this->repository->getAttachments($bill);
-        $attachments = new Collection;
+        $attachments = new Collection();
 
 
         if ($collection->count() > 0) {
@@ -183,5 +186,4 @@ class ShowController extends Controller
 
         return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
-
 }

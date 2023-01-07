@@ -58,10 +58,11 @@ class ChangesForV550 extends Migration
 
         // expand budget / transaction journal table.
         Schema::table(
-            'budget_transaction_journal', function (Blueprint $table) {
-            $table->dropForeign('budget_id_foreign');
-            $table->dropColumn('budget_limit_id');
-        }
+            'budget_transaction_journal',
+            function (Blueprint $table) {
+                $table->dropForeign('budget_id_foreign');
+                $table->dropColumn('budget_limit_id');
+            }
         );
 
         // drop failed jobs table.
@@ -91,40 +92,43 @@ class ChangesForV550 extends Migration
         Schema::dropIfExists('jobs');
         // this is the NEW table
         Schema::create(
-            'jobs', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('queue')->index();
-            $table->longText('payload');
-            $table->unsignedTinyInteger('attempts');
-            $table->unsignedInteger('reserved_at')->nullable();
-            $table->unsignedInteger('available_at');
-            $table->unsignedInteger('created_at');
-        }
+            'jobs',
+            function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('queue')->index();
+                $table->longText('payload');
+                $table->unsignedTinyInteger('attempts');
+                $table->unsignedInteger('reserved_at')->nullable();
+                $table->unsignedInteger('available_at');
+                $table->unsignedInteger('created_at');
+            }
         );
         // drop failed jobs table.
         Schema::dropIfExists('failed_jobs');
 
         // create new failed_jobs table.
         Schema::create(
-            'failed_jobs', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('uuid')->unique();
-            $table->text('connection');
-            $table->text('queue');
-            $table->longText('payload');
-            $table->longText('exception');
-            $table->timestamp('failed_at')->useCurrent();
-        }
+            'failed_jobs',
+            function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('uuid')->unique();
+                $table->text('connection');
+                $table->text('queue');
+                $table->longText('payload');
+                $table->longText('exception');
+                $table->timestamp('failed_at')->useCurrent();
+            }
         );
 
         // update budget / transaction journal table.
         Schema::table(
-            'budget_transaction_journal', function (Blueprint $table) {
-            if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
-                $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
-                $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
+            'budget_transaction_journal',
+            function (Blueprint $table) {
+                if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+                    $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
+                    $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
+                }
             }
-        }
         );
 
         // append budget limits table.

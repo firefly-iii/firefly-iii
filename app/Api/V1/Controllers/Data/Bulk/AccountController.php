@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data\Bulk;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Bulk\MoveTransactionsRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -59,7 +58,7 @@ class AccountController extends Controller
     /**
      * This endpoint is deprecated and not documented.
      *
-     * @param MoveTransactionsRequest $request
+     * @param  MoveTransactionsRequest  $request
      *
      * @return JsonResponse
      * @deprecated
@@ -75,7 +74,5 @@ class AccountController extends Controller
         $service->moveTransactions($original, $destination);
 
         return response()->json([], 204);
-
     }
-
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Tag;
@@ -41,7 +42,7 @@ trait ModelInformation
     /**
      * Get actions based on a bill.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return array
      */
@@ -57,10 +58,11 @@ trait ModelInformation
                     'count'      => 1,
                 ]
             )->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
             $result = 'Could not render view. See log files.';
+            throw new FireflyException($result, 0, $e);
         }
 
         return [$result];
@@ -78,14 +80,13 @@ trait ModelInformation
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         // types of liability:
-        $debt     = $repository->getAccountTypeByType(AccountType::DEBT);
-        $loan     = $repository->getAccountTypeByType(AccountType::LOAN);
-        $mortgage = $repository->getAccountTypeByType(AccountType::MORTGAGE);
-        /** @noinspection NullPointerExceptionInspection */
+        $debt           = $repository->getAccountTypeByType(AccountType::DEBT);
+        $loan           = $repository->getAccountTypeByType(AccountType::LOAN);
+        $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         $liabilityTypes = [
-            $debt->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
-            $loan->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
-            $mortgage->id => (string) trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
+            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
+            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
+            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
         ];
         asort($liabilityTypes);
 
@@ -100,7 +101,7 @@ trait ModelInformation
     {
         $roles = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string) trans(sprintf('firefly.account_role_%s', $role));
+            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
         }
 
         return $roles;
@@ -109,19 +110,18 @@ trait ModelInformation
     /**
      * Create fake triggers to match the bill's properties
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return array
      */
     protected function getTriggersForBill(Bill $bill): array // get info and augument
     {
-        // See reference nr. 39
+        // TODO duplicate code
         $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
-                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
@@ -146,11 +146,11 @@ trait ModelInformation
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) { // @phpstan-ignore-line
-
+            } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
+                throw new FireflyException('Could not render trigger', 0, $e);
             }
             if ('' !== $string) {
                 $result[] = $string;
@@ -161,7 +161,7 @@ trait ModelInformation
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return array
      */
@@ -172,8 +172,7 @@ trait ModelInformation
         $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-
-                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
@@ -262,11 +261,11 @@ trait ModelInformation
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) { // @phpstan-ignore-line
-
+            } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
+                throw new FireflyException('Could not render trigger', 0, $e);
             }
             if ('' !== $string) {
                 $result[] = $string;

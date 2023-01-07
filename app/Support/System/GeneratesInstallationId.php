@@ -53,10 +53,9 @@ trait GeneratesInstallationId
 
         if (null === $config) {
             $uuid4    = Uuid::uuid4();
-            $uniqueId = (string) $uuid4;
+            $uniqueId = (string)$uuid4;
             Log::info(sprintf('Created Firefly III installation ID %s', $uniqueId));
             app('fireflyconfig')->set('installation_id', $uniqueId);
         }
     }
-
 }

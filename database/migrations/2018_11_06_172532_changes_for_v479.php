@@ -40,9 +40,10 @@ class ChangesForV479 extends Migration
     public function down()
     {
         Schema::table(
-            'transaction_currencies', static function (Blueprint $table) {
-            $table->dropColumn(['enabled']);
-        }
+            'transaction_currencies',
+            static function (Blueprint $table) {
+                $table->dropColumn(['enabled']);
+            }
         );
     }
 

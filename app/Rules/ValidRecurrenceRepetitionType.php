@@ -32,7 +32,6 @@ use Illuminate\Contracts\Validation\Rule;
  */
 class ValidRecurrenceRepetitionType implements Rule
 {
-
     /**
      * Get the validation error message.
      *
@@ -40,27 +39,27 @@ class ValidRecurrenceRepetitionType implements Rule
      */
     public function message(): string
     {
-        return (string) trans('validation.valid_recurrence_rep_type');
+        return (string)trans('validation.valid_recurrence_rep_type');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      *
      */
     public function passes($attribute, $value): bool
     {
-        $value = (string) $value;
+        $value = (string)$value;
         if ('daily' === $value) {
             return true;
         }
         //monthly,17
         //ndom,3,7
-        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
+        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'], true)) {
             return true;
         }
         if (str_starts_with($value, 'monthly')) {

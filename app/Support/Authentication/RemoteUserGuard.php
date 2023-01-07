@@ -48,8 +48,7 @@ class RemoteUserGuard implements Guard
      * @param  UserProvider  $provider
      * @param  Application  $app
      */
-    // @phpstan-ignore-next-line
-    public function __construct(UserProvider $provider, Application $app) // @phpstan-ignore-line
+    public function __construct(UserProvider $provider, Application $app)
     {
         /** @var Request $request */
         $request = $app->get('request');
@@ -144,7 +143,7 @@ class RemoteUserGuard implements Guard
     /**
      * @inheritDoc
      */
-    public function hasUser()
+    public function hasUser(): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         // TODO: Implement hasUser() method.

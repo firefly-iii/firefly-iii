@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AutoCompleteController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -29,6 +30,4 @@ use FireflyIII\Http\Controllers\Controller;
  */
 class AutoCompleteController extends Controller
 {
-
-
 }

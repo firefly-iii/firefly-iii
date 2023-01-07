@@ -22,7 +22,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Events;
 
 use FireflyIII\Models\Account;
@@ -40,11 +39,10 @@ class UpdatedAccount extends Event
     /**
      * Create a new event instance.
      *
-     * @param Account $account
+     * @param  Account  $account
      */
     public function __construct(Account $account)
     {
         $this->account = $account;
     }
-
 }

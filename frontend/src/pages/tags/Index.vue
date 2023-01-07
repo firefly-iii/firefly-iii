@@ -23,7 +23,7 @@
     <q-card>
       <q-card-section>
         <span v-for="tag in tags">
-              <q-badge outline class="q-ma-xs" color="blue">
+              <q-badge class="q-ma-xs" color="blue" outline>
                 <router-link :to="{ name: 'tags.show', params: {id: tag.id} }">
                 {{ tag.attributes.tag }}
                 </router-link>
@@ -32,24 +32,24 @@
         </span>
       </q-card-section>
     </q-card>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
         label="Actions"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'tags.create'}" icon="fas fa-exchange-alt" label="New tag"/>
+        <q-fab-action :to="{ name: 'tags.create'}" color="primary" icon="fas fa-exchange-alt" label="New tag" square/>
       </q-fab>
     </q-page-sticky>
   </q-page>
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import List from "../../api/tags/list";
 
 export default {
@@ -71,23 +71,26 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
   },
   created() {
   },
   mounted() {
-    if (null === this.getRange.start || null === this.getRange.end) {
+    if (null === this.store.getRange.start || null === this.store.getRange.end) {
       // subscribe, then update:
-      const $store = useStore();
-      $store.subscribe((mutation, state) => {
-        if ('fireflyiii/setRange' === mutation.type) {
-          this.range = {start: mutation.payload.start, end: mutation.payload.end};
-          this.triggerUpdate();
+      this.store.$onAction(
+        ({name, $store, args, after, onError,}) => {
+          after((result) => {
+            if (name === 'setRange') {
+              this.range = result;
+              this.triggerUpdate();
+            }
+          })
         }
-      });
+      )
     }
-    if (null !== this.getRange.start && null !== this.getRange.end) {
-      this.range = {start: this.getRange.start, end: this.getRange.end};
+    if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
+      this.range = {start: this.store.getRange.start, end: this.store.getRange.end};
       this.triggerUpdate();
     }
   },

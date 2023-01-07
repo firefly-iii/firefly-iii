@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CategoryList.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,8 +34,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CategoryList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return Collection
      * @throws NotFoundHttpException
@@ -50,8 +51,8 @@ class CategoryList implements BinderInterface
             }
 
             $list = array_unique(array_map('\intval', explode(',', $value)));
-            if (empty($list)) {
-                throw new NotFoundHttpException;
+            if (0 === count($list)) {
+                throw new NotFoundHttpException();
             }
 
             /** @var Collection $collection */
@@ -61,13 +62,13 @@ class CategoryList implements BinderInterface
 
             // add empty category if applicable.
             if (in_array(0, $list, true)) {
-                $collection->push(new Category);
+                $collection->push(new Category());
             }
 
             if ($collection->count() > 0) {
                 return $collection;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

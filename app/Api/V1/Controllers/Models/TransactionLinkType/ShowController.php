@@ -46,7 +46,6 @@ class ShowController extends Controller
     use TransactionFilter;
 
     private LinkTypeRepositoryInterface $repository;
-    private UserRepositoryInterface     $userRepository;
 
     /**
      * LinkTypeController constructor.
@@ -61,7 +60,6 @@ class ShowController extends Controller
                 /** @var User $user */
                 $user                 = auth()->user();
                 $this->repository     = app(LinkTypeRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -82,7 +80,7 @@ class ShowController extends Controller
     {
         // create some objects:
         $manager  = $this->getManager();
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->get();
@@ -91,7 +89,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($linkTypes, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.link_types.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.link_types.index').$this->buildParams());
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
@@ -101,7 +99,6 @@ class ShowController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -110,7 +107,7 @@ class ShowController extends Controller
      *
      * List single resource.
      *
-     * @param LinkType $linkType
+     * @param  LinkType  $linkType
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -125,6 +122,5 @@ class ShowController extends Controller
         $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

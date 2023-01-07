@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RuleServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -50,7 +51,7 @@ class RuleServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var RuleRepository $repository */
                 $repository = app(RuleRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }
 

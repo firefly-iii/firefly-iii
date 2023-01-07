@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\TransactionLink;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -69,9 +71,9 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
 
         $field                  = Field::createBasic('link_type_id', 'random-link-type-id');
@@ -80,7 +82,7 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('link_type_id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
 
         $field                  = Field::createBasic('link_type_name', 'random-link-type-name');
@@ -89,21 +91,20 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('link_type_name', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('inward_id', 'random-low-journal-id'));
         $configuration->addOptionalFieldSet('inward_id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('outward_id', 'random-high-journal-id'));
         $configuration->addOptionalFieldSet('outward_id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
         return $configuration->generateAll();
-
     }
 }

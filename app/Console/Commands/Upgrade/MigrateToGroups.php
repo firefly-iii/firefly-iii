@@ -37,6 +37,8 @@ use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * This command will take split transactions and migrate them to "transaction groups".
@@ -59,7 +61,7 @@ class MigrateToGroups extends Command
      *
      * @var string
      */
-    protected                             $signature = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
+    protected $signature = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int                           $count;
     private TransactionGroupFactory       $groupFactory;
@@ -129,14 +131,14 @@ class MigrateToGroups extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isMigrated(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -161,7 +163,7 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @throws Exception
      */
@@ -169,11 +171,9 @@ class MigrateToGroups extends Command
     {
         // double check transaction count.
         if ($journal->transactions->count() <= 2) {
-
             Log::debug(sprintf('Will not try to convert journal #%d because it has 2 or less transactions.', $journal->id));
 
             return;
-
         }
         Log::debug(sprintf('Will now try to convert journal #%d', $journal->id));
 
@@ -221,7 +221,6 @@ class MigrateToGroups extends Command
             $opposingTr = $this->findOpposingTransaction($journal, $transaction);
 
             if (null === $opposingTr) {
-
                 $this->error(
                     sprintf(
                         'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
@@ -230,7 +229,6 @@ class MigrateToGroups extends Command
                     )
                 );
                 continue;
-
             }
 
             // overrule journal category with transaction category.
@@ -307,7 +305,7 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Collection
      */
@@ -321,8 +319,8 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param Transaction        $transaction
+     * @param  TransactionJournal  $journal
+     * @param  Transaction  $transaction
      *
      * @return Transaction|null
      */
@@ -330,7 +328,7 @@ class MigrateToGroups extends Command
     {
         $set = $journal->transactions->filter(
             static function (Transaction $subject) use ($transaction) {
-                $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;  // intentional float
+                $amount     = (float)$transaction->amount * -1 === (float)$subject->amount;  // intentional float
                 $identifier = $transaction->identifier === $subject->identifier;
                 Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
                 Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
@@ -343,8 +341,8 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @param Transaction $left
-     * @param Transaction $right
+     * @param  Transaction  $left
+     * @param  Transaction  $right
      *
      * @return int|null
      */
@@ -353,21 +351,21 @@ class MigrateToGroups extends Command
         Log::debug('Now in getTransactionBudget()');
 
         // try to get a budget ID from the left transaction:
-        /** @var Budget $budget */
+        /** @var Budget|null $budget */
         $budget = $left->budgets()->first();
         if (null !== $budget) {
             Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
 
-            return (int) $budget->id;
+            return (int)$budget->id;
         }
 
         // try to get a budget ID from the right transaction:
-        /** @var Budget $budget */
+        /** @var Budget|null $budget */
         $budget = $right->budgets()->first();
         if (null !== $budget) {
             Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
 
-            return (int) $budget->id;
+            return (int)$budget->id;
         }
         Log::debug('Neither left or right have a budget, return NULL');
 
@@ -376,8 +374,8 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @param Transaction $left
-     * @param Transaction $right
+     * @param  Transaction  $left
+     * @param  Transaction  $right
      *
      * @return int|null
      */
@@ -386,21 +384,21 @@ class MigrateToGroups extends Command
         Log::debug('Now in getTransactionCategory()');
 
         // try to get a category ID from the left transaction:
-        /** @var Category $category */
+        /** @var Category|null $category */
         $category = $left->categories()->first();
         if (null !== $category) {
             Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
 
-            return (int) $category->id;
+            return (int)$category->id;
         }
 
         // try to get a category ID from the left transaction:
-        /** @var Category $category */
+        /** @var Category|null $category */
         $category = $right->categories()->first();
         if (null !== $category) {
             Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));
 
-            return (int) $category->id;
+            return (int)$category->id;
         }
         Log::debug('Neither left or right have a category, return NULL');
 
@@ -429,7 +427,7 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @param array $array
+     * @param  array  $array
      */
     private function giveGroup(array $array): void
     {

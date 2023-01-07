@@ -34,8 +34,8 @@ use FireflyIII\Support\Cronjobs\RecurringCronjob;
 trait CronRunner
 {
     /**
-     * @param bool   $force
-     * @param Carbon $date
+     * @param  bool  $force
+     * @param  Carbon  $date
      *
      * @return array
      */
@@ -65,8 +65,8 @@ trait CronRunner
     }
 
     /**
-     * @param bool   $force
-     * @param Carbon $date
+     * @param  bool  $force
+     * @param  Carbon  $date
      *
      * @return array
      */
@@ -93,8 +93,5 @@ trait CronRunner
             'job_errored'   => $recurring->jobErrored,
             'message'       => $recurring->message,
         ];
-
     }
-
-
 }

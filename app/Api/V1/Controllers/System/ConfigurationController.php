@@ -108,8 +108,8 @@ class ConfigurationController extends Controller
 
         return [
             'is_demo_site'            => $isDemoSite?->data,
-            'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
-            'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
+            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
+            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
             'single_user_mode'        => $singleUser?->data,
         ];
     }
@@ -132,7 +132,7 @@ class ConfigurationController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/configuration/getSingleConfiguration
      *
-     * @param string $configKey
+     * @param  string  $configKey
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -166,8 +166,8 @@ class ConfigurationController extends Controller
      *
      * Update the configuration.
      *
-     * @param UpdateRequest $request
-     * @param string        $name
+     * @param  UpdateRequest  $request
+     * @param  string  $name
      *
      * @return JsonResponse
      * @throws FireflyException

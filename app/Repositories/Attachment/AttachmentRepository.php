@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AttachmentRepository.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,6 +34,9 @@ use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToDeleteFile;
+use LogicException;
+use Log;
 
 /**
  * Class AttachmentRepository.
@@ -44,7 +48,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     private $user;
 
     /**
-     * @param Attachment $attachment
+     * @param  Attachment  $attachment
      *
      * @return bool
      * @throws Exception
@@ -57,7 +61,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $path = $helper->getAttachmentLocation($attachment);
         try {
             Storage::disk('upload')->delete($path);
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (UnableToDeleteFile $e) {
             // @ignoreException
         }
         $attachment->delete();
@@ -66,7 +70,32 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param Attachment $attachment
+     * @param  Attachment  $attachment
+     *
+     * @return string
+     */
+    public function getContent(Attachment $attachment): string
+    {
+        // create a disk.
+        $disk               = Storage::disk('upload');
+        $file               = $attachment->fileName();
+        $unencryptedContent = '';
+
+        if ($disk->exists($file)) {
+            $encryptedContent = (string)$disk->get($file);
+
+            try {
+                $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
+            } catch (DecryptException $e) {
+                $unencryptedContent = $encryptedContent;
+            }
+        }
+
+        return $unencryptedContent;
+    }
+
+    /**
+     * @param  Attachment  $attachment
      *
      * @return bool
      */
@@ -87,34 +116,9 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param Attachment $attachment
-     *
-     * @return string
-     */
-    public function getContent(Attachment $attachment): string
-    {
-        // create a disk.
-        $disk               = Storage::disk('upload');
-        $file               = $attachment->fileName();
-        $unencryptedContent = '';
-
-        if ($disk->exists($file)) {
-            $encryptedContent = (string) $disk->get($file);
-
-            try {
-                $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
-            } catch (DecryptException $e) {
-                $unencryptedContent = $encryptedContent;
-            }
-        }
-
-        return $unencryptedContent;
-    }
-
-    /**
      * Get attachment note text or empty string.
      *
-     * @param Attachment $attachment
+     * @param  Attachment  $attachment
      *
      * @return string|null
      */
@@ -122,22 +126,14 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     {
         $note = $attachment->notes()->first();
         if (null !== $note) {
-            return (string) $note->text;
+            return (string)$note->text;
         }
 
         return null;
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Attachment
      * @throws FireflyException
@@ -156,11 +152,18 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param Attachment $attachment
-     * @param array      $data
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param  Attachment  $attachment
+     * @param  array  $data
      *
      * @return Attachment
-     * @throws Exception
      */
     public function update(Attachment $attachment, array $data): Attachment
     {
@@ -168,31 +171,30 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             $attachment->title = $data['title'];
         }
 
-        if (array_key_exists('filename', $data) && '' !== (string) $data['filename'] && $data['filename'] !== $attachment->filename) {
+        if (array_key_exists('filename', $data) && '' !== (string)$data['filename'] && $data['filename'] !== $attachment->filename) {
             $attachment->filename = $data['filename'];
         }
         // update model (move attachment)
         // should be validated already:
         if (array_key_exists('attachable_type', $data) && array_key_exists('attachable_id', $data)) {
-            $attachment->attachable_id   = (int) $data['attachable_id'];
+            $attachment->attachable_id   = (int)$data['attachable_id'];
             $attachment->attachable_type = sprintf('FireflyIII\\Models\\%s', $data['attachable_type']);
         }
 
         $attachment->save();
         $attachment->refresh();
         if (array_key_exists('notes', $data)) {
-            $this->updateNote($attachment, (string) $data['notes']);
+            $this->updateNote($attachment, (string)$data['notes']);
         }
 
         return $attachment;
     }
 
     /**
-     * @param Attachment $attachment
-     * @param string     $note
+     * @param  Attachment  $attachment
+     * @param  string  $note
      *
      * @return bool
-     * @throws Exception
      */
     public function updateNote(Attachment $attachment, string $note): bool
     {
@@ -201,8 +203,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
-                    // @ignoreException
+                } catch (LogicException $e) {
+                    Log::error($e->getMessage());
                 }
             }
 
@@ -210,7 +212,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         }
         $dbNote = $attachment->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($attachment);
         }
         $dbNote->text = trim($note);

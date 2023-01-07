@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AdminEventHandler.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -22,14 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
+use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Mail\AdminTestMail;
+use FireflyIII\Events\NewVersionAvailable;
+use FireflyIII\Notifications\Admin\TestNotification;
+use FireflyIII\Notifications\Admin\UserInvitation;
+use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Log;
-use Mail;
-use Session;
+use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * Class AdminEventHandler.
@@ -37,49 +39,65 @@ use Session;
 class AdminEventHandler
 {
     /**
+     * @param  InvitationCreated  $event
+     * @return void
+     */
+    public function sendInvitationNotification(InvitationCreated $event): void
+    {
+        $sendMail = FireflyConfig::get('notification_invite_created', true)->data;
+        if (false === $sendMail) {
+            return;
+        }
+
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $all        = $repository->all();
+        foreach ($all as $user) {
+            if ($repository->hasRole($user, 'owner')) {
+                Notification::send($user, new UserInvitation($event->invitee));
+            }
+        }
+    }
+
+    /**
+     * Send new version message to admin.
+     *
+     * @param  NewVersionAvailable  $event
+     * @return void
+     */
+    public function sendNewVersion(NewVersionAvailable $event): void
+    {
+        $sendMail = FireflyConfig::get('notification_new_version', true)->data;
+        if (false === $sendMail) {
+            return;
+        }
+
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $all        = $repository->all();
+        foreach ($all as $user) {
+            if ($repository->hasRole($user, 'owner')) {
+                Notification::send($user, new VersionCheckResult($event->message));
+            }
+        }
+    }
+
+    /**
      * Sends a test message to an administrator.
      *
-     * @param AdminRequestedTestMessage $event
+     * @param  AdminRequestedTestMessage  $event
      *
-     * @return bool
-     * @throws FireflyException
+     * @return void
      */
-    public function sendTestMessage(AdminRequestedTestMessage $event): bool
+    public function sendTestMessage(AdminRequestedTestMessage $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
 
-        // is user even admin?
-        if ($repository->hasRole($event->user, 'owner')) {
-            $email = $event->user->email;
-
-            // if user is demo user, send to owner:
-            if ($event->user->hasRole('demo')) {
-                $email = config('firefly.site_owner');
-            }
-
-            // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email');
-            if (null !== $pref) {
-                $email = $pref->data;
-            }
-
-            Log::debug(sprintf('Now in sendTestMessage event handler. Email is %s', $email));
-            try {
-                Log::debug('Trying to send message...');
-                Mail::to($email)->send(new AdminTestMail($email));
-
-                // Laravel cannot pretend this process failed during testing.
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::debug('Send message failed! :(');
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-                Session::flash('error', 'Possible email error: ' . $e->getMessage());
-            }
-
-            Log::debug('If no error above this line, message was sent.');
+        if (!$repository->hasRole($event->user, 'owner')) {
+            return;
         }
 
-        return true;
+        Notification::send($event->user, new TestNotification($event->user->email));
     }
 }

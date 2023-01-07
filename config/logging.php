@@ -62,10 +62,6 @@ return [
             'driver'   => 'stack',
             'channels' => ['audit_daily', 'audit_stdout'],
         ],
-        'scoped'       => [
-            'driver' => 'custom',
-            'via'    => FireflyIII\Logging\CreateCustomLogger::class,
-        ],
         'papertrail'   => [
             'driver'       => 'monolog',
             'level'        => envNonEmpty('APP_LOG_LEVEL', 'info'),
@@ -93,7 +89,7 @@ return [
         // daily, used in stack 'stack' by default:
         'daily'        => [
             'driver' => 'daily',
-            'path'   => storage_path('logs/ff3-' . PHP_SAPI . '.log'),
+            'path'   => storage_path('logs/ff3-'.PHP_SAPI.'.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],

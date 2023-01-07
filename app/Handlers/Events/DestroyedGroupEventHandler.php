@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
-use FireflyIII\Models\Webhook;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -36,7 +36,7 @@ use Log;
 class DestroyedGroupEventHandler
 {
     /**
-     * @param DestroyedTransactionGroup $destroyedGroupEvent
+     * @param  DestroyedTransactionGroup  $destroyedGroupEvent
      */
     public function triggerWebhooks(DestroyedTransactionGroup $destroyedGroupEvent): void
     {
@@ -47,9 +47,9 @@ class DestroyedGroupEventHandler
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
         $engine->setObjects(new Collection([$group]));
-        $engine->setTrigger(Webhook::TRIGGER_DESTROY_TRANSACTION);
+        $engine->setTrigger(WebhookTrigger::DESTROY_TRANSACTION->value);
         $engine->generateMessages();
 
-        event(new RequestedSendWebhookMessages);
+        event(new RequestedSendWebhookMessages());
     }
 }

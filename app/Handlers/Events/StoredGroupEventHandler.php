@@ -1,4 +1,5 @@
 <?php
+
 /**
  * StoredGroupEventHandler.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -22,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
@@ -41,7 +42,7 @@ class StoredGroupEventHandler
     /**
      * This method grabs all the users rules and processes them.
      *
-     * @param StoredTransactionGroup $storedGroupEvent
+     * @param  StoredTransactionGroup  $storedGroupEvent
      */
     public function processRules(StoredTransactionGroup $storedGroupEvent): void
     {
@@ -78,7 +79,7 @@ class StoredGroupEventHandler
     }
 
     /**
-     * @param StoredTransactionGroup $event
+     * @param  StoredTransactionGroup  $event
      */
     public function recalculateCredit(StoredTransactionGroup $event): void
     {
@@ -92,7 +93,7 @@ class StoredGroupEventHandler
     /**
      * This method processes all webhooks that respond to the "stored transaction group" trigger (100)
      *
-     * @param StoredTransactionGroup $storedGroupEvent
+     * @param  StoredTransactionGroup  $storedGroupEvent
      */
     public function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
     {
@@ -110,14 +111,13 @@ class StoredGroupEventHandler
         $engine->setUser($user);
 
         // tell the generator which trigger it should look for
-        $engine->setTrigger(Webhook::TRIGGER_STORE_TRANSACTION);
+        $engine->setTrigger(WebhookTrigger::STORE_TRANSACTION->value);
         // tell the generator which objects to process
         $engine->setObjects(new Collection([$group]));
         // tell the generator to generate the messages
         $engine->generateMessages();
 
         // trigger event to send them:
-        event(new RequestedSendWebhookMessages);
+        event(new RequestedSendWebhookMessages());
     }
-
 }

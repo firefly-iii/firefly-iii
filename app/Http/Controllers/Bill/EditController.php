@@ -53,7 +53,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
+                app('view')->share('title', (string)trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->repository  = app(BillRepositoryInterface::class);
@@ -66,8 +66,8 @@ class EditController extends Controller
     /**
      * Edit a bill.
      *
-     * @param Request $request
-     * @param Bill    $bill
+     * @param  Request  $request
+     * @param  Bill  $bill
      *
      * @return Factory|View
      */
@@ -78,10 +78,10 @@ class EditController extends Controller
         $billPeriods = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string) trans('firefly.' . $current);
+            $periods[$current] = (string)trans('firefly.'.$current);
         }
 
-        $subTitle = (string) trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
@@ -102,7 +102,7 @@ class EditController extends Controller
             'extension_date'          => $bill->extension_date,
             'notes'                   => $this->repository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
-            'active'                  => $hasOldInput ? (bool) $request->old('active') : $bill->active,
+            'active'                  => $hasOldInput ? (bool)$request->old('active') : $bill->active,
             'object_group'            => $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
         ];
 
@@ -115,8 +115,8 @@ class EditController extends Controller
     /**
      * Update a bill.
      *
-     * @param BillUpdateRequest $request
-     * @param Bill              $bill
+     * @param  BillUpdateRequest  $request
+     * @param  Bill  $bill
      *
      * @return RedirectResponse
      */
@@ -125,7 +125,7 @@ class EditController extends Controller
         $billData = $request->getBillData();
         $bill     = $this->repository->update($bill, $billData);
 
-        $request->session()->flash('success', (string) trans('firefly.updated_bill', ['name' => $bill->name]));
+        $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
         /** @var array $files */
@@ -134,7 +134,7 @@ class EditController extends Controller
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         // flash messages
@@ -143,12 +143,10 @@ class EditController extends Controller
         }
         $redirect = redirect($this->getPreviousUrl('bills.edit.url'));
 
-        if (1 === (int) $request->get('return_to_edit')) {
-
+        if (1 === (int)$request->get('return_to_edit')) {
             $request->session()->put('bills.edit.fromUpdate', true);
 
             $redirect = redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
-
         }
 
         return $redirect;

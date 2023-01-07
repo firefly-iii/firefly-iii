@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
+use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -37,7 +38,9 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ValidatesAutoBudgetRequest, ChecksLogin;
+    use ConvertsDataTypes;
+    use ValidatesAutoBudgetRequest;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -78,11 +81,12 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var Budget $budget */
         $budget = $this->route()->parameter('budget');
 
         return [
             'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
-            'active'                    => [new IsBoolean],
+            'active'                    => [new IsBoolean()],
             'notes'                     => 'nullable|between:1,65536',
             'auto_budget_type'          => 'in:reset,rollover,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
@@ -95,7 +99,7 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */

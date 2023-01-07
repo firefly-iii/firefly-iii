@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Transaction;
+
 use Carbon\Carbon;
 use Laravel\Passport\Passport;
 use Log;
@@ -37,7 +38,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -72,9 +74,9 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('apply_rules', 'boolean'));
         $configuration->addOptionalFieldSet('apply_rules', $fieldSet);
@@ -93,13 +95,13 @@ class UpdateControllerTest extends TestCase
         $configuration->addOptionalFieldSet('date', $fieldSet);
 
         // category
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('transactions/0/category_id', 'random-category-id'));
         $configuration->addOptionalFieldSet('category_id', $fieldSet);
 
         // amount
-        $fieldSet              = new FieldSet;
+        $fieldSet              = new FieldSet();
         $fieldSet->parameters  = [1];
         $field                 = Field::createBasic('transactions/0/amount', 'random-amount');
         $field->expectedReturn = function ($value) {
@@ -109,13 +111,13 @@ class UpdateControllerTest extends TestCase
         $configuration->addOptionalFieldSet('amount', $fieldSet);
 
         // descr
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('transactions/0/description', 'uuid'));
         $configuration->addOptionalFieldSet('descr', $fieldSet);
 
         // source
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('transactions/0/source_id', 'random-asset-id');
         $field->ignorableFields = ['transactions/0/source_name', 'transactions/0/source_iban'];
@@ -123,26 +125,26 @@ class UpdateControllerTest extends TestCase
         $configuration->addOptionalFieldSet('src', $fieldSet);
 
         // dest
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('transactions/0/destination_id', 'random-expense-id');
         $field->ignorableFields = ['transactions/0/destination_name', 'transactions/0/destination_iban'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('dest', $fieldSet);
         // optional fields
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('transactions/0/category_id', 'random-category-id');
         $field->ignorableFields = ['transactions/0/category_name'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('category_id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('transactions/0/reconciled', 'boolean'));
         $configuration->addOptionalFieldSet('reconciled', $fieldSet);
 
-        $fieldSet              = new FieldSet;
+        $fieldSet              = new FieldSet();
         $fieldSet->parameters  = [1];
         $field                 = Field::createBasic('transactions/0/tags', 'random-tags');
         $field->expectedReturn = function ($value) {
@@ -160,7 +162,7 @@ class UpdateControllerTest extends TestCase
                   'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id'];
 
         foreach ($array as $value) {
-            $fieldSet             = new FieldSet;
+            $fieldSet             = new FieldSet();
             $fieldSet->parameters = [1];
             $fieldSet->addField(Field::createBasic('transactions/0/' . $value, 'uuid'));
             $configuration->addOptionalFieldSet($value, $fieldSet);

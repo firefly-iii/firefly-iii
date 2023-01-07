@@ -21,9 +21,6 @@
                             <p>
                                 {{ trans('firefly.apply_rule_selection_intro', {title: rule.title}) }}
                             </p>
-                            <p class="text-danger">
-                                {{ 'apply_rule_warning'|_ }}
-                            </p>
                             <div class="row">
                                 <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
                                     {{ ExpandedForm.date('start', first) }}
@@ -42,9 +39,6 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var askReadWarning = "{{ trans('firefly.rules_have_read_warning')|escape('js') }}";
-    </script>
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/rules/select-transactions.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

@@ -46,7 +46,6 @@ class ListController extends Controller
     use TransactionFilter;
 
     private LinkTypeRepositoryInterface $repository;
-    private UserRepositoryInterface     $userRepository;
 
     /**
      * LinkTypeController constructor.
@@ -61,7 +60,6 @@ class ListController extends Controller
                 /** @var User $user */
                 $user                 = auth()->user();
                 $this->repository     = app(LinkTypeRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -73,8 +71,8 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/links/listTransactionByLinkType
      *
-     * @param Request  $request
-     * @param LinkType $linkType
+     * @param  Request  $request
+     * @param  LinkType  $linkType
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -82,7 +80,7 @@ class ListController extends Controller
      */
     public function transactions(Request $request, LinkType $linkType): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -114,7 +112,7 @@ class ListController extends Controller
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.transactions.index').$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
@@ -126,5 +124,4 @@ class ListController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

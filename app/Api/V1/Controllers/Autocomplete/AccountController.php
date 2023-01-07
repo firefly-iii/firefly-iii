@@ -67,7 +67,7 @@ class AccountController extends Controller
      * Documentation for this endpoint:
      * https://api-docs.firefly-iii.org/#/autocomplete/getAccountsAC
      *
-     * @param AutocompleteRequest $request
+     * @param  AutocompleteRequest  $request
      *
      * @return JsonResponse
      * @throws JsonException
@@ -82,7 +82,7 @@ class AccountController extends Controller
         $date  = $data['date'] ?? today(config('app.timezone'));
 
         $return          = [];
-        $result          = $this->repository->searchAccount((string) $query, $types, $data['limit']);
+        $result          = $this->repository->searchAccount((string)$query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         /** @var Account $account */
@@ -96,7 +96,7 @@ class AccountController extends Controller
             }
 
             $return[] = [
-                'id'                      => (string) $account->id,
+                'id'                      => (string)$account->id,
                 'name'                    => $account->name,
                 'name_with_balance'       => $nameWithBalance,
                 'type'                    => $account->accountType->type,
@@ -111,12 +111,13 @@ class AccountController extends Controller
         // custom order.
         $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
         usort(
-            $return, function ($a, $b) use ($order) {
-            $pos_a = array_search($a['type'], $order);
-            $pos_b = array_search($b['type'], $order);
+            $return,
+            function ($a, $b) use ($order) {
+                $pos_a = array_search($a['type'], $order, true);
+                $pos_b = array_search($b['type'], $order, true);
 
-            return $pos_a - $pos_b;
-        }
+                return $pos_a - $pos_b;
+            }
         );
 
         return response()->json($return);

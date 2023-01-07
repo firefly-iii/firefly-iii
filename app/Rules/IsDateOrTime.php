@@ -35,7 +35,6 @@ use Log;
  */
 class IsDateOrTime implements Rule
 {
-
     /**
      * Get the validation error message.
      *
@@ -44,20 +43,20 @@ class IsDateOrTime implements Rule
      */
     public function message()
     {
-        return (string) trans('validation.date_or_time');
+        return (string)trans('validation.date_or_time');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      */
     public function passes($attribute, $value): bool
     {
-        $value = (string) $value;
+        $value = (string)$value;
         if ('' === $value) {
             return false;
         }

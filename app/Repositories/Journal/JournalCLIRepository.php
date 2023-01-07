@@ -25,12 +25,10 @@ namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
 use DB;
-use Exception;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use JsonException;
 use stdClass;
 
 /**
@@ -44,23 +42,22 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Get all transaction journals with a specific type, regardless of user.
      *
-     * @param array $types
+     * @param  array  $types
      *
      * @return Collection
      */
     public function getAllJournals(array $types): Collection
     {
-        return TransactionJournal
-            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereIn('transaction_types.type', $types)
-            ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
-            ->get(['transaction_journals.*']);
+        return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->whereIn('transaction_types.type', $types)
+                                 ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
+                                 ->get(['transaction_journals.*']);
     }
 
     /**
      * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return int
      */
@@ -70,7 +67,6 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         if (null !== $budget) {
             return $budget->id;
         }
-        /** @noinspection NullPointerExceptionInspection */
         $budget = $journal->transactions()->first()->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
@@ -82,7 +78,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return int
      */
@@ -92,7 +88,6 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         if (null !== $category) {
             return $category->id;
         }
-        /** @noinspection NullPointerExceptionInspection */
         $category = $journal->transactions()->first()->categories()->first();
         if (null !== $category) {
             return $category->id;
@@ -114,42 +109,29 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return Carbon value of a meta field (or NULL).
      *
-     * @param TransactionJournal $journal
-     * @param string             $field
+     * @param  TransactionJournal  $journal
+     * @param  string  $field
      *
      * @return null|Carbon
      */
     public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
 
         if ($cache->has()) {
             $result = null;
-            try {
-                $result = new Carbon($cache->get());
-            } catch (Exception $e) { // @phpstan-ignore-line
-                // @ignoreException
-            }
-
-            return $result;
+            return new Carbon($cache->get());
         }
 
         $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
         if (null === $entry) {
             return null;
         }
-        $value = null;
-        try {
-            $value = new Carbon($entry->data);
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
-        if (null !== $value) {
-            $cache->store($value);
-        }
+        $value = new Carbon($entry->data);
+        $cache->store($value);
 
         return $value;
     }
@@ -157,14 +139,14 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return value of a meta field (or NULL) as a string.
      *
-     * @param TransactionJournal $journal
-     * @param string             $field
+     * @param  TransactionJournal  $journal
+     * @param  string  $field
      *
      * @return null|string
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
@@ -188,12 +170,8 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         }
 
         // return when something else:
-        $return = (string) $value;
-        try {
-            $cache->store($return);
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
+        $return = (string)$value;
+        $cache->store($return);
 
         return $return;
     }
@@ -201,7 +179,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return text of a note attached to journal, or NULL
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return string|null
      */
@@ -223,28 +201,26 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getSplitJournals(): Collection
     {
-        $query      = TransactionJournal
-            ::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->groupBy('transaction_journals.id');
+        $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                        ->groupBy('transaction_journals.id');
         $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]);
         $journalIds = [];
         /** @var stdClass $row */
         foreach ($result as $row) {
-            if ((int) $row->transaction_count > 2) {
-                $journalIds[] = (int) $row->id;
+            if ((int)$row->transaction_count > 2) {
+                $journalIds[] = (int)$row->id;
             }
         }
         $journalIds = array_unique($journalIds);
 
-        return TransactionJournal
-            ::with(['transactions'])
-            ->whereIn('id', $journalIds)->get();
+        return TransactionJournal::with(['transactions'])
+                                 ->whereIn('id', $journalIds)->get();
     }
 
     /**
      * Return all tags as strings in an array.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return array
      */
@@ -254,7 +230,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

@@ -43,7 +43,6 @@ class ChangesForV473 extends Migration
         Schema::table(
             'bills',
             static function (Blueprint $table) {
-
                 // cannot drop foreign keys in SQLite:
                 if ('sqlite' !== config('database.default')) {
                     $table->dropForeign('bills_transaction_currency_id_foreign');

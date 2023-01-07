@@ -1,0 +1,44 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, webhook) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('form.delete_webhook', {'title': webhook.title}) }}</h3>
+                </div>
+                <div class="box-body">
+                    <p class="text-danger">
+                        {{ trans('form.permDeleteWarning') }}
+                    </p>
+
+                    <p>
+                        {{ trans('form.webhook_areYouSure', {'title': webhook.title}) }}
+                    </p>
+                </div>
+                <div class="box-footer">
+                    <input type="submit" id="button" name="submit" value="{{ trans('form.deletePermanently') }}"
+                           class="btn pull-right btn-danger"/>
+                    <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script nonce="{{ JS_NONCE }}">
+        $(function () {
+            "use strict";
+            $('#button').click(function() {
+                var url = "{{ route('index') }}/api/v1/webhooks/{{ webhook.id }}";
+                $.ajax({url: url, type: 'DELETE'}).done(function() {
+                    window.location = "{{ URL.previous() }}?webhook_id={{ webhook.id }}&message=deleted";
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -52,7 +52,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository = app(BudgetRepositoryInterface::class);
 
@@ -64,13 +64,13 @@ class DeleteController extends Controller
     /**
      * Deletes a budget.
      *
-     * @param Budget $budget
+     * @param  Budget  $budget
      *
      * @return Factory|View
      */
     public function delete(Budget $budget)
     {
-        $subTitle = (string) trans('firefly.delete_budget', ['name' => $budget->name]);
+        $subTitle = (string)trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
         $this->rememberPreviousUrl('budgets.delete.url');
@@ -81,8 +81,8 @@ class DeleteController extends Controller
     /**
      * Destroys a budget.
      *
-     * @param Request $request
-     * @param Budget  $budget
+     * @param  Request  $request
+     * @param  Budget  $budget
      *
      * @return RedirectResponse|Redirector
      */
@@ -90,10 +90,9 @@ class DeleteController extends Controller
     {
         $name = $budget->name;
         $this->repository->destroy($budget);
-        $request->session()->flash('success', (string) trans('firefly.deleted_budget', ['name' => $name]));
+        $request->session()->flash('success', (string)trans('firefly.deleted_budget', ['name' => $name]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUrl('budgets.delete.url'));
     }
-
 }

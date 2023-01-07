@@ -21,86 +21,87 @@
 <template>
   <q-page>
     <q-card v-for="ruleGroup in ruleGroups" class="q-ma-md">
-        <q-table
-          :title="ruleGroup.title"
-          :rows="ruleGroup.rules"
-          :columns="columns"
-          row-key="id"
-          :pagination="pagination"
-          :dense="$q.screen.lt.md"
-          :loading="ruleGroup.loading"
+      <q-table
+        :columns="columns"
+        :dense="$q.screen.lt.md"
+        :loading="ruleGroup.loading"
+        :pagination="pagination"
+        :rows="ruleGroup.rules"
+        :title="ruleGroup.title"
+        row-key="id"
 
-        >
-          <template v-slot:header="props">
-            <q-tr :props="props">
-              <q-th
-                v-for="col in props.cols"
-                :key="col.name"
-                :props="props"
-              >
-                {{ col.label }}
-              </q-th>
-            </q-tr>
-          </template>
-          <template v-slot:body="props">
-            <q-tr :props="props">
-              <q-td key="name" :props="props">
-                <router-link :to="{ name: 'rules.show', params: {id: props.row.id} }" class="text-primary">
-                  {{ props.row.title }}
-                </router-link>
-              </q-td>
-              <q-td key="menu" :props="props">
-                <q-btn-dropdown color="primary" label="Actions" size="sm">
-                  <q-list>
-                    <q-item clickable v-close-popup :to="{name: 'rules.edit', params: {id: props.row.id}}">
-                      <q-item-section>
-                        <q-item-label>Edit</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <q-item clickable v-close-popup @click="deleteRule(props.row.id, props.row.title)">
-                      <q-item-section>
-                        <q-item-label>Delete</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-btn-dropdown>
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
+      >
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th
+              v-for="col in props.cols"
+              :key="col.name"
+              :props="props"
+            >
+              {{ col.label }}
+            </q-th>
+          </q-tr>
+        </template>
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="name" :props="props">
+              <router-link :to="{ name: 'rules.show', params: {id: props.row.id} }" class="text-primary">
+                {{ props.row.title }}
+              </router-link>
+            </q-td>
+            <q-td key="menu" :props="props">
+              <q-btn-dropdown color="primary" label="Actions" size="sm">
+                <q-list>
+                  <q-item v-close-popup :to="{name: 'rules.edit', params: {id: props.row.id}}" clickable>
+                    <q-item-section>
+                      <q-item-label>Edit</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item v-close-popup clickable @click="deleteRule(props.row.id, props.row.title)">
+                    <q-item-section>
+                      <q-item-label>Delete</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
       <q-card-actions>
         <q-btn-group>
-          <q-btn size="sm" :to="{name: 'rule-groups.edit', params: {id: ruleGroup.id}}" color="primary">Edit group
+          <q-btn :to="{name: 'rule-groups.edit', params: {id: ruleGroup.id}}" color="primary" size="sm">Edit group
           </q-btn>
-          <q-btn size="sm" color="primary" @click="deleteRuleGroup(ruleGroup.id, ruleGroup.title)">Delete group
+          <q-btn color="primary" size="sm" @click="deleteRuleGroup(ruleGroup.id, ruleGroup.title)">Delete group
           </q-btn>
         </q-btn-group>
       </q-card-actions>
     </q-card>
 
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
         label="Actions"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'rule-groups.create'}" icon="fas fa-exchange-alt"
-                      label="New rule group"/>
-        <q-fab-action color="primary" square :to="{ name: 'rules.create'}" icon="fas fa-exchange-alt" label="New rule"/>
+        <q-fab-action :to="{ name: 'rule-groups.create'}" color="primary" icon="fas fa-exchange-alt" label="New rule group"
+                      square/>
+        <q-fab-action :to="{ name: 'rules.create'}" color="primary" icon="fas fa-exchange-alt" label="New rule" square/>
       </q-fab>
     </q-page-sticky>
   </q-page>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 import List from "../../api/rule-groups/list";
 import Get from "../../api/rule-groups/get";
 import Destroy from "../../api/generic/destroy";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Index',
@@ -113,6 +114,7 @@ export default {
     }
   },
   mounted() {
+    this.store = useFireflyIIIStore();
     this.triggerUpdate();
   },
   data() {
@@ -126,10 +128,11 @@ export default {
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
       ruleGroups: {},
+      store: null
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey']),
   },
   methods: {
     triggerUpdate: function () {
@@ -162,13 +165,13 @@ export default {
     },
     destroyRuleGroup: function (id) {
       (new Destroy('rule_groups')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },
     destroyRule: function (id) {
       (new Destroy('rules')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
+use League\Flysystem\FilesystemException;
 use Log;
 use Storage;
 
@@ -50,7 +51,7 @@ class VerifySecurityAlerts extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws \League\Flysystem\FilesystemException
+     * @throws FilesystemException
      */
     public function handle(): int
     {
@@ -61,7 +62,8 @@ class VerifySecurityAlerts extends Command
         // check for security advisories.
         $version = config('firefly.version');
         $disk    = Storage::disk('resources');
-        if (!$disk->has('alerts.json')) {
+        // Next line is ignored because it's a Laravel Facade.
+        if (!$disk->has('alerts.json')) { // @phpstan-ignore-line
             Log::debug('No alerts.json file present.');
 
             return 0;

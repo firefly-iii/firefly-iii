@@ -41,7 +41,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     /**
      * Returns transaction by ID. Used to validate attachments.
      *
-     * @param int $transactionId
+     * @param  int  $transactionId
      *
      * @return Transaction|null
      */
@@ -54,9 +54,11 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     }
 
     /**
+     * TODO pretty sure method duplicated.
+     *
      * Return all attachments for journal.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Collection
      */
@@ -71,7 +73,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
+                $attachment->notes       = $notes ? $notes->text : ''; // TODO should not set notes like this.
 
                 return $attachment;
             }
@@ -91,7 +93,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     /**
      * Get all piggy bank events for a journal.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Collection
      */
@@ -108,7 +110,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {

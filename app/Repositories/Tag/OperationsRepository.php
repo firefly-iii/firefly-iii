@@ -29,6 +29,8 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  *
@@ -44,10 +46,10 @@ class OperationsRepository implements OperationsRepositoryInterface
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $tags
      *
      * @return array
      */
@@ -70,31 +72,31 @@ class OperationsRepository implements OperationsRepositoryInterface
         $array          = [];
         $listedJournals = [];
         foreach ($journals as $journal) {
-            $currencyId         = (int) $journal['currency_id'];
+            $currencyId         = (int)$journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [
-                    'tags'                    => [],
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
+                'tags'                    => [],
+                'currency_id'             => $currencyId,
+                'currency_name'           => $journal['currency_name'],
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_decimal_places' => $journal['currency_decimal_places'],
+            ];
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId     = (int) $tag['id'];
-                $tagName   = (string) $tag['name'];
-                $journalId = (int) $journal['transaction_journal_id'];
+                $tagId     = (int)$tag['id'];
+                $tagName   = (string)$tag['name'];
+                $journalId = (int)$journal['transaction_journal_id'];
 
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
                 }
                 $listedJournals[]                   = $journalId;
                 $array[$currencyId]['tags'][$tagId] = $array[$currencyId]['tags'][$tagId] ?? [
-                        'id'                   => $tagId,
-                        'name'                 => $tagName,
-                        'transaction_journals' => [],
-                    ];
+                    'id'                   => $tagId,
+                    'name'                 => $tagName,
+                    'transaction_journals' => [],
+                ];
 
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => app('steam')->negative($journal['amount']),
@@ -115,9 +117,17 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @return Collection
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function getTags(): Collection
     {
@@ -131,10 +141,10 @@ class OperationsRepository implements OperationsRepositoryInterface
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $tags
      *
      * @return array
      */
@@ -158,21 +168,21 @@ class OperationsRepository implements OperationsRepositoryInterface
         $listedJournals = [];
 
         foreach ($journals as $journal) {
-            $currencyId         = (int) $journal['currency_id'];
+            $currencyId         = (int)$journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [
-                    'tags'                    => [],
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
+                'tags'                    => [],
+                'currency_id'             => $currencyId,
+                'currency_name'           => $journal['currency_name'],
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_decimal_places' => $journal['currency_decimal_places'],
+            ];
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId     = (int) $tag['id'];
-                $tagName   = (string) $tag['name'];
-                $journalId = (int) $journal['transaction_journal_id'];
+                $tagId     = (int)$tag['id'];
+                $tagName   = (string)$tag['name'];
+                $journalId = (int)$journal['transaction_journal_id'];
 
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
@@ -180,11 +190,11 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $listedJournals[] = $journalId;
 
                 $array[$currencyId]['tags'][$tagId]                                     = $array[$currencyId]['tags'][$tagId] ?? [
-                        'id'                   => $tagId,
-                        'name'                 => $tagName,
-                        'transaction_journals' => [],
-                    ];
-                $journalId                                                              = (int) $journal['transaction_journal_id'];
+                    'id'                   => $tagId,
+                    'name'                 => $tagName,
+                    'transaction_journals' => [],
+                ];
+                $journalId                                                              = (int)$journal['transaction_journal_id'];
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => app('steam')->positive($journal['amount']),
                     'date'                     => $journal['date'],
@@ -203,20 +213,12 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
      * Sum of withdrawal journals in period for a set of tags, grouped per currency. Amounts are always negative.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $tags
      *
      * @return array
      * @throws FireflyException
@@ -229,10 +231,10 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * Sum of income journals in period for a set of tags, grouped per currency. Amounts are always positive.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $tags
      *
      * @return array
      * @throws FireflyException

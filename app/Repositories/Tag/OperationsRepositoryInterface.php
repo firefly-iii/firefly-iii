@@ -39,10 +39,10 @@ interface OperationsRepositoryInterface
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $tags
      *
      * @return array
      */
@@ -53,27 +53,27 @@ interface OperationsRepositoryInterface
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $tags
      *
      * @return array
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void;
 
     /**
      * Sum of withdrawal journals in period for a set of tags, grouped per currency. Amounts are always negative.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $tags
      *
      * @return array
      */
@@ -82,10 +82,10 @@ interface OperationsRepositoryInterface
     /**
      * Sum of income journals in period for a set of tags, grouped per currency. Amounts are always positive.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection|null  $accounts
+     * @param  Collection|null  $tags
      *
      * @return array
      */

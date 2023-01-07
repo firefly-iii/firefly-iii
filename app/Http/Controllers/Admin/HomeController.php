@@ -1,4 +1,5 @@
 <?php
+
 /**
  * HomeController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -26,6 +27,7 @@ use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -33,6 +35,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class HomeController.
@@ -55,28 +59,55 @@ class HomeController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index()
     {
         Log::channel('audit')->info('User visits admin index.');
-        $title         = (string) trans('firefly.administration');
+        $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
         $email         = auth()->user()->email;
         $pref          = app('preferences')->get('remote_guard_alt_email');
         if (null !== $pref && is_string($pref->data)) {
             $email = $pref->data;
         }
-        Log::debug('Email is ', [$email]);
 
-        return view('admin.index', compact('title', 'mainTitleIcon', 'email'));
+        // admin notification settings:
+        $notifications = [];
+        foreach (config('firefly.admin_notifications') as $item) {
+            $notifications[$item] = FireflyConfig::get(sprintf('notification_%s', $item), true)->data;
+        }
+        $slackUrl = FireflyConfig::get('slack_webhook_url', '')->data;
+
+        return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications', 'slackUrl'));
+    }
+
+    public function notifications(Request $request): RedirectResponse
+    {
+        foreach (config('firefly.admin_notifications') as $item) {
+            $value = false;
+            if ($request->has(sprintf('notification_%s', $item))) {
+                $value = true;
+            }
+            FireflyConfig::set(sprintf('notification_%s', $item), $value);
+        }
+        $url = (string)$request->get('slackUrl');
+        if ('' === $url) {
+            FireflyConfig::delete('slack_webhook_url');
+        }
+        if (str_starts_with($url, 'https://hooks.slack.com/services/')) {
+            FireflyConfig::set('slack_webhook_url', $url);
+        }
+
+        session()->flash('success', (string)trans('firefly.notification_settings_saved'));
+        return redirect(route('admin.index'));
     }
 
     /**
      * Send a test message to the admin.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
      */
@@ -87,7 +118,7 @@ class HomeController extends Controller
         $user = auth()->user();
         Log::debug('Now in testMessage() controller.');
         event(new AdminRequestedTestMessage($user));
-        session()->flash('info', (string) trans('firefly.send_test_triggered'));
+        session()->flash('info', (string)trans('firefly.send_test_triggered'));
 
         return redirect(route('admin.index'));
     }

@@ -77,6 +77,7 @@ class CorrectDatabase extends Command
             'firefly-iii:fix-long-descriptions',
             'firefly-iii:fix-recurring-transactions',
             'firefly-iii:restore-oauth-keys',
+            'firefly-iii:upgrade-group-information',
             'firefly-iii:fix-transaction-types',
             'firefly-iii:fix-frontpage-accounts',
         ];

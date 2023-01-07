@@ -40,7 +40,6 @@ use Log;
  */
 class AmountController extends Controller
 {
-
     private AccountRepositoryInterface   $accountRepos;
     private PiggyBankRepositoryInterface $piggyRepos;
 
@@ -55,7 +54,7 @@ class AmountController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
+                app('view')->share('title', (string)trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->piggyRepos   = app(PiggyBankRepositoryInterface::class);
@@ -69,7 +68,7 @@ class AmountController extends Controller
     /**
      * Add money to piggy bank.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return Factory|View
      */
@@ -78,7 +77,7 @@ class AmountController extends Controller
         $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, today(config('app.timezone')));
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $maxAmount     = $leftOnAccount;
-        if (0 !== bccomp($piggyBank->targetamount,'0')) {
+        if (0 !== bccomp($piggyBank->targetamount, '0')) {
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = min($leftOnAccount, $leftToSave);
         }
@@ -90,7 +89,7 @@ class AmountController extends Controller
     /**
      * Add money to piggy bank (for mobile devices).
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return Factory|View
      */
@@ -102,7 +101,7 @@ class AmountController extends Controller
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $maxAmount     = $leftOnAccount;
 
-        if (0 !== bccomp($piggyBank->targetamount,'0')) {
+        if (0 !== bccomp($piggyBank->targetamount, '0')) {
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = min($leftOnAccount, $leftToSave);
         }
@@ -114,8 +113,8 @@ class AmountController extends Controller
     /**
      * Add money to piggy bank.
      *
-     * @param Request   $request
-     * @param PiggyBank $piggyBank
+     * @param  Request  $request
+     * @param  PiggyBank  $piggyBank
      *
      * @return RedirectResponse
      */
@@ -131,7 +130,7 @@ class AmountController extends Controller
             $this->piggyRepos->addAmount($piggyBank, $amount);
             session()->flash(
                 'success',
-                (string) trans(
+                (string)trans(
                     'firefly.added_amount_to_piggy',
                     ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
                 )
@@ -141,10 +140,10 @@ class AmountController extends Controller
             return redirect(route('piggy-banks.index'));
         }
 
-        Log::error('Cannot add ' . $amount . ' because canAddAmount returned false.');
+        Log::error('Cannot add '.$amount.' because canAddAmount returned false.');
         session()->flash(
             'error',
-            (string) trans(
+            (string)trans(
                 'firefly.cannot_add_amount_piggy',
                 ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
             )
@@ -156,8 +155,8 @@ class AmountController extends Controller
     /**
      * Remove money from piggy bank.
      *
-     * @param Request   $request
-     * @param PiggyBank $piggyBank
+     * @param  Request  $request
+     * @param  PiggyBank  $piggyBank
      *
      * @return RedirectResponse
      */
@@ -173,7 +172,7 @@ class AmountController extends Controller
             $this->piggyRepos->removeAmount($piggyBank, $amount);
             session()->flash(
                 'success',
-                (string) trans(
+                (string)trans(
                     'firefly.removed_amount_from_piggy',
                     ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
                 )
@@ -182,11 +181,11 @@ class AmountController extends Controller
 
             return redirect(route('piggy-banks.index'));
         }
-        $amount = (string) $request->get('amount');
+        $amount = (string)$request->get('amount');
 
         session()->flash(
             'error',
-            (string) trans(
+            (string)trans(
                 'firefly.cannot_remove_from_piggy',
                 ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
             )
@@ -198,7 +197,7 @@ class AmountController extends Controller
     /**
      * Remove money from piggy bank form.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return Factory|View
      */
@@ -213,7 +212,7 @@ class AmountController extends Controller
     /**
      * Remove money from piggy bank (for mobile devices).
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return Factory|View
      */

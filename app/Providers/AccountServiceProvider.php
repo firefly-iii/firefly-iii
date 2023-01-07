@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -64,6 +65,7 @@ class AccountServiceProvider extends ServiceProvider
                 /** @var AccountRepositoryInterface $repository */
                 $repository = app(AccountRepository::class);
 
+                // phpstan thinks auth does not exist.
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
@@ -78,6 +80,7 @@ class AccountServiceProvider extends ServiceProvider
                 /** @var OperationsRepository $repository */
                 $repository = app(OperationsRepository::class);
 
+                // phpstan thinks auth does not exist.
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
@@ -98,6 +101,7 @@ class AccountServiceProvider extends ServiceProvider
                 /** @var AccountTaskerInterface $tasker */
                 $tasker = app(AccountTasker::class);
 
+                // phpstan thinks auth does not exist.
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $tasker->setUser(auth()->user());
                 }

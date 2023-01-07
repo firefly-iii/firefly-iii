@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\RuleGroup;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default test set:
         $defaultSet        = new FieldSet();
@@ -72,23 +73,22 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optionals
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $field    = Field::createBasic('description', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('description', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $field    = Field::createBasic('order', 'low-order');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $field    = Field::createBasic('active', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
         return $configuration->generateAll();
-
     }
 
     /**
@@ -111,5 +111,4 @@ class StoreControllerTest extends TestCase
         $address = route('api.v1.rule_groups.store');
         $this->assertPOST($address, $submission);
     }
-
 }

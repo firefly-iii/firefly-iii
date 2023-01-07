@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -67,5 +68,4 @@ class StoreRequest extends FormRequest
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
         ];
     }
-
 }

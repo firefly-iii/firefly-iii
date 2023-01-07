@@ -41,7 +41,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  *
@@ -68,7 +71,7 @@ class IndexController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository         = app(BudgetRepositoryInterface::class);
                 $this->opsRepository      = app(OperationsRepositoryInterface::class);
@@ -85,23 +88,23 @@ class IndexController extends Controller
     /**
      * Show all budgets.
      *
-     * @param Request     $request
+     * @param  Request  $request
      *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {
         Log::debug('Start of IndexController::index()');
 
         // collect some basic vars:
-        $range           = (string) app('preferences')->get('viewRange', '1M')->data;
+        $range           = (string)app('preferences')->get('viewRange', '1M')->data;
         $start           = $start ?? session('start', Carbon::now()->startOfMonth());
         $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -122,15 +125,12 @@ class IndexController extends Controller
         $sums    = $this->getSums($budgets);
 
         // get budgeted for default currency:
-        if (empty($availableBudgets)) {
-            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency,);
+        if (0 === count($availableBudgets)) {
+            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency, );
             $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $defaultCurrency);
             $spent    = $spentArr[$defaultCurrency->id]['sum'] ?? '0';
             unset($spentArr);
         }
-
-        // count the number of enabled currencies. This determines if we display a "+" button.
-        $enableAddButton = $currencies->count() > count($availableBudgets);
 
         // number of days for consistent budgeting.
         $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
@@ -140,16 +140,31 @@ class IndexController extends Controller
         $inactive = $this->repository->getInactiveBudgets();
 
         return view(
-            'budgets.index', compact(
-                               'availableBudgets', 'budgeted', 'spent', 'prevLoop', 'nextLoop', 'budgets', 'currencies', 'enableAddButton', 'periodTitle',
-                               'defaultCurrency', 'activeDaysPassed', 'activeDaysLeft', 'inactive', 'budgets', 'start', 'end', 'sums'
-                           )
+            'budgets.index',
+            compact(
+                'availableBudgets',
+                'budgeted',
+                'spent',
+                'prevLoop',
+                'nextLoop',
+                'budgets',
+                'currencies',
+                'periodTitle',
+                'defaultCurrency',
+                'activeDaysPassed',
+                'activeDaysLeft',
+                'inactive',
+                'budgets',
+                'start',
+                'end',
+                'sums'
+            )
         );
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -170,7 +185,7 @@ class IndexController extends Controller
             $array['spent'] = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
 
             // budgeted in period:
-            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency,);
+            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency, );
             $array['budgeted']  = $budgeted;
             $availableBudgets[] = $array;
             unset($spentArr);
@@ -180,10 +195,10 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param Collection          $currencies
-     * @param TransactionCurrency $defaultCurrency
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $currencies
+     * @param  TransactionCurrency  $defaultCurrency
      *
      * @return array
      */
@@ -238,7 +253,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @param array $budgets
+     * @param  array  $budgets
      *
      * @return array
      */
@@ -290,6 +305,10 @@ class IndexController extends Controller
             }
         }
         // final calculation for 'left':
+        /**
+         * @var int $currencyId
+         * @var array $info
+         */
         foreach ($sums['budgeted'] as $currencyId => $info) {
             $spent                               = $sums['spent'][$currencyId]['amount'] ?? '0';
             $budgeted                            = $sums['budgeted'][$currencyId]['amount'] ?? '0';
@@ -300,8 +319,8 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request                   $request
-     * @param BudgetRepositoryInterface $repository
+     * @param  Request  $request
+     * @param  BudgetRepositoryInterface  $repository
      *
      * @return JsonResponse
      */
@@ -310,7 +329,7 @@ class IndexController extends Controller
         $budgetIds = $request->get('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int) $budgetId;
+            $budgetId = (int)$budgetId;
             $budget   = $repository->find($budgetId);
             if (null !== $budget) {
                 Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));

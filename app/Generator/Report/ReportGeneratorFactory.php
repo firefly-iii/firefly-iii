@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReportGeneratorFactory.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -35,9 +36,9 @@ class ReportGeneratorFactory
     /**
      * Static report generator class.
      *
-     * @param string $type
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  string  $type
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return ReportGeneratorInterface
      *

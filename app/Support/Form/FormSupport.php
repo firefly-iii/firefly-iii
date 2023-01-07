@@ -24,11 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Form;
 
 use Carbon\Carbon;
-use Exception;
+use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
-use RuntimeException;
 use Throwable;
 
 /**
@@ -37,10 +36,10 @@ use Throwable;
 trait FormSupport
 {
     /**
-     * @param string     $name
-     * @param array|null $list
-     * @param mixed      $selected
-     * @param array|null $options
+     * @param  string  $name
+     * @param  array|null  $list
+     * @param  mixed  $selected
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -54,7 +53,7 @@ trait FormSupport
         unset($options['autocomplete'], $options['placeholder']);
         try {
             $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
         }
@@ -63,8 +62,8 @@ trait FormSupport
     }
 
     /**
-     * @param string     $name
-     * @param array|null $options
+     * @param  string  $name
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -76,13 +75,13 @@ trait FormSupport
         }
         $name = str_replace('[]', '', $name);
 
-        return (string) trans('form.' . $name);
+        return (string)trans('form.'.$name);
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $label
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $label
+     * @param  array|null  $options
      *
      * @return array
      */
@@ -91,7 +90,7 @@ trait FormSupport
         $options                 = $options ?? [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
-        $options['id']           = 'ffInput_' . $name;
+        $options['id']           = 'ffInput_'.$name;
         $options['autocomplete'] = 'off';
         $options['placeholder']  = ucfirst($label);
 
@@ -99,7 +98,7 @@ trait FormSupport
     }
 
     /**
-     * @param string $name
+     * @param  string  $name
      *
      * @return string
      */
@@ -118,8 +117,8 @@ trait FormSupport
     }
 
     /**
-     * @param string     $name
-     * @param mixed|null $value
+     * @param  string  $name
+     * @param  mixed|null  $value
      *
      * @return mixed
      */
@@ -130,13 +129,8 @@ trait FormSupport
             $value     = array_key_exists($name, $preFilled) && null === $value ? $preFilled[$name] : $value;
         }
 
-        try {
-            if (null !== request()->old($name)) {
-                $value = request()->old($name);
-            }
-        } catch (RuntimeException $e) { // @phpstan-ignore-line
-            // don't care about session errors.
-            Log::debug(sprintf('Run time: %s', $e->getMessage()));
+        if (null !== request()->old($name)) {
+            $value = request()->old($name);
         }
 
         if ($value instanceof Carbon) {
@@ -163,8 +157,8 @@ trait FormSupport
         $date = null;
         try {
             $date = today(config('app.timezone'));
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
+        } catch (InvalidDateException $e) {
+            Log::error($e->getMessage());
         }
 
         return $date;

@@ -56,7 +56,7 @@ class ApplyRules extends Command
      *
      * @var string
      */
-    protected                            $signature
+    protected $signature
         = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}
@@ -161,13 +161,13 @@ class ApplyRules extends Command
     private function stupidLaravel(): void
     {
         $this->allRules            = false;
-        $this->accounts            = new Collection;
+        $this->accounts            = new Collection();
         $this->ruleSelection       = [];
         $this->ruleGroupSelection  = [];
         $this->ruleRepository      = app(RuleRepositoryInterface::class);
         $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
         $this->acceptedAccounts    = [AccountType::DEFAULT, AccountType::DEBT, AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE];
-        $this->groups              = new Collection;
+        $this->groups              = new Collection();
     }
 
     /**
@@ -205,14 +205,14 @@ class ApplyRules extends Command
 
             return false;
         }
-        $finalList   = new Collection;
+        $finalList   = new Collection();
         $accountList = explode(',', $accountString);
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($this->getUser());
         foreach ($accountList as $accountId) {
-            $accountId = (int) $accountId;
+            $accountId = (int)$accountId;
             $account   = $accountRepository->find($accountId);
             if (null !== $account && in_array($account->accountType->type, $this->acceptedAccounts, true)) {
                 $finalList->push($account);
@@ -227,7 +227,6 @@ class ApplyRules extends Command
         $this->accounts = $finalList;
 
         return true;
-
     }
 
     /**
@@ -243,7 +242,7 @@ class ApplyRules extends Command
         $ruleGroupList = explode(',', $ruleGroupString);
 
         foreach ($ruleGroupList as $ruleGroupId) {
-            $ruleGroup = $this->ruleGroupRepository->find((int) $ruleGroupId);
+            $ruleGroup = $this->ruleGroupRepository->find((int)$ruleGroupId);
             if ($ruleGroup->active) {
                 $this->ruleGroupSelection[] = $ruleGroup->id;
             }
@@ -268,7 +267,7 @@ class ApplyRules extends Command
         $ruleList = explode(',', $ruleString);
 
         foreach ($ruleList as $ruleId) {
-            $rule = $this->ruleRepository->find((int) $ruleId);
+            $rule = $this->ruleRepository->find((int)$ruleId);
             if (null !== $rule && $rule->active) {
                 $this->ruleSelection[] = $rule->id;
             }
@@ -325,7 +324,7 @@ class ApplyRules extends Command
      */
     private function getRulesToApply(): Collection
     {
-        $rulesToApply = new Collection;
+        $rulesToApply = new Collection();
         /** @var RuleGroup $group */
         foreach ($this->groups as $group) {
             $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
@@ -344,8 +343,8 @@ class ApplyRules extends Command
     }
 
     /**
-     * @param Rule      $rule
-     * @param RuleGroup $group
+     * @param  Rule  $rule
+     * @param  RuleGroup  $group
      *
      * @return bool
      */

@@ -50,7 +50,7 @@ class CategoryTransformer extends AbstractTransformer
     /**
      * Convert category.
      *
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return array
      */
@@ -70,7 +70,7 @@ class CategoryTransformer extends AbstractTransformer
         $notes = $this->repository->getNoteText($category);
 
         return [
-            'id'         => (int) $category->id,
+            'id'         => (int)$category->id,
             'created_at' => $category->created_at->toAtomString(),
             'updated_at' => $category->updated_at->toAtomString(),
             'name'       => $category->name,
@@ -80,14 +80,14 @@ class CategoryTransformer extends AbstractTransformer
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/' . $category->id,
+                    'uri' => '/categories/'.$category->id,
                 ],
             ],
         ];
     }
 
     /**
-     * @param array $array
+     * @param  array  $array
      *
      * @return array
      */
@@ -95,7 +95,7 @@ class CategoryTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = app('steam')->bcround($data['sum'], (int) $data['currency_decimal_places']);
+            $data['sum'] = app('steam')->bcround($data['sum'], (int)$data['currency_decimal_places']);
             $return[]    = $data;
         }
 

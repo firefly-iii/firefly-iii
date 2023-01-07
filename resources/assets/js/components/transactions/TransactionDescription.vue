@@ -139,7 +139,7 @@ export default {
       this.$emit('input', this.$refs.descr.value);
     },
     handleEnter: function (e) {
-// See reference nr. 7
+    // TODO feels sloppy
 
       if (e.keyCode === 13) {
         //e.preventDefault();

@@ -99,7 +99,7 @@
                 {% set style="border-bottom:1px #aaa solid;" %}
             {% endif %}
             <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-count="{{ group.count }}" data-id="{{ group.id }}">
-                <td style=" {{ style|raw }};text-align:right;" class="hidden-xs">
+                <td style=" {{ style|raw }}" class="hidden-xs">
                     {% if transaction.transaction_type_type == 'Withdrawal' %}
                         <span class="object-handle fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></span>
                     {% endif %}

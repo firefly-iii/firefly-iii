@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Budget;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -63,33 +65,32 @@ class UpdateControllerTest extends TestCase
 
         $route = route('api.v1.budgets.update', $submission['parameters']);
         $this->assertPUT($route, $submission);
-
     }
     /**
      * @return array
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('name', 'uuid'));
         $configuration->addOptionalFieldSet('name', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('order', 'order'));
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'auto_budget_currency_id';
         $field->fieldType       = 'random-currency-id';
         $field->ignorableFields = ['auto_budget_currency_code', 'a'];
@@ -100,9 +101,9 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
         $configuration->addOptionalFieldSet('auto_budget_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'auto_budget_currency_code';
         $field->fieldType       = 'random-currency-code';
         $field->ignorableFields = ['auto_budget_currency_id', 'b'];
@@ -113,9 +114,9 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
         $configuration->addOptionalFieldSet('auto_budget_code', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'auto_budget_type';
         $field->fieldType       = 'static-auto-none';
         $field->ignorableFields = ['auto_budget_currency_code', 'auto_budget_currency_id', 'c', 'auto_budget_period', 'auto_budget_amount'];

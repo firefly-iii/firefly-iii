@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PiggyBankEvent.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,14 +33,14 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
- * @property int                          $id
- * @property Carbon|null                  $created_at
- * @property Carbon|null                  $updated_at
- * @property int                          $piggy_bank_id
- * @property int|null                     $transaction_journal_id
- * @property Carbon                       $date
- * @property string                       $amount
- * @property PiggyBank                    $piggyBank
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property int $piggy_bank_id
+ * @property int|null $transaction_journal_id
+ * @property Carbon $date
+ * @property string $amount
+ * @property PiggyBank $piggyBank
  * @property-read TransactionJournal|null $transactionJournal
  * @method static Builder|PiggyBankEvent newModelQuery()
  * @method static Builder|PiggyBankEvent newQuery()
@@ -83,11 +84,11 @@ class PiggyBankEvent extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setAmountAttribute($value): void
     {
-        $this->attributes['amount'] = (string) $value;
+        $this->attributes['amount'] = (string)$value;
     }
 
     /**
@@ -107,7 +108,7 @@ class PiggyBankEvent extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 }

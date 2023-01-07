@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Form;
 
 use Amount as Amt;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -40,9 +41,9 @@ class CurrencyForm
     use FormSupport;
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -52,10 +53,10 @@ class CurrencyForm
     }
 
     /**
-     * @param string     $name
-     * @param string     $view
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  string  $view
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -76,8 +77,8 @@ class CurrencyForm
         if (!is_array($preFilled)) {
             $preFilled = [];
         }
-        $key            = 'amount_currency_id_' . $name;
-        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $defaultCurrency->id;
+        $key            = 'amount_currency_id_'.$name;
+        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
 
         Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -95,21 +96,22 @@ class CurrencyForm
             $value = app('steam')->bcround($value, $defaultCurrency->decimal_places);
         }
         try {
-            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+            $html = view('form.'.$view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
     }
 
     /**
-     * See reference nr. 23
+     * TODO describe and cleanup.
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -119,12 +121,12 @@ class CurrencyForm
     }
 
     /**
-     * See reference nr. 24
+     * TODO describe and cleanup
      *
-     * @param string     $name
-     * @param string     $view
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  string  $view
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -145,8 +147,8 @@ class CurrencyForm
         if (!is_array($preFilled)) {
             $preFilled = [];
         }
-        $key            = 'amount_currency_id_' . $name;
-        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $defaultCurrency->id;
+        $key            = 'amount_currency_id_'.$name;
+        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
 
         Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -164,21 +166,22 @@ class CurrencyForm
             $value = app('steam')->bcround($value, $defaultCurrency->decimal_places);
         }
         try {
-            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+            $html = view('form.'.$view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
+            throw new FireflyException($html, 0, $e);
         }
 
         return $html;
     }
 
     /**
-     * See reference nr. 25
+     * TODO cleanup and describe
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -192,18 +195,18 @@ class CurrencyForm
         $array = [];
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
         }
 
         return $this->select($name, $array, $value, $options);
     }
 
     /**
-     * See reference nr. 26
+     * TODO cleanup and describe
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -215,14 +218,13 @@ class CurrencyForm
         // get all currencies:
         $list  = $currencyRepos->get();
         $array = [
-            0 => (string) trans('firefly.no_currency'),
+            0 => (string)trans('firefly.no_currency'),
         ];
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
         }
 
         return $this->select($name, $array, $value, $options);
     }
-
 }

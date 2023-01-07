@@ -35,16 +35,11 @@ use FireflyIII\Models\Budget;
 class BudgetDestroyService
 {
     /**
-     * @param Budget $budget
+     * @param  Budget  $budget
      */
     public function destroy(Budget $budget): void
     {
-
-        try {
-            $budget->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
+        $budget->delete();
 
         // also delete auto budget:
         foreach ($budget->autoBudgets()->get() as $autoBudget) {
@@ -52,10 +47,10 @@ class BudgetDestroyService
         }
 
         // also delete all relations between categories and transaction journals:
-        DB::table('budget_transaction_journal')->where('budget_id', (int) $budget->id)->delete();
+        DB::table('budget_transaction_journal')->where('budget_id', (int)$budget->id)->delete();
 
         // also delete all relations between categories and transactions:
-        DB::table('budget_transaction')->where('budget_id', (int) $budget->id)->delete();
+        DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
 
         // also delete all budget limits
         $budget->budgetlimits()->delete();

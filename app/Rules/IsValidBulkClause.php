@@ -37,12 +37,12 @@ class IsValidBulkClause implements Rule
     private array  $rules;
 
     /**
-     * @param string $type
+     * @param  string  $type
      */
     public function __construct(string $type)
     {
         $this->rules = config(sprintf('bulk.%s', $type));
-        $this->error = (string) trans('firefly.belongs_user');
+        $this->error = (string)trans('firefly.belongs_user');
     }
 
     /**
@@ -54,14 +54,14 @@ class IsValidBulkClause implements Rule
     }
 
     /**
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      */
     public function passes($attribute, $value): bool
     {
-        $result = $this->basicValidation((string) $value);
+        $result = $this->basicValidation((string)$value);
         if (false === $result) {
             return false;
         }
@@ -72,7 +72,7 @@ class IsValidBulkClause implements Rule
     /**
      * Does basic rule based validation.
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      */
@@ -81,24 +81,24 @@ class IsValidBulkClause implements Rule
         try {
             $array = json_decode($value, true, 8, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            $this->error = (string) trans('validation.json');
+            $this->error = (string)trans('validation.json');
 
             return false;
         }
         $clauses = ['where', 'update'];
         foreach ($clauses as $clause) {
             if (!array_key_exists($clause, $array)) {
-                $this->error = (string) trans(sprintf('validation.missing_%s', $clause));
+                $this->error = (string)trans(sprintf('validation.missing_%s', $clause));
 
                 return false;
             }
             /**
              * @var string $arrayKey
-             * @var mixed  $arrayValue
+             * @var mixed $arrayValue
              */
             foreach ($array[$clause] as $arrayKey => $arrayValue) {
                 if (!array_key_exists($arrayKey, $this->rules[$clause])) {
-                    $this->error = (string) trans(sprintf('validation.invalid_%s_key', $clause));
+                    $this->error = (string)trans(sprintf('validation.invalid_%s_key', $clause));
 
                     return false;
                 }

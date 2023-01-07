@@ -61,7 +61,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -80,9 +80,9 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param Webhook        $webhook
-     * @param WebhookMessage $message
-     * @param WebhookAttempt $attempt
+     * @param  Webhook  $webhook
+     * @param  WebhookMessage  $message
+     * @param  WebhookAttempt  $attempt
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -95,7 +95,6 @@ class DestroyController extends Controller
         }
         if ($attempt->webhook_message_id !== $message->id) {
             throw new FireflyException('Webhook message and webhook attempt are no match');
-
         }
 
         $this->repository->destroyAttempt($attempt);
@@ -110,8 +109,8 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param Webhook        $webhook
-     * @param WebhookMessage $message
+     * @param  Webhook  $webhook
+     * @param  WebhookMessage  $message
      *
      * @return JsonResponse
      * @throws FireflyException

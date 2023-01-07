@@ -20,13 +20,13 @@
 
 <template>
   <q-table
-    :title="title"
-    :rows="rows"
-    :columns="columns"
-    row-key="group_id"
     v-model:pagination="pagination"
+    :columns="columns"
     :loading="loading"
+    :rows="rows"
+    :title="title"
     class="q-ma-md"
+    row-key="group_id"
     @request="onRequest"
   >
     <template v-slot:header="props">
@@ -44,13 +44,13 @@
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td auto-width>
-          <q-btn size="sm" v-if="props.row.splits.length > 1" round dense @click="props.expand = !props.expand"
-                 :icon="props.expand ? 'fas fa-minus-circle' : 'fas fa-plus-circle'"/>
+          <q-btn v-if="props.row.splits.length > 1" :icon="props.expand ? 'fas fa-minus-circle' : 'fas fa-plus-circle'" dense round size="sm"
+                 @click="props.expand = !props.expand"/>
         </q-td>
         <q-td key="type" :props="props">
-          <q-icon class="fas fa-long-arrow-alt-right" v-if="'deposit' === props.row.type.toLowerCase()"></q-icon>
-          <q-icon class="fas fa-long-arrow-alt-left" v-if="'withdrawal' === props.row.type.toLowerCase()"></q-icon>
-          <q-icon class="fas fa-arrows-alt-h" v-if="'transfer' === props.row.type.toLowerCase()"></q-icon>
+          <q-icon v-if="'deposit' === props.row.type.toLowerCase()" class="fas fa-long-arrow-alt-right"></q-icon>
+          <q-icon v-if="'withdrawal' === props.row.type.toLowerCase()" class="fas fa-long-arrow-alt-left"></q-icon>
+          <q-icon v-if="'transfer' === props.row.type.toLowerCase()" class="fas fa-arrows-alt-h"></q-icon>
         </q-td>
         <q-td key="description" :props="props">
           <router-link :to="{ name: 'transactions.show', params: {id: props.row.group_id} }" class="text-primary">
@@ -79,12 +79,13 @@
         <q-td key="menu" :props="props">
           <q-btn-dropdown color="primary" label="Actions" size="sm">
             <q-list>
-              <q-item clickable v-close-popup :to="{name: 'transactions.edit', params: {id: props.row.group_id}}">
+              <q-item v-close-popup :to="{name: 'transactions.edit', params: {id: props.row.group_id}}" clickable>
                 <q-item-section>
                   <q-item-label>Edit</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup @click="deleteTransaction(props.row.group_id, props.row.description, props.row.group_title)">
+              <q-item v-close-popup clickable
+                      @click="deleteTransaction(props.row.group_id, props.row.description, props.row.group_title)">
                 <q-item-section>
                   <q-item-label>Delete</q-item-label>
                 </q-item-section>
@@ -93,7 +94,7 @@
           </q-btn-dropdown>
         </q-td>
       </q-tr>
-      <q-tr v-show="props.expand" :props="props" v-for="currentRow in props.row.splits">
+      <q-tr v-for="currentRow in props.row.splits" v-show="props.expand" :props="props">
         <q-td auto-width/>
         <q-td auto-width/>
         <q-td>
@@ -128,6 +129,7 @@
 <script>
 import format from "date-fns/format";
 import Destroy from "../../api/generic/destroy";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "LargeTable",
@@ -164,6 +166,7 @@ export default {
         {name: 'budget', label: 'Budget', field: 'budget', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'left'},
       ],
+      store: null,
     }
   },
   mounted() {
@@ -194,9 +197,9 @@ export default {
       //this.page = props.pagination.page;
       // this.triggerUpdate();
     },
-    deleteTransaction: function(identifier, description, groupTitle) {
-      let  title  = description;
-      if('' !== groupTitle) {
+    deleteTransaction: function (identifier, description, groupTitle) {
+      let title = description;
+      if ('' !== groupTitle) {
         title = groupTitle;
       }
       this.$q.dialog({
@@ -211,8 +214,8 @@ export default {
     destroyTransaction: function (id) {
 
       (new Destroy('transactions')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
-        //this.triggerUpdate();
+        this.store = useFireflyIIIStore();
+        this.store.refreshCacheKey();
       });
     },
   },

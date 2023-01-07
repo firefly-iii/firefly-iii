@@ -69,7 +69,7 @@ class ShowController extends Controller
      *
      * List all transaction links there are.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -83,7 +83,7 @@ class ShowController extends Controller
         $name = $request->get('name');
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $linkType = $this->repository->findByName($name);
 
         // get list of transaction links. Count it and split it.
@@ -93,7 +93,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transaction_links.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.transaction_links.index').$this->buildParams());
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);
@@ -103,7 +103,6 @@ class ShowController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -112,7 +111,7 @@ class ShowController extends Controller
      *
      * List single resource.
      *
-     * @param TransactionJournalLink $journalLink
+     * @param  TransactionJournalLink  $journalLink
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -128,6 +127,5 @@ class ShowController extends Controller
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

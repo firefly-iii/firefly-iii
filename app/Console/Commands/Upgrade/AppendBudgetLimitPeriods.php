@@ -27,6 +27,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class AppendBudgetLimitPeriods extends Command
 {
@@ -72,14 +74,14 @@ class AppendBudgetLimitPeriods extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar->data;
+        return (bool)$configVar->data;
     }
 
     /**
@@ -95,7 +97,7 @@ class AppendBudgetLimitPeriods extends Command
     }
 
     /**
-     * @param BudgetLimit $limit
+     * @param  BudgetLimit  $limit
      */
     private function fixLimit(BudgetLimit $limit)
     {
@@ -103,10 +105,13 @@ class AppendBudgetLimitPeriods extends Command
 
         if (null === $period) {
             $message = sprintf(
-                'Could not guesstimate budget limit #%d (%s - %s) period.', $limit->id, $limit->start_date->format('Y-m-d'), $limit->end_date->format('Y-m-d')
+                'Could not guesstimate budget limit #%d (%s - %s) period.',
+                $limit->id,
+                $limit->start_date->format('Y-m-d'),
+                $limit->end_date->format('Y-m-d')
             );
             $this->warn($message);
-            Log::warning($message);
+            app('log')->warning($message);
 
             return;
         }
@@ -114,14 +119,17 @@ class AppendBudgetLimitPeriods extends Command
         $limit->save();
 
         $msg = sprintf(
-            'Budget limit #%d (%s - %s) period is "%s".', $limit->id, $limit->start_date->format('Y-m-d'), $limit->end_date->format('Y-m-d'), $period
+            'Budget limit #%d (%s - %s) period is "%s".',
+            $limit->id,
+            $limit->start_date->format('Y-m-d'),
+            $limit->end_date->format('Y-m-d'),
+            $period
         );
         Log::debug($msg);
-
     }
 
     /**
-     * @param BudgetLimit $limit
+     * @param  BudgetLimit  $limit
      *
      * @return string|null
      */
@@ -159,8 +167,8 @@ class AppendBudgetLimitPeriods extends Command
         $start = ['1-1', '1-7'];
         $end   = ['30-6', '31-12'];
         if (
-            in_array($limit->start_date->format('j-n'), $start) // start of quarter
-            && in_array($limit->end_date->format('j-n'), $end) // end of quarter
+            in_array($limit->start_date->format('j-n'), $start, true) // start of quarter
+            && in_array($limit->end_date->format('j-n'), $end, true) // end of quarter
             && 5 === $limit->start_date->diffInMonths($limit->end_date)
         ) {
             return 'half_year';

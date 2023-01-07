@@ -77,7 +77,6 @@
                                     :
                                     <span class="available_amount" data-id="0" data-value="0" data-currency="{{ defaultCurrency.id }}"
                                           data-value="0">{{ formatAmountBySymbol(0, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }}</span>
-                                    <a href="#" data-id="0" class="update_ab btn btn-default btn-xs"><span class="fa fa-pencil"></span></a>
                                 </small>
                             </div>
                         </div>
@@ -90,15 +89,6 @@
                         </div>
                     </div>
                 </div>
-                {% if enableAddButton %}
-                    <div class="col-lg-12">
-                        <p class="pull-right">
-                            <a href="#" class="btn btn-light btn-xs create_ab_alt">
-                                <span class="fa fa-plus-circle"></span>
-                                {{ 'alt_currency_ab_create'|_ }}</a>
-                        </p>
-                    </div>
-                {% endif %}
             </div>
         </div>
     {% endif %}
@@ -134,10 +124,8 @@
                                     <small class="available_bar"
                                            data-id="{{ budget.id }}">{{ trans('firefly.available_between', {start: budget.start_date.isoFormat(monthAndDayFormat), end: budget.end_date.isoFormat(monthAndDayFormat) }) }}
                                         :
-                                        <span class="available_amount" data-id="{{ budget.id }}"
+                                        <span class="available_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}"
                                               data-value="{{ budget.amount }}">{{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}</span>
-                                        <a href="#" data-id="{{ budget.id }}" class="update_ab btn btn-default btn-xs"><span class="fa fa-pencil"></span></a>
-                                        <a href="#" data-id="{{ budget.id }}" class="delete_ab btn btn-danger btn-xs"><span class="fa fa-trash"></span></a>
                                     </small>
                                 </div>
                             </div>
@@ -190,15 +178,6 @@
                     </div>
                 </div>
             {% endfor %}
-            {% if enableAddButton %}
-                <div class="col-lg-12">
-                    <p class="pull-right">
-                        <a href="#" class="btn btn-light btn-xs create_ab_alt">
-                            <span class="fa fa-plus-circle"></span>
-                            {{ 'alt_currency_ab_create'|_ }}</a>
-                    </p>
-                </div>
-            {% endif %}
         </div>
     {% endif %}
     {% if budgets|length == 0 and inactive.count() == 0 %}
@@ -206,7 +185,7 @@
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
     {% else %}
-    
+
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="box">
@@ -459,12 +438,6 @@
 
         // index route.
         var budgetIndexUrl = "{{ route('budgets.index',['START','END']) }}";
-
-        // create available budgets / edit
-        var createAvailableBudgetUrl = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
-        var createAltAvailableBudgetUrl = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
-        var editAvailableBudgetUrl = "{{ route('available-budgets.edit', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
-        var deleteABUrl = "{{ route('available-budgets.delete') }}";
 
         // budget limit create form.
         var createBudgetLimitUrl = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";

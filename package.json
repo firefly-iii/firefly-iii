@@ -8,6 +8,10 @@
         "production": "mix --production",
         "prod": "mix --production"
     },
+    "dependencies": {
+        "date-fns": "^2.29.3",
+        "stream-browserify": "^3.0.0"
+    },
     "devDependencies": {
         "@johmun/vue-tags-input": "^2",
         "@vue/compiler-sfc": "^3.2.45",
@@ -23,8 +27,5 @@
         "vue-i18n": "^8",
         "vue-loader": "^15",
         "vue-template-compiler": "^2.7"
-    },
-    "dependencies": {
-        "stream-browserify": "^3.0.0"
     }
 }

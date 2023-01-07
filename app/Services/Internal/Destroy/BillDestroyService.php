@@ -33,15 +33,10 @@ use FireflyIII\Models\Bill;
 class BillDestroyService
 {
     /**
-     * @param Bill $bill
+     * @param  Bill  $bill
      */
     public function destroy(Bill $bill): void
     {
-        try {
-            $bill->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
+        $bill->delete();
     }
-
 }

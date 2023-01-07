@@ -22,9 +22,7 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Services\Internal\Support;
-
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
@@ -64,13 +62,15 @@ class CreditRecalculateService
             return;
         }
         if (null !== $this->group && null === $this->account) {
+            Log::debug('Have to handle a group.');
             $this->processGroup();
         }
         if (null !== $this->account && null === $this->group) {
+            Log::debug('Have to handle an account.');
             // work based on account.
             $this->processAccount();
         }
-        if (empty($this->work)) {
+        if (0 === count($this->work)) {
             Log::debug('No work accounts, do not do CreditRecalculationService');
 
             return;
@@ -86,7 +86,7 @@ class CreditRecalculateService
     {
         /** @var TransactionJournal $journal */
         foreach ($this->group->transactionJournals as $journal) {
-            if (empty($this->work)) {
+            if (0 === count($this->work)) {
                 try {
                     $this->findByJournal($journal);
                 } catch (FireflyException $e) {
@@ -110,11 +110,11 @@ class CreditRecalculateService
 
         // destination or source must be liability.
         $valid = config('firefly.valid_liabilities');
-        if (in_array($destination->accountType->type, $valid)) {
+        if (in_array($destination->accountType->type, $valid, true)) {
             Log::debug(sprintf('Dest account type is "%s", include it.', $destination->accountType->type));
             $this->work[] = $destination;
         }
-        if (in_array($source->accountType->type, $valid)) {
+        if (in_array($source->accountType->type, $valid, true)) {
             Log::debug(sprintf('Src account type is "%s", include it.', $source->accountType->type));
             $this->work[] = $source;
         }
@@ -170,7 +170,7 @@ class CreditRecalculateService
     private function processAccount(): void
     {
         $valid = config('firefly.valid_liabilities');
-        if (in_array($this->account->accountType->type, $valid)) {
+        if (in_array($this->account->accountType->type, $valid, true)) {
             Log::debug(sprintf('Account type is "%s", include it.', $this->account->accountType->type));
             $this->work[] = $this->account;
         }
@@ -215,7 +215,6 @@ class CreditRecalculateService
         }
         $factory->crud($account, 'current_debt', $leftOfDebt);
 
-
         Log::debug(sprintf('Done with %s(#%d)', __METHOD__, $account->id));
     }
 
@@ -254,28 +253,32 @@ class CreditRecalculateService
         Log::debug(sprintf('Processing group #%d, journal #%d of type "%s"', $journal->id, $groupId, $type));
 
         // it's a withdrawal into this liability (from asset).
-        // if it's a credit, we don't care, because sending more money
-        // to a credit-liability doesn't increase the amount (yet)
+        // if it's a credit ("I am owed"), this increases the amount due,
+        // because we're lending person X more money
         if (
             $type === TransactionType::WITHDRAWAL
             && (int)$account->id === (int)$transaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
-            Log::debug(sprintf('Is withdrawal into credit liability #%d, does not influence the amount due.', $transaction->account_id));
-
+            $amount = bcadd($amount, app('steam')->positive($usedAmount));
+            Log::debug(
+                sprintf('Is withdrawal (%s) into credit liability #%d, will increase amount due to %s.', $transaction->account_id, $usedAmount, $amount)
+            );
             return $amount;
         }
 
-        // likewise deposit into a credit debt does not change the amount
+        // it's a deposit out of this liability (to asset).
+        // if it's a credit ("I am owed") this decreases the amount due.
+        // because the person is paying us back.
         if (
             $type === TransactionType::DEPOSIT
             && (int)$account->id === (int)$transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
-            Log::debug(sprintf('Is deposit from liability #%d,does not influence the amount left.', $transaction->account_id));
-
+            $amount = bcsub($amount, app('steam')->positive($usedAmount));
+            Log::debug(sprintf('Is deposit (%s) from credit liability #%d, will decrease amount due to %s.', $transaction->account_id, $usedAmount, $amount));
             return $amount;
         }
 
@@ -302,6 +305,4 @@ class CreditRecalculateService
     {
         $this->group = $group;
     }
-
-
 }

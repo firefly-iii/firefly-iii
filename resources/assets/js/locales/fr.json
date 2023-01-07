@@ -109,7 +109,7 @@
         "webhook_delivery_form_help": "Le format dans lequel le webhook doit fournir des donn\u00e9es.",
         "webhook_active_form_help": "Le webhook doit \u00eatre actif, sinon il ne sera pas appel\u00e9.",
         "edit_webhook_js": "Modifier le webhook \"{title}\"",
-        "webhook_was_triggered": "Le webhook a \u00e9t\u00e9 d\u00e9clench\u00e9 sur l'op\u00e9ration indiqu\u00e9e. Vous pouvez actualiser cette page pour voir les r\u00e9sultats.",
+        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. Please wait for results to appear.",
         "view_message": "Afficher le message",
         "view_attempts": "Voir les tentatives \u00e9chou\u00e9es",
         "message_content_title": "Contenu du message webhook",

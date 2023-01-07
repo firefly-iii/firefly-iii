@@ -39,7 +39,6 @@ use Log;
  */
 trait UserNavigation
 {
-
     /**
      * Functionality:.
      *
@@ -47,14 +46,14 @@ trait UserNavigation
      *   will be returned.
      * - If the remembered url contains "jscript/" the remembered url will not be returned but instead the index (/) will be returned.
      *
-     * @param string $identifier
+     * @param  string  $identifier
      *
      * @return string
      */
     final protected function getPreviousUrl(string $identifier): string
     {
         Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
-        $url = (string) session($identifier);
+        $url = (string)session($identifier);
         Log::debug(sprintf('The URL is %s', $url));
 
         return app('steam')->getSafeUrl($url, route('index'));
@@ -63,7 +62,7 @@ trait UserNavigation
     /**
      * Will return false if you cant edit this account type.
      *
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return bool
      */
@@ -76,7 +75,7 @@ trait UserNavigation
     }
 
     /**
-     * @param TransactionGroup $group
+     * @param  TransactionGroup  $group
      *
      * @return bool
      */
@@ -94,7 +93,7 @@ trait UserNavigation
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return RedirectResponse|Redirector
      */
@@ -129,7 +128,7 @@ trait UserNavigation
     }
 
     /**
-     * @param TransactionGroup $group
+     * @param  TransactionGroup  $group
      *
      * @return RedirectResponse|Redirector
      */
@@ -157,7 +156,7 @@ trait UserNavigation
     }
 
     /**
-     * @param string $identifier
+     * @param  string  $identifier
      *
      * @return string|null
      */

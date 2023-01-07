@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -40,30 +40,31 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.name"
-                  :error="hasSubmissionErrors.name"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="name" :label="$t('form.name')"
-                  outlined/>
+                  v-model="name"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.name" :error-message="submissionErrors.name" :label="$t('form.name')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
 
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.code"
-                  :error="hasSubmissionErrors.code"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="code" :label="$t('form.code')"
-                  outlined/>
+                  v-model="code"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.code" :error-message="submissionErrors.code" :label="$t('form.code')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
 
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.symbol"
-                  :error="hasSubmissionErrors.symbol"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="symbol" :label="$t('form.symbol')"
-                  outlined/>
+                  v-model="symbol"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.symbol" :error-message="submissionErrors.symbol" :label="$t('form.symbol')" bottom-slots clearable
+                  outlined
+                  type="text"/>
               </div>
             </div>
           </q-card-section>
@@ -82,9 +83,11 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label label="Return here to create another one"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
+                            left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" left-label :disable="!doReturnHere || disabledInput" label="Reset form after submission"/>
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                            left-label/>
               </div>
             </div>
           </q-card-section>
@@ -97,6 +100,7 @@
 
 <script>
 import Post from "../../api/currencies/post";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Create',
@@ -113,6 +117,7 @@ export default {
       name: '',
       code: '',
       symbol: '',
+      store: null,
     }
   },
   computed: {
@@ -123,6 +128,7 @@ export default {
   created() {
     this.resetForm();
     this.type = this.$route.params.type;
+    this.store = useFireflyIIIStore();
   },
   methods: {
     resetForm: function () {
@@ -175,7 +181,7 @@ export default {
       if (!response) {
         return;
       }
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       this.submitting = false;
       let message = {
         level: 'success',

@@ -253,7 +253,7 @@ return [
     'updated_webhook'                      => 'Оновлено веб-хук ":title"',
     'edit_webhook_js'                      => 'Редагувати веб-хук "{title}"',
     'show_webhook'                         => 'Веб-хук ":title"',
-    'webhook_was_triggered'                => 'Веб-хук було запущено за вказаною операцією. Ви можете оновити цю сторінку, щоб побачити результати.',
+    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
     'webhook_messages'                     => 'Повідомлення веб-хука',
     'view_message'                         => 'Переглянути повідомлення',
     'view_attempts'                        => 'Переглянути невдалі спроби',

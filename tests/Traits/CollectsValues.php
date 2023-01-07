@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Traits;
+
 use FireflyIII\User;
 
 /**

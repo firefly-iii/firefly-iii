@@ -73,7 +73,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/accounts/listAttachmentByAccount
      *
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -82,7 +82,7 @@ class ListController extends Controller
     public function attachments(Account $account): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($account);
 
         $count       = $collection->count();
@@ -90,7 +90,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.accounts.attachments', [$account->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.accounts.attachments', [$account->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -106,7 +106,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/accounts/listPiggyBankByAccount
      *
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -118,7 +118,7 @@ class ListController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getPiggyBanks($account);
@@ -127,7 +127,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.accounts.piggy_banks', [$account->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.accounts.piggy_banks', [$account->id]).$this->buildParams());
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -137,7 +137,6 @@ class ListController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -148,15 +147,15 @@ class ListController extends Controller
      *
      * @codeCoverageIgnore
      *
-     * @param Request $request
-     * @param Account $account
+     * @param  Request  $request
+     * @param  Account  $account
      *
      * @return JsonResponse
      * @throws FireflyException
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -181,7 +180,7 @@ class ListController extends Controller
         }
 
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]).$this->buildParams());
         $groups = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

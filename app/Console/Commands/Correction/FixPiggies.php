@@ -61,11 +61,10 @@ class FixPiggies extends Command
 
         /** @var PiggyBankEvent $event */
         foreach ($set as $event) {
-
             if (null === $event->transaction_journal_id) {
                 continue;
             }
-            /** @var TransactionJournal $journal */
+            /** @var TransactionJournal|null $journal */
             $journal = $event->transactionJournal;
 
             if (null === $journal) {

@@ -29,7 +29,7 @@
             </div>
           </q-card-section>
           <q-card-section>
-            <div class="row" v-for="(transaction, index) in group.transactions">
+            <div v-for="(transaction, index) in group.transactions" class="row">
               <div class="col-12 q-mb-xs">
                 <strong>index {{ index }}</strong><br>
                 {{ transaction.description }}<br>
@@ -84,15 +84,15 @@ export default {
         group_title: data.attributes.group_title,
         transactions: [],
       };
-      if(null !== data.attributes.group_title) {
+      if (null !== data.attributes.group_title) {
         this.title = data.attributes.group_title;
       }
-      for(let i in data.attributes.transactions) {
-        if(data.attributes.transactions.hasOwnProperty(i)) {
+      for (let i in data.attributes.transactions) {
+        if (data.attributes.transactions.hasOwnProperty(i)) {
           let transaction = data.attributes.transactions[i];
           this.group.transactions.push(transaction);
 
-          if(0 === parseInt(i) && null === data.attributes.group_title) {
+          if (0 === parseInt(i) && null === data.attributes.group_title) {
             this.title = transaction.description;
           }
         }

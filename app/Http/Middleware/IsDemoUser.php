@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IsDemoUser.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -36,8 +37,8 @@ class IsDemoUser
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request  $request
+     * @param  Closure  $next
      *
      * @return mixed
      */
@@ -53,7 +54,7 @@ class IsDemoUser
         $repository = app(UserRepositoryInterface::class);
         if ($repository->hasRole($user, 'demo')) {
             Log::info('User is a demo user.');
-            $request->session()->flash('info', (string) trans('firefly.not_available_demo_user'));
+            $request->session()->flash('info', (string)trans('firefly.not_available_demo_user'));
             $current  = $request->url();
             $previous = $request->session()->previousUrl();
             if ($current !== $previous) {

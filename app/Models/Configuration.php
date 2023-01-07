@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Configuration.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -31,12 +32,12 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\Configuration
  *
- * @property int         $id
+ * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property string      $name
- * @property mixed       $data
+ * @property string $name
+ * @property mixed $data
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration newQuery()
  * @method static Builder|Configuration onlyTrashed()
@@ -70,11 +71,11 @@ class Configuration extends Model
     protected $table = 'configuration';
 
     /**
-     * See reference nr. 17
+     * TODO can be replaced with native laravel code.
      *
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @return mixed
      */
@@ -86,7 +87,7 @@ class Configuration extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setDataAttribute($value): void
     {

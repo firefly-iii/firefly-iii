@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Attachment.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -37,26 +38,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Attachment
  *
- * @property int                 $id
- * @property Carbon|null         $created_at
- * @property Carbon|null         $updated_at
- * @property Carbon|null         $deleted_at
- * @property int                 $user_id
- * @property int                 $attachable_id
- * @property string              $attachable_type
- * @property bool                $file_exists
- * @property string              $md5
- * @property string              $filename
- * @property string|null         $title
- * @property string|null         $description
- * @property string              $mime
- * @property int                 $size
- * @property bool                $uploaded
- * @property string              $notes_text
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int $attachable_id
+ * @property string $attachable_type
+ * @property bool $file_exists
+ * @property string $md5
+ * @property string $filename
+ * @property string|null $title
+ * @property string|null $description
+ * @property string $mime
+ * @property int $size
+ * @property bool $uploaded
+ * @property string $notes_text
  * @property-read Model|Eloquent $attachable
- * @property Collection|Note[]   $notes
- * @property-read int|null       $notes_count
- * @property-read User           $user
+ * @property Collection|Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newQuery()
  * @method static Builder|Attachment onlyTrashed()
@@ -78,7 +79,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Attachment withTrashed()
  * @method static Builder|Attachment withoutTrashed()
  * @mixin Eloquent
- * @property int|null            $user_group_id
+ * @property int|null $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserGroupId($value)
  */
 class Attachment extends Model
@@ -103,7 +104,7 @@ class Attachment extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return Attachment
      * @throws NotFoundHttpException
@@ -111,7 +112,7 @@ class Attachment extends Model
     public static function routeBinder(string $value): Attachment
     {
         if (auth()->check()) {
-            $attachmentId = (int) $value;
+            $attachmentId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Attachment $attachment */
@@ -120,7 +121,16 @@ class Attachment extends Model
                 return $attachment;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -143,7 +153,7 @@ class Attachment extends Model
      */
     public function fileName(): string
     {
-        return sprintf('at-%s.data', (string) $this->id);
+        return sprintf('at-%s.data', (string)$this->id);
     }
 
     /**
@@ -153,14 +163,5 @@ class Attachment extends Model
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

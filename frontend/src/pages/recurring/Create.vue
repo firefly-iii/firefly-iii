@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -40,23 +40,23 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.title"
-                  :error="hasSubmissionErrors.title"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="title" :label="$t('form.title')"
-                  outlined/>
+                  v-model="title"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.title" :error-message="submissionErrors.title" :label="$t('form.title')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-select
-                  :error-message="submissionErrors.type"
-                  :error="hasSubmissionErrors.type"
-                  bottom-slots
-                  :disable="disabledInput"
-                  outlined
                   v-model="type"
-                  emit-value class="q-pr-xs"
-                  map-options :options="types" label="Transaction type"/>
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.type"
+                  :error-message="submissionErrors.type"
+                  :options="types"
+                  bottom-slots
+                  class="q-pr-xs" emit-value
+                  label="Transaction type" map-options outlined/>
               </div>
             </div>
           </q-card-section>
@@ -71,35 +71,35 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.first_date"
+                  v-model="first_date"
+                  :disable="disabledInput"
                   :error="hasSubmissionErrors.first_date"
-                  clearable
-                  bottom-slots :disable="disabledInput" type="date" v-model="first_date" :label="$t('form.first_date')"
-                  hint="The first date you want the recurrence"
-                  outlined/>
+                  :error-message="submissionErrors.first_date" :label="$t('form.first_date')" bottom-slots clearable hint="The first date you want the recurrence"
+                  outlined
+                  type="date"/>
               </div>
             </div>
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.nr_of_repetitions"
+                  v-model="nr_of_repetitions"
+                  :disable="disabledInput"
                   :error="hasSubmissionErrors.nr_of_repetitions"
-                  clearable
-                  bottom-slots :disable="disabledInput" type="number" step="1" v-model="nr_of_repetitions"
-                  :label="$t('form.repetitions')"
-                  hint="nr_of_repetitions"
-                  outlined/>
+                  :error-message="submissionErrors.nr_of_repetitions" :label="$t('form.repetitions')" bottom-slots clearable hint="nr_of_repetitions"
+                  outlined
+                  step="1"
+                  type="number"/>
               </div>
             </div>
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.repeat_until"
-                  :error="hasSubmissionErrors.repeat_until"
-                  bottom-slots :disable="disabledInput" type="date" v-model="repeat_until"
+                  v-model="repeat_until"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.repeat_until" :error-message="submissionErrors.repeat_until" bottom-slots clearable
                   hint="repeat_until"
-                  clearable
-                  outlined/>
+                  outlined
+                  type="date"/>
               </div>
             </div>
           </q-card-section>
@@ -116,40 +116,40 @@
           <q-card-section>
 
             <q-input
-              :error-message="submissionErrors.transactions[index].description"
-              :error="hasSubmissionErrors.transactions[index].description"
-              bottom-slots :disable="disabledInput" type="text" clearable v-model="transactions[index].description"
-              :label="$t('form.description')"
-              outlined/>
+              v-model="transactions[index].description"
+              :disable="disabledInput"
+              :error="hasSubmissionErrors.transactions[index].description" :error-message="submissionErrors.transactions[index].description" :label="$t('form.description')" bottom-slots clearable
+              outlined
+              type="text"/>
 
             <q-input
-              :error-message="submissionErrors.transactions[index].amount"
-              :error="hasSubmissionErrors.transactions[index].amount"
-              bottom-slots :disable="disabledInput" clearable :mask="balance_input_mask" reverse-fill-mask
-              hint="Expects #.##" fill-mask="0"
               v-model="transactions[index].amount"
-              :label="$t('firefly.amount')" outlined/>
-
-
-            <q-select
-              :error-message="submissionErrors.transactions[index].source_id"
-              :error="hasSubmissionErrors.transactions[index].source_id"
-              v-model="transactions[index].source_id"
-              bottom-slots
-              :disable="loading"
-              outlined
-              emit-value class="q-pr-xs"
-              map-options :options="accounts" label="Source account"/>
-
-            <q-select
-              :error-message="submissionErrors.transactions[index].destination_id"
-              :error="hasSubmissionErrors.transactions[index].destination_id"
-              v-model="transactions[index].destination_id"
-              bottom-slots
               :disable="disabledInput"
-              outlined
-              emit-value class="q-pr-xs"
-              map-options :options="accounts" label="Destination account"/>
+              :error="hasSubmissionErrors.transactions[index].amount" :error-message="submissionErrors.transactions[index].amount" :label="$t('firefly.amount')" :mask="balance_input_mask" bottom-slots
+              clearable fill-mask="0"
+              hint="Expects #.##"
+              outlined reverse-fill-mask/>
+
+
+            <q-select
+              v-model="transactions[index].source_id"
+              :disable="loading"
+              :error="hasSubmissionErrors.transactions[index].source_id"
+              :error-message="submissionErrors.transactions[index].source_id"
+              :options="accounts"
+              bottom-slots
+              class="q-pr-xs" emit-value
+              label="Source account" map-options outlined/>
+
+            <q-select
+              v-model="transactions[index].destination_id"
+              :disable="disabledInput"
+              :error="hasSubmissionErrors.transactions[index].destination_id"
+              :error-message="submissionErrors.transactions[index].destination_id"
+              :options="accounts"
+              bottom-slots
+              class="q-pr-xs" emit-value
+              label="Destination account" map-options outlined/>
           </q-card-section>
         </q-card>
       </div>
@@ -160,33 +160,33 @@
           </q-card-section>
           <q-card-section>
             <q-select
-              :error-message="submissionErrors.repetitions[index].type"
+              v-model="repetitions[index].type"
               :error="hasSubmissionErrors.repetitions[index].type"
+              :error-message="submissionErrors.repetitions[index].type"
+              :options="repetition_types"
               bottom-slots
               emit-value
-              outlined
-              v-model="repetitions[index].type"
-              map-options :options="repetition_types" label="Type of repetition"/>
+              label="Type of repetition" map-options outlined/>
 
             <q-input
-              :error-message="submissionErrors.repetitions[index].skip"
-              :error="hasSubmissionErrors.repetitions[index].skip"
-              bottom-slots :disable="disabledInput" clearable
               v-model="repetitions[index].skip"
-              type="number"
-              min="0" max="31"
-              :label="$t('firefly.skip')" outlined
+              :disable="disabledInput"
+              :error="hasSubmissionErrors.repetitions[index].skip" :error-message="submissionErrors.repetitions[index].skip" :label="$t('firefly.skip')"
+              bottom-slots
+              clearable
+              max="31" min="0"
+              outlined type="number"
             />
 
             <q-select
-              :error-message="submissionErrors.repetitions[index].weekend"
-              :error="hasSubmissionErrors.repetitions[index].weekend"
               v-model="repetitions[index].weekend"
-              bottom-slots
               :disable="disabledInput"
-              outlined
-              emit-value class="q-pr-xs"
-              map-options :options="weekends" label="Weekend?"/>
+              :error="hasSubmissionErrors.repetitions[index].weekend"
+              :error-message="submissionErrors.repetitions[index].weekend"
+              :options="weekends"
+              bottom-slots
+              class="q-pr-xs" emit-value
+              label="Weekend?" map-options outlined/>
 
           </q-card-section>
 
@@ -206,11 +206,11 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label
-                            label="Return here to create another one"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
+                            left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" left-label :disable="!doReturnHere || disabledInput"
-                            label="Reset form after submission"/>
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                            left-label/>
               </div>
             </div>
           </q-card-section>
@@ -223,8 +223,8 @@
 
 <script>
 import Post from "../../api/recurring/post";
-import {mapGetters} from "vuex";
-import {getCacheKey} from "../../store/fireflyiii/getters";
+// import {mapGetters} from "vuex";
+// import {getCacheKey} from "../../store/fireflyiii/getters";
 import format from "date-fns/format";
 import List from "../../api/accounts/list";
 import {parseISO} from "date-fns";
@@ -275,7 +275,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
     disabledInput: function () {
       return this.submitting;
     }

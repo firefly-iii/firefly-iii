@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReportHelperInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -36,9 +37,9 @@ interface ReportHelperInterface
      *
      * Excludes bills which have not had a payment on the mentioned accounts.
      *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
      *
      * @return array
      */
@@ -47,7 +48,7 @@ interface ReportHelperInterface
     /**
      * Generate a list of months.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return array
      */

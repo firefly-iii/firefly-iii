@@ -2,6 +2,62 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.8.0-alpha.1 - 2023-01-08
+
+This is the first release of the new 5.8.0 series of Firefly III. It should upgrade the database automatically BUT 
+make a backup of your database first! I guarantee nothing.
+
+### Warnings
+
+- ⚠️ Make a backup of your database first!
+- ⚠️ This version requires **PHP 8.2**.
+
+You can access the new V3 layout under `/v3/`. If you decide to use or test it:
+
+- ⚠️ Read the instructions under the ☠️ icon FIRST.
+- ⚠️ The new layout is not yet finished. Use it to change your data at your own risk. 
+
+### Added
+
+Lots of new stuff that I invite you to test and break.
+
+- [Issue 4975](https://github.com/firefly-iii/firefly-iii/issues/4975) Rules can copy/move description to notes and vice versa
+- [Issue 5031](https://github.com/firefly-iii/firefly-iii/issues/5031) You can invite users to your installation when registration is off
+- [Issue 5213](https://github.com/firefly-iii/firefly-iii/issues/5213) You can trigger recurring transactions beforehand
+- [Issue 5592](https://github.com/firefly-iii/firefly-iii/issues/5592) Transactions have a little history box to show how rules changed them
+- [Issue 5752](https://github.com/firefly-iii/firefly-iii/issues/5752) Firefly III can send Slack notifications instead of emails
+- [Issue 5862](https://github.com/firefly-iii/firefly-iii/issues/5862) Search can filter on reconciled transactions
+- [Issue 6086](https://github.com/firefly-iii/firefly-iii/issues/6086) All search filters can be negative by putting `-` in front of them
+- [Issue 6441](https://github.com/firefly-iii/firefly-iii/issues/6441) Buttons to purge deleted data, which is easy for data imports
+- [Issue 6457](https://github.com/firefly-iii/firefly-iii/issues/6457) Rule trigger 'transaction exists', that will always trigger
+- [Issue 6526](https://github.com/firefly-iii/firefly-iii/issues/6526) Option to disable rules and/or webhooks when saving transactions
+- [Issue 6605](https://github.com/firefly-iii/firefly-iii/issues/6605) You can search for external ID values
+- Working beta of the new layout under `/v3/`
+- New authentication screens that support dark mode.
+- There is a page for webhooks.
+
+### Changed
+- Firefly III requires PHP 8.2
+- Liabilities are no longer part of your net worth.
+- Liabilities no longer need two transactions to be managed properly (see the documentation)
+
+### Removed
+- [Issue 4198](https://github.com/firefly-iii/firefly-iii/issues/4198) The total available budget amount bar on the `/budgets` page is no longer manageable but will be auto-calculated
+
+### Fixed
+
+Not many bugfixes (yet).
+
+- [Issue 6581](https://github.com/firefly-iii/firefly-iii/issues/6581) Fields were not cleared in the transaction screen in some cases
+
+### API
+
+New `/v2/` endpoints are being implemented that prepare the application for (among other things) the ability
+to manage multiple financial administrations. The documentation for these endpoints will be at 
+https://api-docs.firefly-iii.org/.
+
+- [Issue 6130](https://github.com/firefly-iii/firefly-iii/issues/6130) You can now create a reconciliation transaction
+
 ## 5.7.18 - 2023-01-03
 
 ### Fixed

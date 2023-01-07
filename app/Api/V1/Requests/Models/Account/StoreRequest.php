@@ -40,7 +40,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
+    use ConvertsDataTypes;
+    use AppendsLocationData;
+    use ChecksLogin;
 
     /**
      * @return array
@@ -104,7 +106,7 @@ class StoreRequest extends FormRequest
         $type           = $this->convertString('type');
         $rules          = [
             'name'                 => 'required|min:1|uniqueAccountForUser',
-            'type'                 => 'required|' . sprintf('in:%s', $types),
+            'type'                 => 'required|min:1|'.sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
             'bic'                  => 'bic|nullable',
             'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber(null, $type)],
@@ -114,8 +116,8 @@ class StoreRequest extends FormRequest
             'order'                => 'numeric|nullable',
             'currency_id'          => 'numeric|exists:transaction_currencies,id',
             'currency_code'        => 'min:3|max:3|exists:transaction_currencies,code',
-            'active'               => [new IsBoolean],
-            'include_net_worth'    => [new IsBoolean],
+            'active'               => [new IsBoolean()],
+            'include_net_worth'    => [new IsBoolean()],
             'account_role'         => sprintf('nullable|in:%s|required_if:type,asset', $accountRoles),
             'credit_card_type'     => sprintf('nullable|in:%s|required_if:account_role,ccAsset', $ccPaymentTypes),
             'monthly_payment_date' => 'nullable|date|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',

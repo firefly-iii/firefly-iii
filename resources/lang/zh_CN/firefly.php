@@ -253,7 +253,7 @@ return [
     'updated_webhook'                      => '已更新 webhook “:title”',
     'edit_webhook_js'                      => '编辑 webhook “{title}”',
     'show_webhook'                         => 'Webhook “:title”',
-    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. You can refresh this page to see the results.',
+    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
     'webhook_messages'                     => 'Webhook 消息',
     'view_message'                         => '查看消息',
     'view_attempts'                        => '查看失败的尝试',

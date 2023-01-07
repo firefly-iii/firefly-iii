@@ -56,7 +56,7 @@ class RuleGroupController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/autocomplete/getRuleGroupsAC
      *
-     * @param AutocompleteRequest $request
+     * @param  AutocompleteRequest  $request
      *
      * @return JsonResponse
      */
@@ -69,7 +69,7 @@ class RuleGroupController extends Controller
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
             $response[] = [
-                'id'          => (string) $group->id,
+                'id'          => (string)$group->id,
                 'name'        => $group->title,
                 'description' => $group->description,
             ];

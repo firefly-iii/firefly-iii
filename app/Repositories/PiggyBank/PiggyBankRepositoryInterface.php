@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PiggyBankRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -25,7 +26,6 @@ namespace FireflyIII\Repositories\PiggyBank;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
@@ -45,22 +45,22 @@ interface PiggyBankRepositoryInterface
     public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
     /**
-     * @param PiggyBankRepetition $repetition
-     * @param string              $amount
+     * @param  PiggyBankRepetition  $repetition
+     * @param  string  $amount
      */
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void;
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $amount
      *
      * @return bool
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool;
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $amount
      *
      * @return bool
      */
@@ -69,7 +69,7 @@ interface PiggyBankRepositoryInterface
     /**
      * Destroy piggy bank.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return bool
      */
@@ -81,7 +81,7 @@ interface PiggyBankRepositoryInterface
     public function destroyAll(): void;
 
     /**
-     * @param int $piggyBankId
+     * @param  int  $piggyBankId
      *
      * @return PiggyBank|null
      */
@@ -90,22 +90,22 @@ interface PiggyBankRepositoryInterface
     /**
      * Find by name or return NULL.
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return PiggyBank|null
      */
     public function findByName(string $name): ?PiggyBank;
 
     /**
-     * @param int|null    $piggyBankId
-     * @param string|null $piggyBankName
+     * @param  int|null  $piggyBankId
+     * @param  string|null  $piggyBankName
      *
      * @return PiggyBank|null
      */
     public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank;
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return Collection
      */
@@ -114,7 +114,7 @@ interface PiggyBankRepositoryInterface
     /**
      * Get current amount saved in piggy bank.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return string
      */
@@ -123,7 +123,7 @@ interface PiggyBankRepositoryInterface
     /**
      * Get all events.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return Collection
      */
@@ -132,9 +132,9 @@ interface PiggyBankRepositoryInterface
     /**
      * Used for connecting to a piggy bank.
      *
-     * @param PiggyBank           $piggyBank
-     * @param PiggyBankRepetition $repetition
-     * @param TransactionJournal  $journal
+     * @param  PiggyBank  $piggyBank
+     * @param  PiggyBankRepetition  $repetition
+     * @param  TransactionJournal  $journal
      *
      * @return string
      */
@@ -150,7 +150,7 @@ interface PiggyBankRepositoryInterface
     /**
      * Return note for piggy bank.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return string
      */
@@ -171,7 +171,7 @@ interface PiggyBankRepositoryInterface
     public function getPiggyBanksWithAmount(): Collection;
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return PiggyBankRepetition|null
      */
@@ -180,7 +180,7 @@ interface PiggyBankRepositoryInterface
     /**
      * Returns the suggested amount the user should save per month, or "".
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return string
      */
@@ -189,8 +189,8 @@ interface PiggyBankRepositoryInterface
     /**
      * Get for piggy account what is left to put in piggies.
      *
-     * @param PiggyBank $piggyBank
-     * @param Carbon    $date
+     * @param  PiggyBank  $piggyBank
+     * @param  Carbon  $date
      *
      * @return string
      */
@@ -205,7 +205,7 @@ interface PiggyBankRepositoryInterface
     public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return PiggyBank
      */
@@ -219,24 +219,24 @@ interface PiggyBankRepositoryInterface
     /**
      * Search for piggy banks.
      *
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function searchPiggyBank(string $query, int $limit): Collection;
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $amount
      *
      * @return PiggyBank
      */
     public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank;
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string    $objectGroupTitle
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $objectGroupTitle
      *
      * @return PiggyBank
      */
@@ -245,22 +245,22 @@ interface PiggyBankRepositoryInterface
     /**
      * Set specific piggy bank to specific order.
      *
-     * @param PiggyBank $piggyBank
-     * @param int       $newOrder
+     * @param  PiggyBank  $piggyBank
+     * @param  int  $newOrder
      *
      * @return bool
      */
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 
     /**
      * Store new piggy bank.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return PiggyBank
      * @throws FireflyException
@@ -270,8 +270,8 @@ interface PiggyBankRepositoryInterface
     /**
      * Update existing piggy bank.
      *
-     * @param PiggyBank $piggyBank
-     * @param array     $data
+     * @param  PiggyBank  $piggyBank
+     * @param  array  $data
      *
      * @return PiggyBank
      */

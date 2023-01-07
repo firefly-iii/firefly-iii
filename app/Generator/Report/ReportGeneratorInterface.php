@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReportGeneratorInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -40,7 +41,7 @@ interface ReportGeneratorInterface
     /**
      * Set the involved accounts.
      *
-     * @param Collection $accounts
+     * @param  Collection  $accounts
      *
      * @return ReportGeneratorInterface
      */
@@ -49,7 +50,7 @@ interface ReportGeneratorInterface
     /**
      * Set the involved budgets.
      *
-     * @param Collection $budgets
+     * @param  Collection  $budgets
      *
      * @return ReportGeneratorInterface
      */
@@ -58,7 +59,7 @@ interface ReportGeneratorInterface
     /**
      * Set the involved categories.
      *
-     * @param Collection $categories
+     * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
      */
@@ -67,7 +68,7 @@ interface ReportGeneratorInterface
     /**
      * Set the end date.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -76,7 +77,7 @@ interface ReportGeneratorInterface
     /**
      * Set the expense accounts.
      *
-     * @param Collection $expense
+     * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
      */
@@ -85,7 +86,7 @@ interface ReportGeneratorInterface
     /**
      * Set the start date.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -94,7 +95,7 @@ interface ReportGeneratorInterface
     /**
      * Set the tags.
      *
-     * @param Collection $tags
+     * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
      */

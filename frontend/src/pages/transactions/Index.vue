@@ -23,13 +23,13 @@
 
     <!-- insert LargeTable -->
     <LargeTable ref="table"
-                :title="$t('firefly.title_' + this.type)"
-                :rows="rows"
                 :loading="loading"
-                v-on:on-request="onRequest"
+                :page="page"
+                :rows="rows"
                 :rows-number="rowsNumber"
                 :rows-per-page="rowsPerPage"
-                :page="page"
+                :title="$t('firefly.title_' + this.type)"
+                v-on:on-request="onRequest"
     >
 
     </LargeTable>
@@ -37,21 +37,24 @@
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
         label="Actions"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'transactions.create', params: {type: 'transfer'} }" icon="fas fa-exchange-alt" label="New transfer"/>
-        <q-fab-action color="primary" square :to="{ name: 'transactions.create', params: {type: 'deposit'} }" icon="fas fa-long-arrow-alt-right"
-                      label="New deposit"/>
-        <q-fab-action color="primary" square :to="{ name: 'transactions.create', params: {type: 'withdrawal'} }" icon="fas fa-long-arrow-alt-left"
-                      label="New withdrawal"/>
+        <q-fab-action :to="{ name: 'transactions.create', params: {type: 'transfer'} }" color="primary" icon="fas fa-exchange-alt"
+                      label="New transfer" square/>
+        <q-fab-action :to="{ name: 'transactions.create', params: {type: 'deposit'} }" color="primary" icon="fas fa-long-arrow-alt-right"
+                      label="New deposit"
+                      square/>
+        <q-fab-action :to="{ name: 'transactions.create', params: {type: 'withdrawal'} }" color="primary" icon="fas fa-long-arrow-alt-left"
+                      label="New withdrawal"
+                      square/>
 
       </q-fab>
     </q-page-sticky>
@@ -59,7 +62,7 @@
 </template>
 
 <script>
-import {mapGetters, useStore} from "vuex";
+// import {mapGetters, useStore} from "vuex";
 import List from "../../api/transactions/list";
 import LargeTable from "../../components/transactions/LargeTable";
 import Parser from "../../api/transactions/parser";
@@ -113,25 +116,31 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getRange', 'getCacheKey', 'getListPageSize']),
   },
   created() {
     this.rowsPerPage = this.getListPageSize;
   },
   mounted() {
     this.type = this.$route.params.type;
-    if (null === this.getRange.start || null === this.getRange.end) {
+    if (null === this.store.getRange.start || null === this.store.getRange.end) {
+
       // subscribe, then update:
-      const $store = useStore();
-      $store.subscribe((mutation, state) => {
-        if ('fireflyiii/setRange' === mutation.type) {
-          this.range = {start: mutation.payload.start, end: mutation.payload.end};
-          this.triggerUpdate();
+      this.store.$onAction(
+        ({name, $store, args, after, onError,}) => {
+          after((result) => {
+            if (name === 'setRange') {
+              this.range = result;
+              this.triggerUpdate();
+            }
+          })
         }
-      });
+      )
+
+
     }
-    if (null !== this.getRange.start && null !== this.getRange.end) {
-      this.range = {start: this.getRange.start, end: this.getRange.end};
+    if (null !== this.store.getRange.start && null !== this.store.getRange.end) {
+      this.range = {start: this.store.getRange.start, end: this.store.getRange.end};
       this.triggerUpdate();
     }
   },

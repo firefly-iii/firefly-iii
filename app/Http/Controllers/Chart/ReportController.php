@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReportController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
@@ -43,7 +45,8 @@ use Log;
  */
 class ReportController extends Controller
 {
-    use BasicDataSupport, ChartGeneration;
+    use BasicDataSupport;
+    use ChartGeneration;
 
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
@@ -64,17 +67,17 @@ class ReportController extends Controller
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function netWorth(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('chart.report.net-worth');
         $cache->addProperty($start);
         $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
@@ -104,7 +107,7 @@ class ReportController extends Controller
             }
         );
 
-        // See reference nr. 56
+        // TODO get liabilities and include those as well?
 
         while ($current < $end) {
             // get balances by date, grouped by currency.
@@ -114,10 +117,10 @@ class ReportController extends Controller
             /** @var array $netWorthItem */
             foreach ($result as $netWorthItem) {
                 $currencyId = $netWorthItem['currency']->id;
-                $label      = $current->isoFormat((string) trans('config.month_and_day_js', [], $locale));
+                $label      = $current->isoFormat((string)trans('config.month_and_day_js', [], $locale));
                 if (!array_key_exists($currencyId, $chartData)) {
                     $chartData[$currencyId] = [
-                        'label'           => 'Net worth in ' . $netWorthItem['currency']->name,
+                        'label'           => 'Net worth in '.$netWorthItem['currency']->name,
                         'type'            => 'line',
                         'currency_symbol' => $netWorthItem['currency']->symbol,
                         'currency_code'   => $netWorthItem['currency']->code,
@@ -125,7 +128,6 @@ class ReportController extends Controller
                     ];
                 }
                 $chartData[$currencyId]['entries'][$label] = $netWorthItem['balance'];
-
             }
             $current->addDays(7);
         }
@@ -139,9 +141,9 @@ class ReportController extends Controller
     /**
      * Shows income and expense, debit/credit: operations.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
      * @throws JsonException
@@ -149,7 +151,7 @@ class ReportController extends Controller
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty('chart.report.operations');
         $cache->addProperty($start);
         $cache->addProperty($accounts);
@@ -179,13 +181,13 @@ class ReportController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $period                     = $journal['date']->format($format);
-            $currencyId                 = (int) $journal['currency_id'];
+            $currencyId                 = (int)$journal['currency_id'];
             $data[$currencyId]          = $data[$currencyId] ?? [
                 'currency_id'             => $currencyId,
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
                 'currency_name'           => $journal['currency_name'],
-                'currency_decimal_places' => (int) $journal['currency_decimal_places'],
+                'currency_decimal_places' => (int)$journal['currency_decimal_places'],
             ];
             $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
                 'period' => $period,
@@ -220,7 +222,7 @@ class ReportController extends Controller
         /** @var array $currency */
         foreach ($data as $currency) {
             $income  = [
-                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
+                'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
                 'currency_id'     => $currency['currency_id'],
@@ -229,7 +231,7 @@ class ReportController extends Controller
                 'entries'         => [],
             ];
             $expense = [
-                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
+                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
                 'currency_id'     => $currency['currency_id'],

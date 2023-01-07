@@ -50,7 +50,7 @@ class DeleteController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-envelope-o');
-                app('view')->share('title', (string) trans('firefly.object_groups_page_title'));
+                app('view')->share('title', (string)trans('firefly.object_groups_page_title'));
 
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
 
@@ -62,13 +62,13 @@ class DeleteController extends Controller
     /**
      * Delete a piggy bank.
      *
-     * @param ObjectGroup $objectGroup
+     * @param  ObjectGroup  $objectGroup
      *
      * @return Factory|View
      */
     public function delete(ObjectGroup $objectGroup)
     {
-        $subTitle   = (string) trans('firefly.delete_object_group', ['title' => $objectGroup->title]);
+        $subTitle   = (string)trans('firefly.delete_object_group', ['title' => $objectGroup->title]);
         $piggyBanks = $objectGroup->piggyBanks()->count();
 
         // put previous url in session
@@ -80,17 +80,16 @@ class DeleteController extends Controller
     /**
      * Destroy the piggy bank.
      *
-     * @param ObjectGroup $objectGroup
+     * @param  ObjectGroup  $objectGroup
      *
      * @return RedirectResponse
      */
     public function destroy(ObjectGroup $objectGroup): RedirectResponse
     {
-        session()->flash('success', (string) trans('firefly.deleted_object_group', ['title' => $objectGroup->title]));
+        session()->flash('success', (string)trans('firefly.deleted_object_group', ['title' => $objectGroup->title]));
         app('preferences')->mark();
         $this->repository->destroy($objectGroup);
 
         return redirect($this->getPreviousUrl('object-groups.delete.url'));
     }
-
 }

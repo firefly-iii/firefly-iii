@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AttachmentFormRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AttachmentFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Returns the data required by the controller.

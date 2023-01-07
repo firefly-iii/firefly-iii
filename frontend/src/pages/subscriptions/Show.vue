@@ -40,13 +40,13 @@
     <div class="row q-mt-sm">
       <div class="col-12">
         <LargeTable ref="table"
-                    title="Transactions"
-                    :rows="rows"
                     :loading="loading"
-                    v-on:on-request="onRequest"
+                    :page="page"
+                    :rows="rows"
                     :rows-number="rowsNumber"
                     :rows-per-page="rowsPerPage"
-                    :page="page"
+                    title="Transactions"
+                    v-on:on-request="onRequest"
         >
         </LargeTable>
       </div>

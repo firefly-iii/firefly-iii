@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ConfirmEmailChangeMail.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -35,7 +36,8 @@ use Illuminate\Queue\SerializesModels;
  */
 class ConfirmEmailChangeMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public string $newEmail;
     public string $oldEmail;
@@ -44,9 +46,9 @@ class ConfirmEmailChangeMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      *
-     * @param string $newEmail
-     * @param string $oldEmail
-     * @param string $url
+     * @param  string  $newEmail
+     * @param  string  $oldEmail
+     * @param  string  $url
      */
     public function __construct(string $newEmail, string $oldEmail, string $url)
     {
@@ -66,6 +68,6 @@ class ConfirmEmailChangeMail extends Mailable
             //->view('emails.confirm-email-change-html')
             //->text('emails.confirm-email-change-text')
             ->markdown('emails.confirm-email-change')
-            ->subject((string) trans('email.email_change_subject'));
+            ->subject((string)trans('email.email_change_subject'));
     }
 }

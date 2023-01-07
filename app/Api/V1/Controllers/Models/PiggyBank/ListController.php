@@ -63,7 +63,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/piggy_banks/listAttachmentByPiggyBank
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -72,7 +72,7 @@ class ListController extends Controller
     public function attachments(PiggyBank $piggyBank): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($piggyBank);
 
         $count       = $collection->count();
@@ -80,7 +80,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy_banks.attachments', [$piggyBank->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.piggy_banks.attachments', [$piggyBank->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -98,7 +98,7 @@ class ListController extends Controller
      *
      * List single resource.
      *
-     * @param PiggyBank $piggyBank
+     * @param  PiggyBank  $piggyBank
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -107,7 +107,7 @@ class ListController extends Controller
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $manager  = $this->getManager();
 
         $collection = $this->repository->getEvents($piggyBank);
@@ -116,7 +116,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy_banks.events', [$piggyBank->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.piggy_banks.events', [$piggyBank->id]).$this->buildParams());
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);
@@ -126,6 +126,5 @@ class ListController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

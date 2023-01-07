@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -38,33 +38,33 @@
           </q-card-section>
           <q-card-section>
             <q-input
-              :error-message="submissionErrors.title"
-              :error="hasSubmissionErrors.title"
-              bottom-slots :disable="disabledInput" type="text" clearable v-model="title" :label="$t('form.title')"
-              outlined/>
+              v-model="title"
+              :disable="disabledInput"
+              :error="hasSubmissionErrors.title" :error-message="submissionErrors.title" :label="$t('form.title')" bottom-slots clearable outlined
+              type="text"/>
 
             <q-select
-              :error-message="submissionErrors.rule_group_id"
-              :error="hasSubmissionErrors.rule_group_id"
-              bottom-slots
-              :disable="disabledInput"
-              outlined
-              dense
               v-model="rule_group_id"
+              :disable="disabledInput"
+              :error="hasSubmissionErrors.rule_group_id"
+              :error-message="submissionErrors.rule_group_id"
+              :options="ruleGroups"
+              bottom-slots
               class="q-pr-xs"
-              map-options :options="ruleGroups" label="Rule group"/>
+              dense
+              label="Rule group" map-options outlined/>
 
             <q-select
-              :error-message="submissionErrors.trigger"
-              :error="hasSubmissionErrors.trigger"
-              bottom-slots
+              v-model="trigger"
               :disable="disabledInput"
-              outlined
+              :error="hasSubmissionErrors.trigger"
+              :error-message="submissionErrors.trigger"
+              :options="initialTriggers"
+              bottom-slots
+              class="q-pr-xs"
               dense
               emit-value
-              v-model="trigger"
-              class="q-pr-xs"
-              map-options :options="initialTriggers" label="What fires a rule?"/>
+              label="What fires a rule?" map-options outlined/>
           </q-card-section>
         </q-card>
       </div>
@@ -94,30 +94,30 @@
                 del
               </div>
             </div>
-            <div v-for="(trigger, index) in triggers" class="row" :key="index">
+            <div v-for="(trigger, index) in triggers" :key="index" class="row">
               <div class="col">
                 <q-select
-                  :error-message="submissionErrors.triggers[index].type"
-                  :error="hasSubmissionErrors.triggers[index].type"
-                  bottom-slots
-                  :disable="disabledInput"
-                  outlined
-                  dense
                   v-model="trigger.type"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.triggers[index].type"
+                  :error-message="submissionErrors.triggers[index].type"
+                  :options="availableTriggers"
+                  bottom-slots
                   class="q-pr-xs"
-                  map-options :options="availableTriggers" label="Trigger type"/>
+                  dense
+                  label="Trigger type" map-options outlined/>
 
               </div>
               <div class="col">
                 <q-input
-                  :error-message="submissionErrors.triggers[index].value"
-                  :error="hasSubmissionErrors.triggers[index].value"
-                  bottom-slots
-                  dense
-                  :disable="disabledInput"
                   v-if="trigger.type.needs_context"
-                  type="text" clearable v-model="trigger.value" label="Trigger value"
-                  outlined/>
+                  v-model="trigger.value"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.triggers[index].value"
+                  :error-message="submissionErrors.triggers[index].value"
+                  bottom-slots
+                  clearable dense label="Trigger value" outlined
+                  type="text"/>
               </div>
               <div class="col">
                 <q-checkbox v-model="trigger.active"/>
@@ -161,30 +161,30 @@
                 del
               </div>
             </div>
-            <div v-for="(action, index) in actions" class="row" :key="index">
+            <div v-for="(action, index) in actions" :key="index" class="row">
               <div class="col">
                 <q-select
-                  :error-message="submissionErrors.actions[index].type"
-                  :error="hasSubmissionErrors.actions[index].type"
-                  bottom-slots
-                  :disable="disabledInput"
-                  outlined
-                  dense
                   v-model="action.type"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.actions[index].type"
+                  :error-message="submissionErrors.actions[index].type"
+                  :options="availableActions"
+                  bottom-slots
                   class="q-pr-xs"
-                  map-options :options="availableActions" label="Action type"/>
+                  dense
+                  label="Action type" map-options outlined/>
 
               </div>
               <div class="col">
                 <q-input
-                  :error-message="submissionErrors.actions[index].value"
-                  :error="hasSubmissionErrors.actions[index].value"
-                  bottom-slots
-                  dense
-                  :disable="disabledInput"
                   v-if="action.type.needs_context"
-                  type="text" clearable v-model="action.value" label="Action value"
-                  outlined/>
+                  v-model="action.value"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.actions[index].value"
+                  :error-message="submissionErrors.actions[index].value"
+                  bottom-slots
+                  clearable dense label="Action value" outlined
+                  type="text"/>
               </div>
               <div class="col">
                 <q-checkbox v-model="action.active"/>
@@ -215,11 +215,11 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label
-                            label="Return here to create another one"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
+                            left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" left-label :disable="!doReturnHere || disabledInput"
-                            label="Reset form after submission"/>
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                            left-label/>
               </div>
             </div>
           </q-card-section>
@@ -232,8 +232,8 @@
 
 <script>
 import Post from "../../api/rules/post";
-import {mapGetters} from "vuex";
-import {getCacheKey} from "../../store/fireflyiii/getters";
+// import {mapGetters} from "vuex";
+// import {getCacheKey} from "../../store/fireflyiii/getters";
 import Configuration from "../../api/system/configuration";
 import List from "../../api/rule-groups/list";
 
@@ -270,7 +270,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
     disabledInput: function () {
       return this.submitting;
     }

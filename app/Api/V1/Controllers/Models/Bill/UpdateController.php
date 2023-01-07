@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update a bill.
      *
-     * @param UpdateRequest $request
-     * @param Bill          $bill
+     * @param  UpdateRequest  $request
+     * @param  Bill  $bill
      *
      * @return JsonResponse
      */
@@ -80,7 +80,5 @@ class UpdateController extends Controller
         $resource = new Item($bill, $transformer, 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
-
 }

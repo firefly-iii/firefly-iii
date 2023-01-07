@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);
 
@@ -38,8 +37,8 @@ use Log;
  */
 class RecurrenceFactory
 {
-
-    use TransactionTypeTrait, RecurringTransactionTrait;
+    use TransactionTypeTrait;
+    use RecurringTransactionTrait;
 
     private MessageBag $errors;
     private User       $user;
@@ -51,11 +50,11 @@ class RecurrenceFactory
      */
     public function __construct()
     {
-        $this->errors = new MessageBag;
+        $this->errors = new MessageBag();
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Recurrence
      * @throws FireflyException
@@ -84,7 +83,7 @@ class RecurrenceFactory
             $firstDate = $data['recurrence']['first_date'];
         }
         if (array_key_exists('nr_of_repetitions', $data['recurrence'])) {
-            $repetitions = (int) $data['recurrence']['nr_of_repetitions'];
+            $repetitions = (int)$data['recurrence']['nr_of_repetitions'];
         }
         if (array_key_exists('repeat_until', $data['recurrence'])) {
             $repeatUntil = $data['recurrence']['repeat_until'];
@@ -120,21 +119,18 @@ class RecurrenceFactory
         $recurrence->save();
 
         if (array_key_exists('notes', $data['recurrence'])) {
-            $this->updateNote($recurrence, (string) $data['recurrence']['notes']);
-
+            $this->updateNote($recurrence, (string)$data['recurrence']['notes']);
         }
 
         $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
         try {
             $this->createTransactions($recurrence, $data['transactions'] ?? []);
-
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             $recurrence->forceDelete();
             $message = sprintf('Could not create recurring transaction: %s', $e->getMessage());
             $this->errors->add('store', $message);
             throw new FireflyException($message, 0, $e);
-
         }
 
 
@@ -150,12 +146,10 @@ class RecurrenceFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
-
-
 }

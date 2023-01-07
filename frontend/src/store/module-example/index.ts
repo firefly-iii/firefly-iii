@@ -18,9 +18,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Module } from 'vuex';
-import { StateInterface } from '../index';
-import state, { ExampleStateInterface } from './state';
+import {Module} from 'vuex';
+import {StateInterface} from '../index';
+import state, {ExampleStateInterface} from './state';
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';

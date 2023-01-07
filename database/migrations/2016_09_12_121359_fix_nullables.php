@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2016_09_12_121359_fix_nullables.php
  * Copyright (c) 2019 james@firefly-iii.org.

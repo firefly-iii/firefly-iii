@@ -41,8 +41,8 @@ class UniqueIban implements Rule
      *
      * @codeCoverageIgnore
      *
-     * @param Account|null $account
-     * @param string|null  $expectedType
+     * @param  Account|null  $account
+     * @param  string|null  $expectedType
      */
     public function __construct(?Account $account, ?string $expectedType)
     {
@@ -69,14 +69,14 @@ class UniqueIban implements Rule
      */
     public function message(): string
     {
-        return (string) trans('validation.unique_iban_for_user');
+        return (string)trans('validation.unique_iban_for_user');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      *
@@ -98,7 +98,10 @@ class UniqueIban implements Rule
                 Log::debug(
                     sprintf(
                         'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
-                        $value, $count, $type, $this->expectedType
+                        $value,
+                        $count,
+                        $type,
+                        $this->expectedType
                     )
                 );
 
@@ -136,8 +139,8 @@ class UniqueIban implements Rule
     }
 
     /**
-     * @param string $type
-     * @param string $iban
+     * @param  string  $type
+     * @param  string  $iban
      *
      * @return int
      */

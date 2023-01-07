@@ -35,18 +35,18 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\Location
  *
- * @property int                       $id
- * @property Carbon|null               $created_at
- * @property Carbon|null               $updated_at
- * @property Carbon|null               $deleted_at
- * @property int                       $locatable_id
- * @property string                    $locatable_type
- * @property float|null                $latitude
- * @property float|null                $longitude
- * @property int|null                  $zoom_level
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $locatable_id
+ * @property string $locatable_type
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property int|null $zoom_level
  * @property-read Collection|Account[] $accounts
- * @property-read int|null             $accounts_count
- * @property-read Model|Eloquent       $locatable
+ * @property-read int|null $accounts_count
+ * @property-read Model|Eloquent $locatable
  * @method static Builder|Location newModelQuery()
  * @method static Builder|Location newQuery()
  * @method static Builder|Location query()
@@ -63,7 +63,6 @@ use Illuminate\Support\Carbon;
  */
 class Location extends Model
 {
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -84,7 +83,7 @@ class Location extends Model
     /**
      * Add rules for locations.
      *
-     * @param array $rules
+     * @param  array  $rules
      *
      * @return array
      */
@@ -117,5 +116,4 @@ class Location extends Model
     {
         return $this->morphTo();
     }
-
 }

@@ -21,6 +21,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tests\Objects;
 
 /**
@@ -54,5 +55,4 @@ class FieldSet
         }
         $this->fields[$key] = $field;
     }
-
 }

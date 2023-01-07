@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReportNewJournalsMail.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,8 @@ use Illuminate\Support\Collection;
  */
 class ReportNewJournalsMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public Collection $groups;
     public array      $transformed;
@@ -46,7 +48,7 @@ class ReportNewJournalsMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      *
-     * @param Collection $groups
+     * @param  Collection  $groups
      */
     public function __construct(Collection $groups)
     {
@@ -64,7 +66,7 @@ class ReportNewJournalsMail extends Mailable
 
         return $this
             ->markdown('emails.report-new-journals')
-            ->subject((string) trans_choice('email.new_journals_subject', $this->groups->count()));
+            ->subject((string)trans_choice('email.new_journals_subject', $this->groups->count()));
     }
 
     private function transform(): void

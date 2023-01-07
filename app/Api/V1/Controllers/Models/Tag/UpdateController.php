@@ -66,8 +66,8 @@ class UpdateController extends Controller
      *
      * Update a rule.
      *
-     * @param UpdateRequest $request
-     * @param Tag           $tag
+     * @param  UpdateRequest  $request
+     * @param  Tag  $tag
      *
      * @return JsonResponse
      */
@@ -82,7 +82,5 @@ class UpdateController extends Controller
         $resource = new Item($rule, $transformer, 'tags');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
-
 }

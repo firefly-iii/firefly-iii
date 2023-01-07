@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PrependDescription.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,20 +24,21 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class PrependDescription.
  */
 class PrependDescription implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -48,8 +50,16 @@ class PrependDescription implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $description = sprintf('%s%s', $this->action->action_value, $journal['description']);
-        DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
+        $before = $journal['description'];
+        $after  = sprintf('%s%s', $this->action->action_value, $journal['description']);
+        DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $after]);
+
+        // journal
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+
+        // audit log
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $after));
 
         return true;
     }

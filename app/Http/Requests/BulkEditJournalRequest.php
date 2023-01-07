@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BulkEditJournalRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -31,7 +32,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class BulkEditJournalRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Rules for this request.
@@ -40,7 +42,6 @@ class BulkEditJournalRequest extends FormRequest
      */
     public function rules(): array
     {
-
         // fixed
         return [
             'journals.*'  => 'required|belongsToUser:transaction_journals,id',

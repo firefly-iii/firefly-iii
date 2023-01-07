@@ -21,7 +21,7 @@
 <template>
   <div class="row">
     <div class="col q-mb-xs">
-      <q-banner rounded class="bg-purple-8 text-white">
+      <q-banner class="bg-purple-8 text-white" rounded>
         Hi! You must be new to Firefly III. Welcome! Please fill in this form to create some basic accounts and get you
         started.
       </q-banner>
@@ -37,12 +37,12 @@
           <div class="row q-mb-xs">
             <div class="col-8 offset-2">
               <q-input
-                :error-message="bank_name_error"
-                :error="bank_name_has_error"
-                bottom-slots
+                v-model="bank_name"
                 :disable="disabledInput"
-                clearable
-                outlined v-model="bank_name" label="The name of your bank">
+                :error="bank_name_has_error"
+                :error-message="bank_name_error"
+                bottom-slots
+                clearable label="The name of your bank" outlined>
                 <template v-slot:prepend>
                   <q-icon name="fas fa-university"/>
                 </template>
@@ -52,23 +52,23 @@
           <div class="row q-mb-xs">
             <div class="col-3 offset-2">
               <q-select
-                :error-message="currency_error"
-                :error="currency_has_error"
-                bottom-slots
+                v-model="currency"
                 :disable="disabledInput"
-                outlined
-                v-model="currency" emit-value class="q-pr-xs"
-                map-options :options="currencies" label="Currency"/>
+                :error="currency_has_error"
+                :error-message="currency_error"
+                :options="currencies"
+                bottom-slots class="q-pr-xs" emit-value
+                label="Currency" map-options outlined/>
             </div>
             <div class="col-5">
               <q-input
-                :error-message="bank_balance_error"
-                :error="bank_balance_has_error"
-                bottom-slots
+                v-model="bank_balance"
                 :disable="disabledInput"
-                outlined
-                v-model="bank_balance" :mask="balance_input_mask" reverse-fill-mask fill-mask="0"
-                label="Today's balance" hint="Enter your current balance">
+                :error="bank_balance_has_error"
+                :error-message="bank_balance_error"
+                :mask="balance_input_mask"
+                bottom-slots fill-mask="0" hint="Enter your current balance" label="Today's balance"
+                outlined reverse-fill-mask>
                 <template v-slot:prepend>
                   <q-icon name="fas fa-money-bill-wave"/>
                 </template>
@@ -78,13 +78,13 @@
           <div class="row q-mb-xs">
             <div class="col-8 offset-2">
               <q-input
-                :error-message="savings_balance_error"
-                :error="savings_balance_has_error"
-                bottom-slots
+                v-model="savings_balance"
                 :disable="disabledInput"
-                outlined
-                v-model="savings_balance" :mask="balance_input_mask" reverse-fill-mask fill-mask="0"
-                label="Today's savings account balance" hint="Leave empty or set to zero if not relevant.">
+                :error="savings_balance_has_error"
+                :error-message="savings_balance_error"
+                :mask="balance_input_mask"
+                bottom-slots fill-mask="0" hint="Leave empty or set to zero if not relevant." label="Today's savings account balance"
+                outlined reverse-fill-mask>
                 <template v-slot:prepend>
                   <q-icon name="fas fa-coins"/>
                 </template>
@@ -105,21 +105,21 @@
           <div class="row q-mb-xs">
             <div class="col-8 offset-2">
               <q-select
-                :error-message="language_error"
-                :error="language_has_error"
-                bottom-slots
-                outlined
+                v-model="language"
                 :disable="disabledInput"
-                v-model="language" emit-value
-                map-options :options="languages" label="I prefer the following language"/>
+                :error="language_has_error"
+                :error-message="language_error"
+                :options="languages"
+                bottom-slots emit-value
+                label="I prefer the following language" map-options outlined/>
 
             </div>
           </div>
           <div class="row">
             <div class="col-10 offset-2">
               <q-checkbox
-                :disable="disabledInput"
-                v-model="manage_cash" label="I want to manage cash using Firefly III"/>
+                v-model="manage_cash"
+                :disable="disabledInput" label="I want to manage cash using Firefly III"/>
               <q-banner v-if="manage_cash_has_error" class="text-white bg-red">{{ manage_cash_error }}</q-banner>
             </div>
           </div>
@@ -127,8 +127,8 @@
           <div class="row">
             <div class="col-8 offset-2">
               <q-checkbox
-                :disable="disabledInput"
-                v-model="have_cc" label="I have a credit card."/>
+                v-model="have_cc"
+                :disable="disabledInput" label="I have a credit card."/>
               <q-banner v-if="have_cc_has_error" class="text-white bg-red">{{ have_cc_error }}</q-banner>
             </div>
           </div>
@@ -136,8 +136,8 @@
           <div class="row">
             <div class="col-8 offset-2">
               <q-checkbox
-                :disable="disabledInput"
-                v-model="have_questions" label="I know where to go when I have questions"/>
+                v-model="have_questions"
+                :disable="disabledInput" label="I know where to go when I have questions"/>
               <div class="q-px-sm">
                 Hint: visit <a href="https://github.com/firefly-iii/firefly-iii/discussions/">GitHub</a>
                 or <a href="#">Gitter.im</a>. You can also

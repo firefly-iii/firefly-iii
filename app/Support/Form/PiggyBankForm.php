@@ -29,18 +29,18 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 /**
  * Class PiggyBankForm
  *
- * See reference nr. 27
+ * TODO cleanup and describe.
  */
 class PiggyBankForm
 {
     use FormSupport;
 
     /**
-     * See reference nr. 28
+     * TODO cleanup and describe
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param  string  $name
+     * @param  mixed  $value
+     * @param  array|null  $options
      *
      * @return string
      */
@@ -50,7 +50,7 @@ class PiggyBankForm
         /** @var PiggyBankRepositoryInterface $repository */
         $repository = app(PiggyBankRepositoryInterface::class);
         $piggyBanks = $repository->getPiggyBanksWithAmount();
-        $title      = (string) trans('firefly.default_group_title_name');
+        $title      = (string)trans('firefly.default_group_title_name');
         $array      = [];
         $subList    = [
             0 => [
@@ -58,7 +58,7 @@ class PiggyBankForm
                     'title' => $title,
                 ],
                 'piggies' => [
-                    (string) trans('firefly.none_in_select_list'),
+                    (string)trans('firefly.none_in_select_list'),
                 ],
             ],
         ];
@@ -72,11 +72,11 @@ class PiggyBankForm
                 $groupOrder = $group->order;
             }
             $subList[$groupOrder]                        = $subList[$groupOrder] ?? [
-                    'group'   => [
-                        'title' => $groupTitle,
-                    ],
-                    'piggies' => [],
-                ];
+                'group'   => [
+                    'title' => $groupTitle,
+                ],
+                'piggies' => [],
+            ];
             $subList[$groupOrder]['piggies'][$piggy->id] = $piggy->name;
         }
         ksort($subList);

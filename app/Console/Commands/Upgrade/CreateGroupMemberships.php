@@ -31,6 +31,8 @@ use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class CreateGroupMemberships
@@ -43,7 +45,7 @@ class CreateGroupMemberships extends Command
      *
      * @var string
      */
-    protected $description = 'SOME DESCRIPTION';
+    protected $description = 'Update group memberships';
     /**
      * The name and signature of the console command.
      *
@@ -77,14 +79,14 @@ class CreateGroupMemberships extends Command
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -109,7 +111,7 @@ class CreateGroupMemberships extends Command
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @return bool
      */
@@ -119,7 +121,7 @@ class CreateGroupMemberships extends Command
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @throws FireflyException
      */
@@ -132,6 +134,7 @@ class CreateGroupMemberships extends Command
             throw new FireflyException('Firefly III could not find a user role. Please make sure all validations have run.');
         }
 
+        /** @var GroupMembership|null $membership */
         $membership = GroupMembership::create(
             [
                 'user_id'       => $user->id,

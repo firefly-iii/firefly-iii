@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Navigation.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,9 +34,9 @@ use Log;
 class Navigation
 {
     /**
-     * @param Carbon $theDate
-     * @param string $repeatFreq
-     * @param int    $skip
+     * @param  Carbon  $theDate
+     * @param  string  $repeatFreq
+     * @param  int  $skip
      *
      * @return Carbon
      */
@@ -99,9 +100,9 @@ class Navigation
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param string $range
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  string  $range
      *
      * @return array
      *
@@ -160,8 +161,8 @@ class Navigation
     }
 
     /**
-     * @param Carbon $theDate
-     * @param string $repeatFreq
+     * @param  Carbon  $theDate
+     * @param  string  $repeatFreq
      *
      * @return Carbon
      */
@@ -207,12 +208,11 @@ class Navigation
         Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
         return $theDate;
-
     }
 
     /**
-     * @param Carbon $end
-     * @param string $repeatFreq
+     * @param  Carbon  $end
+     * @param  string  $repeatFreq
      *
      * @return Carbon
      */
@@ -289,9 +289,9 @@ class Navigation
     }
 
     /**
-     * @param Carbon      $theCurrentEnd
-     * @param string      $repeatFreq
-     * @param Carbon|null $maxDate
+     * @param  Carbon  $theCurrentEnd
+     * @param  string  $repeatFreq
+     * @param  Carbon|null  $maxDate
      *
      * @return Carbon
      */
@@ -329,8 +329,8 @@ class Navigation
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @throws FireflyException
@@ -341,17 +341,17 @@ class Navigation
         // define period to increment
         $increment     = 'addDay';
         $format        = $this->preferredCarbonFormat($start, $end);
-        $displayFormat = (string) trans('config.month_and_day_js', [], $locale);
+        $displayFormat = (string)trans('config.month_and_day_js', [], $locale);
         // increment by month (for year)
         if ($start->diffInMonths($end) > 1) {
             $increment     = 'addMonth';
-            $displayFormat = (string) trans('config.month_js');
+            $displayFormat = (string)trans('config.month_js');
         }
 
         // increment by year (for multi year)
         if ($start->diffInMonths($end) > 12) {
             $increment     = 'addYear';
-            $displayFormat = (string) trans('config.year_js');
+            $displayFormat = (string)trans('config.year_js');
         }
         $begin   = clone $start;
         $entries = [];
@@ -369,8 +369,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
      * method returns "Y-m". If the date difference is larger, method returns "Y".
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
      */
@@ -389,8 +389,8 @@ class Navigation
     }
 
     /**
-     * @param Carbon $theDate
-     * @param string $repeatFrequency
+     * @param  Carbon  $theDate
+     * @param  string  $repeatFrequency
      *
      * @return string
      */
@@ -398,23 +398,23 @@ class Navigation
     {
         $date      = clone $theDate;
         $formatMap = [
-            '1D'      => (string) trans('config.specific_day_js'),
-            'daily'   => (string) trans('config.specific_day_js'),
-            'custom'  => (string) trans('config.specific_day_js'),
-            '1W'      => (string) trans('config.week_in_year_js'),
-            'week'    => (string) trans('config.week_in_year_js'),
-            'weekly'  => (string) trans('config.week_in_year_js'),
-            '1M'      => (string) trans('config.month_js'),
-            'month'   => (string) trans('config.month_js'),
-            'monthly' => (string) trans('config.month_js'),
-            '1Y'      => (string) trans('config.year_js'),
-            'year'    => (string) trans('config.year_js'),
-            'yearly'  => (string) trans('config.year_js'),
-            '6M'      => (string) trans('config.half_year_js'),
+            '1D'      => (string)trans('config.specific_day_js'),
+            'daily'   => (string)trans('config.specific_day_js'),
+            'custom'  => (string)trans('config.specific_day_js'),
+            '1W'      => (string)trans('config.week_in_year_js'),
+            'week'    => (string)trans('config.week_in_year_js'),
+            'weekly'  => (string)trans('config.week_in_year_js'),
+            '1M'      => (string)trans('config.month_js'),
+            'month'   => (string)trans('config.month_js'),
+            'monthly' => (string)trans('config.month_js'),
+            '1Y'      => (string)trans('config.year_js'),
+            'year'    => (string)trans('config.year_js'),
+            'yearly'  => (string)trans('config.year_js'),
+            '6M'      => (string)trans('config.half_year_js'),
         ];
 
         if (array_key_exists($repeatFrequency, $formatMap)) {
-            return $date->isoFormat((string) $formatMap[$repeatFrequency]);
+            return $date->isoFormat((string)$formatMap[$repeatFrequency]);
         }
         if ('3M' === $repeatFrequency || 'quarter' === $repeatFrequency) {
             $quarter = ceil($theDate->month / 3);
@@ -426,15 +426,14 @@ class Navigation
         Log::error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
 
         return $date->format('Y-m-d');
-
     }
 
     /**
      * If the date difference between start and end is less than a month, method returns trans(config.month_and_day). If the difference is less than a year,
      * method returns "config.month". If the date difference is larger, method returns "config.year".
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
      * @throws FireflyException
@@ -442,13 +441,13 @@ class Navigation
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {
         $locale = app('steam')->getLocale();
-        $format = (string) trans('config.month_and_day_js', [], $locale);
+        $format = (string)trans('config.month_and_day_js', [], $locale);
         if ($start->diffInMonths($end) > 1) {
-            $format = (string) trans('config.month_js', [], $locale);
+            $format = (string)trans('config.month_js', [], $locale);
         }
 
         if ($start->diffInMonths($end) > 12) {
-            $format = (string) trans('config.year_js', [], $locale);
+            $format = (string)trans('config.year_js', [], $locale);
         }
 
         return $format;
@@ -458,8 +457,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference is less than a year,
      * method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
      */
@@ -481,8 +480,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "1D". If the difference is less than a year,
      * method returns "1M". If the date difference is larger, method returns "1Y".
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
      */
@@ -504,8 +503,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "%Y-%m-%d". If the difference is less than a year,
      * method returns "%Y-%m". If the date difference is larger, method returns "%Y".
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
      */
@@ -524,9 +523,9 @@ class Navigation
     }
 
     /**
-     * @param Carbon   $theDate
-     * @param string   $repeatFreq
-     * @param int|null $subtract
+     * @param  Carbon  $theDate
+     * @param  string  $repeatFreq
+     * @param  int|null  $subtract
      *
      * @return Carbon
      *
@@ -585,10 +584,10 @@ class Navigation
         switch ($repeatFreq) {
             default:
                 break;
-            case 'last7';
+            case 'last7':
                 $date->subDays(7);
                 return $date;
-            case 'last30';
+            case 'last30':
                 $date->subDays(30);
                 return $date;
             case 'last90':
@@ -613,8 +612,8 @@ class Navigation
     }
 
     /**
-     * @param string $range
-     * @param Carbon $start
+     * @param  string  $range
+     * @param  Carbon  $start
      *
      * @return Carbon
      *
@@ -655,25 +654,25 @@ class Navigation
 
             return $fiscalHelper->endOfFiscalYear($end);
         }
-        switch ($range) {
-            default:
-                break;
-            case 'last7';
-            case 'last30';
-            case 'last90':
-            case 'last365':
-            case 'YTD':
-            case 'QTD':
-            case 'MTD':
-                return $end;
+        $list = [
+            'last7',
+            'last30',
+            'last90',
+            'last365',
+            'YTD',
+            'QTD',
+            'MTD',
+        ];
+        if (in_array($range, $list, true)) {
+            return $end;
         }
 
         throw new FireflyException(sprintf('updateEndDate cannot handle range "%s"', $range));
     }
 
     /**
-     * @param string $range
-     * @param Carbon $start
+     * @param  string  $range
+     * @param  Carbon  $start
      *
      * @return Carbon
      *
@@ -715,10 +714,10 @@ class Navigation
         switch ($range) {
             default:
                 break;
-            case 'last7';
+            case 'last7':
                 $start->subDays(7);
                 return $start;
-            case 'last30';
+            case 'last30':
                 $start->subDays(30);
                 return $start;
             case 'last90':

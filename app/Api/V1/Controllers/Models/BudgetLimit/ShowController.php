@@ -75,8 +75,8 @@ class ShowController extends Controller
      *
      * Display a listing of the budget limits for this budget.
      *
-     * @param Request $request
-     * @param Budget  $budget
+     * @param  Request  $request
+     * @param  Budget  $budget
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -86,12 +86,12 @@ class ShowController extends Controller
     {
         $manager = $this->getManager();
         $manager->parseIncludes('budget');
-        $pageSize     = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.limits.index', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.limits.index', [$budget->id]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -109,7 +109,7 @@ class ShowController extends Controller
      *
      * Display a listing of the budget limits for this budget.
      *
-     * @param DateRequest $request
+     * @param  DateRequest  $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -119,12 +119,12 @@ class ShowController extends Controller
     {
         $manager = $this->getManager();
         $manager->parseIncludes('budget');
-        $pageSize     = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection   = $this->blRepository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budget-limits.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.budget-limits.index').$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -140,16 +140,16 @@ class ShowController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/budgets/getBudgetLimit
      *
-     * @param Request     $request
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
+     * @param  Request  $request
+     * @param  Budget  $budget
+     * @param  BudgetLimit  $budgetLimit
      *
      * @return JsonResponse
      * @throws FireflyException
      */
     public function show(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
-        if ((int) $budget->id !== (int) $budgetLimit->budget_id) {
+        if ((int)$budget->id !== (int)$budgetLimit->budget_id) {
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
         // continue!
@@ -163,5 +163,4 @@ class ShowController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

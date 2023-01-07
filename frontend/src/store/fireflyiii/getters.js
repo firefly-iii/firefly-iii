@@ -34,6 +34,7 @@ export function getListPageSize(state) {
 export function getCurrencyCode(state) {
   return state.currencyCode;
 }
+
 export function getCurrencyId(state) {
   return state.currencyId;
 }
@@ -41,6 +42,7 @@ export function getCurrencyId(state) {
 export function getRange(state) {
   return state.range;
 }
+
 export function getDefaultRange(state) {
   return state.defaultRange;
 }

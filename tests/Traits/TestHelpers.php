@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tests\Traits;
 
 use Illuminate\Support\Facades\Log;
@@ -94,7 +95,6 @@ trait TestHelpers
                 }
             }
         }
-
     }
     /**
      * @param string $route
@@ -180,7 +180,6 @@ trait TestHelpers
                 && isset($original[$key])
                 && !in_array($key, $ignore, true)
                 && !in_array($key, $extraIgnore, true)) {
-
                 $message = sprintf(
                     "Field '%s' was unexpectedly changed from %s to %s.\nSubmitted:  %s\nIgnored:    %s\nExpected:   %s\nReturned:   %s\nURL: %s",
                     $key,

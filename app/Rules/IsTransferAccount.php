@@ -41,14 +41,14 @@ class IsTransferAccount implements Rule
      */
     public function message(): string
     {
-        return (string) trans('validation.not_transfer_account');
+        return (string)trans('validation.not_transfer_account');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      */
@@ -60,15 +60,15 @@ class IsTransferAccount implements Rule
         $validator->setTransactionType(TransactionType::TRANSFER);
         $validator->setUser(auth()->user());
 
-        $validAccount = $validator->validateSource(['name' => (string) $value,]);
+        $validAccount = $validator->validateSource(['name' => (string)$value,]);
         if (true === $validAccount) {
             Log::debug('Found account based on name. Return true.');
 
             // found by name, use repos to return.
             return true;
         }
-        $validAccount = $validator->validateSource(['id' => (int) $value,]);
-        Log::debug(sprintf('Search by id (%d), result is %s.', (int) $value, var_export($validAccount, true)));
+        $validAccount = $validator->validateSource(['id' => (int)$value,]);
+        Log::debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
 
         return false !== $validAccount;
     }

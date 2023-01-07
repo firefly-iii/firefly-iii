@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -62,10 +63,9 @@ class CorrectOpeningBalanceCurrencies extends Command
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         // get all OB journals:
-        $set = TransactionJournal
-            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_types.type', TransactionType::OPENING_BALANCE)->get(['transaction_journals.*']);
+        $set = TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->whereNull('transaction_journals.deleted_at')
+                                 ->where('transaction_types.type', TransactionType::OPENING_BALANCE)->get(['transaction_journals.*']);
 
         $this->line(sprintf('Going to verify %d opening balance transactions.', $set->count()));
         $count = 0;
@@ -91,7 +91,7 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return int
      */
@@ -101,7 +101,7 @@ class CorrectOpeningBalanceCurrencies extends Command
         $account = $this->getAccount($journal);
         if (null === $account) {
             $message = sprintf('Transaction journal #%d has no valid account. Cant fix this line.', $journal->id);
-            Log::warning($message);
+            app('log')->warning($message);
             $this->warn($message);
 
             return 0;
@@ -113,7 +113,7 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Account|null
      */
@@ -132,11 +132,11 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return TransactionCurrency
      * @throws JsonException
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function getCurrency(Account $account): TransactionCurrency
     {
@@ -148,15 +148,15 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param TransactionJournal  $journal
-     * @param TransactionCurrency $currency
+     * @param  TransactionJournal  $journal
+     * @param  TransactionCurrency  $currency
      *
      * @return int
      */
     private function setCurrency(TransactionJournal $journal, TransactionCurrency $currency): int
     {
         $count = 0;
-        if ((int) $journal->transaction_currency_id !== (int) $currency->id) {
+        if ((int)$journal->transaction_currency_id !== (int)$currency->id) {
             $journal->transaction_currency_id = $currency->id;
             $journal->save();
             $count = 1;
@@ -164,7 +164,7 @@ class CorrectOpeningBalanceCurrencies extends Command
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
-            if ((int) $transaction->transaction_currency_id !== (int) $currency->id) {
+            if ((int)$transaction->transaction_currency_id !== (int)$currency->id) {
                 $transaction->transaction_currency_id = $currency->id;
                 $transaction->save();
                 $count = 1;

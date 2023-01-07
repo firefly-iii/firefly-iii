@@ -59,7 +59,7 @@ class ObjectGroupController extends Controller
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/#/autocomplete/getObjectGroupsAC
      *
-     * @param AutocompleteRequest $request
+     * @param  AutocompleteRequest  $request
      *
      * @return JsonResponse
      */
@@ -72,7 +72,7 @@ class ObjectGroupController extends Controller
         /** @var ObjectGroup $objectGroup */
         foreach ($result as $objectGroup) {
             $return[] = [
-                'id'    => (string) $objectGroup->id,
+                'id'    => (string)$objectGroup->id,
                 'name'  => $objectGroup->title,
                 'title' => $objectGroup->title,
             ];
@@ -80,5 +80,4 @@ class ObjectGroupController extends Controller
 
         return response()->json($return);
     }
-
 }

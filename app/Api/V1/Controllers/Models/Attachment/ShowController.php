@@ -71,7 +71,7 @@ class ShowController extends Controller
      *
      * Download an attachment.
      *
-     * @param Attachment $attachment
+     * @param  Attachment  $attachment
      *
      * @codeCoverageIgnore
      * @return LaravelResponse
@@ -97,13 +97,13 @@ class ShowController extends Controller
             $response
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
-                ->header('Content-Disposition', 'attachment; filename=' . $quoted)
+                ->header('Content-Disposition', 'attachment; filename='.$quoted)
                 ->header('Content-Transfer-Encoding', 'binary')
                 ->header('Connection', 'Keep-Alive')
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', (string) strlen($content));
+                ->header('Content-Length', (string)strlen($content));
 
             return $response;
         }
@@ -125,7 +125,7 @@ class ShowController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of attachments. Count it and split it.
         $collection  = $this->repository->get();
@@ -134,7 +134,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.attachments.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.attachments.index').$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -152,7 +152,7 @@ class ShowController extends Controller
      *
      * Display the specified resource.
      *
-     * @param Attachment $attachment
+     * @param  Attachment  $attachment
      *
      * @return JsonResponse
      */

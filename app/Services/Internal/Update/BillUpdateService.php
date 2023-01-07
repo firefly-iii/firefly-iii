@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
@@ -32,6 +33,7 @@ use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 
 /**
@@ -40,17 +42,18 @@ use Log;
  */
 class BillUpdateService
 {
-    use BillServiceTrait, CreatesObjectGroups;
+    use BillServiceTrait;
+    use CreatesObjectGroups;
 
     protected User $user;
 
     /**
-     * @param Bill  $bill
-     * @param array $data
+     * @param  Bill  $bill
+     * @param  array  $data
      *
      * @return Bill
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \JsonException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function update(Bill $bill, array $data): Bill
     {
@@ -58,7 +61,7 @@ class BillUpdateService
 
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             $factory  = app(TransactionCurrencyFactory::class);
-            $currency = $factory->find((int) ($data['currency_id'] ?? null), $data['currency_code'] ?? null) ??
+            $currency = $factory->find((int)($data['currency_id'] ?? null), $data['currency_code'] ?? null) ??
                         app('amount')->getDefaultCurrencyByUser($bill->user);
 
             // enable the currency if it isn't.
@@ -80,14 +83,14 @@ class BillUpdateService
         ];
         // update note:
         if (array_key_exists('notes', $data)) {
-            $this->updateNote($bill, (string) $data['notes']);
+            $this->updateNote($bill, (string)$data['notes']);
         }
 
         // update order.
         if (array_key_exists('order', $data)) {
             // update the order of the piggy bank:
-            $oldOrder = (int) $bill->order;
-            $newOrder = (int) ($data['order'] ?? $oldOrder);
+            $oldOrder = (int)$bill->order;
+            $newOrder = (int)($data['order'] ?? $oldOrder);
             if ($oldOrder !== $newOrder) {
                 $this->updateOrder($bill, $oldOrder, $newOrder);
             }
@@ -119,7 +122,7 @@ class BillUpdateService
         }
         if (array_key_exists('object_group_id', $data)) {
             // try also with ID:
-            $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+            $objectGroupId = (int)($data['object_group_id'] ?? 0);
             if (0 !== $objectGroupId) {
                 $objectGroup = $this->findObjectGroupById($objectGroupId);
                 if (null !== $objectGroup) {
@@ -139,27 +142,27 @@ class BillUpdateService
     }
 
     /**
-     * @param Bill  $bill
-     * @param array $data
+     * @param  Bill  $bill
+     * @param  array  $data
      *
      * @return Bill
      */
     private function updateBillProperties(Bill $bill, array $data): Bill
     {
-        if (array_key_exists('name', $data) && '' !== (string) $data['name']) {
+        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
             $bill->name = $data['name'];
         }
 
-        if (array_key_exists('amount_min', $data) && '' !== (string) $data['amount_min']) {
+        if (array_key_exists('amount_min', $data) && '' !== (string)$data['amount_min']) {
             $bill->amount_min = $data['amount_min'];
         }
-        if (array_key_exists('amount_max', $data) && '' !== (string) $data['amount_max']) {
+        if (array_key_exists('amount_max', $data) && '' !== (string)$data['amount_max']) {
             $bill->amount_max = $data['amount_max'];
         }
-        if (array_key_exists('date', $data) && '' !== (string) $data['date']) {
+        if (array_key_exists('date', $data) && '' !== (string)$data['date']) {
             $bill->date = $data['date'];
         }
-        if (array_key_exists('repeat_freq', $data) && '' !== (string) $data['repeat_freq']) {
+        if (array_key_exists('repeat_freq', $data) && '' !== (string)$data['repeat_freq']) {
             $bill->repeat_freq = $data['repeat_freq'];
         }
         if (array_key_exists('skip', $data)) {
@@ -183,9 +186,9 @@ class BillUpdateService
     }
 
     /**
-     * @param Bill $bill
-     * @param int  $oldOrder
-     * @param int  $newOrder
+     * @param  Bill  $bill
+     * @param  int  $oldOrder
+     * @param  int  $newOrder
      */
     private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
     {
@@ -203,13 +206,12 @@ class BillUpdateService
             $bill->order = $newOrder;
             $bill->save();
         }
-
     }
 
     /**
-     * @param Bill  $bill
-     * @param array $oldData
-     * @param array $newData
+     * @param  Bill  $bill
+     * @param  array  $oldData
+     * @param  array  $newData
      */
     private function updateBillTriggers(Bill $bill, array $oldData, array $newData): void
     {
@@ -228,7 +230,8 @@ class BillUpdateService
             'name'                      => 'description_contains',
             'amount_min'                => 'amount_more',
             'amount_max'                => 'amount_less',
-            'transaction_currency_name' => 'currency_is'];
+            'transaction_currency_name' => 'currency_is',
+        ];
         foreach ($fields as $field => $ruleTriggerKey) {
             if (!array_key_exists($field, $newData)) {
                 continue;
@@ -239,14 +242,13 @@ class BillUpdateService
             }
             $this->updateRules($rules, $ruleTriggerKey, $oldData[$field], $newData[$field]);
         }
-
     }
 
     /**
-     * @param Collection $rules
-     * @param string     $key
-     * @param string     $oldValue
-     * @param string     $newValue
+     * @param  Collection  $rules
+     * @param  string  $key
+     * @param  string  $oldValue
+     * @param  string  $newValue
      */
     private function updateRules(Collection $rules, string $key, string $oldValue, string $newValue): void
     {
@@ -269,8 +271,8 @@ class BillUpdateService
     }
 
     /**
-     * @param Rule   $rule
-     * @param string $key
+     * @param  Rule  $rule
+     * @param  string  $key
      *
      * @return RuleTrigger|null
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controller.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -36,7 +37,11 @@ use Route;
  */
 abstract class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, RequestInformation, UserNavigation;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
+    use RequestInformation;
+    use UserNavigation;
 
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;
@@ -92,9 +97,9 @@ abstract class Controller extends BaseController
             function ($request, $next): mixed {
                 $locale = app('steam')->getLocale();
                 // translations for specific strings:
-                $this->monthFormat       = (string) trans('config.month_js', [], $locale);
-                $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
-                $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
+                $this->monthFormat       = (string)trans('config.month_js', [], $locale);
+                $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
+                $this->dateTimeFormat    = (string)trans('config.date_time_js', [], $locale);
 
                 // get shown-intro-preference:
                 if (auth()->check()) {

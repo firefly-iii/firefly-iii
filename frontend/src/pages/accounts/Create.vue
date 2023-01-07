@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -40,22 +40,22 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.name"
-                  :error="hasSubmissionErrors.name"
-                  bottom-slots
+                  v-model="name"
                   :disable="disabledInput"
-                  type="text" clearable v-model="name" :label="$t('form.name')"
-                  outlined/>
+                  :error="hasSubmissionErrors.name"
+                  :error-message="submissionErrors.name"
+                  :label="$t('form.name')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.iban"
+                  v-model="iban"
+                  :disable="disabledInput"
                   :error="hasSubmissionErrors.iban"
-                  mask="AA## XXXX XXXX XXXX XXXX XXXX XXXX XXXX XX"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="iban" :label="$t('form.iban')"
-                  outlined/>
+                  :error-message="submissionErrors.iban" :label="$t('form.iban')" bottom-slots clearable mask="AA## XXXX XXXX XXXX XXXX XXXX XXXX XXXX XX" outlined
+                  type="text"/>
               </div>
             </div>
           </q-card-section>
@@ -74,9 +74,11 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label label="Return here to create another one"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
+                            left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" left-label :disable="!doReturnHere || disabledInput" label="Reset form after submission"/>
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                            left-label/>
               </div>
             </div>
           </q-card-section>

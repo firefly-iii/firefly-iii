@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2016_06_16_000002_create_main_tables.php
  * Copyright (c) 2019 james@firefly-iii.org.

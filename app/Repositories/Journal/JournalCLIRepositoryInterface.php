@@ -36,7 +36,7 @@ interface JournalCLIRepositoryInterface
     /**
      * Get all transaction journals with a specific type, regardless of user.
      *
-     * @param array $types
+     * @param  array  $types
      *
      * @return Collection
      */
@@ -45,7 +45,7 @@ interface JournalCLIRepositoryInterface
     /**
      * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return int
      */
@@ -54,7 +54,7 @@ interface JournalCLIRepositoryInterface
     /**
      * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return int
      */
@@ -70,8 +70,8 @@ interface JournalCLIRepositoryInterface
     /**
      * Return Carbon value of a meta field (or NULL).
      *
-     * @param TransactionJournal $journal
-     * @param string             $field
+     * @param  TransactionJournal  $journal
+     * @param  string  $field
      *
      * @return null|Carbon
      */
@@ -80,8 +80,8 @@ interface JournalCLIRepositoryInterface
     /**
      * Return value of a meta field (or NULL).
      *
-     * @param TransactionJournal $journal
-     * @param string             $field
+     * @param  TransactionJournal  $journal
+     * @param  string  $field
      *
      * @return null|string
      */
@@ -90,7 +90,7 @@ interface JournalCLIRepositoryInterface
     /**
      * Return text of a note attached to journal, or NULL
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return string|null
      */
@@ -107,15 +107,14 @@ interface JournalCLIRepositoryInterface
     /**
      * Return all tags as strings in an array.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return array
      */
     public function getTags(TransactionJournal $journal): array;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
-
 }

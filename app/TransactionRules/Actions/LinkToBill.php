@@ -1,4 +1,5 @@
 <?php
+
 /**
  * LinkToBill.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
@@ -34,15 +37,14 @@ use Log;
  */
 class LinkToBill implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
      *
      * @codeCoverageIgnore
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -58,10 +60,24 @@ class LinkToBill implements ActionInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($user);
-        $billName = (string) $this->action->action_value;
+        $billName = (string)$this->action->action_value;
         $bill     = $repository->findByName($billName);
 
         if (null !== $bill && $journal['transaction_type_type'] === TransactionType::WITHDRAWAL) {
+            $count = DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
+                       ->where('bill_id', $bill->id)->count();
+            if (0 !== $count) {
+                Log::error(
+                    sprintf(
+                        'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.',
+                        $journal['transaction_journal_id'],
+                        $billName
+                    )
+                );
+                return false;
+            }
+
+
             DB::table('transaction_journals')
               ->where('id', '=', $journal['transaction_journal_id'])
               ->update(['bill_id' => $bill->id]);
@@ -69,13 +85,17 @@ class LinkToBill implements ActionInterface
                 sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name)
             );
 
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'set_bill', null, $bill->name));
+
             return true;
         }
 
         Log::error(
             sprintf(
                 'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.',
-                $journal['transaction_journal_id'], $billName
+                $journal['transaction_journal_id'],
+                $billName
             )
         );
 

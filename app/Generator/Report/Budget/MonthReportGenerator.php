@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MonthReportGenerator.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -18,14 +19,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection MultipleReturnStatementsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -34,7 +34,7 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
- * See reference nr. 19
+ * TODO include info about tags.
  *
  * @codeCoverageIgnore
  */
@@ -72,46 +72,19 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('budgets', $this->budgets)
                 ->with('accounts', $this->accounts)
                 ->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
     }
 
     /**
-     * Set the involved accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface
-    {
-        $this->accounts = $accounts;
-
-        return $this;
-    }
-
-    /**
-     * Set the involved budgets.
-     *
-     * @param Collection $budgets
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setBudgets(Collection $budgets): ReportGeneratorInterface
-    {
-        $this->budgets = $budgets;
-
-        return $this;
-    }
-
-    /**
      * Unused category setter.
      *
-     * @param Collection $categories
+     * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
      */
@@ -123,7 +96,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the end date of the report.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -137,7 +110,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused expense setter.
      *
-     * @param Collection $expense
+     * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
      */
@@ -149,7 +122,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set the start date of the report.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -163,7 +136,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Unused tags setter.
      *
-     * @param Collection $tags
+     * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
      */
@@ -179,7 +152,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     protected function getExpenses(): array
     {
-        if (!empty($this->expenses)) {
+        if (0 !== count($this->expenses)) {
             Log::debug('Return previous set of expenses.');
 
             return $this->expenses;
@@ -197,5 +170,33 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $this->expenses = $journals;
 
         return $journals;
+    }
+
+    /**
+     * Set the involved budgets.
+     *
+     * @param  Collection  $budgets
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
+        $this->budgets = $budgets;
+
+        return $this;
+    }
+
+    /**
+     * Set the involved accounts.
+     *
+     * @param  Collection  $accounts
+     *
+     * @return ReportGeneratorInterface
+     */
+    public function setAccounts(Collection $accounts): ReportGeneratorInterface
+    {
+        $this->accounts = $accounts;
+
+        return $this;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ClearNotes.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
 
@@ -31,16 +34,38 @@ use Log;
  */
 class ClearNotes implements ActionInterface
 {
+    private RuleAction $action;
+
+    /**
+     * TriggerInterface constructor.
+     *
+     * @param  RuleAction  $action
+     */
+    public function __construct(RuleAction $action)
+    {
+        $this->action = $action;
+    }
+
     /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool
     {
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $notes  = $object->notes()->first();
+        if (null === $notes) {
+            Log::debug(sprintf('RuleAction ClearNotes, journal #%d has no notes.', $journal['transaction_journal_id']));
+            return false;
+        }
+        $before = $notes->text;
+
         DB::table('notes')
           ->where('noteable_id', $journal['transaction_journal_id'])
           ->where('noteable_type', TransactionJournal::class)
           ->delete();
-        Log::debug('RuleAction ClearNotes removed all notes.');
+        Log::debug(sprintf('RuleAction ClearNotes removed all notes from journal #%d.', $journal['transaction_journal_id']));
+
+        event(new TriggeredAuditLog($this->action->rule, $object, 'clear_notes', $before, null));
 
         return true;
     }

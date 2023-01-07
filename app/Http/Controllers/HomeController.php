@@ -1,4 +1,5 @@
 <?php
+
 /**
  * HomeController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -25,6 +26,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Models\AccountType;
@@ -57,7 +59,7 @@ class HomeController extends Controller
     /**
      * Change index date range.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
      * @throws Exception
@@ -72,7 +74,7 @@ class HomeController extends Controller
         Log::debug('Received dateRange', ['start' => $request->get('start'), 'end' => $request->get('end'), 'label' => $request->get('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
-        if ($label === (string) trans('firefly.everything') || $label === (string) trans('firefly.customRange')) {
+        if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
             $isCustomRange = true;
             Log::debug('Range is now marked as "custom".');
         }
@@ -80,7 +82,7 @@ class HomeController extends Controller
         $diff = $start->diffInDays($end) + 1;
 
         if ($diff > 50) {
-            $request->session()->flash('warning', (string) trans('firefly.warning_much_data', ['days' => $diff]));
+            $request->session()->flash('warning', (string)trans('firefly.warning_much_data', ['days' => $diff]));
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
@@ -96,10 +98,10 @@ class HomeController extends Controller
     /**
      * Show index.
      *
-     * @param AccountRepositoryInterface $repository
+     * @param  AccountRepositoryInterface  $repository
      *
      * @return mixed
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function index(AccountRepositoryInterface $repository): mixed
     {
@@ -113,14 +115,13 @@ class HomeController extends Controller
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }
-        $subTitle     = (string) trans('firefly.welcome_back');
+        $subTitle     = (string)trans('firefly.welcome_back');
         $transactions = [];
         $frontPage    = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end = session('end', Carbon::now()->endOfMonth());
-        /** @noinspection NullPointerExceptionInspection */
+        $end      = session('end', Carbon::now()->endOfMonth());
         $accounts = $repository->getAccountsById($frontPage->data);
         $today    = today(config('app.timezone'));
 

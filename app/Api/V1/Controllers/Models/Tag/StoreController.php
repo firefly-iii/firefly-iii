@@ -65,7 +65,7 @@ class StoreController extends Controller
      *
      * Store new object.
      *
-     * @param StoreRequest $request
+     * @param  StoreRequest  $request
      *
      * @return JsonResponse
      */
@@ -82,4 +82,3 @@ class StoreController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 }
-

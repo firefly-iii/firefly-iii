@@ -109,24 +109,26 @@ class Authenticate
                             $message = (string)trans('firefly.email_changed_logout');
                         }
                         app('session')->flash('logoutMessage', $message);
-                        /** @noinspection PhpUndefinedMethodInspection */
-                        $this->auth->logout();
+                        $this->auth->logout(); // @phpstan-ignore-line (thinks function is undefined)
 
                         throw new AuthenticationException('Blocked account.', $guards);
                     }
                 }
             }
 
-            /** @noinspection PhpUndefinedMethodInspection */
-            return $this->auth->authenticate();
+            return $this->auth->authenticate(); // @phpstan-ignore-line (thinks function returns void)
         }
         Log::debug('Guard array is not empty.');
 
         foreach ($guards as $guard) {
             Log::debug(sprintf('Now in guard loop, guard is "%s"', $guard));
-            $this->auth->guard($guard)->authenticate();
-            if ($this->auth->guard($guard)->check()) {
-                /** @noinspection PhpVoidFunctionResultUsedInspection */
+            if('api' !== $guard) {
+                $this->auth->guard($guard)->authenticate();
+            }
+            $result = $this->auth->guard($guard)->check();
+            Log::debug(sprintf('Result is %s', var_export($result, true)));
+            if ($result) {
+                // According to PHPstan the method returns void, but we'll see.
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
         }

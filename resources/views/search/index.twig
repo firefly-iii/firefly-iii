@@ -57,7 +57,12 @@
                         <p>{{ trans('firefly.modifiers_applies_are') }}</p>
                         <ul>
                             {% for operator in operators %}
-                                <li>{{ trans('firefly.search_modifier_'~operator.type, {value: operator.value}) }}</li>
+                                {% if operator.prohibited %}
+                                    <li>{{ trans('firefly.search_modifier_not_'~operator.type, {value: operator.value}) }}</li>
+                                {% endif %}
+                                {% if not operator.prohibited %}
+                                    <li>{{ trans('firefly.search_modifier_'~operator.type, {value: operator.value}) }}</li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     {% endif %}

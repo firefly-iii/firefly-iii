@@ -28,7 +28,6 @@ use FireflyIII\Models\WebhookMessage;
 use JsonException;
 use Log;
 
-
 /**
  * Class Sha3SignatureGenerator
  */

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use Log;
@@ -37,19 +36,18 @@ class AccountMetaFactory
     /**
      * Create update or delete meta data.
      *
-     * @param Account $account
-     * @param string  $field
-     * @param string  $value
+     * @param  Account  $account
+     * @param  string  $field
+     * @param  string  $value
      *
      * @return AccountMeta|null
      */
     public function crud(Account $account, string $field, string $value): ?AccountMeta
     {
-        /** @var AccountMeta $entry */
+        /** @var AccountMeta|null $entry */
         $entry = $account->accountMeta()->where('name', $field)->first();
         // must not be an empty string:
         if ('' !== $value) {
-
             // if $data has field and $entry is null, create new one:
             if (null === $entry) {
                 Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $value, $account->id, $account->name));
@@ -63,11 +61,7 @@ class AccountMetaFactory
             Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $value, $account->id, $account->name));
         }
         if ('' === $value && null !== $entry) {
-            try {
-                $entry->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::debug(sprintf('Could not delete entry: %s', $e->getMessage()));
-            }
+            $entry->delete();
 
             return null;
         }
@@ -76,7 +70,7 @@ class AccountMetaFactory
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return AccountMeta|null
      */
@@ -84,5 +78,4 @@ class AccountMetaFactory
     {
         return AccountMeta::create($data);
     }
-
 }

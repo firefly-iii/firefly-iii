@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReportFormRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -52,10 +53,10 @@ class ReportFormRequest extends FormRequest
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('accounts');
-        $collection = new Collection;
+        $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int) $accountId);
+                $account = $repository->find((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -75,10 +76,10 @@ class ReportFormRequest extends FormRequest
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $set        = $this->get('budget');
-        $collection = new Collection;
+        $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $budgetId) {
-                $budget = $repository->find((int) $budgetId);
+                $budget = $repository->find((int)$budgetId);
                 if (null !== $budget) {
                     $collection->push($budget);
                 }
@@ -98,10 +99,10 @@ class ReportFormRequest extends FormRequest
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $set        = $this->get('category');
-        $collection = new Collection;
+        $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $categoryId) {
-                $category = $repository->find((int) $categoryId);
+                $category = $repository->find((int)$categoryId);
                 if (null !== $category) {
                     $collection->push($category);
                 }
@@ -121,10 +122,10 @@ class ReportFormRequest extends FormRequest
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('double');
-        $collection = new Collection;
+        $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int) $accountId);
+                $account = $repository->find((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -145,7 +146,7 @@ class ReportFormRequest extends FormRequest
     {
         $date  = today(config('app.timezone'));
         $range = $this->get('daterange');
-        $parts = explode(' - ', (string) $range);
+        $parts = explode(' - ', (string)$range);
         if (2 === count($parts)) {
             $string = $parts[1];
             // validate as date
@@ -154,7 +155,7 @@ class ReportFormRequest extends FormRequest
             if (preg_match($pattern, $string)) {
                 try {
                     $date = new Carbon($parts[1]);
-                } catch (Exception $e) {
+                } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     Log::error($error);
                     throw new FireflyException($error, 0, $e);
@@ -179,7 +180,7 @@ class ReportFormRequest extends FormRequest
     {
         $date  = today(config('app.timezone'));
         $range = $this->get('daterange');
-        $parts = explode(' - ', (string) $range);
+        $parts = explode(' - ', (string)$range);
         if (2 === count($parts)) {
             $string = $parts[0];
             // validate as date
@@ -188,7 +189,7 @@ class ReportFormRequest extends FormRequest
             if (preg_match($pattern, $string)) {
                 try {
                     $date = new Carbon($parts[0]);
-                } catch (Exception $e) {
+                } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     Log::error($error);
                     throw new FireflyException($error, 0, $e);
@@ -213,7 +214,7 @@ class ReportFormRequest extends FormRequest
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $set        = $this->get('tag');
-        $collection = new Collection;
+        $collection = new Collection();
         Log::debug('Set is:', $set ?? []);
         if (is_array($set)) {
             foreach ($set as $tagTag) {
@@ -223,7 +224,7 @@ class ReportFormRequest extends FormRequest
                     $collection->push($tag);
                     continue;
                 }
-                $tag = $repository->find((int) $tagTag);
+                $tag = $repository->find((int)$tagTag);
                 if (null !== $tag) {
                     $collection->push($tag);
                 }

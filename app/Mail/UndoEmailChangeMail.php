@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UndoEmailChangeMail.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,7 +34,8 @@ use Illuminate\Queue\SerializesModels;
  */
 class UndoEmailChangeMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public string $newEmail;
     public string $oldEmail;
@@ -42,9 +44,9 @@ class UndoEmailChangeMail extends Mailable
     /**
      * UndoEmailChangeMail constructor.
      *
-     * @param string $newEmail
-     * @param string $oldEmail
-     * @param string $url
+     * @param  string  $newEmail
+     * @param  string  $oldEmail
+     * @param  string  $url
      */
     public function __construct(string $newEmail, string $oldEmail, string $url)
     {
@@ -62,6 +64,6 @@ class UndoEmailChangeMail extends Mailable
     {
         return $this
             ->markdown('emails.undo-email-change')
-            ->subject((string) trans('email.email_change_subject'));
+            ->subject((string)trans('email.email_change_subject'));
     }
 }

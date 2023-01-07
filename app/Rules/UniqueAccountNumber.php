@@ -42,8 +42,8 @@ class UniqueAccountNumber implements Rule
      *
      * @codeCoverageIgnore
      *
-     * @param Account|null $account
-     * @param string|null  $expectedType
+     * @param  Account|null  $account
+     * @param  string|null  $expectedType
      */
     public function __construct(?Account $account, ?string $expectedType)
     {
@@ -72,14 +72,14 @@ class UniqueAccountNumber implements Rule
      */
     public function message(): string
     {
-        return (string) trans('validation.unique_account_number_for_user');
+        return (string)trans('validation.unique_account_number_for_user');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      *
@@ -101,7 +101,10 @@ class UniqueAccountNumber implements Rule
                 Log::debug(
                     sprintf(
                         'account number "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
-                        $value, $count, $type, $this->expectedType
+                        $value,
+                        $count,
+                        $type,
+                        $this->expectedType
                     )
                 );
 
@@ -140,20 +143,19 @@ class UniqueAccountNumber implements Rule
     }
 
     /**
-     * @param string $type
-     * @param string $accountNumber
+     * @param  string  $type
+     * @param  string  $accountNumber
      *
      * @return int
      */
     private function countHits(string $type, string $accountNumber): int
     {
-        $query = AccountMeta
-            ::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
-            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-            ->where('accounts.user_id', auth()->user()->id)
-            ->where('account_types.type', $type)
-            ->where('account_meta.name', '=', 'account_number')
-            ->where('account_meta.data', json_encode($accountNumber));
+        $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+                            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                            ->where('accounts.user_id', auth()->user()->id)
+                            ->where('account_types.type', $type)
+                            ->where('account_meta.name', '=', 'account_number')
+                            ->where('account_meta.data', json_encode($accountNumber));
 
         if (null !== $this->account) {
             $query->where('accounts.id', '!=', $this->account->id);

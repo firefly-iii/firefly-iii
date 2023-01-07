@@ -47,7 +47,7 @@ class ObjectGroupTransformer extends AbstractTransformer
     /**
      * Transform the account.
      *
-     * @param ObjectGroup $objectGroup
+     * @param  ObjectGroup  $objectGroup
      *
      * @return array
      */
@@ -56,18 +56,17 @@ class ObjectGroupTransformer extends AbstractTransformer
         $this->repository->setUser($objectGroup->user);
 
         return [
-            'id'         => (string) $objectGroup->id,
+            'id'         => (string)$objectGroup->id,
             'created_at' => $objectGroup->created_at?->toAtomString(),
             'updated_at' => $objectGroup->updated_at?->toAtomString(),
             'title'      => $objectGroup->title,
-            'order'      => (int) $objectGroup->order,
+            'order'      => (int)$objectGroup->order,
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/object_groups/' . $objectGroup->id,
+                    'uri' => '/object_groups/'.$objectGroup->id,
                 ],
             ],
         ];
     }
-
 }

@@ -32,7 +32,6 @@ use Illuminate\Http\JsonResponse;
 
 class DestroyController extends Controller
 {
-
     private LinkTypeRepositoryInterface $repository;
 
     /**
@@ -63,7 +62,7 @@ class DestroyController extends Controller
      *
      * Delete the resource.
      *
-     * @param TransactionJournalLink $link
+     * @param  TransactionJournalLink  $link
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -75,5 +74,4 @@ class DestroyController extends Controller
 
         return response()->json([], 204);
     }
-
 }

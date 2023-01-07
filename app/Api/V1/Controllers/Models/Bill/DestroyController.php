@@ -59,7 +59,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -71,5 +71,4 @@ class DestroyController extends Controller
 
         return response()->json([], 204);
     }
-
 }

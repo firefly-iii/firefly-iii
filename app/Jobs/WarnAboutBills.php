@@ -39,31 +39,33 @@ use Log;
  */
 class WarnAboutBills implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private Carbon $date;
     private bool   $force;
-
 
     /**
      * Create a new job instance.
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon|null $date
+     * @param  Carbon|null  $date
      */
     public function __construct(?Carbon $date)
     {
+        $newDate = new Carbon();
+        $newDate->startOfDay();
+        $this->date = $newDate;
+
         if (null !== $date) {
             $newDate = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
         }
-        if (null === $date) {
-            $newDate = new Carbon;
-            $newDate->startOfDay();
-            $this->date = $newDate;
-        }
+
         $this->force = false;
 
         Log::debug(sprintf('Created new WarnAboutBills("%s")', $this->date->format('Y-m-d')));
@@ -95,7 +97,7 @@ class WarnAboutBills implements ShouldQueue
     }
 
     /**
-     * @param Bill $bill
+     * @param  Bill  $bill
      * @return bool
      */
     private function hasDateFields(Bill $bill): bool
@@ -112,8 +114,8 @@ class WarnAboutBills implements ShouldQueue
     }
 
     /**
-     * @param Bill   $bill
-     * @param string $field
+     * @param  Bill  $bill
+     * @param  string  $field
      * @return bool
      */
     private function needsWarning(Bill $bill, string $field): bool
@@ -131,8 +133,8 @@ class WarnAboutBills implements ShouldQueue
     }
 
     /**
-     * @param Bill   $bill
-     * @param string $field
+     * @param  Bill  $bill
+     * @param  string  $field
      * @return int
      */
     private function getDiff(Bill $bill, string $field): int
@@ -143,8 +145,8 @@ class WarnAboutBills implements ShouldQueue
     }
 
     /**
-     * @param Bill   $bill
-     * @param string $field
+     * @param  Bill  $bill
+     * @param  string  $field
      * @return void
      */
     private function sendWarning(Bill $bill, string $field): void
@@ -155,7 +157,7 @@ class WarnAboutBills implements ShouldQueue
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      */
     public function setDate(Carbon $date): void
     {
@@ -165,7 +167,7 @@ class WarnAboutBills implements ShouldQueue
     }
 
     /**
-     * @param bool $force
+     * @param  bool  $force
      */
     public function setForce(bool $force): void
     {

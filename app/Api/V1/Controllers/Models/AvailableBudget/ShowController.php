@@ -77,7 +77,7 @@ class ShowController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         $start = $this->parameters->get('start');
         $end   = $this->parameters->get('end');
@@ -89,7 +89,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.available_budgets.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.available_budgets.index').$this->buildParams());
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);
@@ -107,7 +107,7 @@ class ShowController extends Controller
      *
      * Display the specified resource.
      *
-     * @param AvailableBudget $availableBudget
+     * @param  AvailableBudget  $availableBudget
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -124,5 +124,4 @@ class ShowController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

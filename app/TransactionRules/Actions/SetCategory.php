@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SetCategory.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,8 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Log;
 
@@ -38,7 +41,7 @@ class SetCategory implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -65,7 +68,8 @@ class SetCategory implements ActionInterface
         if (null === $category) {
             Log::debug(
                 sprintf(
-                    'RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.', $journal['transaction_journal_id'],
+                    'RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.',
+                    $journal['transaction_journal_id'],
                     $search
                 )
             );
@@ -75,13 +79,19 @@ class SetCategory implements ActionInterface
 
         Log::debug(
             sprintf(
-                'RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal['transaction_journal_id'], $category->id,
+                'RuleAction SetCategory set the category of journal #%d to category #%d ("%s").',
+                $journal['transaction_journal_id'],
+                $category->id,
                 $category->name
             )
         );
 
         DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
         DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
+
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_category', null, $category->name));
 
         return true;
     }

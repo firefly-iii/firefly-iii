@@ -1,4 +1,5 @@
 <?php
+
 /*
  * HealthcheckController.php
  * Copyright (c) 2021 https://github.com/ajgon
@@ -39,6 +40,4 @@ class HealthcheckController extends Controller
     {
         return response('OK', 200);
     }
-
 }
-

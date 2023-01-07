@@ -69,7 +69,7 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -80,7 +80,7 @@ class ShowController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         $this->repository->resetOrder();
         $collection   = $this->repository->get();
@@ -89,7 +89,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($objectGroups, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.object-groups.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.object-groups.index').$this->buildParams());
 
         /** @var ObjectGroupTransformer $transformer */
         $transformer = app(ObjectGroupTransformer::class);
@@ -107,7 +107,7 @@ class ShowController extends Controller
      *
      * Show single instance.
      *
-     * @param ObjectGroup $objectGroup
+     * @param  ObjectGroup  $objectGroup
      *
      * @return JsonResponse
      */

@@ -253,7 +253,7 @@ return [
     'updated_webhook'                      => 'Updated webhook ":title"',
     'edit_webhook_js'                      => 'Edit webhook "{title}"',
     'show_webhook'                         => 'Webhook ":title"',
-    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. You can refresh this page to see the results.',
+    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
     'webhook_messages'                     => 'Webhook sporočilo',
     'view_message'                         => 'View message',
     'view_attempts'                        => 'View failed attempts',

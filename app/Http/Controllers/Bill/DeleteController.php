@@ -53,7 +53,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
+                app('view')->share('title', (string)trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->repository = app(BillRepositoryInterface::class);
 
@@ -65,7 +65,7 @@ class DeleteController extends Controller
     /**
      * Delete a bill.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return Factory|View
      */
@@ -73,7 +73,7 @@ class DeleteController extends Controller
     {
         // put previous url in session
         $this->rememberPreviousUrl('bills.delete.url');
-        $subTitle = (string) trans('firefly.delete_bill', ['name' => $bill->name]);
+        $subTitle = (string)trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
     }
@@ -81,8 +81,8 @@ class DeleteController extends Controller
     /**
      * Destroy a bill.
      *
-     * @param Request $request
-     * @param Bill    $bill
+     * @param  Request  $request
+     * @param  Bill  $bill
      *
      * @return RedirectResponse|Redirector
      */
@@ -91,7 +91,7 @@ class DeleteController extends Controller
         $name = $bill->name;
         $this->repository->destroy($bill);
 
-        $request->session()->flash('success', (string) trans('firefly.deleted_bill', ['name' => $name]));
+        $request->session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $name]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUrl('bills.delete.url'));

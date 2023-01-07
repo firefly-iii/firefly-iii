@@ -41,22 +41,25 @@ class ChangesForV540 extends Migration
     public function down(): void
     {
         Schema::table(
-            'oauth_clients', static function (Blueprint $table) {
-            $table->dropColumn('provider');
-        }
+            'oauth_clients',
+            static function (Blueprint $table) {
+                $table->dropColumn('provider');
+            }
         );
 
         Schema::table(
-            'accounts', static function (Blueprint $table) {
-            $table->dropColumn('order');
-        }
+            'accounts',
+            static function (Blueprint $table) {
+                $table->dropColumn('order');
+            }
         );
 
         Schema::table(
-            'bills', static function (Blueprint $table) {
-            $table->dropColumn('end_date');
-            $table->dropColumn('extension_date');
-        }
+            'bills',
+            static function (Blueprint $table) {
+                $table->dropColumn('end_date');
+                $table->dropColumn('extension_date');
+            }
         );
     }
 
@@ -68,26 +71,30 @@ class ChangesForV540 extends Migration
     public function up(): void
     {
         Schema::table(
-            'accounts', static function (Blueprint $table) {
-            $table->integer('order', false, true)->default(0);
-        }
+            'accounts',
+            static function (Blueprint $table) {
+                $table->integer('order', false, true)->default(0);
+            }
         );
         Schema::table(
-            'oauth_clients', static function (Blueprint $table) {
-            $table->string('provider')->nullable();
-        }
+            'oauth_clients',
+            static function (Blueprint $table) {
+                $table->string('provider')->nullable();
+            }
         );
         Schema::table(
-            'bills', static function (Blueprint $table) {
-            $table->date('end_date')->nullable()->after('date');
-            $table->date('extension_date')->nullable()->after('end_date');
-        }
+            'bills',
+            static function (Blueprint $table) {
+                $table->date('end_date')->nullable()->after('date');
+                $table->date('extension_date')->nullable()->after('end_date');
+            }
         );
         // make column nullable:
         Schema::table(
-            'oauth_clients', function (Blueprint $table) {
-            $table->string('secret', 100)->nullable()->change();
-        }
+            'oauth_clients',
+            function (Blueprint $table) {
+                $table->string('secret', 100)->nullable()->change();
+            }
         );
     }
 }

@@ -37,7 +37,6 @@ use Twig\TwigFunction;
  */
 class TransactionGroupTwig extends AbstractExtension
 {
-    /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * @return array
      *
@@ -80,7 +79,7 @@ class TransactionGroupTwig extends AbstractExtension
     /**
      * Generate normal amount for transaction from a transaction group.
      *
-     * @param array $array
+     * @param  array  $array
      *
      * @return string
      */
@@ -96,7 +95,7 @@ class TransactionGroupTwig extends AbstractExtension
             $colored = false;
         }
 
-        $result = app('amount')->formatFlat($array['currency_symbol'], (int) $array['currency_decimal_places'], $amount, $colored);
+        $result = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
@@ -105,15 +104,14 @@ class TransactionGroupTwig extends AbstractExtension
     }
 
     /**
-     * @param string $amount
-     * @param string $transactionType
-     * @param string $sourceType
+     * @param  string  $amount
+     * @param  string  $transactionType
+     * @param  string  $sourceType
      *
      * @return string
      */
     private function signAmount(string $amount, string $transactionType, string $sourceType): string
     {
-
         // withdrawals stay negative
         if ($transactionType !== TransactionType::WITHDRAWAL) {
             $amount = bcmul($amount, '-1');
@@ -135,7 +133,7 @@ class TransactionGroupTwig extends AbstractExtension
     /**
      * Generate foreign amount for transaction from a transaction group.
      *
-     * @param array $array
+     * @param  array  $array
      *
      * @return string
      */
@@ -151,7 +149,7 @@ class TransactionGroupTwig extends AbstractExtension
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($array['foreign_currency_symbol'], (int) $array['foreign_currency_decimal_places'], $amount, $colored);
+        $result = app('amount')->formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
@@ -185,7 +183,7 @@ class TransactionGroupTwig extends AbstractExtension
     /**
      * Generate normal amount for transaction from a transaction group.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return string
      */
@@ -203,7 +201,7 @@ class TransactionGroupTwig extends AbstractExtension
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, (int) $currency->decimal_places, $amount, $colored);
+        $result = app('amount')->formatFlat($currency->symbol, (int)$currency->decimal_places, $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
@@ -212,7 +210,7 @@ class TransactionGroupTwig extends AbstractExtension
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return bool
      */
@@ -227,7 +225,7 @@ class TransactionGroupTwig extends AbstractExtension
     /**
      * Generate foreign amount for journal from a transaction group.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return string
      */
@@ -246,7 +244,7 @@ class TransactionGroupTwig extends AbstractExtension
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, (int) $currency->decimal_places, $amount, $colored);
+        $result = app('amount')->formatFlat($currency->symbol, (int)$currency->decimal_places, $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }

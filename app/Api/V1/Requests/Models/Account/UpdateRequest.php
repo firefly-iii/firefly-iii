@@ -42,7 +42,9 @@ use Log;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
+    use ConvertsDataTypes;
+    use AppendsLocationData;
+    use ChecksLogin;
 
     /**
      * @return array
@@ -99,6 +101,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var Account $account */
         $account        = $this->route()->parameter('account');
         $accountRoles   = implode(',', config('firefly.accountRoles'));
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
@@ -116,11 +119,11 @@ class UpdateRequest extends FormRequest
             'order'                => 'numeric|nullable',
             'currency_id'          => 'numeric|exists:transaction_currencies,id',
             'currency_code'        => 'min:3|max:3|exists:transaction_currencies,code',
-            'active'               => [new IsBoolean],
-            'include_net_worth'    => [new IsBoolean],
+            'active'               => [new IsBoolean()],
+            'include_net_worth'    => [new IsBoolean()],
             'account_role'         => sprintf('in:%s|nullable|required_if:type,asset', $accountRoles),
             'credit_card_type'     => sprintf('in:%s|nullable|required_if:account_role,ccAsset', $ccPaymentTypes),
-            'monthly_payment_date' => 'date' . '|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
+            'monthly_payment_date' => 'date'.'|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
             'liability_direction'  => 'required_if:type,liability|in:credit,debit',
             'interest'             => 'required_if:type,liability|between:0,100|numeric',

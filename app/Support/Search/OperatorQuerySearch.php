@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
+use Gdbots\QueryParser\Enum\BoolOperator;
 use Gdbots\QueryParser\Node\Date;
 use Gdbots\QueryParser\Node\Emoji;
 use Gdbots\QueryParser\Node\Emoticon;
@@ -73,6 +74,7 @@ class OperatorQuerySearch implements SearchInterface
     private int                         $limit;
     private Collection                  $operators;
     private int                         $page;
+    private array                       $prohibitedWords;
     private float                       $startTime;
     private TagRepositoryInterface      $tagRepository;
     private array                       $validOperators;
@@ -86,9 +88,10 @@ class OperatorQuerySearch implements SearchInterface
     public function __construct()
     {
         Log::debug('Constructed OperatorQuerySearch');
-        $this->operators          = new Collection;
+        $this->operators          = new Collection();
         $this->page               = 1;
         $this->words              = [];
+        $this->prohibitedWords    = [];
         $this->invalidOperators   = [];
         $this->limit              = 25;
         $this->date               = today(config('app.timezone'));
@@ -168,10 +171,11 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         $this->collector->setSearchWords($this->words);
+        $this->collector->excludeSearchWords($this->prohibitedWords);
     }
 
     /**
-     * @param Node $searchNode
+     * @param  Node  $searchNode
      *
      * @throws FireflyException
      */
@@ -185,8 +189,8 @@ class OperatorQuerySearch implements SearchInterface
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Subquery::class:
                 // loop all notes in subquery:
-                foreach ($searchNode->getNodes() as $subNode) { // @phpstan-ignore-line
-                    $this->handleSearchNode($subNode);          // let's hope it's not too recursive!
+                foreach ($searchNode->getNodes() as $subNode) { // @phpstan-ignore-line PHPStan thinks getNodes() does not exist but it does.
+                    $this->handleSearchNode($subNode);          // let's hope it's not too recursive
                 }
                 break;
             case Word::class:
@@ -198,7 +202,7 @@ class OperatorQuerySearch implements SearchInterface
             case Emoticon::class:
             case Emoji::class:
             case Mention::class:
-                $allWords = (string) $searchNode->getValue();
+                $allWords = (string)$searchNode->getValue();
                 Log::debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $allWords, $class));
                 $this->words[] = $allWords;
                 break;
@@ -206,14 +210,25 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Now handle Node class %s', $class));
                 /** @var Field $searchNode */
                 // used to search for x:y
-                $operator = strtolower($searchNode->getValue());
-                $value    = $searchNode->getNode()->getValue();
+                $operator   = strtolower($searchNode->getValue());
+                $value      = $searchNode->getNode()->getValue();
+                $prohibited = $searchNode->getBoolOperator()->equals(BoolOperator::PROHIBITED()->getValue());
+                $context    = config(sprintf('search.operators.%s.needs_context', $operator));
+
+                // is an operator that needs no context, and value is false, then prohibited = true.
+                if ('false' === $value && in_array($operator, $this->validOperators, true) && false === $context) {
+                    $prohibited = true;
+                }
+
                 // must be valid operator:
-                if (in_array($operator, $this->validOperators, true) && $this->updateCollector($operator, (string) $value)) {
+                if (
+                    in_array($operator, $this->validOperators, true) &&
+                    $this->updateCollector($operator, (string)$value, $prohibited)) {
                     $this->operators->push(
                         [
-                            'type'  => self::getRootOperator($operator),
-                            'value' => (string) $value,
+                            'type'       => self::getRootOperator($operator),
+                            'value'      => (string)$value,
+                            'prohibited' => $prohibited,
                         ]
                     );
                     Log::debug(sprintf('Added operator type "%s"', $operator));
@@ -222,22 +237,26 @@ class OperatorQuerySearch implements SearchInterface
                     Log::debug(sprintf('Added INVALID operator type "%s"', $operator));
                     $this->invalidOperators[] = [
                         'type'  => $operator,
-                        'value' => (string) $value,
+                        'value' => (string)$value,
                     ];
                 }
         }
-
     }
 
     /**
-     * @param string $operator
-     * @param string $value
+     * @param  string  $operator
+     * @param  string  $value
      *
      * @return bool
      * @throws FireflyException
      */
-    private function updateCollector(string $operator, string $value): bool
+    private function updateCollector(string $operator, string $value, bool $prohibited): bool
     {
+        if ($prohibited) {
+            Log::debug(sprintf('Operator "%s" is now "%s"', $operator, sprintf('-%s', $operator)));
+            $operator = sprintf('-%s', $operator);
+        }
+
         Log::debug(sprintf('Now in updateCollector("%s", "%s")', $operator, $value));
 
         // check if alias, replace if necessary:
@@ -247,66 +266,124 @@ class OperatorQuerySearch implements SearchInterface
             default:
                 Log::error(sprintf('No such operator: %s', $operator));
                 throw new FireflyException(sprintf('Unsupported search operator: "%s"', $operator));
-            // some search operators are ignored, basically:
+                // some search operators are ignored, basically:
             case 'user_action':
                 Log::info(sprintf('Ignore search operator "%s"', $operator));
 
                 return false;
             //
-            // all account related searches:
+                // all account related searches:
             //
             case 'account_is':
                 $this->searchAccount($value, 3, 4);
                 break;
+            case '-account_is':
+                $this->searchAccount($value, 3, 4, true);
+                break;
             case 'account_contains':
                 $this->searchAccount($value, 3, 3);
+                break;
+            case '-account_contains':
+                $this->searchAccount($value, 3, 3, true);
                 break;
             case 'account_ends':
                 $this->searchAccount($value, 3, 2);
                 break;
+            case '-account_ends':
+                $this->searchAccount($value, 3, 2, true);
+                break;
             case 'account_starts':
                 $this->searchAccount($value, 3, 1);
+                break;
+            case '-account_starts':
+                $this->searchAccount($value, 3, 1, true);
                 break;
             case 'account_nr_is':
                 $this->searchAccountNr($value, 3, 4);
                 break;
+            case '-account_nr_is':
+                $this->searchAccountNr($value, 3, 4, true);
+                break;
             case 'account_nr_contains':
                 $this->searchAccountNr($value, 3, 3);
+                break;
+            case '-account_nr_contains':
+                $this->searchAccountNr($value, 3, 3, true);
                 break;
             case 'account_nr_ends':
                 $this->searchAccountNr($value, 3, 2);
                 break;
+            case '-account_nr_ends':
+                $this->searchAccountNr($value, 3, 2, true);
+                break;
             case 'account_nr_starts':
                 $this->searchAccountNr($value, 3, 1);
+                break;
+            case '-account_nr_starts':
+                $this->searchAccountNr($value, 3, 1, true);
                 break;
             case 'source_account_starts':
                 $this->searchAccount($value, 1, 1);
                 break;
+            case '-source_account_starts':
+                $this->searchAccount($value, 1, 1, true);
+                break;
             case 'source_account_ends':
                 $this->searchAccount($value, 1, 2);
+                break;
+            case '-source_account_ends':
+                $this->searchAccount($value, 1, 2, true);
                 break;
             case 'source_account_is':
                 $this->searchAccount($value, 1, 4);
                 break;
+            case '-source_account_is':
+                $this->searchAccount($value, 1, 4, true);
+                break;
             case 'source_account_nr_starts':
                 $this->searchAccountNr($value, 1, 1);
+                break;
+            case '-source_account_nr_starts':
+                $this->searchAccountNr($value, 1, 1, true);
                 break;
             case 'source_account_nr_ends':
                 $this->searchAccountNr($value, 1, 2);
                 break;
+            case '-source_account_nr_ends':
+                $this->searchAccountNr($value, 1, 2, true);
+                break;
             case 'source_account_nr_is':
                 $this->searchAccountNr($value, 1, 4);
+                break;
+            case '-source_account_nr_is':
+                $this->searchAccountNr($value, 1, 4, true);
                 break;
             case 'source_account_nr_contains':
                 $this->searchAccountNr($value, 1, 3);
                 break;
+            case '-source_account_nr_contains':
+                $this->searchAccountNr($value, 1, 3, true);
+                break;
             case 'source_account_contains':
                 $this->searchAccount($value, 1, 3);
                 break;
+            case '-source_account_contains':
+                $this->searchAccount($value, 1, 3, true);
+                break;
             case 'source_account_id':
-                $account = $this->accountRepository->find((int) $value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection([$account]));
+                }
+                if (null === $account) {
+                    // since the source does not exist, cannot return results:
+                    $this->collector->findNothing();
+                }
+                break;
+            case '-source_account_id':
+                $account = $this->accountRepository->find((int)$value);
+                if (null !== $account) {
+                    $this->collector->excludeSourceAccounts(new Collection([$account]));
                 }
                 if (null === $account) {
                     // since the source does not exist, cannot return results:
@@ -317,36 +394,68 @@ class OperatorQuerySearch implements SearchInterface
                 $parts = explode(',', $value);
                 $this->collector->setJournalIds($parts);
                 break;
+            case '-journal_id':
+                $parts = explode(',', $value);
+                $this->collector->excludeJournalIds($parts);
+                break;
             case 'id':
                 $parts = explode(',', $value);
                 $this->collector->setIds($parts);
                 break;
+            case '-id':
+                $parts = explode(',', $value);
+                $this->collector->excludeIds($parts);
+                break;
             case 'destination_account_starts':
                 $this->searchAccount($value, 2, 1);
+                break;
+            case '-destination_account_starts':
+                $this->searchAccount($value, 2, 1, true);
                 break;
             case 'destination_account_ends':
                 $this->searchAccount($value, 2, 2);
                 break;
+            case '-destination_account_ends':
+                $this->searchAccount($value, 2, 2, true);
+                break;
             case 'destination_account_nr_starts':
                 $this->searchAccountNr($value, 2, 1);
+                break;
+            case '-destination_account_nr_starts':
+                $this->searchAccountNr($value, 2, 1, true);
                 break;
             case 'destination_account_nr_ends':
                 $this->searchAccountNr($value, 2, 2);
                 break;
+            case '-destination_account_nr_ends':
+                $this->searchAccountNr($value, 2, 2, true);
+                break;
             case 'destination_account_nr_is':
                 $this->searchAccountNr($value, 2, 4);
+                break;
+            case '-destination_account_nr_is':
+                $this->searchAccountNr($value, 2, 4, true);
                 break;
             case 'destination_account_is':
                 $this->searchAccount($value, 2, 4);
                 break;
+            case '-destination_account_is':
+                $this->searchAccount($value, 2, 4, true);
+                break;
             case 'destination_account_nr_contains':
                 $this->searchAccountNr($value, 2, 3);
+                break;
+            case '-destination_account_nr_contains':
+                $this->searchAccountNr($value, 2, 3, true);
                 break;
             case 'destination_account_contains':
                 $this->searchAccount($value, 2, 3);
                 break;
+            case '-destination_account_contains':
+                $this->searchAccount($value, 2, 3, true);
+                break;
             case 'destination_account_id':
-                $account = $this->accountRepository->find((int) $value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
@@ -354,11 +463,20 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case '-destination_account_id':
+                $account = $this->accountRepository->find((int)$value);
+                if (null !== $account) {
+                    $this->collector->excludeDestinationAccounts(new Collection([$account]));
+                }
+                if (null === $account) {
+                    $this->collector->findNothing();
+                }
+                break;
             case 'account_id':
                 $parts      = explode(',', $value);
-                $collection = new Collection;
+                $collection = new Collection();
                 foreach ($parts as $accountId) {
-                    $account = $this->accountRepository->find((int) $accountId);
+                    $account = $this->accountRepository->find((int)$accountId);
                     if (null !== $account) {
                         $collection->push($account);
                     }
@@ -370,44 +488,94 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case '-account_id':
+                $parts      = explode(',', $value);
+                $collection = new Collection();
+                foreach ($parts as $accountId) {
+                    $account = $this->accountRepository->find((int)$accountId);
+                    if (null !== $account) {
+                        $collection->push($account);
+                    }
+                }
+                if ($collection->count() > 0) {
+                    $this->collector->setNotAccounts($collection);
+                }
+                if (0 === $collection->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
             //
-            // cash account
+                // cash account
             //
             case 'source_is_cash':
                 $account = $this->getCashAccount();
                 $this->collector->setSourceAccounts(new Collection([$account]));
                 break;
+            case '-source_is_cash':
+                $account = $this->getCashAccount();
+                $this->collector->excludeSourceAccounts(new Collection([$account]));
+                break;
             case 'destination_is_cash':
                 $account = $this->getCashAccount();
                 $this->collector->setDestinationAccounts(new Collection([$account]));
+                break;
+            case '-destination_is_cash':
+                $account = $this->getCashAccount();
+                $this->collector->excludeDestinationAccounts(new Collection([$account]));
                 break;
             case 'account_is_cash':
                 $account = $this->getCashAccount();
                 $this->collector->setAccounts(new Collection([$account]));
                 break;
+            case '-account_is_cash':
+                $account = $this->getCashAccount();
+                $this->collector->excludeAccounts(new Collection([$account]));
+                break;
             //
-            // description
+                // description
             //
             case 'description_starts':
                 $this->collector->descriptionStarts([$value]);
                 break;
+            case '-description_starts':
+                $this->collector->descriptionDoesNotStart([$value]);
+                break;
             case 'description_ends':
                 $this->collector->descriptionEnds([$value]);
+                break;
+            case '-description_ends':
+                $this->collector->descriptionDoesNotEnd([$value]);
                 break;
             case 'description_contains':
                 $this->words[] = $value;
 
                 return false;
+            case '-description_contains':
+                $this->prohibitedWords[] = $value;
+
+                break;
             case 'description_is':
                 $this->collector->descriptionIs($value);
                 break;
+            case '-description_is':
+                $this->collector->descriptionIsNot($value);
+                break;
             //
-            // currency
+                // currency
             //
             case 'currency_is':
                 $currency = $this->findCurrency($value);
                 if (null !== $currency) {
                     $this->collector->setCurrency($currency);
+                }
+                if (null === $currency) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case '-currency_is':
+                $currency = $this->findCurrency($value);
+                if (null !== $currency) {
+                    $this->collector->excludeCurrency($currency);
                 }
                 if (null === $currency) {
                     $this->collector->findNothing();
@@ -422,22 +590,35 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case '-foreign_currency_is':
+                $currency = $this->findCurrency($value);
+                if (null !== $currency) {
+                    $this->collector->excludeForeignCurrency($currency);
+                }
+                if (null === $currency) {
+                    $this->collector->findNothing();
+                }
+                break;
             //
-            // attachments
+                // attachments
             //
             case 'has_attachments':
+            case '-has_no_attachments':
                 Log::debug('Set collector to filter on attachments.');
                 $this->collector->hasAttachments();
                 break;
             case 'has_no_attachments':
+            case '-has_attachments':
                 Log::debug('Set collector to filter on NO attachments.');
                 $this->collector->hasNoAttachments();
                 break;
             //
-            // categories
+                // categories
+            case '-has_any_category':
             case 'has_no_category':
                 $this->collector->withoutCategory();
                 break;
+            case '-has_no_category':
             case 'has_any_category':
                 $this->collector->withCategory();
                 break;
@@ -449,10 +630,26 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 $this->collector->findNothing();
                 break;
+            case '-category_is':
+                $category = $this->categoryRepository->findByName($value);
+                if (null !== $category) {
+                    $this->collector->excludeCategory($category);
+                    break;
+                }
+                break;
             case 'category_ends':
                 $result = $this->categoryRepository->categoryEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case '-category_ends':
+                $result = $this->categoryRepository->categoryEndsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeCategories($result);
                 }
                 if (0 === $result->count()) {
                     $this->collector->findNothing();
@@ -467,6 +664,15 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case '-category_starts':
+                $result = $this->categoryRepository->categoryStartsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeCategories($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
             case 'category_contains':
                 $result = $this->categoryRepository->searchCategory($value, 1337);
                 if ($result->count() > 0) {
@@ -476,19 +682,39 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case '-category_contains':
+                $result = $this->categoryRepository->searchCategory($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeCategories($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
             //
-            // budgets
+                // budgets
             //
+            case '-has_any_budget':
             case 'has_no_budget':
                 $this->collector->withoutBudget();
                 break;
             case 'has_any_budget':
+            case '-has_no_budget':
                 $this->collector->withBudget();
                 break;
             case 'budget_contains':
                 $result = $this->budgetRepository->searchBudget($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBudgets($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case '-budget_contains':
+                $result = $this->budgetRepository->searchBudget($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeBudgets($result);
                 }
                 if (0 === $result->count()) {
                     $this->collector->findNothing();
@@ -502,10 +728,27 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 $this->collector->findNothing();
                 break;
+            case '-budget_is':
+                $budget = $this->budgetRepository->findByName($value);
+                if (null !== $budget) {
+                    $this->collector->excludeBudget($budget);
+                    break;
+                }
+                $this->collector->findNothing();
+                break;
             case 'budget_ends':
                 $result = $this->budgetRepository->budgetEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBudgets($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case '-budget_ends':
+                $result = $this->budgetRepository->budgetEndsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeBudgets($result);
                 }
                 if (0 === $result->count()) {
                     $this->collector->findNothing();
@@ -520,12 +763,23 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case '-budget_starts':
+                $result = $this->budgetRepository->budgetStartsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeBudgets($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
             //
-            // bill
+                // bill
             //
+            case '-has_any_bill':
             case 'has_no_bill':
                 $this->collector->withoutBill();
                 break;
+            case '-has_no_bill':
             case 'has_any_bill':
                 $this->collector->withBill();
                 break;
@@ -533,6 +787,14 @@ class OperatorQuerySearch implements SearchInterface
                 $result = $this->billRepository->searchBill($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
+                    break;
+                }
+                $this->collector->findNothing();
+                break;
+            case '-bill_contains':
+                $result = $this->billRepository->searchBill($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeBills($result);
                     break;
                 }
                 $this->collector->findNothing();
@@ -545,10 +807,27 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 $this->collector->findNothing();
                 break;
+            case '-bill_is':
+                $bill = $this->billRepository->findByName($value);
+                if (null !== $bill) {
+                    $this->collector->excludeBills(new Collection([$bill]));
+                    break;
+                }
+                $this->collector->findNothing();
+                break;
             case 'bill_ends':
                 $result = $this->billRepository->billEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
+            case '-bill_ends':
+                $result = $this->billRepository->billEndsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeBills($result);
                 }
                 if (0 === $result->count()) {
                     $this->collector->findNothing();
@@ -563,15 +842,27 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case '-bill_starts':
+                $result = $this->billRepository->billStartsWith($value, 1337);
+                if ($result->count() > 0) {
+                    $this->collector->excludeBills($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
+                break;
             //
-            // tags
+                // tags
             //
+            case '-has_any_tag':
             case 'has_no_tag':
                 $this->collector->withoutTags();
                 break;
+            case '-has_no_tag':
             case 'has_any_tag':
                 $this->collector->hasAnyTag();
                 break;
+            case '-tag_is_not':
             case 'tag_is':
                 $result = $this->tagRepository->searchTag($value);
                 if ($result->count() > 0) {
@@ -583,6 +874,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case '-tag_is':
             case 'tag_is_not':
                 $result = $this->tagRepository->searchTag($value);
                 if ($result->count() > 0) {
@@ -590,336 +882,517 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             //
-            // notes
+                // notes
             //
             case 'notes_contains':
                 $this->collector->notesContain($value);
                 break;
+            case '-notes_contains':
+                $this->collector->notesDoNotContain($value);
+                break;
             case 'notes_starts':
                 $this->collector->notesStartWith($value);
+                break;
+            case '-notes_starts':
+                $this->collector->notesDontStartWith($value);
                 break;
             case 'notes_ends':
                 $this->collector->notesEndWith($value);
                 break;
+            case '-notes_ends':
+                $this->collector->notesDontEndWith($value);
+                break;
             case 'notes_is':
                 $this->collector->notesExactly($value);
                 break;
+            case '-notes_is':
+                $this->collector->notesExactlyNot($value);
+                break;
+            case '-any_notes':
             case 'no_notes':
                 $this->collector->withoutNotes();
                 break;
             case 'any_notes':
+            case '-no_notes':
                 $this->collector->withAnyNotes();
                 break;
+            case 'reconciled':
+                $this->collector->isReconciled();
+                break;
+            case '-reconciled':
+                $this->collector->isNotReconciled();
+                break;
             //
-            // amount
+                // amount
             //
             case 'amount_is':
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
-                $value = str_replace(',', '.', (string) $value);
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
                 break;
+            case '-amount_is':
+                // strip comma's, make dots.
+                Log::debug(sprintf('Original value "%s"', $value));
+                $value  = str_replace(',', '.', (string)$value);
+                $amount = app('steam')->positive($value);
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                $this->collector->amountIsNot($amount);
+                break;
             case 'foreign_amount_is':
 
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string) $value);
+                $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIs($amount);
                 break;
+            case '-foreign_amount_is':
+
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string)$value);
+
+                $amount = app('steam')->positive($value);
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                $this->collector->foreignAmountIsNot($amount);
+                break;
+            case '-amount_more':
             case 'amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string) $value);
+                $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
                 break;
+            case '-foreign_amount_more':
             case 'foreign_amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string) $value);
+                $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountLess($amount);
                 break;
+            case '-amount_less':
             case 'amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', (string) $value);
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
                 break;
+            case '-foreign_amount_less':
             case 'foreign_amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', (string) $value);
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountMore($amount);
                 break;
             //
-            // transaction type
+                // transaction type
             //
             case 'transaction_type':
                 $this->collector->setTypes([ucfirst($value)]);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 break;
+            case '-transaction_type':
+                $this->collector->excludeTypes([ucfirst($value)]);
+                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                break;
             //
-            // dates
+                // dates
             //
+            case '-date_on':
             case 'date_on':
                 $range = $this->parseDateRange($value);
-                $this->setExactDateParams($range);
+                $this->setExactDateParams($range, $prohibited);
                 return false;
             case 'date_before':
+            case '-date_after':
                 $range = $this->parseDateRange($value);
                 $this->setDateBeforeParams($range);
                 return false;
             case 'date_after':
+            case '-date_before':
                 $range = $this->parseDateRange($value);
                 $this->setDateAfterParams($range);
                 return false;
+
             case 'interest_date_on':
+            case '-interest_date_on':
                 $range = $this->parseDateRange($value);
-                $this->setExactMetaDateParams('interest_date', $range);
+                $this->setExactMetaDateParams('interest_date', $range, $prohibited);
                 return false;
             case 'interest_date_before':
+            case '-interest_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('interest_date', $range);
                 return false;
             case 'interest_date_after':
+            case '-interest_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('interest_date', $range);
                 return false;
 
             case 'book_date_on':
+            case '-book_date_on':
                 $range = $this->parseDateRange($value);
-                $this->setExactMetaDateParams('book_date', $range);
+                $this->setExactMetaDateParams('book_date', $range, $prohibited);
                 return false;
             case 'book_date_before':
+            case '-book_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('book_date', $range);
                 return false;
             case 'book_date_after':
+            case '-book_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('book_date', $range);
                 return false;
 
             case 'process_date_on':
+            case '-process_date_on':
                 $range = $this->parseDateRange($value);
-                $this->setExactMetaDateParams('process_date', $range);
+                $this->setExactMetaDateParams('process_date', $range, $prohibited);
                 return false;
             case 'process_date_before':
+            case '-process_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('process_date', $range);
                 return false;
             case 'process_date_after':
+            case '-process_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('process_date', $range);
                 return false;
+
             case 'due_date_on':
+            case '-due_date_on':
                 $range = $this->parseDateRange($value);
-                $this->setExactMetaDateParams('due_date', $range);
+                $this->setExactMetaDateParams('due_date', $range, $prohibited);
                 return false;
             case 'due_date_before':
+            case '-due_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('due_date', $range);
                 return false;
             case 'due_date_after':
+            case '-due_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('due_date', $range);
                 return false;
+
             case 'payment_date_on':
+            case '-payment_date_on':
                 $range = $this->parseDateRange($value);
-                $this->setExactMetaDateParams('payment_date', $range);
+                $this->setExactMetaDateParams('payment_date', $range, $prohibited);
                 return false;
             case 'payment_date_before':
+            case '-payment_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('payment_date', $range);
                 return false;
             case 'payment_date_after':
+            case '-payment_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('payment_date', $range);
                 return false;
+
             case 'invoice_date_on':
+            case '-invoice_date_on':
                 $range = $this->parseDateRange($value);
-                $this->setExactMetaDateParams('invoice_date', $range);
+                $this->setExactMetaDateParams('invoice_date', $range, $prohibited);
                 return false;
             case 'invoice_date_before':
+            case '-invoice_date_after':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateBeforeParams('invoice_date', $range);
                 return false;
             case 'invoice_date_after':
+            case '-invoice_date_before':
                 $range = $this->parseDateRange($value);
                 $this->setMetaDateAfterParams('invoice_date', $range);
                 return false;
+
             case 'created_at_on':
+            case '-created_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
-                $this->setExactObjectDateParams('created_at', $range);
+                $this->setExactObjectDateParams('created_at', $range, $prohibited);
                 return false;
             case 'created_at_before':
+            case '-created_at_after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setObjectDateBeforeParams('created_at', $range);
                 return false;
             case 'created_at_after':
+            case '-created_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setObjectDateAfterParams('created_at', $range);
                 return false;
+
             case 'updated_at_on':
+            case '-updated_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
-                $this->setExactObjectDateParams('updated_at', $range);
+                $this->setExactObjectDateParams('updated_at', $range, $prohibited);
                 return false;
             case 'updated_at_before':
+            case '-updated_at_after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setObjectDateBeforeParams('updated_at', $range);
                 return false;
             case 'updated_at_after':
+            case '-updated_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($value);
                 $this->setObjectDateAfterParams('updated_at', $range);
                 return false;
             //
-            // external URL
+                // external URL
             //
+            case '-any_external_url':
             case 'no_external_url':
                 $this->collector->withoutExternalUrl();
                 break;
+            case '-no_external_url':
             case 'any_external_url':
                 $this->collector->withExternalUrl();
                 break;
+            case '-any_external_id':
+            case 'no_external_id':
+                $this->collector->withoutExternalId();
+                break;
+            case '-no_external_id':
+            case 'any_external_id':
+                $this->collector->withExternalId();
+                break;
+
             case 'external_url_is':
                 $this->collector->setExternalUrl($value);
+                break;
+            case '-external_url_is':
+                $this->collector->excludeExternalUrl($value);
                 break;
             case 'external_url_contains':
                 $this->collector->externalUrlContains($value);
                 break;
+            case '-external_url_contains':
+                $this->collector->externalUrlDoesNotContain($value);
+                break;
             case 'external_url_starts':
                 $this->collector->externalUrlStarts($value);
+                break;
+            case '-external_url_starts':
+                $this->collector->externalUrlDoesNotStart($value);
                 break;
             case 'external_url_ends':
                 $this->collector->externalUrlEnds($value);
                 break;
+            case '-external_url_ends':
+                $this->collector->externalUrlDoesNotEnd($value);
+                break;
+
             //
-            // other fields
+                // other fields
             //
             case 'external_id_is':
                 $this->collector->setExternalId($value);
                 break;
+            case '-external_id_is':
+                $this->collector->excludeExternalId($value);
+                break;
             case 'recurrence_id':
                 $this->collector->setRecurrenceId($value);
+                break;
+            case '-recurrence_id':
+                $this->collector->excludeRecurrenceId($value);
                 break;
             case 'external_id_contains':
                 $this->collector->externalIdContains($value);
                 break;
+            case '-external_id_contains':
+                $this->collector->externalIdDoesNotContain($value);
+                break;
             case 'external_id_starts':
                 $this->collector->externalIdStarts($value);
+                break;
+            case '-external_id_starts':
+                $this->collector->externalIdDoesNotStart($value);
                 break;
             case 'external_id_ends':
                 $this->collector->externalIdEnds($value);
                 break;
+            case '-external_id_ends':
+                $this->collector->externalIdDoesNotEnd($value);
+                break;
+
             case 'internal_reference_is':
                 $this->collector->setInternalReference($value);
+                break;
+            case '-internal_reference_is':
+                $this->collector->excludeInternalReference($value);
                 break;
             case 'internal_reference_contains':
                 $this->collector->internalReferenceContains($value);
                 break;
+            case '-internal_reference_contains':
+                $this->collector->internalReferenceDoesNotContain($value);
+                break;
             case 'internal_reference_starts':
                 $this->collector->internalReferenceStarts($value);
+                break;
+            case '-internal_reference_starts':
+                $this->collector->internalReferenceDoesNotStart($value);
                 break;
             case 'internal_reference_ends':
                 $this->collector->internalReferenceEnds($value);
                 break;
+            case '-internal_reference_ends':
+                $this->collector->internalReferenceDoesNotEnd($value);
+                break;
+
             case 'attachment_name_is':
                 $this->collector->attachmentNameIs($value);
+                break;
+            case '-attachment_name_is':
+                $this->collector->attachmentNameIsNot($value);
                 break;
             case 'attachment_name_contains':
                 $this->collector->attachmentNameContains($value);
                 break;
+            case '-attachment_name_contains':
+                $this->collector->attachmentNameDoesNotContain($value);
+                break;
             case 'attachment_name_starts':
                 $this->collector->attachmentNameStarts($value);
+                break;
+            case '-attachment_name_starts':
+                $this->collector->attachmentNameDoesNotStart($value);
                 break;
             case 'attachment_name_ends':
                 $this->collector->attachmentNameEnds($value);
                 break;
+            case '-attachment_name_ends':
+                $this->collector->attachmentNameDoesNotEnd($value);
+                break;
+
             case 'attachment_notes_are':
                 $this->collector->attachmentNotesAre($value);
+                break;
+            case '-attachment_notes_are':
+                $this->collector->attachmentNotesAreNot($value);
                 break;
             case 'attachment_notes_contains':
                 $this->collector->attachmentNotesContains($value);
                 break;
+            case '-attachment_notes_contains':
+                $this->collector->attachmentNotesDoNotContain($value);
+                break;
             case 'attachment_notes_starts':
                 $this->collector->attachmentNotesStarts($value);
+                break;
+            case '-attachment_notes_starts':
+                $this->collector->attachmentNotesDoNotStart($value);
                 break;
             case 'attachment_notes_ends':
                 $this->collector->attachmentNotesEnds($value);
                 break;
+            case '-attachment_notes_ends':
+                $this->collector->attachmentNotesDoNotEnd($value);
+                break;
+            case 'exists':
+                $this->collector->exists();
+                break;
+            case '-exists':
+                $this->collector->findNothing();
+                break;
             case 'sepa_ct_is':
                 $this->collector->setSepaCT($value);
                 break;
-
         }
-
         return true;
     }
 
     /**
-     * @param string $operator
+     * @param  string  $operator
      *
      * @return string
      * @throws FireflyException
      */
     public static function getRootOperator(string $operator): string
     {
+        $original = $operator;
+        // if the string starts with "-" (not), we can remove it and recycle
+        // the configuration from the original operator.
+        if (str_starts_with($operator, '-')) {
+            $operator = substr($operator, 1);
+        }
+
         $config = config(sprintf('search.operators.%s', $operator));
         if (null === $config) {
             throw new FireflyException(sprintf('No configuration for search operator "%s"', $operator));
         }
         if (true === $config['alias']) {
-            Log::debug(sprintf('"%s" is an alias for "%s", so return that instead.', $operator, $config['alias_for']));
+            $return = $config['alias_for'];
+            if (str_starts_with($original, '-')) {
+                $return = sprintf('-%s', $config['alias_for']);
+            }
+            Log::debug(sprintf('"%s" is an alias for "%s", so return that instead.', $original, $return));
 
-            return $config['alias_for'];
+            return $return;
         }
         Log::debug(sprintf('"%s" is not an alias.', $operator));
 
-        return $operator;
+        return $original;
     }
 
     /**
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
-     * @param string $value
-     * @param int    $searchDirection
-     * @param int    $stringPosition
+     * @param  string  $value
+     * @param  int  $searchDirection
+     * @param  int  $stringPosition
+     * @param  bool  $prohibited
      */
-    private function searchAccount(string $value, int $searchDirection, int $stringPosition): void
+    private function searchAccount(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
     {
         Log::debug(sprintf('searchAccount("%s", %d, %d)', $value, $stringPosition, $searchDirection));
 
         // search direction (default): for source accounts
         $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
         $collectorMethod = 'setSourceAccounts';
+        if ($prohibited) {
+            $collectorMethod = 'excludeSourceAccounts';
+        }
 
         // search direction: for destination accounts
         if (2 === $searchDirection) {
             // destination can be
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
             $collectorMethod = 'setDestinationAccounts';
+            if ($prohibited) {
+                $collectorMethod = 'excludeDestinationAccounts';
+            }
         }
         // either account could be:
         if (3 === $searchDirection) {
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE, AccountType::REVENUE];
             $collectorMethod = 'setAccounts';
+            if ($prohibited) {
+                $collectorMethod = 'excludeAccounts';
+            }
         }
         // string position (default): starts with:
         $stringMethod = 'str_starts_with';
@@ -964,29 +1437,39 @@ class OperatorQuerySearch implements SearchInterface
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
-     * @param string $value
-     * @param int    $searchDirection
-     * @param int    $stringPosition
+     * @param  string  $value
+     * @param  int  $searchDirection
+     * @param  int  $stringPosition
+     * @param  bool  $prohibited
      */
-    private function searchAccountNr(string $value, int $searchDirection, int $stringPosition): void
+    private function searchAccountNr(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
     {
         Log::debug(sprintf('searchAccountNr(%s, %d, %d)', $value, $searchDirection, $stringPosition));
 
         // search direction (default): for source accounts
         $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
         $collectorMethod = 'setSourceAccounts';
+        if (true === $prohibited) {
+            $collectorMethod = 'excludeSourceAccounts';
+        }
 
         // search direction: for destination accounts
         if (2 === $searchDirection) {
             // destination can be
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
             $collectorMethod = 'setDestinationAccounts';
+            if (true === $prohibited) {
+                $collectorMethod = 'excludeDestinationAccounts';
+            }
         }
 
         // either account could be:
         if (3 === $searchDirection) {
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE, AccountType::REVENUE];
             $collectorMethod = 'setAccounts';
+            if (true === $prohibited) {
+                $collectorMethod = 'excludeAccounts';
+            }
         }
 
         // string position (default): starts with:
@@ -1016,8 +1499,8 @@ class OperatorQuerySearch implements SearchInterface
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered = $accounts->filter(
             function (Account $account) use ($value, $stringMethod) {
-                // either IBAN or account number!
-                $ibanMatch      = $stringMethod(strtolower((string) $account->iban), strtolower((string) $value));
+                // either IBAN or account number
+                $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower((string)$value));
                 $accountNrMatch = false;
                 /** @var AccountMeta $meta */
                 foreach ($account->accountMeta as $meta) {
@@ -1049,7 +1532,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return TransactionCurrency|null
      */
@@ -1069,14 +1552,14 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return array
      * @throws FireflyException
      */
     private function parseDateRange(string $value): array
     {
-        $parser = new ParseDateString;
+        $parser = new ParseDateString();
         if ($parser->isDateRange($value)) {
             return $parser->parseRange($value);
         }
@@ -1088,17 +1571,18 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param array $range
+     * @param  array  $range
      *
      * @throws FireflyException
      */
-    private function setExactDateParams(array $range): void
+    private function setExactDateParams(array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setExactParameters()', $key));
@@ -1107,37 +1591,57 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->setRange($value, $value);
                     $this->operators->push(['type' => 'date_on', 'value' => $value->format('Y-m-d'),]);
                     break;
+                case 'exact_not':
+                    $this->collector->excludeRange($value, $value);
+                    $this->operators->push(['type' => 'not_date_on', 'value' => $value->format('Y-m-d'),]);
+                    break;
                 case 'year':
                     Log::debug(sprintf('Set date_is_exact YEAR value "%s"', $value));
                     $this->collector->yearIs($value);
                     $this->operators->push(['type' => 'date_on_year', 'value' => $value,]);
+                    break;
+                case 'year_not':
+                    Log::debug(sprintf('Set date_is_exact_not YEAR value "%s"', $value));
+                    $this->collector->yearIsNot($value);
+                    $this->operators->push(['type' => 'not_date_on_year', 'value' => $value,]);
                     break;
                 case 'month':
                     Log::debug(sprintf('Set date_is_exact MONTH value "%s"', $value));
                     $this->collector->monthIs($value);
                     $this->operators->push(['type' => 'date_on_month', 'value' => $value,]);
                     break;
+                case 'month_not':
+                    Log::debug(sprintf('Set date_is_exact not MONTH value "%s"', $value));
+                    $this->collector->monthIsNot($value);
+                    $this->operators->push(['type' => 'not_date_on_month', 'value' => $value,]);
+                    break;
                 case 'day':
                     Log::debug(sprintf('Set date_is_exact DAY value "%s"', $value));
                     $this->collector->dayIs($value);
                     $this->operators->push(['type' => 'date_on_day', 'value' => $value,]);
+                    break;
+                case 'day_not':
+                    Log::debug(sprintf('Set not date_is_exact DAY value "%s"', $value));
+                    $this->collector->dayIsNot($value);
+                    $this->operators->push(['type' => 'not_date_on_day', 'value' => $value,]);
                     break;
             }
         }
     }
 
     /**
-     * @param array $range
+     * @param  array  $range
      *
      * @throws FireflyException
      */
-    private function setDateBeforeParams(array $range): void
+    private function setDateBeforeParams(array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setDateBeforeParams()', $key));
@@ -1165,17 +1669,18 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param array $range
+     * @param  array  $range
      *
      * @throws FireflyException
      */
-    private function setDateAfterParams(array $range)
+    private function setDateAfterParams(array $range, bool $prohibited = false)
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setDateAfterParams()', $key));
@@ -1203,19 +1708,20 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      * @return void
      * @throws FireflyException
      */
-    private function setExactMetaDateParams(string $field, array $range): void
+    private function setExactMetaDateParams(string $field, array $range, bool $prohibited = false): void
     {
         Log::debug('Now in setExactMetaDateParams()');
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setExactMetaDateParams()', $key));
@@ -1224,38 +1730,59 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->setMetaDateRange($value, $value, $field);
                     $this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
+                case 'exact_not':
+                    Log::debug(sprintf('Set NOT %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
+                    $this->collector->excludeMetaDateRange($value, $value, $field);
+                    $this->operators->push(['type' => sprintf('not_%s_on', $field), 'value' => $value->format('Y-m-d'),]);
+                    break;
                 case 'year':
                     Log::debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
                     $this->collector->metaYearIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value,]);
+                    break;
+                case 'year_not':
+                    Log::debug(sprintf('Set NOT %s_is_exact YEAR value "%s"', $field, $value));
+                    $this->collector->metaYearIsNot($value, $field);
+                    $this->operators->push(['type' => sprintf('not_%s_on_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
                     Log::debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
                     $this->collector->metaMonthIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value,]);
                     break;
+                case 'month_not':
+                    Log::debug(sprintf('Set NOT %s_is_exact MONTH value "%s"', $field, $value));
+                    $this->collector->metaMonthIsNot($value, $field);
+                    $this->operators->push(['type' => sprintf('not_%s_on_month', $field), 'value' => $value,]);
+                    break;
                 case 'day':
                     Log::debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
                     $this->collector->metaDayIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value,]);
+                    break;
+                case 'day_not':
+                    Log::debug(sprintf('Set NOT %s_is_exact DAY value "%s"', $field, $value));
+                    $this->collector->metaDayIsNot($value, $field);
+                    $this->operators->push(['type' => sprintf('not_%s_on_day', $field), 'value' => $value,]);
                     break;
             }
         }
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      * @return void
      * @throws FireflyException
      */
-    private function setMetaDateBeforeParams(string $field, array $range): void
+    private function setMetaDateBeforeParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setMetaDateBeforeParams()', $key));
@@ -1283,18 +1810,19 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      * @return void
      * @throws FireflyException
      */
-    private function setMetaDateAfterParams(string $field, array $range): void
+    private function setMetaDateAfterParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setMetaDateAfterParams()', $key));
@@ -1322,18 +1850,19 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      * @return void
      * @throws FireflyException
      */
-    private function setExactObjectDateParams(string $field, array $range): void
+    private function setExactObjectDateParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setExactObjectDateParams()', $key));
@@ -1342,38 +1871,59 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->setObjectRange($value, clone $value, $field);
                     $this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
+                case 'exact_not':
+                    Log::debug(sprintf('Set NOT %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
+                    $this->collector->excludeObjectRange($value, clone $value, $field);
+                    $this->operators->push(['type' => sprintf('not_%s_on', $field), 'value' => $value->format('Y-m-d'),]);
+                    break;
                 case 'year':
                     Log::debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
                     $this->collector->objectYearIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value,]);
+                    break;
+                case 'year_not':
+                    Log::debug(sprintf('Set NOT %s_is_exact YEAR value "%s"', $field, $value));
+                    $this->collector->objectYearIsNot($value, $field);
+                    $this->operators->push(['type' => sprintf('not_%s_on_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
                     Log::debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
                     $this->collector->objectMonthIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value,]);
                     break;
+                case 'month_not':
+                    Log::debug(sprintf('Set NOT %s_is_exact MONTH value "%s"', $field, $value));
+                    $this->collector->objectMonthIsNot($value, $field);
+                    $this->operators->push(['type' => sprintf('not_%s_on_month', $field), 'value' => $value,]);
+                    break;
                 case 'day':
                     Log::debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
                     $this->collector->objectDayIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value,]);
+                    break;
+                case 'day_not':
+                    Log::debug(sprintf('Set NOT %s_is_exact DAY value "%s"', $field, $value));
+                    $this->collector->objectDayIsNot($value, $field);
+                    $this->operators->push(['type' => sprintf('not_%s_on_day', $field), 'value' => $value,]);
                     break;
             }
         }
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      *
      * @throws FireflyException
      */
-    private function setObjectDateBeforeParams(string $field, array $range)
+    private function setObjectDateBeforeParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setObjectDateBeforeParams()', $key));
@@ -1401,18 +1951,19 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param string $field
-     * @param array  $range
+     * @param  string  $field
+     * @param  array  $range
      *
      * @throws FireflyException
      */
-    private function setObjectDateAfterParams(string $field, array $range)
+    private function setObjectDateAfterParams(string $field, array $range, bool $prohibited = false): void
     {
         /**
-         * @var string        $key
+         * @var string $key
          * @var Carbon|string $value
          */
         foreach ($range as $key => $value) {
+            $key = $prohibited ? sprintf('%s_not', $key) : $key;
             switch ($key) {
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setObjectDateAfterParams()', $key));
@@ -1453,7 +2004,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function searchTransactions(): LengthAwarePaginator
     {
-        if (empty($this->getWords()) && empty($this->getOperators())) {
+        if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
             return new LengthAwarePaginator([], 0, 5, 1);
         }
 
@@ -1469,7 +2020,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      */
     public function setDate(Carbon $date): void
     {
@@ -1501,12 +2052,11 @@ class OperatorQuerySearch implements SearchInterface
         $this->collector->setUser($user);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
-        $this->setLimit((int) app('preferences')->getForUser($user, 'listPageSize', 50)->data);
-
+        $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);
     }
 
     /**
-     * @param int $limit
+     * @param  int  $limit
      */
     public function setLimit(int $limit): void
     {

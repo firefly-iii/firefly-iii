@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Budget;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default test set:
         $defaultSet        = new FieldSet();
@@ -72,14 +73,14 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optional sets:
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
 
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'auto_budget_currency_id';
         $field->fieldType       = 'random-currency-id';
         $field->ignorableFields = ['auto_budget_currency_code'];
@@ -91,10 +92,10 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
         $configuration->addOptionalFieldSet('auto-id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
 
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'auto_budget_currency_code';
         $field->fieldType       = 'random-currency-code';
         $field->ignorableFields = ['auto_budget_currency_id'];
@@ -127,5 +128,4 @@ class StoreControllerTest extends TestCase
         $address = route('api.v1.budgets.store');
         $this->assertPOST($address, $submission);
     }
-
 }

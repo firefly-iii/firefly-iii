@@ -29,6 +29,7 @@ use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
+use JsonException;
 use Log;
 
 /**
@@ -39,8 +40,8 @@ class GroupUpdateService
     /**
      * Update a transaction group.
      *
-     * @param TransactionGroup $transactionGroup
-     * @param array            $data
+     * @param  TransactionGroup  $transactionGroup
+     * @param  array  $data
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
@@ -60,7 +61,7 @@ class GroupUpdateService
         }
 
 
-        if (empty($transactions)) {
+        if (0 === count($transactions)) {
             Log::debug('No transactions submitted, do nothing.');
 
             return $transactionGroup;
@@ -96,7 +97,7 @@ class GroupUpdateService
             /** @var string $deletedId */
             foreach ($result as $deletedId) {
                 /** @var TransactionJournal $journal */
-                $journal = $transactionGroup->transactionJournals()->find((int) $deletedId);
+                $journal = $transactionGroup->transactionJournals()->find((int)$deletedId);
                 /** @var JournalDestroyService $service */
                 $service = app(JournalDestroyService::class);
                 $service->destroy($journal);
@@ -112,14 +113,14 @@ class GroupUpdateService
     /**
      * Update single journal.
      *
-     * @param TransactionGroup   $transactionGroup
-     * @param TransactionJournal $journal
-     * @param array              $data
+     * @param  TransactionGroup  $transactionGroup
+     * @param  TransactionJournal  $journal
+     * @param  array  $data
      */
     private function updateTransactionJournal(TransactionGroup $transactionGroup, TransactionJournal $journal, array $data): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        if (empty($data)) {
+        if (0 === count($data)) {
             return;
         }
         if (1 === count($data) && array_key_exists('transaction_journal_id', $data)) {
@@ -134,8 +135,8 @@ class GroupUpdateService
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
-     * @param array            $transactions
+     * @param  TransactionGroup  $transactionGroup
+     * @param  array  $transactions
      *
      * @return array
      * @throws DuplicateTransactionException
@@ -147,12 +148,12 @@ class GroupUpdateService
         // updated or created transaction journals:
         $updated = [];
         /**
-         * @var int   $index
+         * @var int $index
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now at #%d of %d', ($index + 1), count($transactions)), $transaction);
-            $journalId = (int) ($transaction['transaction_journal_id'] ?? 0);
+            $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
             /** @var TransactionJournal|null $journal */
             $journal = $transactionGroup->transactionJournals()->find($journalId);
             if (null === $journal) {
@@ -190,14 +191,14 @@ class GroupUpdateService
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
-     * @param array            $data
+     * @param  TransactionGroup  $transactionGroup
+     * @param  array  $data
      *
      * @return TransactionJournal|null
      *
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
     {
@@ -227,5 +228,4 @@ class GroupUpdateService
 
         return $collection->first();
     }
-
 }

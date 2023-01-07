@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -48,34 +47,11 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * @param AvailableBudget $availableBudget
+     * @param  AvailableBudget  $availableBudget
      */
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void
     {
-        try {
-            $availableBudget->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
-    }
-
-    /**
-     * Find existing AB.
-     *
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     *
-     * @return AvailableBudget|null
-     */
-    public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget
-    {
-        return $this->user->availableBudgets()
-                          ->where('transaction_currency_id', $currency->id)
-                          ->where('start_date', $start->format('Y-m-d'))
-                          ->where('end_date', $end->format('Y-m-d'))
-                          ->first();
-
+        $availableBudget->delete();
     }
 
     /**
@@ -87,10 +63,69 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
+     * Find existing AB.
+     *
+     * @param  TransactionCurrency  $currency
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return AvailableBudget|null
+     */
+    public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget
+    {
+        return $this->user->availableBudgets()
+                          ->where('transaction_currency_id', $currency->id)
+                          ->where('start_date', $start->format('Y-m-d'))
+                          ->where('end_date', $end->format('Y-m-d'))
+                          ->first();
+    }
+
+    /**
+     * @param  TransactionCurrency  $currency
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return string
+     */
+    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
+    {
+        $amount          = '0';
+        $availableBudget = $this->user->availableBudgets()
+                                      ->where('transaction_currency_id', $currency->id)
+                                      ->where('start_date', $start->format('Y-m-d'))
+                                      ->where('end_date', $end->format('Y-m-d'))->first();
+        if (null !== $availableBudget) {
+            $amount = (string)$availableBudget->amount;
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return array
+     */
+    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
+    {
+        $return           = [];
+        $availableBudgets = $this->user->availableBudgets()
+                                       ->where('start_date', $start->format('Y-m-d'))
+                                       ->where('end_date', $end->format('Y-m-d'))->get();
+        /** @var AvailableBudget $availableBudget */
+        foreach ($availableBudgets as $availableBudget) {
+            $return[$availableBudget->transaction_currency_id] = $availableBudget->amount;
+        }
+
+        return $return;
+    }
+
+    /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
      *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return Collection
      */
@@ -110,50 +145,9 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     *
-     * @return string
-     */
-    public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
-    {
-        $amount          = '0';
-        $availableBudget = $this->user->availableBudgets()
-                                      ->where('transaction_currency_id', $currency->id)
-                                      ->where('start_date', $start->format('Y-m-d'))
-                                      ->where('end_date', $end->format('Y-m-d'))->first();
-        if (null !== $availableBudget) {
-            $amount = (string) $availableBudget->amount;
-        }
-
-        return $amount;
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
-    {
-        $return           = [];
-        $availableBudgets = $this->user->availableBudgets()
-                                       ->where('start_date', $start->format('Y-m-d'))
-                                       ->where('end_date', $end->format('Y-m-d'))->get();
-        /** @var AvailableBudget $availableBudget */
-        foreach ($availableBudgets as $availableBudget) {
-            $return[$availableBudget->transaction_currency_id] = $availableBudget->amount;
-        }
-
-        return $return;
-    }
-
-    /**
      * Returns all available budget objects.
      *
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      *
      * @return Collection
      */
@@ -165,8 +159,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     /**
      * Returns all available budget objects.
      *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return Collection
      *
@@ -198,10 +192,10 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param string              $amount
+     * @param  TransactionCurrency  $currency
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  string  $amount
      *
      * @return AvailableBudget
      * @deprecated
@@ -213,7 +207,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                                       ->where('start_date', $start->format('Y-m-d'))
                                       ->where('end_date', $end->format('Y-m-d'))->first();
         if (null === $availableBudget) {
-            $availableBudget = new AvailableBudget;
+            $availableBudget = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
             $availableBudget->start_date = $start->format('Y-m-d');
@@ -226,7 +220,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {
@@ -234,7 +228,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return AvailableBudget|null
      */
@@ -262,8 +256,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * @param AvailableBudget $availableBudget
-     * @param array           $data
+     * @param  AvailableBudget  $availableBudget
+     * @param  array  $data
      *
      * @return AvailableBudget
      */
@@ -278,8 +272,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * @param AvailableBudget $availableBudget
-     * @param array           $data
+     * @param  AvailableBudget  $availableBudget
+     * @param  array  $data
      *
      * @return AvailableBudget
      */
@@ -312,6 +306,5 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         }
 
         return $availableBudget;
-
     }
 }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Support;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
@@ -39,6 +38,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
+use JsonException;
 use Log;
 use Validator;
 
@@ -51,7 +51,7 @@ trait AccountServiceTrait
     protected AccountRepositoryInterface $accountRepository;
 
     /**
-     * @param null|string $iban
+     * @param  null|string  $iban
      *
      * @return null|string
      */
@@ -76,7 +76,7 @@ trait AccountServiceTrait
     /**
      * Returns true if the data in the array is submitted but empty.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return bool
      */
@@ -100,12 +100,12 @@ trait AccountServiceTrait
     }
 
     /**
-     * Update meta data for account. Depends on type which fields are valid.
+     * Update metadata for account. Depends on type which fields are valid.
      *
-     * See reference nr. 97
+     * TODO this method treats expense accounts and liabilities the same way (tries to save interest)
      *
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      */
     public function updateMetaData(Account $account, array $data): void
@@ -118,8 +118,8 @@ trait AccountServiceTrait
         // remove currency_id if necessary.
         $type = $account->accountType->type;
         $list = config('firefly.valid_currency_account_types');
-        if(!in_array($type, $list, true)) {
-            $pos = array_search('currency_id', $fields);
+        if (!in_array($type, $list, true)) {
+            $pos = array_search('currency_id', $fields, true);
             if ($pos !== false) {
                 unset($fields[$pos]);
             }
@@ -147,7 +147,6 @@ trait AccountServiceTrait
             // if the field is set but NULL, skip it.
             // if the field is set but "", update it.
             if (array_key_exists($field, $data) && null !== $data[$field]) {
-
                 // convert boolean value:
                 if (is_bool($data[$field]) && false === $data[$field]) {
                     $data[$field] = 0;
@@ -156,14 +155,14 @@ trait AccountServiceTrait
                     $data[$field] = 1;
                 }
 
-                $factory->crud($account, $field, (string) $data[$field]);
+                $factory->crud($account, $field, (string)$data[$field]);
             }
         }
     }
 
     /**
-     * @param Account $account
-     * @param string  $note
+     * @param  Account  $account
+     * @param  string  $note
      *
      * @codeCoverageIgnore
      * @return bool
@@ -173,18 +172,14 @@ trait AccountServiceTrait
         if ('' === $note) {
             $dbNote = $account->notes()->first();
             if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
-                    // @ignoreException
-                }
+                $dbNote->delete();
             }
 
             return true;
         }
         $dbNote = $account->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($account);
         }
         $dbNote->text = trim($note);
@@ -196,13 +191,13 @@ trait AccountServiceTrait
     /**
      * Verify if array contains valid data to possibly store or update the opening balance.
      *
-     * @param array $data
+     * @param  array  $data
      *
      * @return bool
      */
     public function validOBData(array $data): bool
     {
-        $data['opening_balance'] = (string) ($data['opening_balance'] ?? '');
+        $data['opening_balance'] = (string)($data['opening_balance'] ?? '');
         if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
             $data['opening_balance'] = '';
         }
@@ -218,8 +213,8 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
+     * @param  Account  $account
+     * @param  array  $data
      *
      * @return TransactionGroup
      * @throws FireflyException
@@ -312,7 +307,7 @@ trait AccountServiceTrait
     /**
      * Delete TransactionGroup with liability credit in it.
      *
-     * @param Account $account
+     * @param  Account  $account
      */
     protected function deleteCreditTransaction(Account $account): void
     {
@@ -330,7 +325,7 @@ trait AccountServiceTrait
     /**
      * Returns the credit transaction group, or NULL if it does not exist.
      *
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return TransactionGroup|null
      */
@@ -344,7 +339,7 @@ trait AccountServiceTrait
     /**
      * Delete TransactionGroup with opening balance in it.
      *
-     * @param Account $account
+     * @param  Account  $account
      */
     protected function deleteOBGroup(Account $account): void
     {
@@ -363,7 +358,7 @@ trait AccountServiceTrait
     /**
      * Returns the opening balance group, or NULL if it does not exist.
      *
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return TransactionGroup|null
      */
@@ -373,12 +368,12 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param int    $currencyId
-     * @param string $currencyCode
+     * @param  int  $currencyId
+     * @param  string  $currencyCode
      *
      * @return TransactionCurrency
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
     {
@@ -401,20 +396,29 @@ trait AccountServiceTrait
     /**
      * Create the opposing "credit liability" transaction for credit liabilities.
      *
-     * @param Account $account
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
+     * @param  Account  $account
+     * @param  string  $openingBalance
+     * @param  Carbon  $openingBalanceDate
      *
      * @return TransactionGroup
      * @throws FireflyException
      */
-    protected function updateCreditTransaction(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
+    protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         if (0 === bccomp($openingBalance, '0')) {
-            Log::debug('Amount is zero, so will not update liability credit group.');
-            throw new FireflyException('Amount for update liability credit was unexpectedly 0.');
+            Log::debug('Amount is zero, so will not update liability credit/debit group.');
+            throw new FireflyException('Amount for update liability credit/debit was unexpectedly 0.');
+        }
+        // if direction is "debit" (i owe this debt), amount is negative.
+        // which means the liability will have a negative balance which the user must fill.
+        $openingBalance = app('steam')->negative($openingBalance);
+
+        // if direction is "credit" (I am owed this debt), amount is positive.
+        // which means the liability will have a positive balance which is drained when its paid back into any asset.
+        if ('credit' === $direction) {
+            $openingBalance = app('steam')->positive($openingBalance);
         }
 
         // create if not exists:
@@ -452,9 +456,9 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param Account $account
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
+     * @param  Account  $account
+     * @param  string  $openingBalance
+     * @param  Carbon  $openingBalanceDate
      *
      * @return TransactionGroup
      * @throws FireflyException
@@ -469,7 +473,24 @@ trait AccountServiceTrait
         }
 
         $language = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
-        $amount   = app('steam')->positive($openingBalance);
+
+        // set source and/or destination based on whether the amount is positive or negative.
+        // first, assume the amount is positive and go from there:
+        // if amount is positive ("I am owed this debt"), source is special account, destination is the liability.
+        $sourceId   = null;
+        $sourceName = trans('firefly.liability_credit_description', ['account' => $account->name], $language);
+        $destId     = $account->id;
+        $destName   = null;
+        if (-1 === bccomp($openingBalance, '0')) {
+            // amount is negative, reverse it
+            $sourceId   = $account->id;
+            $sourceName = null;
+            $destId     = null;
+            $destName   = trans('firefly.liability_credit_description', ['account' => $account->name], $language);
+        }
+
+        // amount must be positive for the transaction to work.
+        $amount = app('steam')->positive($openingBalance);
 
         // get or grab currency:
         $currency = $this->accountRepository->getAccountCurrency($account);
@@ -485,10 +506,10 @@ trait AccountServiceTrait
                 [
                     'type'             => 'Liability credit',
                     'date'             => $openingBalanceDate,
-                    'source_id'        => null,
-                    'source_name'      => trans('firefly.liability_credit_description', ['account' => $account->name], $language),
-                    'destination_id'   => $account->id,
-                    'destination_name' => null,
+                    'source_id'        => $sourceId,
+                    'source_name'      => $sourceName,
+                    'destination_id'   => $destId,
+                    'destination_name' => $destName,
                     'user'             => $account->user_id,
                     'currency_id'      => $currency->id,
                     'order'            => 0,
@@ -525,9 +546,9 @@ trait AccountServiceTrait
     }
 
     /**
-     * See reference nr. 99
+     * TODO refactor to "getfirstjournal"
      *
-     * @param TransactionGroup $group
+     * @param  TransactionGroup  $group
      *
      * @return TransactionJournal
      * @throws FireflyException
@@ -544,10 +565,10 @@ trait AccountServiceTrait
     }
 
     /**
-     * See reference nr. 98
+     * TODO Rename to getOpposingTransaction
      *
-     * @param TransactionJournal $journal
-     * @param Account            $account
+     * @param  TransactionJournal  $journal
+     * @param  Account  $account
      *
      * @return Transaction
      * @throws FireflyException
@@ -564,8 +585,8 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param Account            $account
+     * @param  TransactionJournal  $journal
+     * @param  Account  $account
      *
      * @return Transaction
      * @throws FireflyException
@@ -585,9 +606,9 @@ trait AccountServiceTrait
      * Update or create the opening balance group.
      * Since opening balance and date can still be empty strings, it may fail.
      *
-     * @param Account $account
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
+     * @param  Account  $account
+     * @param  string  $openingBalance
+     * @param  Carbon  $openingBalanceDate
      *
      * @return TransactionGroup
      * @throws FireflyException
@@ -647,9 +668,9 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param Account $account
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
+     * @param  Account  $account
+     * @param  string  $openingBalance
+     * @param  Carbon  $openingBalanceDate
      *
      * @return TransactionGroup
      * @throws FireflyException

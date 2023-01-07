@@ -33,13 +33,14 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait PeriodOverview.
  *
- * See reference nr. 36
+ * TODO verify this all works as expected.
  *
  * - Always request start date and end date.
  * - Group expenses, income, etc. under this period.
@@ -73,14 +74,14 @@ trait PeriodOverview
      * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
      * performance reasons.
      *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param  Account  $account
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
@@ -88,7 +89,7 @@ trait PeriodOverview
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-show-period-entries');
@@ -152,9 +153,9 @@ trait PeriodOverview
     /**
      * Filter a list of journals by a set of dates, and then group them by currency.
      *
-     * @param array  $array
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  array  $array
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -174,8 +175,8 @@ trait PeriodOverview
     /**
      * Return only transactions where $account is the source.
      *
-     * @param Account $account
-     * @param array   $journals
+     * @param  Account  $account
+     * @param  array  $journals
      *
      * @return array
      */
@@ -184,7 +185,7 @@ trait PeriodOverview
         $return = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int) $journal['source_account_id']) {
+            if ($account->id === (int)$journal['source_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -195,8 +196,8 @@ trait PeriodOverview
     /**
      * Return only transactions where $account is the source.
      *
-     * @param Account $account
-     * @param array   $journals
+     * @param  Account  $account
+     * @param  array  $journals
      *
      * @return array
      * @codeCoverageIgnore
@@ -206,7 +207,7 @@ trait PeriodOverview
         $return = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int) $journal['destination_account_id']) {
+            if ($account->id === (int)$journal['destination_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -215,7 +216,7 @@ trait PeriodOverview
     }
 
     /**
-     * @param array $journals
+     * @param  array  $journals
      *
      * @return array
      * @codeCoverageIgnore
@@ -225,7 +226,7 @@ trait PeriodOverview
         $return = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId        = (int) $journal['currency_id'];
+            $currencyId        = (int)$journal['currency_id'];
             $foreignCurrencyId = $journal['foreign_currency_id'];
             if (!array_key_exists($currencyId, $return)) {
                 $return[$currencyId] = [
@@ -246,18 +247,16 @@ trait PeriodOverview
                     $return[$foreignCurrencyId] = [
                         'amount'                  => '0',
                         'count'                   => 0,
-                        'currency_id'             => (int) $foreignCurrencyId,
+                        'currency_id'             => (int)$foreignCurrencyId,
                         'currency_name'           => $journal['foreign_currency_name'],
                         'currency_code'           => $journal['foreign_currency_code'],
                         'currency_symbol'         => $journal['foreign_currency_symbol'],
                         'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                     ];
-
                 }
                 $return[$foreignCurrencyId]['count']++;
                 $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
             }
-
         }
 
         return $return;
@@ -266,14 +265,14 @@ trait PeriodOverview
     /**
      * Overview for single category. Has been refactored recently.
      *
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param  Category  $category
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
@@ -347,13 +346,13 @@ trait PeriodOverview
      *
      * This method has been refactored recently.
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getNoBudgetPeriodOverview(Carbon $start, Carbon $end): array
     {
@@ -361,7 +360,7 @@ trait PeriodOverview
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('no-budget-period-entries');
@@ -399,24 +398,24 @@ trait PeriodOverview
     }
 
     /**
-     * See reference nr. 37
+     * TODO fix the date.
      *
      * Show period overview for no category view.
      *
-     * @param Carbon $theDate
+     * @param  Carbon  $theDate
      *
      * @return array
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
         Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
         $range = app('preferences')->get('viewRange', '1M')->data;
         $first = $this->journalRepos->firstNull();
-        $start = null === $first ? new Carbon : $first->date;
-        $end   = $theDate ?? today(config('app.timezone'));
+        $start = null === $first ? new Carbon() : $first->date;
+        $end   = clone $theDate;
 
         Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
@@ -473,23 +472,22 @@ trait PeriodOverview
     /**
      * This shows a period overview for a tag. It goes back in time and lists all relevant transactions and sums.
      *
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Tag  $tag
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
-
         $range = app('preferences')->get('viewRange', '1M')->data;
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('tag-period-entries');
@@ -549,14 +547,14 @@ trait PeriodOverview
     }
 
     /**
-     * @param string $transactionType
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  string  $transactionType
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {
@@ -565,7 +563,7 @@ trait PeriodOverview
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('transactions-period-entries');

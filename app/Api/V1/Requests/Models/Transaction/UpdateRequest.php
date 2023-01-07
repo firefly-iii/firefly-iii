@@ -41,14 +41,17 @@ use Log;
  */
 class UpdateRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, ConvertsDataTypes, ChecksLogin;
+    use TransactionValidation;
+    use GroupValidation;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     private array $arrayFields;
     private array $booleanFields;
     private array $dateFields;
+    private array $floatFields;
     private array $integerFields;
     private array $stringFields;
-    private array $floatFields;
     private array $textareaFields;
 
     /**
@@ -86,8 +89,8 @@ class UpdateRequest extends FormRequest
         ];
 
         $this->floatFields = [ // not really floats, for validation.
-            'amount',
-            'foreign_amount',
+                               'amount',
+                               'foreign_amount',
         ];
 
         $this->stringFields  = [
@@ -177,8 +180,8 @@ class UpdateRequest extends FormRequest
     /**
      * For each field, add it to the array if a reference is present in the request:
      *
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -186,7 +189,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->integerFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
             }
         }
 
@@ -194,8 +197,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -203,7 +206,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->stringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string) $transaction[$fieldName], false);
+                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName], false);
             }
         }
 
@@ -211,8 +214,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -220,7 +223,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->textareaFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName]);
             }
         }
 
@@ -228,8 +231,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -238,8 +241,8 @@ class UpdateRequest extends FormRequest
         foreach ($this->dateFields as $fieldName) {
             Log::debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                Log::debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
-                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
+                Log::debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
+                $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
             }
         }
 
@@ -247,8 +250,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -256,7 +259,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->booleanFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
             }
         }
 
@@ -264,8 +267,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param array $current
-     * @param array $transaction
+     * @param  array  $current
+     * @param  array  $transaction
      *
      * @return array
      */
@@ -274,6 +277,28 @@ class UpdateRequest extends FormRequest
         foreach ($this->arrayFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
                 $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param  array  $current
+     * @param  array  $transaction
+     * @return array
+     */
+    private function getFloatData(array $current, array $transaction): array
+    {
+        foreach ($this->floatFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $value = $transaction[$fieldName];
+                if (is_float($value)) {
+                    $current[$fieldName] = sprintf('%.24f', $value);
+                }
+                if (!is_float($value)) {
+                    $current[$fieldName] = (string)$value;
+                }
             }
         }
 
@@ -290,15 +315,15 @@ class UpdateRequest extends FormRequest
         return [
             // basic fields for group:
             'group_title'                           => 'between:1,1000',
-            'apply_rules'                           => [new IsBoolean],
+            'apply_rules'                           => [new IsBoolean()],
 
             // transaction rules (in array for splits):
             'transactions.*.type'                   => 'in:withdrawal,deposit,transfer,opening-balance,reconciliation',
-            'transactions.*.date'                   => [new IsDateOrTime],
+            'transactions.*.date'                   => [new IsDateOrTime()],
             'transactions.*.order'                  => 'numeric|min:0',
 
             // group id:
-            'transactions.*.transaction_journal_id' => ['nullable', 'numeric', new BelongsUser],
+            'transactions.*.transaction_journal_id' => ['nullable', 'numeric', new BelongsUser()],
 
 
             // currency info
@@ -315,23 +340,23 @@ class UpdateRequest extends FormRequest
             'transactions.*.description'            => 'nullable|between:1,1000',
 
             // source of transaction
-            'transactions.*.source_id'              => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.source_id'              => ['numeric', 'nullable', new BelongsUser()],
             'transactions.*.source_name'            => 'between:1,255|nullable',
 
             // destination of transaction
-            'transactions.*.destination_id'         => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.destination_id'         => ['numeric', 'nullable', new BelongsUser()],
             'transactions.*.destination_name'       => 'between:1,255|nullable',
 
             // budget, category, bill and piggy
-            'transactions.*.budget_id'              => ['mustExist:budgets,id', new BelongsUser],
-            'transactions.*.budget_name'            => ['between:1,255', 'nullable', new BelongsUser],
-            'transactions.*.category_id'            => ['mustExist:categories,id', new BelongsUser],
+            'transactions.*.budget_id'              => ['mustExist:budgets,id', new BelongsUser()],
+            'transactions.*.budget_name'            => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.category_id'            => ['mustExist:categories,id', new BelongsUser()],
             'transactions.*.category_name'          => 'between:1,255|nullable',
-            'transactions.*.bill_id'                => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
-            'transactions.*.bill_name'              => ['between:1,255', 'nullable', new BelongsUser],
+            'transactions.*.bill_id'                => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser()],
+            'transactions.*.bill_name'              => ['between:1,255', 'nullable', new BelongsUser()],
 
             // other interesting fields
-            'transactions.*.reconciled'             => [new IsBoolean],
+            'transactions.*.reconciled'             => [new IsBoolean()],
             'transactions.*.notes'                  => 'min:1,max:50000|nullable',
             'transactions.*.tags'                   => 'between:0,255',
 
@@ -365,7 +390,7 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -385,35 +410,12 @@ class UpdateRequest extends FormRequest
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
 
                 // a catch when users submit splits with no source or destination info at all.
-                $this->preventNoAccountInfo($validator,);
+                $this->preventNoAccountInfo($validator, );
 
                 // validate that the currency fits the source and/or destination account.
                 // validate all account info
                 $this->validateAccountInformationUpdate($validator, $transactionGroup);
-
             }
         );
-    }
-
-    /**
-     * @param array $current
-     * @param array $transaction
-     * @return array
-     */
-    private function getFloatData(array $current, array $transaction): array
-    {
-        foreach ($this->floatFields as $fieldName) {
-            if (array_key_exists($fieldName, $transaction)) {
-                $value = $transaction[$fieldName];
-                if (is_float($value)) {
-                    $current[$fieldName] = sprintf('%.24f', $value);
-                }
-                if (!is_float($value)) {
-                    $current[$fieldName] = (string) $value;
-                }
-            }
-        }
-
-        return $current;
     }
 }

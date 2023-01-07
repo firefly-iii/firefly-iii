@@ -253,7 +253,7 @@ return [
     'updated_webhook'                      => 'Webhook ":title" aggiornato',
     'edit_webhook_js'                      => 'Modifica webhook "{title}"',
     'show_webhook'                         => 'Webhook ":title"',
-    'webhook_was_triggered'                => 'Il webhook è stato attivato sulla transazione indicata. È possibile aggiornare questa pagina per vedere i risultati.',
+    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
     'webhook_messages'                     => 'Messaggio Webhook',
     'view_message'                         => 'Visualizza messaggio',
     'view_attempts'                        => 'Visualizza tentativi falliti',

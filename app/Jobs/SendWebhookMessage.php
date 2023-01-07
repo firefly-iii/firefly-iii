@@ -38,14 +38,17 @@ use Log;
  */
 class SendWebhookMessage implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private WebhookMessage $message;
 
     /**
      * Create a new job instance.
      *
-     * @param WebhookMessage $message
+     * @param  WebhookMessage  $message
      */
     public function __construct(WebhookMessage $message)
     {

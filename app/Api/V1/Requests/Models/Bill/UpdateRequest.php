@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Bill;
 
+use FireflyIII\Models\Bill;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -37,7 +38,8 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -74,6 +76,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var Bill $bill */
         $bill = $this->route()->parameter('bill');
 
         return [
@@ -87,7 +90,7 @@ class UpdateRequest extends FormRequest
             'extension_date' => 'date|after:date',
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly',
             'skip'           => 'between:0,31',
-            'active'         => [new IsBoolean],
+            'active'         => [new IsBoolean()],
             'notes'          => 'between:1,65536',
         ];
     }
@@ -95,7 +98,7 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -105,11 +108,11 @@ class UpdateRequest extends FormRequest
             static function (Validator $validator) {
                 $data = $validator->getData();
                 if (array_key_exists('amount_min', $data) && array_key_exists('amount_max', $data)) {
-                    $min  = $data['amount_min'] ?? '0';
-                    $max  = $data['amount_max'] ?? '0';
+                    $min = $data['amount_min'] ?? '0';
+                    $max = $data['amount_max'] ?? '0';
 
                     if (1 === bccomp($min, $max)) {
-                        $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
+                        $validator->errors()->add('amount_min', (string)trans('validation.amount_min_over_max'));
                     }
                 }
             }

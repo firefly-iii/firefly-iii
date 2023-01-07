@@ -73,8 +73,8 @@ class UpdateController extends Controller
      *
      * Update object.
      *
-     * @param UpdateRequest $request
-     * @param LinkType      $linkType
+     * @param  UpdateRequest  $request
+     * @param  LinkType  $linkType
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -102,6 +102,5 @@ class UpdateController extends Controller
         $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

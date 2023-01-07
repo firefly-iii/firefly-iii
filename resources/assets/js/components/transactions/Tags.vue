@@ -22,7 +22,7 @@
   <div class="form-group"
        v-bind:class="{ 'has-error': hasError()}">
     <div class="col-sm-12 text-sm">
-      {{ $t('firefly.tags') }}
+      {{ $t('firefly.tags') }} XX
     </div>
     <div class="col-sm-12">
       <div class="input-group">
@@ -74,18 +74,22 @@ export default {
   },
   methods: {
     update(newTags) {
+      console.log('update', newTags);
       this.autocompleteItems = [];
       this.tags = newTags;
       this.$emit('input', this.tags);
     },
     clearTags() {
+      console.log('clearTags');
       this.tags = [];
+      this.$emit('input', this.tags);
+
     },
     hasError: function () {
       return this.error.length > 0;
     },
     initItems() {
-      // console.log('Now in initItems');
+      console.log('Now in initItems');
       if (this.tag.length < 2) {
         return;
       }

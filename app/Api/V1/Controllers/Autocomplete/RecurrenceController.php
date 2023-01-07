@@ -56,7 +56,7 @@ class RecurrenceController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/autocomplete/getRecurringAC
      *
-     * @param AutocompleteRequest $request
+     * @param  AutocompleteRequest  $request
      *
      * @return JsonResponse
      */
@@ -69,7 +69,7 @@ class RecurrenceController extends Controller
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
             $response[] = [
-                'id'          => (string) $recurrence->id,
+                'id'          => (string)$recurrence->id,
                 'name'        => $recurrence->title,
                 'description' => $recurrence->description,
             ];
@@ -77,5 +77,4 @@ class RecurrenceController extends Controller
 
         return response()->json($response);
     }
-
 }

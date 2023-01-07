@@ -47,8 +47,6 @@ use Throwable;
 class ReconcileController extends Controller
 {
     private AccountRepositoryInterface  $accountRepos;
-    private CurrencyRepositoryInterface $currencyRepos;
-    private JournalRepositoryInterface  $repository;
 
     /**
      * ReconcileController constructor.
@@ -63,10 +61,8 @@ class ReconcileController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
-                $this->repository    = app(JournalRepositoryInterface::class);
+                app('view')->share('title', (string)trans('firefly.accounts'));
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
-                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -76,10 +72,10 @@ class ReconcileController extends Controller
     /**
      * Overview of reconciliation.
      *
-     * @param Request      $request
-     * @param Account|null $account
-     * @param Carbon|null  $start
-     * @param Carbon|null  $end
+     * @param  Request  $request
+     * @param  Account|null  $account
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -161,10 +157,10 @@ class ReconcileController extends Controller
                     'selectedIds'
                 )
             )->render();
-
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::debug(sprintf('View error: %s', $e->getMessage()));
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
+            throw new FireflyException($view, 0, $e);
         }
 
         $return = [
@@ -176,10 +172,10 @@ class ReconcileController extends Controller
     }
 
     /**
-     * @param Account             $account
-     * @param TransactionCurrency $currency
-     * @param array               $journal
-     * @param string              $amount
+     * @param  Account  $account
+     * @param  TransactionCurrency  $currency
+     * @param  array  $journal
+     * @param  string  $amount
      *
      * @return string
      */
@@ -218,9 +214,9 @@ class ReconcileController extends Controller
     /**
      * Returns a list of transactions in a modal.
      *
-     * @param Account     $account
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Account  $account
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -262,10 +258,10 @@ class ReconcileController extends Controller
                 'accounts.reconcile.transactions',
                 compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
             )->render();
-
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render: %s', $e->getMessage()));
             $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
+            throw new FireflyException($html, 0, $e);
         }
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
@@ -274,8 +270,8 @@ class ReconcileController extends Controller
     /**
      * "fix" amounts to make it easier on the reconciliation overview:
      *
-     * @param Account $account
-     * @param array   $array
+     * @param  Account  $account
+     * @param  array  $array
      *
      * @return array
      */

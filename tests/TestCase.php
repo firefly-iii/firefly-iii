@@ -31,7 +31,8 @@ use Tests\Traits\CollectsValues;
  */
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, CollectsValues;
+    use CreatesApplication;
+    use CollectsValues;
 
     protected const MAX_ITERATIONS = 2;
 
@@ -50,5 +51,4 @@ abstract class TestCase extends BaseTestCase
             'custom range' => ['custom'],
         ];
     }
-
 }

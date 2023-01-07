@@ -21,14 +21,14 @@
 <template>
   <q-page>
     <q-table
-      :title="$t('firefly.webhooks')"
-      :rows="rows"
+      v-model:pagination="pagination"
       :columns="columns"
+      :loading="loading"
+      :rows="rows"
+      :title="$t('firefly.webhooks')"
+      class="q-ma-md"
       row-key="id"
       @request="onRequest"
-      v-model:pagination="pagination"
-      :loading="loading"
-      class="q-ma-md"
     >
       <template v-slot:header="props">
         <q-tr :props="props">
@@ -51,12 +51,12 @@
           <q-td key="menu" :props="props">
             <q-btn-dropdown color="primary" label="Actions" size="sm">
               <q-list>
-                <q-item clickable v-close-popup :to="{name: 'webhooks.edit', params: {id: props.row.id}}">
+                <q-item v-close-popup :to="{name: 'webhooks.edit', params: {id: props.row.id}}" clickable>
                   <q-item-section>
                     <q-item-label>Edit</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="deleteWebhook(props.row.id, props.row.title)">
+                <q-item v-close-popup clickable @click="deleteWebhook(props.row.id, props.row.title)">
                   <q-item-section>
                     <q-item-label>Delete</q-item-label>
                   </q-item-section>
@@ -67,27 +67,28 @@
         </q-tr>
       </template>
     </q-table>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
+    <q-page-sticky :offset="[18, 18]" position="bottom-right">
       <q-fab
+        color="green"
+        direction="up"
+        icon="fas fa-chevron-up"
         label="Actions"
+        label-position="left"
         square
         vertical-actions-align="right"
-        label-position="left"
-        color="green"
-        icon="fas fa-chevron-up"
-        direction="up"
       >
-        <q-fab-action color="primary" square :to="{ name: 'webhooks.create'}" icon="fas fa-exchange-alt"
-                      label="New webhook"/>
+        <q-fab-action :to="{ name: 'webhooks.create'}" color="primary" icon="fas fa-exchange-alt" label="New webhook"
+                      square/>
       </q-fab>
     </q-page-sticky>
   </q-page>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+// import {mapGetters} from "vuex";
 import Destroy from "../../api/generic/destroy";
 import List from "../../api/webhooks/list";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: 'Index',
@@ -116,13 +117,15 @@ export default {
         {name: 'title', label: 'Title', field: 'title', align: 'left'},
         {name: 'menu', label: ' ', field: 'menu', align: 'right'},
       ],
+      store: null,
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey', 'getListPageSize']),
+    // ...mapGetters('fireflyiii', ['getCacheKey', 'getListPageSize']),
   },
   created() {
     this.pagination.rowsPerPage = this.getListPageSize;
+    this.store = useFireflyIIIStore();
   },
   mounted() {
     this.triggerUpdate();
@@ -140,7 +143,7 @@ export default {
     },
     destroyWebhook: function (id) {
       (new Destroy('webhooks')).destroy(id).then(() => {
-        this.$store.dispatch('fireflyiii/refreshCacheKey');
+        this.store.refreshCacheKey();
         this.triggerUpdate();
       });
     },

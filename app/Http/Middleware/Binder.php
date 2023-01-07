@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Binder.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -49,7 +50,7 @@ class Binder
     /**
      * Binder constructor.
      *
-     * @param Auth $auth
+     * @param  Auth  $auth
      */
     public function __construct(Auth $auth)
     {
@@ -60,8 +61,8 @@ class Binder
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request  $request
+     * @param  Closure  $next
      *
      * @return mixed
      *
@@ -81,9 +82,9 @@ class Binder
     /**
      * Do the binding.
      *
-     * @param string $key
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $key
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return mixed
      */

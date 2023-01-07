@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CategoryFormRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,7 +33,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class CategoryFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get information for the controller.
@@ -59,7 +61,7 @@ class CategoryFormRequest extends FormRequest
         $category = $this->route()->parameter('category');
 
         if (null !== $category) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . $category->id;
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,'.$category->id;
         }
 
         // fixed

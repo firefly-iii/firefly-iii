@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TrustProxies.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -45,6 +46,6 @@ class TrustProxies extends Middleware
      */
     public function __construct()
     {
-        $this->proxies = (string) config('firefly.trusted_proxies');
+        $this->proxies = (string)config('firefly.trusted_proxies');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ReportController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,7 +39,7 @@ class ReportController extends Controller
     /**
      * Generate popup view.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
      *

@@ -72,7 +72,7 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -81,7 +81,7 @@ class ListController extends Controller
     public function attachments(Bill $bill): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($bill);
 
         $count       = $collection->count();
@@ -89,7 +89,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -107,7 +107,7 @@ class ListController extends Controller
      *
      * List all of them.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -118,7 +118,7 @@ class ListController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getRulesForBill($bill);
@@ -127,7 +127,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.bills.rules', [$bill->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.bills.rules', [$bill->id]).$this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
@@ -136,7 +136,6 @@ class ListController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
     /**
@@ -145,9 +144,9 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
-     * @param Bill    $bill
+     * @param  Bill  $bill
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -155,7 +154,7 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Bill $bill): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -188,7 +187,7 @@ class ListController extends Controller
 
         // get paginator.
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
@@ -200,5 +199,4 @@ class ListController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

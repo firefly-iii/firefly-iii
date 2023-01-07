@@ -39,7 +39,9 @@ use Log;
  */
 class TransactionRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes, ValidatesBulkTransactionQuery;
+    use ChecksLogin;
+    use ConvertsDataTypes;
+    use ValidatesBulkTransactionQuery;
 
     /**
      * @return array
@@ -60,7 +62,7 @@ class TransactionRequest extends FormRequest
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function rules(): array
     {
@@ -70,7 +72,7 @@ class TransactionRequest extends FormRequest
     }
 
     /**
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */

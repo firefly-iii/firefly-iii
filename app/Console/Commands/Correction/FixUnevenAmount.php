@@ -65,11 +65,11 @@ class FixUnevenAmount extends Command
                       ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
-            if (0 !== bccomp((string) $entry->the_sum, '0')) {
+            if (0 !== bccomp((string)$entry->the_sum, '0')) {
                 $message = sprintf('Sum of journal #%d is %s instead of zero.', $entry->transaction_journal_id, $entry->the_sum);
                 $this->warn($message);
-                Log::warning($message);
-                $this->fixJournal((int) $entry->transaction_journal_id);
+                app('log')->warning($message);
+                $this->fixJournal((int)$entry->transaction_journal_id);
                 $count++;
             }
         }
@@ -84,7 +84,7 @@ class FixUnevenAmount extends Command
     }
 
     /**
-     * @param int $param
+     * @param  int  $param
      */
     private function fixJournal(int $param): void
     {
@@ -93,7 +93,7 @@ class FixUnevenAmount extends Command
         if (!$journal) {
             return;
         }
-        /** @var Transaction $source */
+        /** @var Transaction|null $source */
         $source = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
@@ -110,10 +110,10 @@ class FixUnevenAmount extends Command
             return;
         }
 
-        $amount = bcmul('-1', (string) $source->amount);
+        $amount = bcmul('-1', (string)$source->amount);
 
         // fix amount of destination:
-        /** @var Transaction $destination */
+        /** @var Transaction|null $destination */
         $destination = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {

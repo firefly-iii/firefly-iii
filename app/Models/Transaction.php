@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Transaction.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -36,31 +37,31 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * FireflyIII\Models\Transaction
  *
- * @property int                             $id
+ * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property bool                            $reconciled
- * @property int                             $account_id
- * @property int                             $transaction_journal_id
- * @property string|null                     $description
- * @property int|null                        $transaction_currency_id
- * @property string                          $modified
- * @property string                          $modified_foreign
- * @property string                          $date
- * @property string                          $max_date
- * @property string                          $amount
- * @property string|null                     $foreign_amount
- * @property int|null                        $foreign_currency_id
- * @property int                             $identifier
- * @property-read Account                    $account
- * @property-read Collection|Budget[]        $budgets
- * @property-read int|null                   $budgets_count
- * @property-read Collection|Category[]      $categories
- * @property-read int|null                   $categories_count
- * @property-read TransactionCurrency|null   $foreignCurrency
- * @property-read TransactionCurrency|null   $transactionCurrency
- * @property-read TransactionJournal         $transactionJournal
+ * @property bool $reconciled
+ * @property int $account_id
+ * @property int $transaction_journal_id
+ * @property string|null $description
+ * @property int|null $transaction_currency_id
+ * @property string $modified
+ * @property string $modified_foreign
+ * @property string $date
+ * @property string $max_date
+ * @property string $amount
+ * @property string|null $foreign_amount
+ * @property int|null $foreign_currency_id
+ * @property int $identifier
+ * @property-read Account $account
+ * @property-read Collection|Budget[] $budgets
+ * @property-read int|null $budgets_count
+ * @property-read Collection|Category[] $categories
+ * @property-read int|null $categories_count
+ * @property-read TransactionCurrency|null $foreignCurrency
+ * @property-read TransactionCurrency|null $transactionCurrency
+ * @property-read TransactionJournal $transactionJournal
  * @method static Builder|Transaction after(Carbon $date)
  * @method static Builder|Transaction before(Carbon $date)
  * @method static Builder|Transaction newModelQuery()
@@ -84,11 +85,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
  * @mixin Eloquent
- * @property int                             $the_count
+ * @property int $the_count
  */
 class Transaction extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that should be casted to native types.
@@ -107,8 +109,17 @@ class Transaction extends Model
         ];
     /** @var array Fields that can be filled */
     protected $fillable
-        = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
-           'foreign_amount', 'reconciled'];
+        = [
+            'account_id',
+            'transaction_journal_id',
+            'description',
+            'amount',
+            'identifier',
+            'transaction_currency_id',
+            'foreign_currency_id',
+            'foreign_amount',
+            'reconciled',
+        ];
     /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 
@@ -161,8 +172,8 @@ class Transaction extends Model
      *
      * @codeCoverageIgnore
      *
-     * @param Builder $query
-     * @param Carbon  $date
+     * @param  Builder  $query
+     * @param  Carbon  $date
      */
     public function scopeAfter(Builder $query, Carbon $date): void
     {
@@ -175,8 +186,8 @@ class Transaction extends Model
     /**
      * Check if a table is joined.
      *
-     * @param Builder $query
-     * @param string  $table
+     * @param  Builder  $query
+     * @param  string  $table
      *
      * @return bool
      * @codeCoverageIgnore
@@ -201,8 +212,8 @@ class Transaction extends Model
      *
      * @codeCoverageIgnore
      *
-     * @param Builder $query
-     * @param Carbon  $date
+     * @param  Builder  $query
+     * @param  Carbon  $date
      */
     public function scopeBefore(Builder $query, Carbon $date): void
     {
@@ -215,8 +226,8 @@ class Transaction extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param Builder $query
-     * @param array   $types
+     * @param  Builder  $query
+     * @param  array  $types
      */
     public function scopeTransactionTypes(Builder $query, array $types): void
     {
@@ -233,11 +244,11 @@ class Transaction extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setAmountAttribute($value): void
     {
-        $this->attributes['amount'] = (string) $value;
+        $this->attributes['amount'] = (string)$value;
     }
 
     /**
@@ -266,7 +277,7 @@ class Transaction extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 
@@ -278,7 +289,7 @@ class Transaction extends Model
     protected function foreignAmount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 }

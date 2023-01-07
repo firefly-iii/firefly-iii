@@ -34,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -58,7 +59,6 @@ class StoreRequest extends FormRequest
         $data['object_group_title'] = $this->convertString('object_group_title');
 
         return $data;
-
     }
 
     /**
@@ -80,5 +80,4 @@ class StoreRequest extends FormRequest
             'notes'              => 'max:65000',
         ];
     }
-
 }

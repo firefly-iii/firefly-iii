@@ -20,8 +20,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** @noinspection MultipleReturnStatementsInspection */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
@@ -30,6 +28,7 @@ use ErrorException;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,7 +39,9 @@ use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -52,7 +53,7 @@ use Throwable;
 class Handler extends ExceptionHandler
 {
     /**
-     * @var array
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport
         = [
@@ -63,14 +64,14 @@ class Handler extends ExceptionHandler
             LaravelOAuthException::class,
             TokenMismatchException::class,
             HttpException::class,
-            SuspiciousOperationException::class
+            SuspiciousOperationException::class,
         ];
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param Request   $request
-     * @param Throwable $e
+     * @param  Request  $request
+     * @param  Throwable  $e
      *
      * @return mixed
      * @throws Throwable
@@ -95,8 +96,19 @@ class Handler extends ExceptionHandler
             // somehow Laravel handler does not catch this:
             return response()->json(['message' => $e->getMessage(), 'exception' => 'OAuthServerException'], 401);
         }
+        if ($e instanceof BadRequestHttpException) {
+            return response()->json(['message' => $e->getMessage(), 'exception' => 'BadRequestHttpException'], 400);
+        }
+
+        if ($e instanceof BadHttpHeaderException) {
+            // is always API exception.
+            return response()->json(['message' => $e->getMessage(), 'exception' => 'BadHttpHeaderException'], $e->statusCode);
+        }
 
         if ($request->expectsJson()) {
+            $errorCode = 500;
+            $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
+
             $isDebug = config('app.debug', false);
             if ($isDebug) {
                 return response()->json(
@@ -107,12 +119,13 @@ class Handler extends ExceptionHandler
                         'file'      => $e->getFile(),
                         'trace'     => $e->getTrace(),
                     ],
-                    500
+                    $errorCode
                 );
             }
 
             return response()->json(
-                ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => get_class($e)], 500
+                ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => get_class($e)],
+                $errorCode
             );
         }
 
@@ -126,6 +139,14 @@ class Handler extends ExceptionHandler
 
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
+        // special view for database errors with extra instructions
+        if ($e instanceof QueryException) {
+            $isDebug = config('app.debug');
+
+            return response()->view('errors.DatabaseException', ['exception' => $e, 'debug' => $isDebug], 500);
+        }
+
+        //var_dump($e);exit;
 
         return parent::render($request, $e);
     }
@@ -133,7 +154,7 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param Throwable $e
+     * @param  Throwable  $e
      *
      * @return void
      * @throws Throwable
@@ -156,10 +177,7 @@ class Handler extends ExceptionHandler
             $userData['email'] = auth()->user()->email;
         }
 
-        $headers = [];
-        if (request()->headers) {
-            $headers = request()->headers->all();
-        }
+        $headers = request()->headers->all();
 
         $data = [
             'class'        => get_class($e),
@@ -179,14 +197,14 @@ class Handler extends ExceptionHandler
 
         // create job that will mail.
         $ipAddress = request()->ip() ?? '0.0.0.0';
-        $job       = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
+        $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);
     }
 
     /**
-     * @param Throwable $e
+     * @param  Throwable  $e
      *
      * @return bool
      */
@@ -194,9 +212,10 @@ class Handler extends ExceptionHandler
     {
         return !is_null(
             Arr::first(
-                $this->dontReport, function ($type) use ($e) {
-                return $e instanceof $type;
-            }
+                $this->dontReport,
+                function ($type) use ($e) {
+                    return $e instanceof $type;
+                }
             )
         );
     }
@@ -204,8 +223,8 @@ class Handler extends ExceptionHandler
     /**
      * Convert a validation exception into a response.
      *
-     * @param Request                    $request
-     * @param LaravelValidationException $exception
+     * @param  Request  $request
+     * @param  LaravelValidationException  $exception
      *
      * @return Application|RedirectResponse|Redirector
      */
@@ -223,7 +242,7 @@ class Handler extends ExceptionHandler
     /**
      * Only return the redirectTo property from the exception if it is a valid URL. Return NULL otherwise.
      *
-     * @param LaravelValidationException $exception
+     * @param  LaravelValidationException  $exception
      *
      * @return string|null
      */

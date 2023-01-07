@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TagRepository.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -54,7 +55,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return bool
      * @throws Exception
@@ -90,9 +91,9 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Tag  $tag
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -108,7 +109,15 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param int $tagId
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param  int  $tagId
      *
      * @return Tag|null
      */
@@ -118,7 +127,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param string $tag
+     * @param  string  $tag
      *
      * @return Tag|null
      */
@@ -128,7 +137,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return Carbon|null
      */
@@ -163,7 +172,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param int|null $year
+     * @param  int|null  $year
      *
      * @return array
      */
@@ -180,7 +189,7 @@ class TagRepository implements TagRepositoryInterface
 
         if (null !== $year) {
             Log::debug(sprintf('Get tags with year %s.', $year));
-            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
+            $tagQuery->where('tags.date', '>=', $year.'-01-01 00:00:00')->where('tags.date', '<=', $year.'-12-31 23:59:59');
         }
         $collection = $tagQuery->get();
         $return     = [];
@@ -200,9 +209,9 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Tag  $tag
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -218,7 +227,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      *
      * @return Carbon|null
      */
@@ -253,7 +262,7 @@ class TagRepository implements TagRepositoryInterface
     /**
      * Find one or more tags based on the query.
      *
-     * @param string $query
+     * @param  string  $query
      *
      * @return Collection
      */
@@ -267,8 +276,8 @@ class TagRepository implements TagRepositoryInterface
     /**
      * Search the users tags.
      *
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
@@ -285,15 +294,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Tag
      */
@@ -307,9 +308,9 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Tag  $tag
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return array
      *
@@ -330,21 +331,21 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId        = (int) $journal['currency_id'];
+            $currencyId        = (int)$journal['currency_id'];
             $sums[$currencyId] = $sums[$currencyId] ?? [
-                    'currency_id'                    => $currencyId,
-                    'currency_name'                  => $journal['currency_name'],
-                    'currency_symbol'                => $journal['currency_symbol'],
-                    'currency_decimal_places'        => $journal['currency_decimal_places'],
-                    TransactionType::WITHDRAWAL      => '0',
-                    TransactionType::DEPOSIT         => '0',
-                    TransactionType::TRANSFER        => '0',
-                    TransactionType::RECONCILIATION  => '0',
-                    TransactionType::OPENING_BALANCE => '0',
-                ];
+                'currency_id'                    => $currencyId,
+                'currency_name'                  => $journal['currency_name'],
+                'currency_symbol'                => $journal['currency_symbol'],
+                'currency_decimal_places'        => $journal['currency_decimal_places'],
+                TransactionType::WITHDRAWAL      => '0',
+                TransactionType::DEPOSIT         => '0',
+                TransactionType::TRANSFER        => '0',
+                TransactionType::RECONCILIATION  => '0',
+                TransactionType::OPENING_BALANCE => '0',
+            ];
 
             // add amount to correct type:
-            $amount = app('steam')->positive((string) $journal['amount']);
+            $amount = app('steam')->positive((string)$journal['amount']);
             $type   = $journal['transaction_type_type'];
             if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
@@ -354,24 +355,23 @@ class TagRepository implements TagRepositoryInterface
             $foreignCurrencyId = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
                 $sums[$foreignCurrencyId] = $sums[$foreignCurrencyId] ?? [
-                        'currency_id'                    => $foreignCurrencyId,
-                        'currency_name'                  => $journal['foreign_currency_name'],
-                        'currency_symbol'                => $journal['foreign_currency_symbol'],
-                        'currency_decimal_places'        => $journal['foreign_currency_decimal_places'],
-                        TransactionType::WITHDRAWAL      => '0',
-                        TransactionType::DEPOSIT         => '0',
-                        TransactionType::TRANSFER        => '0',
-                        TransactionType::RECONCILIATION  => '0',
-                        TransactionType::OPENING_BALANCE => '0',
-                    ];
+                    'currency_id'                    => $foreignCurrencyId,
+                    'currency_name'                  => $journal['foreign_currency_name'],
+                    'currency_symbol'                => $journal['foreign_currency_symbol'],
+                    'currency_decimal_places'        => $journal['foreign_currency_decimal_places'],
+                    TransactionType::WITHDRAWAL      => '0',
+                    TransactionType::DEPOSIT         => '0',
+                    TransactionType::TRANSFER        => '0',
+                    TransactionType::RECONCILIATION  => '0',
+                    TransactionType::OPENING_BALANCE => '0',
+                ];
                 // add foreign amount to correct type:
-                $amount = app('steam')->positive((string) $journal['foreign_amount']);
+                $amount = app('steam')->positive((string)$journal['foreign_amount']);
                 $type   = $journal['transaction_type_type'];
                 if (TransactionType::WITHDRAWAL === $type) {
                     $amount = bcmul($amount, '-1');
                 }
                 $sums[$foreignCurrencyId][$type] = bcadd($sums[$foreignCurrencyId][$type], $amount);
-
             }
         }
 
@@ -379,9 +379,9 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Tag  $tag
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
      */
@@ -396,8 +396,8 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag   $tag
-     * @param array $data
+     * @param  Tag  $tag
+     * @param  array  $data
      *
      * @return Tag
      */
@@ -433,7 +433,7 @@ class TagRepository implements TagRepositoryInterface
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
                 $location = $this->getLocation($tag);
                 if (null === $location) {
-                    $location = new Location;
+                    $location = new Location();
                     $location->locatable()->associate($tag);
                 }
 
@@ -457,5 +457,4 @@ class TagRepository implements TagRepositoryInterface
     {
         return $tag->locations()->first();
     }
-
 }

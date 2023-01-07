@@ -74,7 +74,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/budgets/listAttachmentByBudget
      *
-     * @param Budget $budget
+     * @param  Budget  $budget
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -83,7 +83,7 @@ class ListController extends Controller
     public function attachments(Budget $budget): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($budget);
 
         $count       = $collection->count();
@@ -91,7 +91,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.attachments', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.attachments', [$budget->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -109,7 +109,7 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param Budget $budget
+     * @param  Budget  $budget
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -118,13 +118,13 @@ class ListController extends Controller
     public function budgetLimits(Budget $budget): JsonResponse
     {
         $manager  = $this->getManager();
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $this->parameters->set('budget_id', $budget->id);
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.budget_limits', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.budget_limits', [$budget->id]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -141,9 +141,9 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
-     * @param Budget  $budget
+     * @param  Budget  $budget
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -151,7 +151,7 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // user can overrule page size with limit parameter.
         $limit = $this->parameters->get('limit');
@@ -189,7 +189,7 @@ class ListController extends Controller
         }
 
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.budgets.transactions', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.transactions', [$budget->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
@@ -207,7 +207,7 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -215,7 +215,7 @@ class ListController extends Controller
      */
     public function withoutBudget(Request $request): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // user can overrule page size with limit parameter.
         $limit = $this->parameters->get('limit');
@@ -253,7 +253,7 @@ class ListController extends Controller
         }
 
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.budgets.without-budget') . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.without-budget').$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
@@ -264,5 +264,4 @@ class ListController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

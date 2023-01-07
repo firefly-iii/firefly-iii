@@ -65,7 +65,7 @@
     }
   ],
   "require": {
-    "php": ">=8",
+    "php": ">=8.2",
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-fileinfo": "*",
@@ -91,6 +91,7 @@
     "laravel/framework": "^9",
     "laravel/passport": "11.*",
     "laravel/sanctum": "^3.0",
+    "laravel/slack-notification-channel": "^2.4",
     "laravel/ui": "^4.1",
     "laravelcollective/html": "6.*",
     "league/commonmark": "2.*",
@@ -109,10 +110,16 @@
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "2.*",
-    "filp/whoops": "2.*",
+    "ergebnis/phpstan-rules": "^1.0",
     "fakerphp/faker": "1.*",
+    "filp/whoops": "2.*",
     "mockery/mockery": "1.*",
-    "phpunit/phpunit": "^9.5"
+    "nunomaduro/larastan": "^2.0",
+    "phpstan/phpstan": "^1.8",
+    "phpstan/phpstan-deprecation-rules": "^1.0",
+    "phpstan/phpstan-strict-rules": "^1.4",
+    "phpunit/phpunit": "^9.5",
+    "thecodingmachine/phpstan-strict-rules": "^1.0"
   },
   "suggest": {
   },
@@ -193,6 +200,7 @@
       "@php artisan firefly-iii:report-empty-objects",
       "@php artisan firefly-iii:report-sum",
       "@php artisan firefly-iii:restore-oauth-keys",
+      "@php artisan firefly-iii:upgrade-group-information",
       "@php artisan firefly-iii:set-latest-version --james-is-cool",
       "@php artisan firefly:instructions update",
       "@php artisan firefly-iii:verify-security-alerts",
@@ -205,7 +213,7 @@
   },
   "config": {
     "platform": {
-      "php": "8.0.19"
+      "php": "8.2"
     },
     "preferred-install": "dist",
     "sort-packages": true,

@@ -56,7 +56,7 @@ class ExportData extends Command
      *
      * @var string
      */
-    protected                          $signature = 'firefly-iii:export-data
+    protected $signature = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}
     {--start= : First transaction to export. Defaults to your very first transaction. Only applies to transaction export.}
@@ -121,11 +121,11 @@ class ExportData extends Command
         $exporter->setExportBills($options['export']['bills']);
         $exporter->setExportPiggies($options['export']['piggies']);
         $data = $exporter->export();
-        if (empty($data)) {
+        if (0 === count($data)) {
             $this->error('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
         }
         $returnCode = 0;
-        if (!empty($data)) {
+        if (0 !== count($data)) {
             try {
                 $this->exportData($options, $data);
             } catch (FireflyException $e) {
@@ -184,7 +184,7 @@ class ExportData extends Command
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
      *
      * @return Carbon
      * @throws Exception
@@ -230,11 +230,11 @@ class ExportData extends Command
      */
     private function getAccountsParameter(): Collection
     {
-        $final       = new Collection;
-        $accounts    = new Collection;
+        $final       = new Collection();
+        $accounts    = new Collection();
         $accountList = $this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string) $accountList) {
+        if (null !== $accountList && '' !== (string)$accountList) {
             $accountIds = explode(',', $accountList);
             $accounts   = $this->accountRepository->getAccountsById($accountIds);
         }
@@ -262,7 +262,7 @@ class ExportData extends Command
      */
     private function getExportDirectory(): string
     {
-        $directory = (string) $this->option('export_directory');
+        $directory = (string)$this->option('export_directory');
         if (null === $directory) {
             $directory = './';
         }
@@ -274,8 +274,8 @@ class ExportData extends Command
     }
 
     /**
-     * @param array $options
-     * @param array $data
+     * @param  array  $options
+     * @param  array  $data
      *
      * @throws FireflyException
      */

@@ -38,7 +38,9 @@ use Log;
  */
 class RequestedReportOnJournals
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public Collection $groups;
     public int        $userId;
@@ -46,8 +48,8 @@ class RequestedReportOnJournals
     /**
      * Create a new event instance.
      *
-     * @param int        $userId
-     * @param Collection $groups
+     * @param  int  $userId
+     * @param  Collection  $groups
      */
     public function __construct(int $userId, Collection $groups)
     {

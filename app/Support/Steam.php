@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use DB;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -33,6 +34,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use stdClass;
 use Str;
 use ValueError;
@@ -44,7 +47,6 @@ use ValueError;
  */
 class Steam
 {
-
     /**
      * @param  Account  $account
      * @param  Carbon  $date
@@ -97,39 +99,6 @@ class Steam
     }
 
     /**
-     * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
-     *
-     * @param null|string  $number
-     * @param  int  $precision
-     * @return string
-     */
-    public function bcround(?string $number, int $precision = 0): string
-    {
-
-        if(null === $number) {
-            return '0';
-        }
-        if('' === trim($number)) {
-            return '0';
-        }
-        // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
-        if(false !== stripos($number,'e')) {
-            $number = sprintf('%.24f',$number);
-        }
-
-        Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
-        if (str_contains($number, '.')) {
-            if ($number[0] !== '-') {
-                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
-            }
-
-            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
-        }
-
-        return $number;
-    }
-
-    /**
      * Gets the balance for the given account during the whole range, using this format:.
      *
      * [yyyy-mm-dd] => 123,2
@@ -146,7 +115,7 @@ class Steam
     public function balanceInRange(Account $account, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null): array
     {
         // abuse chart properties:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range');
         $cache->addProperty($currency ? $currency->id : 0);
@@ -183,12 +152,12 @@ class Steam
                        ->orderBy('transaction_journals.date', 'ASC')
                        ->whereNull('transaction_journals.deleted_at')
                        ->get(
-                           [  // @phpstan-ignore-line
-                              'transaction_journals.date',
-                              'transactions.transaction_currency_id',
-                              DB::raw('SUM(transactions.amount) AS modified'),
-                              'transactions.foreign_currency_id',
-                              DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
+                           [
+                               'transaction_journals.date',
+                               'transactions.transaction_currency_id',
+                               DB::raw('SUM(transactions.amount) AS modified'),
+                               'transactions.foreign_currency_id',
+                               DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
                            ]
                        );
 
@@ -228,12 +197,11 @@ class Steam
      *
      * @return string
      * @throws FireflyException
-     * @throws JsonException
      */
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
         // abuse chart properties:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
@@ -277,13 +245,12 @@ class Steam
      * @param  Carbon  $date
      *
      * @return array
-     * @throws JsonException
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($ids);
         $cache->addProperty('balances');
         $cache->addProperty($date);
@@ -316,7 +283,7 @@ class Steam
     {
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($ids);
         $cache->addProperty('balances-per-currency');
         $cache->addProperty($date);
@@ -345,7 +312,7 @@ class Steam
     public function balancePerCurrency(Account $account, Carbon $date): array
     {
         // abuse chart properties:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-per-currency');
         $cache->addProperty($date);
@@ -356,7 +323,7 @@ class Steam
                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                             ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]);
         $return   = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
@@ -365,6 +332,38 @@ class Steam
         $cache->store($return);
 
         return $return;
+    }
+
+    /**
+     * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
+     *
+     * @param  null|string  $number
+     * @param  int  $precision
+     * @return string
+     */
+    public function bcround(?string $number, int $precision = 0): string
+    {
+        if (null === $number) {
+            return '0';
+        }
+        if ('' === trim($number)) {
+            return '0';
+        }
+        // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
+        if (false !== stripos($number, 'e')) {
+            $number = sprintf('%.24f', $number);
+        }
+
+        Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
+        if (str_contains($number, '.')) {
+            if ($number[0] !== '-') {
+                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
+            }
+
+            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
+        }
+
+        return $number;
     }
 
     /**
@@ -423,6 +422,9 @@ class Steam
             "\x20", // plain old normal space
         ];
 
+        // clear zalgo text
+        $string = preg_replace('/\pM/u', '', $string);
+
         return str_replace($search, '', $string);
     }
 
@@ -438,7 +440,7 @@ class Steam
         $set = auth()->user()->transactions()
                      ->whereIn('transactions.account_id', $accounts)
                      ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]); // @phpstan-ignore-line
+                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
 
         foreach ($set as $entry) {
             $date = new Carbon($entry->max_date, config('app.timezone'));
@@ -454,8 +456,8 @@ class Steam
      *
      * @return string
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getLocale(): string // get preference
     {
@@ -477,8 +479,8 @@ class Steam
      *
      * @return string
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getLanguage(): string // get preference
     {
@@ -665,5 +667,20 @@ class Steam
         }
 
         return $amount;
+    }
+
+    /**
+     * @param  string  $ipAddress
+     * @return string
+     * @throws FireflyException
+     */
+    public function getHostName(string $ipAddress): string
+    {
+        try {
+            $hostName = gethostbyaddr($ipAddress);
+        } catch (Exception $e) { // intentional generic exception
+            throw new FireflyException($e->getMessage(), 0, $e);
+        }
+        return $hostName;
     }
 }

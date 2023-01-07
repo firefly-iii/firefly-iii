@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Role.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,14 +34,14 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\Role
  *
- * @property int                    $id
- * @property Carbon|null            $created_at
- * @property Carbon|null            $updated_at
- * @property string                 $name
- * @property string|null            $display_name
- * @property string|null            $description
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string $name
+ * @property string|null $display_name
+ * @property string|null $description
  * @property-read Collection|User[] $users
- * @property-read int|null          $users_count
+ * @property-read int|null $users_count
  * @method static Builder|Role newModelQuery()
  * @method static Builder|Role newQuery()
  * @method static Builder|Role query()

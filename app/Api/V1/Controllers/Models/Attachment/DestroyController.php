@@ -66,7 +66,7 @@ class DestroyController extends Controller
      *
      * @codeCoverageIgnore
      *
-     * @param Attachment $attachment
+     * @param  Attachment  $attachment
      *
      * @return JsonResponse
      */

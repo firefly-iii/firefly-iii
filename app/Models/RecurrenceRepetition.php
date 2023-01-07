@@ -33,15 +33,15 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\RecurrenceRepetition
  *
- * @property int             $id
- * @property Carbon|null     $created_at
- * @property Carbon|null     $updated_at
- * @property Carbon|null     $deleted_at
- * @property int             $recurrence_id
- * @property string          $repetition_type
- * @property string          $repetition_moment
- * @property int             $repetition_skip
- * @property int             $weekend
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $recurrence_id
+ * @property string $repetition_type
+ * @property string $repetition_moment
+ * @property int $repetition_skip
+ * @property int $weekend
  * @property-read Recurrence $recurrence
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newQuery()
@@ -62,15 +62,12 @@ use Illuminate\Support\Carbon;
  */
 class RecurrenceRepetition extends Model
 {
-    /** @var int */
-    public const WEEKEND_DO_NOTHING = 1;
-    /** @var int */
-    public const WEEKEND_SKIP_CREATION = 2;
-    /** @var int */
-    public const WEEKEND_TO_FRIDAY = 3;
-    /** @var int */
-    public const WEEKEND_TO_MONDAY = 4;
     use SoftDeletes;
+
+    public const WEEKEND_DO_NOTHING    = 1;
+    public const WEEKEND_SKIP_CREATION = 2;
+    public const WEEKEND_TO_FRIDAY     = 3;
+    public const WEEKEND_TO_MONDAY     = 4;
 
     /**
      * The attributes that should be casted to native types.

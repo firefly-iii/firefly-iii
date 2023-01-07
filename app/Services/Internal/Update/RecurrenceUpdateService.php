@@ -42,17 +42,18 @@ use Log;
  */
 class RecurrenceUpdateService
 {
-    use TransactionTypeTrait, RecurringTransactionTrait;
+    use TransactionTypeTrait;
+    use RecurringTransactionTrait;
 
     private User $user;
 
     /**
      * Updates a recurrence.
      *
-     * See reference nr. 88
+     * TODO if the user updates the type, the accounts must be validated again.
      *
-     * @param Recurrence $recurrence
-     * @param array      $data
+     * @param  Recurrence  $recurrence
+     * @param  array  $data
      *
      * @return Recurrence
      * @throws FireflyException
@@ -78,7 +79,7 @@ class RecurrenceUpdateService
                 $recurrence->repetitions  = 0;
             }
             if (array_key_exists('nr_of_repetitions', $info)) {
-                if (0 !== (int) $info['nr_of_repetitions']) {
+                if (0 !== (int)$info['nr_of_repetitions']) {
                     $recurrence->repeat_until = null;
                 }
                 $recurrence->repetitions = $info['nr_of_repetitions'];
@@ -114,8 +115,8 @@ class RecurrenceUpdateService
     }
 
     /**
-     * @param Recurrence $recurrence
-     * @param string     $text
+     * @param  Recurrence  $recurrence
+     * @param  string  $text
      */
     private function setNoteText(Recurrence $recurrence, string $text): void
     {
@@ -131,25 +132,21 @@ class RecurrenceUpdateService
             return;
         }
         if (null !== $dbNote && '' === $text) {
-            try {
-                $dbNote->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
-                // @ignoreException
-            }
+            $dbNote->delete();
         }
     }
 
     /**
      *
-     * @param Recurrence $recurrence
-     * @param array      $repetitions
+     * @param  Recurrence  $recurrence
+     * @param  array  $repetitions
      *
      * @throws FireflyException
      */
     private function updateRepetitions(Recurrence $recurrence, array $repetitions): void
     {
         $originalCount = $recurrence->recurrenceRepetitions()->count();
-        if (empty($repetitions)) {
+        if (0 === count($repetitions)) {
             // wont drop repetition, rather avoid.
             return;
         }
@@ -186,8 +183,8 @@ class RecurrenceUpdateService
     }
 
     /**
-     * @param Recurrence $recurrence
-     * @param array      $data
+     * @param  Recurrence  $recurrence
+     * @param  array  $data
      *
      * @return RecurrenceRepetition|null
      */
@@ -200,11 +197,12 @@ class RecurrenceUpdateService
             return $recurrence->recurrenceRepetitions()->first();
         }
         // find it:
-        $fields = ['id'      => 'id',
-                   'type'    => 'repetition_type',
-                   'moment'  => 'repetition_moment',
-                   'skip'    => 'repetition_skip',
-                   'weekend' => 'weekend',
+        $fields = [
+            'id'      => 'id',
+            'type'    => 'repetition_type',
+            'moment'  => 'repetition_moment',
+            'skip'    => 'repetition_skip',
+            'weekend' => 'weekend',
         ];
         $query  = $recurrence->recurrenceRepetitions();
         foreach ($fields as $field => $column) {
@@ -217,17 +215,17 @@ class RecurrenceUpdateService
     }
 
     /**
-     * See reference nr. 89
+     * TODO this method is very complex.
      *
-     * @param Recurrence $recurrence
-     * @param array      $transactions
+     * @param  Recurrence  $recurrence
+     * @param  array  $transactions
      *
      * @throws FireflyException
      */
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
         $originalCount = $recurrence->recurrenceTransactions()->count();
-        if (empty($transactions)) {
+        if (0 === count($transactions)) {
             // wont drop transactions, rather avoid.
             return;
         }
@@ -257,7 +255,7 @@ class RecurrenceUpdateService
                     unset($current['currency_id'], $current['currency_code']);
                 }
                 if (null !== $currency) {
-                    $current['currency_id'] = (int) $currency->id;
+                    $current['currency_id'] = (int)$currency->id;
                 }
                 if (array_key_exists('foreign_currency_id', $current) || array_key_exists('foreign_currency_code', $current)) {
                     $foreignCurrency = $currencyFactory->find($current['foreign_currency_id'] ?? null, $currency['foreign_currency_code'] ?? null);
@@ -266,7 +264,7 @@ class RecurrenceUpdateService
                     unset($current['foreign_currency_id'], $currency['foreign_currency_code']);
                 }
                 if (null !== $foreignCurrency) {
-                    $current['foreign_currency_id'] = (int) $foreignCurrency->id;
+                    $current['foreign_currency_id'] = (int)$foreignCurrency->id;
                 }
 
                 // update fields
@@ -287,35 +285,35 @@ class RecurrenceUpdateService
                 }
                 // update meta data
                 if (array_key_exists('budget_id', $current)) {
-                    $this->setBudget($match, (int) $current['budget_id']);
+                    $this->setBudget($match, (int)$current['budget_id']);
                 }
                 if (array_key_exists('bill_id', $current)) {
-                    $this->setBill($match, (int) $current['bill_id']);
+                    $this->setBill($match, (int)$current['bill_id']);
                 }
                 // reset category if name is set but empty:
                 // can be removed when v1 is retired.
-                if (array_key_exists('category_name', $current) && '' === (string) $current['category_name']) {
+                if (array_key_exists('category_name', $current) && '' === (string)$current['category_name']) {
                     $current['category_name'] = null;
                     $current['category_id']   = 0;
                 }
 
                 if (array_key_exists('category_id', $current)) {
-                    $this->setCategory($match, (int) $current['category_id']);
+                    $this->setCategory($match, (int)$current['category_id']);
                 }
 
                 if (array_key_exists('tags', $current) && is_array($current['tags'])) {
                     $this->updateTags($match, $current['tags']);
                 }
                 if (array_key_exists('piggy_bank_id', $current)) {
-                    $this->updatePiggyBank($match, (int) $current['piggy_bank_id']);
+                    $this->updatePiggyBank($match, (int)$current['piggy_bank_id']);
                 }
             }
         }
     }
 
     /**
-     * @param Recurrence $recurrence
-     * @param array      $data
+     * @param  Recurrence  $recurrence
+     * @param  array  $data
      *
      * @return RecurrenceTransaction|null
      */

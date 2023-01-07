@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RuleRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -40,21 +41,21 @@ interface RuleRepositoryInterface
     public function count(): int;
 
     /**
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return bool
      */
     public function destroy(Rule $rule): bool;
 
     /**
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return Rule
      */
     public function duplicate(Rule $rule): Rule;
 
     /**
-     * @param int $ruleId
+     * @param  int  $ruleId
      *
      * @return Rule|null
      */
@@ -73,28 +74,28 @@ interface RuleRepositoryInterface
     public function getFirstRuleGroup(): RuleGroup;
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param  RuleGroup  $ruleGroup
      *
      * @return int
      */
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int;
 
     /**
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return string
      */
     public function getPrimaryTrigger(Rule $rule): string;
 
     /**
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return Collection
      */
     public function getRuleActions(Rule $rule): Collection;
 
     /**
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return Collection
      */
@@ -103,7 +104,7 @@ interface RuleRepositoryInterface
     /**
      * Return search query for rule.
      *
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return string
      */
@@ -124,73 +125,73 @@ interface RuleRepositoryInterface
     public function getUpdateRules(): Collection;
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param  RuleGroup  $ruleGroup
      *
      * @return int
      */
     public function maxOrder(RuleGroup $ruleGroup): int;
 
     /**
-     * @param Rule      $rule
-     * @param RuleGroup $ruleGroup
-     * @param int       $order
+     * @param  Rule  $rule
+     * @param  RuleGroup  $ruleGroup
+     * @param  int  $order
      *
      * @return Rule
      */
     public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule;
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param  RuleGroup  $ruleGroup
      *
      * @return bool
      */
     public function resetRuleOrder(RuleGroup $ruleGroup): bool;
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function searchRule(string $query, int $limit): Collection;
 
     /**
-     * @param Rule $rule
-     * @param int  $newOrder
+     * @param  Rule  $rule
+     * @param  int  $newOrder
      */
     public function setOrder(Rule $rule, int $newOrder): void;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Rule
      */
     public function store(array $data): Rule;
 
     /**
-     * @param Rule  $rule
-     * @param array $values
+     * @param  Rule  $rule
+     * @param  array  $values
      *
      * @return RuleAction
      */
     public function storeAction(Rule $rule, array $values): RuleAction;
 
     /**
-     * @param Rule  $rule
-     * @param array $values
+     * @param  Rule  $rule
+     * @param  array  $values
      *
      * @return RuleTrigger
      */
     public function storeTrigger(Rule $rule, array $values): RuleTrigger;
 
     /**
-     * @param Rule  $rule
-     * @param array $data
+     * @param  Rule  $rule
+     * @param  array  $data
      *
      * @return Rule
      */

@@ -32,8 +32,21 @@ use Illuminate\Support\Facades\Schema;
 class UserGroups extends Migration
 {
     private array $tables
-        = ['accounts', 'attachments', 'available_budgets', 'bills', 'budgets', 'categories', 'recurrences', 'rule_groups', 'rules', 'tags',
-           'transaction_groups', 'transaction_journals', 'webhooks'];
+        = [
+            'accounts',
+            'attachments',
+            'available_budgets',
+            'bills',
+            'budgets',
+            'categories',
+            'recurrences',
+            'rule_groups',
+            'rules',
+            'tags',
+            'transaction_groups',
+            'transaction_journals',
+            'webhooks',
+        ];
 
     /**
      * Reverse the migrations.
@@ -46,25 +59,24 @@ class UserGroups extends Migration
         /** @var string $tableName */
         foreach ($this->tables as $tableName) {
             Schema::table(
-                $tableName, function (Blueprint $table) use ($tableName) {
-
-                $table->dropForeign(sprintf('%s_to_ugi', $tableName));
-                if (Schema::hasColumn($tableName, 'user_group_id')) {
-                    $table->dropColumn('user_group_id');
+                $tableName,
+                function (Blueprint $table) use ($tableName) {
+                    $table->dropForeign(sprintf('%s_to_ugi', $tableName));
+                    if (Schema::hasColumn($tableName, 'user_group_id')) {
+                        $table->dropColumn('user_group_id');
+                    }
                 }
-            }
             );
         }
 
         Schema::table(
-            'users', function (Blueprint $table) {
-
-            $table->dropForeign('type_user_group_id');
-            if (Schema::hasColumn('users', 'user_group_id')) {
-                $table->dropColumn('user_group_id');
+            'users',
+            function (Blueprint $table) {
+                $table->dropForeign('type_user_group_id');
+                if (Schema::hasColumn('users', 'user_group_id')) {
+                    $table->dropColumn('user_group_id');
+                }
             }
-
-        }
         );
 
         Schema::dropIfExists('group_memberships');
@@ -84,25 +96,27 @@ class UserGroups extends Migration
          * may have multiple roles in a group
          */
         Schema::create(
-            'user_groups', static function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
-            $table->softDeletes();
+            'user_groups',
+            static function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->timestamps();
+                $table->softDeletes();
 
-            $table->string('title', 255);
-            $table->unique('title');
-        }
+                $table->string('title', 255);
+                $table->unique('title');
+            }
         );
 
         Schema::create(
-            'user_roles', static function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
-            $table->softDeletes();
+            'user_roles',
+            static function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->timestamps();
+                $table->softDeletes();
 
-            $table->string('title', 255);
-            $table->unique('title');
-        }
+                $table->string('title', 255);
+                $table->unique('title');
+            }
         );
 
         Schema::create(
@@ -122,27 +136,29 @@ class UserGroups extends Migration
             }
         );
         Schema::table(
-            'users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'user_group_id')) {
-                $table->bigInteger('user_group_id', false, true)->nullable();
-                $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+            'users',
+            function (Blueprint $table) {
+                if (!Schema::hasColumn('users', 'user_group_id')) {
+                    $table->bigInteger('user_group_id', false, true)->nullable();
+                    $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                }
             }
-        }
         );
 
         // ADD columns from tables
         /** @var string $tableName */
         foreach ($this->tables as $tableName) {
             Schema::table(
-                $tableName, function (Blueprint $table) use ($tableName) {
-
-                if (!Schema::hasColumn($tableName, 'user_group_id')) {
-                    $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
-                    $table->foreign('user_group_id', sprintf('%s_to_ugi', $tableName))->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                $tableName,
+                function (Blueprint $table) use ($tableName) {
+                    if (!Schema::hasColumn($tableName, 'user_group_id')) {
+                        $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
+                        $table->foreign('user_group_id', sprintf('%s_to_ugi', $tableName))->references('id')->on('user_groups')->onDelete('set null')->onUpdate(
+                            'cascade'
+                        );
+                    }
                 }
-            }
             );
         }
-
     }
 }

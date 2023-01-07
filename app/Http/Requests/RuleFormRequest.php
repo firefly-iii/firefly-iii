@@ -34,7 +34,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, GetRuleConfiguration, ChecksLogin;
+    use ConvertsDataTypes;
+    use GetRuleConfiguration;
+    use ChecksLogin;
 
     /**
      * Get all data for controller.
@@ -67,14 +69,15 @@ class RuleFormRequest extends FormRequest
         if (is_array($triggerData)) {
             foreach ($triggerData as $trigger) {
                 $stopProcessing = $trigger['stop_processing'] ?? '0';
-                $current        = [
+                $prohibited     = $trigger['prohibited'] ?? '0';
+                $set            = [
                     'type'            => $trigger['type'] ?? 'invalid',
                     'value'           => $trigger['value'] ?? '',
                     'stop_processing' => 1 === (int)$stopProcessing,
+                    'prohibited'      => 1 === (int)$prohibited,
                 ];
-                $current        = self::replaceAmountTrigger($current);
-
-                $return[] = $current;
+                $set            = self::replaceAmountTrigger($set);
+                $return[]       = $set;
             }
         }
 

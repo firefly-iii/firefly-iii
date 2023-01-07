@@ -32,7 +32,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class DestroyRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -51,11 +52,12 @@ class DestroyRequest extends FormRequest
      */
     public function rules(): array
     {
-        $valid = 'budgets,bills,piggy_banks,rules,recurring,categories,tags,object_groups' .
+        $valid = 'budgets,bills,piggy_banks,rules,recurring,categories,tags,object_groups'.
                  ',accounts,asset_accounts,expense_accounts,revenue_accounts,liabilities,transactions,withdrawals,deposits,transfers';
 
         return [
             'objects' => sprintf('required|min:1|string|in:%s', $valid),
+            'unused'  => 'in:true,false',
         ];
     }
 }

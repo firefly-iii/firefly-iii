@@ -35,13 +35,12 @@ class WebhookMessageTransformer extends AbstractTransformer
     /**
      * Transform the preference
      *
-     * @param WebhookMessage $message
+     * @param  WebhookMessage  $message
      *
      * @return array
      */
     public function transform(WebhookMessage $message): array
     {
-
         $json = '{}';
         try {
             $json = json_encode($message->message, JSON_THROW_ON_ERROR);
@@ -50,15 +49,14 @@ class WebhookMessageTransformer extends AbstractTransformer
         }
 
         return [
-            'id'         => (string) $message->id,
+            'id'         => (string)$message->id,
             'created_at' => $message->created_at->toAtomString(),
             'updated_at' => $message->updated_at->toAtomString(),
             'sent'       => $message->sent,
             'errored'    => $message->errored,
-            'webhook_id' => (string) $message->webhook_id,
+            'webhook_id' => (string)$message->webhook_id,
             'uuid'       => $message->uuid,
             'message'    => $json,
         ];
     }
-
 }

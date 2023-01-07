@@ -35,49 +35,58 @@ use Log;
  */
 trait GroupValidation
 {
-
     /**
-     * @param Validator $validator
-     *
-     * @return array
-     */
-    abstract protected function getTransactionsArray(Validator $validator): array;
-
-    /**
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function preventNoAccountInfo(Validator $validator): void
     {
         $transactions = $this->getTransactionsArray($validator);
-        $keys         = ['source_id', 'destination_id', 'source_name', 'destination_name', 'source_iban', 'destination_iban', 'source_number', 'destination_number'];
+        $keys         = [
+            'source_id',
+            'destination_id',
+            'source_name',
+            'destination_name',
+            'source_iban',
+            'destination_iban',
+            'source_number',
+            'destination_number',
+        ];
         /** @var array $transaction */
         foreach ($transactions as $index => $transaction) {
             $hasAccountInfo = false;
             $hasJournalId   = array_key_exists('transaction_journal_id', $transaction);
             foreach ($keys as $key) {
-                if (array_key_exists($key, $transaction) && '' !== (string) $transaction[$key]) {
+                if (array_key_exists($key, $transaction) && '' !== (string)$transaction[$key]) {
                     $hasAccountInfo = true;
                 }
             }
             // set errors:
             if (false === $hasAccountInfo && !$hasJournalId) {
                 $validator->errors()->add(
-                    sprintf('transactions.%d.source_id', $index), (string) trans('validation.generic_no_source')
+                    sprintf('transactions.%d.source_id', $index),
+                    (string)trans('validation.generic_no_source')
                 );
                 $validator->errors()->add(
-                    sprintf('transactions.%d.destination_id', $index), (string) trans('validation.generic_no_destination')
+                    sprintf('transactions.%d.destination_id', $index),
+                    (string)trans('validation.generic_no_destination')
                 );
             }
         }
-
         // only an issue if there is no transaction_journal_id
     }
+
+    /**
+     * @param  Validator  $validator
+     *
+     * @return array
+     */
+    abstract protected function getTransactionsArray(Validator $validator): array;
 
     /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no
      * journal description.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function validateDescriptions(Validator $validator): void
     {
@@ -85,7 +94,7 @@ trait GroupValidation
         $transactions      = $this->getTransactionsArray($validator);
         $validDescriptions = 0;
         foreach ($transactions as $transaction) {
-            if ('' !== (string) ($transaction['description'] ?? null)) {
+            if ('' !== (string)($transaction['description'] ?? null)) {
                 $validDescriptions++;
             }
         }
@@ -93,13 +102,14 @@ trait GroupValidation
         // no valid descriptions?
         if (0 === $validDescriptions) {
             $validator->errors()->add(
-                'transactions.0.description', (string) trans('validation.filled', ['attribute' => (string) trans('validation.attributes.description')])
+                'transactions.0.description',
+                (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
             );
         }
     }
 
     /**
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function validateGroupDescription(Validator $validator): void
     {
@@ -109,7 +119,7 @@ trait GroupValidation
 
         $groupTitle = $data['group_title'] ?? '';
         if ('' === $groupTitle && count($transactions) > 1) {
-            $validator->errors()->add('group_title', (string) trans('validation.group_title_mandatory'));
+            $validator->errors()->add('group_title', (string)trans('validation.group_title_mandatory'));
         }
     }
 
@@ -117,8 +127,8 @@ trait GroupValidation
      * This method validates if the user has submitted transaction journal ID's for each array they submit, if they've submitted more than 1 transaction
      * journal. This check is necessary because Firefly III isn't able to distinguish between journals without the ID.
      *
-     * @param Validator        $validator
-     * @param TransactionGroup $transactionGroup
+     * @param  Validator  $validator
+     * @param  TransactionGroup  $transactionGroup
      */
     protected function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
     {
@@ -133,7 +143,7 @@ trait GroupValidation
         }
         // check each array:
         /**
-         * @var int   $index
+         * @var int $index
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
@@ -144,10 +154,10 @@ trait GroupValidation
     /**
      * Do the validation required by validateJournalIds.
      *
-     * @param Validator        $validator
-     * @param int              $index
-     * @param array            $transaction
-     * @param TransactionGroup $transactionGroup
+     * @param  Validator  $validator
+     * @param  int  $index
+     * @param  array  $transaction
+     * @param  TransactionGroup  $transactionGroup
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -165,9 +175,9 @@ trait GroupValidation
         }
         $count = $transactionGroup->transactionJournals()->where('transaction_journals.id', $journalId)->count();
         if (null === $journalId || 0 === $count) {
-            Log::warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
-            Log::warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
-            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string) trans('validation.need_id_in_edit'));
+            app('log')->warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
+            app('log')->warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
+            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
         }
     }
 }

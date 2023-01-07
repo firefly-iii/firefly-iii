@@ -1,4 +1,5 @@
 <?php
+
 /**
  * JournalRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -39,29 +40,28 @@ interface JournalRepositoryInterface
     /**
      * Deletes a transaction group.
      *
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      */
     public function destroyGroup(TransactionGroup $transactionGroup): void;
 
     /**
      * Deletes a journal.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      */
     public function destroyJournal(TransactionJournal $journal): void;
 
     /**
-     * See reference nr. 1
      * Find a specific journal.
      *
-     * @param int $journalId
+     * @param  int  $journalId
      *
      * @return TransactionJournal|null
      */
     public function find(int $journalId): ?TransactionJournal;
 
     /**
-     * @param array $types
+     * @param  array  $types
      *
      * @return Collection
      */
@@ -77,7 +77,7 @@ interface JournalRepositoryInterface
     /**
      * Returns the destination account of the journal.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Account
      * @throws FireflyException
@@ -87,7 +87,7 @@ interface JournalRepositoryInterface
     /**
      * Return total amount of journal. Is always positive.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return string
      */
@@ -99,7 +99,7 @@ interface JournalRepositoryInterface
     public function getLast(): ?TransactionJournal;
 
     /**
-     * @param TransactionJournalLink $link
+     * @param  TransactionJournalLink  $link
      *
      * @return string
      */
@@ -108,8 +108,8 @@ interface JournalRepositoryInterface
     /**
      * Return Carbon value of a meta field (or NULL).
      *
-     * @param int    $journalId
-     * @param string $field
+     * @param  int  $journalId
+     * @param  string  $field
      *
      * @return null|Carbon
      */
@@ -118,7 +118,7 @@ interface JournalRepositoryInterface
     /**
      * Returns the source account of the journal.
      *
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return Account
      * @throws FireflyException
@@ -126,32 +126,32 @@ interface JournalRepositoryInterface
     public function getSourceAccount(TransactionJournal $journal): Account;
 
     /**
-     * See reference nr. 5
+     * TODO Maybe to account repository? Do this wen reconcile is API only.
      *
-     * @param int $journalId
+     * @param  int  $journalId
      */
     public function reconcileById(int $journalId): void;
 
     /**
      * Search in journal descriptions.
      *
-     * @param string $search
-     * @param int    $limit
+     * @param  string  $search
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function searchJournalDescriptions(string $search, int $limit): Collection;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 
     /**
      * Update budget for a journal.
      *
-     * @param TransactionJournal $journal
-     * @param int                $budgetId
+     * @param  TransactionJournal  $journal
+     * @param  int  $budgetId
      *
      * @return TransactionJournal
      */
@@ -160,8 +160,8 @@ interface JournalRepositoryInterface
     /**
      * Update category for a journal.
      *
-     * @param TransactionJournal $journal
-     * @param string             $category
+     * @param  TransactionJournal  $journal
+     * @param  string  $category
      *
      * @return TransactionJournal
      */
@@ -170,8 +170,8 @@ interface JournalRepositoryInterface
     /**
      * Update tag(s) for a journal.
      *
-     * @param TransactionJournal $journal
-     * @param array              $tags
+     * @param  TransactionJournal  $journal
+     * @param  array  $tags
      *
      * @return TransactionJournal
      */

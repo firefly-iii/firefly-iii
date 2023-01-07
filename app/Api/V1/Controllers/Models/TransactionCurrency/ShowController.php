@@ -43,7 +43,8 @@ use League\Fractal\Resource\Item;
  */
 class ShowController extends Controller
 {
-    use AccountFilter, TransactionFilter;
+    use AccountFilter;
+    use TransactionFilter;
 
     private CurrencyRepositoryInterface $repository;
 
@@ -78,13 +79,13 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAll();
         $count      = $collection->count();
         // slice them:
         $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator  = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.index').$this->buildParams());
         $manager         = $this->getManager();
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $defaultCurrency);
@@ -105,7 +106,7 @@ class ShowController extends Controller
      *
      * Show a currency.
      *
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      *
      * @return JsonResponse
      * @throws FireflyException

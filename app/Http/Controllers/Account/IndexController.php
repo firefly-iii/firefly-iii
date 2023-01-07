@@ -1,4 +1,5 @@
 <?php
+
 /**
  * IndexController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -18,13 +19,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection CallableParameterUseCaseInTypeContextInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -34,7 +33,10 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
+use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  *
@@ -59,7 +61,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository = app(AccountRepositoryInterface::class);
 
@@ -69,26 +71,25 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $objectType
+     * @param  Request  $request
+     * @param  string  $objectType
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function inactive(Request $request, string $objectType)
     {
-        $objectType   = $objectType ?? 'asset';
         $inactivePage = true;
-        $subTitle     = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
+        $subTitle     = (string)trans(sprintf('firefly.%s_accounts_inactive', $objectType));
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
         $collection   = $this->repository->getInactiveAccountsByType($types);
         $total        = $collection->count();
-        $page         = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */
@@ -109,10 +110,10 @@ class IndexController extends Controller
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
                 $account->interest          = app('steam')->bcround($this->repository->getMetaValue($account, 'interest'), 4);
-                $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
-                $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
+                $account->interestPeriod    = (string)trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
+                $account->accountTypeString = (string)trans(sprintf('firefly.account_type_%s', $account->accountType->type));
                 $account->current_debt      = '0';
-                $account->iban              = implode(' ', str_split((string) $account->iban, 4));
+                $account->iban              = implode(' ', str_split((string)$account->iban, 4));
             }
         );
 
@@ -121,26 +122,24 @@ class IndexController extends Controller
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
         return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
-
     }
 
     /**
      * Show list of accounts.
      *
-     * @param Request $request
-     * @param string  $objectType
+     * @param  Request  $request
+     * @param  string  $objectType
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(Request $request, string $objectType)
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        $objectType   = $objectType ?? 'asset';
-        $subTitle     = (string) trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitle     = (string)trans(sprintf('firefly.%s_accounts', $objectType));
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
 
@@ -148,8 +147,8 @@ class IndexController extends Controller
 
         $collection    = $this->repository->getActiveAccountsByType($types);
         $total         = $collection->count();
-        $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page          = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize      = (int)app('preferences')->get('listPageSize', 50)->data;
         $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount = $this->repository->getInactiveAccountsByType($types)->count();
 
@@ -170,7 +169,6 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-
                 $interest = (string)$this->repository->getMetaValue($account, 'interest');
                 $interest = '' === $interest ? '0' : $interest;
 
@@ -180,14 +178,14 @@ class IndexController extends Controller
                 $account->endBalance          = $this->isInArray($endBalances, $account->id);
                 $account->difference          = bcsub($account->endBalance, $account->startBalance);
                 $account->interest            = app('steam')->bcround($interest, 4);
-                $account->interestPeriod      = (string) trans(
+                $account->interestPeriod      = (string)trans(
                     sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period'))
                 );
-                $account->accountTypeString   = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
+                $account->accountTypeString   = (string)trans(sprintf('firefly.account_type_%s', $account->accountType->type));
                 $account->location            = $this->repository->getLocation($account);
                 $account->liability_direction = $this->repository->getMetaValue($account, 'liability_direction');
                 $account->current_debt        = $this->repository->getMetaValue($account, 'current_debt') ?? '-';
-                $account->iban                = implode(' ', str_split((string) $account->iban, 4));
+                $account->iban                = implode(' ', str_split((string)$account->iban, 4));
             }
         );
         // make paginator:

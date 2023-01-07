@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);
 
@@ -37,7 +36,7 @@ class TagFactory
     private User $user;
 
     /**
-     * @param string $tag
+     * @param  string  $tag
      *
      * @return Tag|null
      */
@@ -46,7 +45,7 @@ class TagFactory
         $tag = trim($tag);
         Log::debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
 
-        /** @var Tag $dbTag */
+        /** @var Tag|null $dbTag */
         $dbTag = $this->user->tags()->where('tag', $tag)->first();
         if (null !== $dbTag) {
             Log::debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
@@ -74,15 +73,15 @@ class TagFactory
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Tag|null
      */
     public function create(array $data): ?Tag
     {
-        $zoomLevel = 0 === (int) $data['zoom_level'] ? null : (int) $data['zoom_level'];
-        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude']; // intentional float
-        $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude']; // intentional float
+        $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
+        $latitude  = 0.0 === (float)$data['latitude'] ? null : (float)$data['latitude'];   // intentional float
+        $longitude = 0.0 === (float)$data['longitude'] ? null : (float)$data['longitude']; // intentional float
         $array     = [
             'user_id'     => $this->user->id,
             'tag'         => trim($data['tag']),
@@ -96,7 +95,7 @@ class TagFactory
         $tag       = Tag::create($array);
         if (null !== $tag && null !== $latitude && null !== $longitude) {
             // create location object.
-            $location             = new Location;
+            $location             = new Location();
             $location->latitude   = $latitude;
             $location->longitude  = $longitude;
             $location->zoom_level = $zoomLevel;
@@ -108,11 +107,10 @@ class TagFactory
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {
         $this->user = $user;
     }
-
 }

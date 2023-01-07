@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -40,19 +40,19 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.title"
-                  :error="hasSubmissionErrors.title"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="title" :label="$t('form.title')"
-                  outlined/>
+                  v-model="title"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.title" :error-message="submissionErrors.title" :label="$t('form.title')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.url"
-                  :error="hasSubmissionErrors.url"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="url" :label="$t('form.url')"
-                  outlined/>
+                  v-model="url"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.url" :error-message="submissionErrors.url" :label="$t('form.url')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
 
@@ -60,28 +60,28 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-select
-                  :error-message="submissionErrors.response"
-                  :error="hasSubmissionErrors.response"
-                  bottom-slots
-                  :disable="disabledInput"
-                  outlined
                   v-model="response"
-                  emit-value class="q-pr-xs"
-                  map-options :options="responses" label="Response"/>
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.response"
+                  :error-message="submissionErrors.response"
+                  :options="responses"
+                  bottom-slots
+                  class="q-pr-xs" emit-value
+                  label="Response" map-options outlined/>
               </div>
             </div>
 
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-select
-                  :error-message="submissionErrors.delivery"
-                  :error="hasSubmissionErrors.delivery"
-                  bottom-slots
-                  :disable="disabledInput"
-                  outlined
                   v-model="delivery"
-                  emit-value class="q-pr-xs"
-                  map-options :options="deliveries" label="Delivery"/>
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.delivery"
+                  :error-message="submissionErrors.delivery"
+                  :options="deliveries"
+                  bottom-slots
+                  class="q-pr-xs" emit-value
+                  label="Delivery" map-options outlined/>
               </div>
             </div>
 
@@ -89,14 +89,14 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-select
-                  :error-message="submissionErrors.trigger"
-                  :error="hasSubmissionErrors.trigger"
-                  bottom-slots
-                  :disable="disabledInput"
-                  outlined
                   v-model="trigger"
-                  emit-value class="q-pr-xs"
-                  map-options :options="triggers" label="Triggers"/>
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.trigger"
+                  :error-message="submissionErrors.trigger"
+                  :options="triggers"
+                  bottom-slots
+                  class="q-pr-xs" emit-value
+                  label="Triggers" map-options outlined/>
               </div>
             </div>
 
@@ -116,7 +116,7 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label label="Return here"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here" left-label/>
               </div>
             </div>
           </q-card-section>
@@ -130,6 +130,7 @@
 <script>
 import Get from "../../api/webhooks/get";
 import Put from "../../api/webhooks/put";
+import {useFireflyIIIStore} from "../../stores/fireflyiii";
 
 export default {
   name: "Edit",
@@ -165,6 +166,7 @@ export default {
       response: '',
       delivery: '',
       trigger: '',
+      store: null,
     }
   },
   computed: {
@@ -174,6 +176,7 @@ export default {
   },
   created() {
     this.id = parseInt(this.$route.params.id);
+    this.store = useFireflyIIIStore();
     this.collectWebhook();
   },
   methods: {
@@ -233,7 +236,7 @@ export default {
       this.errorMessage = '';
     },
     processSuccess: function (response) {
-      this.$store.dispatch('fireflyiii/refreshCacheKey');
+      this.store.refreshCacheKey();
       if (!response) {
         return;
       }

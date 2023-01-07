@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TagFactory;
@@ -50,15 +49,15 @@ trait JournalServiceTrait
     private TagFactory                  $tagFactory;
 
     /**
-     * @param string $transactionType
-     * @param string $direction
-     * @param array  $data
+     * @param  string  $transactionType
+     * @param  string  $direction
+     * @param  array  $data
      *
-     * @return Account
+     * @return Account|null
      * @codeCoverageIgnore
      * @throws FireflyException
      */
-    protected function getAccount(string $transactionType, string $direction, array $data): Account
+    protected function getAccount(string $transactionType, string $direction, array $data): ?Account
     {
         // some debug logging:
         Log::debug(sprintf('Now in getAccount(%s)', $direction), $data);
@@ -88,8 +87,8 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param array $data
-     * @param array $types
+     * @param  array  $data
+     * @param  array  $types
      *
      * @return Account|null
      */
@@ -98,7 +97,7 @@ trait JournalServiceTrait
         $search = null;
         // first attempt, find by ID.
         if (null !== $data['id']) {
-            $search = $this->accountRepository->find((int) $data['id']);
+            $search = $this->accountRepository->find((int)$data['id']);
             if (null !== $search && in_array($search->accountType->type, $types, true)) {
                 Log::debug(
                     sprintf('Found "account_id" object: #%d, "%s" of type %s', $search->id, $search->name, $search->accountType->type)
@@ -110,9 +109,9 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param array        $types
+     * @param  Account|null  $account
+     * @param  array  $data
+     * @param  array  $types
      *
      * @return Account|null
      */
@@ -137,22 +136,22 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param array        $types
+     * @param  Account|null  $account
+     * @param  array  $data
+     * @param  array  $types
      *
      * @return Account|null
      */
     private function findAccountByNumber(?Account $account, array $data, array $types): ?Account
     {
         // third attempt, find by account number
-        if (null === $account && null !== $data['number'] && '' !== (string) $data['number']) {
+        if (null === $account && null !== $data['number'] && '' !== (string)$data['number']) {
             Log::debug(sprintf('Searching for account number "%s".', $data['number']));
             // find by preferred type.
-            $source = $this->accountRepository->findByAccountNumber((string) $data['number'], [$types[0]]);
+            $source = $this->accountRepository->findByAccountNumber((string)$data['number'], [$types[0]]);
 
             // or any expected type.
-            $source = $source ?? $this->accountRepository->findByAccountNumber((string) $data['number'], $types);
+            $source = $source ?? $this->accountRepository->findByAccountNumber((string)$data['number'], $types);
 
             if (null !== $source) {
                 Log::debug(sprintf('Found account: #%d, %s', $source->id, $source->name));
@@ -165,9 +164,9 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param array        $types
+     * @param  Account|null  $account
+     * @param  array  $data
+     * @param  array  $types
      *
      * @return Account|null
      */
@@ -191,9 +190,9 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param string       $preferredType
+     * @param  Account|null  $account
+     * @param  array  $data
+     * @param  string  $preferredType
      *
      * @return Account|null
      * @throws FireflyException
@@ -206,32 +205,33 @@ trait JournalServiceTrait
             Log::debug(
                 sprintf(
                     'Was given %s account #%d ("%s") so will simply return that.',
-                    $account->accountType->type, $account->id, $account->name
-
+                    $account->accountType->type,
+                    $account->id,
+                    $account->name
                 )
             );
         }
         if (null === $account) {
-
             // final attempt, create it.
             if (AccountType::ASSET === $preferredType) {
                 throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s', json_encode($data)));
             }
             // fix name of account if only IBAN is given:
-            if ('' === (string) $data['name'] && '' !== (string) $data['iban']) {
+            if ('' === (string)$data['name'] && '' !== (string)$data['iban']) {
                 Log::debug(sprintf('Account name is now IBAN ("%s")', $data['iban']));
                 $data['name'] = $data['iban'];
             }
             // fix name of account if only number is given:
-            if ('' === (string) $data['name'] && '' !== (string) $data['number']) {
+            if ('' === (string)$data['name'] && '' !== (string)$data['number']) {
                 Log::debug(sprintf('Account name is now account number ("%s")', $data['number']));
                 $data['name'] = $data['number'];
             }
             // if name is still NULL, return NULL.
-            if (null === $data['name']) {
+            if ('' === (string)$data['name']) {
+                Log::debug('Account name is still NULL, return NULL.');
                 return null;
             }
-            $data['name'] = $data['name'] ?? '(no name)';
+            //$data['name'] = $data['name'] ?? '(no name)';
 
             $account = $this->accountRepository->store(
                 [
@@ -257,32 +257,31 @@ trait JournalServiceTrait
                 $metaFactory = app(AccountMetaFactory::class);
                 $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['number']]);
             }
-
         }
 
         return $account;
     }
 
     /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param array        $types
+     * @param  Account|null  $account
+     * @param  array  $data
+     * @param  array  $types
      *
      * @return Account|null
      */
     private function getCashAccount(?Account $account, array $data, array $types): ?Account
     {
         // return cash account.
-        if (null === $account && null === $data['name']
+        if (null === $account && '' === (string)$data['name']
             && in_array(AccountType::CASH, $types, true)) {
             $account = $this->accountRepository->getCashAccount();
         }
-
+        Log::debug('Cannot return cash account, return input instead.');
         return $account;
     }
 
     /**
-     * @param string $amount
+     * @param  string  $amount
      *
      * @return string
      * @throws FireflyException
@@ -302,7 +301,7 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param string|null $amount
+     * @param  string|null  $amount
      *
      * @return string|null
      * @codeCoverageIgnore
@@ -330,8 +329,8 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
+     * @param  TransactionJournal  $journal
+     * @param  NullArrayObject  $data
      *
      * @codeCoverageIgnore
      */
@@ -354,8 +353,8 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
+     * @param  TransactionJournal  $journal
+     * @param  NullArrayObject  $data
      *
      * @codeCoverageIgnore
      */
@@ -373,18 +372,18 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param string|null        $notes
+     * @param  TransactionJournal  $journal
+     * @param  string|null  $notes
      *
      * @codeCoverageIgnore
      */
     protected function storeNotes(TransactionJournal $journal, ?string $notes): void
     {
-        $notes = (string) $notes;
+        $notes = (string)$notes;
         $note  = $journal->notes()->first();
         if ('' !== $notes) {
             if (null === $note) {
-                $note = new Note;
+                $note = new Note();
                 $note->noteable()->associate($journal);
             }
             $note->text = $notes;
@@ -395,19 +394,15 @@ trait JournalServiceTrait
         }
         if ('' === $notes && null !== $note) {
             // try to delete existing notes.
-            try {
-                $note->delete();
-            } catch (Exception $e) { // @phpstan-ignore-line
-                // @ignoreException
-            }
+            $note->delete();
         }
     }
 
     /**
      * Link tags to journal.
      *
-     * @param TransactionJournal $journal
-     * @param array|null         $tags
+     * @param  TransactionJournal  $journal
+     * @param  array|null  $tags
      *
      * @codeCoverageIgnore
      */
@@ -423,7 +418,7 @@ trait JournalServiceTrait
         }
         Log::debug('Start of loop.');
         foreach ($tags as $string) {
-            $string = (string) $string;
+            $string = (string)$string;
             Log::debug(sprintf('Now at tag "%s"', $string));
             if ('' !== $string) {
                 $tag = $this->tagFactory->findOrCreate($string);

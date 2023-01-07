@@ -25,6 +25,7 @@ export default class Post {
     let url = '/api/v1/currencies';
     return api.post(url, submission);
   }
+
   makeDefault(currency) {
     let url = '/api/v1/currencies/' + currency + '/default';
     return api.post(url);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TagOrId.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,8 +35,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TagOrId implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return Tag
      */
@@ -48,15 +49,15 @@ class TagOrId implements BinderInterface
 
             $result = $repository->findByTag($value);
             if (null === $result) {
-                $result = $repository->find((int) $value);
+                $result = $repository->find((int)$value);
             }
             if (null !== $result) {
                 return $result;
             }
             Log::error('TagOrId: tag not found.');
-            throw new NotFoundHttpException;
+            throw new NotFoundHttpException();
         }
         Log::error('TagOrId: user is not logged in.');
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

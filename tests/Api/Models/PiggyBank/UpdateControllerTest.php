@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\PiggyBank;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -69,59 +71,59 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('name', 'uuid'));
         $configuration->addOptionalFieldSet('name', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('account_id', 'random-piggy-account');
         $field->ignorableFields = ['account_name', 'currency_id', 'currency_code'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('account_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('target_amount', 'random-amount-max');
         $field->ignorableFields = ['percentage', 'current_amount', 'left_to_save', 'save_per_month'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('target_amount', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('current_amount', 'random-amount-min');
         $field->ignorableFields = ['percentage', 'left_to_save', 'save_per_month'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('current_amount', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('start_date', 'random-past-date'));
         $configuration->addOptionalFieldSet('start_date', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('target_date', 'random-future-date');
         $field->ignorableFields = ['save_per_month'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('target_date', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('order', 'order'));
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'object_group_id';
         $field->fieldType       = 'random-og-id';
         $field->ignorableFields = ['object_group_title', 'object_group_order'];
@@ -129,9 +131,9 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('object_group_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
+        $fieldSet               = new FieldSet();
         $fieldSet->parameters   = [1];
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'object_group_title';
         $field->fieldType       = 'uuid';
         $field->ignorableFields = ['object_group_id', 'object_group_order'];

@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\StoreRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
@@ -41,10 +40,10 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    use AccountFilter, TransactionFilter;
+    use AccountFilter;
+    use TransactionFilter;
 
     private CurrencyRepositoryInterface $repository;
-    private UserRepositoryInterface     $userRepository;
 
     /**
      * CurrencyRepository constructor.
@@ -56,8 +55,7 @@ class StoreController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository     = app(CurrencyRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
+                $this->repository = app(CurrencyRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);
@@ -71,7 +69,7 @@ class StoreController extends Controller
      *
      * Store new currency.
      *
-     * @param StoreRequest $request
+     * @param  StoreRequest  $request
      *
      * @return JsonResponse
      * @throws FireflyException

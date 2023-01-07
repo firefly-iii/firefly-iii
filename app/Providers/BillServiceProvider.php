@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BillServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -51,6 +52,7 @@ class BillServiceProvider extends ServiceProvider
                 /** @var BillRepositoryInterface $repository */
                 $repository = app(BillRepository::class);
 
+                // reference to auth is not understood by phpstan.
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }

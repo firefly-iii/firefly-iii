@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BudgetLimit.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,18 +34,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\BudgetLimit
  *
- * @property int                           $id
- * @property Carbon|null                   $created_at
- * @property Carbon|null                   $updated_at
- * @property int                           $budget_id
- * @property int|null                      $transaction_currency_id
- * @property Carbon                        $start_date
- * @property Carbon|null                   $end_date
- * @property string                        $amount
- * @property string                        $spent
- * @property string|null                   $period
- * @property int                           $generated
- * @property-read Budget                   $budget
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property int $budget_id
+ * @property int|null $transaction_currency_id
+ * @property Carbon $start_date
+ * @property Carbon|null $end_date
+ * @property string $amount
+ * @property string $spent
+ * @property string|null $period
+ * @property int $generated
+ * @property-read Budget $budget
  * @property-read TransactionCurrency|null $transactionCurrency
  * @method static Builder|BudgetLimit newModelQuery()
  * @method static Builder|BudgetLimit newQuery()
@@ -83,7 +84,7 @@ class BudgetLimit extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return BudgetLimit
      * @throws NotFoundHttpException
@@ -91,7 +92,7 @@ class BudgetLimit extends Model
     public static function routeBinder(string $value): BudgetLimit
     {
         if (auth()->check()) {
-            $budgetLimitId = (int) $value;
+            $budgetLimitId = (int)$value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
                                  ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                                  ->where('budgets.user_id', auth()->user()->id)
@@ -100,7 +101,7 @@ class BudgetLimit extends Model
                 return $budgetLimit;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -129,7 +130,7 @@ class BudgetLimit extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 }

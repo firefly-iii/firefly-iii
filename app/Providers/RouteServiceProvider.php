@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RouteServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -52,7 +53,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->routes(function () {
-            Route::prefix('api/v1')
+            Route::prefix('api')
                  ->middleware('api')
                  ->namespace($this->namespace)
                  ->group(base_path('routes/api.php'));
@@ -65,9 +66,6 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                  ->namespace($this->namespace)
                  ->group(base_path('routes/web.php'));
-
         });
     }
-
-
 }

@@ -34,10 +34,11 @@ use Log;
  */
 trait CurrencyValidation
 {
+    const TEST = 'Test';
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      */
     protected function validateForeignCurrencyInformation(Validator $validator): void
     {
@@ -49,30 +50,32 @@ trait CurrencyValidation
             if (array_key_exists('foreign_amount', $transaction)
                 && !(array_key_exists('foreign_currency_id', $transaction)
                      || array_key_exists(
-                         'foreign_currency_code', $transaction
+                         'foreign_currency_code',
+                         $transaction
                      ))
                 && 0 !== bccomp('0', $transaction['foreign_amount'])
             ) {
                 $validator->errors()->add(
-                    'transactions.' . $index . '.foreign_amount',
-                    (string) trans('validation.require_currency_info')
+                    'transactions.'.$index.'.foreign_amount',
+                    (string)trans('validation.require_currency_info')
                 );
             }
             // if the currency is present, then the amount must be present as well.
             if ((array_key_exists('foreign_currency_id', $transaction) || array_key_exists('foreign_currency_code', $transaction))
                 && !array_key_exists(
-                    'foreign_amount', $transaction
+                    'foreign_amount',
+                    $transaction
                 )) {
                 $validator->errors()->add(
-                    'transactions.' . $index . '.foreign_amount',
-                    (string) trans('validation.require_currency_amount')
+                    'transactions.'.$index.'.foreign_amount',
+                    (string)trans('validation.require_currency_amount')
                 );
             }
         }
     }
 
     /**
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return array
      */

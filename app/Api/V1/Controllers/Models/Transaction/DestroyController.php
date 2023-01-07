@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -41,8 +40,8 @@ use Log;
  */
 class DestroyController extends Controller
 {
-    private JournalRepositoryInterface $repository;
     private TransactionGroupRepository $groupRepository;
+    private JournalRepositoryInterface $repository;
 
     /**
      * TransactionController constructor.
@@ -74,22 +73,23 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // grab asset account(s) from group:
         $accounts = [];
         /** @var TransactionJournal $journal */
-        foreach($transactionGroup->transactionJournals as $journal) {
+        foreach ($transactionGroup->transactionJournals as $journal) {
             /** @var Transaction $transaction */
-            foreach($journal->transactions as $transaction) {
+            foreach ($journal->transactions as $transaction) {
                 $type = $transaction->account->accountType->type;
                 // if is valid liability, trigger event!
-                if(in_array($type, config('firefly.valid_liabilities'))) {
+                if (in_array($type, config('firefly.valid_liabilities'), true)) {
                     $accounts[] = $transaction->account;
                 }
             }
@@ -100,7 +100,7 @@ class DestroyController extends Controller
         app('preferences')->mark();
 
         /** @var Account $account */
-        foreach($accounts as $account) {
+        foreach ($accounts as $account) {
             Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
             event(new UpdatedAccount($account));
         }
@@ -114,7 +114,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param TransactionJournal $transactionJournal
+     * @param  TransactionJournal  $transactionJournal
      *
      * @codeCoverageIgnore
      * @return JsonResponse

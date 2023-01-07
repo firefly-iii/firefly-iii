@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SearchInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -58,7 +59,7 @@ interface SearchInterface
     public function hasModifiers(): bool;
 
     /**
-     * @param string $query
+     * @param  string  $query
      */
     public function parseQuery(string $query);
 
@@ -73,22 +74,22 @@ interface SearchInterface
     public function searchTransactions(): LengthAwarePaginator;
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      */
     public function setDate(Carbon $date): void;
 
     /**
-     * @param int $limit
+     * @param  int  $limit
      */
     public function setLimit(int $limit): void;
 
     /**
-     * @param int $page
+     * @param  int  $page
      */
     public function setPage(int $page): void;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 }

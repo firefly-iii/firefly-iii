@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NewUserController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -66,7 +67,7 @@ class NewUserController extends Controller
      */
     public function index()
     {
-        app('view')->share('title', (string) trans('firefly.welcome'));
+        app('view')->share('title', (string)trans('firefly.welcome'));
         app('view')->share('mainTitleIcon', 'fa-fire');
 
         $types = config('firefly.accountTypesByIdentifier.asset');
@@ -84,8 +85,8 @@ class NewUserController extends Controller
     /**
      * Store his new settings.
      *
-     * @param NewUserFormRequest          $request
-     * @param CurrencyRepositoryInterface $currencyRepository
+     * @param  NewUserFormRequest  $request
+     * @param  CurrencyRepositoryInterface  $currencyRepository
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
@@ -95,13 +96,12 @@ class NewUserController extends Controller
         $language = $request->convertString('language');
         if (!array_key_exists($language, config('firefly.languages'))) {
             $language = 'en_US';
-
         }
 
         // set language preference:
         app('preferences')->set('language', $language);
         // Store currency preference from input:
-        $currency = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
+        $currency = $currencyRepository->find((int)$request->input('amount_currency_id_bank_balance'));
 
         // if is null, set to EUR:
         if (null === $currency) {
@@ -124,14 +124,22 @@ class NewUserController extends Controller
         app('preferences')->mark();
 
         // set default optional fields:
-        $visibleFields = ['interest_date' => true, 'book_date' => false, 'process_date' => false, 'due_date' => false, 'payment_date' => false,
-                          'invoice_date'  => false, 'internal_reference' => false, 'notes' => true, 'attachments' => true,];
+        $visibleFields = [
+            'interest_date'      => true,
+            'book_date'          => false,
+            'process_date'       => false,
+            'due_date'           => false,
+            'payment_date'       => false,
+            'invoice_date'       => false,
+            'internal_reference' => false,
+            'notes'              => true,
+            'attachments'        => true,
+        ];
         app('preferences')->set('transaction_journal_optional_fields', $visibleFields);
 
-        session()->flash('success', (string) trans('firefly.stored_new_accounts_new_user'));
+        session()->flash('success', (string)trans('firefly.stored_new_accounts_new_user'));
         app('preferences')->mark();
 
         return redirect(route('index'));
     }
-
 }

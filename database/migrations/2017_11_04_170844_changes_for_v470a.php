@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2017_11_04_170844_changes_for_v470a.php
  * Copyright (c) 2019 james@firefly-iii.org.

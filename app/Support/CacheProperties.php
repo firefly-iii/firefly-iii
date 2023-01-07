@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CacheProperties.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -41,7 +42,7 @@ class CacheProperties
      */
     public function __construct()
     {
-        $this->properties = new Collection;
+        $this->properties = new Collection();
         if (auth()->check()) {
             $this->addProperty(auth()->user()->id);
             $this->addProperty(app('preferences')->lastActivity());
@@ -49,7 +50,7 @@ class CacheProperties
     }
 
     /**
-     * @param mixed $property
+     * @param  mixed  $property
      */
     public function addProperty($property): void
     {
@@ -95,14 +96,14 @@ class CacheProperties
                 $content .= json_encode($property, JSON_THROW_ON_ERROR);
             } catch (JsonException $e) {
                 // @ignoreException
-                $content .= hash('sha256', (string) time());
+                $content .= hash('sha256', (string)time());
             }
         }
         $this->hash = substr(hash('sha256', $content), 0, 16);
     }
 
     /**
-     * @param mixed $data
+     * @param  mixed  $data
      */
     public function store($data): void
     {

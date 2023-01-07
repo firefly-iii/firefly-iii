@@ -42,7 +42,8 @@ use Illuminate\Support\Collection;
  */
 class GenericRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     private Collection $accounts;
     private Collection $bills;
@@ -69,11 +70,11 @@ class GenericRequest extends FormRequest
     public function getAssetAccounts(): Collection
     {
         $this->parseAccounts();
-        $return = new Collection;
+        $return = new Collection();
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
-            if (in_array($type, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])) {
+            if (in_array($type, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
                 $return->push($account);
             }
         }
@@ -94,7 +95,7 @@ class GenericRequest extends FormRequest
         $array = $this->get('accounts');
         if (is_array($array)) {
             foreach ($array as $accountId) {
-                $accountId = (int) $accountId;
+                $accountId = (int)$accountId;
                 $account   = $repository->find($accountId);
                 if (null !== $account) {
                     $this->accounts->push($account);
@@ -126,7 +127,7 @@ class GenericRequest extends FormRequest
         $array = $this->get('bills');
         if (is_array($array)) {
             foreach ($array as $billId) {
-                $billId = (int) $billId;
+                $billId = (int)$billId;
                 $bill   = $repository->find($billId);
                 if (null !== $bill) {
                     $this->bills->push($bill);
@@ -158,7 +159,7 @@ class GenericRequest extends FormRequest
         $array = $this->get('budgets');
         if (is_array($array)) {
             foreach ($array as $budgetId) {
-                $budgetId = (int) $budgetId;
+                $budgetId = (int)$budgetId;
                 $budget   = $repository->find($budgetId);
                 if (null !== $budget) {
                     $this->budgets->push($budget);
@@ -190,7 +191,7 @@ class GenericRequest extends FormRequest
         $array = $this->get('categories');
         if (is_array($array)) {
             foreach ($array as $categoryId) {
-                $categoryId = (int) $categoryId;
+                $categoryId = (int)$categoryId;
                 $category   = $repository->find($categoryId);
                 if (null !== $category) {
                     $this->categories->push($category);
@@ -216,7 +217,7 @@ class GenericRequest extends FormRequest
     public function getExpenseAccounts(): Collection
     {
         $this->parseAccounts();
-        $return = new Collection;
+        $return = new Collection();
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
@@ -234,7 +235,7 @@ class GenericRequest extends FormRequest
     public function getRevenueAccounts(): Collection
     {
         $this->parseAccounts();
-        $return = new Collection;
+        $return = new Collection();
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
@@ -280,7 +281,7 @@ class GenericRequest extends FormRequest
         $array = $this->get('tags');
         if (is_array($array)) {
             foreach ($array as $tagId) {
-                $tagId = (int) $tagId;
+                $tagId = (int)$tagId;
                 $tag   = $repository->find($tagId);
                 if (null !== $tag) {
                     $this->tags->push($tag);
@@ -297,11 +298,11 @@ class GenericRequest extends FormRequest
     public function rules(): array
     {
         // this is cheating but it works to initialize the collections.
-        $this->accounts   = new Collection;
-        $this->budgets    = new Collection;
-        $this->categories = new Collection;
-        $this->bills      = new Collection;
-        $this->tags       = new Collection;
+        $this->accounts   = new Collection();
+        $this->budgets    = new Collection();
+        $this->categories = new Collection();
+        $this->bills      = new Collection();
+        $this->tags       = new Collection();
 
         return [
             'start' => 'required|date',

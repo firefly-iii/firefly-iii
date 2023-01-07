@@ -53,7 +53,7 @@ class RemoveBills extends Command
     public function handle(): int
     {
         $start = microtime(true);
-        /** @var TransactionType $withdrawal */
+        /** @var TransactionType|null $withdrawal */
         $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         if (null === $withdrawal) {
             return 0;

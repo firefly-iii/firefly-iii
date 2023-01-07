@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AdminServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -58,6 +59,7 @@ class AdminServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var LinkTypeRepository $repository */
                 $repository = app(LinkTypeRepository::class);
+                // reference to auth is not understood by phpstan.
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }

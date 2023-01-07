@@ -34,7 +34,10 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use JsonException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  *
@@ -58,7 +61,7 @@ class NoCategoryController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.categories'));
+                app('view')->share('title', (string)trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bookmark');
                 $this->journalRepos = app(JournalRepositoryInterface::class);
 
@@ -70,15 +73,15 @@ class NoCategoryController extends Controller
     /**
      * Show transactions without a category.
      *
-     * @param Request     $request
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @param  Request  $request
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Carbon $start = null, Carbon $end = null)
     {
@@ -87,8 +90,8 @@ class NoCategoryController extends Controller
         $start = $start ?? session('start');
         /** @var Carbon $end */
         $end      = $end ?? session('end');
-        $page     = (int) $request->get('page');
-        $pageSize = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page     = (int)$request->get('page');
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         $subTitle = trans(
             'firefly.without_category_between',
             ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]
@@ -113,25 +116,25 @@ class NoCategoryController extends Controller
     /**
      * Show all transactions without a category.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request)
     {
         // default values:
         $start    = null;
         $end      = null;
-        $periods  = new Collection;
-        $page     = (int) $request->get('page');
-        $pageSize = (int) app('preferences')->get('listPageSize', 50)->data;
+        $periods  = new Collection();
+        $page     = (int)$request->get('page');
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         Log::debug('Start of noCategory()');
-        $subTitle = (string) trans('firefly.all_journals_without_category');
+        $subTitle = (string)trans('firefly.all_journals_without_category');
         $first    = $this->journalRepos->firstNull();
-        $start    = null === $first ? new Carbon : $first->date;
+        $start    = null === $first ? new Carbon() : $first->date;
         $end      = today(config('app.timezone'));
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));

@@ -58,14 +58,14 @@ class BelongsUser implements Rule
      */
     public function message(): string
     {
-        return (string) trans('validation.belongs_user');
+        return (string)trans('validation.belongs_user');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      * @throws FireflyException
@@ -77,25 +77,25 @@ class BelongsUser implements Rule
         if (!auth()->check()) {
             return true;
         }
-        $attribute = (string) $attribute;
+        $attribute = (string)$attribute;
         Log::debug(sprintf('Going to validate %s', $attribute));
 
         return match ($attribute) {
-            'piggy_bank_id' => $this->validatePiggyBankId((int) $value),
+            'piggy_bank_id' => $this->validatePiggyBankId((int)$value),
             'piggy_bank_name' => $this->validatePiggyBankName($value),
-            'bill_id' => $this->validateBillId((int) $value),
-            'transaction_journal_id' => $this->validateJournalId((int) $value),
+            'bill_id' => $this->validateBillId((int)$value),
+            'transaction_journal_id' => $this->validateJournalId((int)$value),
             'bill_name' => $this->validateBillName($value),
-            'budget_id' => $this->validateBudgetId((int) $value),
-            'category_id' => $this->validateCategoryId((int) $value),
+            'budget_id' => $this->validateBudgetId((int)$value),
+            'category_id' => $this->validateCategoryId((int)$value),
             'budget_name' => $this->validateBudgetName($value),
-            'source_id', 'destination_id' => $this->validateAccountId((int) $value),
+            'source_id', 'destination_id' => $this->validateAccountId((int)$value),
             default => throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute)),
         };
     }
 
     /**
-     * @param string $attribute
+     * @param  string  $attribute
      *
      * @return string
      */
@@ -113,7 +113,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -127,7 +127,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      */
@@ -139,9 +139,9 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param string $class
-     * @param string $field
-     * @param string $value
+     * @param  string  $class
+     * @param  string  $field
+     * @param  string  $value
      *
      * @return int
      *
@@ -154,14 +154,13 @@ class BelongsUser implements Rule
         if (PiggyBank::class === $class) {
             $objects = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                                 ->where('accounts.user_id', '=', auth()->user()->id)->get(['piggy_banks.*']);
-
         }
         if (PiggyBank::class !== $class) {
             $objects = $class::where('user_id', '=', auth()->user()->id)->get();
         }
         $count = 0;
         foreach ($objects as $object) {
-            $objectValue = trim((string) $object->$field);
+            $objectValue = trim((string)$object->$field);
             Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 $count++;
@@ -173,7 +172,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -188,7 +187,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -203,7 +202,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      */
@@ -216,7 +215,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -231,7 +230,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -243,7 +242,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      */
@@ -255,7 +254,7 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */

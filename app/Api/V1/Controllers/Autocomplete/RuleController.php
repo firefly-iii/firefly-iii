@@ -56,7 +56,7 @@ class RuleController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/autocomplete/getRulesAC
      *
-     * @param AutocompleteRequest $request
+     * @param  AutocompleteRequest  $request
      *
      * @return JsonResponse
      */
@@ -69,7 +69,7 @@ class RuleController extends Controller
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $response[] = [
-                'id'          => (string) $rule->id,
+                'id'          => (string)$rule->id,
                 'name'        => $rule->title,
                 'description' => $rule->description,
             ];
@@ -77,5 +77,4 @@ class RuleController extends Controller
 
         return response()->json($response);
     }
-
 }

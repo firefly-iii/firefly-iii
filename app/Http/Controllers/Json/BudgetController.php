@@ -30,8 +30,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 
@@ -42,16 +40,9 @@ class BudgetController extends Controller
 {
     use DateCalculation;
 
-    /** @var AvailableBudgetRepositoryInterface */
-    private $abRepository;
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    private AvailableBudgetRepositoryInterface $abRepository;
+    private BudgetLimitRepositoryInterface     $blRepository;
+    private BudgetRepositoryInterface          $repository;
 
     /**
      * IndexController constructor.
@@ -64,13 +55,11 @@ class BudgetController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
-                $this->repository         = app(BudgetRepositoryInterface::class);
-                $this->opsRepository      = app(OperationsRepositoryInterface::class);
-                $this->abRepository       = app(AvailableBudgetRepositoryInterface::class);
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->blRepository       = app(BudgetLimitRepositoryInterface::class);
+                $this->repository   = app(BudgetRepositoryInterface::class);
+                $this->abRepository = app(AvailableBudgetRepositoryInterface::class);
+                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
                 $this->repository->cleanupBudgets();
 
                 return $next($request);
@@ -79,9 +68,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
+     * @param  TransactionCurrency  $currency
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return JsonResponse
      */
@@ -102,8 +91,8 @@ class BudgetController extends Controller
             [
                 'budgeted'                => $budgeted,
                 'budgeted_formatted'      => app('amount')->formatAnything($currency, $budgeted, true),
-                'available'               => app('amount')->formatAnything($currency, $available, true),
-                'available_formatted'     => $available,
+                'available'               => $available,
+                'available_formatted'     => app('amount')->formatAnything($currency, $available, true),
                 'percentage'              => $percentage,
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
@@ -113,5 +102,4 @@ class BudgetController extends Controller
             ]
         );
     }
-
 }

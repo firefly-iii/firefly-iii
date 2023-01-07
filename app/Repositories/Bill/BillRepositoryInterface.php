@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BillRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,22 +35,31 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
-
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function billEndsWith(string $query, int $limit): Collection;
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function billStartsWith(string $query, int $limit): Collection;
+
+    /**
+     * Get the total amount of money due for the users active bills in the date range given.
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @return Collection
+     * @deprecated
+     */
+    public function collectBillsUnpaidInRange(Carbon $start, Carbon $end): Collection;
 
     /**
      * Add correct order to bills.
@@ -57,7 +67,7 @@ interface BillRepositoryInterface
     public function correctOrder(): void;
 
     /**
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return bool
      */
@@ -71,7 +81,7 @@ interface BillRepositoryInterface
     /**
      * Find a bill by ID.
      *
-     * @param int $billId
+     * @param  int  $billId
      *
      * @return Bill|null
      */
@@ -80,8 +90,8 @@ interface BillRepositoryInterface
     /**
      * Find bill by parameters.
      *
-     * @param int|null    $billId
-     * @param string|null $billName
+     * @param  int|null  $billId
+     * @param  string|null  $billName
      *
      * @return Bill|null
      */
@@ -90,7 +100,7 @@ interface BillRepositoryInterface
     /**
      * Find a bill by name.
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return Bill|null
      */
@@ -104,7 +114,7 @@ interface BillRepositoryInterface
     /**
      * Get all attachments.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return Collection
      */
@@ -118,7 +128,7 @@ interface BillRepositoryInterface
     /**
      * Gets the bills which have some kind of relevance to the accounts mentioned.
      *
-     * @param Collection $accounts
+     * @param  Collection  $accounts
      *
      * @return Collection
      */
@@ -126,49 +136,49 @@ interface BillRepositoryInterface
 
     /**
      * Get the total amount of money paid for the users active bills in the date range given.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
+     * @deprecated
      */
     public function getBillsPaidInRange(Carbon $start, Carbon $end): string;
 
     /**
      * Get the total amount of money paid for the users active bills in the date range given,
      * grouped per currency.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
+     * @deprecated
      */
     public function getBillsPaidInRangePerCurrency(Carbon $start, Carbon $end): array;
 
     /**
      * Get the total amount of money due for the users active bills in the date range given.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return string
+     * @deprecated
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
 
     /**
      * Get the total amount of money due for the users active bills in the date range given.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return array
+     * @deprecated
      */
     public function getBillsUnpaidInRangePerCurrency(Carbon $start, Carbon $end): array;
 
     /**
      * Get all bills with these ID's.
      *
-     * @param array $billIds
+     * @param  array  $billIds
      *
      * @return Collection
      */
@@ -177,30 +187,30 @@ interface BillRepositoryInterface
     /**
      * Get text or return empty string.
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return string
      */
     public function getNoteText(Bill $bill): string;
 
     /**
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return array
      */
     public function getOverallAverage(Bill $bill): array;
 
     /**
-     * @param int $size
+     * @param  int  $size
      *
      * @return LengthAwarePaginator
      */
     public function getPaginator(int $size): LengthAwarePaginator;
 
     /**
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Bill  $bill
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return Collection
      */
@@ -209,9 +219,9 @@ interface BillRepositoryInterface
     /**
      * Between start and end, tells you on which date(s) the bill is expected to hit.
      *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Bill  $bill
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return Collection
      */
@@ -220,7 +230,7 @@ interface BillRepositoryInterface
     /**
      * Return all rules for one bill
      *
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return Collection
      */
@@ -232,15 +242,15 @@ interface BillRepositoryInterface
      *
      * 5 => [['id' => 1, 'title' => 'Some rule'],['id' => 2, 'title' => 'Some other rule']]
      *
-     * @param Collection $collection
+     * @param  Collection  $collection
      *
      * @return array
      */
     public function getRulesForBills(Collection $collection): array;
 
     /**
-     * @param Bill   $bill
-     * @param Carbon $date
+     * @param  Bill  $bill
+     * @param  Carbon  $date
      *
      * @return array
      */
@@ -249,8 +259,8 @@ interface BillRepositoryInterface
     /**
      * Link a set of journals to a bill.
      *
-     * @param Bill  $bill
-     * @param array $transactions
+     * @param  Bill  $bill
+     * @param  array  $transactions
      */
     public function linkCollectionToBill(Bill $bill, array $transactions): void;
 
@@ -258,39 +268,39 @@ interface BillRepositoryInterface
      * Given a bill and a date, this method will tell you at which moment this bill expects its next
      * transaction. Whether or not it is there already, is not relevant.
      *
-     * @param Bill   $bill
-     * @param Carbon $date
+     * @param  Bill  $bill
+     * @param  Carbon  $date
      *
      * @return Carbon
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon;
 
     /**
-     * @param Bill   $bill
-     * @param Carbon $date
+     * @param  Bill  $bill
+     * @param  Carbon  $date
      *
      * @return Carbon
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon;
 
     /**
-     * @param Bill $bill
+     * @param  Bill  $bill
      *
      * @return Bill
      */
     public function removeObjectGroup(Bill $bill): Bill;
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function searchBill(string $query, int $limit): Collection;
 
     /**
-     * @param Bill   $bill
-     * @param string $objectGroupTitle
+     * @param  Bill  $bill
+     * @param  string  $objectGroupTitle
      *
      * @return Bill
      */
@@ -299,18 +309,18 @@ interface BillRepositoryInterface
     /**
      * Set specific piggy bank to specific order.
      *
-     * @param Bill $bill
-     * @param int  $order
+     * @param  Bill  $bill
+     * @param  int  $order
      */
     public function setOrder(Bill $bill, int $order): void;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Bill
      * @throws FireflyException
@@ -318,13 +328,31 @@ interface BillRepositoryInterface
     public function store(array $data): Bill;
 
     /**
-     * @param Bill $bill
+     * Collect multi-currency of sum of bills already paid.
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @return array
+     */
+    public function sumPaidInRange(Carbon $start, Carbon $end): array;
+
+    /**
+     * Collect multi-currency of sum of bills yet to pay.
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @return array
+     */
+    public function sumUnpaidInRange(Carbon $start, Carbon $end): array;
+
+    /**
+     * @param  Bill  $bill
      */
     public function unlinkAll(Bill $bill): void;
 
     /**
-     * @param Bill  $bill
-     * @param array $data
+     * @param  Bill  $bill
+     * @param  array  $data
      *
      * @return Bill
      */

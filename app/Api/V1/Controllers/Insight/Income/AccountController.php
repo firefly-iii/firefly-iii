@@ -76,7 +76,7 @@ class AccountController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/insight/insightIncomeAsset
      *
-     * @param GenericRequest $request
+     * @param  GenericRequest  $request
      *
      * @return JsonResponse
      */
@@ -90,11 +90,11 @@ class AccountController extends Controller
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
-                'id'               => (string) $entry['id'],
+                'id'               => (string)$entry['id'],
                 'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
-                'difference_float' => (float) $entry['sum'],
-                'currency_id'      => (string) $entry['currency_id'],
+                'difference_float' => (float)$entry['sum'], // float but on purpose.
+                'currency_id'      => (string)$entry['currency_id'],
                 'currency_code'    => $entry['currency_code'],
             ];
         }
@@ -106,7 +106,7 @@ class AccountController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/insight/insightIncomeRevenue
      *
-     * @param GenericRequest $request
+     * @param  GenericRequest  $request
      *
      * @return JsonResponse
      */
@@ -122,16 +122,15 @@ class AccountController extends Controller
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
-                'id'               => (string) $entry['id'],
+                'id'               => (string)$entry['id'],
                 'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
-                'difference_float' => (float) $entry['sum'],
-                'currency_id'      => (string) $entry['currency_id'],
+                'difference_float' => (float)$entry['sum'], // float but on purpose.
+                'currency_id'      => (string)$entry['currency_id'],
                 'currency_code'    => $entry['currency_code'],
             ];
         }
 
         return response()->json($result);
     }
-
 }

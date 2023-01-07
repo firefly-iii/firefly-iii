@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ResetPasswordController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,6 +34,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ResetPasswordController
@@ -73,7 +76,7 @@ class ResetPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return Factory|JsonResponse|RedirectResponse|View
      * @throws ValidationException
@@ -118,13 +121,13 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param Request $request
-     * @param null    $token
+     * @param  Request  $request
+     * @param  null  $token
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showResetForm(Request $request, $token = null)
     {
@@ -139,12 +142,11 @@ class ResetPasswordController extends Controller
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
-        $pageTitle         = (string) trans('firefly.reset_pw_page_title');
+        $pageTitle         = (string)trans('firefly.reset_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }
 
-        /** @noinspection PhpUndefinedFieldInspection */
         return view('auth.passwords.reset')->with(
             ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration, 'pageTitle' => $pageTitle]
         );

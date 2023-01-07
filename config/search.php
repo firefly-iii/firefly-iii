@@ -26,6 +26,7 @@ return [
     'operators' => [
         'user_action'                     => ['alias' => false, 'needs_context' => true,],
         'account_id'                      => ['alias' => false, 'needs_context' => true,],
+        'reconciled'                      => ['alias' => false, 'needs_context' => false,],
         'source_account_id'               => ['alias' => false, 'needs_context' => true,],
         'destination_account_id'          => ['alias' => false, 'needs_context' => true,],
         'transaction_type'                => ['alias' => false, 'needs_context' => true,],
@@ -229,6 +230,10 @@ return [
         'attachment_notes_start'          => ['alias' => true, 'alias_for' => 'attachment_notes_starts', 'needs_context' => true],
         'attachment_notes_ends'           => ['alias' => false, 'needs_context' => true],
         'attachment_notes_end'            => ['alias' => true, 'alias_for' => 'attachment_notes_ends', 'needs_context' => true],
+        'exists'                          => ['alias' => false, 'needs_context' => false,],
         'sepa_ct_is'                      => ['alias' => false, 'needs_context' => true],
+        'no_external_id'                  => ['alias' => false, 'needs_context' => false],
+        'any_external_id'                 => ['alias' => false, 'needs_context' => false],
+
     ],
 ];

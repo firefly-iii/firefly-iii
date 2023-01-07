@@ -38,7 +38,8 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      *
@@ -65,98 +66,97 @@ class UpdateControllerTest extends TestCase
 
         $route = route('api.v1.recurrences.update', $submission['parameters']);
         $this->assertPUT($route, $submission);
-
     }
     /**
      * @return array
      */
     public function updateDataProvider(): array
     {
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('title', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('title', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('description', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('description', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('order', 'low-order');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('trigger', 'random-trigger'));
         $configuration->addOptionalFieldSet('trigger', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('strict', 'boolean'));
         $configuration->addOptionalFieldSet('strict', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('stop_processing', 'boolean'));
         $configuration->addOptionalFieldSet('stop_processing', $fieldSet);
 
         // sub trigger fields
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('triggers/0/type', 'random-trigger-type');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('trigger_type', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('triggers/0/value', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('trigger_value', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('triggers/0/active', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('trigger_active', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('triggers/0/stop_processing', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('stop_processing', $fieldSet);
 
         // optional action fields
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('actions/0/type', 'random-action-type');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('action_type', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('actions/0/value', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('action_value', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('actions/0/active', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('action_active', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet             = new FieldSet();
         $fieldSet->parameters = [1];
         $field                = Field::createBasic('actions/0/stop_processing', 'boolean');
         $fieldSet->addField($field);

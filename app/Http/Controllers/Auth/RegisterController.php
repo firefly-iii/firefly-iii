@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RegisterController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -25,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Illuminate\Contracts\Foundation\Application;
@@ -50,7 +52,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers, CreateStuff;
+    use RegistersUsers;
+    use CreateStuff;
 
     /**
      * Where to redirect users after registration.
@@ -73,13 +76,12 @@ class RegisterController extends Controller
         if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
             throw new FireflyException('Using external identity provider. Cannot continue.');
         }
-
     }
 
     /**
      * Handle a registration request for the application.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return Application|Redirector|RedirectResponse
      * @throws FireflyException
@@ -88,10 +90,14 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $allowRegistration = $this->allowedToRegister();
+        $inviteCode        = (string)$request->get('invite_code');
+        $repository        = app(UserRepositoryInterface::class);
+        $validCode         = $repository->validateInviteCode($inviteCode);
 
-        if (false === $allowRegistration) {
+        if (false === $allowRegistration && false === $validCode) {
             throw new FireflyException('Registration is currently not available :(');
         }
+
 
         $this->validator($request->all())->validate();
         $user = $this->createUser($request->all());
@@ -100,9 +106,13 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
-        session()->flash('success', (string) trans('firefly.registered'));
+        session()->flash('success', (string)trans('firefly.registered'));
 
         $this->registered($request, $user);
+
+        if ($validCode) {
+            $repository->redeemCode($inviteCode);
+        }
 
         return redirect($this->redirectPath());
     }
@@ -132,9 +142,44 @@ class RegisterController extends Controller
     }
 
     /**
+     * Show the application registration form if the invitation code is valid.
+     *
+     * @param  Request  $request
+     *
+     * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     */
+    public function showInviteForm(Request $request, string $code)
+    {
+        $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $pageTitle         = (string)trans('firefly.register_page_title');
+        $repository        = app(UserRepositoryInterface::class);
+        $allowRegistration = $this->allowedToRegister();
+        $inviteCode        = $code;
+        $validCode         = $repository->validateInviteCode($inviteCode);
+
+        if (true === $allowRegistration) {
+            $message = 'You do not need an invite code on this installation.';
+
+            return view('error', compact('message'));
+        }
+        if (false === $validCode) {
+            $message = 'Invalid code.';
+
+            return view('error', compact('message'));
+        }
+
+        $email = $request->old('email');
+
+        return view('auth.register', compact('isDemoSite', 'email', 'pageTitle', 'inviteCode'));
+    }
+
+    /**
      * Show the application registration form.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return Factory|View
      * @throws ContainerExceptionInterface
@@ -144,7 +189,7 @@ class RegisterController extends Controller
     public function showRegistrationForm(Request $request)
     {
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $pageTitle         = (string) trans('firefly.register_page_title');
+        $pageTitle         = (string)trans('firefly.register_page_title');
         $allowRegistration = $this->allowedToRegister();
 
         if (false === $allowRegistration) {

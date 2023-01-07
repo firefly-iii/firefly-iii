@@ -49,10 +49,11 @@ class ExtendCurrencyInfo extends Migration
     public function up()
     {
         Schema::table(
-            'transaction_currencies', function (Blueprint $table) {
-            $table->string('code', 51)->change();
-            $table->string('symbol', 51)->change();
-        }
+            'transaction_currencies',
+            function (Blueprint $table) {
+                $table->string('code', 51)->change();
+                $table->string('symbol', 51)->change();
+            }
         );
     }
 }

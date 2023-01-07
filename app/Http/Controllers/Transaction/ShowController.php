@@ -27,21 +27,21 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
-
 
 /**
  * Class ShowController
  */
 class ShowController extends Controller
 {
+    private ALERepositoryInterface              $ALERepository;
     private TransactionGroupRepositoryInterface $repository;
 
     /**
@@ -54,9 +54,10 @@ class ShowController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(TransactionGroupRepositoryInterface::class);
+                $this->repository    = app(TransactionGroupRepositoryInterface::class);
+                $this->ALERepository = app(ALERepositoryInterface::class);
 
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -65,7 +66,7 @@ class ShowController extends Controller
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      */
@@ -75,8 +76,8 @@ class ShowController extends Controller
     }
 
     /**
-     * @param Request          $request
-     * @param TransactionGroup $transactionGroup
+     * @param  Request  $request
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return Factory|View
      * @throws FireflyException
@@ -91,13 +92,13 @@ class ShowController extends Controller
             throw new FireflyException('This transaction is broken :(.');
         }
 
-        $type     = (string) trans(sprintf('firefly.%s', $first->transactionType->type));
+        $type     = (string)trans(sprintf('firefly.%s', $first->transactionType->type));
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
-        $transformer->setParameters(new ParameterBag);
+        $transformer->setParameters(new ParameterBag());
         $groupArray = $transformer->transformObject($transactionGroup);
 
         // do some calculations:
@@ -108,9 +109,16 @@ class ShowController extends Controller
             $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects($groupArray['transactions'][$index]['transaction_journal_id']);
         }
 
+        // get audit log entries:
+        $logEntries = [];
+        foreach ($transactionGroup->transactionJournals as $journal) {
+            $logEntries[$journal->id] = $this->ALERepository->getForObject($journal);
+        }
+
         $events      = $this->repository->getPiggyEvents($transactionGroup);
         $attachments = $this->repository->getAttachments($transactionGroup);
         $links       = $this->repository->getLinks($transactionGroup);
+
 
         return view(
             'transactions.show',
@@ -119,6 +127,7 @@ class ShowController extends Controller
                 'amounts',
                 'first',
                 'type',
+                'logEntries',
                 'subTitle',
                 'splits',
                 'groupArray',
@@ -131,7 +140,7 @@ class ShowController extends Controller
     }
 
     /**
-     * @param array $group
+     * @param  array  $group
      *
      * @return array
      */
@@ -166,7 +175,7 @@ class ShowController extends Controller
     }
 
     /**
-     * @param array $group
+     * @param  array  $group
      *
      * @return array
      */
@@ -179,12 +188,14 @@ class ShowController extends Controller
                 'type' => $transaction['source_type'],
                 'id'   => $transaction['source_id'],
                 'name' => $transaction['source_name'],
-                'iban' => $transaction['source_iban']];
+                'iban' => $transaction['source_iban'],
+            ];
             $accounts['destination'][] = [
                 'type' => $transaction['destination_type'],
                 'id'   => $transaction['destination_id'],
                 'name' => $transaction['destination_name'],
-                'iban' => $transaction['destination_iban']];
+                'iban' => $transaction['destination_iban'],
+            ];
         }
 
         $accounts['source']      = array_unique($accounts['source'], SORT_REGULAR);

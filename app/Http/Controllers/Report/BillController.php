@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use JsonException;
 use Log;
 use Throwable;
 
@@ -38,15 +38,15 @@ use Throwable;
 class BillController extends Controller
 {
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return mixed|string
      */
     public function overview(Collection $accounts, Carbon $start, Carbon $end)
     {   // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('bill-report');
@@ -59,15 +59,14 @@ class BillController extends Controller
         $report = $helper->getBillReport($accounts, $start, $end);
         try {
             $result = view('reports.partials.bills', compact('report'))->render();
-
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         $cache->store($result);
 
         return $result;
-
     }
 }

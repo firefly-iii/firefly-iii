@@ -51,7 +51,7 @@ class ShowController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -59,7 +59,7 @@ class ShowController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -85,7 +85,7 @@ class ShowController extends Controller
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.transactions.index').$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
@@ -104,7 +104,7 @@ class ShowController extends Controller
      *
      * Show a single transaction, by transaction journal.
      *
-     * @param TransactionJournal $transactionJournal
+     * @param  TransactionJournal  $transactionJournal
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -120,7 +120,7 @@ class ShowController extends Controller
      *
      * Show a single transaction.
      *
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -151,5 +151,4 @@ class ShowController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

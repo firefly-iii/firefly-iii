@@ -53,7 +53,7 @@ class DeleteController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository = app(AccountRepositoryInterface::class);
 
@@ -65,7 +65,7 @@ class DeleteController extends Controller
     /**
      * Delete account screen.
      *
-     * @param Account $account
+     * @param  Account  $account
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
@@ -76,7 +76,7 @@ class DeleteController extends Controller
         }
 
         $typeName    = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
-        $subTitle    = (string) trans(sprintf('firefly.delete_%s_account', $typeName), ['name' => $account->name]);
+        $subTitle    = (string)trans(sprintf('firefly.delete_%s_account', $typeName), ['name' => $account->name]);
         $accountList = app('expandedform')->makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
         $objectType  = $typeName;
         unset($accountList[$account->id]);
@@ -90,8 +90,8 @@ class DeleteController extends Controller
     /**
      * Delete the account.
      *
-     * @param Request $request
-     * @param Account $account
+     * @param  Request  $request
+     * @param  Account  $account
      *
      * @return RedirectResponse|Redirector
      */
@@ -104,14 +104,13 @@ class DeleteController extends Controller
         $type     = $account->accountType->type;
         $typeName = config(sprintf('firefly.shortNamesByFullName.%s', $type));
         $name     = $account->name;
-        $moveTo   = $this->repository->find((int) $request->get('move_account_before_delete'));
+        $moveTo   = $this->repository->find((int)$request->get('move_account_before_delete'));
 
         $this->repository->destroy($account, $moveTo);
 
-        $request->session()->flash('success', (string) trans(sprintf('firefly.%s_deleted', $typeName), ['name' => $name]));
+        $request->session()->flash('success', (string)trans(sprintf('firefly.%s_deleted', $typeName), ['name' => $name]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUrl('accounts.delete.url'));
     }
-
 }

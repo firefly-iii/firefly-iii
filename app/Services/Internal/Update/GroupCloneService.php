@@ -41,7 +41,7 @@ use FireflyIII\Models\TransactionJournalMeta;
 class GroupCloneService
 {
     /**
-     * @param TransactionGroup $group
+     * @param  TransactionGroup  $group
      *
      * @return TransactionGroup
      */
@@ -50,16 +50,16 @@ class GroupCloneService
         $newGroup = $group->replicate();
         $newGroup->save();
         foreach ($group->transactionJournals as $journal) {
-            $this->cloneJournal($journal, $newGroup, (int) $group->id);
+            $this->cloneJournal($journal, $newGroup, (int)$group->id);
         }
 
         return $newGroup;
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param TransactionGroup   $newGroup
-     * @param int                $originalGroup
+     * @param  TransactionJournal  $journal
+     * @param  TransactionGroup  $newGroup
+     * @param  int  $originalGroup
      */
     private function cloneJournal(TransactionJournal $journal, TransactionGroup $newGroup, int $originalGroup): void
     {
@@ -107,17 +107,17 @@ class GroupCloneService
         // add relation.
         // TODO clone ALL linked piggy banks
         /** @var PiggyBankEvent $event */
-        $event =  $journal->piggyBankEvents()->first();
-        if(null !== $event) {
+        $event = $journal->piggyBankEvents()->first();
+        if (null !== $event) {
             $piggyBank = $event->piggyBank;
-            $factory = app(PiggyBankEventFactory::class);
+            $factory   = app(PiggyBankEventFactory::class);
             $factory->create($newJournal, $piggyBank);
         }
     }
 
     /**
-     * @param Transaction        $transaction
-     * @param TransactionJournal $newJournal
+     * @param  Transaction  $transaction
+     * @param  TransactionJournal  $newJournal
      */
     private function cloneTransaction(Transaction $transaction, TransactionJournal $newJournal): void
     {
@@ -128,24 +128,24 @@ class GroupCloneService
     }
 
     /**
-     * @param Note               $note
-     * @param TransactionJournal $newJournal
-     * @param int                $oldGroupId
+     * @param  Note  $note
+     * @param  TransactionJournal  $newJournal
+     * @param  int  $oldGroupId
      */
     private function cloneNote(Note $note, TransactionJournal $newJournal, int $oldGroupId): void
     {
         $newNote              = $note->replicate();
         $newNote->text        .= sprintf(
-            "\n\n%s", trans('firefly.clones_journal_x', ['description' => $newJournal->description, 'id' => $oldGroupId])
+            "\n\n%s",
+            trans('firefly.clones_journal_x', ['description' => $newJournal->description, 'id' => $oldGroupId])
         );
         $newNote->noteable_id = $newJournal->id;
         $newNote->save();
-
     }
 
     /**
-     * @param TransactionJournalMeta $meta
-     * @param TransactionJournal     $newJournal
+     * @param  TransactionJournalMeta  $meta
+     * @param  TransactionJournal  $newJournal
      */
     private function cloneMeta(TransactionJournalMeta $meta, TransactionJournal $newJournal): void
     {

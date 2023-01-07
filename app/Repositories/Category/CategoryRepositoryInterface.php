@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CategoryRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,25 +34,24 @@ use Illuminate\Support\Collection;
  */
 interface CategoryRepositoryInterface
 {
-
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function categoryEndsWith(string $query, int $limit): Collection;
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function categoryStartsWith(string $query, int $limit): Collection;
 
     /**
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return bool
      */
@@ -65,7 +65,7 @@ interface CategoryRepositoryInterface
     /**
      * Find a category or return NULL
      *
-     * @param int $categoryId
+     * @param  int  $categoryId
      *
      * @return Category|null
      */
@@ -74,29 +74,29 @@ interface CategoryRepositoryInterface
     /**
      * Find a category.
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return Category|null
      */
     public function findByName(string $name): ?Category;
 
     /**
-     * @param int|null    $categoryId
-     * @param string|null $categoryName
+     * @param  int|null  $categoryId
+     * @param  string|null  $categoryName
      *
      * @return Category|null
      */
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category;
 
     /**
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return Carbon|null
      */
     public function firstUseDate(Category $category): ?Carbon;
 
     /**
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return Collection
      */
@@ -105,7 +105,7 @@ interface CategoryRepositoryInterface
     /**
      * Get all categories with ID's.
      *
-     * @param array $categoryIds
+     * @param  array  $categoryIds
      *
      * @return Collection
      */
@@ -119,7 +119,7 @@ interface CategoryRepositoryInterface
     public function getCategories(): Collection;
 
     /**
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return string|null
      */
@@ -128,8 +128,8 @@ interface CategoryRepositoryInterface
     /**
      * Return most recent transaction(journal) date or null when never used before.
      *
-     * @param Category   $category
-     * @param Collection $accounts
+     * @param  Category  $category
+     * @param  Collection  $accounts
      *
      * @return Carbon|null
      */
@@ -138,25 +138,25 @@ interface CategoryRepositoryInterface
     /**
      * Remove notes.
      *
-     * @param Category $category
+     * @param  Category  $category
      */
     public function removeNotes(Category $category): void;
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function searchCategory(string $query, int $limit): Collection;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Category
      * @throws FireflyException
@@ -164,16 +164,16 @@ interface CategoryRepositoryInterface
     public function store(array $data): Category;
 
     /**
-     * @param Category $category
-     * @param array    $data
+     * @param  Category  $category
+     * @param  array  $data
      *
      * @return Category
      */
     public function update(Category $category, array $data): Category;
 
     /**
-     * @param Category $category
-     * @param string   $notes
+     * @param  Category  $category
+     * @param  string  $notes
      */
     public function updateNotes(Category $category, string $notes): void;
 }

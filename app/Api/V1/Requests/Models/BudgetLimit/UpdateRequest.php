@@ -36,7 +36,8 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -75,8 +76,8 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
      *
-     * @param Validator $validator
-     * See reference nr. 72
+     * @param  Validator  $validator
+     * TODO duplicate code
      *
      * @return void
      */
@@ -90,11 +91,10 @@ class UpdateRequest extends FormRequest
                     $start = new Carbon($data['start']);
                     $end   = new Carbon($data['end']);
                     if ($end->isBefore($start)) {
-                        $validator->errors()->add('end', (string) trans('validation.date_after'));
+                        $validator->errors()->add('end', (string)trans('validation.date_after'));
                     }
                 }
             }
         );
     }
-
 }

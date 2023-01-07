@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BudgetList.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -25,7 +26,6 @@ namespace FireflyIII\Support\Binder;
 use FireflyIII\Models\Budget;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -34,8 +34,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BudgetList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return Collection
      * @throws NotFoundHttpException
@@ -44,7 +44,6 @@ class BudgetList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-
             if ('allBudgets' === $value) {
                 return auth()->user()->budgets()->where('active', true)
                              ->orderBy('order', 'ASC')
@@ -55,9 +54,9 @@ class BudgetList implements BinderInterface
             $list = array_unique(array_map('\intval', explode(',', $value)));
 
 
-            if (empty($list)) {
-                Log::warning('Budget list count is zero, return 404.');
-                throw new NotFoundHttpException;
+            if (0 === count($list)) {
+                app('log')->warning('Budget list count is zero, return 404.');
+                throw new NotFoundHttpException();
             }
 
 
@@ -69,15 +68,14 @@ class BudgetList implements BinderInterface
 
             // add empty budget if applicable.
             if (in_array(0, $list, true)) {
-                $collection->push(new Budget);
+                $collection->push(new Budget());
             }
 
             if ($collection->count() > 0) {
-
                 return $collection;
             }
         }
-        Log::warning('BudgetList fallback to 404.');
-        throw new NotFoundHttpException;
+        app('log')->warning('BudgetList fallback to 404.');
+        throw new NotFoundHttpException();
     }
 }

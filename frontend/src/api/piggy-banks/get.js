@@ -23,8 +23,9 @@ import {api} from "boot/axios";
 export default class Get {
   get(identifier) {
     let url = '/api/v1/piggy_banks/' + identifier;
-      return api.get(url);
+    return api.get(url);
   }
+
   transactions(identifier, page, cacheKey) {
     let url = '/api/v1/piggy_banks/' + identifier + '/transactions';
     return api.get(url, {params: {page: page, cache: cacheKey}});

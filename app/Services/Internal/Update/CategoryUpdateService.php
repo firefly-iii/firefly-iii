@@ -51,7 +51,7 @@ class CategoryUpdateService
     }
 
     /**
-     * @param mixed $user
+     * @param  mixed  $user
      */
     public function setUser($user): void
     {
@@ -59,8 +59,8 @@ class CategoryUpdateService
     }
 
     /**
-     * @param Category $category
-     * @param array    $data
+     * @param  Category  $category
+     * @param  array  $data
      *
      * @return Category
      * @throws Exception
@@ -83,8 +83,8 @@ class CategoryUpdateService
     }
 
     /**
-     * @param string $oldName
-     * @param string $newName
+     * @param  string  $oldName
+     * @param  string  $newName
      */
     private function updateRuleTriggers(string $oldName, string $newName): void
     {
@@ -104,8 +104,8 @@ class CategoryUpdateService
     }
 
     /**
-     * @param string $oldName
-     * @param string $newName
+     * @param  string  $oldName
+     * @param  string  $newName
      */
     private function updateRuleActions(string $oldName, string $newName): void
     {
@@ -125,23 +125,22 @@ class CategoryUpdateService
     }
 
     /**
-     * @param string $oldName
-     * @param string $newName
+     * @param  string  $oldName
+     * @param  string  $newName
      */
     private function updateRecurrences(string $oldName, string $newName): void
     {
-        RecurrenceTransactionMeta
-            ::leftJoin('recurrences_transactions', 'rt_meta.rt_id', '=', 'recurrences_transactions.id')
-            ->leftJoin('recurrences', 'recurrences.id', '=', 'recurrences_transactions.recurrence_id')
-            ->where('recurrences.user_id', $this->user->id)
-            ->where('rt_meta.name', 'category_name')
-            ->where('rt_meta.value', $oldName)
-            ->update(['rt_meta.value' => $newName]);
+        RecurrenceTransactionMeta::leftJoin('recurrences_transactions', 'rt_meta.rt_id', '=', 'recurrences_transactions.id')
+                                 ->leftJoin('recurrences', 'recurrences.id', '=', 'recurrences_transactions.recurrence_id')
+                                 ->where('recurrences.user_id', $this->user->id)
+                                 ->where('rt_meta.name', 'category_name')
+                                 ->where('rt_meta.value', $oldName)
+                                 ->update(['rt_meta.value' => $newName]);
     }
 
     /**
-     * @param Category $category
-     * @param array    $data
+     * @param  Category  $category
+     * @param  array  $data
      *
      * @throws Exception
      */
@@ -154,22 +153,17 @@ class CategoryUpdateService
         if ('' === $note) {
             $dbNote = $category->notes()->first();
             if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
-                    // @ignoreException
-                }
+                $dbNote->delete();
             }
 
             return;
         }
         $dbNote = $category->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($category);
         }
         $dbNote->text = trim($note);
         $dbNote->save();
     }
-
 }

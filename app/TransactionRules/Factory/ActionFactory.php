@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ActionFactory.php
  * Copyright (c) 2019 Robert Horlings
@@ -44,7 +45,7 @@ class ActionFactory
      * with value "Groceries" this method will return a corresponding SetCategory object preset
      * to "Groceries". Any transaction journal then fed to this object will have its category changed.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      *
      * @return ActionInterface
      *
@@ -63,7 +64,7 @@ class ActionFactory
      * that will match the given action type (ie. "change_category") to the matching class name
      * (SetCategory) using the configuration (firefly.php).
      *
-     * @param string $actionType
+     * @param  string  $actionType
      *
      * @return string
      *
@@ -74,12 +75,12 @@ class ActionFactory
         $actionTypes = self::getActionTypes();
 
         if (!array_key_exists($actionType, $actionTypes)) {
-            throw new FireflyException('No such action exists ("' . e($actionType) . '").');
+            throw new FireflyException('No such action exists ("'.e($actionType).'").');
         }
 
         $class = $actionTypes[$actionType];
         if (!class_exists($class)) {
-            throw new FireflyException('Could not instantiate class for rule action type "' . e($actionType) . '" (' . e($class) . ').');
+            throw new FireflyException('Could not instantiate class for rule action type "'.e($actionType).'" ('.e($class).').');
         }
 
         return $class;
@@ -92,7 +93,7 @@ class ActionFactory
      */
     protected static function getActionTypes(): array
     {
-        if (empty(self::$actionTypes)) {
+        if (0 === count(self::$actionTypes)) {
             self::$actionTypes = Domain::getRuleActions();
         }
 

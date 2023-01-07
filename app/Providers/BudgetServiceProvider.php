@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BudgetServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -53,6 +54,8 @@ class BudgetServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // reference to auth is not understood by phpstan.
+
         $this->app->bind(
             BudgetRepositoryInterface::class,
             static function (Application $app) {
@@ -121,6 +124,5 @@ class BudgetServiceProvider extends ServiceProvider
                 return $repository;
             }
         );
-
     }
 }

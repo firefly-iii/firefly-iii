@@ -54,7 +54,6 @@ require __DIR__ . '/../vendor/autoload.php';
 |
 */
 
-/** @noinspection UsingInclusionOnceReturnValueInspection */
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
 

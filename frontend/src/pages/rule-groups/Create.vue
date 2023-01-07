@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -37,11 +37,11 @@
             <div class="text-h6">Info for new rule group</div>
           </q-card-section>
           <q-card-section>
-                <q-input
-                  :error-message="submissionErrors.title"
-                  :error="hasSubmissionErrors.title"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="title" :label="$t('form.title')"
-                  outlined/>
+            <q-input
+              v-model="title"
+              :disable="disabledInput"
+              :error="hasSubmissionErrors.title" :error-message="submissionErrors.title" :label="$t('form.title')" bottom-slots clearable outlined
+              type="text"/>
           </q-card-section>
         </q-card>
       </div>
@@ -58,11 +58,11 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label
-                            label="Return here to create another one"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
+                            left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" left-label :disable="!doReturnHere || disabledInput"
-                            label="Reset form after submission"/>
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                            left-label/>
               </div>
             </div>
           </q-card-section>
@@ -75,8 +75,8 @@
 
 <script>
 import Post from "../../api/rule-groups/post";
-import {mapGetters} from "vuex";
-import {getCacheKey} from "../../store/fireflyiii/getters";
+// import {mapGetters} from "vuex";
+// import {getCacheKey} from "../../store/fireflyiii/getters";
 
 export default {
   name: 'Create',
@@ -94,7 +94,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
     disabledInput: function () {
       return this.submitting;
     }

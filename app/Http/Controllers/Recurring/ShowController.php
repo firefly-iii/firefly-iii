@@ -59,7 +59,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
 
@@ -71,7 +71,7 @@ class ShowController extends Controller
     /**
      * Show a single recurring transaction.
      *
-     * @param Recurrence $recurrence
+     * @param  Recurrence  $recurrence
      *
      * @return Factory|View
      * @throws FireflyException
@@ -80,21 +80,26 @@ class ShowController extends Controller
     {
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag);
+        $transformer->setParameters(new ParameterBag());
 
         $array                 = $transformer->transform($recurrence);
         $groups                = $this->recurring->getTransactions($recurrence);
         $today                 = today(config('app.timezone'));
         $array['repeat_until'] = null !== $array['repeat_until'] ? new Carbon($array['repeat_until']) : null;
 
-        // transform dates back to Carbon objects:
+        // transform dates back to Carbon objects and expand information
         foreach ($array['repetitions'] as $index => $repetition) {
             foreach ($repetition['occurrences'] as $item => $occurrence) {
-                $array['repetitions'][$index]['occurrences'][$item] = new Carbon($occurrence);
+                $date                                               = (new Carbon($occurrence))->startOfDay();
+                $set                                                = [
+                    'date'  => $date,
+                    'fired' => $this->recurring->createdPreviously($recurrence, $date) || $this->recurring->getJournalCount($recurrence, $date) > 0,
+                ];
+                $array['repetitions'][$index]['occurrences'][$item] = $set;
             }
         }
 
-        $subTitle = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
+        $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
         return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups', 'today'));
     }

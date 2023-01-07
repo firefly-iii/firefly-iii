@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Transaction;
+
 use Carbon\Carbon;
 use Laravel\Passport\Passport;
 use Log;
@@ -37,7 +38,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -45,7 +47,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,9 +64,8 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default test set:
         $defaultSet        = new FieldSet();
@@ -93,22 +93,22 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optional fields
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('transactions/0/category_id', 'random-category-id'));
         $configuration->addOptionalFieldSet('category_id', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('transactions/0/reconciled', 'boolean'));
         $configuration->addOptionalFieldSet('reconciled', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('transactions/0/tags', 'random-tags'));
         $configuration->addOptionalFieldSet('tags', $fieldSet);
         $array = ['notes', 'internal_reference', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
                   'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id'];
 
         foreach ($array as $value) {
-            $fieldSet = new FieldSet;
+            $fieldSet = new FieldSet();
             $fieldSet->addField(Field::createBasic('transactions/0/' . $value, 'uuid'));
             $configuration->addOptionalFieldSet($value, $fieldSet);
         }
@@ -134,7 +134,5 @@ class StoreControllerTest extends TestCase
         // run account store with a minimal data set:
         $address = route('api.v1.transactions.store');
         $this->assertPOST($address, $submission);
-
     }
-
 }

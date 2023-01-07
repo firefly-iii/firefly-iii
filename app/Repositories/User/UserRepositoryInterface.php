@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UserRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -22,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -31,7 +33,6 @@ use Illuminate\Support\Collection;
  */
 interface UserRepositoryInterface
 {
-
     /**
      * Returns a collection of all users.
      *
@@ -42,8 +43,8 @@ interface UserRepositoryInterface
     /**
      * Gives a user a role.
      *
-     * @param User   $user
-     * @param string $role
+     * @param  User  $user
+     * @param  string  $role
      *
      * @return bool
      */
@@ -53,8 +54,8 @@ interface UserRepositoryInterface
      * This updates the users email address and records some things so it can be confirmed or undone later.
      * The user is blocked until the change is confirmed.
      *
-     * @param User   $user
-     * @param string $newEmail
+     * @param  User  $user
+     * @param  string  $newEmail
      *
      * @return bool
      * @see updateEmail
@@ -63,17 +64,17 @@ interface UserRepositoryInterface
     public function changeEmail(User $user, string $newEmail): bool;
 
     /**
-     * @param User   $user
-     * @param string $password
+     * @param  User  $user
+     * @param  string  $password
      *
      * @return mixed
      */
     public function changePassword(User $user, string $password);
 
     /**
-     * @param User   $user
-     * @param bool   $isBlocked
-     * @param string $code
+     * @param  User  $user
+     * @param  bool  $isBlocked
+     * @param  string  $code
      *
      * @return bool
      */
@@ -87,9 +88,9 @@ interface UserRepositoryInterface
     public function count(): int;
 
     /**
-     * @param string $name
-     * @param string $displayName
-     * @param string $description
+     * @param  string  $name
+     * @param  string  $displayName
+     * @param  string  $description
      *
      * @return Role
      */
@@ -101,21 +102,21 @@ interface UserRepositoryInterface
     public function deleteEmptyGroups(): void;
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @return bool
      */
     public function destroy(User $user): bool;
 
     /**
-     * @param int $userId
+     * @param  int  $userId
      *
      * @return User|null
      */
     public function find(int $userId): ?User;
 
     /**
-     * @param string $email
+     * @param  string  $email
      *
      * @return User|null
      */
@@ -129,14 +130,19 @@ interface UserRepositoryInterface
     public function first(): ?User;
 
     /**
-     * @param string $role
+     * @return Collection
+     */
+    public function getInvitedUsers(): Collection;
+
+    /**
+     * @param  string  $role
      *
      * @return Role|null
      */
     public function getRole(string $role): ?Role;
 
     /**
-     * @param User $user
+     * @param  User  $user
      *
      * @return string|null
      */
@@ -145,53 +151,66 @@ interface UserRepositoryInterface
     /**
      * Return basic user information.
      *
-     * @param User $user
+     * @param  User  $user
      *
      * @return array
      */
     public function getUserData(User $user): array;
 
     /**
-     * @param User   $user
-     * @param string $role
+     * @param  User  $user
+     * @param  string  $role
      *
      * @return bool
      */
     public function hasRole(User $user, string $role): bool;
 
     /**
+     * @param  User  $user
+     * @param  string  $email
+     * @return InvitedUser
+     */
+    public function inviteUser(User $user, string $email): InvitedUser;
+
+    /**
+     * @param  string  $code
+     * @return void
+     */
+    public function redeemCode(string $code): void;
+
+    /**
      * Remove any role the user has.
      *
-     * @param User   $user
-     * @param string $role
+     * @param  User  $user
+     * @param  string  $role
      */
     public function removeRole(User $user, string $role): void;
 
     /**
      * Set MFA code.
      *
-     * @param User        $user
-     * @param string|null $code
+     * @param  User  $user
+     * @param  string|null  $code
      */
     public function setMFACode(User $user, ?string $code): void;
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return User
      */
     public function store(array $data): User;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function unblockUser(User $user): void;
 
     /**
      * Update user info.
      *
-     * @param User  $user
-     * @param array $data
+     * @param  User  $user
+     * @param  array  $data
      *
      * @return User
      */
@@ -201,12 +220,18 @@ interface UserRepositoryInterface
      * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the undo/confirm routine can't catch this one.
      * The user is NOT blocked.
      *
-     * @param User   $user
-     * @param string $newEmail
+     * @param  User  $user
+     * @param  string  $newEmail
      *
      * @return bool
      * @see changeEmail
      *
      */
     public function updateEmail(User $user, string $newEmail): bool;
+
+    /**
+     * @param  string  $code
+     * @return bool
+     */
+    public function validateInviteCode(string $code): bool;
 }

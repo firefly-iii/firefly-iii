@@ -34,7 +34,6 @@ use Schema;
  */
 class ReportIntegrity extends Command
 {
-
     /**
      * The console command description.
      *

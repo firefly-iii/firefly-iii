@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RuleGroupRepositoryInterface.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -31,7 +32,6 @@ use Illuminate\Support\Collection;
  */
 interface RuleGroupRepositoryInterface
 {
-
     /**
      * Make sure rule group order is correct in DB.
      */
@@ -43,8 +43,8 @@ interface RuleGroupRepositoryInterface
     public function count(): int;
 
     /**
-     * @param RuleGroup      $ruleGroup
-     * @param RuleGroup|null $moveTo
+     * @param  RuleGroup  $ruleGroup
+     * @param  RuleGroup|null  $moveTo
      *
      * @return bool
      */
@@ -56,14 +56,14 @@ interface RuleGroupRepositoryInterface
     public function destroyAll(): void;
 
     /**
-     * @param int $ruleGroupId
+     * @param  int  $ruleGroupId
      *
      * @return RuleGroup|null
      */
     public function find(int $ruleGroupId): ?RuleGroup;
 
     /**
-     * @param string $title
+     * @param  string  $title
      *
      * @return RuleGroup|null
      */
@@ -82,21 +82,21 @@ interface RuleGroupRepositoryInterface
     public function getActiveGroups(): Collection;
 
     /**
-     * @param RuleGroup $group
+     * @param  RuleGroup  $group
      *
      * @return Collection
      */
     public function getActiveRules(RuleGroup $group): Collection;
 
     /**
-     * @param RuleGroup $group
+     * @param  RuleGroup  $group
      *
      * @return Collection
      */
     public function getActiveStoreRules(RuleGroup $group): Collection;
 
     /**
-     * @param RuleGroup $group
+     * @param  RuleGroup  $group
      *
      * @return Collection
      */
@@ -105,7 +105,7 @@ interface RuleGroupRepositoryInterface
     /**
      * Also inactive groups.
      *
-     * @param string|null $filter
+     * @param  string|null  $filter
      *
      * @return Collection
      */
@@ -117,14 +117,14 @@ interface RuleGroupRepositoryInterface
     public function getHighestOrderRuleGroup(): int;
 
     /**
-     * @param string|null $filter
+     * @param  string|null  $filter
      *
      * @return Collection
      */
     public function getRuleGroupsWithRules(?string $filter): Collection;
 
     /**
-     * @param RuleGroup $group
+     * @param  RuleGroup  $group
      *
      * @return Collection
      */
@@ -143,41 +143,41 @@ interface RuleGroupRepositoryInterface
     public function resetOrder(): bool;
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param  RuleGroup  $ruleGroup
      *
      * @return bool
      */
     public function resetRuleOrder(RuleGroup $ruleGroup): bool;
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
     public function searchRuleGroup(string $query, int $limit): Collection;
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @param int       $newOrder
+     * @param  RuleGroup  $ruleGroup
+     * @param  int  $newOrder
      */
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user);
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return RuleGroup
      */
     public function store(array $data): RuleGroup;
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @param array     $data
+     * @param  RuleGroup  $ruleGroup
+     * @param  array  $data
      *
      * @return RuleGroup
      */

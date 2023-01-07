@@ -68,7 +68,7 @@ class BudgetController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/insight/insightExpenseBudget
      *
-     * @param GenericRequest $request
+     * @param  GenericRequest  $request
      *
      * @return JsonResponse
      */
@@ -88,11 +88,11 @@ class BudgetController extends Controller
             /** @var array $expense */
             foreach ($expenses as $expense) {
                 $result[] = [
-                    'id'               => (string) $budget->id,
+                    'id'               => (string)$budget->id,
                     'name'             => $budget->name,
                     'difference'       => $expense['sum'],
-                    'difference_float' => (float) $expense['sum'], // intentional float
-                    'currency_id'      => (string) $expense['currency_id'],
+                    'difference_float' => (float)$expense['sum'], // intentional float
+                    'currency_id'      => (string)$expense['currency_id'],
                     'currency_code'    => $expense['currency_code'],
                 ];
             }
@@ -105,7 +105,7 @@ class BudgetController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/insight/insightExpenseNoBudget
      *
-     * @param GenericRequest $request
+     * @param  GenericRequest  $request
      *
      * @return JsonResponse
      */
@@ -120,14 +120,12 @@ class BudgetController extends Controller
         foreach ($expenses as $expense) {
             $result[] = [
                 'difference'       => $expense['sum'],
-                'difference_float' => (float) $expense['sum'], // intentional float
-                'currency_id'      => (string) $expense['currency_id'],
+                'difference_float' => (float)$expense['sum'], // intentional float
+                'currency_id'      => (string)$expense['currency_id'],
                 'currency_code'    => $expense['currency_code'],
             ];
         }
 
         return response()->json($result);
-
     }
-
 }

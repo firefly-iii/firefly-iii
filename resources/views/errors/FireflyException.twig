@@ -42,6 +42,9 @@
         <p class="text-danger">
             {{ exception.getMessage |default('General unknown errror') }}
         </p>
+        <p>
+            {{ trans('errors.error_location', {file: exception.getFile, line: exception.getLine, code: exception.getCode })|raw }}
+        </p>
     </div>
 </div>
 {% if not debug %}

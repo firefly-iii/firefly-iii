@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DeleteTransaction.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -22,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
@@ -33,6 +36,18 @@ use Log;
  */
 class DeleteTransaction implements ActionInterface
 {
+    private RuleAction $action;
+
+    /**
+     * TriggerInterface constructor.
+     *
+     * @param  RuleAction  $action
+     */
+    public function __construct(RuleAction $action)
+    {
+        $this->action = $action;
+    }
+
     /**
      * @inheritDoc
      */
@@ -45,12 +60,15 @@ class DeleteTransaction implements ActionInterface
             Log::debug(
                 sprintf(
                     'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
-                    $journal['transaction_journal_id'], $journal['description']
+                    $journal['transaction_journal_id'],
+                    $journal['description']
                 )
             );
             $group   = TransactionGroup::find($journal['transaction_group_id']);
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($group);
+
+            event(new TriggeredAuditLog($this->action->rule, $group, 'delete_group', null, null));
 
             return true;
         }
@@ -59,11 +77,12 @@ class DeleteTransaction implements ActionInterface
         );
 
         // trigger delete factory:
-        $journal = TransactionJournal::find($journal['transaction_group_id']);
-        if (null !== $journal) {
+        $object = TransactionJournal::find($journal['transaction_group_id']);
+        if (null !== $object) {
             /** @var JournalDestroyService $service */
             $service = app(JournalDestroyService::class);
-            $service->destroy($journal);
+            $service->destroy($object);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'delete_journal', null, null));
         }
 
         return true;

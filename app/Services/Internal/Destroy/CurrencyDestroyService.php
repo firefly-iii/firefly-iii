@@ -34,16 +34,10 @@ use FireflyIII\Models\TransactionCurrency;
 class CurrencyDestroyService
 {
     /**
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      */
     public function destroy(TransactionCurrency $currency): void
     {
-
-        try {
-            $currency->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
+        $currency->delete();
     }
-
 }

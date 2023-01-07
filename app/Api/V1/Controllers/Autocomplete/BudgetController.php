@@ -59,7 +59,7 @@ class BudgetController extends Controller
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/#/autocomplete/getBudgetsAC
      *
-     * @param AutocompleteRequest $request
+     * @param  AutocompleteRequest  $request
      *
      * @return JsonResponse
      */
@@ -70,7 +70,7 @@ class BudgetController extends Controller
         $filtered = $result->map(
             static function (Budget $item) {
                 return [
-                    'id'   => (string) $item->id,
+                    'id'   => (string)$item->id,
                     'name' => $item->name,
                 ];
             }

@@ -62,7 +62,7 @@ class AboutController extends Controller
             'driver'      => $currentDriver,
         ];
 
-        return response()->json(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
+        return response()->api(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -83,6 +83,6 @@ class AboutController extends Controller
 
         $resource = new Item(auth()->user(), $transformer, 'users');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+        return response()->api($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 }

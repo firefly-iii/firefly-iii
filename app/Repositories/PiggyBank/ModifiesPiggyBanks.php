@@ -43,6 +43,46 @@ trait ModifiesPiggyBanks
     use CreatesObjectGroups;
 
     /**
+     * @param  PiggyBankRepetition  $repetition
+     * @param  string  $amount
+     *
+     * @return void
+     */
+    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
+    {
+        Log::debug(sprintf('addAmountToRepetition: %s', $amount));
+        if (-1 === bccomp($amount, '0')) {
+            Log::debug('Remove amount.');
+            $this->removeAmount($repetition->piggyBank, bcmul($amount, '-1'), $journal);
+        }
+        if (1 === bccomp($amount, '0')) {
+            Log::debug('Add amount.');
+            $this->addAmount($repetition->piggyBank, $amount, $journal);
+        }
+    }
+
+    /**
+     * @param  PiggyBank  $piggyBank
+     * @param  string  $amount
+     *
+     * @return bool
+     */
+    public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
+    {
+        $repetition = $this->getRepetition($piggyBank);
+        if (null === $repetition) {
+            return false;
+        }
+        $repetition->currentamount = bcsub($repetition->currentamount, $amount);
+        $repetition->save();
+
+        Log::debug('addAmount: Trigger change for negative amount.');
+        event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
+
+        return true;
+    }
+
+    /**
      * @param  PiggyBank  $piggyBank
      * @param  string  $amount
      * @param  TransactionJournal|null  $journal
@@ -62,25 +102,6 @@ trait ModifiesPiggyBanks
         event(new ChangedPiggyBankAmount($piggyBank, $amount, $journal, null));
 
         return true;
-    }
-
-    /**
-     * @param  PiggyBankRepetition  $repetition
-     * @param  string  $amount
-     *
-     * @return void
-     */
-    public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
-    {
-        Log::debug(sprintf('addAmountToRepetition: %s', $amount));
-        if (-1 === bccomp($amount, '0')) {
-            Log::debug('Remove amount.');
-            $this->removeAmount($repetition->piggyBank, bcmul($amount, '-1'), $journal);
-        }
-        if (1 === bccomp($amount, '0')) {
-            Log::debug('Add amount.');
-            $this->addAmount($repetition->piggyBank, $amount, $journal);
-        }
     }
 
     /**
@@ -140,27 +161,6 @@ trait ModifiesPiggyBanks
     {
         $piggyBank->objectGroups()->sync([]);
         $piggyBank->delete();
-
-        return true;
-    }
-
-    /**
-     * @param  PiggyBank  $piggyBank
-     * @param  string  $amount
-     *
-     * @return bool
-     */
-    public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
-    {
-        $repetition = $this->getRepetition($piggyBank);
-        if (null === $repetition) {
-            return false;
-        }
-        $repetition->currentamount = bcsub($repetition->currentamount, $amount);
-        $repetition->save();
-
-        Log::debug('addAmount: Trigger change for negative amount.');
-        event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
 
         return true;
     }
@@ -339,19 +339,13 @@ trait ModifiesPiggyBanks
     {
         if ('' === $note) {
             $dbNote = $piggyBank->notes()->first();
-            if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) { // @phpstan-ignore-line
-                    // @ignoreException
-                }
-            }
+            $dbNote?->delete();
 
             return true;
         }
         $dbNote = $piggyBank->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($piggyBank);
         }
         $dbNote->text = trim($note);

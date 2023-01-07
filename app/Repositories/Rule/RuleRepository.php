@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RuleRepository.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -44,15 +45,7 @@ class RuleRepository implements RuleRepositoryInterface
     private $user;
 
     /**
-     * @return int
-     */
-    public function count(): int
-    {
-        return $this->user->rules()->count();
-    }
-
-    /**
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return bool
      * @throws Exception
@@ -76,7 +69,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function duplicate(Rule $rule): Rule
     {
         $newRule        = $rule->replicate();
-        $newRule->title = (string) trans('firefly.rule_copy_of', ['title' => $rule->title]);
+        $newRule->title = (string)trans('firefly.rule_copy_of', ['title' => $rule->title]);
         $newRule->save();
 
         // replicate all triggers
@@ -96,16 +89,6 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return $newRule;
-    }
-
-    /**
-     * @param int $ruleId
-     *
-     * @return Rule|null
-     */
-    public function find(int $ruleId): ?Rule
-    {
-        return $this->user->rules()->find($ruleId);
     }
 
     /**
@@ -129,17 +112,17 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param  RuleGroup  $ruleGroup
      *
      * @return int
      */
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int
     {
-        return (int) $ruleGroup->rules()->max('order');
+        return (int)$ruleGroup->rules()->max('order');
     }
 
     /**
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return string
      *
@@ -149,14 +132,22 @@ class RuleRepository implements RuleRepositoryInterface
     {
         $count = $rule->ruleTriggers()->count();
         if (0 === $count) {
-            throw new FireflyException('Rules should have more than zero triggers, rule #' . $rule->id . ' has none!');
+            throw new FireflyException('Rules should have more than zero triggers, rule #'.$rule->id.' has none!');
         }
 
         return $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
     }
 
     /**
-     * @param Rule $rule
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->user->rules()->count();
+    }
+
+    /**
+     * @param  Rule  $rule
      *
      * @return Collection
      */
@@ -166,7 +157,7 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param Rule $rule
+     * @param  Rule  $rule
      *
      * @return Collection
      */
@@ -196,7 +187,6 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return implode(' ', $params);
-
     }
 
     /**
@@ -212,7 +202,7 @@ class RuleRepository implements RuleRepositoryInterface
                                  ->orderBy('rules.order', 'ASC')
                                  ->orderBy('rules.id', 'ASC')
                                  ->with(['ruleGroup', 'ruleTriggers'])->get(['rules.*']);
-        $filtered   = new Collection;
+        $filtered   = new Collection();
         /** @var Rule $rule */
         foreach ($collection as $rule) {
             /** @var RuleTrigger $ruleTrigger */
@@ -239,7 +229,7 @@ class RuleRepository implements RuleRepositoryInterface
                                  ->orderBy('rules.order', 'ASC')
                                  ->orderBy('rules.id', 'ASC')
                                  ->with(['ruleGroup', 'ruleTriggers'])->get();
-        $filtered   = new Collection;
+        $filtered   = new Collection();
         /** @var Rule $rule */
         foreach ($collection as $rule) {
             /** @var RuleTrigger $ruleTrigger */
@@ -269,15 +259,7 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Rule
      * @throws FireflyException
@@ -296,7 +278,7 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         // start by creating a new rule:
-        $rule = new Rule;
+        $rule = new Rule();
         $rule->user()->associate($this->user->id);
 
         $rule->rule_group_id   = $ruleGroup->id;
@@ -331,8 +313,18 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param string $moment
-     * @param Rule   $rule
+     * @param  int  $ruleId
+     *
+     * @return Rule|null
+     */
+    public function find(int $ruleId): ?Rule
+    {
+        return $this->user->rules()->find($ruleId);
+    }
+
+    /**
+     * @param  string  $moment
+     * @param  Rule  $rule
      */
     private function setRuleTrigger(string $moment, Rule $rule): void
     {
@@ -344,7 +336,7 @@ class RuleRepository implements RuleRepositoryInterface
 
             return;
         }
-        $trigger                  = new RuleTrigger;
+        $trigger                  = new RuleTrigger();
         $trigger->order           = 0;
         $trigger->trigger_type    = 'user_action';
         $trigger->trigger_value   = $moment;
@@ -355,7 +347,7 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param  RuleGroup  $ruleGroup
      *
      * @return bool
      */
@@ -369,12 +361,20 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @inheritDoc
      */
     public function setOrder(Rule $rule, int $newOrder): void
     {
-        $oldOrder = (int) $rule->order;
-        $groupId  = (int) $rule->rule_group_id;
+        $oldOrder = (int)$rule->order;
+        $groupId  = (int)$rule->rule_group_id;
         $maxOrder = $this->maxOrder($rule->ruleGroup);
         $newOrder = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
         Log::debug(sprintf('New order will be %d', $newOrder));
@@ -409,12 +409,12 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function maxOrder(RuleGroup $ruleGroup): int
     {
-        return (int) $ruleGroup->rules()->max('order');
+        return (int)$ruleGroup->rules()->max('order');
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $data
+     * @param  Rule  $rule
+     * @param  array  $data
      *
      * @return void
      */
@@ -425,9 +425,13 @@ class RuleRepository implements RuleRepositoryInterface
             $value          = $trigger['value'] ?? '';
             $stopProcessing = $trigger['stop_processing'] ?? false;
             $active         = $trigger['active'] ?? true;
+            $type           = $trigger['type'];
+            if (true === $trigger['prohibited']) {
+                $type = sprintf('-%s', $type);
+            }
 
             $triggerValues = [
-                'action'          => $trigger['type'],
+                'action'          => $type,
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,
@@ -436,18 +440,17 @@ class RuleRepository implements RuleRepositoryInterface
             $this->storeTrigger($rule, $triggerValues);
             ++$order;
         }
-
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $values
+     * @param  Rule  $rule
+     * @param  array  $values
      *
      * @return RuleTrigger
      */
     public function storeTrigger(Rule $rule, array $values): RuleTrigger
     {
-        $ruleTrigger = new RuleTrigger;
+        $ruleTrigger = new RuleTrigger();
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = $values['order'];
         $ruleTrigger->active          = $values['active'];
@@ -460,8 +463,8 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $data
+     * @param  Rule  $rule
+     * @param  array  $data
      *
      * @return void
      */
@@ -482,18 +485,17 @@ class RuleRepository implements RuleRepositoryInterface
             $this->storeAction($rule, $actionValues);
             ++$order;
         }
-
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $values
+     * @param  Rule  $rule
+     * @param  array  $values
      *
      * @return RuleAction
      */
     public function storeAction(Rule $rule, array $values): RuleAction
     {
-        $ruleAction = new RuleAction;
+        $ruleAction = new RuleAction();
         $ruleAction->rule()->associate($rule);
         $ruleAction->order           = $values['order'];
         $ruleAction->active          = $values['active'];
@@ -506,8 +508,8 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $data
+     * @param  Rule  $rule
+     * @param  array  $data
      *
      * @return Rule
      */
@@ -533,7 +535,7 @@ class RuleRepository implements RuleRepositoryInterface
         // update the order:
         $this->resetRuleOrder($group);
         if (array_key_exists('order', $data)) {
-            $this->moveRule($rule, $group, (int) $data['order']);
+            $this->moveRule($rule, $group, (int)$data['order']);
         }
 
 

@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -38,7 +37,6 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
-    private UserRepositoryInterface     $userRepository;
 
     /**
      * CurrencyRepository constructor.
@@ -50,8 +48,7 @@ class DestroyController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository     = app(CurrencyRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
+                $this->repository = app(CurrencyRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);
@@ -65,7 +62,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param TransactionCurrency $currency
+     * @param  TransactionCurrency  $currency
      *
      * @return JsonResponse
      * @throws FireflyException

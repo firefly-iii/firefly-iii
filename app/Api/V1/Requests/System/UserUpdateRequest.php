@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Requests\System;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -35,7 +36,8 @@ use Illuminate\Validation\Validator;
  */
 class UserUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Logged in + owner
@@ -74,11 +76,12 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var User $user */
         $user = $this->route()->parameter('user');
 
         return [
             'email'        => sprintf('email|unique:users,email,%d', $user->id),
-            'blocked'      => [new IsBoolean],
+            'blocked'      => [new IsBoolean()],
             'blocked_code' => 'in:email_changed',
             'role'         => 'in:owner,demo,',
         ];
@@ -87,22 +90,22 @@ class UserUpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
     public function withValidator(Validator $validator): void
     {
+        /** @var User|null $current */
         $current = $this->route()->parameter('user');
         $validator->after(
             static function (Validator $validator) use ($current) {
                 $isAdmin = auth()->user()->hasRole('owner');
                 // not admin, and not own user?
                 if (auth()->check() && false === $isAdmin && $current?->id !== auth()->user()->id) {
-                    $validator->errors()->add('email', (string) trans('validation.invalid_selection'));
+                    $validator->errors()->add('email', (string)trans('validation.invalid_selection'));
                 }
             }
         );
     }
-
 }

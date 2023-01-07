@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MailError.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
@@ -37,7 +39,8 @@ use Mail;
  */
 class MailError extends Job implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue;
+    use SerializesModels;
 
     protected string $destination;
     protected array  $exception;
@@ -47,10 +50,10 @@ class MailError extends Job implements ShouldQueue
     /**
      * MailError constructor.
      *
-     * @param array  $userData
-     * @param string $destination
-     * @param string $ipAddress
-     * @param array  $exceptionData
+     * @param  array  $userData
+     * @param  string  $destination
+     * @param  string  $ipAddress
+     * @param  array  $exceptionData
      */
     public function __construct(array $userData, string $destination, string $ipAddress, array $exceptionData)
     {
@@ -66,10 +69,11 @@ class MailError extends Job implements ShouldQueue
 
     /**
      * Execute the job.
+     * @throws FireflyException
      */
     public function handle()
     {
-        $email            = (string) config('firefly.site_owner');
+        $email            = (string)config('firefly.site_owner');
         $args             = $this->exception;
         $args['loggedIn'] = $this->userData['id'] > 0;
         $args['user']     = $this->userData;
@@ -82,12 +86,12 @@ class MailError extends Job implements ShouldQueue
                     $args,
                     function (Message $message) use ($email) {
                         if ('mail@example.com' !== $email) {
-                            $message->to($email, $email)->subject((string) trans('email.error_subject'));
+                            $message->to($email, $email)->subject((string)trans('email.error_subject'));
                         }
                     }
                 );
-            } catch (Exception $e) { // @phpstan-ignore-line
-                Log::error('Exception when mailing: ' . $e->getMessage());
+            } catch (Exception $e) { // intentional generic exception
+                throw new FireflyException($e->getMessage(), 0, $e);
             }
         }
     }

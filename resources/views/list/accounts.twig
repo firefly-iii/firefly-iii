@@ -15,7 +15,9 @@
             <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
         {% endif %}
         <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
-        <th style="text-align: right;">{{ trans('list.currentBalance') }}</th>
+        {% if objectType != 'liabilities' %}
+            <th style="text-align: right;">{{ trans('list.currentBalance') }}</th>
+        {% endif %}
         {% if objectType == 'liabilities' %}
             <th style="text-align: right;">
                 {{ trans('firefly.left_in_debt') }}
@@ -61,11 +63,13 @@
             <td>{{ account.interest }}% ({{ account.interestPeriod|lower }})</td>
             {% endif %}
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
+            {% if objectType != 'liabilities' %}
             <td style="text-align: right;">
                 <span style="margin-right:5px;">
                 {{ formatAmountByAccount(account, account.endBalance) }}
                 </span>
             </td>
+            {% endif %}
             {% if objectType == 'liabilities' %}
             <td style="text-align: right;">
                 {% if '-' != account.current_debt %}

@@ -64,8 +64,8 @@ class AttemptController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/webhooks/getWebhookMessageAttempts
      *
-     * @param Webhook        $webhook
-     * @param WebhookMessage $message
+     * @param  Webhook  $webhook
+     * @param  WebhookMessage  $message
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -77,14 +77,14 @@ class AttemptController extends Controller
         }
 
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttempts($message);
         $count      = $collection->count();
         $attempts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attempts, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.attempts.index', [$webhook->id, $message->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.webhooks.attempts.index', [$webhook->id, $message->id]).$this->buildParams());
 
         /** @var WebhookAttemptTransformer $transformer */
         $transformer = app(WebhookAttemptTransformer::class);
@@ -102,9 +102,9 @@ class AttemptController extends Controller
      *
      * Show single instance.
      *
-     * @param Webhook        $webhook
-     * @param WebhookMessage $message
-     * @param WebhookAttempt $attempt
+     * @param  Webhook  $webhook
+     * @param  WebhookMessage  $message
+     * @param  WebhookAttempt  $attempt
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -116,7 +116,6 @@ class AttemptController extends Controller
         }
         if ($attempt->webhook_message_id !== $message->id) {
             throw new FireflyException('Webhook message and webhook attempt are no match');
-
         }
 
         $manager = $this->getManager();

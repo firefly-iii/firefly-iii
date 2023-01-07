@@ -34,6 +34,8 @@ use Illuminate\Support\Collection;
 interface NetWorthInterface
 {
     /**
+     * TODO unsure why this is deprecated.
+     *
      * Returns the user's net worth in an array with the following layout:
      *
      * -
@@ -44,16 +46,26 @@ interface NetWorthInterface
      * This repeats for each currency the user has transactions in.
      * Result of this method is cached.
      *
-     * @param Collection $accounts
-     * @param Carbon     $date
-     *
+     * @param  Collection  $accounts
+     * @param  Carbon  $date
      * @return array
+     * @deprecated
      */
     public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array;
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void;
 
+    /**
+     * TODO move to repository
+     *
+     * Same as above but cleaner function with less dependencies.
+     *
+     * @param  Carbon  $date
+     *
+     * @return array
+     */
+    public function sumNetWorthByCurrency(Carbon $date): array;
 }

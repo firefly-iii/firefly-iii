@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update single recurrence.
      *
-     * @param UpdateRequest $request
-     * @param Recurrence    $recurrence
+     * @param  UpdateRequest  $request
+     * @param  Recurrence  $recurrence
      *
      * @return JsonResponse
      */
@@ -80,6 +80,5 @@ class UpdateController extends Controller
         $resource = new Item($recurrence, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

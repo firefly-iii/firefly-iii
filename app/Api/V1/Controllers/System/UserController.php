@@ -67,7 +67,7 @@ class UserController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param User $user
+     * @param  User  $user
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -102,7 +102,7 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         // user preferences
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $manager  = $this->getManager();
 
         // build collection
@@ -112,7 +112,7 @@ class UserController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($users, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.users.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.users.index').$this->buildParams());
 
         // make resource
         /** @var UserTransformer $transformer */
@@ -131,7 +131,7 @@ class UserController extends Controller
      *
      * Show a single user.
      *
-     * @param User $user
+     * @param  User  $user
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -156,7 +156,7 @@ class UserController extends Controller
      *
      * Store a new user.
      *
-     * @param UserStoreRequest $request
+     * @param  UserStoreRequest  $request
      *
      * @return JsonResponse
      */
@@ -183,8 +183,8 @@ class UserController extends Controller
      *
      * Update a user.
      *
-     * @param UserUpdateRequest $request
-     * @param User              $user
+     * @param  UserUpdateRequest  $request
+     * @param  User  $user
      *
      * @return JsonResponse
      */
@@ -201,7 +201,5 @@ class UserController extends Controller
         $resource = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
-
 }

@@ -35,7 +35,6 @@ use Log;
  */
 class ValidRecurrenceRepetitionValue implements Rule
 {
-
     /**
      * Get the validation error message.
      *
@@ -43,21 +42,21 @@ class ValidRecurrenceRepetitionValue implements Rule
      */
     public function message(): string
     {
-        return (string) trans('validation.valid_recurrence_rep_type');
+        return (string)trans('validation.valid_recurrence_rep_type');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      *
      */
     public function passes($attribute, $value): bool
     {
-        $value = (string) $value;
+        $value = (string)$value;
 
         if ('daily' === $value) {
             return true;
@@ -87,19 +86,19 @@ class ValidRecurrenceRepetitionValue implements Rule
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      */
     private function validateMonthly(string $value): bool
     {
-        $dayOfMonth = (int) substr($value, 8);
+        $dayOfMonth = (int)substr($value, 8);
 
         return $dayOfMonth > 0 && $dayOfMonth < 32;
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      *
@@ -110,8 +109,8 @@ class ValidRecurrenceRepetitionValue implements Rule
         if (2 !== count($parameters)) {
             return false;
         }
-        $nthDay    = (int) ($parameters[0] ?? 0.0);
-        $dayOfWeek = (int) ($parameters[1] ?? 0.0);
+        $nthDay    = (int)($parameters[0] ?? 0.0);
+        $dayOfWeek = (int)($parameters[1] ?? 0.0);
         if ($nthDay < 1 || $nthDay > 5) {
             return false;
         }
@@ -120,19 +119,19 @@ class ValidRecurrenceRepetitionValue implements Rule
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      */
     private function validateWeekly(string $value): bool
     {
-        $dayOfWeek = (int) substr($value, 7);
+        $dayOfWeek = (int)substr($value, 7);
 
         return $dayOfWeek > 0 && $dayOfWeek < 8;
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return bool
      */

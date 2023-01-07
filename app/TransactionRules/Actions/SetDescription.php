@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SetDescription.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
@@ -36,7 +39,7 @@ class SetDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -48,6 +51,10 @@ class SetDescription implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $before = $object->description;
+
         DB::table('transaction_journals')
           ->where('id', '=', $journal['transaction_journal_id'])
           ->update(['description' => $this->action->action_value]);
@@ -60,6 +67,8 @@ class SetDescription implements ActionInterface
                 $this->action->action_value
             )
         );
+        $object->refresh();
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $this->action->action_value));
 
         return true;
     }

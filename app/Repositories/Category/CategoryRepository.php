@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CategoryRepository.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -73,7 +74,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return bool
      *
@@ -115,8 +116,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param int|null    $categoryId
-     * @param string|null $categoryName
+     * @param  int|null  $categoryId
+     * @param  string|null  $categoryName
      *
      * @return Category|null
      * @throws FireflyException
@@ -125,11 +126,11 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         Log::debug('Now in findCategory()');
         Log::debug(sprintf('Searching for category with ID #%d...', $categoryId));
-        $result = $this->find((int) $categoryId);
+        $result = $this->find((int)$categoryId);
         if (null === $result) {
             Log::debug(sprintf('Searching for category with name %s...', $categoryName));
-            $result = $this->findByName((string) $categoryName);
-            if (null === $result && '' !== (string) $categoryName) {
+            $result = $this->findByName((string)$categoryName);
+            if (null === $result && '' !== (string)$categoryName) {
                 // create it!
                 $result = $this->store(['name' => $categoryName]);
             }
@@ -145,7 +146,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * Find a category or return NULL
      *
-     * @param int $categoryId
+     * @param  int  $categoryId
      *
      * @return Category|null
      */
@@ -157,7 +158,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * Find a category.
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @return Category|null
      */
@@ -167,7 +168,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      *
      * @return Category
      * @throws FireflyException
@@ -192,11 +193,18 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return $category;
-
     }
 
     /**
-     * @param Category $category
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param  Category  $category
      */
     public function removeNotes(Category $category): void
     {
@@ -210,7 +218,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $dbNote = $category->notes()->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
+            $dbNote = new Note();
             $dbNote->noteable()->associate($category);
         }
         $dbNote->text = trim($notes);
@@ -218,7 +226,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return Carbon|null
      *
@@ -246,7 +254,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return Carbon|null
      */
@@ -263,7 +271,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category $category
+     * @param  Category  $category
      *
      * @return Carbon|null
      */
@@ -306,7 +314,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * Get all categories with ID's.
      *
-     * @param array $categoryIds
+     * @param  array  $categoryIds
      *
      * @return Collection
      */
@@ -329,8 +337,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
+     * @param  Category  $category
+     * @param  Collection  $accounts
      *
      * @return Carbon|null
      * @throws Exception
@@ -358,8 +366,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
+     * @param  Category  $category
+     * @param  Collection  $accounts
      *
      * @return Carbon|null
      */
@@ -382,8 +390,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
+     * @param  Category  $category
+     * @param  Collection  $accounts
      *
      * @return Carbon|null
      * @throws Exception
@@ -408,8 +416,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param string $query
-     * @param int    $limit
+     * @param  string  $query
+     * @param  int  $limit
      *
      * @return Collection
      */
@@ -424,16 +432,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @param Category $category
-     * @param array    $data
+     * @param  Category  $category
+     * @param  array  $data
      *
      * @return Category
      * @throws Exception

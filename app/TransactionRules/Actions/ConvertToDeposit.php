@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Log;
@@ -43,7 +45,7 @@ class ConvertToDeposit implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -56,6 +58,12 @@ class ConvertToDeposit implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        if ($groupCount > 1) {
+            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to deposit.', $journal['transaction_group_id']));
+            return false;
+        }
+
         Log::debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
         $type = $journal['transaction_type_type'];
         if (TransactionType::DEPOSIT === $type) {
@@ -66,10 +74,14 @@ class ConvertToDeposit implements ActionInterface
 
         if (TransactionType::WITHDRAWAL === $type) {
             Log::debug('Going to transform a withdrawal to a deposit.');
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::DEPOSIT));
 
             return $this->convertWithdrawalArray($journal);
         }
         if (TransactionType::TRANSFER === $type) {
+            $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::DEPOSIT));
             Log::debug('Going to transform a transfer to a deposit.');
 
             return $this->convertTransferArray($journal);
@@ -82,7 +94,7 @@ class ConvertToDeposit implements ActionInterface
      * Input is a withdrawal from A to B
      * Is converted to a deposit from C to A.
      *
-     * @param array $journal
+     * @param  array  $journal
      *
      * @return bool
      * @throws FireflyException
@@ -130,7 +142,7 @@ class ConvertToDeposit implements ActionInterface
      * Input is a transfer from A to B.
      * Output is a deposit from C to B.
      *
-     * @param array $journal
+     * @param  array  $journal
      *
      * @return bool
      * @throws FireflyException

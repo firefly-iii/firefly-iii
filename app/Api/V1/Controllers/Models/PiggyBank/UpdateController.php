@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update piggy bank.
      *
-     * @param UpdateRequest $request
-     * @param PiggyBank     $piggyBank
+     * @param  UpdateRequest  $request
+     * @param  PiggyBank  $piggyBank
      *
      * @return JsonResponse
      */
@@ -84,6 +84,5 @@ class UpdateController extends Controller
         $resource = new Item($piggyBank, $transformer, 'piggy_banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

@@ -33,32 +33,50 @@ use Log;
 trait ConvertsDataTypes
 {
     /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param  string  $key
+     * @param  mixed|null  $default
+     * @return mixed
+     */
+    abstract public function get(string $key, mixed $default = null): mixed;
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param mixed $key
+     * @return mixed
+     */
+    abstract public function has($key);
+    /**
      * Return integer value.
      *
-     * @param string $field
+     * @param  string  $field
      *
      * @return int
      */
     public function convertInteger(string $field): int
     {
-        return (int) $this->get($field);
+        return (int)$this->get($field);
     }
 
     /**
      * Return string value.
      *
-     * @param string $field
+     * @param  string  $field
      *
      * @return string
      */
     public function convertString(string $field): string
     {
-        return $this->clearString((string) ($this->get($field) ?? ''), false);
+        return $this->clearString((string)($this->get($field) ?? ''), false);
     }
 
     /**
-     * @param string|null $string
-     * @param bool        $keepNewlines
+     * @param  string|null  $string
+     * @param  bool  $keepNewlines
      *
      * @return string|null
      */
@@ -122,23 +140,26 @@ trait ConvertsDataTypes
         $secondSearch = $keepNewlines ? ["\r"] : ["\r", "\n", "\t", "\036", "\025"];
         $string       = str_replace($secondSearch, '', $string);
 
+        // clear zalgo text (TODO also in API v2)
+        $string = preg_replace('/\pM/u', '', $string);
+
         return trim($string);
     }
 
     /**
      * Return string value with newlines.
      *
-     * @param string $field
+     * @param  string  $field
      *
      * @return string
      */
     public function stringWithNewlines(string $field): string
     {
-        return $this->clearString((string) ($this->get($field) ?? ''));
+        return $this->clearString((string)($this->get($field) ?? ''));
     }
 
     /**
-     * @param mixed $array
+     * @param  mixed  $array
      *
      * @return array|null
      */
@@ -158,7 +179,7 @@ trait ConvertsDataTypes
     }
 
     /**
-     * @param string|null $value
+     * @param  string|null  $value
      *
      * @return bool
      */
@@ -184,7 +205,24 @@ trait ConvertsDataTypes
     }
 
     /**
-     * @param string|null $string
+     * Return floating value.
+     *
+     * @param  string  $field
+     *
+     * @return float|null
+     */
+    protected function convertFloat(string $field): ?float
+    {
+        $res = $this->get($field);
+        if (null === $res) {
+            return null;
+        }
+
+        return (float)$res;
+    }
+
+    /**
+     * @param  string|null  $string
      *
      * @return Carbon|null
      */
@@ -198,7 +236,7 @@ trait ConvertsDataTypes
         }
         $carbon = null;
         try {
-            $carbon = new Carbon($string);
+            $carbon = new Carbon($string, config('app.timezone'));
         } catch (InvalidFormatException $e) {
             // @ignoreException
         }
@@ -213,27 +251,10 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Return floating value.
-     *
-     * @param string $field
-     *
-     * @return float|null
-     */
-    protected function convertFloat(string $field): ?float
-    {
-        $res = $this->get($field);
-        if (null === $res) {
-            return null;
-        }
-
-        return (float) $res;
-    }
-
-    /**
      * Returns all data in the request, or omits the field if not set,
      * according to the config from the request. This is the way.
      *
-     * @param array $fields
+     * @param  array  $fields
      *
      * @return array
      */
@@ -253,7 +274,7 @@ trait ConvertsDataTypes
     /**
      * Return date or NULL.
      *
-     * @param string $field
+     * @param  string  $field
      *
      * @return Carbon|null
      */
@@ -275,7 +296,7 @@ trait ConvertsDataTypes
     /**
      * Parse to integer
      *
-     * @param string|null $string
+     * @param  string|null  $string
      *
      * @return int|null
      */
@@ -288,13 +309,13 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (int) $string;
+        return (int)$string;
     }
 
     /**
      * Return integer value, or NULL when it's not set.
      *
-     * @param string $field
+     * @param  string  $field
      *
      * @return int|null
      */
@@ -304,12 +325,11 @@ trait ConvertsDataTypes
             return null;
         }
 
-        $value = (string) $this->get($field);
+        $value = (string)$this->get($field);
         if ('' === $value) {
             return null;
         }
 
-        return (int) $value;
+        return (int)$value;
     }
-
 }

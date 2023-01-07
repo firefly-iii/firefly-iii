@@ -26,6 +26,7 @@ namespace FireflyIII\Models;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,18 +37,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\WebhookMessage
  *
- * @property int                              $id
- * @property Carbon|null                      $created_at
- * @property Carbon|null                      $updated_at
- * @property string|null                      $deleted_at
- * @property int                              $webhook_id
- * @property bool                             $sent
- * @property bool                             $errored
- * @property int                              $attempts
- * @property string                           $uuid
- * @property array                            $message
- * @property array|null                       $logs
- * @property-read Webhook                     $webhook
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property int $webhook_id
+ * @property bool $sent
+ * @property bool $errored
+ * @property int $attempts
+ * @property string $uuid
+ * @property array $message
+ * @property array|null $logs
+ * @property-read Webhook $webhook
  * @method static Builder|WebhookMessage newModelQuery()
  * @method static Builder|WebhookMessage newQuery()
  * @method static Builder|WebhookMessage query()
@@ -64,11 +65,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|WebhookMessage whereWebhookId($value)
  * @mixin Eloquent
  * @property-read Collection|WebhookAttempt[] $webhookAttempts
- * @property-read int|null                    $webhook_attempts_count
+ * @property-read int|null $webhook_attempts_count
  */
 class WebhookMessage extends Model
 {
-
     protected $casts
         = [
             'sent'    => 'boolean',
@@ -81,7 +81,7 @@ class WebhookMessage extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return WebhookMessage
      * @throws NotFoundHttpException
@@ -89,7 +89,7 @@ class WebhookMessage extends Model
     public static function routeBinder(string $value): WebhookMessage
     {
         if (auth()->check()) {
-            $messageId = (int) $value;
+            $messageId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var WebhookMessage $message */
@@ -98,7 +98,7 @@ class WebhookMessage extends Model
                 return $message;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -117,5 +117,16 @@ class WebhookMessage extends Model
     public function webhookAttempts(): HasMany
     {
         return $this->hasMany(WebhookAttempt::class);
+    }
+    /**
+     * Get the amount
+     *
+     * @return Attribute
+     */
+    protected function sent(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => (bool)$value,
+        );
     }
 }

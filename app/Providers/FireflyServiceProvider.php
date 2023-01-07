@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FireflyServiceProvider.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -30,8 +31,6 @@ use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelper;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Helpers\Help\Help;
-use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Helpers\Report\NetWorth;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Helpers\Report\PopupReport;
@@ -40,6 +39,8 @@ use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Webhook\Sha3SignatureGenerator;
 use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
+use FireflyIII\Repositories\AuditLogEntry\ALERepository;
+use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepository;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
@@ -101,66 +102,66 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(
             'preferences',
             static function () {
-                return new Preferences;
+                return new Preferences();
             }
         );
 
         $this->app->bind(
             'fireflyconfig',
             static function () {
-                return new FireflyConfig;
+                return new FireflyConfig();
             }
         );
         $this->app->bind(
             'navigation',
             static function () {
-                return new Navigation;
+                return new Navigation();
             }
         );
         $this->app->bind(
             'amount',
             static function () {
-                return new Amount;
+                return new Amount();
             }
         );
 
         $this->app->bind(
             'steam',
             static function () {
-                return new Steam;
+                return new Steam();
             }
         );
         $this->app->bind(
             'expandedform',
             static function () {
-                return new ExpandedForm;
+                return new ExpandedForm();
             }
         );
 
         $this->app->bind(
             'accountform',
             static function () {
-                return new AccountForm;
+                return new AccountForm();
             }
         );
         $this->app->bind(
             'currencyform',
             static function () {
-                return new CurrencyForm;
+                return new CurrencyForm();
             }
         );
 
         $this->app->bind(
             'piggybankform',
             static function () {
-                return new PiggyBankForm;
+                return new PiggyBankForm();
             }
         );
 
         $this->app->bind(
             'ruleform',
             static function () {
-                return new RuleForm;
+                return new RuleForm();
             }
         );
 
@@ -171,12 +172,14 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
 
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
+        $this->app->bind(ALERepositoryInterface::class, ALERepository::class);
+
         $this->app->bind(
             ObjectGroupRepositoryInterface::class,
             static function (Application $app) {
                 /** @var ObjectGroupRepository $repository */
                 $repository = app(ObjectGroupRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }
 
@@ -189,7 +192,7 @@ class FireflyServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var WebhookRepository $repository */
                 $repository = app(WebhookRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }
 
@@ -202,7 +205,7 @@ class FireflyServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var SearchRuleEngine $engine */
                 $engine = app(SearchRuleEngine::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $engine->setUser(auth()->user());
                 }
 
@@ -212,7 +215,6 @@ class FireflyServiceProvider extends ServiceProvider
 
         // more generators:
         $this->app->bind(PopupReportInterface::class, PopupReport::class);
-        $this->app->bind(HelpInterface::class, Help::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);

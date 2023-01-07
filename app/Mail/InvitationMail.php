@@ -1,0 +1,67 @@
+<?php
+
+/*
+ * InvitationMail.php
+ * Copyright (c) 2022 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace FireflyIII\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class InvitationMail extends Mailable
+{
+    use Queueable;
+    use SerializesModels;
+
+    public string $admin;
+    public string $host;
+    public string $invitee;
+    public string $url;
+
+    /**
+     * OAuthTokenCreatedMail constructor.
+     *
+     * @param  string  $invitee
+     * @param  string  $admin
+     * @param  string  $url
+     */
+    public function __construct(string $invitee, string $admin, string $url)
+    {
+        $this->invitee = $invitee;
+        $this->admin   = $admin;
+        $this->url     = $url;
+        $this->host    = parse_url($url, PHP_URL_HOST);
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build(): self
+    {
+        return $this
+            ->markdown('emails.invitation')
+            ->subject((string)trans('email.invite_user_subject'));
+    }
+}

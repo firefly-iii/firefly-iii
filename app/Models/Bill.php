@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bill.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -38,36 +39,36 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Bill
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property int                                  $user_id
- * @property int|null                             $transaction_currency_id
- * @property string                               $name
- * @property string                               $match
- * @property string                               $amount_min
- * @property string                               $amount_max
- * @property Carbon                               $date
- * @property string|null                          $end_date
- * @property string|null                          $extension_date
- * @property string                               $repeat_freq
- * @property int                                  $skip
- * @property bool                                 $automatch
- * @property bool                                 $active
- * @property bool                                 $name_encrypted
- * @property bool                                 $match_encrypted
- * @property int                                  $order
- * @property-read Collection|Attachment[]         $attachments
- * @property-read int|null                        $attachments_count
- * @property-read Collection|Note[]               $notes
- * @property-read int|null                        $notes_count
- * @property-read Collection|ObjectGroup[]        $objectGroups
- * @property-read int|null                        $object_groups_count
- * @property-read TransactionCurrency|null        $transactionCurrency
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int|null $transaction_currency_id
+ * @property string $name
+ * @property string $match
+ * @property string $amount_min
+ * @property string $amount_max
+ * @property Carbon $date
+ * @property Carbon|null $end_date
+ * @property Carbon|null $extension_date
+ * @property string $repeat_freq
+ * @property int $skip
+ * @property bool $automatch
+ * @property bool $active
+ * @property bool $name_encrypted
+ * @property bool $match_encrypted
+ * @property int $order
+ * @property-read Collection|Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read Collection|Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read Collection|ObjectGroup[] $objectGroups
+ * @property-read int|null $object_groups_count
+ * @property-read TransactionCurrency|null $transactionCurrency
  * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
- * @property-read User                            $user
+ * @property-read int|null $transaction_journals_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newQuery()
  * @method static Builder|Bill onlyTrashed()
@@ -95,7 +96,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Bill withTrashed()
  * @method static Builder|Bill withoutTrashed()
  * @mixin Eloquent
- * @property int|null                             $user_group_id
+ * @property int|null $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereUserGroupId($value)
  */
 class Bill extends Model
@@ -124,15 +125,28 @@ class Bill extends Model
 
     /** @var array Fields that can be filled */
     protected $fillable
-        = ['name', 'match', 'amount_min', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
-           'automatch', 'active', 'transaction_currency_id', 'end_date', 'extension_date'];
+        = [
+            'name',
+            'match',
+            'amount_min',
+            'user_id',
+            'amount_max',
+            'date',
+            'repeat_freq',
+            'skip',
+            'automatch',
+            'active',
+            'transaction_currency_id',
+            'end_date',
+            'extension_date',
+        ];
     /** @var array Hidden from view */
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return Bill
      * @throws NotFoundHttpException
@@ -140,7 +154,7 @@ class Bill extends Model
     public static function routeBinder(string $value): Bill
     {
         if (auth()->check()) {
-            $billId = (int) $value;
+            $billId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Bill $bill */
@@ -149,7 +163,16 @@ class Bill extends Model
                 return $bill;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -181,21 +204,21 @@ class Bill extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setAmountMaxAttribute($value): void
     {
-        $this->attributes['amount_max'] = (string) $value;
+        $this->attributes['amount_max'] = (string)$value;
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      *
      * @codeCoverageIgnore
      */
     public function setAmountMinAttribute($value): void
     {
-        $this->attributes['amount_min'] = (string) $value;
+        $this->attributes['amount_min'] = (string)$value;
     }
 
     /**
@@ -217,15 +240,6 @@ class Bill extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * Get the max amount
      *
      * @return Attribute
@@ -233,7 +247,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 
@@ -245,7 +259,7 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 }

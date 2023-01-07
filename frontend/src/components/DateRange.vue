@@ -22,14 +22,15 @@
   <div class="q-pa-xs">
     <div>
       <!-- <DatePicker v-model="range" is-range :is-dark="darkMode" :model-config="modelConfig"/> -->
-      <q-date v-model="localRange" range minimal mask="YYYY-MM-DD"/>
+      <q-date v-model="localRange" mask="YYYY-MM-DD" minimal range/>
     </div>
     <div class="q-mt-xs">
-      <span class="q-mr-xs"><q-btn @click="resetRange" size="sm" color="primary" label="Reset"/></span>
-      <q-btn color="primary" size="sm" label="Change range" icon-right="fas fa-caret-down" title="More options in preferences">
+      <span class="q-mr-xs"><q-btn color="primary" label="Reset" size="sm" @click="resetRange"/></span>
+      <q-btn color="primary" icon-right="fas fa-caret-down" label="Change range" size="sm"
+             title="More options in preferences">
         <q-menu>
           <q-list style="min-width: 100px">
-            <q-item clickable v-close-popup v-for="choice in rangeChoices" @click="setViewRange(choice)">
+            <q-item v-for="choice in rangeChoices" v-close-popup clickable @click="setViewRange(choice)">
               <q-item-section>{{ $t('firefly.pref_' + choice.value) }}</q-item-section>
             </q-item>
           </q-list>
@@ -40,60 +41,17 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from "vuex";
+// import {mapGetters, mapMutations} from "vuex";
 import {useQuasar} from 'quasar'
 import Preferences from "../api/preferences";
 import format from 'date-fns/format';
+import {useFireflyIIIStore} from "../stores/fireflyiii";
 
 export default {
   name: "DateRange",
   computed: {
-    ...mapGetters('fireflyiii', ['getRange']),
-    ...mapMutations('fireflyiii', ['setRange'])
-  },
-  created() {
-    // set dark mode:
-    const $q = useQuasar();
-    this.darkMode = $q.dark.isActive;
-
-    this.localRange = {
-      from: format(this.getRange.start, 'yyyy-MM-dd'),
-      to: format(this.getRange.end, 'yyyy-MM-dd')
-    };
-  },
-  watch: {
-    localRange: function (value) {
-      if (null !== value) {
-        const updatedRange = {
-          start: Date.parse(value.from),
-          end: Date.parse(value.to)
-        };
-        this.$store.commit('fireflyiii/setRange', updatedRange);
-      }
-    },
-  },
-  mounted() {
-
-  },
-  methods: {
-    resetRange: function () {
-      this.$store.dispatch('fireflyiii/resetRange').then(() => {
-        this.localRange = {
-          from: format(this.getRange.start, 'yyyy-MM-dd'),
-          to: format(this.getRange.end, 'yyyy-MM-dd')
-        };
-      });
-
-    },
-    setViewRange: function (value) {
-      let submission = value.value;
-      let preferences = new Preferences();
-      preferences.postByName('viewRange', submission);
-      this.$store.commit('fireflyiii/updateViewRange', submission);
-      this.$store.dispatch('fireflyiii/setDatesFromViewRange');
-    },
-    updateViewRange: function () {
-    }
+    // ...mapGetters('fireflyiii', ['getRange']),
+    // ...mapMutations('fireflyiii', ['setRange'])
   },
   data() {
     return {
@@ -122,6 +80,54 @@ export default {
           timeAdjust: '23:59:59',
         },
       },
+      store: null
+    }
+  },
+  created() {
+    this.store = useFireflyIIIStore();
+    const $q = useQuasar();
+    this.darkMode = $q.dark.isActive;
+
+    this.localRange = {
+      from: format(this.store.getRange.start, 'yyyy-MM-dd'),
+      to: format(this.store.getRange.end, 'yyyy-MM-dd')
+    };
+  },
+  watch: {
+    localRange: function (value) {
+      if (null !== value) {
+        const updatedRange = {
+          start: Date.parse(value.from),
+          end: Date.parse(value.to)
+        };
+        // FIXME new store
+        this.store.setRange(updatedRange);
+      }
+    },
+  },
+  mounted() {
+
+  },
+  methods: {
+    resetRange: function () {
+      // FIXME new store
+      this.store.resetRange().then(() => {
+        this.localRange = {
+          from: format(this.store.getRange.start, 'yyyy-MM-dd'),
+          to: format(this.store.getRange.end, 'yyyy-MM-dd')
+        };
+      });
+
+    },
+    setViewRange: function (value) {
+      let submission = value.value;
+      let preferences = new Preferences();
+      preferences.postByName('viewRange', submission);
+      // FIXME new store
+      this.store.updateViewRange(submission);
+      this.store.setDatesFromViewRange();
+    },
+    updateViewRange: function () {
     }
   },
   components: {},

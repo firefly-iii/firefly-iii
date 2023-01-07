@@ -28,6 +28,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Configuration;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class RecurringCronjob
@@ -36,15 +38,15 @@ class RecurringCronjob extends AbstractCronjob
 {
     /**
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function fire(): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_rt_job', 0);
-        $lastTime      = (int) $config->data;
+        $lastTime      = (int)$config->data;
         $diff          = time() - $lastTime;
         $diffForHumans = Carbon::now()->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
@@ -97,8 +99,8 @@ class RecurringCronjob extends AbstractCronjob
         $this->jobSucceeded = true;
         $this->message      = 'Recurring transactions cron job fired successfully.';
 
-        app('fireflyconfig')->set('last_rt_job', (int) $this->date->format('U'));
-        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));
+        app('fireflyconfig')->set('last_rt_job', (int)$this->date->format('U'));
+        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int)$this->date->format('U')));
         Log::info('Done with recurring cron job task.');
     }
 }

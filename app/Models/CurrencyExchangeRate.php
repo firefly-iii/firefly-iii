@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CurrencyExchangeRate.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -31,21 +32,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * FireflyIII\Models\CurrencyExchangeRate
+ * Class CurrencyExchangeRate
  *
- * @property int                      $id
- * @property Carbon|null              $created_at
- * @property Carbon|null              $updated_at
- * @property string|null              $deleted_at
- * @property int                      $user_id
- * @property int                      $from_currency_id
- * @property int                      $to_currency_id
- * @property Carbon                   $date
- * @property string                   $rate
- * @property string|null              $user_rate
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property int $user_id
+ * @property int $from_currency_id
+ * @property int $to_currency_id
+ * @property Carbon $date
+ * @property string $rate
+ * @property string|null $user_rate
  * @property-read TransactionCurrency $fromCurrency
  * @property-read TransactionCurrency $toCurrency
- * @property-read User                $user
+ * @property-read User $user
  * @method static Builder|CurrencyExchangeRate newModelQuery()
  * @method static Builder|CurrencyExchangeRate newQuery()
  * @method static Builder|CurrencyExchangeRate query()
@@ -60,12 +61,14 @@ use Illuminate\Support\Carbon;
  * @method static Builder|CurrencyExchangeRate whereUserId($value)
  * @method static Builder|CurrencyExchangeRate whereUserRate($value)
  * @mixin Eloquent
+ * @property int|null $user_group_id
+ * @method static Builder|CurrencyExchangeRate whereUserGroupId($value)
  */
 class CurrencyExchangeRate extends Model
 {
     /** @var array Convert these fields to other data types */
     protected $casts
-        = [
+                        = [
             'created_at'       => 'datetime',
             'updated_at'       => 'datetime',
             'user_id'          => 'int',
@@ -73,6 +76,7 @@ class CurrencyExchangeRate extends Model
             'to_currency_id'   => 'int',
             'date'             => 'datetime',
         ];
+    protected $fillable = ['user_id', 'from_currency_id', 'to_currency_id', 'date', 'rate'];
 
     /**
      * @codeCoverageIgnore
@@ -107,7 +111,7 @@ class CurrencyExchangeRate extends Model
     protected function rate(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string) $value,
         );
     }
 
@@ -117,7 +121,7 @@ class CurrencyExchangeRate extends Model
     protected function userRate(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string) $value,
         );
     }
 }

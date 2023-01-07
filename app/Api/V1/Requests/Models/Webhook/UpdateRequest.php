@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
+use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -33,16 +34,17 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateRequest extends FormRequest
 {
-    use ChecksLogin, ConvertsDataTypes;
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array
      */
     public function getData(): array
     {
-        $triggers   = array_flip(config('firefly.webhooks.triggers'));
-        $responses  = array_flip(config('firefly.webhooks.responses'));
-        $deliveries = array_flip(config('firefly.webhooks.deliveries'));
+        $triggers   = Webhook::getTriggersForValidation();
+        $responses  = Webhook::getResponsesForValidation();
+        $deliveries = Webhook::getDeliveriesForValidation();
 
         $fields = [
             'title'    => ['title', 'convertString'],
@@ -79,18 +81,20 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers   = implode(',', array_values(config('firefly.webhooks.triggers')));
-        $responses  = implode(',', array_values(config('firefly.webhooks.responses')));
-        $deliveries = implode(',', array_values(config('firefly.webhooks.deliveries')));
-        $webhook    = $this->route()->parameter('webhook');
+        $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
+        $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
+        $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+
+        /** @var Webhook $webhook */
+        $webhook = $this->route()->parameter('webhook');
 
         return [
             'title'    => sprintf('between:1,512|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
-            'active'   => [new IsBoolean],
+            'active'   => [new IsBoolean()],
             'trigger'  => sprintf('in:%s', $triggers),
             'response' => sprintf('in:%s', $responses),
             'delivery' => sprintf('in:%s', $deliveries),
-            'url'      => ['url', 'starts_with:https://', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+            'url'      => ['url', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
         ];
     }
 }

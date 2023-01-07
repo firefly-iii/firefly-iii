@@ -20,7 +20,7 @@
 
 <template>
   <div>
-    <p class="help-block" v-html="$t('firefly.hidden_fields_preferences')"></p>
+    <p class="help-block" v-text="$t('firefly.hidden_fields_preferences')"></p>
     <component
         v-bind:is="dateComponent"
         v-if="this.fields.interest_date" v-model="value.interest_date" :error="error.interest_date"
@@ -96,7 +96,7 @@ export default {
     };
   },
   computed: {
-// See reference nr. 6
+    // TODO this seems to be a pretty weird way of doing it.
     dateComponent() {
       return 'custom-date';
     },

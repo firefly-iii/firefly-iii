@@ -19,9 +19,9 @@
   -->
 
 <template>
-<q-page>
-  Here be default report.
-</q-page>
+  <q-page>
+    Here be default report.
+  </q-page>
 </template>
 
 <script>

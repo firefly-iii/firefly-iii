@@ -60,7 +60,7 @@ class MessageController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/webhooks/getWebhookMessages
      *
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -68,7 +68,7 @@ class MessageController extends Controller
     public function index(Webhook $webhook): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getMessages($webhook);
 
         $count    = $collection->count();
@@ -76,7 +76,7 @@ class MessageController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($messages, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.messages.index', [$webhook->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.webhooks.messages.index', [$webhook->id]).$this->buildParams());
 
         /** @var WebhookMessageTransformer $transformer */
         $transformer = app(WebhookMessageTransformer::class);
@@ -94,8 +94,8 @@ class MessageController extends Controller
      *
      * Show single instance.
      *
-     * @param Webhook        $webhook
-     * @param WebhookMessage $message
+     * @param  Webhook  $webhook
+     * @param  WebhookMessage  $message
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -115,5 +115,4 @@ class MessageController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

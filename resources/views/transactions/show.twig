@@ -46,7 +46,7 @@
                     <table class="table table-hover">
                         <tbody>
                         <tr>
-                            <td>{{ trans('list.type') }}</td>
+                            <td style="width:40%;">{{ trans('list.type') }}</td>
                             <td>{{ first.transactiontype.type|_ }}</td>
                         </tr>
                         <tr>
@@ -80,7 +80,7 @@
                         <tbody>
                         {% if first.transactiontype.type != 'Withdrawal' or splits == 1 %}
                             <tr>
-                                <td>
+                                <td style="width:40%;">
                                     {{ trans_choice('firefly.source_accounts', accounts['source']|length ) }}
                                 </td>
                                 <td>
@@ -270,13 +270,13 @@
                             {% endif %}
                             {% if null != journal.budget_id and first.transactiontype.type == 'Withdrawal' %}
                                 <tr>
-                                    <td>{{ 'budget'|_ }}</td>
+                                    <td style="width:40%;">{{ 'budget'|_ }}</td>
                                     <td><a href="{{ route('budgets.show', [journal.budget_id]) }}">{{ journal.budget_name }}</a></td>
                                 </tr>
                             {% endif %}
                             {% if null != journal.bill_id and first.transactiontype.type == 'Withdrawal' %}
                                 <tr>
-                                    <td>{{ 'bill'|_ }}</td>
+                                    <td style="width:40%;">{{ 'bill'|_ }}</td>
                                     <td><a href="{{ route('bills.show', [journal.bill_id]) }}">{{ journal.bill_name }}</a></td>
                                 </tr>
                             {% endif %}
@@ -284,7 +284,7 @@
                             {% for dateField in ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'] %}
                                 {% if journalHasMeta(journal.transaction_journal_id, dateField) %}
                                     <tr>
-                                        <td>{{ trans('list.'~dateField) }}</td>
+                                        <td style="width:40%;">{{ trans('list.'~dateField) }}</td>
                                         <td>{{ journalGetMetaDate(journal.transaction_journal_id, dateField).isoFormat(monthAndDayFormat) }}</td>
                                     </tr>
                                 {% endif %}
@@ -293,7 +293,7 @@
                                 {% if journalHasMeta(journal.transaction_journal_id, metaField) %}
                                     <tr>
                                         <td>{{ trans('list.'~metaField) }}</td>
-                                        <td>
+                                        <td style="width:40%;">
                                             {% if 'external_url' == metaField  %}
                                                 {% set url = journalGetMetaField(journal.transaction_journal_id, metaField) %}
                                                 <a href="{{ url }}" rel="noopener noreferrer nofollow" target="_blank">
@@ -313,7 +313,7 @@
                             {% endfor %}
                             {% if null != journal.notes and '' != journal.notes %}
                                 <tr>
-                                    <td>{{ trans('list.notes') }}</td>
+                                    <td style="width:40%;">{{ trans('list.notes') }}</td>
                                     <td class="markdown">{{ journal.notes|default('')|markdown }}</td>
                                 </tr>
                             {% endif %}
@@ -323,13 +323,13 @@
                                     {% set recurringTotal = '∞' %}
                                 {% endif %}
                                 <tr>
-                                    <td>{{ trans('list.recurring_transaction') }}</td>
+                                    <td style="width:40%;">{{ trans('list.recurring_transaction') }}</td>
                                     <td>{{ trans('firefly.recurring_info', {total: recurringTotal, count: journalGetMetaField(journal.transaction_journal_id, 'recurring_count') }) }}</td>
                                 </tr>
                             {% endif %}
                             {% if journal.tags|length > 0 %}
                                 <tr>
-                                    <td>{{ 'tags'|_ }}</td>
+                                    <td style="width:40%;">{{ 'tags'|_ }}</td>
                                     <td>
                                         {% for tag in journal.tags %}
                                             <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show', tag.id) }}">
@@ -415,6 +415,18 @@
                             </table>
                         </div>
                     </div>
+                {% endif %}
+                {% if logEntries[journal.transaction_journal_id]|length > 0 %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {{ 'audit_log_entries'|_ }}
+                        </h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        {% include 'list.ale' with {logEntries: logEntries[journal.transaction_journal_id]} %}
+                    </div>
+                </div>
                 {% endif %}
             </div>
         {% endfor %}

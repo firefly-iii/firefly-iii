@@ -24,12 +24,18 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Webhook;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Events\RequestedSendWebhookMessages;
+use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -72,13 +78,13 @@ class ShowController extends Controller
     {
         $manager    = $this->getManager();
         $collection = $this->repository->all();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $count      = $collection->count();
         $webhooks   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.webhooks.index').$this->buildParams());
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
@@ -96,7 +102,7 @@ class ShowController extends Controller
      *
      * Show single instance.
      *
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      *
      * @return JsonResponse
      */
@@ -110,5 +116,36 @@ class ShowController extends Controller
         $resource = new Item($webhook, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/webhooks/triggerWebhookTransaction
+     *
+     * This method recycles part of the code of the StoredGroupEventHandler.
+     *
+     * @param  Webhook  $webhook
+     * @param  TransactionGroup  $group
+     * @return JsonResponse
+     */
+    public function triggerTransaction(Webhook $webhook, TransactionGroup $group): JsonResponse
+    {
+        /** @var MessageGeneratorInterface $engine */
+        $engine = app(MessageGeneratorInterface::class);
+        $engine->setUser(auth()->user());
+
+        // tell the generator which trigger it should look for
+        $engine->setTrigger($webhook->trigger);
+        // tell the generator which objects to process
+        $engine->setObjects(new Collection([$group]));
+        // set the webhook to trigger
+        $engine->setWebhooks(new Collection([$webhook]));
+        // tell the generator to generate the messages
+        $engine->generateMessages();
+
+        // trigger event to send them:
+        event(new RequestedSendWebhookMessages());
+        return response()->json([], 204);
+
     }
 }

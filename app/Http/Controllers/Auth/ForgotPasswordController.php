@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ForgotPasswordController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,6 +33,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ForgotPasswordController
@@ -61,8 +64,8 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param Request                 $request
-     * @param UserRepositoryInterface $repository
+     * @param  Request  $request
+     * @param  UserRepositoryInterface  $repository
      *
      * @return Factory|RedirectResponse|View
      */
@@ -86,7 +89,7 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {
-            return back()->withErrors(['email' => (string) trans('firefly.cannot_reset_demo_user')]);
+            return back()->withErrors(['email' => (string)trans('firefly.cannot_reset_demo_user')]);
         }
 
         // We will send the password reset link to this user. Once we have attempted
@@ -110,8 +113,8 @@ class ForgotPasswordController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showLinkRequestForm()
     {
@@ -126,7 +129,7 @@ class ForgotPasswordController extends Controller
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
-        $pageTitle         = (string) trans('firefly.forgot_pw_page_title');
+        $pageTitle         = (string)trans('firefly.forgot_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }

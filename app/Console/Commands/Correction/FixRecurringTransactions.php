@@ -96,7 +96,7 @@ class FixRecurringTransactions extends Command
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     private function processUser(User $user): void
     {
@@ -109,7 +109,7 @@ class FixRecurringTransactions extends Command
     }
 
     /**
-     * @param Recurrence $recurrence
+     * @param  Recurrence  $recurrence
      */
     private function processRecurrence(Recurrence $recurrence): void
     {
@@ -120,8 +120,8 @@ class FixRecurringTransactions extends Command
     }
 
     /**
-     * @param Recurrence            $recurrence
-     * @param RecurrenceTransaction $transaction
+     * @param  Recurrence  $recurrence
+     * @param  RecurrenceTransaction  $transaction
      */
     private function processTransaction(Recurrence $recurrence, RecurrenceTransaction $transaction): void
     {

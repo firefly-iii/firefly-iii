@@ -13,6 +13,15 @@
             {% endfor %}
         </select>
     </td>
+    <td style="width:40px;">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="triggers[{{ count }}][prohibited]" value="1"
+                       {% if oldProhibited %}checked{% endif %}
+                />
+            </label>
+        </div>
+    </td>
     <td>
         <input autocomplete="off" type="text" value="{{ oldValue }}" name="triggers[{{ count }}][value]"
                class="form-control">

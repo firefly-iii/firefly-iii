@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update the category.
      *
-     * @param UpdateRequest $request
-     * @param Category      $category
+     * @param  UpdateRequest  $request
+     * @param  Category  $category
      *
      * @return JsonResponse
      */
@@ -80,6 +80,5 @@ class UpdateController extends Controller
         $resource = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

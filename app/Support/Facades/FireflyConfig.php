@@ -1,4 +1,5 @@
 <?php
+
 /**
  * FireflyConfig.php
  * Copyright (c) 2019 james@firefly-iii.org

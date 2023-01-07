@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MonthReportGenerator.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Generator\Report\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -42,8 +44,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Generate the report.
-     *
      * @return string
+     * @throws FireflyException
      */
     public function generate(): string
     {
@@ -56,9 +58,11 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('start', $this->start)->with('end', $this->end)
                 ->with('doubles', $this->expense)
                 ->render();
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.double.report: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+            throw new FireflyException($result, 0, $e);
         }
 
         return $result;
@@ -77,7 +81,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set accounts.
      *
-     * @param Collection $accounts
+     * @param  Collection  $accounts
      *
      * @return ReportGeneratorInterface
      */
@@ -91,7 +95,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set budgets.
      *
-     * @param Collection $budgets
+     * @param  Collection  $budgets
      *
      * @return ReportGeneratorInterface
      */
@@ -103,7 +107,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set categories.
      *
-     * @param Collection $categories
+     * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
      */
@@ -115,7 +119,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set end date.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -129,7 +133,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set expense collection.
      *
-     * @param Collection $expense
+     * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
      */
@@ -143,7 +147,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set start date.
      *
-     * @param Carbon $date
+     * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
      */
@@ -157,7 +161,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Set collection of tags.
      *
-     * @param Collection $tags
+     * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
      */

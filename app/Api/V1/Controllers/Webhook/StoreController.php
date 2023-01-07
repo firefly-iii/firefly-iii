@@ -58,7 +58,7 @@ class StoreController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/webhooks/storeWebhook
      *
-     * @param CreateRequest $request
+     * @param  CreateRequest  $request
      *
      * @return JsonResponse
      */

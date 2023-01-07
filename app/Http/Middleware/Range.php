@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Range.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -40,8 +41,8 @@ class Range
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
+     * @param  Request  $request
+     * @param  Closure  $next
      *
      * @return mixed
      */
@@ -56,7 +57,6 @@ class Range
 
             // set more view variables:
             $this->configureList();
-
         }
 
         return $next($request);
@@ -113,12 +113,12 @@ class Range
         }
 
         // save some formats:
-        $monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
-        $dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
+        $monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
+        $dateTimeFormat    = (string)trans('config.date_time_js', [], $locale);
         $defaultCurrency   = app('amount')->getDefaultCurrency();
 
         // also format for moment JS:
-        $madMomentJS = (string) trans('config.month_and_day_moment_js', [], $locale);
+        $madMomentJS = (string)trans('config.month_and_day_moment_js', [], $locale);
 
         app('view')->share('madMomentJS', $madMomentJS);
         app('view')->share('monthAndDayFormat', $monthAndDayFormat);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PiggyBankRepetition.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,14 +33,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * FireflyIII\Models\PiggyBankRepetition
  *
- * @property int                             $id
+ * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int                             $piggy_bank_id
+ * @property int $piggy_bank_id
  * @property \Illuminate\Support\Carbon|null $startdate
  * @property \Illuminate\Support\Carbon|null $targetdate
- * @property string                          $currentamount
- * @property-read PiggyBank                  $piggyBank
+ * @property string $currentamount
+ * @property-read PiggyBank $piggyBank
  * @method static EloquentBuilder|PiggyBankRepetition newModelQuery()
  * @method static EloquentBuilder|PiggyBankRepetition newQuery()
  * @method static EloquentBuilder|PiggyBankRepetition onDates(Carbon $start, Carbon $target)
@@ -83,9 +84,9 @@ class PiggyBankRepetition extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param EloquentBuilder $query
-     * @param Carbon          $start
-     * @param Carbon          $target
+     * @param  EloquentBuilder  $query
+     * @param  Carbon  $start
+     * @param  Carbon  $target
      *
      * @return EloquentBuilder
      */
@@ -97,8 +98,8 @@ class PiggyBankRepetition extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param EloquentBuilder $query
-     * @param Carbon          $date
+     * @param  EloquentBuilder  $query
+     * @param  Carbon  $date
      *
      * @return EloquentBuilder
      */
@@ -121,11 +122,11 @@ class PiggyBankRepetition extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setCurrentamountAttribute($value): void
     {
-        $this->attributes['currentamount'] = (string) $value;
+        $this->attributes['currentamount'] = (string)$value;
     }
 
     /**
@@ -136,7 +137,7 @@ class PiggyBankRepetition extends Model
     protected function currentamount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 }

@@ -70,8 +70,8 @@ class UpdateController extends Controller
      *
      * Update a transaction.
      *
-     * @param UpdateRequest    $request
-     * @param TransactionGroup $transactionGroup
+     * @param  UpdateRequest  $request
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      */
@@ -110,5 +110,4 @@ class UpdateController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

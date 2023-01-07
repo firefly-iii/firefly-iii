@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-use Illuminate\Contracts\View\Factory as ViewFactory;
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -37,8 +36,8 @@ bcscale(24);
 
 if (!function_exists('envNonEmpty')) {
     /**
-     * @param string $key
-     * @param null   $default
+     * @param  string  $key
+     * @param  null  $default
      *
      * @return mixed|null
      */
@@ -55,8 +54,8 @@ if (!function_exists('envNonEmpty')) {
 
 if (!function_exists('str_is_equal')) {
     /**
-     * @param string $left
-     * @param string $right
+     * @param  string  $left
+     * @param  string  $right
      *
      * @return bool
      */
@@ -67,7 +66,7 @@ if (!function_exists('str_is_equal')) {
 }
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__ . '/../')
+    realpath(__DIR__.'/../')
 );
 
 /*

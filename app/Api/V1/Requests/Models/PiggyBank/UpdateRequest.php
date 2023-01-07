@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
 use FireflyIII\Rules\LessThanPiggyTarget;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -36,7 +37,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -68,17 +70,17 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var PiggyBank $piggyBank */
         $piggyBank = $this->route()->parameter('piggyBank');
 
         return [
-            'name'           => 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id,
-            'current_amount' => ['numeric', 'gte:0', new LessThanPiggyTarget],
+            'name'           => 'between:1,255|uniquePiggyBankForUser:'.$piggyBank->id,
+            'current_amount' => ['numeric', 'gte:0', new LessThanPiggyTarget()],
             'target_amount'  => 'numeric|gt:0',
             'start_date'     => 'date|nullable',
             'target_date'    => 'date|nullable|after:start_date',
             'notes'          => 'max:65000',
-            'account_id'     => ['belongsToUser:accounts', new IsAssetAccountId],
+            'account_id'     => ['belongsToUser:accounts', new IsAssetAccountId()],
         ];
     }
-
 }

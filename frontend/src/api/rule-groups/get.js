@@ -23,11 +23,12 @@ import {api} from "boot/axios";
 export default class Get {
   get(identifier, date) {
     let url = '/api/v1/rule_groups/' + identifier;
-    if(!date) {
+    if (!date) {
       return api.get(url);
     }
     return api.get(url, {params: {date: date}});
   }
+
   rules(identifier, page, cacheKey) {
     let url = '/api/v1/rule_groups/' + identifier + '/rules';
     return api.get(url, {params: {page: page, cache: cacheKey}});

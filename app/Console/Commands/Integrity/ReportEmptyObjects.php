@@ -131,7 +131,6 @@ class ReportEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-
             $line = sprintf(
                 'User #%d (%s) has tag #%d ("%s") which has no transaction journals.',
                 $entry->user_id,

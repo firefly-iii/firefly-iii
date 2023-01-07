@@ -107,16 +107,7 @@ class AvailableBudget extends Model
                 return $availableBudget;
             }
         }
-        throw new NotFoundHttpException;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return BelongsTo
-     */
-    public function transactionCurrency(): BelongsTo
-    {
-        return $this->belongsTo(TransactionCurrency::class);
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -129,8 +120,14 @@ class AvailableBudget extends Model
     }
 
     /**
-     * @return Attribute
+     * @codeCoverageIgnore
+     * @return BelongsTo
      */
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
+    }
+
     protected function amount(): Attribute
     {
         return Attribute::make(

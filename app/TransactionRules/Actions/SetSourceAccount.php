@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SetSourceAccount.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -43,7 +45,7 @@ class SetSourceAccount implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -58,7 +60,7 @@ class SetSourceAccount implements ActionInterface
         $user = User::find($journal['user_id']);
         $type = $journal['transaction_type_type'];
         /** @var TransactionJournal|null $object */
-        $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
+        $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
         if (null === $object) {
             Log::error('Could not find journal.');
@@ -86,16 +88,17 @@ class SetSourceAccount implements ActionInterface
 
             return false;
         }
-        // account must not be deleted (in the mean time):
+        // account must not be deleted (in the meantime):
         if (null === $destination->account) {
             Log::error('Could not find destination transaction account.');
 
             return false;
         }
-        if (null !== $newAccount && (int) $newAccount->id === (int) $destination->account_id) {
+        if (null !== $newAccount && (int)$newAccount->id === (int)$destination->account_id) {
             Log::error(
                 sprintf(
-                    'New source account ID #%d and current destination account ID #%d are the same. Do nothing.', $newAccount->id,
+                    'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
+                    $newAccount->id,
                     $destination->account_id
                 )
             );
@@ -117,13 +120,15 @@ class SetSourceAccount implements ActionInterface
           ->where('amount', '<', 0)
           ->update(['account_id' => $newAccount->id]);
 
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $newAccount->name));
+
         Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
 
         return true;
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      *
      * @return Account|null
      */

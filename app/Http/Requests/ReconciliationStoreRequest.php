@@ -34,7 +34,8 @@ use Log;
  */
 class ReconciliationStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Returns the data required by the controller.
@@ -74,7 +75,7 @@ class ReconciliationStoreRequest extends FormRequest
             'startBalance' => 'numeric|max:1000000000',
             'endBalance'   => 'numeric|max:1000000000',
             'difference'   => 'required|numeric|max:1000000000',
-            'journals'     => [new ValidJournals],
+            'journals'     => [new ValidJournals()],
             'reconcile'    => 'required|in:create,nothing',
         ];
     }

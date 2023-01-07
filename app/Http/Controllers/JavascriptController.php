@@ -1,4 +1,5 @@
 <?php
+
 /**
  * JavascriptController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -32,6 +33,9 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use JsonException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class JavascriptController.
@@ -43,13 +47,13 @@ class JavascriptController extends Controller
     /**
      * Show info about accounts.
      *
-     * @param AccountRepositoryInterface  $repository
-     * @param CurrencyRepositoryInterface $currencyRepository
+     * @param  AccountRepositoryInterface  $repository
+     * @param  CurrencyRepositoryInterface  $currencyRepository
      *
      * @return Response
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
@@ -57,16 +61,14 @@ class JavascriptController extends Controller
             [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]
         );
         $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        /** @noinspection NullPointerExceptionInspection */
-        $default = $currencyRepository->findByCodeNull((string) $preference->data);
+        $default    = $currencyRepository->findByCodeNull((string)$preference->data);
 
         $data = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountId = $account->id;
-            $currency  = (int) $repository->getMetaValue($account, 'currency_id');
-            /** @noinspection NullPointerExceptionInspection */
+            $accountId                    = $account->id;
+            $currency                     = (int)$repository->getMetaValue($account, 'currency_id');
             $currency                     = 0 === $currency ? $default->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
@@ -80,7 +82,7 @@ class JavascriptController extends Controller
     /**
      * Get info about currencies.
      *
-     * @param CurrencyRepositoryInterface $repository
+     * @param  CurrencyRepositoryInterface  $repository
      *
      * @return Response
      */
@@ -103,19 +105,19 @@ class JavascriptController extends Controller
     /**
      * Show some common variables to be used in scripts.
      *
-     * @param Request                     $request
-     * @param AccountRepositoryInterface  $repository
-     * @param CurrencyRepositoryInterface $currencyRepository
+     * @param  Request  $request
+     * @param  AccountRepositoryInterface  $repository
+     * @param  CurrencyRepositoryInterface  $currencyRepository
      *
      * @return Response
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws JsonException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
-        $account  = $repository->find((int) $request->get('account'));
+        $account  = $repository->find((int)$request->get('account'));
         $currency = app('amount')->getDefaultCurrency();
         if (null !== $account) {
             $currency = $repository->getAccountCurrency($account) ?? $currency;
@@ -124,10 +126,9 @@ class JavascriptController extends Controller
         $accounting                = app('amount')->getJsConfig();
         $accounting['frac_digits'] = $currency->decimal_places;
         $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
-        /** @noinspection NullPointerExceptionInspection */
-        $lang      = $pref->data;
-        $dateRange = $this->getDateRangeConfig();
-        $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
+        $lang                      = $pref->data;
+        $dateRange                 = $this->getDateRangeConfig();
+        $uid                       = substr(hash('sha256', sprintf('%s-%s-%s', (string)config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
 
         $data = [
             'currencyCode'         => $currency->code,
@@ -149,7 +150,7 @@ class JavascriptController extends Controller
     /**
      * Bit of a hack but OK.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return Response
      */
@@ -169,5 +170,4 @@ class JavascriptController extends Controller
             ->view('v2.javascript.variables', $data)
             ->header('Content-Type', 'text/javascript');
     }
-
 }

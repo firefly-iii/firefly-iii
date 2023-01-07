@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RuleGroupFormRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,7 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleGroupFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
+    use ConvertsDataTypes;
+    use ChecksLogin;
 
     /**
      * Get all data for controller.
@@ -67,13 +69,13 @@ class RuleGroupFormRequest extends FormRequest
         $ruleGroup = $this->route()->parameter('ruleGroup');
 
         if (null !== $ruleGroup) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id;
+            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id;
         }
 
         return [
             'title'       => $titleRule,
             'description' => 'between:1,5000|nullable',
-            'active'      => [new IsBoolean],
+            'active'      => [new IsBoolean()],
         ];
     }
 }

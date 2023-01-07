@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountList.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,10 +34,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class AccountList implements BinderInterface
 {
-
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return Collection
      * @throws NotFoundHttpException
@@ -45,7 +45,7 @@ class AccountList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $collection = new Collection;
+            $collection = new Collection();
             if ('allAssetAccounts' === $value) {
                 /** @var Collection $collection */
                 $collection = auth()->user()->accounts()
@@ -70,6 +70,6 @@ class AccountList implements BinderInterface
             }
         }
         Log::error(sprintf('Trying to show account list (%s), but user is not logged in or list is empty.', $route->uri));
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 }

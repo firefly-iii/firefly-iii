@@ -37,6 +37,8 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Route as RouteFacade;
 
 /**
@@ -88,8 +90,8 @@ trait RequestInformation
      *
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     final protected function hasSeenDemo(): bool // get request info + get preference
     {
@@ -230,5 +232,4 @@ trait RequestInformation
             ]
         );
     }
-
 }

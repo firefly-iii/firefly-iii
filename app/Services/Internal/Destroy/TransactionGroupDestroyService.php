@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use Exception;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Models\TransactionGroup;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupDestroyService
@@ -34,24 +34,19 @@ use FireflyIII\Models\TransactionGroup;
  */
 class TransactionGroupDestroyService
 {
-
     /**
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      */
     public function destroy(TransactionGroup $transactionGroup): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
         foreach ($transactionGroup->transactionJournals as $journal) {
             $service->destroy($journal);
         }
-        try {
-            $transactionGroup->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
+        $transactionGroup->delete();
         // trigger just after destruction
         event(new DestroyedTransactionGroup($transactionGroup));
     }
-
 }

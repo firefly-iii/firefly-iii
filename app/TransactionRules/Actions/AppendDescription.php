@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AppendDescription.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Class AppendDescription.
@@ -35,7 +38,7 @@ class AppendDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -49,6 +52,11 @@ class AppendDescription implements ActionInterface
     {
         $description = sprintf('%s%s', $journal['description'], $this->action->action_value);
         DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
+
+        // event for audit log entry
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $journal['description'], $description));
 
         return true;
     }

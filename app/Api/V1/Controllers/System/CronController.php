@@ -40,8 +40,8 @@ class CronController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/about/getCron
      *
-     * @param CronRequest $request
-     * @param string      $token
+     * @param  CronRequest  $request
+     * @param  string  $token
      *
      * @return JsonResponse
      */
@@ -57,5 +57,4 @@ class CronController extends Controller
 
         return response()->json($return);
     }
-
 }

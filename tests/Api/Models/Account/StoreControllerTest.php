@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace Tests\Api\Models\Account;
+
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -36,7 +37,8 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use TestHelpers, CollectsValues;
+    use TestHelpers;
+    use CollectsValues;
 
     /**
      * @return array
@@ -44,7 +46,6 @@ class StoreControllerTest extends TestCase
     public function emptyDataProvider(): array
     {
         return [[[]]];
-
     }
 
     /**
@@ -63,7 +64,7 @@ class StoreControllerTest extends TestCase
     public function storeDataProvider(): array
     {
         // some test configs:
-        $configuration = new TestConfiguration;
+        $configuration = new TestConfiguration();
 
         // default asset account test set:
         $defaultAssetSet        = new FieldSet();
@@ -79,7 +80,7 @@ class StoreControllerTest extends TestCase
         $expenseSet->addField(Field::createBasic('name', 'uuid'));
 
         // to make sure expense set ignores the opening balance fields:
-        $field                  = new Field;
+        $field                  = new Field();
         $field->title           = 'type';
         $field->fieldTitle      = 'type';
         $field->fieldType       = 'static-expense';
@@ -96,7 +97,7 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('liability_amount', 'random-amount'));
         $fieldSet->addField(Field::createBasic('interest', 'random-percentage'));
         $fieldSet->addField(Field::createBasic('interest_period', 'random-interest-period'));
-        $field                  = new Field;
+        $field                  = new Field();
         $field->fieldTitle      = 'liability_start_date';
         $field->fieldType       = 'random-past-date';
         $field->ignorableFields = ['opening_balance', 'opening_balance_date'];
@@ -115,33 +116,33 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($fieldSet);
 
         // optional field sets (for all test configs)
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('iban', 'iban'));
         $configuration->addOptionalFieldSet('iban', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('bic', 'bic'));
         $configuration->addOptionalFieldSet('bic', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('account_number', 'account_number'));
         $configuration->addOptionalFieldSet('account_number', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('opening_balance', 'random-amount'));
         $fieldSet->addField(Field::createBasic('opening_balance_date', 'random-past-date'));
         $configuration->addOptionalFieldSet('ob', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('virtual_balance', 'random-amount'));
         $configuration->addOptionalFieldSet('virtual_balance', $fieldSet);
 
-        $fieldSet               = new FieldSet;
-        $field                  = new Field;
+        $fieldSet               = new FieldSet();
+        $field                  = new Field();
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
         $field->ignorableFields = ['currency_code'];
@@ -149,8 +150,8 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        $fieldSet               = new FieldSet;
-        $field                  = new Field;
+        $fieldSet               = new FieldSet();
+        $field                  = new Field();
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
         $field->ignorableFields = ['currency_id'];
@@ -158,19 +159,19 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_code', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('order', 'order'));
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('include_net_worth', 'boolean'));
         $configuration->addOptionalFieldSet('include_net_worth', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet = new FieldSet();
         $fieldSet->addField(Field::createBasic('latitude', 'latitude'));
         $fieldSet->addField(Field::createBasic('longitude', 'longitude'));
         $fieldSet->addField(Field::createBasic('zoom_level', 'random-zoom_level'));
@@ -199,5 +200,4 @@ class StoreControllerTest extends TestCase
         $address = route('api.v1.accounts.store');
         $this->assertPOST($address, $submission);
     }
-
 }

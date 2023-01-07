@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TwoFactorController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -47,13 +48,13 @@ class TwoFactorController extends Controller
         /** @var User $user */
         $user      = auth()->user();
         $siteOwner = config('firefly.site_owner');
-        $title     = (string) trans('firefly.two_factor_forgot_title');
+        $title     = (string)trans('firefly.two_factor_forgot_title');
 
         return view('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
      */
@@ -61,7 +62,7 @@ class TwoFactorController extends Controller
     {
         /** @var array $mfaHistory */
         $mfaHistory = Preferences::get('mfa_history', [])->data;
-        $mfaCode    = (string) $request->get('one_time_password');
+        $mfaCode    = (string)$request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
@@ -101,8 +102,8 @@ class TwoFactorController extends Controller
      * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
      * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
      *
-     * @param string $mfaCode
-     * @param array  $mfaHistory
+     * @param  string  $mfaCode
+     * @param  array  $mfaHistory
      *
      * @return bool
      */
@@ -143,7 +144,7 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * @param string $mfaCode
+     * @param  string  $mfaCode
      */
     private function addToMFAHistory(string $mfaCode): void
     {
@@ -162,7 +163,7 @@ class TwoFactorController extends Controller
     /**
      * Checks if code is in users backup codes.
      *
-     * @param string $mfaCode
+     * @param  string  $mfaCode
      *
      * @return bool
      */
@@ -179,7 +180,7 @@ class TwoFactorController extends Controller
     /**
      * Remove the used code from the list of backup codes.
      *
-     * @param string $mfaCode
+     * @param  string  $mfaCode
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {

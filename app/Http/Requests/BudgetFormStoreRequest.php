@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BudgetFormStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -34,7 +35,9 @@ use Illuminate\Validation\Validator;
  */
 class BudgetFormStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ValidatesAutoBudgetRequest, ChecksLogin;
+    use ConvertsDataTypes;
+    use ValidatesAutoBudgetRequest;
+    use ChecksLogin;
 
     /**
      * Returns the data required by the controller.
@@ -73,7 +76,7 @@ class BudgetFormStoreRequest extends FormRequest
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      *
      * @return void
      */
@@ -86,5 +89,4 @@ class BudgetFormStoreRequest extends FormRequest
             }
         );
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * JournalList.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -33,8 +34,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class JournalList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
+     * @param  string  $value
+     * @param  Route  $route
      *
      * @return array
      *
@@ -52,25 +53,25 @@ class JournalList implements BinderInterface
             $collector->withCategoryInformation()->withBudgetInformation()->withTagInformation()->withAccountInformation();
             $collector->setJournalIds($list);
             $result = $collector->getExtractedJournals();
-            if (empty($result)) {
-                throw new NotFoundHttpException;
+            if (0 === count($result)) {
+                throw new NotFoundHttpException();
             }
 
             return $result;
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
     }
 
     /**
-     * @param string $value
+     * @param  string  $value
      *
      * @return array
      */
     protected static function parseList(string $value): array
     {
         $list = array_unique(array_map('\intval', explode(',', $value)));
-        if (empty($list)) {
-            throw new NotFoundHttpException;
+        if (0 === count($list)) {
+            throw new NotFoundHttpException();
         }
 
         return $list;

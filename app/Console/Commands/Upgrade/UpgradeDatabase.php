@@ -55,7 +55,6 @@ class UpgradeDatabase extends Command
      */
     public function handle(): int
     {
-
         $this->callInitialCommands();
         $commands = [
             // there are 14 upgrade commands.
@@ -100,6 +99,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:fix-transaction-types',
             'firefly-iii:fix-frontpage-accounts',
             'firefly-iii:fix-ibans',
+            'firefly-iii:upgrade-group-information',
 
             // two report commands
             'firefly-iii:report-empty-objects',
@@ -121,9 +121,9 @@ class UpgradeDatabase extends Command
             echo $result;
         }
         // set new DB version.
-        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
+        app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
+        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
 
         return 0;
     }

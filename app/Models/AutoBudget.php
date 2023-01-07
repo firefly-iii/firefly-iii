@@ -35,16 +35,16 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\AutoBudget
  *
- * @property int                      $id
- * @property Carbon|null              $created_at
- * @property Carbon|null              $updated_at
- * @property Carbon|null              $deleted_at
- * @property int                      $budget_id
- * @property int                      $transaction_currency_id
- * @property int                      $auto_budget_type
- * @property string                   $amount
- * @property string                   $period
- * @property-read Budget              $budget
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $budget_id
+ * @property int $transaction_currency_id
+ * @property int $auto_budget_type
+ * @property string $amount
+ * @property string $period
+ * @property-read Budget $budget
  * @property-read TransactionCurrency $transactionCurrency
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newQuery()
@@ -65,12 +65,10 @@ use Illuminate\Support\Carbon;
  */
 class AutoBudget extends Model
 {
-    /** @var int When the auto-budget resets every period automatically. */
-    public const AUTO_BUDGET_RESET = 1;
-    /** @var int When the auto-budget adds an amount every period automatically */
-    public const AUTO_BUDGET_ROLLOVER = 2;
-
     use SoftDeletes;
+
+    public const AUTO_BUDGET_RESET    = 1;
+    public const AUTO_BUDGET_ROLLOVER = 2;
 
     /**
      * @codeCoverageIgnore
@@ -96,7 +94,7 @@ class AutoBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string) $value,
+            get: fn ($value) => (string) $value,
         );
     }
 }

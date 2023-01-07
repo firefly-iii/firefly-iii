@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PiggyBankEventFactory.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -18,14 +19,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection MultipleReturnStatementsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use FireflyIII\Events\ChangedPiggyBankAmount;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -39,8 +37,8 @@ use Log;
 class PiggyBankEventFactory
 {
     /**
-     * @param TransactionJournal $journal
-     * @param PiggyBank|null     $piggyBank
+     * @param  TransactionJournal  $journal
+     * @param  PiggyBank|null  $piggyBank
      */
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): void
     {

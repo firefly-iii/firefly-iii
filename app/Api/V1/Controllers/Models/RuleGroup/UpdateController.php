@@ -37,7 +37,6 @@ use League\Fractal\Resource\Item;
  */
 class UpdateController extends Controller
 {
-
     private RuleGroupRepositoryInterface $ruleGroupRepository;
 
     /**
@@ -67,8 +66,8 @@ class UpdateController extends Controller
      *
      * Update a rule group.
      *
-     * @param UpdateRequest $request
-     * @param RuleGroup     $ruleGroup
+     * @param  UpdateRequest  $request
+     * @param  RuleGroup  $ruleGroup
      *
      * @return JsonResponse
      */

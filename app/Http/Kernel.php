@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Kernel.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -22,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http;
 
+use FireflyIII\Http\Middleware\AcceptHeaders;
 use FireflyIII\Http\Middleware\Authenticate;
 use FireflyIII\Http\Middleware\Binder;
 use FireflyIII\Http\Middleware\EncryptCookies;
@@ -178,6 +180,7 @@ class Kernel extends HttpKernel
 
             // full API authentication
             'api'  => [
+                AcceptHeaders::class,
                 EnsureFrontendRequestsAreStateful::class,
                 'auth:api,sanctum',
                 'bindings',

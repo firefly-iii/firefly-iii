@@ -35,20 +35,16 @@ use FireflyIII\Models\Category;
 class CategoryDestroyService
 {
     /**
-     * @param Category $category
+     * @param  Category  $category
      */
     public function destroy(Category $category): void
     {
-        try {
-            $category->delete();
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
-        }
+        $category->delete();
 
         // also delete all relations between categories and transaction journals:
-        DB::table('category_transaction_journal')->where('category_id', (int) $category->id)->delete();
+        DB::table('category_transaction_journal')->where('category_id', (int)$category->id)->delete();
 
         // also delete all relations between categories and transactions:
-        DB::table('category_transaction')->where('category_id', (int) $category->id)->delete();
+        DB::table('category_transaction')->where('category_id', (int)$category->id)->delete();
     }
 }

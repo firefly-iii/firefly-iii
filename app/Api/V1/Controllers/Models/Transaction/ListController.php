@@ -70,7 +70,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/transactions/listAttachmentByTransaction
      *
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -79,8 +79,8 @@ class ListController extends Controller
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $collection = new Collection;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $collection = new Collection();
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getAttachments($transactionJournal)->merge($collection);
         }
@@ -90,7 +90,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transactions.attachments', [$transactionGroup->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.transactions.attachments', [$transactionGroup->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -106,7 +106,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/transactions/listEventByTransaction
      *
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -115,8 +115,8 @@ class ListController extends Controller
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager    = $this->getManager();
-        $collection = new Collection;
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $collection = new Collection();
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal)->merge($collection);
         }
@@ -124,7 +124,7 @@ class ListController extends Controller
         $events = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         // make paginator:
         $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transactions.piggy_bank_events', [$transactionGroup->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.transactions.piggy_bank_events', [$transactionGroup->id]).$this->buildParams());
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);
@@ -145,7 +145,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/#/transactions/listLinksByJournal
      *
-     * @param TransactionJournal $transactionJournal
+     * @param  TransactionJournal  $transactionJournal
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -155,13 +155,13 @@ class ListController extends Controller
     {
         $manager      = $this->getManager();
         $collection   = $this->journalAPIRepository->getJournalLinks($transactionJournal);
-        $pageSize     = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $count        = $collection->count();
         $journalLinks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transaction-journals.transaction_links', [$transactionJournal->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.transaction-journals.transaction_links', [$transactionJournal->id]).$this->buildParams());
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);

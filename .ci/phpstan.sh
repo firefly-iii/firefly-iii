@@ -23,11 +23,11 @@
 # Install composer packages
 #composer install --no-scripts --no-ansi
 
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 # enable test .env file.
-cp .ci/.env.ci .env
+# cp .ci/.env.ci .env
 
 # Do static code analysis.
 # ./vendor/bin/phpstan analyse -c .ci/phpstan.neon --no-progress
-./vendor/bin/phpstan analyse -c .ci/phpstan.neon
-
-exit 0
+./vendor/bin/phpstan analyse -c .ci/phpstan.neon --xdebug --error-format=table > phpstan-report.txt

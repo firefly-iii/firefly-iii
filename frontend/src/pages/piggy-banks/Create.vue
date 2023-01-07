@@ -22,10 +22,10 @@
   <q-page>
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-banner inline-actions rounded class="bg-orange text-white" v-if="'' !== errorMessage">
+        <q-banner v-if="'' !== errorMessage" class="bg-orange text-white" inline-actions rounded>
           {{ errorMessage }}
           <template v-slot:action>
-            <q-btn flat @click="dismissBanner" label="Dismiss"/>
+            <q-btn flat label="Dismiss" @click="dismissBanner"/>
           </template>
         </q-banner>
       </div>
@@ -40,34 +40,34 @@
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.name"
-                  :error="hasSubmissionErrors.name"
-                  bottom-slots :disable="disabledInput" type="text" clearable v-model="name" :label="$t('form.name')"
-                  outlined/>
+                  v-model="name"
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.name" :error-message="submissionErrors.name" :label="$t('form.name')" bottom-slots clearable outlined
+                  type="text"/>
               </div>
             </div>
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-select
-                  :error-message="submissionErrors.account_id"
-                  :error="hasSubmissionErrors.account_id"
-                  bottom-slots
-                  :disable="disabledInput"
-                  outlined
                   v-model="account_id"
-                  emit-value class="q-pr-xs"
-                  map-options :options="accounts" label="Asset account"/>
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.account_id"
+                  :error-message="submissionErrors.account_id"
+                  :options="accounts"
+                  bottom-slots
+                  class="q-pr-xs" emit-value
+                  label="Asset account" map-options outlined/>
               </div>
             </div>
             <div class="row">
               <div class="col-12 q-mb-xs">
                 <q-input
-                  :error-message="submissionErrors.target_amount"
-                  :error="hasSubmissionErrors.target_amount"
-                  bottom-slots :disable="disabledInput" clearable :mask="balance_input_mask" reverse-fill-mask
-                  hint="Expects #.##" fill-mask="0"
                   v-model="target_amount"
-                  :label="$t('firefly.target_amount')" outlined/>
+                  :disable="disabledInput"
+                  :error="hasSubmissionErrors.target_amount" :error-message="submissionErrors.target_amount" :label="$t('firefly.target_amount')" :mask="balance_input_mask" bottom-slots
+                  clearable fill-mask="0"
+                  hint="Expects #.##"
+                  outlined reverse-fill-mask/>
               </div>
             </div>
           </q-card-section>
@@ -86,11 +86,11 @@
             </div>
             <div class="row">
               <div class="col-12 text-right">
-                <q-checkbox :disable="disabledInput" v-model="doReturnHere" left-label
-                            label="Return here to create another one"/>
+                <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
+                            left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" left-label :disable="!doReturnHere || disabledInput"
-                            label="Reset form after submission"/>
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                            left-label/>
               </div>
             </div>
           </q-card-section>
@@ -104,8 +104,8 @@
 <script>
 import Post from "../../api/piggy-banks/post";
 import List from "../../api/accounts/list";
-import {mapGetters} from "vuex";
-import {getCacheKey} from "../../store/fireflyiii/getters";
+// import {mapGetters} from "vuex";
+// import {getCacheKey} from "../../store/fireflyiii/getters";
 
 export default {
   name: 'Create',
@@ -142,7 +142,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('fireflyiii', ['getCacheKey']),
+    // ...mapGetters('fireflyiii', ['getCacheKey']),
     disabledInput: function () {
       return this.submitting;
     }

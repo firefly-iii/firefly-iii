@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tag.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -37,25 +38,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Tag
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property int                                  $user_id
- * @property string                               $tag
- * @property string                               $tagMode
- * @property Carbon|null                          $date
- * @property string|null                          $description
- * @property float|null                           $latitude
- * @property float|null                           $longitude
- * @property int|null                             $zoomLevel
- * @property-read Collection|Attachment[]         $attachments
- * @property-read int|null                        $attachments_count
- * @property-read Collection|Location[]           $locations
- * @property-read int|null                        $locations_count
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $user_id
+ * @property string $tag
+ * @property string $tagMode
+ * @property Carbon|null $date
+ * @property string|null $description
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property int|null $zoomLevel
+ * @property-read Collection|Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read Collection|Location[] $locations
+ * @property-read int|null $locations_count
  * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
- * @property-read User                            $user
+ * @property-read int|null $transaction_journals_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
  * @method static Builder|Tag onlyTrashed()
@@ -75,7 +76,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Tag withTrashed()
  * @method static Builder|Tag withoutTrashed()
  * @mixin Eloquent
- * @property int|null                             $user_group_id
+ * @property int|null $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserGroupId($value)
  */
 class Tag extends Model
@@ -105,7 +106,7 @@ class Tag extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
+     * @param  string  $value
      *
      * @return Tag
      * @throws NotFoundHttpException
@@ -113,7 +114,7 @@ class Tag extends Model
     public static function routeBinder(string $value): Tag
     {
         if (auth()->check()) {
-            $tagId = (int) $value;
+            $tagId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Tag $tag */
@@ -122,7 +123,16 @@ class Tag extends Model
                 return $tag;
             }
         }
-        throw new NotFoundHttpException;
+        throw new NotFoundHttpException();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -150,14 +160,5 @@ class Tag extends Model
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

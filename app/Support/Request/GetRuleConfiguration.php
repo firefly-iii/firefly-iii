@@ -28,7 +28,6 @@ namespace FireflyIII\Support\Request;
  */
 trait GetRuleConfiguration
 {
-
     /**
      * @return array
      */

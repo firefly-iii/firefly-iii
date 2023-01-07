@@ -57,7 +57,7 @@ class BulkController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -68,15 +68,15 @@ class BulkController extends Controller
     /**
      * Edit a set of journals in bulk.
      *
-     * See reference nr. 47
+     * TODO user wont be able to tell if the journal is part of a split.
      *
-     * @param array $journals
+     * @param  array  $journals
      *
      * @return Factory|View
      */
     public function edit(array $journals)
     {
-        $subTitle = (string) trans('firefly.mass_bulk_journals');
+        $subTitle = (string)trans('firefly.mass_bulk_journals');
 
         $this->rememberPreviousUrl('transactions.bulk-edit.url');
 
@@ -93,7 +93,7 @@ class BulkController extends Controller
     /**
      * Update all journals.
      *
-     * @param BulkEditJournalRequest $request
+     * @param  BulkEditJournalRequest  $request
      *
      * @return Application|RedirectResponse|Redirector
      */
@@ -101,14 +101,14 @@ class BulkController extends Controller
     {
         $journalIds     = $request->get('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = 1 === (int) $request->get('ignore_category');
-        $ignoreBudget   = 1 === (int) $request->get('ignore_budget');
+        $ignoreCategory = 1 === (int)$request->get('ignore_category');
+        $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
         $tagsAction     = $request->get('tags_action');
-        $collection     = new Collection;
+        $collection     = new Collection();
         $count          = 0;
 
         foreach ($journalIds as $journalId) {
-            $journalId = (int) $journalId;
+            $journalId = (int)$journalId;
             $journal   = $this->repository->find($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
@@ -124,20 +124,20 @@ class BulkController extends Controller
         // run rules on changed journals:
         /** @var TransactionJournal $journal */
         foreach ($collection as $journal) {
-            event(new UpdatedTransactionGroup($journal->transactionGroup));
+            event(new UpdatedTransactionGroup($journal->transactionGroup, true, true));
         }
 
         app('preferences')->mark();
-        $request->session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count));
+        $request->session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.bulk-edit.url'));
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param bool               $ignoreUpdate
-     * @param int                $budgetId
+     * @param  TransactionJournal  $journal
+     * @param  bool  $ignoreUpdate
+     * @param  int  $budgetId
      *
      * @return bool
      */
@@ -153,9 +153,9 @@ class BulkController extends Controller
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param string             $action
-     * @param array              $tags
+     * @param  TransactionJournal  $journal
+     * @param  string  $action
+     * @param  array  $tags
      *
      * @return bool
      */
@@ -175,9 +175,9 @@ class BulkController extends Controller
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param bool               $ignoreUpdate
-     * @param string             $category
+     * @param  TransactionJournal  $journal
+     * @param  bool  $ignoreUpdate
+     * @param  string  $category
      *
      * @return bool
      */

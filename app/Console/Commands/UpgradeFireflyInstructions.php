@@ -54,10 +54,10 @@ class UpgradeFireflyInstructions extends Command
     public function handle(): int
     {
         $this->generateInstallationId();
-        if ('update' === (string) $this->argument('task')) {
+        if ('update' === (string)$this->argument('task')) {
             $this->updateInstructions();
         }
-        if ('install' === (string) $this->argument('task')) {
+        if ('install' === (string)$this->argument('task')) {
             $this->installInstructions();
         }
 
@@ -112,26 +112,26 @@ class UpgradeFireflyInstructions extends Command
     /**
      * Show a nice box.
      *
-     * @param string $text
+     * @param  string  $text
      */
     private function boxed(string $text): void
     {
         $parts = explode("\n", wordwrap($text));
         foreach ($parts as $string) {
-            $this->line('| ' . sprintf('%-77s', $string) . '|');
+            $this->line('| '.sprintf('%-77s', $string).'|');
         }
     }
 
     /**
      * Show a nice info box.
      *
-     * @param string $text
+     * @param  string  $text
      */
     private function boxedInfo(string $text): void
     {
         $parts = explode("\n", wordwrap($text));
         foreach ($parts as $string) {
-            $this->info('| ' . sprintf('%-77s', $string) . '|');
+            $this->info('| '.sprintf('%-77s', $string).'|');
         }
     }
 

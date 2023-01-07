@@ -63,7 +63,7 @@ class CreateLinkTypes extends Command
             $link = LinkType::where('name', $name)
                             ->first();
             if (null === $link) {
-                $link          = new LinkType;
+                $link          = new LinkType();
                 $link->name    = $name;
                 $link->inward  = $values[1];
                 $link->outward = $values[0];

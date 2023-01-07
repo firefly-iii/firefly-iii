@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Webhook;
 
+use FireflyIII\Enums\WebhookResponse;
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
@@ -35,6 +37,7 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use JsonException;
 use Log;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -53,11 +56,22 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     /**
      *
      */
+    public function __construct()
+    {
+        $this->objects  = new Collection();
+        $this->webhooks = new Collection();
+    }
+
+    /**
+     *
+     */
     public function generateMessages(): void
     {
         Log::debug(__METHOD__);
         // get the webhooks:
-        $this->webhooks = $this->getWebhooks();
+        if (0 === $this->webhooks->count()) {
+            $this->webhooks = $this->getWebhooks();
+        }
 
         // do some debugging
         Log::debug(
@@ -88,7 +102,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param Webhook $webhook
+     * @param  Webhook  $webhook
      */
     private function runWebhook(Webhook $webhook): void
     {
@@ -100,22 +114,23 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param Webhook $webhook
-     * @param Model   $model
+     * @param  Webhook  $webhook
+     * @param  Model  $model
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
         $class = get_class($model);
-        Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
+        // Line is ignored because all of Firefly III's Models have an id property.
+        Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id)); // @phpstan-ignore-line
 
         $uuid         = Uuid::uuid4();
         $basicMessage = [
             'uuid'     => $uuid->toString(),
             'user_id'  => 0,
-            'trigger'  => config('firefly.webhooks.triggers')[$webhook->trigger],
-            'response' => config('firefly.webhooks.responses')[$webhook->response],
+            'trigger'  => WebhookTrigger::from($webhook->trigger)->name,
+            'response' => WebhookResponse::from($webhook->response)->name,
             'url'      => $webhook->url,
             'version'  => sprintf('v%d', $this->getVersion()),
             'content'  => [],
@@ -124,7 +139,10 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         // depends on the model how user_id is set:
         switch ($class) {
             default:
-                Log::error(sprintf('Webhook #%d was given %s#%d to deal with but can\'t extract user ID from it.', $webhook->id, $class, $model->id));
+                // Line is ignored because all of Firefly III's Models have an id property.
+                Log::error(
+                    sprintf('Webhook #%d was given %s#%d to deal with but can\'t extract user ID from it.', $webhook->id, $class, $model->id)
+                ); // @phpstan-ignore-line
 
                 return;
             case TransactionGroup::class:
@@ -141,11 +159,11 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 );
 
                 return;
-            case Webhook::RESPONSE_NONE:
+            case WebhookResponse::NONE->value:
                 $basicMessage['content'] = [];
                 break;
-            case Webhook::RESPONSE_TRANSACTIONS:
-                $transformer = new TransactionGroupTransformer;
+            case WebhookResponse::TRANSACTIONS->value:
+                $transformer = new TransactionGroupTransformer();
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
                 } catch (FireflyException $e) {
@@ -156,11 +174,11 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     return;
                 }
                 break;
-            case Webhook::RESPONSE_ACCOUNTS:
+            case WebhookResponse::ACCOUNTS->value:
                 $accounts = $this->collectAccounts($model);
                 foreach ($accounts as $account) {
-                    $transformer = new AccountTransformer;
-                    $transformer->setParameters(new ParameterBag);
+                    $transformer = new AccountTransformer();
+                    $transformer->setParameters(new ParameterBag());
                     $basicMessage['content'][] = $transformer->transform($account);
                 }
         }
@@ -176,13 +194,13 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
+     * @param  TransactionGroup  $transactionGroup
      *
      * @return Collection
      */
     private function collectAccounts(TransactionGroup $transactionGroup): Collection
     {
-        $accounts = new Collection;
+        $accounts = new Collection();
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
             /** @var Transaction $transaction */
@@ -195,14 +213,14 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param Webhook $webhook
-     * @param array   $message
+     * @param  Webhook  $webhook
+     * @param  array  $message
      *
      * @return void
      */
     private function storeMessage(Webhook $webhook, array $message): void
     {
-        $webhookMessage = new WebhookMessage;
+        $webhookMessage = new WebhookMessage();
         $webhookMessage->webhook()->associate($webhook);
         $webhookMessage->sent    = false;
         $webhookMessage->errored = false;
@@ -210,11 +228,10 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $webhookMessage->message = $message;
         $webhookMessage->save();
         Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
-
     }
 
     /**
-     * @param Collection $objects
+     * @param  Collection  $objects
      */
     public function setObjects(Collection $objects): void
     {
@@ -222,7 +239,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param int $trigger
+     * @param  int  $trigger
      */
     public function setTrigger(int $trigger): void
     {
@@ -230,10 +247,18 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      */
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setWebhooks(Collection $webhooks): void
+    {
+        $this->webhooks = $webhooks;
     }
 }

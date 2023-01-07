@@ -33,8 +33,8 @@ use Illuminate\Database\Eloquent\Model;
 trait LocationServiceTrait
 {
     /**
-     * @param Model $model
-     * @param array $data
+     * @param  Model  $model
+     * @param  array  $data
      *
      * @return Location|null
      */
@@ -42,7 +42,7 @@ trait LocationServiceTrait
     {
         $data['store_location'] = $data['store_location'] ?? false;
         if ($data['store_location']) {
-            $location             = new Location;
+            $location             = new Location();
             $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
             $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
             $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
@@ -54,5 +54,4 @@ trait LocationServiceTrait
 
         return null;
     }
-
 }

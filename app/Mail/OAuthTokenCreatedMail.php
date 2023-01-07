@@ -35,14 +35,15 @@ use Laravel\Passport\Client;
  */
 class OAuthTokenCreatedMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public Client $client;
 
     /**
      * OAuthTokenCreatedMail constructor.
      *
-     * @param Client $client
+     * @param  Client  $client
      */
     public function __construct(Client $client)
     {
@@ -58,6 +59,6 @@ class OAuthTokenCreatedMail extends Mailable
     {
         return $this
             ->markdown('emails.oauth-client-created')
-            ->subject((string) trans('email.oauth_created_subject'));
+            ->subject((string)trans('email.oauth_created_subject'));
     }
 }

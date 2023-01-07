@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SetBudget.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Log;
@@ -38,7 +41,7 @@ class SetBudget implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -57,7 +60,8 @@ class SetBudget implements ActionInterface
         if (null === $budget) {
             Log::debug(
                 sprintf(
-                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal['transaction_journal_id'],
+                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.',
+                    $journal['transaction_journal_id'],
                     $search
                 )
             );
@@ -75,7 +79,7 @@ class SetBudget implements ActionInterface
                 )
             );
 
-            return true;
+            return false;
         }
 
         Log::debug(
@@ -84,6 +88,10 @@ class SetBudget implements ActionInterface
 
         DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
         DB::table('budget_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'budget_id' => $budget->id]);
+
+        /** @var TransactionJournal $object */
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_budget', null, $budget->name));
 
         return true;
     }

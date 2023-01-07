@@ -70,7 +70,7 @@ class DebugController extends Controller
         Log::debug('This is a test message at the DEBUG level.');
         Log::info('This is a test message at the INFO level.');
         Log::notice('This is a test message at the NOTICE level.');
-        Log::warning('This is a test message at the WARNING level.');
+        app('log')->warning('This is a test message at the WARNING level.');
         Log::error('This is a test message at the ERROR level.');
         Log::critical('This is a test message at the CRITICAL level.');
         Log::alert('This is a test message at the ALERT level.');
@@ -81,14 +81,14 @@ class DebugController extends Controller
     /**
      * Clear log and session.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
      */
     public function flush(Request $request)
     {
         app('preferences')->mark();
-        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range','temp-mfa-secret','temp-mfa-codes']);
+        $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
         Log::debug('Call cache:clear...');
         Artisan::call('cache:clear');
         Log::debug('Call config:clear...');
@@ -98,9 +98,8 @@ class DebugController extends Controller
         Log::debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
-
-        } catch (Exception $e) { // @phpstan-ignore-line
-            // @ignoreException
+        } catch (Exception $e) {  // intentional generic exception
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         Log::debug('Call view:clear...');
@@ -113,7 +112,7 @@ class DebugController extends Controller
     /**
      * Show debug info.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return Factory|View
      * @throws FireflyException
@@ -143,10 +142,10 @@ class DebugController extends Controller
         $logChannel      = config('logging.default');
         $appLogLevel     = config('logging.level');
         $displayErrors   = ini_get('display_errors');
-        $errorReporting  = $this->errorReporting((int) ini_get('error_reporting'));
+        $errorReporting  = $this->errorReporting((int)ini_get('error_reporting'));
         $interface       = PHP_SAPI;
-        $defaultLanguage = (string) config('firefly.default_language');
-        $defaultLocale   = (string) config('firefly.default_locale');
+        $defaultLanguage = (string)config('firefly.default_language');
+        $defaultLocale   = (string)config('firefly.default_locale');
         $bcscale         = bcscale();
         $drivers         = implode(', ', DB::availableDrivers());
         $currentDriver   = DB::getDriverName();
@@ -181,25 +180,20 @@ class DebugController extends Controller
 
         // get latest log file:
         $logger     = Log::driver();
-        $handlers   = $logger->getHandlers();
+        // PHPstan doesn't recognize the method because of its polymorphic nature.
+        $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
         $logContent = '';
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
                 $logFile = $handler->getUrl();
                 if (null !== $logFile) {
-                    try {
-                        $logContent = file_get_contents($logFile);
-
-                    } catch (Exception $e) { // @phpstan-ignore-line
-                        // @ignoreException
-                    }
-
+                    $logContent = file_get_contents($logFile);
                 }
             }
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
+            $logContent = 'Truncated from this point <----|'.substr($logContent, -8192);
         }
 
         return view(
@@ -238,55 +232,14 @@ class DebugController extends Controller
                 'defaultLanguage',
                 'defaultLocale',
                 'isDocker'
-
             )
         );
     }
 
     /**
-     * Return all possible routes.
-     *
-     * @return string
-     */
-    public function routes(): string
-    {
-        $set    = RouteFacade::getRoutes();
-        $ignore = ['chart.', 'javascript.', 'json.', 'report-data.', 'popup.', 'debugbar.', 'attachments.download', 'attachments.preview',
-                   'bills.rescan', 'budgets.income', 'currencies.def', 'error', 'flush', 'help.show',
-                   'login', 'logout', 'password.reset', 'profile.confirm-email-change', 'profile.undo-email-change',
-                   'register', 'report.options', 'routes', 'rule-groups.down', 'rule-groups.up', 'rules.up', 'rules.down',
-                   'rules.select', 'search.search', 'test-flash', 'transactions.link.delete', 'transactions.link.switch',
-                   'two-factor.lost', 'reports.options', 'debug',
-                   'preferences.delete-code', 'rules.test-triggers', 'piggy-banks.remove-money', 'piggy-banks.add-money',
-                   'accounts.reconcile.transactions', 'accounts.reconcile.overview',
-                   'transactions.clone', 'two-factor.index', 'api.v1', 'installer.', 'attachments.view', 'recurring.events',
-                   'recurring.suggest',
-        ];
-        $return = '&nbsp;';
-        /** @var Route $route */
-        foreach ($set as $route) {
-            $name = (string) $route->getName();
-            if (in_array('GET', $route->methods(), true)) {
-                $found = false;
-                foreach ($ignore as $string) {
-                    if (false !== stripos($name, $string)) {
-                        $found = true;
-                        break;
-                    }
-                }
-                if (false === $found) {
-                    $return .= 'touch ' . $route->getName() . '.md;';
-                }
-            }
-        }
-
-        return $return;
-    }
-
-    /**
      * Flash all types of messages.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
      */

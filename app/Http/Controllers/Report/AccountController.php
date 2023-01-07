@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AccountController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,11 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use JsonException;
 use Log;
 use Throwable;
 
@@ -36,20 +37,19 @@ use Throwable;
  */
 class AccountController extends Controller
 {
-
     /**
      * Show partial overview for account balances.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      *
      * @return mixed|string
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache = new CacheProperties;
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-report');
@@ -63,10 +63,10 @@ class AccountController extends Controller
         $accountReport = $accountTasker->getAccountReport($accounts, $start, $end);
         try {
             $result = view('reports.partials.accounts', compact('accountReport'))->render();
-
-        } catch (Throwable $e) { // @phpstan-ignore-line
+        } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
             $result = 'Could not render view.';
+            throw new FireflyException($result, 0, $e);
         }
 
         $cache->store($result);

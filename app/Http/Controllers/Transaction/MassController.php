@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MassController.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -61,7 +62,7 @@ class MassController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -73,13 +74,13 @@ class MassController extends Controller
     /**
      * Mass delete transactions.
      *
-     * @param array $journals
+     * @param  array  $journals
      *
      * @return IlluminateView
      */
     public function delete(array $journals): IlluminateView
     {
-        $subTitle = (string) trans('firefly.mass_delete_journals');
+        $subTitle = (string)trans('firefly.mass_delete_journals');
 
         // put previous url in session
         $this->rememberPreviousUrl('transactions.mass-delete.url');
@@ -90,7 +91,7 @@ class MassController extends Controller
     /**
      * Do the mass delete.
      *
-     * @param MassDeleteJournalRequest $request
+     * @param  MassDeleteJournalRequest  $request
      *
      * @return Application|Redirector|RedirectResponse
      *
@@ -102,17 +103,16 @@ class MassController extends Controller
         if (is_array($ids)) {
             /** @var string $journalId */
             foreach ($ids as $journalId) {
-
                 /** @var TransactionJournal $journal */
-                $journal = $this->repository->find((int) $journalId);
-                if (null !== $journal && (int) $journalId === $journal->id) {
+                $journal = $this->repository->find((int)$journalId);
+                if (null !== $journal && (int)$journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
                 }
             }
         }
         app('preferences')->mark();
-        session()->flash('success', (string) trans_choice('firefly.mass_deleted_transactions_success', $count));
+        session()->flash('success', (string)trans_choice('firefly.mass_deleted_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.mass-delete.url'));
@@ -121,13 +121,13 @@ class MassController extends Controller
     /**
      * Mass edit of journals.
      *
-     * @param array $journals
+     * @param  array  $journals
      *
      * @return IlluminateView
      */
     public function edit(array $journals): IlluminateView
     {
-        $subTitle = (string) trans('firefly.mass_edit_journals');
+        $subTitle = (string)trans('firefly.mass_edit_journals');
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
@@ -159,7 +159,7 @@ class MassController extends Controller
     /**
      * Mass update of journals.
      *
-     * @param MassEditJournalRequest $request
+     * @param  MassEditJournalRequest  $request
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
@@ -168,13 +168,13 @@ class MassController extends Controller
     {
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {
-            // See reference nr. 48
+            // TODO this is a weird error, should be caught.
             throw new FireflyException('This is not an array.');
         }
         $count = 0;
         /** @var string $journalId */
         foreach ($journalIds as $journalId) {
-            $integer = (int) $journalId;
+            $integer = (int)$journalId;
             try {
                 $this->updateJournal($integer, $request);
                 $count++;
@@ -184,15 +184,15 @@ class MassController extends Controller
         }
 
         app('preferences')->mark();
-        session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count));
+        session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.mass-edit.url'));
     }
 
     /**
-     * @param int                    $journalId
-     * @param MassEditJournalRequest $request
+     * @param  int  $journalId
+     * @param  MassEditJournalRequest  $request
      *
      * @throws FireflyException
      */
@@ -224,13 +224,13 @@ class MassController extends Controller
         $service->setData($data);
         $service->update();
         // trigger rules
-        event(new UpdatedTransactionGroup($journal->transactionGroup));
+        event(new UpdatedTransactionGroup($journal->transactionGroup, true, true));
     }
 
     /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $key
+     * @param  MassEditJournalRequest  $request
+     * @param  int  $journalId
+     * @param  string  $key
      *
      * @return Carbon|null
      * @codeCoverageIgnore
@@ -256,9 +256,9 @@ class MassController extends Controller
     }
 
     /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $string
+     * @param  MassEditJournalRequest  $request
+     * @param  int  $journalId
+     * @param  string  $string
      *
      * @return string|null
      * @codeCoverageIgnore
@@ -273,13 +273,13 @@ class MassController extends Controller
             return null;
         }
 
-        return (string) $value[$journalId];
+        return (string)$value[$journalId];
     }
 
     /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $string
+     * @param  MassEditJournalRequest  $request
+     * @param  int  $journalId
+     * @param  string  $string
      *
      * @return int|null
      * @codeCoverageIgnore
@@ -294,6 +294,6 @@ class MassController extends Controller
             return null;
         }
 
-        return (int) $value[$journalId];
+        return (int)$value[$journalId];
     }
 }

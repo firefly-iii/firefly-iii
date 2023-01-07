@@ -32,6 +32,8 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class BackToJournals
@@ -60,7 +62,6 @@ class BackToJournals extends Command
      */
     public function handle(): int
     {
-
         $start = microtime(true);
         if (!$this->isMigrated()) {
             $this->error('Please run firefly-iii:migrate-to-groups first.');
@@ -85,28 +86,25 @@ class BackToJournals extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function isMigrated(): bool
     {
         $configVar = app('fireflyconfig')->get(MigrateToGroups::CONFIG_NAME, false);
 
-        return (bool) $configVar->data;
+        return (bool)$configVar->data;
     }
 
     /**
      * @return bool
      * @throws FireflyException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
-        return (bool) $configVar->data;
+        return (bool)$configVar->data;
     }
 
     /**
@@ -128,7 +126,7 @@ class BackToJournals extends Command
      */
     private function migrateBudgets(): void
     {
-        $journals = new Collection;
+        $journals = new Collection();
         $allIds   = $this->getIdsForBudgets();
         $chunks   = array_chunk($allIds, 500);
         foreach ($chunks as $journalIds) {
@@ -147,12 +145,12 @@ class BackToJournals extends Command
      */
     private function getIdsForBudgets(): array
     {
-        $transactions = DB::table('budget_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray(); // @phpstan-ignore-line
+        $transactions = DB::table('budget_transaction')->distinct()->pluck('transaction_id')->toArray();
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->pluck('transaction_journal_id')->toArray();
             $array = array_merge($array, $set);
         }
 
@@ -160,30 +158,27 @@ class BackToJournals extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      */
     private function migrateBudgetsForJournal(TransactionJournal $journal): void
     {
-
         // grab category from first transaction
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
-
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
-
         }
-        /** @var Budget $budget */
+        /** @var Budget|null $budget */
         $budget = $transaction->budgets->first();
-        /** @var Budget $journalBudget */
+        /** @var Budget|null $journalBudget */
         $journalBudget = $journal->budgets->first();
 
         // both have a budget, but they don't match.
         if (null !== $budget && null !== $journalBudget && $budget->id !== $journalBudget->id) {
             // sync to journal:
-            $journal->budgets()->sync([(int) $budget->id]);
+            $journal->budgets()->sync([(int)$budget->id]);
 
             return;
         }
@@ -191,7 +186,7 @@ class BackToJournals extends Command
         // transaction has a budget, but the journal doesn't.
         if (null !== $budget && null === $journalBudget) {
             // sync to journal:
-            $journal->budgets()->sync([(int) $budget->id]);
+            $journal->budgets()->sync([(int)$budget->id]);
         }
     }
 
@@ -201,7 +196,7 @@ class BackToJournals extends Command
     private function migrateCategories(): void
     {
         Log::debug('Now in migrateCategories()');
-        $journals = new Collection;
+        $journals = new Collection();
         $allIds   = $this->getIdsForCategories();
 
         Log::debug(sprintf('Total: %d', count($allIds)));
@@ -224,15 +219,14 @@ class BackToJournals extends Command
      */
     private function getIdsForCategories(): array
     {
-        $transactions = DB::table('category_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray(); // @phpstan-ignore-line
+        $transactions = DB::table('category_transaction')->distinct()->pluck('transaction_id')->toArray();
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set = DB::table('transactions') // @phpstan-ignore-line
-                     ->whereIn('transactions.id', $chunk)
-                     ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-            /** @noinspection SlowArrayOperationsInLoopInspection */
+            $set   = DB::table('transactions')
+                       ->whereIn('transactions.id', $chunk)
+                       ->pluck('transaction_journal_id')->toArray();
             $array = array_merge($array, $set);
         }
 
@@ -240,34 +234,32 @@ class BackToJournals extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      */
     private function migrateCategoriesForJournal(TransactionJournal $journal): void
     {
         // grab category from first transaction
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
-
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
-
         }
-        /** @var Category $category */
+        /** @var Category|null $category */
         $category = $transaction->categories->first();
-        /** @var Category $journalCategory */
+        /** @var Category|null $journalCategory */
         $journalCategory = $journal->categories->first();
 
         // both have a category, but they don't match.
         if (null !== $category && null !== $journalCategory && $category->id !== $journalCategory->id) {
             // sync to journal:
-            $journal->categories()->sync([(int) $category->id]);
+            $journal->categories()->sync([(int)$category->id]);
         }
 
         // transaction has a category, but the journal doesn't.
         if (null !== $category && null === $journalCategory) {
-            $journal->categories()->sync([(int) $category->id]);
+            $journal->categories()->sync([(int)$category->id]);
         }
     }
 

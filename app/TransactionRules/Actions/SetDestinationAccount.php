@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SetDestinationAccount.php
  * Copyright (c) 2019 james@firefly-iii.org
@@ -23,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -43,7 +45,7 @@ class SetDestinationAccount implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param RuleAction $action
+     * @param  RuleAction  $action
      */
     public function __construct(RuleAction $action)
     {
@@ -58,7 +60,7 @@ class SetDestinationAccount implements ActionInterface
         $user = User::find($journal['user_id']);
         $type = $journal['transaction_type_type'];
         /** @var TransactionJournal|null $object */
-        $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
+        $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
 
         if (null === $object) {
@@ -74,7 +76,9 @@ class SetDestinationAccount implements ActionInterface
         if ((TransactionType::DEPOSIT === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             Log::error(
                 sprintf(
-                    'Cant change destination account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value
+                    'Cant change destination account of journal #%d because no asset account with name "%s" exists.',
+                    $object->id,
+                    $this->action->action_value
                 )
             );
 
@@ -89,16 +93,17 @@ class SetDestinationAccount implements ActionInterface
 
             return false;
         }
-        // account must not be deleted (in the mean time):
+        // account must not be deleted (in the meantime):
         if (null === $source->account) {
             Log::error('Could not find source transaction account.');
 
             return false;
         }
-        if (null !== $newAccount && (int) $newAccount->id === (int) $source->account_id) {
+        if (null !== $newAccount && (int)$newAccount->id === (int)$source->account_id) {
             Log::error(
                 sprintf(
-                    'New destination account ID #%d and current source account ID #%d are the same. Do nothing.', $newAccount->id,
+                    'New destination account ID #%d and current source account ID #%d are the same. Do nothing.',
+                    $newAccount->id,
                     $source->account_id
                 )
             );
@@ -114,6 +119,8 @@ class SetDestinationAccount implements ActionInterface
 
         Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_destination', null, $newAccount->name));
+
         // update destination transaction with new destination account:
         DB::table('transactions')
           ->where('transaction_journal_id', '=', $object->id)
@@ -123,12 +130,10 @@ class SetDestinationAccount implements ActionInterface
         Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
 
         return true;
-
-
     }
 
     /**
-     * @param string $type
+     * @param  string  $type
      *
      * @return Account|null
      */
@@ -164,6 +169,4 @@ class SetDestinationAccount implements ActionInterface
 
         return $account;
     }
-
-
 }

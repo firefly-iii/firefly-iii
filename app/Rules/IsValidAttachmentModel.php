@@ -55,7 +55,7 @@ class IsValidAttachmentModel implements Rule
      *
      * @codeCoverageIgnore
      *
-     * @param string $model
+     * @param  string  $model
      */
     public function __construct(string $model)
     {
@@ -64,7 +64,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param string $model
+     * @param  string  $model
      *
      * @return string
      */
@@ -85,14 +85,14 @@ class IsValidAttachmentModel implements Rule
      */
     public function message(): string
     {
-        return (string) trans('validation.model_id_invalid');
+        return (string)trans('validation.model_id_invalid');
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      *
      * @return bool
      */
@@ -118,11 +118,11 @@ class IsValidAttachmentModel implements Rule
         }
         $method = $methods[$this->model];
 
-        return $this->$method((int) $value);
+        return $this->$method((int)$value);
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -136,7 +136,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -150,7 +150,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -164,7 +164,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -178,7 +178,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -191,7 +191,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -205,7 +205,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -219,7 +219,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param int $value
+     * @param  int  $value
      *
      * @return bool
      */
@@ -229,6 +229,6 @@ class IsValidAttachmentModel implements Rule
         $repository = app(JournalAPIRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findTransaction((int) $value);
+        return null !== $repository->findTransaction((int)$value);
     }
 }

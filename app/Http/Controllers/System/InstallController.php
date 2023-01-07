@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\System;
 use Artisan;
 use Cache;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
@@ -52,8 +53,6 @@ class InstallController extends Controller
     public const OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
     private string $lastError;
     private array  $upgradeCommands;
-    /** @noinspection MagicMethodsValidityInspection */
-    /** @noinspection PhpMissingParentConstructorInspection */
 
     /**
      * InstallController constructor.
@@ -111,6 +110,7 @@ class InstallController extends Controller
             'firefly-iii:fix-transaction-types'        => [],
             'firefly-iii:fix-frontpage-accounts'       => [],
             'firefly-iii:fix-ibans'                    => [],
+            'firefly-iii:upgrade-group-information'    => [],
 
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
@@ -128,22 +128,22 @@ class InstallController extends Controller
     public function index()
     {
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
+        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
 
         // set new DB version.
-        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
+        app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
 
         return view('install.index');
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      *
      * @return JsonResponse
      */
     public function runCommand(Request $request): JsonResponse
     {
-        $requestIndex = (int) $request->get('index');
+        $requestIndex = (int)$request->get('index');
         $response     = [
             'hasNextCommand' => false,
             'done'           => true,
@@ -157,7 +157,7 @@ class InstallController extends Controller
         $index = 0;
         /**
          * @var string $command
-         * @var array  $args
+         * @var array $args
          */
         foreach ($this->upgradeCommands as $command => $args) {
             Log::debug(sprintf('Current command is "%s", index is %d', $command, $index));
@@ -166,7 +166,17 @@ class InstallController extends Controller
                 $index++;
                 continue;
             }
-            $result = $this->executeCommand($command, $args);
+            try {
+                $result = $this->executeCommand($command, $args);
+            } catch (FireflyException $e) {
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+                if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                    $this->lastError = self::BASEDIR_ERROR;
+                }
+                $result          = false;
+                $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
+            }
             if (false === $result) {
                 $response['errorMessage'] = $this->lastError;
                 $response['error']        = true;
@@ -183,9 +193,9 @@ class InstallController extends Controller
     }
 
     /**
-     * @param string $command
-     * @param array  $args
-     *
+     * @param  string  $command
+     * @param  array  $args
+     * @throws FireflyException
      * @return bool
      */
     private function executeCommand(string $command, array $args): bool
@@ -199,20 +209,11 @@ class InstallController extends Controller
                 Artisan::call($command, $args);
                 Log::debug(Artisan::output());
             }
-        } catch (Exception $e) { // @phpstan-ignore-line
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
-                $this->lastError = self::BASEDIR_ERROR;
-
-                return false;
-            }
-            $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
-
-            return false;
+        } catch (Exception $e) { // intentional generic exception
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
         // clear cache as well.
-        Cache::clear(); // @phpstan-ignore-line
+        Cache::clear();
         Preferences::mark();
 
         return true;
@@ -230,7 +231,7 @@ class InstallController extends Controller
         if (class_exists(LegacyRSA::class)) {
             // PHP 7
             Log::info('Will run PHP7 code.');
-            $keys = (new LegacyRSA)->createKey(4096);
+            $keys = (new LegacyRSA())->createKey(4096);
         }
 
         if (!class_exists(LegacyRSA::class)) {

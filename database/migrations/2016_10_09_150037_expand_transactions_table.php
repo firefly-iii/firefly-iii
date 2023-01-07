@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2016_10_09_150037_expand_transactions_table.php
  * Copyright (c) 2019 james@firefly-iii.org.
