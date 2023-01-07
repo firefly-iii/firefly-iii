@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.8.0-alpha.1 2023-01-01
+## 5.8.0-alpha.1 - 2023-01-08
 
 This is the first release of the new 5.8.0 series of Firefly III. It should upgrade the database automatically BUT 
 make a backup of your database first! I guarantee nothing.
