@@ -48,8 +48,8 @@ class RemoveViaRegex implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $action_value = $this->action->action_value
-        $before = $journal['description']
+        $action_value = $this->action->action_value;
+        $before = $journal['description'];
 
         // remove via regex occurrence
         $replace = '';
