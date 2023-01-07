@@ -41,9 +41,9 @@
           <div v-for="limit in budget.limits">
             <div class="row">
               <div class="col">
-                <small>{{ limit.amount }}</small><br>
-                {{ limit.start }}<br>
-                {{ limit.end }}
+                <small>{{ formatAmount(limit.currency_code, limit.amount) }}</small><br>
+                {{ formatDate(limit.start) }}<br>
+                {{ formatDate(limit.end) }}
               </div>
               <div class="col">
                 I am bar
@@ -67,6 +67,7 @@
 import {useFireflyIIIStore} from "../../stores/fireflyiii";
 import List from '../../api/v2/budgets/list';
 import ListLimit from '../../api/v2/budget-limits/list';
+import format from "date-fns/format";
 
 export default {
   name: "BudgetBox",
@@ -75,11 +76,13 @@ export default {
       budgets: [],
       locale: 'en-US',
       page: 1,
-      loadingBudgets: false
+      loadingBudgets: false,
+      dateFormat: '',
     }
   },
   mounted() {
     this.store = useFireflyIIIStore();
+    this.dateFormat = this.$t('config.month_and_day_fns');
     this.store.$onAction(
       ({name, store, args, after, onError,}) => {
         after((result) => {
@@ -95,6 +98,12 @@ export default {
     }
   },
   methods: {
+    formatDate: function (date) {
+      return format(new Date(date), this.$t('config.month_and_day_fns'));
+    },
+    formatAmount: function (currencyCode, amount) {
+      return Intl.NumberFormat('en-US', {style: 'currency', currency: currencyCode}).format(amount);
+    },
     loadBox: function () {
       this.loadingBudgets = true;
       (new List).list(this.page).then((data) => {
@@ -145,12 +154,14 @@ export default {
           budget.limits.push(
             {
               amount: current.attributes.amount,
+              currency_code: current.attributes.currency_code,
               start: new Date(current.attributes.start),
               end: new Date(current.attributes.end),
             }
           );
-          console.log('A ' + new Date(current.attributes.start));
-          console.log('B ' + this.store.getRange.start);
+          console.log(current);
+          //console.log('A ' + new Date(current.attributes.start));
+          //console.log('B ' + this.store.getRange.start);
         }
       }
     }

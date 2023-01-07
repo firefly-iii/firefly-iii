@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupTransformer
@@ -261,6 +262,10 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $string) {
             return null;
         }
-        return Carbon::createFromFormat('Y-m-d', $string);
+        Log::debug(sprintf('Now in date("%s")', $string));
+        if(10 === strlen($string)) {
+            return Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
+        }
+        return Carbon::createFromFormat('Y-m-d H:i:s', $string, config('app.timezone'));
     }
 }

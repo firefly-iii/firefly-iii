@@ -42,7 +42,7 @@
         <tbody>
         <tr v-for="transaction in transactions">
           <td class="text-left">
-            <router-link :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }">
+            <router-link :class="$q.dark.isActive ? 'text-red' : 'text-blue'" :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }">
               <strong v-if="transaction.transactions.length > 1">
                 {{ transaction.transactionGroupTitle }}<br/>
               </strong>
@@ -52,7 +52,7 @@
                     {{ tr.description }}
                   <br/>
                   </span>
-                  <router-link v-if="transaction.transactions.length === 1"
+                  <router-link :class="$q.dark.isActive ? 'text-red' : 'text-blue'" v-if="transaction.transactions.length === 1"
                                :to="{ name: 'transactions.show', params: {id: transaction.transactionGroupId} }">
                     {{ tr.description }}
                   </router-link>
@@ -66,7 +66,7 @@
             <span v-if="transaction.transactions.length > 1"><br></span>
             <span v-for="tr in transaction.transactions">
 
-                      <router-link :to="{ name: 'accounts.show', params: {id: tr.destination_id} }">
+                      <router-link :class="$q.dark.isActive ? 'text-red' : 'text-blue'" :to="{ name: 'accounts.show', params: {id: tr.destination_id} }">
                       {{ tr.destination_name }}
                     </router-link>
               <br v-if="transaction.transactions.length > 1"/>

@@ -66,9 +66,9 @@
           future. Until then, please leave your feedback here:
         </p>
         <ul>
-          <li><a href="https://github.com/firefly-iii/firefly-iii/discussions/5589">GitHub discussion</a></li>
-          <li><a href="https://gitter.im/firefly-iii/firefly-iii">Gitter.im chat</a></li>
-          <li><a href="mailto:james@firefly-iii.org">james@firefly-iii.org</a></li>
+          <li><a :class="$q.dark.isActive ? 'text-red' : 'text-blue'" href="https://github.com/firefly-iii/firefly-iii/discussions/5589">GitHub discussion</a></li>
+          <li><a :class="$q.dark.isActive ? 'text-red' : 'text-blue'" href="https://gitter.im/firefly-iii/firefly-iii">Gitter.im chat</a></li>
+          <li><a :class="$q.dark.isActive ? 'text-red' : 'text-blue'" href="mailto:james@firefly-iii.org">james@firefly-iii.org</a></li>
         </ul>
         <p>
           Thanks again,<br>
