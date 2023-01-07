@@ -76,8 +76,11 @@ use FireflyIII\TransactionRules\Actions\MoveDescriptionToNotes;
 use FireflyIII\TransactionRules\Actions\MoveNotesToDescription;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
+use FireflyIII\TransactionRules\Actions\RemoveFirstFromDescription;
+use FireflyIII\TransactionRules\Actions\RemoveFromDescription;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
 use FireflyIII\TransactionRules\Actions\RemoveTag;
+use FireflyIII\TransactionRules\Actions\RemoveViaRegex;
 use FireflyIII\TransactionRules\Actions\SetBudget;
 use FireflyIII\TransactionRules\Actions\SetCategory;
 use FireflyIII\TransactionRules\Actions\SetDescription;
@@ -484,6 +487,9 @@ return [
         'set_description'         => SetDescription::class,
         'append_description'      => AppendDescription::class,
         'prepend_description'     => PrependDescription::class,
+        'remove_description'      => RemoveFirstFromDescription::class,
+        'removefirst_description' => RemoveFromDescription::class,
+        'removeregex_description' => RemoveViaRegex::class,        
         'set_source_account'      => SetSourceAccount::class,
         'set_destination_account' => SetDestinationAccount::class,
         'set_notes'               => SetNotes::class,
@@ -509,6 +515,9 @@ return [
         'set_description',
         'append_description',
         'prepend_description',
+        'remove_description',
+        'removefirst_description',
+        'removeregex_description',
         'set_source_account',
         'set_destination_account',
         'set_notes',
