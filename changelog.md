@@ -10,7 +10,11 @@ make a backup of your database first! I guarantee nothing.
 ### Warnings
 
 - ⚠️ Make a backup of your database first!
-- ⚠️ This version requires **PHP 8.1** and there is a good chance the final version jumps to **PHP 8.2**.
+- ⚠️ This version requires **PHP 8.2**.
+
+You can access the new V3 layout under `/v3/`. If you decide to use or test it:
+
+- ⚠️ Read the instructions under the ☠️ icon FIRST.
 - ⚠️ The new layout is not yet finished. Use it to change your data at your own risk. 
 
 ### Added
@@ -19,10 +23,10 @@ Lots of new stuff that I invite you to test and break.
 
 - #4975 Rules can copy/move description to notes and vice versa
 - #5031 You can invite users to your installation when registration is off
-- #5213 You can trigger recurring transactions
+- #5213 You can trigger recurring transactions beforehand
 - #5592 Transactions have a little history box to show how rules changed them
 - #5752 Firefly III can send Slack notifications instead of emails
-- #5862 search can filter on reconciled transactions
+- #5862 Search can filter on reconciled transactions
 - #6086 All search filters can be negative by putting `-` in front of them
 - #6441 Buttons to purge deleted data, which is easy for data imports
 - #6457 Rule trigger 'transaction exists', that will always trigger
@@ -33,7 +37,7 @@ Lots of new stuff that I invite you to test and break.
 - There is a page for webhooks.
 
 ### Changed
-- Firefly III requires PHP 8.1
+- Firefly III requires PHP 8.2
 - Liabilities are no longer part of your net worth.
 - Liabilities no longer need two transactions to be managed properly (see the documentation)
 
