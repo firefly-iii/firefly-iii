@@ -83,7 +83,7 @@ class UpdatePiggybank implements ActionInterface
         Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
 
         /** @var Transaction $source */
-        $source      = $journalObj->transactions()->where('amount', '<', 0)->first();
+        $source = $journalObj->transactions()->where('amount', '<', 0)->first();
         /** @var Transaction $destination */
         $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
@@ -199,12 +199,18 @@ class UpdatePiggybank implements ActionInterface
         $repository->setUser($journal->user);
 
         // how much can we add to the piggy bank?
-        $toAdd = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
-        Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
+        if (0 !== bccomp($piggyBank->targetamount, '0')) {
+            $toAdd = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
+            Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
 
-        // update amount to fit:
-        $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
-        Log::debug(sprintf('Amount is now %s', $amount));
+            // update amount to fit:
+            $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
+            Log::debug(sprintf('Amount is now %s', $amount));
+        }
+        if (0 === bccomp($piggyBank->targetamount, '0')) {
+            Log::debug('Target amount is zero, can add anything.');
+        }
+
 
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {
