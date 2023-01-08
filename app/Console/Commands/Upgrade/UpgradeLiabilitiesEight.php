@@ -144,6 +144,7 @@ class UpgradeLiabilitiesEight extends Command
             $this->deleteCreditTransaction($account);
             $this->line(sprintf('Fixed correct bad opening for liability #%d ("%s")', $account->id, $account->name));
         }
+        Log::debug(sprintf('Done upgrading liability #%d ("%s")', $account->id, $account->name));
     }
 
     /**
