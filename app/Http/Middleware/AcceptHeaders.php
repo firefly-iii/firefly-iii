@@ -46,8 +46,8 @@ class AcceptHeaders
     {
         $method = $request->getMethod();
 
-        if ('GET' === $method && !$request->accepts(['application/json', 'application/vdn.api+json'])) {
-            throw new BadHttpHeaderException('Your request must accept either application/json or application/vdn.api+json.');
+        if ('GET' === $method && !$request->accepts(['application/json', 'application/vnd.api+json'])) {
+            throw new BadHttpHeaderException('Your request must accept either application/json or application/vnd.api+json');
         }
         $allowed   = ['application/x-www-form-urlencoded', 'application/json',''];
         $submitted = (string)$request->header('Content-Type');

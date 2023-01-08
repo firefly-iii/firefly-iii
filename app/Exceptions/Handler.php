@@ -65,6 +65,7 @@ class Handler extends ExceptionHandler
             TokenMismatchException::class,
             HttpException::class,
             SuspiciousOperationException::class,
+            BadHttpHeaderException::class,
         ];
 
     /**
