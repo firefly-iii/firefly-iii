@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -145,6 +146,7 @@ class UpgradeLiabilitiesEight extends Command
         }
         if ('credit' === $direction && $this->hasBadOpening($account)) {
             $this->deleteCreditTransaction($account);
+            $this->reverseOpeningBalance($account);
             $this->line(sprintf('Fixed correct bad opening for liability #%d ("%s")', $account->id, $account->name));
         }
         Log::debug(sprintf('Done upgrading liability #%d ("%s")', $account->id, $account->name));
@@ -209,5 +211,34 @@ class UpgradeLiabilitiesEight extends Command
         Log::debug('Account has bad opening balance data.');
 
         return true;
+    }
+
+    /**
+     * @param  Account  $account
+     * @return void
+     */
+    private function reverseOpeningBalance(Account $account): void
+    {
+        $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
+        /** @var TransactionJournal $openingJournal */
+        $openingJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                            ->where('transactions.account_id', $account->id)
+                                            ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
+                                            ->first(['transaction_journals.*']);
+        /** @var Transaction $source */
+        $source         = $openingJournal->transactions()->where('amount', '<', 0)->first();
+        /** @var Transaction $dest */
+        $dest           = $openingJournal->transactions()->where('amount', '>', 0)->first();
+        if($source && $dest) {
+            $sourceId = $source->account_id;
+            $destId   = $dest->account_id;
+            $dest->account_id = $sourceId;
+            $source->account_id = $destId;
+            $source->save();
+            $dest->save();
+            Log::debug(sprintf('Opening balance transaction journal #%d reversed.', $openingJournal->id));
+            return;
+        }
+        Log::warning('Did not find opening balance.');
     }
 }
