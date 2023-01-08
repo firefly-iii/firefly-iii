@@ -140,7 +140,10 @@ class UpgradeLiabilitiesEight extends Command
         Log::debug(sprintf('Upgrade liability #%d ("%s")', $account->id, $account->name));
 
         $direction = $repository->getMetaValue($account, 'liability_direction');
-        if ('debit' === $direction && $this->hasBadOpening($account)) {
+        if ('debit' === $direction) {
+            Log::debug('Direction is debit ("I owe this amount"), so no need to upgrade.');
+        }
+        if ('credit' === $direction && $this->hasBadOpening($account)) {
             $this->deleteCreditTransaction($account);
             $this->line(sprintf('Fixed correct bad opening for liability #%d ("%s")', $account->id, $account->name));
         }
@@ -203,6 +206,7 @@ class UpgradeLiabilitiesEight extends Command
             Log::debug('Account has opening/credit not on the same day.');
             return false;
         }
+        Log::debug('Account has bad opening balance data.');
 
         return true;
     }
