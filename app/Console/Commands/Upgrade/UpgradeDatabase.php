@@ -75,6 +75,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:migrate-recurrence-type',
             'firefly-iii:upgrade-liabilities',
             'firefly-iii:create-group-memberships',
+            'firefly-iii:liabilities-580',
 
             // there are 16 verify commands.
             'firefly-iii:fix-piggies',

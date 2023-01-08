@@ -73,7 +73,7 @@ class UpgradeLiabilitiesEight extends Command
         $this->upgradeLiabilities();
 
         // TODO uncomment me
-        //$this->markAsExecuted();
+        $this->markAsExecuted();
 
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Upgraded liabilities for 5.8.0 in %s seconds.', $end));
