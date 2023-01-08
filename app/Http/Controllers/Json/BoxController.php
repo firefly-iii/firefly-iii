@@ -231,7 +231,7 @@ class BoxController extends Controller
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $allAccounts       = $accountRepository->getActiveAccountsByType(
-            [AccountType::DEFAULT, AccountType::ASSET]
+            [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
         );
         Log::debug(sprintf('Found %d accounts.', $allAccounts->count()));
 
