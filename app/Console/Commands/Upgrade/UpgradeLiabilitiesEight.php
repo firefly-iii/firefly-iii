@@ -25,36 +25,36 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * Class UpgradeLiabilities
+ * Class UpgradeLiabilitiesEight
  */
-class UpgradeLiabilities extends Command
+class UpgradeLiabilitiesEight extends Command
 {
-    public const CONFIG_NAME = '560_upgrade_liabilities';
+    public const CONFIG_NAME = '580_upgrade_liabilities';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Upgrade liabilities to new 5.6.0 structure.';
+    protected $description = 'Upgrade liabilities to new 5.8.0 structure.';
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:upgrade-liabilities {--F|force : Force the execution of this command.}';
+    protected $signature = 'firefly-iii:liabilities-580 {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -72,10 +72,11 @@ class UpgradeLiabilities extends Command
         }
         $this->upgradeLiabilities();
 
-        $this->markAsExecuted();
+        // TODO uncomment me
+        //$this->markAsExecuted();
 
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Upgraded liabilities in %s seconds.', $end));
+        $this->info(sprintf('Upgraded liabilities for 5.8.0 in %s seconds.', $end));
 
         return 0;
     }
@@ -136,68 +137,34 @@ class UpgradeLiabilities extends Command
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
-        Log::debug(sprintf('Upgrade liability #%d', $account->id));
+        Log::debug(sprintf('Upgrade liability #%d ("%s")', $account->id, $account->name));
 
-        // get opening balance, and correct if necessary.
-        $openingBalance = $repository->getOpeningBalance($account);
-        if (null !== $openingBalance) {
-            // correct if necessary
-            $this->correctOpeningBalance($account, $openingBalance);
-        }
-
-        // add liability direction property (if it does not yet exist!)
-        $value = $repository->getMetaValue($account, 'liability_direction');
-        if (null === $value) {
-            /** @var AccountMetaFactory $factory */
-            $factory = app(AccountMetaFactory::class);
-            $factory->crud($account, 'liability_direction', 'debit');
+        $direction = $repository->getMetaValue($account, 'liability_direction');
+        if ('debit' === $direction && $this->hasBadOpening($account)) {
+            $this->deleteCreditTransaction($account);
+            $this->line(sprintf('Fixed correct bad opening for liability #%d ("%s")', $account->id, $account->name));
         }
     }
 
     /**
      * @param  Account  $account
-     * @param  TransactionJournal  $openingBalance
+     * @return void
      */
-    private function correctOpeningBalance(Account $account, TransactionJournal $openingBalance): void
+    private function deleteCreditTransaction(Account $account): void
     {
-        $source      = $this->getSourceTransaction($openingBalance);
-        $destination = $this->getDestinationTransaction($openingBalance);
-        if (null === $source || null === $destination) {
-            return;
-        }
-        // source MUST be the liability.
-        if ((int)$destination->account_id === (int)$account->id) {
-            Log::debug(sprintf('Must switch around, because account #%d is the destination.', $destination->account_id));
-            // so if not, switch things around:
-            $sourceAccountId         = (int)$source->account_id;
-            $source->account_id      = $destination->account_id;
-            $destination->account_id = $sourceAccountId;
-            $source->save();
-            $destination->save();
-            Log::debug(sprintf('Source transaction #%d now has account #%d', $source->id, $source->account_id));
-            Log::debug(sprintf('Dest   transaction #%d now has account #%d', $destination->id, $destination->account_id));
+        $liabilityType    = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
+        $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                              ->where('transactions.account_id', $account->id)
+                                              ->where('transaction_journals.transaction_type_id', $liabilityType->id)
+                                              ->first(['transaction_journals.*']);
+        if (null !== $liabilityJournal) {
+            $group   = $liabilityJournal->transactionGroup;
+            $service = new TransactionGroupDestroyService();
+            $service->destroy($group);
+            Log::debug(sprintf('Deleted liability credit group #%d', $group->id));
         }
     }
 
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Transaction|null
-     */
-    private function getSourceTransaction(TransactionJournal $journal): ?Transaction
-    {
-        return $journal->transactions()->where('amount', '<', 0)->first();
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Transaction|null
-     */
-    private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
-    {
-        return $journal->transactions()->where('amount', '>', 0)->first();
-    }
 
     /**
      *
@@ -205,5 +172,37 @@ class UpgradeLiabilities extends Command
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
+    }
+
+    /**
+     * @param  Account  $account
+     * @return bool
+     */
+    private function hasBadOpening(Account $account): bool
+    {
+        $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
+        $liabilityType      = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
+        $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                                ->where('transactions.account_id', $account->id)
+                                                ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
+                                                ->first(['transaction_journals.*']);
+        if (null === $openingJournal) {
+            Log::debug('Account has no opening balance and can be skipped.');
+            return false;
+        }
+        $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                              ->where('transactions.account_id', $account->id)
+                                              ->where('transaction_journals.transaction_type_id', $liabilityType->id)
+                                              ->first(['transaction_journals.*']);
+        if (null === $liabilityJournal) {
+            Log::debug('Account has no liability credit and can be skipped.');
+            return false;
+        }
+        if (!$openingJournal->date->isSameDay($liabilityJournal->date)) {
+            Log::debug('Account has opening/credit not on the same day.');
+            return false;
+        }
+
+        return true;
     }
 }

@@ -875,7 +875,7 @@ return [
         'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
     ],
     'can_have_virtual_amounts'  => [AccountType::ASSET],
-    'can_have_opening_balance'  => [AccountType::ASSET],
+    'can_have_opening_balance'  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
