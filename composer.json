@@ -115,7 +115,7 @@
     "filp/whoops": "2.*",
     "mockery/mockery": "1.*",
     "nunomaduro/larastan": "^2.0",
-    "phpstan/phpstan": "^1.8",
+    "phpstan/phpstan": "^1.9",
     "phpstan/phpstan-deprecation-rules": "^1.0",
     "phpstan/phpstan-strict-rules": "^1.4",
     "phpunit/phpunit": "^9.5",
