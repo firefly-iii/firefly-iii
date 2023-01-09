@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5dde180061b5fd718845ee783ca08b34",
+    "content-hash": "0fcb949c6675c4f46fece8069222a7f1",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1269,24 +1269,24 @@
         },
         {
             "name": "gdbots/query-parser",
-            "version": "v2.0.2",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gdbots/query-parser-php.git",
-                "reference": "d35cb9ae613ee8d6a94b5758fb0047668ab1d34c"
+                "reference": "d033bb3db7b14cf1c902b0dabe89577cafac2b91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gdbots/query-parser-php/zipball/d35cb9ae613ee8d6a94b5758fb0047668ab1d34c",
-                "reference": "d35cb9ae613ee8d6a94b5758fb0047668ab1d34c",
+                "url": "https://api.github.com/repos/gdbots/query-parser-php/zipball/d033bb3db7b14cf1c902b0dabe89577cafac2b91",
+                "reference": "d033bb3db7b14cf1c902b0dabe89577cafac2b91",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4"
+                "php": ">=8.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.2",
-                "ruflin/elastica": "^7.0"
+                "phpunit/phpunit": "^9.5",
+                "ruflin/elastica": "^7.1"
             },
             "type": "library",
             "autoload": {
@@ -1302,9 +1302,9 @@
             "homepage": "https://github.com/gdbots/query-parser-php",
             "support": {
                 "issues": "https://github.com/gdbots/query-parser-php/issues",
-                "source": "https://github.com/gdbots/query-parser-php/tree/v2.0.2"
+                "source": "https://github.com/gdbots/query-parser-php/tree/v3.0.0"
             },
-            "time": "2020-10-30T23:41:54+00:00"
+            "time": "2021-12-05T19:44:35+00:00"
         },
         {
             "name": "graham-campbell/result-type",
