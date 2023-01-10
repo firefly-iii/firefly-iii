@@ -44,14 +44,23 @@ class AcceptHeaders
      */
     public function handle($request, $next): mixed
     {
-        $method = $request->getMethod();
+        $method       = $request->getMethod();
+        $accepts      = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json', '*/*'];
+        $contentTypes = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json'];
+        $submitted    = (string)$request->header('Content-Type');
 
-        if ('GET' === $method && !$request->accepts(['application/json', 'application/vnd.api+json'])) {
-            throw new BadHttpHeaderException('Your request must accept either application/json or application/vnd.api+json');
+
+        // if bad Accept header, send error.
+        if (!$request->accepts($accepts)) {
+            throw new BadHttpHeaderException(sprintf('Accept header "%s" is not something this server can provide.', $request->header('Accept')));
         }
-        $allowed   = ['application/x-www-form-urlencoded', 'application/json',''];
-        $submitted = (string)$request->header('Content-Type');
-        if (('POST' === $method || 'PUT' === $method) && !in_array($submitted, $allowed, true)) {
+        // if bad 'Content-Type' header, refuse service.
+        if (('POST' === $method || 'PUT' === $method) && !$request->hasHeader('Content-Type')) {
+            $error             = new BadHttpHeaderException('Content-Type header cannot be empty');
+            $error->statusCode = 415;
+            throw $error;
+        }
+        if (('POST' === $method || 'PUT' === $method) && !in_array($submitted, $contentTypes, true)) {
             $error             = new BadHttpHeaderException(sprintf('Content-Type cannot be "%s"', $submitted));
             $error->statusCode = 415;
             throw $error;
