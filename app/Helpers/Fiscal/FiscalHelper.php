@@ -55,7 +55,7 @@ class FiscalHelper implements FiscalHelperInterface
      */
     public function endOfFiscalYear(Carbon $date): Carbon
     {
-        Log::debug(sprintf('Now in endOfFiscalYear(%s).', $date->format('Y-m-d')));
+        // Log::debug(sprintf('Now in endOfFiscalYear(%s).', $date->format('Y-m-d')));
         $endDate = $this->startOfFiscalYear($date);
         if (true === $this->useCustomFiscalYear) {
             // add 1 year and sub 1 day
@@ -65,7 +65,7 @@ class FiscalHelper implements FiscalHelperInterface
         if (false === $this->useCustomFiscalYear) {
             $endDate->endOfYear();
         }
-        Log::debug(sprintf('Result of endOfFiscalYear(%s) = %s', $date->format('Y-m-d'), $endDate->format('Y-m-d')));
+        // Log::debug(sprintf('Result of endOfFiscalYear(%s) = %s', $date->format('Y-m-d'), $endDate->format('Y-m-d')));
 
         return $endDate;
     }
