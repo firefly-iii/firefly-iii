@@ -25,7 +25,7 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\LinkType;
 use Illuminate\Database\Seeder;
-use PDOEXception;
+use PDOException;
 
 /**
  * Class LinkTypeSeeder.

@@ -26,7 +26,7 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\UserRole;
 use Illuminate\Database\Seeder;
-use PDOEXception;
+use PDOException;
 
 /**
  * Class UserRoleSeeder
