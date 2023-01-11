@@ -33,6 +33,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use Log;
 
@@ -61,6 +62,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $this->integerFields = [
             'order',
             'currency_id',
@@ -153,7 +155,7 @@ class UpdateRequest extends FormRequest
      */
     private function getTransactionData(): array
     {
-        Log::debug('Now in getTransactionData()');
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return = [];
 
         if (!is_countable($this->get('transactions'))) {
@@ -312,6 +314,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         return [
             // basic fields for group:
             'group_title'                           => 'between:1,1000',

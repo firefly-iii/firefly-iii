@@ -35,6 +35,7 @@ trait ChecksLogin
      */
     public function authorize(): bool
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // Only allow logged in users
         return auth()->check();
     }
