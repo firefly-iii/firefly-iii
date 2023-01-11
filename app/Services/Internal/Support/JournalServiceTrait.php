@@ -75,11 +75,23 @@ trait JournalServiceTrait
         Log::debug('Now searching by ID');
         $result = $this->findAccountById($data, $expectedTypes[$transactionType]);
         Log::debug('If nothing is found, searching by IBAN');
-        $result = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
+        $result     = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
+        $ibanResult = $result;
+        // if result is NULL but IBAN is set, any result of the search by NAME can't overrule
+        // this account. In such a case, the name search must be retried with a new name.
+
         Log::debug('If nothing is found, searching by number');
-        $result = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
+        $result       = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
+        $numberResult = $result;
         Log::debug('If nothing is found, searching by name');
         $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
+
+        if (null !== $result && null === $numberResult && null === $ibanResult && null !== $data['iban']) {
+            $data['name'] = sprintf('%s (%s)', $data['name'], $data['iban']);
+            Log::debug(sprintf('Search again using the new name, "%s".', $data['name']));
+            $result = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
+        }
+
         Log::debug('If nothing is found, create it.');
         $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
         Log::debug('If cant be created, return cash account.');
