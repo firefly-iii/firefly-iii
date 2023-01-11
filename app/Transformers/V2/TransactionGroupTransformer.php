@@ -239,14 +239,15 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function stringFromArray(NullArrayObject $array, string $key, ?string $default): ?string
     {
+        Log::debug(sprintf('%s: %s', $key, var_export($array[$key])));
         if (null === $array[$key] && null === $default) {
             return null;
         }
         if(0 === $array[$key]) {
-            return null;
+            return $default;
         }
         if('0' === $array[$key]) {
-            return null;
+            return $default;
         }
         if (null !== $array[$key]) {
             return (string)$array[$key];
