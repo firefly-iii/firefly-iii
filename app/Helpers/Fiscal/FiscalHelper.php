@@ -96,7 +96,7 @@ class FiscalHelper implements FiscalHelperInterface
             $startDate->startOfYear();
         }
 
-        Log::debug(sprintf('Result of startOfFiscalYear(%s) = %s', $date->format('Y-m-d'), $startDate->format('Y-m-d')));
+        // Log::debug(sprintf('Result of startOfFiscalYear(%s) = %s', $date->format('Y-m-d'), $startDate->format('Y-m-d')));
 
         return $startDate;
     }
