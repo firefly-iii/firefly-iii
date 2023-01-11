@@ -118,7 +118,7 @@ class Authenticate
 
             return $this->auth->authenticate(); // @phpstan-ignore-line (thinks function returns void)
         }
-        Log::debug('Guard array is not empty.');
+        // Log::debug('Guard array is not empty.');
 
         foreach ($guards as $guard) {
             // Log::debug(sprintf('Now in guard loop, guard is "%s"', $guard));
