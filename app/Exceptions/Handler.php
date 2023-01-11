@@ -90,7 +90,7 @@ class Handler extends ExceptionHandler
         Log::debug('Now in Handler::render()');
         if ($e instanceof LaravelValidationException && $expectsJson) {
             // ignore it: controller will handle it.
-            Log::debug('Return to parent to handle LaravelValidationException');
+            Log::debug(sprintf('Return to parent to handle LaravelValidationException(%d)', $e->status));
             return parent::render($request, $e);
         }
         if ($e instanceof NotFoundHttpException && $expectsJson) {
