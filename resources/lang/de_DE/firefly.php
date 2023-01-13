@@ -792,7 +792,7 @@ return [
     'rule_trigger_source_account_id_choice'               => 'Quellkonto-ID ist genau..',
     'rule_trigger_source_account_id'                      => 'Quellkonto-ID ist genau :trigger_value',
     'rule_trigger_destination_account_id_choice'          => 'Zielkonto-ID ist genau..',
-    'rule_trigger_destination_account_id'                 => 'Quellkonto-ID ist genau :trigger_value',
+    'rule_trigger_destination_account_id'                 => 'Zielkonto-ID ist genau :trigger_value',
     'rule_trigger_account_is_cash_choice'                 => 'Beide Konten sind Bargeld',
     'rule_trigger_account_is_cash'                        => 'Beide Konten sind Bargeld',
     'rule_trigger_source_is_cash_choice'                  => 'Quellkonto ist (bar)',
