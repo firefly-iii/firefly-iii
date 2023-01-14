@@ -67,8 +67,16 @@ trait ValidatesBulkTransactionQuery
 
                 return;
             }
+
             // must have same currency:
-            if ($repository->getAccountCurrency($source)->id !== $repository->getAccountCurrency($dest)->id) {
+            // some account types (like expenses) do not have currency, so they have to be omitted
+            $sourceCurrency = $repository->getAccountCurrency($source);
+            $destCurrency =  $repository->getAccountCurrency($dest);
+            if (
+                $sourceCurrency !== null
+                && $destCurrency !== null
+                && $sourceCurrency->id !== $destCurrency->id
+            ) {
                 $validator->errors()->add('query', (string)trans('validation.invalid_query_currency'));
             }
         }
