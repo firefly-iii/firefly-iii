@@ -33,6 +33,7 @@ use FireflyIII\Transformers\UserTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -191,6 +192,13 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
         $data    = $request->getAll();
+
+        // can only update 'blocked' when user is admin.
+        if(!$this->repository->hasRole(auth()->user(), 'owner')) {
+            Log::debug('Quietly drop fields "blocked" and "blocked_code" from request.');
+            unset($data['blocked'], $data['blocked_code']);
+        }
+
         $user    = $this->repository->update($user, $data);
         $manager = $this->getManager();
         // make resource
