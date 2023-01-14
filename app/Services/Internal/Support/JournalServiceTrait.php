@@ -69,27 +69,37 @@ trait JournalServiceTrait
         unset($array);
 
         // and now try to find it, based on the type of transaction.
-        $message = 'Based on the fact that the transaction is a %s, the %s account should be in: %s. Direction is %s.';
+        $message = 'Transaction = %s, %s account should be in: %s. Direction is %s.';
         Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType] ?? ['UNKNOWN']), $direction));
 
-        Log::debug('Now searching by ID');
-        $result = $this->findAccountById($data, $expectedTypes[$transactionType]);
-        Log::debug('If nothing is found, searching by IBAN');
-        $result     = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
-        $ibanResult = $result;
-        // if result is NULL but IBAN is set, any result of the search by NAME can't overrule
-        // this account. In such a case, the name search must be retried with a new name.
-
-        Log::debug('If nothing is found, searching by number');
+        $result       = $this->findAccountById($data, $expectedTypes[$transactionType]);
+        $result       = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
+        $ibanResult   = $result;
         $result       = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
         $numberResult = $result;
-        Log::debug('If nothing is found, searching by name');
-        $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
+        $result       = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
 
+        // if result is NULL but IBAN is set, any result of the search by NAME can't overrule
+        // this account. In such a case, the name search must be retried with a new name.
         if (null !== $result && null === $numberResult && null === $ibanResult && null !== $data['iban']) {
             $data['name'] = sprintf('%s (%s)', $data['name'], $data['iban']);
             Log::debug(sprintf('Search again using the new name, "%s".', $data['name']));
             $result = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
+        }
+        // if the result is NULL but the ID is set, an account could exist of the wrong type.
+        // that data can be used to create a new account of the right type.
+        if (null === $result && null !== $data['id']) {
+            Log::debug(sprintf('Account #%d may exist and be of the wrong type, use data to create one of the right type.', $data['id']));
+            $temp = $this->findAccountById(['id' => $data['id']], []);
+            if (null !== $temp) {
+                $tempData = [
+                    'name'   => $temp->name,
+                    'iban'   => $temp->iban,
+                    'number' => null,
+                    'bic'    => null,
+                ];
+                $result   = $this->createAccount(null, $tempData, $expectedTypes[$transactionType][0]);
+            }
         }
 
         Log::debug('If nothing is found, create it.');
@@ -106,18 +116,24 @@ trait JournalServiceTrait
      */
     private function findAccountById(array $data, array $types): ?Account
     {
-        $search = null;
         // first attempt, find by ID.
         if (null !== $data['id']) {
             $search = $this->accountRepository->find((int)$data['id']);
             if (null !== $search && in_array($search->accountType->type, $types, true)) {
                 Log::debug(
-                    sprintf('Found "account_id" object: #%d, "%s" of type %s', $search->id, $search->name, $search->accountType->type)
+                    sprintf('Found "account_id" object: #%d, "%s" of type %s (1)', $search->id, $search->name, $search->accountType->type)
                 );
+                return $search;
+            }
+            if (null !== $search && 0 === count($types)) {
+                Log::debug(
+                    sprintf('Found "account_id" object: #%d, "%s" of type %s (2)', $search->id, $search->name, $search->accountType->type)
+                );
+                return $search;
             }
         }
-
-        return $search;
+        Log::debug(sprintf('Found no account by ID #%d of types', $data['id']), $types);
+        return null;
     }
 
     /**
@@ -129,22 +145,26 @@ trait JournalServiceTrait
      */
     private function findAccountByIban(?Account $account, array $data, array $types): ?Account
     {
-        // third attempt, find by IBAN
-        if (null === $account && null !== $data['iban']) {
-            Log::debug(sprintf('Found nothing by account iban "%s".', $data['iban']));
-            // find by preferred type.
-            $source = $this->accountRepository->findByIbanNull($data['iban'], [$types[0]]);
-            // or any expected type.
-            $source = $source ?? $this->accountRepository->findByIbanNull($data['iban'], $types);
-
-            if (null !== $source) {
-                Log::debug(sprintf('Found "account_iban" object: #%d, %s', $source->id, $source->name));
-
-                $account = $source;
-            }
+        if (null !== $account) {
+            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+            return $account;
         }
+        if (null === $data['iban'] || '' === $data['iban']) {
+            Log::debug('IBAN is empty, will not search for IBAN.');
+            return null;
+        }
+        // find by preferred type.
+        $source = $this->accountRepository->findByIbanNull($data['iban'], [$types[0]]);
+        // or any expected type.
+        $source = $source ?? $this->accountRepository->findByIbanNull($data['iban'], $types);
 
-        return $account;
+        if (null !== $source) {
+            Log::debug(sprintf('Found "account_iban" object: #%d, %s', $source->id, $source->name));
+
+            return $source;
+        }
+        Log::debug(sprintf('Found no account with IBAN "%s" of expected types', $data['iban']), $types);
+        return null;
     }
 
     /**
@@ -156,23 +176,28 @@ trait JournalServiceTrait
      */
     private function findAccountByNumber(?Account $account, array $data, array $types): ?Account
     {
-        // third attempt, find by account number
-        if (null === $account && null !== $data['number'] && '' !== (string)$data['number']) {
-            Log::debug(sprintf('Searching for account number "%s".', $data['number']));
-            // find by preferred type.
-            $source = $this->accountRepository->findByAccountNumber((string)$data['number'], [$types[0]]);
+        if (null !== $account) {
+            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+            return $account;
+        }
+        if (null === $data['number'] || '' === $data['number']) {
+            Log::debug('Account number is empty, will not search for account number.');
+            return null;
+        }
+        // find by preferred type.
+        $source = $this->accountRepository->findByAccountNumber((string)$data['number'], [$types[0]]);
 
-            // or any expected type.
-            $source = $source ?? $this->accountRepository->findByAccountNumber((string)$data['number'], $types);
+        // or any expected type.
+        $source = $source ?? $this->accountRepository->findByAccountNumber((string)$data['number'], $types);
 
-            if (null !== $source) {
-                Log::debug(sprintf('Found account: #%d, %s', $source->id, $source->name));
+        if (null !== $source) {
+            Log::debug(sprintf('Found account: #%d, %s', $source->id, $source->name));
 
-                $account = $source;
-            }
+            return $source;
         }
 
-        return $account;
+        Log::debug(sprintf('Found no account with account number "%s" of expected types', $data['number']), $types);
+        return null;
     }
 
     /**
@@ -184,21 +209,28 @@ trait JournalServiceTrait
      */
     private function findAccountByName(?Account $account, array $data, array $types): ?Account
     {
-        // second attempt, find by name.
-        if (null === $account && null !== $data['name']) {
-            // find by preferred type.
-            $source = $this->accountRepository->findByName($data['name'], [$types[0]]);
-            // or any expected type.
-            $source = $source ?? $this->accountRepository->findByName($data['name'], $types);
-
-            if (null !== $source) {
-                Log::debug(sprintf('Found "account_name" object: #%d, %s', $source->id, $source->name));
-
-                $account = $source;
-            }
+        if (null !== $account) {
+            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+            return $account;
+        }
+        if (null === $data['name'] || '' === $data['name']) {
+            Log::debug('Account name is empty, will not search for account name.');
+            return null;
         }
 
-        return $account;
+        // find by preferred type.
+        $source = $this->accountRepository->findByName($data['name'], [$types[0]]);
+
+        // or any expected type.
+        $source = $source ?? $this->accountRepository->findByName($data['name'], $types);
+
+        if (null !== $source) {
+            Log::debug(sprintf('Found "account_name" object: #%d, %s', $source->id, $source->name));
+
+            return $source;
+        }
+        Log::debug(sprintf('Found no account with account name "%s" of expected types', $data['name']), $types);
+        return null;
     }
 
     /**

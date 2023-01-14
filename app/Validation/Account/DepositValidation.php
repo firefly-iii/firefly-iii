@@ -106,7 +106,11 @@ trait DepositValidation
         $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
         $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
         Log::debug('Now in validateDepositSource', $array);
+
+        // null = we found nothing at all or didnt even search
+        // false = invalid results
         $result = null;
+
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
@@ -123,7 +127,7 @@ trait DepositValidation
             $search = $this->accountRepository->find($accountId);
             if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug(sprintf('User submitted an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type));
-                $result = false;
+                Log::debug(sprintf('Firefly III accepts ID #%d as valid account data.', $accountId));
             }
         }
 
