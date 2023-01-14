@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+Alpha 2
+
+
+- Data import: when you submit a transaction but give the ID of an account of the wrong type, Firefly III will try to create an account of the right type. For example: you submit a deposit but the source account is an expense account: Firefly III will try to create a revenue account instead. 
+
+
+
 ## 5.8.0-alpha.1 - 2023-01-08
 
 This is the first release of the new 5.8.0 series of Firefly III. It should upgrade the database automatically BUT 
