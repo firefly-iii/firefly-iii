@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Tuotto, ansio ja talletukset',
     'transfer_list'          => 'Tilisiirrot',
     'transfers_list'         => 'Tilisiirrot',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Täsmäytykset',
     'create_withdrawal'      => 'Luo uusi nosto',
     'create_deposit'         => 'Luo uusi talletus',

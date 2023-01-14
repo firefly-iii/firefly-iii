@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Saldo początkowe',
     'tagMode'                     => 'Tryb tagów',
     'virtual_balance'             => 'Wirtualne saldo',
+
+    // Ignore this comment
+
     'targetamount'                => 'Kwota docelowa',
     'account_role'                => 'Rola konta',
     'opening_balance_date'        => 'Data salda otwarcia',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Czy na pewno chcesz usunąć skarbonkę o nazwie ":name"?',
     'journal_areYouSure'          => 'Czy na pewno chcesz usunąć transakcję opisaną ":description"?',
     'mass_journal_are_you_sure'   => 'Czy na pewno chcesz usunąć te transakcje?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Czy na pewno chcesz usunąć tag ":tag"?',
     'journal_link_areYouSure'     => 'Czy na pewno chcesz usunąć powiązanie między <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Czy na pewno chcesz usunąć typ łącza ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / hasło',
     'fints_account'               => 'Konto FinTS',
     'local_account'               => 'Konto Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Data od',
     'to_date'                     => 'Data do',
     'due_date'                    => 'Termin realizacji',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Odpowiedź',
     'webhook_trigger'             => 'Wyzwalacz',
 ];
+// Ignore this comment

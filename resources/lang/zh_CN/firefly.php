@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => '关闭',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => '搜索参数无效，已忽略。',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => '交易日期为 “:value”',
     'search_modifier_not_date_on'                         => '交易日期不为 “:value”',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => '从搜索语句创建新规则',
     'rule_from_search_words'                              => '规则引擎无法处理“:string”。符合搜索语句的建议规则可能会给出不同的结果，请仔细确认规则触发条件。',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => '搜索结果同时包含以下内容：',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => '请注意，后续拆分的来源账户将会被支出的首笔拆分的配置所覆盖。',
     'multi_account_warning_deposit'             => '请注意，后续拆分的目标账户将会被收入的首笔拆分的配置所覆盖。',
     'multi_account_warning_transfer'            => '请注意，后续拆分的来源和目标账户将会被转账的首笔拆分的配置所覆盖。',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => '从 Firefly III 导出数据',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => '已保存新分类“:name”',
     'without_category_between'                  => ':start – :end 没有分类',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => '更新支出',
     'update_deposit'                            => '更新收入',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => '归类整理',
     'store_transaction'                         => '保存交易',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => ':start – :end 的默认财务报表',
     'report_audit'                              => ':start – :end 的交易历史概览',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => '总额会总是以您的默认货币显示',
     'net_filtered_prefs'                        => '此图表永远不会包括未勾选“包含于净资产”选项的账户',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => '图表',
     'month'                                     => '月',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => '在“:journal”中存储',
     'total_amount'                             => '总金额',
     'number_of_decimals'                       => '小数位数',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => '例外的周末',
     'recurrence_deleted'                 => '定期交易“:title”已删除',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => '余额(:currency)',
     'box_spent_in_currency'              => '支出 (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'Тестово съобщение от вашата инсталация на Firefly III',
     'admin_test_body'                         => 'Това е тестово съобщение от вашата Firefly III инстанция. То беше изпратено на :email.',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'An invitation has been created',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Смяна на парола:',
     'registered_doc_link'                     => 'Документация:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'A new Firefly III version is available',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => 'Пълният stacktrace е отдолу:',
     'error_headers'                           => 'The following headers may also be relevant:',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III създаде нова транзакция | Firefly III създаде :count нови транзакции',
     'new_journals_header'                     => 'Firefly III създаде транзакция за вас. Можете да я намерите във вашата инсталация на Firefly III: | Firefly III създаде :count транзакции за вас. Можете да ги намерите във вашата инсталация на Firefly III:',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => 'Please take the appropriate action.',
 
 ];
+// Ignore this comment

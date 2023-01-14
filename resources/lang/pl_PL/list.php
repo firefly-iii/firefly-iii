@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Źródło',
     'next_expected_match'     => 'Następne oczekiwane dopasowanie',
     'automatch'               => 'Auto dopasowanie?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Powtarza się',
     'description'             => 'Opis',
     'amount'                  => 'Kwota',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'Zewnętrzne ID',
     'account_at_bunq'         => 'Konto bunq',
     'file_name'               => 'Nazwa pliku',
+
+    // Ignore this comment
+
     'file_size'               => 'Rozmiar pliku',
     'file_type'               => 'Typ pliku',
     'attached_to'             => 'Dołączony do',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Sekret',
 
 ];
+// Ignore this comment

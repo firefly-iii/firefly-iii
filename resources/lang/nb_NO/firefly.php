@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Lukk',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'These search parameters are not valid and have been ignored.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaksjons dato er ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Create new rule from search query',
     'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'De følgende modifikatorer er lagt til søket i tillegg:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Husk at kildekontoen for etterfølgende oppsplitting skal overlates av hva som defineres i den første delen av uttrekket.',
     'multi_account_warning_deposit'             => 'Husk at mottakerkontoen for etterfølgende oppsplitting skal overstyres av det som er definert i den første delen av depositumet.',
     'multi_account_warning_transfer'            => 'Husk at kildens pluss destinasjonskonto med etterfølgende oppdeling overstyres av det som er definert i en første del av overføringen.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Eksportere data fra Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Lagret ny kategori ":name"',
     'without_category_between'                  => 'Uten kategori mellom :start og :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Oppdater uttak',
     'update_deposit'                            => 'Oppdater innskudd',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Classification',
     'store_transaction'                         => 'Store transaction',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Standard finansiell rapport mellom :start og :end',
     'report_audit'                              => 'Transaksjonshistorikk og oversikt mellom :start og :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Summen vil alltid be i din standard valuta.',
     'net_filtered_prefs'                        => 'Dette diagrammet vil aldri inkludere kontoer som ikke har "Inkluder i nettoverdi"-valget avkrysset.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Diagram',
     'month'                                     => 'Måned',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Stored under ":journal"',
     'total_amount'                             => 'Totalbeløp',
     'number_of_decimals'                       => 'Antall desimaler',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Unntatt helger',
     'recurrence_deleted'                 => 'Gjentakende transaksjon ":title" slettet',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Balanse i (:currency)',
     'box_spent_in_currency'              => 'Brukt (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

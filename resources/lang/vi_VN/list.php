@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Nơi gửi',
     'next_expected_match'     => 'Trận đấu dự kiến tiếp theo',
     'automatch'               => 'Tự động khớp?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Số lần lặp lại',
     'description'             => 'Mô tả',
     'amount'                  => 'Số tiền',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'ID bên ngoài',
     'account_at_bunq'         => 'Tài khoản với bunq',
     'file_name'               => 'Tên file',
+
+    // Ignore this comment
+
     'file_size'               => 'Kích thước file',
     'file_type'               => 'Loại file',
     'attached_to'             => 'Đính kèm vào',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

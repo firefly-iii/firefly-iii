@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Intäkter, inkomster och insättningar',
     'transfer_list'          => 'Överföringar',
     'transfers_list'         => 'Överföringar',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Avstämningar',
     'create_withdrawal'      => 'Skapa nytt uttag',
     'create_deposit'         => 'Skapa ny insättning',

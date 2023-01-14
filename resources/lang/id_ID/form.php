@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Saldo awal',
     'tagMode'                     => 'Mode Tag',
     'virtual_balance'             => 'Saldo virtual',
+
+    // Ignore this comment
+
     'targetamount'                => 'Jumlah target',
     'account_role'                => 'Peran akun',
     'opening_balance_date'        => 'Tanggal pembukaan saldo',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Yakin ingin menghapus piggy bank yang bernama ":name"?',
     'journal_areYouSure'          => 'Yakin ingin menghapus transaksi yang dijelaskan ":description"?',
     'mass_journal_are_you_sure'   => 'Yakin ingin menghapus transaksi ini?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Yakin ingin menghapus tag ":tag"?',
     'journal_link_areYouSure'     => 'Yakin ingin menghapus tautan antara <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Yakin ingin menghapus jenis tautan ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Kata Sandi',
     'fints_account'               => 'Akun FinTS',
     'local_account'               => 'Akun Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Tanggal dari',
     'to_date'                     => 'Tanggal ke',
     'due_date'                    => 'Batas tanggal terakhir',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

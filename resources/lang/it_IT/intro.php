@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Crea nuovi budget come meglio credi.',
     'budgets_index_list_of_budgets'         => 'Usa questa tabella per impostare gli importi per ciascun budget e vedere l\'andamento.',
     'budgets_index_outro'                   => 'Per saperne di più sui budget, controlla l\'icona della guida nell\'angolo in alto a destra.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Utilizza questi resoconti per ottenere informazioni dettagliate sulle tue finanze.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Questo campo ti mostra quanto hai salvato in ogni salvadanaio.',
     'piggy-banks_index_button'                                => 'Accanto a questa barra di avanzamento ci sono due pulsanti (+ e -) per aggiungere o rimuovere denaro da ogni salvadanaio.',
     'piggy-banks_index_accountStatus'                         => 'Per ogni conto attività con almeno un salvadanaio lo stato è elencato in questa tabella.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Qual è il tuo obiettivo? Un nuovo divano, una macchina fotografica, soldi per le emergenze?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Usa questo pulsante per vedere quali transazioni corrispondono alla tua regola.',
     'rules_create_actions'                                    => 'Imposta tutte le azioni che vuoi.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Altre opzioni sono disponibili dietro queste schede.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Questo codice dovrebbe essere conforme ISO (cercalo con Google per la tua nuova valuta).',
 ];
+// Ignore this comment

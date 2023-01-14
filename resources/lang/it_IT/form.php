@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Saldo di apertura',
     'tagMode'                     => 'Modalità etichetta',
     'virtual_balance'             => 'Saldo virtuale',
+
+    // Ignore this comment
+
     'targetamount'                => 'Importo obiettivo',
     'account_role'                => 'Ruolo del conto',
     'opening_balance_date'        => 'Data saldo di apertura',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Sei sicuro di voler eliminare il salvadanaio ":name"?',
     'journal_areYouSure'          => 'Sei sicuro di voler eliminare la transazione ":description"?',
     'mass_journal_are_you_sure'   => 'Sei sicuro di voler eliminare queste transazioni?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Sei sicuro di voler eliminare l\'etichetta ":tag"?',
     'journal_link_areYouSure'     => 'Sei sicuro di voler eliminare il collegamento tra <a href=":source_link">:source</a> e <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Sei sicuro di voler eliminare il tipo di collegamento ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Password',
     'fints_account'               => 'Conto FinTS',
     'local_account'               => 'Conto Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Data inizio',
     'to_date'                     => 'Alla data',
     'due_date'                    => 'Data scadenza',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Risposta',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

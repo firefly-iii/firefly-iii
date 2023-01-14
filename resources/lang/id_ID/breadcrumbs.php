@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Pendapatan, pemasukan, dan deposit',
     'transfer_list'          => 'Transfer',
     'transfers_list'         => 'Transfer',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Penyesuaian',
     'create_withdrawal'      => 'Buat penarikan baru',
     'create_deposit'         => 'Buat deposit baru',

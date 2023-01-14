@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'Một thông báo kiểm tra từ bản cài đặt Firefly III của bạn',
     'admin_test_body'                         => 'Đây là một thông báo thử nghiệm từ Firefly III của bạn. Nó đã được gửi đến :email.',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'An invitation has been created',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Thiết lập lại mật khẩu đăng nhập:',
     'registered_doc_link'                     => 'Tài Liệu:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'A new Firefly III version is available',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => 'Các stacktrace đầy đủ bên dưới:',
     'error_headers'                           => 'Các tiêu đề sau cũng có thể có liên quan:',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III đã tạo một giao dịch mới | Firefly III đã tạo: :count các giao dịch mới',
     'new_journals_header'                     => 'Firefly III đã tạo ra một giao dịch cho bạn. Bạn có thể tìm thấy nó trong bản cài đặt Firefly III: | Firefly III đã tạo :count giao dịch cho bạn. Bạn có thể tìm thấy chúng trong bản cài đặt Firefly III:',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => 'Please take the appropriate action.',
 
 ];
+// Ignore this comment

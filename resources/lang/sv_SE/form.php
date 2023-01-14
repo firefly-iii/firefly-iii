@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Ingående balans',
     'tagMode'                     => 'Etikett läge',
     'virtual_balance'             => 'Virtuell balans',
+
+    // Ignore this comment
+
     'targetamount'                => 'Mål belopp',
     'account_role'                => 'Konto roll',
     'opening_balance_date'        => 'Ingående balans datum',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Är du säker du vill ta bort spargrisen ":name"?',
     'journal_areYouSure'          => 'Är du säker du vill ta bort transaktionen ":description"?',
     'mass_journal_are_you_sure'   => 'Är du säker du vill ta bort dessa transaktioner?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Är du säker du vill ta bort etiketten ":tag"?',
     'journal_link_areYouSure'     => 'Är du säker du vill ta bort länken mellan <a href=":source_link">:source</a> och <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Är du säker du vill ta bort länktypen ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Lösenord',
     'fints_account'               => 'FinTS konto',
     'local_account'               => 'Firefly III konto',
+
+    // Ignore this comment
+
     'from_date'                   => 'Datum från',
     'to_date'                     => 'Datum till',
     'due_date'                    => 'Förfallodatum',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

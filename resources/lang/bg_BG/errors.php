@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Тази грешка се появи във файл "<span style="font-family: monospace;">:file</span>" на ред: :line с код: :code.',
     'stacktrace'              => 'Проследяване на стека',
     'more_info'               => 'Повече информация',
+
+    // Ignore this comment
+
     'collect_info'            => 'Моля, съберете повече информация в директорията <code> storage/logs </code>, където ще намерите файловете на дневника. Ако използвате Docker, използвайте <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'Можете да прочетете повече за събирането на информация за грешки на <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">the FAQ</a>.',
     'github_help'             => 'Получете помощ на GitHub',

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,7 +37,7 @@ return [
     'active'                      => 'Activo',
     'amount_min'                  => 'Importe mínimo',
     'amount_max'                  => 'Importe máximo',
-    'match'                       => 'Encuentros en',
+    'match'                       => 'Encontrado en',
     'strict'                      => 'Modo estricto',
     'repeat_freq'                 => 'Repetición',
     'object_group'                => 'Grupo',
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Saldo inicial',
     'tagMode'                     => 'Modo de etiqueta',
     'virtual_balance'             => 'Saldo virtual',
+
+    // Ignore this comment
+
     'targetamount'                => 'Cantidad objetivo',
     'account_role'                => 'Rol de cuenta',
     'opening_balance_date'        => 'Fecha del saldo inicial',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => '¿Está seguro que desea eliminar la hucha llamada ":name"?',
     'journal_areYouSure'          => '¿Estás seguro de que deseas eliminar la transacción descrita ":description"?',
     'mass_journal_are_you_sure'   => '¿Usted esta seguro de querer eliminar estas transacciones?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => '¿Seguro que quieres eliminar la etiqueta ":tag"?',
     'journal_link_areYouSure'     => '¿Seguro que quieres eliminar el vínculo entre <a href=":source_link">:source</a> y <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => '¿Estás seguro de que deseas eliminar el tipo de vínculo ":name" (":inward" / ":outward")?',
@@ -172,7 +180,7 @@ return [
     'category_keep_transactions'  => 'La transacción conectada a esta categoría no se eliminará.|Las :count transacciones conectadas a esta categoría no serán eliminadas.',
     'recurring_keep_transactions' => 'La transacción conectada a esta transacción recurrente no se eliminará.|Las :count transacciones conectadas a esta transacción recurrente no serán eliminadas.',
     'tag_keep_transactions'       => 'La transacción conectada a esta etiqueta no se eliminará.|Las :count transacciones conectadas a esta etiqueta no serán eliminadas.',
-    'check_for_updates'           => 'Ver actualizaciones',
+    'check_for_updates'           => 'Buscar actualizaciones',
     'liability_direction'         => 'Pasivo entrada/salida',
     'delete_object_group'         => 'Eliminar grupo ":title"',
     'email'                       => 'Correo electrónico',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Contraseña',
     'fints_account'               => 'Cuenta FinTS',
     'local_account'               => 'Cuenta Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Fecha desde',
     'to_date'                     => 'Fecha hasta',
     'due_date'                    => 'Fecha de vencimiento',
@@ -242,13 +253,14 @@ return [
     'expected_on'                 => 'Esperado para',
     'paid'                        => 'Pagado',
     'auto_budget_type'            => 'Autopresupuesto',
-    'auto_budget_amount'          => 'Monto del autopresupuesto',
+    'auto_budget_amount'          => 'Importe del autopresupuesto',
     'auto_budget_period'          => 'Período del autopresupuesto',
     'collected'                   => 'Cobrado',
     'submitted'                   => 'Enviado',
     'key'                         => 'Clave',
     'value'                       => 'Contenido del registro',
     'webhook_delivery'            => 'Delivery',
-    'webhook_response'            => 'Response',
-    'webhook_trigger'             => 'Trigger',
+    'webhook_response'            => 'Respuesta',
+    'webhook_trigger'             => 'Disparador',
 ];
+// Ignore this comment

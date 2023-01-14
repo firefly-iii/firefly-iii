@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -38,6 +40,8 @@ return [
 
     //'month_and_day_no_year'   => '%B %e',
     'month_and_day_no_year_js' => 'MMMM Do',
+
+    // Ignore this comment
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'MMMM Do, YYYY, @ HH:mm:ss',
@@ -66,3 +70,5 @@ return [
     'dow_6'         => '週六',
     'dow_7'         => '週日',
 ];
+
+// Ignore this comment

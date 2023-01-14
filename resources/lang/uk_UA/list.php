@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Джерело',
     'next_expected_match'     => 'Наступний очікуваний збіг',
     'automatch'               => 'Автоматичний збіг?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Повтор',
     'description'             => 'Опис',
     'amount'                  => 'Сума',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'Зовнішній ID',
     'account_at_bunq'         => 'Рахунок з bunq',
     'file_name'               => 'Ім\'я файлу',
+
+    // Ignore this comment
+
     'file_size'               => 'Розмір файлу',
     'file_type'               => 'Тип файлу',
     'attached_to'             => 'Прикріплено до',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

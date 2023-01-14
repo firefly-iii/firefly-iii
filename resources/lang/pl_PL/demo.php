@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Jak widać, istnieją trzy skarbonki. Użyj przycisków plus i minus, aby wpłynąć na ilość pieniędzy w każdej skarbonce. Kliknij nazwę skarbonki, aby zobaczyć administrację każdej skarbonki.',
     'profile-index'          => 'Pamiętaj, że strona demo resetuje się co cztery godziny. Dostęp może zostać cofnięty w dowolnym momencie. Dzieje się to automatycznie i nie jest to błąd.',
 ];
+
+// Ignore this comment

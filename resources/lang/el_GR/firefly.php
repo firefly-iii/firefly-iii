@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Κλείσιμο',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Αυτές οι παράμετροι αναζήτησης δεν είναι έγκυρες και έχουν αγνοηθεί.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Δημιουργία νέου κανόνα από το ερώτημα αναζήτησης',
     'rule_from_search_words'                              => 'Η ρουτίνα για τους κανόνες δυσκολεύτηκε στο χειρισμό του ":string". Ο προτεινόμενος κανόνας που ταιριάζει στο ερώτημά αναζήτησης μπορεί να δώσει διαφορετικά αποτελέσματα. Παρακαλώ να επιβεβαιώσετε προσεκτικά τους κανόνες ενεργοποίησης.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Οι ακόλουθοι τροποποιητές εφαρμόστηκαν στην αναζήτηση επίσης:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Λάβετε υπόψη ότι ο λογαριασμός προέλευσης των επόμενων διαχωρισμών θα υπερισχύσει αυτού του πρώτου διαχωρισμού της ανάληψης.',
     'multi_account_warning_deposit'             => 'Λάβετε υπόψη ότι ο λογαριασμός προορισμού των επόμενων διαχωρισμών θα υπερισχύσει αυτού του πρώτου διαχωρισμού της κατάθεσης.',
     'multi_account_warning_transfer'            => 'Λάβετε υπόψη ότι ο λογαριασμός προέλευσης και προορισμού των επόμενων διαχωρισμών θα υπερισχύσει αυτού του πρώτου διαχωρισμού της μεταφοράς.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Εξαγωγή δεδομένων από το Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Αποθηκεύτηκε η νέα κατηγορία ":name"',
     'without_category_between'                  => 'Χωρίς κατηγορία μεταξύ :start και :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Ενημέρωση ανάληψης',
     'update_deposit'                            => 'Ενημέρωση κατάθεσης',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Ταξινόμηση',
     'store_transaction'                         => 'Αποθήκευση συναλλαγής',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Προεπιλεγμένη οικονομική αναφορά μεταξύ :start και :end',
     'report_audit'                              => 'Επισκόπηση ιστορικού συναλλαγών μεταξύ :start και :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Το σύνολο θα είναι πάντοτε στο προεπιλεγμένο σας νόμισμα.',
     'net_filtered_prefs'                        => 'Αυτό το διάγραμμα δε θα περιλαμβάνει ποτέ λογαριασμούς που δεν έχουν τσεκαρισμένη την επιλογή "Συμπεριλαμβάνεται στην καθαρή αξία".',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Διάγραμμα',
     'month'                                     => 'Μήνας',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Αποθηκεύτηκε στο ":journal"',
     'total_amount'                             => 'Συνολικό ποσό',
     'number_of_decimals'                       => 'Πλήθος δεκαδικών ψηφίων',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Εκτός από τα Σαββατοκύριακα',
     'recurrence_deleted'                 => 'Η επαναλαμβανόμενη συναλλαγή ":title" διαγράφηκε',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Υπόλοιπο (:currency)',
     'box_spent_in_currency'              => 'Δαπάνες (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

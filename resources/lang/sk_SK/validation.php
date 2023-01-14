@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute musí byť skôr než :date.',
     'unique_object_for_user'         => 'Tento názov sa už používa.',
     'unique_account_for_user'        => 'Tento názov účtu je už použitý.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute musí byť v rozsahu :min a :max.',
     'between.file'                   => ':attribute musí byť v rozsahu :min a :max kilobajtov.',
     'between.string'                 => ':attribute musí mať dĺžku v rozsahu :min a :max znakov.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Oba účty musia mať rovnaký typ',
     'same_account_currency'          => 'Oba účty musia mať rovnakú menu',
 
+    // Ignore this comment
+
     'secure_password'             => 'Toto nie je bezpečné heslo. Skúste iné. Viac se dozviete na http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Neplatný typ opakovania pre opakované transakcie.',
     'valid_recurrence_rep_moment' => 'Neplatný moment opakovania pre tento typ opakovania.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Pre ID „:id“ alebo meno „:name“ sa nenašiel žiadny platný cieľový účet.',
     'deposit_dest_wrong_type'  => 'Zadaný cieľový účet nemá správny typ.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Pre pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
     'transfer_source_bad_data'  => 'Nenašiel sa platný zdrojový účet pri hľadaní ID „:id“ alebo mena „:name“.',
     'transfer_dest_need_data'   => 'Pre pokračovanie je potrebné platné ID cieľového účtu a/alebo platný názov cieľového účtu.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Suma musí byť viac ako 0.',
     'auto_budget_period_mandatory'    => 'Obdobie rozpočtu je povinný údaj.',
 ];
+
+// Ignore this comment

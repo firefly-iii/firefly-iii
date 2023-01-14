@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Lỗi này xảy ra trong tập tin <span style="font-family: monospace;">:file</span> dòng :line code :code.',
     'stacktrace'              => 'Stack trace',
     'more_info'               => 'Thông tin thêm',
+
+    // Ignore this comment
+
     'collect_info'            => 'Vui lòng thu thập thêm thông tin trong <code>storage/logs</code> nơi bạn lưu file log.',
     'collect_info_more'       => 'Bạn có thể đọc thêm về việc thu thập thông tin lỗi trong <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">the FAQ</a>.',
     'github_help'             => 'Nhận trợ giúp trên GitHub',

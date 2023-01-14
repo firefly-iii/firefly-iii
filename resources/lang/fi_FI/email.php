@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'Testiviesti Firefly III applikaatioltasi',
     'admin_test_body'                         => 'Tämä on testiviesti Firefly III instanssiltasi. Se lähetettiin osoitteeseen :email.',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'An invitation has been created',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Salasanan nollaus:',
     'registered_doc_link'                     => 'Dokumentaatio:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'Uusi Firefly III versio on saatavilla',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => 'Täydellinen stack trace:',
     'error_headers'                           => 'Seuraavat otsikot voivat myös olla merkityksellisiä:',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III on luonut uuden tapahtuman|Firefly III on luonut :count uutta tapahtumaa',
     'new_journals_header'                     => 'Firefly III on luonut tapahtuman sinulle. Löydät sen Firefly III -asennuksestasi:|Firefly III on luonut sinulle :count tapahtumaa. Löydät ne Firefly III -asennuksestasi:',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => 'Suorita asianmukaiset toimet, ole hyvä.',
 
 ];
+// Ignore this comment

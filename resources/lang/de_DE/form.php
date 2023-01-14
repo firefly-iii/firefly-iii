@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Eröffnungsbilanz',
     'tagMode'                     => 'Schlagwort-Modus',
     'virtual_balance'             => 'Virtueller Kontostand',
+
+    // Ignore this comment
+
     'targetamount'                => 'Zielbetrag',
     'account_role'                => 'Kontenfunktion',
     'opening_balance_date'        => 'Eröffnungsbilanzdatum',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Möchten Sie das Sparschwein „:name” wirklich löschen?',
     'journal_areYouSure'          => 'Sind Sie sicher, dass Sie die Überweisung mit dem Namen ":description" löschen möchten?',
     'mass_journal_are_you_sure'   => 'Sind Sie sicher, dass Sie diese Überweisung löschen möchten?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Möchten Sie das Schlagwort „:tag” wirklich löschen?',
     'journal_link_areYouSure'     => 'Sind Sie sicher, dass Sie die Verknüpfung zwischen <a href=":source_link">:source</a> und <a href=":destination_link">:destination</a> löschen möchten?',
     'linkType_areYouSure'         => 'Möchten Sie den Verknüpfungstyp „:name” („:inward”/„:outward”) wirklich löschen?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN/Passwort',
     'fints_account'               => 'FinTS-Konto',
     'local_account'               => 'Firefly-III-Konto',
+
+    // Ignore this comment
+
     'from_date'                   => 'Datum ab',
     'to_date'                     => 'Datum bis',
     'due_date'                    => 'Fälligkeitstermin',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Antwort',
     'webhook_trigger'             => 'Auslöser',
 ];
+// Ignore this comment

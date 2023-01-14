@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute 必須是一個在 :date 之前的日期。',
     'unique_object_for_user'         => '這個名稱已被使用。',
     'unique_account_for_user'        => '這個帳戶名稱已被使用。',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute 必須介於 :min 和 :max 之間。',
     'between.file'                   => ':attribute 必須介於 :min kB 到 :max kB 之間。',
     'between.string'                 => ':attribute 必須介於 :min 到 :max 個字元之間。',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 
+    // Ignore this comment
+
     'secure_password'             => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => '定期重複交易的重複類型無效。',
     'valid_recurrence_rep_moment' => '重複時刻在此重複類型無效。',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
     'deposit_dest_wrong_type'  => 'The submitted destination account is not of the right type.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
     'transfer_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
     'transfer_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
     'auto_budget_period_mandatory'    => 'The auto budget period is a mandatory field.',
 ];
+
+// Ignore this comment

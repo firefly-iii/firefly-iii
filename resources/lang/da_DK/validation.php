@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute skal være en dato før :date.',
     'unique_object_for_user'         => 'Navnet er allerede i brug.',
     'unique_account_for_user'        => 'Kontonavnet er allerede i brug.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute skal være mellem :min og :max.',
     'between.file'                   => ':attribute skal være mellem :min og :max kilobytes.',
     'between.string'                 => ':attribute skal være imellem :min - :max tegn.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Begge konti skal være af samme kontotype',
     'same_account_currency'          => 'Begge konti skal have samme valuta',
 
+    // Ignore this comment
+
     'secure_password'             => 'Dette er ikke en sikker adgangskode. Prøv venligst igen. For mere information, besøg https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Ugyldig type gentalgelse for periodiske transaktioner.',
     'valid_recurrence_rep_moment' => 'Ugyldigt øjeblik for denne type gentagelse.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller kontonavn ":name".',
     'deposit_dest_wrong_type'  => 'Den foreslåede destinationskonto er ikke af den rigtige type.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
     'transfer_source_bad_data'  => 'Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller kontonavn ":name".',
     'transfer_dest_need_data'   => 'Det er nødvendigt at have et gyldigt destinationskonto ID og/eller gyldigt destinationskontonavn for at fortsætte.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Beløbet skal være større end 0.',
     'auto_budget_period_mandatory'    => 'Perioden for autobudget skal udfyldes.',
 ];
+
+// Ignore this comment

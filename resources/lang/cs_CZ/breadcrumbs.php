@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Výnosy, příjmy a vklady',
     'transfer_list'          => 'Převody',
     'transfers_list'         => 'Převody',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Vyúčtování',
     'create_withdrawal'      => 'Vytvořit nový výběr',
     'create_deposit'         => 'Vytvořit nový vklad',

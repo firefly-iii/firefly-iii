@@ -20,7 +20,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
+
 
 return [
     'failed'   => 'Vi kunne ikke finne noen konto som har de oppgitte detaljene.',

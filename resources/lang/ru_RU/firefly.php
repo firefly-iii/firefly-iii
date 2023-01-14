@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Закрыть',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Эти параметры поиска некорректны и были проигнорированы.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Дата транзакции: ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Создать новое правило из поискового запроса',
     'rule_from_search_words'                              => 'Механизм правил не справился с обработкой ":string". Предлагаемое правило, удовлетворяющее вашему поисковому запросу, может дать различные результаты. Пожалуйста, тщательно проверьте условия правила.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'В поиске применяются следующие атрибуты:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Имейте в виду, что счёт-источник в других частях разделённой транзакции будет таким же, как в первой части расхода.',
     'multi_account_warning_deposit'             => 'Имейте в виду, что счёт назначения в других частях разделённой транзакции будет таким же, как в первой части дохода.',
     'multi_account_warning_transfer'            => 'Имейте в виду, что счёт-источник и счёт назначения в других частях разделённой транзакции будут такими же, как в первой части перевода.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Экспорт данных из Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Новая категория ":name" успешно сохранена!',
     'without_category_between'                  => 'Без категории между :start и :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Обновить расход',
     'update_deposit'                            => 'Обновить доход',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Классификация',
     'store_transaction'                         => 'Сохранить транзакцию',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Стандартный финансовый отчёт за период с :start по :end',
     'report_audit'                              => 'Обзор транзакций за период с :start по :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Сумма всегда будет в валюте по умолчанию.',
     'net_filtered_prefs'                        => 'Эта диаграмма никогда не будет включать счета, у которых выключена опция "Включать в мои сбережения".',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Диаграмма',
     'month'                                     => 'Месяц',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Сохранено в ":journal"',
     'total_amount'                             => 'Итого',
     'number_of_decimals'                       => 'Количество знаков после запятой',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Исключить выходные дни',
     'recurrence_deleted'                 => 'Повторяющаяся транзакция ":title" удалена',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Баланс (:currency)',
     'box_spent_in_currency'              => 'Расходы (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

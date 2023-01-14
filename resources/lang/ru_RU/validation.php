@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute должна быть раньше :date.',
     'unique_object_for_user'         => 'Это название уже используется.',
     'unique_account_for_user'        => 'Такое название счёта уже используется.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute должен быть больше :min и меньше :max.',
     'between.file'                   => ':attribute должен быть размером :min - :max килобайт.',
     'between.string'                 => ':attribute должен содержать :min - :max символов.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Оба счета должны иметь один тип счета',
     'same_account_currency'          => 'Оба счета должны иметь одну и ту же валюту',
 
+    // Ignore this comment
+
     'secure_password'             => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Недопустимый тип для повторяющихся транзакций.',
     'valid_recurrence_rep_moment' => 'Неверный период повторения для данного типа повторений.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
     'deposit_dest_wrong_type'  => 'Сохраняемый счёт назначения - некорректный.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
     'transfer_source_bad_data'  => 'Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
     'transfer_dest_need_data'   => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Сумма должна быть больше 0.',
     'auto_budget_period_mandatory'    => 'Период авто-бюджета - это обязательно поле.',
 ];
+
+// Ignore this comment

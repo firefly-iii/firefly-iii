@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => '来源',
     'next_expected_match'     => '预期下次支付',
     'automatch'               => '自动匹配？',
+
+    // Ignore this comment
+
     'repeat_freq'             => '重复',
     'description'             => '描述',
     'amount'                  => '金额',
@@ -121,6 +126,9 @@ return [
     'external_id'             => '外部 ID',
     'account_at_bunq'         => 'bunq 账户',
     'file_name'               => '文件名称',
+
+    // Ignore this comment
+
     'file_size'               => '文件大小',
     'file_type'               => '文件类型',
     'attached_to'             => '附加到',
@@ -149,3 +157,4 @@ return [
     'secret'                  => '密钥',
 
 ];
+// Ignore this comment

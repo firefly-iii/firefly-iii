@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'あなたの Firefly III からのテストメッセージ',
     'admin_test_body'                         => 'これはあなたの Firefly III からのテストメッセージです。:email 宛に送信しました。',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'An invitation has been created',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'パスワードのリセット:',
     'registered_doc_link'                     => 'ドキュメント:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'A new Firefly III version is available',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => '完全なスタックトレースは以下の通りです:',
     'error_headers'                           => '「headers」は技術用語「HTTP headers」を参照します',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III が取引を作成しました|Firefly III が:count件の取引を作成しました',
     'new_journals_header'                     => 'Firefly III が取引を作成しました。Firefly III で参照できます:|Firefly III が:count件の取引を作成しました。 Firefly III でそれらを参照できます。',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => '適切に対処してください。',
 
 ];
+// Ignore this comment

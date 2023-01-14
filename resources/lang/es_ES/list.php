@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -28,7 +30,7 @@ return [
     'id'                      => 'ID',
     'create_date'             => 'Fecha de creación',
     'update_date'             => 'Fecha de modificación',
-    'updated_at'              => 'Actualizado en',
+    'updated_at'              => 'Actualizado el',
     'balance_before'          => 'Balance antes de ',
     'balance_after'           => 'Balance después de la',
     'name'                    => 'Nombre',
@@ -43,10 +45,10 @@ return [
     'lastActivity'            => 'Actividad más reciente',
     'balanceDiff'             => 'Diferencia de saldo',
     'other_meta_data'         => 'Otros metadatos',
-    'invited_at'              => 'Invited at',
+    'invited_at'              => 'Invitada el',
     'expires'                 => 'Invitation expires',
-    'invited_by'              => 'Invited by',
-    'invite_link'             => 'Invite link',
+    'invited_by'              => 'Invitado por',
+    'invite_link'             => 'Enlace de invitación',
     'account_type'            => 'Tipo de cuenta',
     'created_at'              => 'Fecha de creación',
     'account'                 => 'Cuenta',
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Origen',
     'next_expected_match'     => 'Próxima coincidencia esperada',
     'automatch'               => '¿Buscar coincidencia automaticamente?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Repetición:',
     'description'             => 'Descripción',
     'amount'                  => 'Monto',
@@ -74,8 +79,8 @@ return [
     'budget'                  => 'Presupuesto',
     'category'                => 'Categoría',
     'bill'                    => 'Factura',
-    'withdrawal'              => 'Retiro',
-    'deposit'                 => 'Depósito',
+    'withdrawal'              => 'Gasto',
+    'deposit'                 => 'Ingreso',
     'transfer'                => 'Trasferencia',
     'type'                    => 'Tipo',
     'completed'               => 'Completado',
@@ -87,7 +92,7 @@ return [
     'is_blocked'              => 'Está bloqueado',
     'is_admin'                => '¿Es el administrador?',
     'has_two_factor'          => 'Tiene 2FA',
-    'blocked_code'            => 'Bloque de código',
+    'blocked_code'            => 'Código de bloqueo',
     'source_account'          => 'Cuenta origen',
     'destination_account'     => 'Cuenta destino',
     'accounts_count'          => 'Número de cuentas',
@@ -105,8 +110,8 @@ return [
     'total_amount'            => 'Total',
     'sum'                     => 'Suma',
     'sum_excluding_transfers' => 'Suma (excluyendo transferencias)',
-    'sum_withdrawals'         => 'Suma de retiros',
-    'sum_deposits'            => 'Suma de depositos',
+    'sum_withdrawals'         => 'Suma de gastos',
+    'sum_deposits'            => 'Suma de ingresos',
     'sum_transfers'           => 'Suma de transferencias',
     'sum_reconciliations'     => 'Suma de reconciliaciones',
     'reconcile'               => 'Reconciliar',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'ID Externo',
     'account_at_bunq'         => 'Cuenta con bunq',
     'file_name'               => 'Nombre de fichero',
+
+    // Ignore this comment
+
     'file_size'               => 'Tamaño de fichero',
     'file_type'               => 'Tipo de fichero',
     'attached_to'             => 'Adjunto a',
@@ -142,10 +150,11 @@ return [
     'payment_info'            => 'Información del pago',
     'expected_info'           => 'Siguiente transacción esperada',
     'start_date'              => 'Fecha de inicio',
-    'trigger'                 => 'Trigger',
-    'response'                => 'Response',
+    'trigger'                 => 'Disparador',
+    'response'                => 'Respuesta',
     'delivery'                => 'Delivery',
     'url'                     => 'URL',
-    'secret'                  => 'Secret',
+    'secret'                  => 'Secreto',
 
 ];
+// Ignore this comment

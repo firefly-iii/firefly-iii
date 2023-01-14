@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Como podes ver, existem 3 mealheiros. Usa o botao mais e menos para actualizar o montante de dinheiro em cada mealheiro. Clica no nome do mealheiro para ver a administracao de cada mealheiro.',
     'profile-index'          => 'Nao te esquecas que a plataforma demo reinicia a cada 4 horas. O teu acesso pode ser revogado a qualquer altura. Isto acontece automaticamente e nao e um problema na plataforma.',
 ];
+
+// Ignore this comment

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Sumber',
     'next_expected_match'     => 'Transaksi yang diharapkan berikutnya',
     'automatch'               => 'Pencocokan otomatis?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Berulang',
     'description'             => 'Deskripsi',
     'amount'                  => 'Jumlah',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'ID Eksternal',
     'account_at_bunq'         => 'Rekening dengan bunq',
     'file_name'               => 'Nama file',
+
+    // Ignore this comment
+
     'file_size'               => 'Ukuran file',
     'file_type'               => 'Jenis file',
     'attached_to'             => 'Melekat pada',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

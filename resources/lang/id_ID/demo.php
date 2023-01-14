@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Seperti yang bisa Anda lihat, ada tiga celengan. Gunakan tombol plus dan minus untuk mempengaruhi jumlah uang di setiap celengan. Klik nama celengan untuk melihat administrasi masing-masing celengan.',
     'profile-index'          => 'Mohon diingat bahwa situs demo ini diatur ulang setiap 4 jam. Akses Anda bisa ditolak kapan saja. Ini berjalan secara otomatis dan bukanlah merupakan sebuah kesalahan.',
 ];
+
+// Ignore this comment

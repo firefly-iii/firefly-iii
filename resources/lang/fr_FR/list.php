@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Source',
     'next_expected_match'     => 'Prochaine association attendue',
     'automatch'               => 'Correspondance automatique ?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Répétitions',
     'description'             => 'Description',
     'amount'                  => 'Montant',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'ID externe',
     'account_at_bunq'         => 'Compte avec bunq',
     'file_name'               => 'Nom du fichier',
+
+    // Ignore this comment
+
     'file_size'               => 'Taille du fichier',
     'file_type'               => 'Type de fichier',
     'attached_to'             => 'Attaché à',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

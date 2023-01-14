@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'Ένα δοκιμαστικό μήνυμα από την εγκατάσταση του Firefly III',
     'admin_test_body'                         => 'Αυτό είναι ένα δοκιμαστικό μήνυμα από την εγκατάσταση του Firefly III. Αποστάλθηκε στο :email.',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'Έχει δημιουργηθεί μια πρόσκληση',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Επαναφορά κωδικού πρόσβασης:',
     'registered_doc_link'                     => 'Τεκμηρίωση:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'Μια νέα έκδοση του Firefly III είναι διαθέσιμη',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => 'Το πλήρες stacktrace είναι παρακάτω:',
     'error_headers'                           => 'The following headers may also be relevant:',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Το Firefly III έχει δημιουργήσει μια νέα συναλλαγή|Το Firefly III έχει δημιουργήσει :count νέες συναλλαγές',
     'new_journals_header'                     => 'Το Firefly III έχει δημιουργήσει μια συναλλαγή για εσάς. Μπορείτε να τη βρείτε στην εγκατάσταση Firefly ΙΙΙ:|Το Firefly III έχει δημιουργήσει :count συναλλαγές για εσάς. Μπορείτε να τις βρείτε στην εγκατάσταση Firefly III:',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => 'Please take the appropriate action.',
 
 ];
+// Ignore this comment

@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Închide',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Acești parametri de căutare nu sunt valabili și au fost ignorați.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Creați o nouă regulă din interogarea de căutare',
     'rule_from_search_words'                              => 'Motorul regulii are dificultăți în manipularea ":string". Regula sugerată care se potrivește interogării dvs. poate da rezultate diferite. Vă rugăm să verificați declanșatorii regulii cu atenție.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Următorii modificatorii sunt aplicați la căutare:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Reţineţi faptul că sursa scindărilor ulterioare va fi anulată de orice altceva definit în prima împărţire a retragerii.',
     'multi_account_warning_deposit'             => 'Țineți cont de faptul că destinația scindărilor ulterioare va fi depășită cu orice se definește la prima împărțire a depozitului.',
     'multi_account_warning_transfer'            => 'Reţineţi faptul că contul sursei + destinaţia fracţionărilor ulterioare va fi anulat de orice se defineşte în prima împărţire a transferului.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Exportă date din Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Categorie nouă ":name" salvată',
     'without_category_between'                  => 'Fără categorie între :start și :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Actualizați retragere',
     'update_deposit'                            => 'Actualizați depozit',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Clasificare',
     'store_transaction'                         => 'Tranzacție magazin',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Raportul financiar prestabilit între :start și :end',
     'report_audit'                              => 'Afișarea istoricului tranzacțiilor între :start și :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Suma va fi întotdeauna în moneda dvs. prestabilită.',
     'net_filtered_prefs'                        => 'Acest grafic nu va include niciodată conturi care nu au selectat opțiunea "Include în valoare netă".',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Grafic',
     'month'                                     => 'Lună',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Salvat în ":journal"',
     'total_amount'                             => 'Valoare totală',
     'number_of_decimals'                       => 'Număr de zecimale',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Cu excepția weekend-urilor',
     'recurrence_deleted'                 => 'tranzacție recurentă ":title" ștearsă',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Balanța (:currency)',
     'box_spent_in_currency'              => 'Cheltuit (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

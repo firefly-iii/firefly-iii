@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -37,3 +39,5 @@ Računi obveznosti so vaši dolgovi in krediti, kot na primer dolg na kreditni k
     'piggy-banks-index'      => 'Obstajajo trije pujski. Uporabi gumba plus in minus da vplivaš na količino denarja v vsakem. Klikni na ime pujska za več informacij.',
     'profile-index'          => 'Demo spletno mesto se ponastavi vsake štiri ure. Dostop lahko izgubiš v vsakem trenutku. Ta proces je samodejen in ne gre za "bug".',
 ];
+
+// Ignore this comment

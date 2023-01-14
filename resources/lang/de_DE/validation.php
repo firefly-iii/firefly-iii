@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute muss ein Datum vor dem :date sein.',
     'unique_object_for_user'         => 'Dieser Name wird bereits verwendet.',
     'unique_account_for_user'        => 'Dieser Kontoname wird bereits verwendet.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute muss zwischen :min und :max liegen.',
     'between.file'                   => ':attribute muss zwischen :min und :max Kilobytes groß sein.',
     'between.string'                 => ':attribute muss zwischen :min und :max Zeichen lang sein.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Beide Konten müssen vom selben Kontotyp sein',
     'same_account_currency'          => 'Beiden Konten muss die gleiche Währung zugeordnet sein',
 
+    // Ignore this comment
+
     'secure_password'             => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'valid_recurrence_rep_type'   => 'Ungültige Wiederholungsart für Daueraufträge.',
     'valid_recurrence_rep_moment' => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
     'deposit_dest_wrong_type'  => 'Das übermittelte Zielkonto entspricht nicht dem geforderten Typ.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
     'transfer_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
     'transfer_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Der Betrag muss größer als Null sein.',
     'auto_budget_period_mandatory'    => 'Der Zeitraum für das automatische Budget ist ein Pflichtfeld.',
 ];
+
+// Ignore this comment

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute має бути датою до :date.',
     'unique_object_for_user'         => 'Ім\'я вже використовується.',
     'unique_account_for_user'        => 'Така назва рахунку вже існує.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute повинен бути між :min і :max.',
     'between.file'                   => 'Розмір :attribute має бути в межах між :min і :max кілобайтів.',
     'between.string'                 => 'Довжина :attribute має бути в межах від :min до :max символів.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 
+    // Ignore this comment
+
     'secure_password'             => 'Це не надійний пароль. Будь ласка, спробуйте інший. Для отримання додаткової інформації, відвідайте https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Неприпустимий тип для повторюваних транзакцій.',
     'valid_recurrence_rep_moment' => 'Невірний період повторення для цого типу повторення.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Не вдалося знайти дійсний рахунок призначення з ID ":id" або іменем ":name".',
     'deposit_dest_wrong_type'  => 'Збережений рахунок призначення - некоректний.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Щоб продовжити, необхідно вказати дійсний ID вихідного рахунку і/або його назву.',
     'transfer_source_bad_data'  => 'Не вдалося знайти дійсний вихідний рахунок з ID ":id" або іменем ":name".',
     'transfer_dest_need_data'   => 'Щоб продовжити, необхідно вказати дійсний ID рахунку призначення і/або його назву.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Сума має бути більше нуля.',
     'auto_budget_period_mandatory'    => 'Автоматичний період бюджета - обов\'язкове поле.',
 ];
+
+// Ignore this comment

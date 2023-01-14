@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Buat anggaran baru sesuai keinginan anda.',
     'budgets_index_list_of_budgets'         => 'Gunakan tabel ini untuk menetapkan jumlah setiap anggaran daan melihat bagaimana keadaan anda.',
     'budgets_index_outro'                   => 'Untuk mempelajari lebih lanjut tentang anggaran, periksa ikon bantuan di pojok kanan atas.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Gunakan laporan ini untuk mendapatkan wawasan terperinci dalam keuangan anda.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Bagian ini menunjukkan berapa banyak yang telah anda simpan di setiap celengan.',
     'piggy-banks_index_button'                                => 'Di samping bilah kemajuan ini ada dua tombol (+ dan -) untuk menanmbahkan atau menghapus uang dari masing-masing celengan.',
     'piggy-banks_index_accountStatus'                         => 'Untuk setiap akun aset dengan sedikitnya satu celenggan, statusnya terdaftar dalam tabel ini.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Apa tujuanmu? Sofa baru, kamera baru, uang untuk keadaan darurat?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Gunakan tombol ini untuk melihat transaksi mana yang sesuai dengan peraturan anda.',
     'rules_create_actions'                                    => 'Tentukan sebanyak mungkin tindakan yang anda inginkan.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Pilihan lainnya tersedia di balik tab ini.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Kode ini harus sesuai dengan ISO (Google untuk mata uang baru anda).',
 ];
+// Ignore this comment

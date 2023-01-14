@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Come puoi vedere, ci sono tre salvadanai. Utilizzare i pulsanti più e meno per influenzare la quantità di denaro in ogni salvadanaio. Fare clic sul nome del salvadanaio per visualizzare la gestione per ciascun salvadanaio.',
     'profile-index'          => 'Tieni a mente che il sito demo viene reimpostato ogni quattro ore. L\'acceso può essere revocato in qualsiasi momento. Questo avviene automaticamente e non è un bug.',
 ];
+
+// Ignore this comment

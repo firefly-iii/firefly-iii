@@ -20,7 +20,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
+
 
 return [
     'failed'   => '로그인 정보가 일치하지 않습니다.',

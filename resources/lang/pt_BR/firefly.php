@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Fechar',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Estes parâmetros de busca não são válidos e foram ignorados.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'A data da transação é ":value"',
     'search_modifier_not_date_on'                         => 'A data da transação não é ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Criar nova regra a partir da pesquisa',
     'rule_from_search_words'                              => 'O mecanismo de regra tem dificuldade para tratar ":string". A regra sugerida que se encaixa na sua pesquisa pode retornar resultados diferentes. Por favor, verifique os gatilhos das regras cuidadosamente.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Os seguintes modificadores são aplicados também à busca:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Tenha em mente que a conta de origem das subsequentes divisões será sobrescrita pelo que estiver definido na primeira divisão da saída.',
     'multi_account_warning_deposit'             => 'Tenha em mente que a conta de destino das divisões subsequentes será sobrescrita pelo que estiver definido na primeira divisão da entrada.',
     'multi_account_warning_transfer'            => 'Tenha em mente que a conta de origem + de destino das divisões subsequentes será sobrescrita pelo que for definido na primeira divisão da transferência.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Exportar dados do Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Armazenada nova categoria ":name"',
     'without_category_between'                  => 'Sem categoria entre :start e :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Atualizar retirada',
     'update_deposit'                            => 'Atualizar de depósito',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Classificação',
     'store_transaction'                         => 'Salvar transação',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Relatório financeiro padrão entre :start e :end',
     'report_audit'                              => 'Visão geral do histórico de transação entre :start e :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'A soma será sempre em sua moeda padrão.',
     'net_filtered_prefs'                        => 'Esse gráfico nunca irá incluir contas que têm a opção "incluir no patrimônio líquido" desmarcada.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Gráfico',
     'month'                                     => 'Mês',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Armazendo sob ":journal"',
     'total_amount'                             => 'Valor total',
     'number_of_decimals'                       => 'Número de casas decimais',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Convidar novo usuário',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Exceto nos fins de semana',
     'recurrence_deleted'                 => 'Transação recorrente ":title" apagada',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Saldo (:currency)',
     'box_spent_in_currency'              => 'Gasto (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Etiqueta adicionada',
 
 ];
+
+// Ignore this comment

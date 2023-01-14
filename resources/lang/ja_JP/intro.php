@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'あなたが妥当だと考える新しい予算を設定してください。',
     'budgets_index_list_of_budgets'         => '各予算の金額を設定したり、状況を確認するにはこの表を使ってください。',
     'budgets_index_outro'                   => '予算計上についてもっと知るには、右上のヘルプアイコンを確認してください。',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'あなたの財務状況の詳細を見るにはこれらのレポートを使用してください。',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'この項目は、それぞれの貯金箱にどれだけ貯めたかを示しています。',
     'piggy-banks_index_button'                                => 'このプログレスバーの隣には、それぞれの貯金箱からお金を追加または削除する、2つのボタン(+と-) があります。',
     'piggy-banks_index_accountStatus'                         => 'この表には、1つ以上の貯金箱をもつ資産口座の状況が表示されています。',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'あなたの目標は何ですか？ 新しいソファ、カメラ、もしもの時のお金ですか？',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'ルールに一致する取引を確認するには、このボタンを使用します。',
     'rules_create_actions'                                    => '好きなだけアクションを設定します。',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'これらのタブには、より多くのオプションがあります。',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'このコードはISOに準拠している必要があります(新しい通貨はググってください)。',
 ];
+// Ignore this comment

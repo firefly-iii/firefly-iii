@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'Sebuah pesan tes dari instalasi Firefly III Anda',
     'admin_test_body'                         => 'Ini adalah sebuah pesan tes dari instans Firefly III Anda. Pesan ini dikirim ke :email.',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'Undangan telah terkirim',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Atur ulang kata sandi:',
     'registered_doc_link'                     => 'Dokumentasi:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'A new Firefly III version is available',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => 'Jejak tumpukan lengkap ada di bawah:',
     'error_headers'                           => 'The following headers may also be relevant:',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III telah membuat transaksi baru|Firefly III telah membuat :count transaksi baru',
     'new_journals_header'                     => 'Firefly III telah membuat transaksi untuk Anda. Anda dapat menemukannya di instalasi Firefly III Anda:|Firefly telah membuat :count transaksi untuk Anda. Anda dapat menemukannya di instalasi Firefly III Anda:',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => 'Please take the appropriate action.',
 
 ];
+// Ignore this comment

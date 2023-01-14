@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'รายได้ และ เงินฝาก',
     'transfer_list'          => 'โอน',
     'transfers_list'         => 'โอน',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'การกระทบยอดหนี้',
     'create_withdrawal'      => 'สร้างรายการถอนเงิน',
     'create_deposit'         => 'สร้างรายการฝากเงิน',

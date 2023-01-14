@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Forrás',
     'next_expected_match'     => 'Következő várható egyezés',
     'automatch'               => 'Automatikus egyezés?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Ismétlődések',
     'description'             => 'Leírás',
     'amount'                  => 'Összeg',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'Külső azonosító',
     'account_at_bunq'         => 'Bunq fiók',
     'file_name'               => 'Fájlnév',
+
+    // Ignore this comment
+
     'file_size'               => 'Fájl méret',
     'file_type'               => 'Fájltípus',
     'attached_to'             => 'Csatolva',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

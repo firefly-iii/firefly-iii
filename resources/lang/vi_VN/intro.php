@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Tạo ngân sách mới khi bạn thấy phù hợp.',
     'budgets_index_list_of_budgets'         => 'Sử dụng bảng này để đặt số tiền cho từng ngân sách và xem bạn đang làm như thế nào.',
     'budgets_index_outro'                   => 'Để tìm hiểu thêm về lập ngân sách, hãy kiểm tra biểu tượng trợ giúp ở góc trên bên phải.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Sử dụng các báo cáo này để có được thông tin chi tiết về tài chính của bạn.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Trường này cho bạn biết bạn đã tiết kiệm được bao nhiêu trong mỗi con heo đất.',
     'piggy-banks_index_button'                                => 'Bên cạnh thanh tiến trình này là hai nút (+ và -) để thêm hoặc xóa tiền từ mỗi ngân hàng heo.',
     'piggy-banks_index_accountStatus'                         => 'Đối với mỗi tài khoản có ít nhất một ngân hàng heo, trạng thái được liệt kê trong bảng này.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Mục tiêu của bạn là gì? Một chiếc ghế dài mới, một máy ảnh, tiền cho các trường hợp khẩn cấp?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Sử dụng nút này để xem giao dịch nào sẽ phù hợp với quy tắc của bạn.',
     'rules_create_actions'                                    => 'Đặt bao nhiêu hành động tùy thích.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Nhiều tùy chọn có sẵn đằng sau các tab này.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Mã này phải tuân thủ ISO (Google mã cho loại tiền mới của bạn).',
 ];
+// Ignore this comment

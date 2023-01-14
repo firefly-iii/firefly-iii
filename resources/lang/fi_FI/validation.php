@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => 'Määritteen :attribute täytyy olla päivämäärä ennen päivää :date.',
     'unique_object_for_user'         => 'Tämä nimi on jo käytössä.',
     'unique_account_for_user'        => 'Tämän niminen tili on jo käytössä.',
+
+    // Ignore this comment
+
     'between.numeric'                => 'Kentän :attribute arvon täytyy olla välillä :min ja :max.',
     'between.file'                   => 'Tiedoston :attribute koon täytyy olla välillä :min ja :max kilotavua.',
     'between.string'                 => 'Määritteen :attribute merkkijonon pituuden täytyy olla välillä :min ja :max merkkiä.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Molempien tilien on oltava samaa tyyppiä',
     'same_account_currency'          => 'Molemmilla tileillä on oltava sama valuuttaasetus',
 
+    // Ignore this comment
+
     'secure_password'             => 'Tämä ei ole turvallinen salasana. Yritäpä uudestaan. Lisätietoja löydät osoitteesta https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Virheellinen toiston tyyppi toistuville tapahtumille.',
     'valid_recurrence_rep_moment' => 'Virheellinen arvo tämän tyyppiselle toistolle.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Kelvollista kohdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
     'deposit_dest_wrong_type'  => 'Syötetty kohdetili ei ole oikean tyyppinen.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Tarvitset kelvollisen lähdetilin tunnuksen ja/tai kelvollisen lähdetilin nimen jatkaaksesi.',
     'transfer_source_bad_data'  => 'Nostolle kelvollista lähdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
     'transfer_dest_need_data'   => 'Tarvitset kelvollisen kohdetilin tunnuksen ja/tai kelvollisen kohdetilin nimen jatkaaksesi.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Summan on oltava enemmän nollaa suurempi.',
     'auto_budget_period_mandatory'    => 'Automaattisen budjetin jakso on pakollinen kenttä.',
 ];
+
+// Ignore this comment

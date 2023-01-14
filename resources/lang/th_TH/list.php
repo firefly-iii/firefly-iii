@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'แหล่งที่มา',
     'next_expected_match'     => 'Next expected match',
     'automatch'               => 'Auto match?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Repeats',
     'description'             => 'รายละเอียด',
     'amount'                  => 'จำนวน',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'External ID',
     'account_at_bunq'         => 'Account with bunq',
     'file_name'               => 'File name',
+
+    // Ignore this comment
+
     'file_size'               => 'File size',
     'file_type'               => 'File type',
     'attached_to'             => 'Attached to',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

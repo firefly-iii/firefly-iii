@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => '關閉',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'These search parameters are not valid and have been ignored.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Create new rule from search query',
     'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => '搜尋也套用以下條件：',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
     'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
     'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => '已儲存新分類 “:name”',
     'without_category_between'                  => '自 :start 至 :end 之間沒有分類',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => '更新提款',
     'update_deposit'                            => '更新存款',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Classification',
     'store_transaction'                         => 'Store transaction',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => '自 :start 至 :end 的預設財務報表',
     'report_audit'                              => '自 :start 至 :end 的交易歷史概覽',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => '總額會總是以您的預設貨幣顯示',
     'net_filtered_prefs'                        => '此圖表永遠不會囊括未勾選 “包含於淨值" 選項的帳戶',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => '圖表',
     'month'                                     => '月',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => '儲存在 ":journal"',
     'total_amount'                             => '總金額',
     'number_of_decimals'                       => '小數位數：',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => '例外的周末',
     'recurrence_deleted'                 => '週期性交易 ":title" 已刪除',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => '餘額 (:currency)',
     'box_spent_in_currency'              => '已花費 (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

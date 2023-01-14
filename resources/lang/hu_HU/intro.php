@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Új költségkeretet létrehozása.',
     'budgets_index_list_of_budgets'         => 'Ezen a táblán lehet beállítani a költségkeretek összegeit és áttekinteni, hogy hogyan állnak.',
     'budgets_index_outro'                   => 'A költségkeretek használatáról további információk a jobb felső sarokban található súgó ikon alatt találhatóak.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Ezek a jelentések részletes betekintést biztosítanak a pénzügyekbe.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Ez a mező azt mutatja, hogy menni a megtakarítás a malacperselyekben.',
     'piggy-banks_index_button'                                => 'A folyamatsáv mellett két gomb található (+ és -) melyekkel pénzt lehet a malacperselyekbe betenni vagy kivenni onnan.',
     'piggy-banks_index_accountStatus'                         => 'A legalább egy malacpersellyel rendelkező eszközszámlák állapota ebben a listában jelenik meg.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Mi a cél? Egy új kanapé, egy kamera, pénz a vészhelyzetekre?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Ezzel a gombbal meg lehet nézni, hogy mely tranzakciók felelnek meg a szabálynak.',
     'rules_create_actions'                                    => 'Bármennyi műveletet be lehet állítani.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'A fülek mögött több beállítása lehetőség áll rendelkezésre.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Ennek a kódnak ISO kompatibilisnek kell lennie (új pénznemnél érdemes a Google-t használni).',
 ];
+// Ignore this comment

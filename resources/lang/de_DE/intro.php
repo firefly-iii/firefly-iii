@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Erstellen Sie neue Budgets nach Ihren Wünschen.',
     'budgets_index_list_of_budgets'         => 'Verwenden Sie diese Tabelle, um die Beträge für jedes Budget festzulegen und einen Überblick zu erhalten.',
     'budgets_index_outro'                   => 'Um mehr über die Finanzplanung zu erfahren, klicken Sie auf das Hilfesymbol in der oberen rechten Ecke.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Verwenden Sie diese Reports, um detaillierte Einblicke in Ihre Finanzen zu erhalten.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Dieses Feld zeigt Ihnen, wie viel Sie in jedem Sparschwein gespart haben.',
     'piggy-banks_index_button'                                => 'Neben diesem Fortschrittsbalken befinden sich zwei Buttons (+ und -), um Geld von jedem Sparschwein hinzuzufügen oder zu entfernen.',
     'piggy-banks_index_accountStatus'                         => 'In dieser Tabelle wird der Status der Bestandskonten aufgeführt, die mit mindestens einem Sparschwein verbunden sind.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Worauf sparen Sie? Eine neue Couch, eine Kamera, Geld für Notfälle?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Verwenden Sie diese Schaltfläche, um zu sehen, welche Transaktionen zu Ihrer Regel passen würden.',
     'rules_create_actions'                                    => 'Legen Sie so viele Aktionen fest, wie Sie möchten.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Weitere Optionen sind hinter diesen Registerkarten verfügbar.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Dieser Code sollte ISO-konform sein (Für eine neue Währung googlen).',
 ];
+// Ignore this comment

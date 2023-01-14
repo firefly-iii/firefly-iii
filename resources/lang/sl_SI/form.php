@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Začetno stanje',
     'tagMode'                     => 'Način oznak',
     'virtual_balance'             => 'Navidezno stanje',
+
+    // Ignore this comment
+
     'targetamount'                => 'Ciljni znesek',
     'account_role'                => 'Vloga računa',
     'opening_balance_date'        => 'Datum začetnega stanja',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Si prepričan, da želiš zbrisati hranilnik ":name"?',
     'journal_areYouSure'          => 'Si prepričan, da želiš zbrisati transakcijo z opisom ":description"?',
     'mass_journal_are_you_sure'   => 'Si prepričani, da želite izbrisati te transakcije?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Si prepričan, da želite izbrisati to oznako ":tag"?',
     'journal_link_areYouSure'     => 'Si prepričan, da želiš izbrisati povezavo med <a href=":source_link">:source</a> in <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Si prepričan, da želiš izbrisati vrsto povezave ":name" (":inward"/":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / geslo',
     'fints_account'               => 'FinTS account',
     'local_account'               => 'Račun v Firely III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Datum od',
     'to_date'                     => 'Datum do',
     'due_date'                    => 'Datum zapadlosti',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

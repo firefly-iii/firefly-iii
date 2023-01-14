@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Създайте нови бюджети, както сметнете за добре.',
     'budgets_index_list_of_budgets'         => 'Използвайте тази таблица, за да зададете сумите за всеки бюджет и да видите как се справяте.',
     'budgets_index_outro'                   => 'За да научите повече за бюджетирането, проверете иконата за помощ в горния десен ъгъл.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Използвайте тези отчети, за да получите подробна информация за вашите финанси.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Това поле ви показва колко сте спестили във всяка касичка.',
     'piggy-banks_index_button'                                => 'До тази лента за прогрес са разположени два бутона (+ и -) за добавяне или премахване на пари от всяка касичка.',
     'piggy-banks_index_accountStatus'                         => 'За всяка сметка за активи с най-малко една касичка статусът е посочен в тази таблица.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Каква е твоята цел? Нов диван, камера, пари за спешни случаи?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Използвайте този бутон, за да видите кои транзакции биха съответствали на вашето правило.',
     'rules_create_actions'                                    => 'Задайте толкова действия, колкото искате.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Повече опции са достъпни зад тези раздели.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Този код трябва да е съвместим с ISO (използвайте Google да го намерите за вашата нова валута).',
 ];
+// Ignore this comment

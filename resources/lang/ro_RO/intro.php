@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Creați bugete noi după cum doriți.',
     'budgets_index_list_of_budgets'         => 'Utilizați acest tabel pentru a stabili sumele pentru fiecare buget și pentru a vedea cum progresaţi.',
     'budgets_index_outro'                   => 'Pentru a afla mai multe despre bugetare, verificați pictograma de ajutor din colțul din dreapta sus.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Utilizați aceste rapoarte pentru a obține informații detaliate despre finanțele dumneavoastră.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Acest câmp vă arată cât de mult ați salvat în fiecare pușculiță.',
     'piggy-banks_index_button'                                => 'Lângă această bara de progres sunt două butoane (+ și -) pentru a adăuga sau a elimina bani din fiecare pușculiță.',
     'piggy-banks_index_accountStatus'                         => 'Pentru fiecare cont de activ cu cel puțin o pușculiță, statutul este menționat în acest tabel.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Care este țelul tău? O canapea nouă, o cameră, bani pentru urgențe?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Utilizați acest buton pentru a vedea care tranzacții s-ar potrivi regulii dvs.',
     'rules_create_actions'                                    => 'Setați câte acțiuni doriți.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Mai multe opțiuni sunt disponibile în spatele acestor file.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Acest cod ar trebui să fie conform ISO (căutați pe Google noua dvs. monedă).',
 ];
+// Ignore this comment

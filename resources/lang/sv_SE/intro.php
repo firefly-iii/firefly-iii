@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Skapa en ny budget som du tycker passar.',
     'budgets_index_list_of_budgets'         => 'Använd denna tabell för att ställa in beloppen för varje budget och se hur det står till.',
     'budgets_index_outro'                   => 'För att lära dig mer om budgetering, kolla in hjälpikonen i det övre högra hörnet.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Använd dessa rapporter för att få detaljerad insikt i din ekonomi.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Det här fältet visar hur mycket du har sparat i varje spargris.',
     'piggy-banks_index_button'                                => 'Bredvid framstegsfältet finns två knappar (+ och -) för att lägga till eller ta bort pengar från varje spargris.',
     'piggy-banks_index_accountStatus'                         => 'För varje tillgångskonto med minst en spargris listas status i denna tabell.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Vad är ditt mål? En ny soffa, en kamera, pengar för nödsituationer?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Använd den här knappen för att se vilka transaktioner som matchar din regel.',
     'rules_create_actions'                                    => 'Ställ in så många åtgärder du vill.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Fler alternativ finns bakom dessa flikar.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Den här koden ska vara ISO-kompatibel (Google den för din nya valuta).',
 ];
+// Ignore this comment

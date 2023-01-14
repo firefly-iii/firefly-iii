@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Bron',
     'next_expected_match'     => 'Volgende verwachte match',
     'automatch'               => 'Automatisch herkennen?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Herhaling',
     'description'             => 'Omschrijving',
     'amount'                  => 'Bedrag',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'Externe ID',
     'account_at_bunq'         => 'Bunq-account',
     'file_name'               => 'Bestandsnaam',
+
+    // Ignore this comment
+
     'file_size'               => 'Bestandsgrootte',
     'file_type'               => 'Bestandstype',
     'attached_to'             => 'Bijlage van',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Geheim',
 
 ];
+// Ignore this comment

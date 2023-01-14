@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Tämä virhe tapahtui tiedostossa <span style="font-family: monospace;">:file</span> rivillä :line koodilla :code.',
     'stacktrace'              => 'Pinojäljitys',
     'more_info'               => 'Lisää tietoja',
+
+    // Ignore this comment
+
     'collect_info'            => 'Kerää lisätietoja <code>storage/logs</code> hakemistosta, josta löydät lokitiedostoja. Jos käytät Dockeria, käytä komentoa <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'Voit lukea lisää virhetietojen keräämisestä <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>:sta.',
     'github_help'             => 'Hanki apua GitHubista',

@@ -20,7 +20,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
+
 
 return [
     'failed'   => 'Ezek a hitelesítő adatok nem egyeznek meg a tárolt adatokkal.',

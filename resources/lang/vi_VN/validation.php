@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => 'Thuộc tính: phải là một ngày trước: ngày.',
     'unique_object_for_user'         => 'Tên này đã được sử dụng.',
     'unique_account_for_user'        => 'Tên tài khoản này đã được sử dụng.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute phải nằm trong khoảng :min và :max.',
     'between.file'                   => ':attribute phải nằm trong khoảng :min và :max kilobyte.',
     'between.string'                 => ':attribute phải nằm giữa :min và :max ký tự.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Cả hai tài khoản phải thuộc cùng một loại tài khoản',
     'same_account_currency'          => 'Cả hai tài khoản phải có cùng cài đặt đơn vị tiền tệ',
 
+    // Ignore this comment
+
     'secure_password'             => 'Đây không phải là một mật khẩu an toàn. Vui lòng thử lại. Để biết thêm thông tin, hãy truy cập https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Loại lặp lại không hợp lệ cho các giao dịch định kỳ.',
     'valid_recurrence_rep_moment' => 'Khoảnh khắc lặp lại không hợp lệ cho loại lặp lại này.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
     'deposit_dest_wrong_type'  => 'Tài khoản đích đã gửi không đúng loại.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
     'transfer_source_bad_data'  => 'Không thể tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
     'transfer_dest_need_data'   => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Số lượng phải lớn hơn 0.',
     'auto_budget_period_mandatory'    => 'Ngân sách tự động là một trường bắt buộc.',
 ];
+
+// Ignore this comment

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Crie novos orçamentos conforme for entendendo o programa.',
     'budgets_index_list_of_budgets'         => 'Use esta tabela para definir os montantes para cada orçamento e veja como você está fazendo.',
     'budgets_index_outro'                   => 'Para saber mais sobre orçamentação, clique no ícone de ajuda no canto superior direito.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Use esses relatórios para obter informações detalhadas sobre suas finanças.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Este campo mostra o quanto você salvou em cada banco.',
     'piggy-banks_index_button'                                => 'Ao lado desta barra de progresso estão dois botões (+ e -) para adicionar ou remover dinheiro de cada banco.',
     'piggy-banks_index_accountStatus'                         => 'Para cada conta de ativos com pelo menos um banco, o status está listado nesta tabela.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Qual é o teu objetivo? Um novo sofá, uma câmera, dinheiro para emergências?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Use este botão para ver quais transações combinariam com sua regra.',
     'rules_create_actions'                                    => 'Defina todas ações que desejar realizar.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Mais opções estão disponíveis atrás dessas abas/guias.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Este código deve ser compatível com ISO (Google é para sua nova moeda).',
 ];
+// Ignore this comment

@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Zamknij',
@@ -253,7 +255,7 @@ return [
     'updated_webhook'                      => 'Zaktualizowano webhook ":title"',
     'edit_webhook_js'                      => 'Edytuj webhook "{title}"',
     'show_webhook'                         => 'Webhook ":title"',
-    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
+    'webhook_was_triggered'                => 'Webhook został uruchomiony na wskazanej transakcji. Poczekaj na wyniki.',
     'webhook_messages'                     => 'Wiadomość webhook\'a',
     'view_message'                         => 'Podgląd wiadomości',
     'view_attempts'                        => 'Podgląd nieudanych prób',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Te parametry wyszukiwania nie są prawidłowe i zostały zignorowane.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Data transakcji to ":value"',
     'search_modifier_not_date_on'                         => 'Data transakcji to nie ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Utwórz nową regułę z zapytania wyszukiwania',
     'rule_from_search_words'                              => 'Silnik reguł ma problemy z obsługą ":string". Sugerowana reguła, która pasuje do Twojego zapytania może dawać różne wyniki. Proszę dokładnie sprawdź wyzwalacze reguł.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Zastosowano także poniższe modyfikatory:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Pamiętaj, że konto źródłowe kolejnych podziałów zostanie ustawione na konto zdefiniowane w pierwszym podziale wypłaty.',
     'multi_account_warning_deposit'             => 'Pamiętaj, że konto docelowe kolejnych podziałów zostanie ustawione na konto zdefiniowane w pierwszym podziale wpłaty.',
     'multi_account_warning_transfer'            => 'Pamiętaj, że konta źródłowe i docelowe kolejnych podziałów zostaną ustawione na konto zdefiniowane w pierwszym podziale transferu.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Eksportuj dane z Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Zapisano nową kategorię ":name"',
     'without_category_between'                  => 'Bez kategorii między :start i :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Modyfikuj wypłatę',
     'update_deposit'                            => 'Modyfikuj wpłatę',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Klasyfikacja',
     'store_transaction'                         => 'Zapisz transakcję',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Domyślny raport finansowy między :start i :end',
     'report_audit'                              => 'Przegląd historii transakcji między :start i :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Suma zawsze będzie w domyślnej walucie.',
     'net_filtered_prefs'                        => 'Ten wykres nigdy nie będzie zawierał kont, które nie mają zaznaczonej opcji "Uwzględnij w wartości netto".',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Wykres',
     'month'                                     => 'Miesiąc',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Zapisano jako ":journal"',
     'total_amount'                             => 'Łączna kwota',
     'number_of_decimals'                       => 'Ilość miejsc dziesiętnych',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Pomiń weekendy',
     'recurrence_deleted'                 => 'Cykliczna transakcja ":title" została usunięta',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Saldo (:currency)',
     'box_spent_in_currency'              => 'Wydano (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Dodano tag',
 
 ];
+
+// Ignore this comment

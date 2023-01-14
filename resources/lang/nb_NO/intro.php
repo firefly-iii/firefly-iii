@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Opprett nye budsjetter etter behov.',
     'budgets_index_list_of_budgets'         => 'Bruk denne tabellen til å angi beløp for hvert budsjett og se hvordan du klarer deg.',
     'budgets_index_outro'                   => 'Hvis du vil vite mer om budsjettering, trykk på hjelp-ikonet øverst til høyre.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Bruk disse rapportene for å få detaljert innsikt i din økonomi.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Dette feltet viser hvor mye du har spart i hver sparegris.',
     'piggy-banks_index_button'                                => 'Ved siden av denne fremdriftslinjen er det to knapper (+ og -) for å legge til eller fjerne penger fra hver sparegris.',
     'piggy-banks_index_accountStatus'                         => 'For hver aktivakonto med minst en sparegris er statusen oppført i denne tabellen.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Hva er ditt mål? En ny sofa, et kamera, penger til uforutsette utgifter?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Bruk denne knappen for å se hvilke eksisterende transaksjoner som samsvarer med regelen din.',
     'rules_create_actions'                                    => 'Sett så mange handlinger som du vil.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Flere alternativer er tilgjengelig bak disse fanene.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Denne koden bør være ISO-kompatibel (Søk på Google for å finne ISO-koden).',
 ];
+// Ignore this comment

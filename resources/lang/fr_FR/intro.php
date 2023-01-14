@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Créez de nouveaux budgets comme bon vous semble.',
     'budgets_index_list_of_budgets'         => 'Utilisez ce tableau pour définir les montants pour chaque budget et voir comment vous vous en sortez.',
     'budgets_index_outro'                   => 'Pour en savoir plus sur la budgétisation, utilisez l\'icône d\'aide en haut à droite.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Utilisez ces rapports pour obtenir des informations détaillées sur vos finances.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Ce champ vous montre combien vous avez mis de côté dans chaque tirelire.',
     'piggy-banks_index_button'                                => 'À côté de cette barre de progression sont deux boutons (+ et -) pour ajouter ou retirer de l’argent de chaque tirelire.',
     'piggy-banks_index_accountStatus'                         => 'Pour chaque compte d\'actif avec au moins une tirelire, le statut est indiqué dans ce tableau.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Quel est votre objectif ? Un nouveau divan, une caméra, de l\'argent pour les urgences ?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Utilisez ce bouton pour voir quelles opérations correspondent à votre règle.',
     'rules_create_actions'                                    => 'Définissez autant d\'actions que vous le souhaitez.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Plus d\'options sont disponibles derrière ces onglets.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Ce code devrait être conforme à l\'ISO (recherchez-le sur google votre nouvelle devise).',
 ];
+// Ignore this comment

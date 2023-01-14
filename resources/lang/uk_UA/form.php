@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Початковий баланс',
     'tagMode'                     => 'Режим міток',
     'virtual_balance'             => 'Віртуальний баланс',
+
+    // Ignore this comment
+
     'targetamount'                => 'Сума накопичення',
     'account_role'                => 'Тип рахунку',
     'opening_balance_date'        => 'Дата початкового балансу',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Ви впевнені, що хочете видалити скарбничку ":name"?',
     'journal_areYouSure'          => 'Ви впевнені, що хочете видалити транзакцію ":description"?',
     'mass_journal_are_you_sure'   => 'Видалити ці транзакції?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Ви дійсно хочете видалити мітку ":tag"?',
     'journal_link_areYouSure'     => 'Ви дійсно бажаєте видалити посилання між <a href=":source_link">:source</a> і <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Ви дійсно хочете видалити тип посилання ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN/Password',
     'fints_account'               => 'Обліковий запис FinTS',
     'local_account'               => 'Акаунт Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Дата від',
     'to_date'                     => 'Дата до',
     'due_date'                    => 'Дата закінчення',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

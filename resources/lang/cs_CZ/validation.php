@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute nemůže být později než :date.',
     'unique_object_for_user'         => 'Tento název je již používán.',
     'unique_account_for_user'        => 'Tento název účtu je již používán.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute musí být v rozmezí :min a :max.',
     'between.file'                   => ':attribute musí být v rozmezí :min a :max kilobajtů.',
     'between.string'                 => ':attribute musí mít délku v rozmezí :min a :max znaků.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Oba účty musí být stejného typu',
     'same_account_currency'          => 'Oba účty musí mít stejné nastavení měny',
 
+    // Ignore this comment
+
     'secure_password'             => 'Toto není bezpečné heslo. Zkuste jiné. Více se dozvíte na http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Neplatný typ opakování pro opakované transakce.',
     'valid_recurrence_rep_moment' => 'Neplatné opakování v tento moment tohoto typu opakování.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
     'deposit_dest_wrong_type'  => 'Předložený cílový účet není správného typu.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
     'transfer_source_bad_data'  => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',
     'transfer_dest_need_data'   => 'Pro pokračování je potřeba získat platné cílové ID účtu a/nebo platné jméno cílového účtu.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Částka musí být vyšší než nula.',
     'auto_budget_period_mandatory'    => 'Období automatického rozpočtu je povinné.',
 ];
+
+// Ignore this comment

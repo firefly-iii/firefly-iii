@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => '開始残高',
     'tagMode'                     => 'タグモード',
     'virtual_balance'             => '仮想残高',
+
+    // Ignore this comment
+
     'targetamount'                => '目標金額',
     'account_role'                => '口座の役割',
     'opening_balance_date'        => '残高開始日',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => '貯金箱「:name」を削除してもよろしいですか？',
     'journal_areYouSure'          => '「:description」と説明されている取引を削除してもよろしいですか？',
     'mass_journal_are_you_sure'   => 'これらの取引を削除してもよろしいですか？',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'タグ「:tag」を削除してもよろしいですか？',
     'journal_link_areYouSure'     => '<a href=":source_link">:source</a> と <a href=":destination_link">:destination</a> の間のリンクを削除してもよろしいですか？',
     'linkType_areYouSure'         => 'リンクタイプ「:name (:inward/:outward)」を削除してもよろしいですか？',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / パスワード',
     'fints_account'               => '資産形成口座',
     'local_account'               => 'Firefly III アカウント',
+
+    // Ignore this comment
+
     'from_date'                   => '開始日',
     'to_date'                     => '終了日',
     'due_date'                    => '期日',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

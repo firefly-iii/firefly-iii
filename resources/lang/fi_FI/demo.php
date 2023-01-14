@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Kuten näet, säästöpossuja on kolme. Käytä plus- ja miinuspainikkeita vaikuttaaksesi rahamäärään kussakin säästöpossussa. Napsauttamalla säästöpossun nimeä pääset hallinnoimaan niitä kutakin.',
     'profile-index'          => 'Muista, että esittelysivusto nollautuu joka neljäs tunti. Käyttöoikeutesi voidaan peruuttaa milloin tahansa. Tämä tapahtuu automaattisesti eikä ole virhe.',
 ];
+
+// Ignore this comment

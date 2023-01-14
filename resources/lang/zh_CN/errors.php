@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => '该错误位于文件 <span style="font-family: monospace;">:file</span> 第 :line 行的代码 :code',
     'stacktrace'              => '堆栈跟踪',
     'more_info'               => '更多信息',
+
+    // Ignore this comment
+
     'collect_info'            => '请在 <code>storage/logs</code> 目录中查找日志文件以获取更多信息。如果您正在使用 Docker，请使用 <code>docker logs -f [container]</code>。',
     'collect_info_more'       => '您可以在<a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ页面</a>了解更多有关收集错误信息的内容。',
     'github_help'             => '在 GitHub 上获取帮助',

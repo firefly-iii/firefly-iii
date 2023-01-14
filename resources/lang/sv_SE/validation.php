@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute måste vara ett datum före :date.',
     'unique_object_for_user'         => 'Namnet är redan upptaget.',
     'unique_account_for_user'        => 'Kontonamnet är redan upptaget.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute måste vara mellan :min och :max.',
     'between.file'                   => ':attribute måste vara mellan :min och :max kilobytes.',
     'between.string'                 => ':attribute måste vara mellan :min och :max tecken.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Båda kontona måste vara samma kontotyp',
     'same_account_currency'          => 'Båda kontona måste ha samma valutainställning',
 
+    // Ignore this comment
+
     'secure_password'             => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Ogiltig repetitionstyp får återkommande transaktioner.',
     'valid_recurrence_rep_moment' => 'Ogiltig repetitionsmoment för denna typ av repetition.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
     'deposit_dest_wrong_type'  => 'Det inskickade destinationskontot är inte av rätt typ.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
     'transfer_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
     'transfer_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Beloppet måste vara mer än noll.',
     'auto_budget_period_mandatory'    => 'Den automatiska budgetperioden är ett obligatoriskt fält.',
 ];
+
+// Ignore this comment

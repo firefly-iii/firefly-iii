@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Comme vous pouvez le voir, il y a trois tirelires. Utilisez les boutons plus et moins pour influer sur le montant d’argent dans chaque tirelire. Cliquez sur le nom de la tirelire pour voir l’administration pour chaque tirelire.',
     'profile-index'          => 'Garder à l’esprit que le site de démo se réinitialise toutes les quatre heures. Votre accès peut être révoqué à n\'importe quel moment. Ceci intervient automatiquement, ce n\'est pas un bug.',
 ];
+
+// Ignore this comment

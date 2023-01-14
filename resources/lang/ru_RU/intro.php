@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Создавайте новые бюджеты по своему усмотрению.',
     'budgets_index_list_of_budgets'         => 'Используйте эту таблицу, чтобы установить суммы для каждого бюджета и посмотреть, как у вас идут дела.',
     'budgets_index_outro'                   => 'Чтобы узнать больше о бюджете, воспользуйтесь значком справки в верхнем правом углу.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Используйте эти отчеты, чтобы получить подробные сведения о ваших финансах.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Это поле показывает, сколько вы сохранили в каждой копилке.',
     'piggy-banks_index_button'                                => 'Рядом с этим индикатором выполнения находятся две кнопки (+ и -) для добавления или удаления денег из каждой копилки.',
     'piggy-banks_index_accountStatus'                         => 'Для каждого основного счёта, связанного хотя бы с одной копилкой, статус указан в этой таблице.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Какова ваша цель? Новый диван, камера, деньги на "чёрный день"?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Используйте эту кнопку, чтобы узнать, какие транзакции будут соответствовать вашему правилу.',
     'rules_create_actions'                                    => 'Установите столько действий, сколько хотите.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'На этих вкладках доступны дополнительные параметры.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Код должен соответствовать требованиям ISO (для новых валют вы можете найти код с помощью Google).',
 ];
+// Ignore this comment

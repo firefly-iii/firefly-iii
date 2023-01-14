@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Υπόλοιπο έναρξης',
     'tagMode'                     => 'Λειτουργία ετικέτας',
     'virtual_balance'             => 'Εικονικό υπόλοιπο',
+
+    // Ignore this comment
+
     'targetamount'                => 'Ποσό στόχου',
     'account_role'                => 'Ρόλος λογαριασμού',
     'opening_balance_date'        => 'Ημερομηνία υπολοίπου έναρξης',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Είστε σίγουροι ότι θέλετε να διαγράψετε τον κουμπαρά με όνομα ":name";',
     'journal_areYouSure'          => 'Είστε σίγουροι ότι θέλετε να διαγράψετε τη συναλλαγή με περιγραφή ":description";',
     'mass_journal_are_you_sure'   => 'Είστε σίγουροι ότι θέλετε να διαγράψετε αυτές τις συναλλαγές;',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Είστε σίγουροι ότι θέλετε να διαγράψετε την ετικέτα ":tag";',
     'journal_link_areYouSure'     => 'Είστε σίγουροι ότι θέλετε να διαγράψετε το σύνδεσμο μεταξύ <a href=":source_link">:source</a> και <a href=":destination_link">:destination</a>;',
     'linkType_areYouSure'         => 'Είστε σίγουροι ότι θέλετε να διαγράψετε τον τύπο συνδέσμου ":name" (":inward" / ":outward");',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Κωδικός',
     'fints_account'               => 'Λογαριασμός FinTS',
     'local_account'               => 'Λογαριασμός Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Από ημερομηνία',
     'to_date'                     => 'Εώς ημερομηνία',
     'due_date'                    => 'Ημερομηνία προθεσμίας',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Απόκριση',
     'webhook_trigger'             => 'Ενεργοποίηση',
 ];
+// Ignore this comment

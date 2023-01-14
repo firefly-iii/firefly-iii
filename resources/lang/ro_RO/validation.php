@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute trebuie să fie o dată înainte de :date.',
     'unique_object_for_user'         => 'Acest nume este deja folosit.',
     'unique_account_for_user'        => 'Acest nume de cont este deja utilizat.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute trebuie să fie între :min și :max.',
     'between.file'                   => ':attribute trebuie să fie între :min și :max kilobyți.',
     'between.string'                 => ':attribute trebuie să fie între :min și :max caractere.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Ambele conturi trebuie să fie de acelaşi tip de cont',
     'same_account_currency'          => 'Ambele conturi trebuie să aibă aceeași monedă',
 
+    // Ignore this comment
+
     'secure_password'             => 'Aceasta nu este o parolă sigură. Vă rugăm să încercați din nou. Pentru mai multe informații, vizitați https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Tip de repetare nevalid pentru tranzacțiile recurente.',
     'valid_recurrence_rep_moment' => 'Momentul repetiției nevalid pentru acest tip de repetare.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
     'deposit_dest_wrong_type'  => 'Contul de destinație trimis nu este de tipul potrivit.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
     'transfer_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
     'transfer_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Suma trebuie să fie mai mare decât zero.',
     'auto_budget_period_mandatory'    => 'Perioada de autobuget este un câmp obligatoriu.',
 ];
+
+// Ignore this comment

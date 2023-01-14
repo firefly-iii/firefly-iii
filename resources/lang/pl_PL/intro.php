@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Utwórz nowe budżety zgodnie z Twoimi potrzebami.',
     'budgets_index_list_of_budgets'         => 'Skorzystaj z tej tabeli, aby ustawić kwoty dla każdego budżetu i sprawdź jak ci idzie.',
     'budgets_index_outro'                   => 'Aby dowiedzieć się więcej o budżetowaniu, użyj ikonki pomocy w prawym górnym rogu.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Skorzystaj z tych raportów, aby uzyskać szczegółowe informacje o swoich finansach.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'To pole pokazuje, ile zaoszczędziłeś w każdej skarbonce.',
     'piggy-banks_index_button'                                => 'Obok tego paska postępu znajdują się dwa przyciski (+ oraz -) do dodawania lub usuwania pieniędzy z każdej skarbonki.',
     'piggy-banks_index_accountStatus'                         => 'Dla każdego konta aktywów z co najmniej jedną skarbonką status jest pokazany w tej tabeli.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Jaki jest twój cel? Nowa kanapa, aparat fotograficzny, pieniądze na nagłe wypadki?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Użyj tego przycisku, aby zobaczyć, które transakcje pasują do Twojej reguły.',
     'rules_create_actions'                                    => 'Ustaw tak wiele akcji, jak chcesz.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Więcej opcji dostępne są za tymi kartami.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Ten kod powinien być zgodny z normą ISO (poszukaj go w Google dla Twojej nowej waluty).',
 ];
+// Ignore this comment

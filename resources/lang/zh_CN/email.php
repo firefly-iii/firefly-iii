@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => '来自 Firefly III 安装的测试消息',
     'admin_test_body'                         => '这是来自 Firefly III 站点的测试消息，收件人是 :email。',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => '邀请已发送',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => '密码已重置',
     'registered_doc_link'                     => '文档',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => '有新的 Firefly III 版本可用',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => '完整的堆栈跟踪如下：',
     'error_headers'                           => '以下标题也可能具有相关性：',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III 创建了一笔新的交易|Firefly III 创建了 :count 笔新的交易',
     'new_journals_header'                     => 'Firefly III 为您创建了一笔交易，您可以在您的 Firefly III 站点中查看：|Firefly III 为您创建了 :count 笔交易，您可以在您的 Firefly III 站点中查看：',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => '请采取适当的行动。',
 
 ];
+// Ignore this comment

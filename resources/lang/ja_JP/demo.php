@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'ご覧のように、3つの貯金箱があります。プラスやマイナスのボタンでそれぞれの貯金箱のお金の量を調整することができます。貯金箱の名前をクリックするとそれぞれの貯金箱の管理ができます。',
     'profile-index'          => 'デモサイトは4時間毎にリセットされることに注意してください。あなたの変更はいつでも破棄される可能性があります。これは自動的に行われ、バグではありません。',
 ];
+
+// Ignore this comment

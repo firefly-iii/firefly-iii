@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Varlık, gelir ve mevduatlar',
     'transfer_list'          => 'Transferler',
     'transfers_list'         => 'Transferler',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Mutabakatlar',
     'create_withdrawal'      => 'Yeni para çekme oluştur',
     'create_deposit'         => 'Yeni mevduat oluştur',

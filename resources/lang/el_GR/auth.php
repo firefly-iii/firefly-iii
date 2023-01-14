@@ -20,7 +20,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
+
 
 return [
     'failed'   => 'Αυτά τα διαπιστευτήρια δεν ταιριάζουν με τα αρχεία μας.',

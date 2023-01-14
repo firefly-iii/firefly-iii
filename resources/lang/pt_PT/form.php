@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Saldo inicial',
     'tagMode'                     => 'Modo da etiqueta',
     'virtual_balance'             => 'Saldo virtual',
+
+    // Ignore this comment
+
     'targetamount'                => 'Montante alvo',
     'account_role'                => 'Tipo de conta',
     'opening_balance_date'        => 'Data do saldo inicial',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Tens a certeza que pretendes apagar o mealheiro chamado ":name"?',
     'journal_areYouSure'          => 'Tens a certeza que pretendes apagar a transaccao com descricao ":description"?',
     'mass_journal_are_you_sure'   => 'Tens a certeza que pretendes apagar estas transações?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Tem a certeza que pretende apagar a etiqueta ":tag"?',
     'journal_link_areYouSure'     => 'Tens a certeza que pretendes apagar a ligacao entre <a href=":source_link">:source</a> e <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Tens a certeza que pretendes apagar o tipo de link ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Password',
     'fints_account'               => 'Conta FinTS',
     'local_account'               => 'Conta Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Data desde',
     'to_date'                     => 'Data ate',
     'due_date'                    => 'Data de vencimento',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

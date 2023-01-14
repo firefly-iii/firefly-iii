@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Como puede ver, hay tres huchas. Utilice los botones más y menos para influir en la cantidad de dinero en cada hucha. Haga clic en el nombre de la hucha para ver la administración de cada una.',
     'profile-index'          => 'Tenga en cuenta que el sitio de demostración se restablece cada cuatro horas. Su acceso puede ser revocado en cualquier momento. Esto ocurre automáticamente y no es un error.',
 ];
+
+// Ignore this comment

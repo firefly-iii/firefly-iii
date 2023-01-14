@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Doanh thu, thu nhập và tiền gửi',
     'transfer_list'          => 'Chuyển',
     'transfers_list'         => 'Chuyển',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Hòa giải',
     'create_withdrawal'      => 'Tạo rút tiền mới',
     'create_deposit'         => 'Tạo gửi tiền mới',

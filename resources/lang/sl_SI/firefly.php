@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'zapri',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'These search parameters are not valid and have been ignored.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Create new rule from search query',
     'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Naslednji modifikatorji se uporabljajo tudi za iskanje:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
     'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
     'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Nova kategorija ":name" shranjen',
     'without_category_between'                  => 'Brez kategorije med :start in :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Posodobi odliv',
     'update_deposit'                            => 'Posodobi polog',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Klasifikacija',
     'store_transaction'                         => 'Store transaction',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Privzeto finančno poročilo med :start in :end',
     'report_audit'                              => 'Pregled zgodovine transakcij med :start in :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Vsota bo vedno v privzeti valuti.',
     'net_filtered_prefs'                        => 'Ta diagram nikoli ne bo vključeval računov, ki nimajo izbrano »Vključi v neto vrednost«.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Diagram',
     'month'                                     => 'Mesec',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Shranjeno v ":journal"',
     'total_amount'                             => 'Skupni znesek',
     'number_of_decimals'                       => 'Število decimalk',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Razen vikendov',
     'recurrence_deleted'                 => 'Ponavljajoča transakcija ":title" izbrisana',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Balance (:currency)',
     'box_spent_in_currency'              => 'Spent (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Dodana oznaka',
 
 ];
+
+// Ignore this comment

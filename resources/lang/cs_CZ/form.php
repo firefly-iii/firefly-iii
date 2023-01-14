@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Počáteční zůstatek',
     'tagMode'                     => 'Režim štítku',
     'virtual_balance'             => 'Virtuální zůstatek',
+
+    // Ignore this comment
+
     'targetamount'                => 'Cílová částka',
     'account_role'                => 'Role účtu',
     'opening_balance_date'        => 'Datum počátečního zůstatku',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Opravdu smazat pokladničku se jménem ":name"?',
     'journal_areYouSure'          => 'Jste si jisti, že chcete odstranit transakci popsanou „:description“?',
     'mass_journal_are_you_sure'   => 'Jste si jisti, že chcete odstranit tyto transakce?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Jste si jisti, že chcete odstranit štítek „:tag“?',
     'journal_link_areYouSure'     => 'Jste si jisti, že chcete odstranit provázání mezi <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Jste si jisti, že chcete odstranit typ provázání „:name“ (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN kód / heslo',
     'fints_account'               => 'FinTS účet',
     'local_account'               => 'Účet Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Od data',
     'to_date'                     => 'Do data',
     'due_date'                    => 'Datum splatnosti',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

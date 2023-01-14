@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'După cum puteți vedea, există trei pușculițe. Utilizați butoanele plus și minus pentru a influența cantitatea de bani din fiecare pușculiță. Faceți clic pe numele pușculiței pentru a vedea gestiunea pentru fiecare pușculiță.',
     'profile-index'          => 'Rețineți că site-ul demo se resetează la fiecare patru ore. Accesul dvs. poate fi revocat oricând. Acest lucru se întâmplă automat și nu este un bug.',
 ];
+
+// Ignore this comment

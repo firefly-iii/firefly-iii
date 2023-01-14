@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Startsaldo',
     'tagMode'                     => 'Tag modus',
     'virtual_balance'             => 'Virtueel saldo',
+
+    // Ignore this comment
+
     'targetamount'                => 'Doelbedrag',
     'account_role'                => 'Rol van rekening',
     'opening_balance_date'        => 'Startsaldodatum',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Weet je zeker dat je het spaarpotje met naam ":name" wilt verwijderen?',
     'journal_areYouSure'          => 'Weet je zeker dat je de transactie met naam ":description" wilt verwijderen?',
     'mass_journal_are_you_sure'   => 'Weet je zeker dat je al deze transacties wilt verwijderen?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Weet je zeker dat je de tag met naam ":tag" wilt verwijderen?',
     'journal_link_areYouSure'     => 'Weet je zeker dat je de koppeling tussen <a href=":source_link">:source</a> en <a href=":destination_link">:destination</a> wilt verwijderen?',
     'linkType_areYouSure'         => 'Weet je zeker dat je linktype ":name" (":inward" / ":outward") wilt verwijderen?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'Pincode / wachtwoord',
     'fints_account'               => 'FinTS-rekening',
     'local_account'               => 'Firefly III rekening',
+
+    // Ignore this comment
+
     'from_date'                   => 'Datum van',
     'to_date'                     => 'Datum tot',
     'due_date'                    => 'Vervaldatum',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Reactie',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

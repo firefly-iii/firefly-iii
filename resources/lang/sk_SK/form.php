@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Počiatočný zostatok',
     'tagMode'                     => 'Režim štítku',
     'virtual_balance'             => 'Virtuálnu zostatok',
+
+    // Ignore this comment
+
     'targetamount'                => 'Cieľová suma',
     'account_role'                => 'Rola účtu',
     'opening_balance_date'        => 'Dátum počiatočného zostatku',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Skutočne chcete odstrániť pokladničku s názvom ":name"?',
     'journal_areYouSure'          => 'Skutočne chcete odstrániť transakciu popísanú ":description"?',
     'mass_journal_are_you_sure'   => 'Skutočne chcete odstrániť tieto transakcie?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Skutočne chcete odstrániť značku ":tag"?',
     'journal_link_areYouSure'     => 'Skutočne chcete odstrániť previazanie medzi <a href=":source_link">:source</a> a <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Skutočne chcete odstrániť previazanie typu ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN kód / heslo',
     'fints_account'               => 'FinTS účet',
     'local_account'               => 'Účet Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Od dátumu',
     'to_date'                     => 'Do dátumu',
     'due_date'                    => 'Dátum splatnosti',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

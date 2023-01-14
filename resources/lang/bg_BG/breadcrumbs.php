@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Приходи, доходи и депозити',
     'transfer_list'          => 'Прехвърляне',
     'transfers_list'         => 'Прехвърляне',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Съгласувания',
     'create_withdrawal'      => 'Създай нов разход',
     'create_deposit'         => 'Създай нов приход',

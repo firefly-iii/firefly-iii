@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Số dư đầu kỳ',
     'tagMode'                     => 'Chế độ nhãn',
     'virtual_balance'             => 'Cân bằng ảo',
+
+    // Ignore this comment
+
     'targetamount'                => 'Số tiền mục tiêu',
     'account_role'                => 'Vai trò tài khoản',
     'opening_balance_date'        => 'Ngày mở số dư',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Bạn có chắc chắn muốn xóa heo đất có tên ":name"?',
     'journal_areYouSure'          => 'Bạn có chắc chắn muốn xóa giao dịch được mô tả ":description"?',
     'mass_journal_are_you_sure'   => 'Bạn có chắc chắn muốn xóa những giao dịch này?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Bạn có chắc chắn muốn xóa nhãn ":tag"?',
     'journal_link_areYouSure'     => 'Bạn có chắc chắn muốn xóa liên kết giữa <a href=":source_link">:source</a> và <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Bạn có chắc chắn muốn xóa loại liên kết ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'Mật khẩu',
     'fints_account'               => 'FinTS account',
     'local_account'               => 'Tài khoản Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Từ ngày',
     'to_date'                     => 'Đến ngày',
     'due_date'                    => 'Ngày đáo hạn',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

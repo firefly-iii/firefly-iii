@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Källa',
     'next_expected_match'     => 'Nästa förväntade träff',
     'automatch'               => 'Automatisk matchning?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Upprepas',
     'description'             => 'Beskrivning',
     'amount'                  => 'Belopp',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'Externt ID',
     'account_at_bunq'         => 'Konto med bunq',
     'file_name'               => 'Filnamn',
+
+    // Ignore this comment
+
     'file_size'               => 'Filstorlek',
     'file_type'               => 'Filtyp',
     'attached_to'             => 'Bifogad till',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

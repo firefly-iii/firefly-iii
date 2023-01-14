@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Vytvárajte nové rozpočty ako uznáte za vhodné.',
     'budgets_index_list_of_budgets'         => 'Používajte túto tabuľku pre nastavenie súm pre každý rozpočet a zistite, ako ste na tom s financiami.',
     'budgets_index_outro'                   => 'Ak se chcete dozvedieť viac o tvorbe rozpočtov, kliknite na ikonu pomocníka v pravom hornom rohu.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'S pomocou týchto prehľadov získate podrobné informácie o svojich financiách.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Toto políčko zobrazuje, koľko ste v každej z pokladničiek ušetrili.',
     'piggy-banks_index_button'                                => 'Vedľa tohto ukazovateľa postupu sa nachádzajú dve tlačítka (+ a -) pre pridanie alebo odobranie peňazí z každej z pokladničiek.',
     'piggy-banks_index_accountStatus'                         => 'Pre každý majetkový účet s aspoň jednou pokladničkou je v tejto tabuľke vypísaný stav.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Čo je vašim cieľom? Nová pohovka, fotoaparát, rezerva pre nečekané výdaje?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Toto tlačidlo slúži na zobrazenie transakcií, ktoré zodpovedajú pravidlu.',
     'rules_create_actions'                                    => 'Nastavte toľko akcií, koľko potrebujete.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Ďalšie možnosti sú k dispozícii v kartách.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Tento kód by mal byť v súlade s normou ISO (vyhľadajte si ho pre novú menu).',
 ];
+// Ignore this comment

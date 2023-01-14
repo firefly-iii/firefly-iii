@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Затвори',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Дадените параметрите за търсене не са валидни и ще бъдат пренебрегнати.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Създай ново правило от низа за търсене',
     'rule_from_search_words'                              => 'Механизмът за правила има затруднения с обработката на ":string". Предложеното правило, което отговаря на низа ви за търсене, може да даде различни резултати. Моля проверете внимателно задействанията на правилото.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'И следните модификатори се прилагат към търсенето:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Имайте предвид, че разходна сметка на следващите разделяния ще бъде тази която е дефинирана в първия раздел на тегленето.',
     'multi_account_warning_deposit'             => 'Имайте предвид, че приходната сметка на следващите разделяния ще бъде тази която е дефинирана в първия раздел на депозита.',
     'multi_account_warning_transfer'            => 'Имайте предвид, че приходната + разходната сметка на следващите разделяния ще бъде тази която е дефинирана в първия раздел на прехвърлянето.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Експортирайте данни от Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Новата категория ":name" бе запазена',
     'without_category_between'                  => 'Без категория между :start и :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Обнови тегленето',
     'update_deposit'                            => 'Обнови депозита',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Класификация',
     'store_transaction'                         => 'Запазете транзакция',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Финансов отчет по подразбиране между :start и :end',
     'report_audit'                              => 'Преглед на историята на транзакциите между :start и :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Сумата винаги ще бъде във вашата валута по подразбиране.',
     'net_filtered_prefs'                        => 'Тази графика никога няма да включва сметки, при които в опцията „Включи в нетната стойност“ не е поставена отметка.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Графика',
     'month'                                     => 'Месец',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Запазено като ":journal"',
     'total_amount'                             => 'Обща сума',
     'number_of_decimals'                       => 'Брой десетични знаци',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Освен уикендите',
     'recurrence_deleted'                 => 'Повтарящата се транзакция ":title" беше изтрита',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Баланс (:currency)',
     'box_spent_in_currency'              => 'Похарчени (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

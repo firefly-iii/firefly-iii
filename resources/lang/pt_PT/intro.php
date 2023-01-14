@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Crie novos orçamentos como achar melhor.',
     'budgets_index_list_of_budgets'         => 'Use esta tabela para definir os valores para cada orçamento e manter o controlo dos gastos.',
     'budgets_index_outro'                   => 'Para obter mais informações sobre orçamentos, verifica o ícone de ajuda no canto superior direito.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Use estes relatórios para obter sínteses detalhadas sobre as suas finanças.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Este campo mostra-te quando ja guardaste em cada mealheiro.',
     'piggy-banks_index_button'                                => 'Ao lado desta barra de progresso existem 2 butoes(+ e -) para adicionares ou removeres dinheiro de cada mealheiro.',
     'piggy-banks_index_accountStatus'                         => 'Para cada conta de activos com pelo menos um mealheiro, o estado e listado nesta tabela.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Qual e o teu objectivo? Um sofa novo, uma camara, dinheiro para emergencias?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Usa este botao para ver quais transaccoes podem coincidir com a tua regra.',
     'rules_create_actions'                                    => 'Define todas as accoes que quiseres.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Mais opções estão disponíveis atrás destas abas.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Este codigo deve ser compativel com ISO (procura pela tua nova moeda no google).',
 ];
+// Ignore this comment

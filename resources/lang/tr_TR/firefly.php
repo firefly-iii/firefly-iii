@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Kapat',
@@ -324,6 +326,8 @@ return [
     'invalid_operators_list'               => 'Bu arama parametreleri geçerli değil ve yok sayıldı.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -685,6 +689,7 @@ return [
     'create_rule_from_query'                              => 'Arama sorgusundan yeni kural oluşturma',
     'rule_from_search_words'                              => 'Kural altyapısı ":string" işlemekte zorlanıyor. Arama sorgunuza uyan önerilen kural farklı sonuçlar verebilir. Lütfen kural tetikleyicilerini dikkatlice doğrulayın.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Aşağıdaki değiştiriciler arama için de uygulanır:',
@@ -1169,6 +1174,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1465,6 +1471,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Sonraki bölünmelerin kaynak hesabının, geri çekilmenin ilk bölünmesinde tanımlanan herhangi bir şey tarafından reddedileceğini unutmayın.',
     'multi_account_warning_deposit'             => 'Sonraki bölünmelerin hedef hesabının, mevduatın ilk bölünmesinde tanımlanan herhangi bir şey tarafından iptal edileceğini unutmayın.',
     'multi_account_warning_transfer'            => 'Sonraki bölünmelerin kaynak + hedef hesabının, aktarımın ilk bölünmesinde tanımlanan her şey tarafından geçersiz kılınacağını unutmayın.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
@@ -1840,6 +1848,8 @@ return [
     'stored_category'                           => 'Kaydedilen yeni kategori ":name"',
     'without_category_between'                  => ':start ve :end arasında kategorisiz',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Geri çekmeyi güncelle',
     'update_deposit'                            => 'Depozitoyu güncelle',
@@ -2058,6 +2068,8 @@ return [
     'classification'                            => 'Classification',
     'store_transaction'                         => 'Store transaction',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => ':start ve :end arasında varsayılan finans raporu',
     'report_audit'                              => ':start ve :end arasında işlem geçmişine genel bakış',
@@ -2162,6 +2174,8 @@ return [
     'sum_in_default_currency'                   => 'The sum will always be in your default currency.',
     'net_filtered_prefs'                        => 'This chart will never include accounts that have the "Include in net worth"-option unchecked.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Grafik',
     'month'                                     => 'Ay',
@@ -2249,6 +2263,8 @@ return [
     'att_part_of_journal'                      => 'Stored under ":journal"',
     'total_amount'                             => 'Toplam Tutar',
     'number_of_decimals'                       => 'Ondalık Sayı',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2520,6 +2536,8 @@ return [
     'except_weekends'                    => 'Except weekends',
     'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Balance (:currency)',
     'box_spent_in_currency'              => 'Spent (:currency)',
@@ -2577,3 +2595,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

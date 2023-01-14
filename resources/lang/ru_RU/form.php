@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Начальный баланс',
     'tagMode'                     => 'Режим метки',
     'virtual_balance'             => 'Виртуальный баланс',
+
+    // Ignore this comment
+
     'targetamount'                => 'Целевая сумма',
     'account_role'                => 'Тип счета',
     'opening_balance_date'        => 'Дата начального баланса',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Вы уверены, что хотите удалить копилку с именем ":name"?',
     'journal_areYouSure'          => 'Вы действительно хотите удалить транзакцию с описанием ":description"?',
     'mass_journal_are_you_sure'   => 'Вы действительно хотите удалить эти транзакции?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Вы действительно хотите удалить метку ":tag"?',
     'journal_link_areYouSure'     => 'Вы действительно хотите удалить связь между <a href=":source_link">:source</a> и <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Вы уверены, что хотите удалить тип ссылки ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Пароль',
     'fints_account'               => 'Счёт FinTS',
     'local_account'               => 'Счёт Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'От даты',
     'to_date'                     => 'До даты',
     'due_date'                    => 'Срок оплаты',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Ответ',
     'webhook_trigger'             => 'События',
 ];
+// Ignore this comment

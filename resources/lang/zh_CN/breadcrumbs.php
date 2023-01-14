@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => '收入',
     'transfer_list'          => '转账',
     'transfers_list'         => '转账',
+
+    // Ignore this comment
+
     'reconciliation_list'    => '对账',
     'create_withdrawal'      => '创建新取款',
     'create_deposit'         => '创建新存款',

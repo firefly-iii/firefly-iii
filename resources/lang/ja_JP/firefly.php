@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => '閉じる',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'これらの検索条件は無効であり、無視されています。',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => '取引日が「:value」',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => '検索クエリから新しいルールを作成',
     'rule_from_search_words'                              => 'ルールエンジンは「:string」をうまく扱えません。 検索クエリに提案されたルールは、異なる結果をもたらす可能性があります。ルールのトリガーは慎重に検証してください。',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => '次の修飾子も検索に適用されます:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => '続く分割の出金元口座は、出金の最初の分割の定義によって覆されることに注意してください。',
     'multi_account_warning_deposit'             => '続く分割の送金先口座は、送金の最初の分割の定義によって覆されることに注意してください。',
     'multi_account_warning_transfer'            => '続く分割の送金先口座と出金元口座は、送金の最初の分割の定義によって覆されることに注意してください。',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Firefly III からデータをエクスポート',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => '新しいカテゴリ「:name」を保存しました',
     'without_category_between'                  => ':start から :end までのカテゴリなし',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => '出金を更新',
     'update_deposit'                            => '入金を更新',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => '分類',
     'store_transaction'                         => '取引を保存',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => ':start から :end までのデフォルトの財務レポート',
     'report_audit'                              => ':start から :end までの取引履歴概要',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => '合計は常にデフォルト通貨になります。',
     'net_filtered_prefs'                        => 'このチャートには「純資産に含める」オプションがチェックされていない口座が含まれることはありません。',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'チャート',
     'month'                                     => '月',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => '「:journal」に保存しました',
     'total_amount'                             => '合計金額',
     'number_of_decimals'                       => '小数点以下の桁数',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => '週末を除外する',
     'recurrence_deleted'                 => '定期的な取引「:title」を削除しました',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => '残高 (:currency)',
     'box_spent_in_currency'              => '支出 (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

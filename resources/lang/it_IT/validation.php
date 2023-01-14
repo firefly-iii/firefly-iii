@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute deve essere una data prima :date.',
     'unique_object_for_user'         => 'Questo nome è già in uso.',
     'unique_account_for_user'        => 'Il nome del conto è già in uso.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute con questo nome conto è già in uso :min e :max.',
     'between.file'                   => ':attribute deve essere :min e :max kilobyte.',
     'between.string'                 => ':attribute deve essere tra :min e :max caratteri.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Entrambi i conti devono essere dello stesso tipo',
     'same_account_currency'          => 'Entrambi i conti devono essere impostati sulla stessa valuta',
 
+    // Ignore this comment
+
     'secure_password'             => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
     'valid_recurrence_rep_moment' => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
     'deposit_dest_wrong_type'  => 'Il conto di destinazione inviato non è di tipo corretto.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
     'transfer_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
     'transfer_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'L\'importo deve essere maggiore di zero.',
     'auto_budget_period_mandatory'    => 'Il periodo per il budget automatico è un campo obbligatorio.',
 ];
+
+// Ignore this comment

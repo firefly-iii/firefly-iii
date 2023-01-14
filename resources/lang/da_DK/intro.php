@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Opret nye budgetter, som du finder passende.',
     'budgets_index_list_of_budgets'         => 'Brug denne tabel til at fastsætte beløbene for hvert budget og se, hvordan du klarer det.',
     'budgets_index_outro'                   => 'For at lære mere om budgettering, tjek hjælpeikonet i øverste højre hjørne.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Brug disse rapporter til at få detaljeret indsigt i dine finanser.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Dette felt viser dig hvor meget du har gemt i hver "sparebøsse".',
     'piggy-banks_index_button'                                => 'Ved siden af denne statuslinje er to knapper (+ og -) for at tilføje eller fjerne penge fra hver "sparebøsse".',
     'piggy-banks_index_accountStatus'                         => 'For hver konto for aktiver med mindst en "sparebøsse" er status angivet i denne tabel.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Hvad er dit mål? En ny sofa, et kamera, penge til nødsituationer?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Brug denne knap til at se, hvilke transaktioner der ville passe til din regel.',
     'rules_create_actions'                                    => 'Angiv så mange handlinger som du ønsker.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Flere indstillinger er tilgængelige bag disse fanerblade.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Denne kode skal være ISO-kompatibel (Slå den op på Google for din nye valuta).',
 ];
+// Ignore this comment

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Bu hata dosyada oluştu<span style="font-family: monospace;">:file</span> on line :line with code :code.',
     'stacktrace'              => 'Yığın izleme',
     'more_info'               => 'Daha çok bilgi',
+
+    // Ignore this comment
+
     'collect_info'            => 'Lütfen günlük dosyalarını bulacağınız <code>storage/logs</code> dizininde daha fazla bilgi toplayın. Eğer Docker kullanıyorsanız, <code>docker logs -f [container]</code> komutunu kullanın.',
     'collect_info_more'       => 'Hata bilgilerini toplama hakkında daha fazla bilgi için <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode ">the FAQ</a>.',
     'github_help'             => 'Github\'dan yardım alın',

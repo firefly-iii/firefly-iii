@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Bevételek, jövedelem és betétek',
     'transfer_list'          => 'Átvezetések',
     'transfers_list'         => 'Átvezetések',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Egyeztetések',
     'create_withdrawal'      => 'Új költség létrehozása',
     'create_deposit'         => 'Új bevétel létrehozása',

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Hier wurden bereits drei Sparschweine angelegt. Der Betrag in den Sparschweinen kann über die Plus-/Minus-Buttons angepasst werden. Klicken Sie auf den Namen des Sparschweins um weitere Informationen einzusehen.',
     'profile-index'          => 'Beachten Sie, dass die Demo-Seite alle vier Stunden zurückgesetzt wird. Ihr Zugang kann jederzeit widerrufen werden. Dies geschieht automatisch und ist kein Fehler.',
 ];
+
+// Ignore this comment

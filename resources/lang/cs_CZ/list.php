@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Zdroj',
     'next_expected_match'     => 'Další očekávaná shoda',
     'automatch'               => 'Automatické hledání shody?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Opakuje se',
     'description'             => 'Popis',
     'amount'                  => 'Částka',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'Externí identifikátor',
     'account_at_bunq'         => 'Účet s bunq',
     'file_name'               => 'Název souboru',
+
+    // Ignore this comment
+
     'file_size'               => 'Velikost souboru',
     'file_type'               => 'Typ souboru',
     'attached_to'             => 'Připojeno k',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

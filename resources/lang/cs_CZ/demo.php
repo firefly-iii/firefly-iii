@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Jak je možné vidět, jsou zde tři pokladničky. Pomocí tlačítek plus a mínus ovlivníte částku v každé z pokladniček. Kliknutí na název pokladničky zobrazí správu pro každou z nich.',
     'profile-index'          => 'Mějte na paměti, že obsah demostránky je každé čtyři hodny smazán. Přístup může být zrušen kdykoli. Toto se děje automaticky a nejedná se o chybu.',
 ];
+
+// Ignore this comment

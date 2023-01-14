@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -57,6 +59,9 @@ return [
     'source'                  => 'Kaynak',
     'next_expected_match'     => 'Beklenen sonraki eşleşme',
     'automatch'               => 'Otomatik eşleştir?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Tekrarlar',
     'description'             => 'Açıklama',
     'amount'                  => 'Miktar',
@@ -122,6 +127,9 @@ return [
     'external_id'             => 'Dış Kimlik',
     'account_at_bunq'         => 'Bunq hesapları',
     'file_name'               => 'Dosya adı',
+
+    // Ignore this comment
+
     'file_size'               => 'Dosya boyutu',
     'file_type'               => 'Dosya tipi',
     'attached_to'             => 'Şuraya Bağlı',
@@ -150,3 +158,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

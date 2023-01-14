@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Ustvari nove proračune, kot se ti zdi primerno.',
     'budgets_index_list_of_budgets'         => 'S to tabelo določi zneske za vsak proračun in si oglej, kako napreduješ.',
     'budgets_index_outro'                   => 'Če želiš izvedeti več o pripravi proračuna, preveri ikono pomoči v zgornjem desnem kotu.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'S temi poročili dobiš podroben vpogled v svoje finance.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'This field shows you how much you\'ve saved in each piggy bank.',
     'piggy-banks_index_button'                                => 'Next to this progress bar are two buttons (+ and -) to add or remove money from each piggy bank.',
     'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'What is your goal? A new couch, a camera, money for emergencies?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
     'rules_create_actions'                                    => 'Set as many actions as you like.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'More options are available behind these tabs.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'This code should be ISO compliant (Google it for your new currency).',
 ];
+// Ignore this comment

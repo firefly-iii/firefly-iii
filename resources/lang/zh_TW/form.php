@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => '初始餘額',
     'tagMode'                     => '標籤模式',
     'virtual_balance'             => '虛擬餘額',
+
+    // Ignore this comment
+
     'targetamount'                => '目標金額',
     'account_role'                => '帳戶角色',
     'opening_balance_date'        => '初始餘額日期',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => '你確定你想要刪除名為 ":name" 的小豬撲滿?',
     'journal_areYouSure'          => '你真的要刪除這個描述為 ":description" 的交易嗎？',
     'mass_journal_are_you_sure'   => '確定刪除這些交易？',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => '你真的要要刪除標籤 ":tag" 嗎？',
     'journal_link_areYouSure'     => '您確定您要刪除 <a href=":source_link">:source</a> 與 <a href=":destination_link">:destination</a> 間的連結嗎？',
     'linkType_areYouSure'         => '您確定您要刪除連結類型 ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN/密碼',
     'fints_account'               => 'FinTS 帳戶',
     'local_account'               => 'Firefly III 帳戶',
+
+    // Ignore this comment
+
     'from_date'                   => '開始自',
     'to_date'                     => '日期至',
     'due_date'                    => '到期日',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

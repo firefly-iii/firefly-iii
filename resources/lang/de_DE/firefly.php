@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Schließen',
@@ -253,7 +255,7 @@ return [
     'updated_webhook'                      => 'Webhook ":title " aktualisiert',
     'edit_webhook_js'                      => 'Webhook "{title} " bearbeiten',
     'show_webhook'                         => 'Webhook ":title"',
-    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
+    'webhook_was_triggered'                => 'Der Webhook wurde für die angezeigte Transaktion ausgelöst. Bitte warten Sie, bis die Ergebnisse erscheinen.',
     'webhook_messages'                     => 'Webhook-Nachricht',
     'view_message'                         => 'Nachricht anzeigen',
     'view_attempts'                        => 'Gescheiterte Versuche anzeigen',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Diese Suchparameter sind ungültig und wurden ignoriert.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Buchungsdatum ist „:value”',
     'search_modifier_not_date_on'                         => 'Buchungsdatum ist nicht ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Neue Regel aus Suchanfrage erstellen',
     'rule_from_search_words'                              => 'Die Regel-Modul hat Schwierigkeiten „:string” zu verarbeiten. Die vorgeschlagene Regel, die Ihrer Suchanfrage entspricht, kann zu unterschiedlichen Ergebnissen führen. Bitte überprüfen Sie die Regelauslöser sorgfältig.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Die folgenden Einschränkungen werden ebenfalls auf die Suche angewendet:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Zielkonto ist kein Bargeldkonto',
     'rule_trigger_not_account_is_cash'                    => 'Beide Konten sind keine Bargeldkonten',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'Buchung LÖSCHEN(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Bedenken Sie, dass das Quellkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Abhebung definiert ist, außer Kraft gesetzt wird.',
     'multi_account_warning_deposit'             => 'Bedenken Sie, dass das Zielkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Einzahlung definiert ist, außer Kraft gesetzt wird.',
     'multi_account_warning_transfer'            => 'Bedenken Sie, dass das Quell- und Zielkonto nachfolgender Aufteilungen durch das, was in der ersten Aufteilung der Übertragung definiert ist, außer Kraft gesetzt wird.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Daten aus Firefly III exportieren',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Neue Kategorie „:name” gespeichert',
     'without_category_between'                  => 'Ohne Kategorie zwischen :start und :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Ausgaben aktualisieren',
     'update_deposit'                            => 'Einnahmen aktualisieren',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Klassifizierung',
     'store_transaction'                         => 'Buchung speichern',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Standardfinanzbericht zwischen :start und :end',
     'report_audit'                              => 'Übersicht des Buchungsverlaufs zwischen :start und :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Der Betrag wird immer in Ihrer Standardwährung angegeben.',
     'net_filtered_prefs'                        => 'Dieses Diagramm wird niemals Konten einbeziehen, die die Option "Im Eigenkapital enthalten" deaktiviert haben.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Diagram',
     'month'                                     => 'Monat',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Unter „:journal” gespeichert',
     'total_amount'                             => 'Gesamtbetrag',
     'number_of_decimals'                       => 'Anzahl der Nachkommastellen',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Neuen Nutzer einladen',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Außer an Wochenenden',
     'recurrence_deleted'                 => 'Dauerauftrag „:title” gelöscht',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Guthaben (:currency)',
     'box_spent_in_currency'              => 'Ausgaben (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Schlagwort hinzugefügt',
 
 ];
+
+// Ignore this comment

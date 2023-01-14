@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'Тестове повідомлення з вашого додатку Firefly III',
     'admin_test_body'                         => 'Це тестове повідомлення з вашого додатку Firefly III. Воно було надіслано на :email.',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'Запрошення створено',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Зміна пароля:',
     'registered_doc_link'                     => 'Документація:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'Доступна нова версія Firefly III',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => 'Повна інформація про помилку нижче:',
     'error_headers'                           => 'Наступні заголовки також можуть підходити:',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III створив нову операцію|Firefly III створив :count нових операцій',
     'new_journals_header'                     => 'Firefly III створив для вас операцію. Ви можете знайти його у вашому додатку Firefly III:|Firefly III створив для вас :count операцій. Ви можете знайти їх у вашому додатку Firefly ІІІ:',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => 'Будь ласка, оберіть відповідну дію.',
 
 ];
+// Ignore this comment

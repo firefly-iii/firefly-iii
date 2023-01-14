@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => 'Αυτό το :attribute πρέπει να είναι μια ημερομηνία πρίν από :date.',
     'unique_object_for_user'         => 'Αυτό το όνομα είναι ήδη σε χρήση.',
     'unique_account_for_user'        => 'Αυτό το όνομα λογαριασμού είναι ήδη σε χρήση.',
+
+    // Ignore this comment
+
     'between.numeric'                => 'Το :attribute πρέπει να είναι μεταξύ :min και :max.',
     'between.file'                   => 'Το :attribute πρέπει να είναι μεταξύ :min και :max kilobytes.',
     'between.string'                 => 'To :attribute πρέπει να είναι μεταξύ :min και :max χαρακτήρων.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Και οι δύο λογαριασμοί πρέπει να έχουν τον ίδιο τύπο λογαριασμού',
     'same_account_currency'          => 'Και οι δύο λογαριασμοί πρέπει να έχουν την ίδια ρύθμιση νομίσματος',
 
+    // Ignore this comment
+
     'secure_password'             => 'Αυτό δεν είναι ασφαλές συνθηματικό. Παρακαλώ δοκιμάστε ξανά. Για περισσότερες πληροφορίες επισκεφτείτε https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Μη έγκυρος τύπος επανάληψης για επαναλαμβανόμενες συναλλαγές.',
     'valid_recurrence_rep_moment' => 'Μη έγκυρη στιγμή επανάληψης για αυτό τον τύπο επανάληψης.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Δεν ήταν δυνατή η εύρεση ενός έγκυρου λογαριασμού προορισμού κατά την αναζήτηση του αναγνωριστικού ID ":id" ή του ονόματος ":name".',
     'deposit_dest_wrong_type'  => 'O υποβεβλημένος λογαριασμός προέλευσης δεν είναι σωστού τύπου.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Πρέπει να λάβετε ένα έγκυρο αναγνωριστικό λογαριασμού προέλευσης και/ή ένα έγκυρο όνομα λογαριασμού προέλευσης για να συνεχίσετε.',
     'transfer_source_bad_data'  => 'Δεν ήταν δυνατή η εύρεση ενός έγκυρου λογαριασμού προέλευσης κατά την αναζήτηση του αναγνωριστικού ID ":id" ή του ονόματος ":name".',
     'transfer_dest_need_data'   => 'Πρέπει να λάβετε ένα έγκυρο αναγνωριστικό ID λογαριασμού προορισμού και/ή ένα έγκυρο όνομα λογαριασμού προορισμού για να συνεχίσετε.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Το ποσό πρέπει να είναι μεγαλύτερο από το μηδέν.',
     'auto_budget_period_mandatory'    => 'Η περίοδος αυτόματου προϋπολογισμού είναι υποχρεωτικό πεδίο.',
 ];
+
+// Ignore this comment

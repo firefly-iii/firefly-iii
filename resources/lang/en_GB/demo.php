@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'As you can see, there are three piggy banks. Use the plus and minus buttons to influence the amount of money in each piggy bank. Click the name of the piggy bank to see the administration for each piggy bank.',
     'profile-index'          => 'Keep in mind that the demo site resets every four hours. Your access may be revoked at any time. This happens automatically and is not a bug.',
 ];
+
+// Ignore this comment

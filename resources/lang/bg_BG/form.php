@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Начално салдо',
     'tagMode'                     => 'Режим на етикети',
     'virtual_balance'             => 'Виртуален баланс',
+
+    // Ignore this comment
+
     'targetamount'                => 'Планирана сума',
     'account_role'                => 'Роля на сметката',
     'opening_balance_date'        => 'Дата на началното салдо',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Наистина ли искате да изтриете касичката озаглавена ":name"?',
     'journal_areYouSure'          => 'Наистина ли искате да изтриете транзакцията озаглавена ":description"?',
     'mass_journal_are_you_sure'   => 'Наистина ли искате да изтриете тези транзакции?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Наистина ли искате да изтриете етикета ":tag"?',
     'journal_link_areYouSure'     => 'Наистина ли искате да изтриете връзката между <a href=":source_link">:source</a> и <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Наистина ли искате да изтриете типа връзка ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Парола',
     'fints_account'               => 'FinTS account',
     'local_account'               => 'Firefly III сметка',
+
+    // Ignore this comment
+
     'from_date'                   => 'Дата от',
     'to_date'                     => 'Дата до',
     'due_date'                    => 'Дата на падеж',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Como você pode ver, existem três cofrinhos. Use o sinal de mais e menos botões para influenciar a quantidade de dinheiro em cada cofrinho. Clique no nome do cofrinho para ver a administração de cada cofrinho.',
     'profile-index'          => 'Tenha em mente que o site de demonstração reinicia a cada 4 horas. Seu acesso pode ser revogado a qualquer momento. Isso acontece automaticamente e não é um erro.',
 ];
+
+// Ignore this comment

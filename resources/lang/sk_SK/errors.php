@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Chyba nastala v súbore "<span style="font-family: monospace;">:file</span>" na riadku :line s kódom :code.',
     'stacktrace'              => 'Trasovanie zásobníka',
     'more_info'               => 'Viac informácií',
+
+    // Ignore this comment
+
     'collect_info'            => 'Prosím, získajte viac informácií v zložke <code>storage/logs</code>, kde nájdete chybové záznamy. Ak spúšťate aplikáciu cez Docker, použite <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'Viac o získavaní informácií o chybách si môžete prečítať v sekcii <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">často kladených otázok</a>.',
     'github_help'             => 'Nájdite pomoc na GitHube',

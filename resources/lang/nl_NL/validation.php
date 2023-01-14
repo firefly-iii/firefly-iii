@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute moet een datum voor :date zijn.',
     'unique_object_for_user'         => 'Deze naam is al in gebruik.',
     'unique_account_for_user'        => 'Deze rekeningnaam is al in gebruik.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute moet tussen :min en :max zijn.',
     'between.file'                   => ':attribute moet tussen :min en :max kilobytes zijn.',
     'between.string'                 => ':attribute moet tussen :min en :max karakters zijn.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Beide rekeningen moeten van hetzelfde rekeningtype zijn',
     'same_account_currency'          => 'Beide rekeningen moeten dezelfde valuta hebben',
 
+    // Ignore this comment
+
     'secure_password'             => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Dit is geen geldige herhaling voor periodieke transacties.',
     'valid_recurrence_rep_moment' => 'Ongeldig herhaalmoment voor dit type herhaling.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
     'deposit_dest_wrong_type'  => 'De ingevoerde doelrekening is niet van het juiste type.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Om door te gaan moet een geldig bronaccount ID en/of geldige bronaccountnaam worden gevonden.',
     'transfer_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
     'transfer_dest_need_data'   => 'Om door te gaan moet een geldig doelrekening ID en/of geldige doelrekeningnaam worden gevonden.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Het bedrag moet meer zijn dan nul.',
     'auto_budget_period_mandatory'    => 'De auto-budgetperiode is verplicht.',
 ];
+
+// Ignore this comment

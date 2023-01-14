@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Maak nieuwe budgetten naar wens.',
     'budgets_index_list_of_budgets'         => 'Gebruik deze tabel om de bedragen voor elk budget vast te stellen en te zien hoe je er voor staat.',
     'budgets_index_outro'                   => 'Om meer te leren over budgetteren, klik dan op het help-icoontje rechtsboven.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Gebruik deze rapporten om gedetailleerde inzicht in je financiën te krijgen.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Dit veld laat zien hoeveel geld er in elk spaarpotje zit.',
     'piggy-banks_index_button'                                => 'Naast deze balk zitten twee knoppen (+ en -) om geld aan je spaarpotje toe te voegen, of er uit te halen.',
     'piggy-banks_index_accountStatus'                         => 'Voor elke betaalrekening met minstens één spaarpotje zie je hier de status.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Wat is je doel? Een nieuwe zithoek, een camera of geld voor noodgevallen?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Gebruik deze knop om te zien welke bestaande transacties overeen zouden komen.',
     'rules_create_actions'                                    => 'Stel zoveel acties in als je wilt.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Meer opties zijn beschikbaar achter deze tabbladen.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Deze code moet ISO-compatibel zijn (Google die code voor je nieuwe valuta).',
 ];
+// Ignore this comment

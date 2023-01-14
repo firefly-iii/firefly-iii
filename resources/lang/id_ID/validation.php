@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute harus tanggal sebelum :date.',
     'unique_object_for_user'         => 'Nama ini sudah digunakan.',
     'unique_account_for_user'        => 'Nama akun ini sudah digunakan.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute harus antara :min dan :max.',
     'between.file'                   => ':attribute harus antara :min dan :max kilobyte.',
     'between.string'                 => ':attribute harus antara :min dan :max karakter.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Kedua akun harus dari jenis akun yang sama',
     'same_account_currency'          => 'Kedua akun harus memiliki pengaturan mata uang yang sama',
 
+    // Ignore this comment
+
     'secure_password'             => 'Ini bukan sebuah kata sandi yang aman. Silahkan coba lagi. Untuk informasi lebih lanjut, kunjungi https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Tipe pengulangan yang tidak valid untuk transaksi berkala.',
     'valid_recurrence_rep_moment' => 'Waktu pengulangan tidaklah valid untuk tipe pengulangan ini.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Tidak dapat menemukan sebuah akun tujuan yang valid saat mencari ID ":id" atau nama ":name".',
     'deposit_dest_wrong_type'  => 'Akun tujuan yang dikirimkan bukan dari jenis yang benar.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Perlu untuk mendapatkan sebuah ID akun sumber yang valid dan/atau nama akun sumber yang valid untuk melanjutkan.',
     'transfer_source_bad_data'  => 'Tidak dapat menemukan sebuah akun sumber yang valid saat mencari ID ":id" atau nama ":name".',
     'transfer_dest_need_data'   => 'Perlu untuk mendapatkan sebuah ID akun tujuan yang valid dan/atau nama akun tujuan yang valid untuk melanjutkan.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Jumlah harus lebih dari kosong.',
     'auto_budget_period_mandatory'    => 'Periode anggaran otomatis adalah bidang yang wajib.',
 ];
+
+// Ignore this comment

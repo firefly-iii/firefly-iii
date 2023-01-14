@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Soldul de deschidere',
     'tagMode'                     => 'Mod de etichetare',
     'virtual_balance'             => 'Soldul virtual',
+
+    // Ignore this comment
+
     'targetamount'                => 'Sumă țintă',
     'account_role'                => 'Rolul contului',
     'opening_balance_date'        => 'Data soldului de deschidere',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Sunteți sigur că doriți să ștergeți pușculita ":name"?',
     'journal_areYouSure'          => 'Sunteți sigur că doriți să ștergeți tranzacția ":description"?',
     'mass_journal_are_you_sure'   => 'Sunteți sigur că doriți să ștergeți aceste tranzacții?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Sunteți sigur că doriți să ștergeți eticheta ":tag"?',
     'journal_link_areYouSure'     => 'Sunteți sigur că doriți să ștergeți legătura dintre <a href=":source_link">:source</a> și <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Sunteți sigur că doriți să ștergeți tipul de legătură ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / parola',
     'fints_account'               => 'Cont FinTS',
     'local_account'               => 'Cont Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'Data din',
     'to_date'                     => 'Data până la',
     'due_date'                    => 'Data scadentă',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

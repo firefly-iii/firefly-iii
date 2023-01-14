@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => '수익, 소득 및 예금',
     'transfer_list'          => '송금',
     'transfers_list'         => '송금',
+
+    // Ignore this comment
+
     'reconciliation_list'    => '조정',
     'create_withdrawal'      => '새로운 환불 만들기',
     'create_deposit'         => '새로운 예금 만들기',

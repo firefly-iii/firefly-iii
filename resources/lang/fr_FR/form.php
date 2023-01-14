@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Solde initial',
     'tagMode'                     => 'Mode du tag',
     'virtual_balance'             => 'Solde virtuel',
+
+    // Ignore this comment
+
     'targetamount'                => 'Montant cible',
     'account_role'                => 'Rôle du compte',
     'opening_balance_date'        => 'Date du solde initial',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Êtes-vous sûr de vouloir supprimer la tirelire nommée ":name" ?',
     'journal_areYouSure'          => 'Êtes-vous sûr de vouloir supprimer la description de l\'opération ":description" ?',
     'mass_journal_are_you_sure'   => 'Êtes-vous sûr de que vouloir supprimer ces opérations ?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Êtes-vous sûr de vouloir supprimer le tag ":tag" ?',
     'journal_link_areYouSure'     => 'Êtes-vous sûr de vouloir supprimer le lien entre <a href=":source_link">:source</a> et <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Êtes-vous sûr de vouloir supprimer le type de lien ":name" (":inward" / ":outward") ?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'Code PIN / Mot de passe',
     'fints_account'               => 'Compte FinTS',
     'local_account'               => 'Compte Firefly III',
+
+    // Ignore this comment
+
     'from_date'                   => 'À partir du',
     'to_date'                     => 'Jusqu\'au',
     'due_date'                    => 'Échéance',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Réponse',
     'webhook_trigger'             => 'Déclencheur',
 ];
+// Ignore this comment

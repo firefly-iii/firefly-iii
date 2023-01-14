@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Luo uusia budjetteja mielesi mukaan.',
     'budgets_index_list_of_budgets'         => 'Tämän taulukon avulla voit asettaa summat jokaiselle budjetille ja nähdä miten sinulla menee.',
     'budgets_index_outro'                   => 'Lisätietoja budjetoinnista saat tutustumalla oikeassa yläkulmassa olevaan ohjekuvakkeeseen.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Näiden raporttien avulla saat yksityiskohtaista tietoa taloudestasi.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Tämä kenttä näyttää kuinka paljon olet säästänyt kuhunkin säästöpossuun.',
     'piggy-banks_index_button'                                => 'Tämän edistymispalkin vieressä on kaksi painiketta (+ ja -) lisäämään tai poistamaan rahaa kustakin säästöpossusta.',
     'piggy-banks_index_accountStatus'                         => 'Tässä taulukossa listataan kaikkien niiden omaisuustilien tila, joilla on vähintään yksi säästöpossu.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Mikä on tavoitteesi? Uusi sohva, kamera, rahaa hätätilanteisiin?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Käytä tätä painiketta nähdäksesi, mitkä tapahtumat vastaisivat sääntöäsi.',
     'rules_create_actions'                                    => 'Aseta niin monta toimintoa kuin haluat.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Lisää vaihtoehtoja on saatavana näiden välilehtien takana.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Tämän koodin tulisi olla ISO-yhteensopiva (Googlaa se uutta valuuttaasi varten).',
 ];
+// Ignore this comment

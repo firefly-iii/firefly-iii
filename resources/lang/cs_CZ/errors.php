@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Došlo k chybě v souboru <span style="font-family: monospace;">:file</span> na řádku :line s kódem :code.',
     'stacktrace'              => 'Trasování zásobníku',
     'more_info'               => 'Více informací',
+
+    // Ignore this comment
+
     'collect_info'            => 'Shromažďujte prosím další informace do adresáře <code>storage/logs</code>, kde najdete chybové záznamy. Pokud používáte Docker, použijte <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'Více informací o shromažďování chyb si můžete přečíst v <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
     'github_help'             => 'Získejte nápovědu na GitHub',

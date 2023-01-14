@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Alkusaldo',
     'tagMode'                     => 'Tägimoodi',
     'virtual_balance'             => 'Virtuaalinen saldo',
+
+    // Ignore this comment
+
     'targetamount'                => 'Tavoitesumma',
     'account_role'                => 'Tilin tyyppi',
     'opening_balance_date'        => 'Alkusaldon päivämäärä',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => 'Haluatko varmasti poistaa säästöpossun ":name"?',
     'journal_areYouSure'          => 'Haluatko varmasti poistaa tapahtuman kuvauksella ":description"?',
     'mass_journal_are_you_sure'   => 'Haluatko varmasti poistaa nämä tapahtumat?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => 'Haluatko varmasti poistaa tägin ":tag"?',
     'journal_link_areYouSure'     => 'Haluatko varmasti poistaa linkin välillä <a href=":source_link">:source</a> ja <a href=":destination_link">:destination</a>?',
     'linkType_areYouSure'         => 'Haluatko varmasti poistaa linkkityypin ":name" (":inward" / ":outward")?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Salasana',
     'fints_account'               => 'FinTS käyttäjätili',
     'local_account'               => 'Firefly III käyttäjätili',
+
+    // Ignore this comment
+
     'from_date'                   => 'Aloituspäivämäärä',
     'to_date'                     => 'Päättymispäivämäärä',
     'due_date'                    => 'Eräpäivä',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

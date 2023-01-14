@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Αυτό το σφάλμα προέκυψε στο αρχείο <span style="font-family: monospace;">:file</span> στη γραμμή :line με κώδικα :code.',
     'stacktrace'              => 'Ιχνηλάτηση στοίβας',
     'more_info'               => 'Περισσότερες πληροφορίες',
+
+    // Ignore this comment
+
     'collect_info'            => 'Συλλέξτε περισσότερες πληροφορίες στον κατάλογο <code>storage/logs</code> όπου θα βρείτε αρχεία καταγραφής. Εάν χρησιμοποιείτε το Docker, χρησιμοποιήστε το <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'Μπορείτε να διαβάσετε περισσότερα σχετικά με τη συλλογή πληροφοριών σφάλματος <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">στο FAQ</a>.',
     'github_help'             => 'Λάβετε βοήθεια στο GitHub',

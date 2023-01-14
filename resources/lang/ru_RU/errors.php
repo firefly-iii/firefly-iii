@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Эта ошибка произошла в файле <span style="font-family: monospace;">:file</span> в строке :line с кодом :code.',
     'stacktrace'              => 'Трассировка стека',
     'more_info'               => 'Подробности',
+
+    // Ignore this comment
+
     'collect_info'            => 'Пожалуйста, соберите больше информации в каталоге <code>storage/logs</code>, где вы найдете файлы журнала. Если вы используете Docker, используйте <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'Вы можете прочитать больше о сборе информации об ошибке в <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
     'github_help'             => 'Получить помощь на GitHub',

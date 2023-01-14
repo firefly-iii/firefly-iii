@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'Testovací zpráva z vaší instalace Firefly III',
     'admin_test_body'                         => 'Toto je testovací zpráva z instance Firefly III. Byla odeslána na :email.',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'An invitation has been created',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Obnovení hesla:',
     'registered_doc_link'                     => 'Dokumentace:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'A new Firefly III version is available',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => 'Celý zásobník je níže:',
     'error_headers'                           => 'The following headers may also be relevant:',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III vytvořil novou transakci|Firefly III vytvořil :count nových transakcí',
     'new_journals_header'                     => 'Firefly III pro Vás vytvořil transakci. Můžete ji najít ve vaší instalaci Firefly III:|Firefly III vytvořil :count transakcí. Najdete je ve vaší instalaci Firefly III:',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => 'Please take the appropriate action.',
 
 ];
+// Ignore this comment

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Zoals je kan zien zijn er drie spaarpotjes. Gebruik de plus- en minknoppen om het bedrag in de spaarpotjes te veranderen. Klik op de naam van het spaarpotje om er de geschiedenis van te zien.',
     'profile-index'          => 'Houd in gedachten dat de demosite elke vier uur reset. Je toegang kan dus te allen tijde worden herroepen. Dit gebeurt automatisch en is niet een bug.',
 ];
+
+// Ignore this comment

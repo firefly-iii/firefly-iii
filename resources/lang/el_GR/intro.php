@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Δημιουργήστε νέους προϋπολογισμούς κατά βούληση.',
     'budgets_index_list_of_budgets'         => 'Χρησιμοποιήστε αυτό τον πίνακα για να ορίσετε τα ποσά για κάθε προϋπολογισμό και την πρόοδό σας.',
     'budgets_index_outro'                   => 'Για να μάθετε περισσότερα για προϋπολογισμούς, ελέγξτε το εικονίδιο βοήθειας στην επάνω δεξιά γωνία.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Χρησιμοποιήστε αυτές τις αναφορές για να λάβετε λεπτομερείς πληροφορίες για τα οικονομικά σας.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Αυτό το πεδίο σας δείχνει τα χρήματα που έχετε δεσμεύσει για κάθε κουμπαρά.',
     'piggy-banks_index_button'                                => 'Διπλά από αυτή τη γραμμή προόδου υπάρχουν δύο κουμπιά (+ και -) για να προσθέσετε ή να αφαιρέσετε χρήματα από κάθε κουμπαρά.',
     'piggy-banks_index_accountStatus'                         => 'Πίνακας κατάστασης για κάθε πάγιο λογαριασμό με τουλάχιστον ένα κουμπαρά.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Ποιός είναι ο στόχος σας; Ένας νέος καναπές, μια κάμερα, χρήματα για έκτακτες ανάγκες;',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Χρησιμοποιήστε αυτό το κουμπί για να δείτε ποιές συναλλαγές θα ταίριαζαν με τον κανόνα σας.',
     'rules_create_actions'                                    => 'Ορίστε όσες ενέργειες επιθυμείτε.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Περισσότερες επιλογές είναι διαθέσιμες πίσω από αυτές τις καρτέλες.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Αυτός ο κωδικός πρέπει να είναι αποδεκτός κατά ISO (Αναζητήστε το στο Google για το νέο σας νόμισμα).',
 ];
+// Ignore this comment

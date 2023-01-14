@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Fermer',
@@ -253,7 +255,7 @@ return [
     'updated_webhook'                      => 'Webhook ":title" mis à jour',
     'edit_webhook_js'                      => 'Modifier le webhook "{title}"',
     'show_webhook'                         => 'Webhook ":title"',
-    'webhook_was_triggered'                => 'The webhook was triggered on the indicated transaction. Please wait for results to appear.',
+    'webhook_was_triggered'                => 'Le webhook a été déclenché sur l\'opération indiquée. Veuillez attendre que les résultats apparaissent.',
     'webhook_messages'                     => 'Message webhook',
     'view_message'                         => 'Afficher le message',
     'view_attempts'                        => 'Voir les tentatives échouées',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Ces paramètres de recherche ne sont pas valides et ont été ignorés.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'La date de l\'opération est ":value"',
     'search_modifier_not_date_on'                         => 'La date de l\'opération n\'est pas ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Créer une nouvelle règle à partir de la requête de recherche',
     'rule_from_search_words'                              => 'Le moteur de règles a du mal à gérer ":string". La règle suggérée qui correspond à votre requête de recherche peut donner des résultats différents. Veuillez vérifier que la règle se déclenche correctement.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Les modificateurs suivants sont aussi appliqués à la recherche :',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Le compte de destination n\'est pas un compte en espèces',
     'rule_trigger_not_account_is_cash'                    => 'Aucun compte n\'est un compte en espèces',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'SUPPRIMER l\'opération(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Gardez en tête que le compte source des ventilations suivantes peut être remplacé par celui de la première ventilation de la dépense.',
     'multi_account_warning_deposit'             => 'Gardez en tête que le compte de destination des ventilations suivantes peut être remplacé par celui de la première ventilation du dépôt.',
     'multi_account_warning_transfer'            => 'Gardez en tête que les comptes source et de destination des ventilations suivantes peuvent être remplacés par ceux de la première ventilation du transfert.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Exporter des données depuis Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Nouvelle catégorie stockée ":name"',
     'without_category_between'                  => 'Sans catégorie entre :start et :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Mettre à jour une dépense',
     'update_deposit'                            => 'Mettre à jour un dépôt',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Classification',
     'store_transaction'                         => 'Enregistrer l\'opération',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Rapport financier par défaut entre le :start et le :end',
     'report_audit'                              => 'Aperçu de l\'historique des opérations entre le :start et le :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'La somme sera toujours dans votre devise par défaut.',
     'net_filtered_prefs'                        => 'Ce graphique n’inclura jamais les comptes dont l\'option « inclure dans l\'avoir net » n\'est pas cochée.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Graphique',
     'month'                                     => 'Mois',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Stocké dans ":journal"',
     'total_amount'                             => 'Montant total',
     'number_of_decimals'                       => 'Nombre de décimales',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Inviter un nouvel utilisateur',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Sauf les week-ends',
     'recurrence_deleted'                 => 'Opération périodique ":title" supprimée',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Solde (:currency)',
     'box_spent_in_currency'              => 'Dépensé (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Tag ajouté',
 
 ];
+
+// Ignore this comment

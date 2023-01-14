@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Chiudi',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'Questi parametri di ricerca non sono validi e sono stati ignorati.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'La data della transazione è ":value"',
     'search_modifier_not_date_on'                         => 'La data della transazione non è ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Crea nuova regola dalla ricerca',
     'rule_from_search_words'                              => 'Il motore delle regole ha difficoltà a gestire ":string". La regola suggerita che si adatta alla tua ricerca potrebbe dare risultati diversi. Verifica attentamente che la regola funzioni.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Alla ricerca vengono applicati anche questi modificatori:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Ricorda che il conto di origine delle successive suddivisioni verrà sovrascritto da quello definito nella prima suddivisione del prelievo.',
     'multi_account_warning_deposit'             => 'Ricorda che il conto di destinazione delle successive suddivisioni verrà sovrascritto da quello definito nella prima suddivisione del deposito.',
     'multi_account_warning_transfer'            => 'Ricorda che il conto di origine e il conto di destinazione delle successive suddivisioni verranno sovrascritti da quelli definiti nella prima suddivisione del trasferimento.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Esporta dati da Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Salva nuova categoria ":name"',
     'without_category_between'                  => 'Senza categoria tra :start e :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Aggiorna prelievo',
     'update_deposit'                            => 'Aggiorna entrata',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Classificazione',
     'store_transaction'                         => 'Salva transazione',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Resoconto predefinito delle tue finanze tra :start e :end',
     'report_audit'                              => 'Panoramica cronologica delle transazioni tra :start e :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'La somma sarà sempre nella tua valuta predefinita.',
     'net_filtered_prefs'                        => 'Questo grafico non includerà mai i conti che hanno l\'opzione "Includi nel patrimonio" non selezionata.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Grafico',
     'month'                                     => 'Mese',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Memorizzato sotto ":journal"',
     'total_amount'                             => 'Importo totale',
     'number_of_decimals'                       => 'Cifre decimali',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Tranne il fine settimana',
     'recurrence_deleted'                 => 'La transazione ricorrente ":title" è stata eliminata',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Saldo (:currency)',
     'box_spent_in_currency'              => 'Spesi (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

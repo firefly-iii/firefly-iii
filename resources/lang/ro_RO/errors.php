@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Această eroare a apărut în fișierul "<span style="font-family: monospace;">:file</span>" pe linia :line cu codul :code.',
     'stacktrace'              => 'Stack trace',
     'more_info'               => 'Mai multe informaţii',
+
+    // Ignore this comment
+
     'collect_info'            => 'Vă rugăm să colectați mai multe informații în directorul <code>storage/logs</code> unde veți găsi fișiere jurnal. Dacă rulați Docker, folosiți <code>docker logs -f[container]</code>.',
     'collect_info_more'       => 'Poți citi mai multe despre colectarea informațiilor despre erori în <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
     'github_help'             => 'Obțineți ajutor pe GitHub',

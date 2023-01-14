@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Som du kan se, finnes det tre spargriser. Bruk pluss- og minus-knappene til å påvirke mengden penger i hver sparegris. Klikk på navnet til spargrisen for å administrere hver spargris.',
     'profile-index'          => 'Vær oppmerksom at demoen tilbakestilles hver fjerde time. Din tilgang kan trekkes tilbake når som helst. Dette skjer automatisk og er ikke en feil.',
 ];
+
+// Ignore this comment

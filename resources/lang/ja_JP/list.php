@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => '源泉',
     'next_expected_match'     => '次の一致予測',
     'automatch'               => '自動一致',
+
+    // Ignore this comment
+
     'repeat_freq'             => '繰り返し',
     'description'             => '説明',
     'amount'                  => '金額',
@@ -121,6 +126,9 @@ return [
     'external_id'             => '外部ID',
     'account_at_bunq'         => 'bunq口座',
     'file_name'               => 'ファイル名',
+
+    // Ignore this comment
+
     'file_size'               => 'ファイルサイズ',
     'file_type'               => 'ファイルの種類',
     'attached_to'             => '添付先',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

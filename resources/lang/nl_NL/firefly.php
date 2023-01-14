@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Sluiten',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'De volgende zoekparameters zijn niet geldig en worden genegeerd.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transactiedatum is ":value"',
     'search_modifier_not_date_on'                         => 'Transactiedatum is niet ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Nieuwe regel op basis van zoekquery',
     'rule_from_search_words'                              => 'Firefly III heeft moeite met deze query: ":string". De voorgestelde regel die past bij je zoekquery kan afwijken. Controleer de regel zorgvuldig.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'De volgende wijzigingen worden ook toegepast op de zoekopdracht:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'De bronrekening wordt overschreven door wat er in de eerste split staat.',
     'multi_account_warning_deposit'             => 'De doelrekening wordt overschreven door wat er in de eerste split staat.',
     'multi_account_warning_transfer'            => 'De bron + doelrekening wordt overschreven door wat er in de eerste split staat.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Gegevens exporteren uit Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Nieuwe categorie ":name" opgeslagen',
     'without_category_between'                  => 'Zonder categorie tussen :start en :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Wijzig uitgave',
     'update_deposit'                            => 'Wijzig inkomsten',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Indeling',
     'store_transaction'                         => 'Transactie opslaan',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Standaard financieel rapport (:start tot :end)',
     'report_audit'                              => 'Transactiehistorie-overzicht van :start tot :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Deze lijst is altijd in je standaardvaluta.',
     'net_filtered_prefs'                        => 'Deze grafiek bevat nooit betaalrekeningen die je niet het vinkje "meetellen in kapitaal" hebt gegeven.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Diagram',
     'month'                                     => 'Maand',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Opgeslagen onder ":journal"',
     'total_amount'                             => 'Totaalbedrag',
     'number_of_decimals'                       => 'Aantal decimalen',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Behalve de weekenden',
     'recurrence_deleted'                 => 'Periodieke transactie ":title" verwijderd',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Saldo (:currency)',
     'box_spent_in_currency'              => 'Uitgegeven (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Tag toegevoegd',
 
 ];
+
+// Ignore this comment

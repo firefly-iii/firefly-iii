@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Như bạn có thể thấy, có ba con heo đất. Sử dụng các nút cộng và trừ để tăng, giảm số tiền trong mỗi heo đất. Nhấp vào tên của heo đất để xem quyền quản trị cho mỗi heo đất.',
     'profile-index'          => 'Hãy nhớ rằng trang web demo đặt lại sau mỗi bốn giờ. Quyền truy cập của bạn có thể bị thu hồi bất cứ lúc nào. Điều này xảy ra tự động và không phải là một lỗi.',
 ];
+
+// Ignore this comment

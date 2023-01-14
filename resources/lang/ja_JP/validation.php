@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attributeには、:dateより前の日付を指定してください。',
     'unique_object_for_user'         => 'この名称はすでに使われています。',
     'unique_account_for_user'        => 'この口座番号は既に使われているようです。',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attributeには、:minから、:maxまでの数字を指定してください。',
     'between.file'                   => ':attributeには、:min KBから:max KBまでのサイズのファイルを指定してください。',
     'between.string'                 => ':attributeは、:min文字から:max文字にしてください。',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'これらの口座は同じ口座種別でなければなりません',
     'same_account_currency'          => 'これらの口座には同じ通貨設定でなければいけません',
 
+    // Ignore this comment
+
     'secure_password'             => 'これは安全なパスワードではありません。もう一度やり直してください。詳細については、https://bit.ly/FF3-password-security を参照してください。',
     'valid_recurrence_rep_type'   => '繰り返し取引のタイプが無効です。',
     'valid_recurrence_rep_moment' => '無効な繰り返し設定があります。',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
     'deposit_dest_wrong_type'  => '預け入れ先口座が適切なタイプではありません。',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
     'transfer_source_bad_data'  => 'ID「:id」、名称「:name」で検索した結果、有効な引き出し元口座が見つかりませんでした。',
     'transfer_dest_need_data'   => '続行するには、有効な預け入れ先口座 ID および（または）有効な預け入れ先口座名を取得する必要があります。',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => '金額はゼロ以上でなければなりません。',
     'auto_budget_period_mandatory'    => '自動予算期間は必須項目です。',
 ];
+
+// Ignore this comment

@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Venituri și depozite',
     'transfer_list'          => 'Transferuri',
     'transfers_list'         => 'Transferuri',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Reconcilieri',
     'create_withdrawal'      => 'Crează o nouă retragere',
     'create_deposit'         => 'Crează depozit nou',

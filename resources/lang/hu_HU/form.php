@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -62,6 +64,9 @@ return [
     'opening_balance'             => 'Nyitó egyenleg',
     'tagMode'                     => 'Címke mód',
     'virtual_balance'             => 'Virtuális egyenleg',
+
+    // Ignore this comment
+
     'targetamount'                => 'Cél összeg',
     'account_role'                => 'Bankszámla szerepköre',
     'opening_balance_date'        => 'Nyitó egyenleg dátuma',
@@ -153,6 +158,9 @@ return [
     'piggyBank_areYouSure'        => '":name" malacpersely biztosan törölhető?',
     'journal_areYouSure'          => '":description" tranzakció biztosan törölhető?',
     'mass_journal_are_you_sure'   => 'Ezek a tranzakciók biztosan törölhetőek?',
+
+    // Ignore this comment
+
     'tag_areYouSure'              => '":tag" címke biztosan törölhető?',
     'journal_link_areYouSure'     => '<a href=":source_link">:source</a> és <a href=":destination_link">:destination</a> közötti kapcsolat biztosan törölhető?',
     'linkType_areYouSure'         => '":name" (":inward" / ":outward") kapcsolattípus biztosan törölhető?',
@@ -216,6 +224,9 @@ return [
     'fints_password'              => 'PIN / Jelszó',
     'fints_account'               => 'FinTS fiók',
     'local_account'               => 'Firefly III fiók',
+
+    // Ignore this comment
+
     'from_date'                   => 'Dátumtól',
     'to_date'                     => 'Dátumig',
     'due_date'                    => 'Lejárati időpont',
@@ -252,3 +263,4 @@ return [
     'webhook_response'            => 'Response',
     'webhook_trigger'             => 'Trigger',
 ];
+// Ignore this comment

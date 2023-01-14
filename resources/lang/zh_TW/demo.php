@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => '您可見到有 3 個小豬撲滿。使用 + 號、- 號按鈕控制每個小豬撲滿的存款額，按一下小豬撲滿的名稱則可查看管理詳情。',
     'profile-index'          => '請注意，本展示網站每 4 小時會自動重設，存取權限可能隨時撤銷。這是自動安排的，不是錯誤。',
 ];
+
+// Ignore this comment

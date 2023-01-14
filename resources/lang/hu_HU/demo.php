@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Mint látható, három malacpersely van. A plusz és a mínusz jelekkel lehet a pénzmennyiséget állítani a malacperselyekben. A malacperselyek beállításait a nevükre kattintva lehet elvégezni.',
     'profile-index'          => 'Ne feledje, hogy a bemutató oldal adatai négyóránként automatikusan visszaállnak. A hozzáférése bármikor visszavonható. Ez automatikusan történik, és nem egy hiba.',
 ];
+
+// Ignore this comment

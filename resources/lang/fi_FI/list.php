@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Lähde',
     'next_expected_match'     => 'Seuraava lasku odotettavissa',
     'automatch'               => 'Automaattinen vertailu?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Toistot',
     'description'             => 'Kuvaus',
     'amount'                  => 'Summa',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'Ulkoinen tunniste',
     'account_at_bunq'         => 'Bung käyttäjätili',
     'file_name'               => 'Tiedoston nimi',
+
+    // Ignore this comment
+
     'file_size'               => 'Tiedoston koko',
     'file_type'               => 'Tiedoston tyyppi',
     'attached_to'             => 'Liitteenä',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

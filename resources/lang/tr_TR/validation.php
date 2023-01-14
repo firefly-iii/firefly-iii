@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute :date tarihinden öncesi için tarihlendirilmelidir.',
     'unique_object_for_user'         => 'Bu isim zaten kullanılıyor.',
     'unique_account_for_user'        => 'Bu hesap adı zaten kullanılıyor.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute :min ve :max arasında olmalıdır.',
     'between.file'                   => ':attribute, :min kilobayt ve :max kilobayt arasında olmalıdır.',
     'between.string'                 => ':attribute :min karakter ve :max karakter olmalıdır.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 
+    // Ignore this comment
+
     'secure_password'             => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Invalid repetition type for recurring transactions.',
     'valid_recurrence_rep_moment' => 'Invalid repetition moment for this type of repetition.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
     'deposit_dest_wrong_type'  => 'The submitted destination account is not of the right type.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'transfer_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
     'auto_budget_period_mandatory'    => 'The auto budget period is a mandatory field.',
 ];
+
+// Ignore this comment

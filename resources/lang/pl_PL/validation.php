@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute musi być wcześniejszą datą w stosunku do :date.',
     'unique_object_for_user'         => 'Ta nazwa jest już w użyciu.',
     'unique_account_for_user'        => 'Ta nazwa konta jest już w użyciu.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute musi się mieścić w zakresie pomiędzy :min a :max.',
     'between.file'                   => ':attribute musi się mieścić w zakresie pomiędzy :min oraz :max kilobajtów.',
     'between.string'                 => ':attribute musi zawierać pomiędzy :min a :max znaków.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Oba konta muszą być tego samego typu',
     'same_account_currency'          => 'Oba konta muszą mieć to samo ustawienie waluty',
 
+    // Ignore this comment
+
     'secure_password'             => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',
     'valid_recurrence_rep_moment' => 'Nieprawidłowy moment powtórzenia dla tego typu powtórzenia.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
     'deposit_dest_wrong_type'  => 'Konto docelowe nie jest poprawnego typu.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
     'transfer_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
     'transfer_dest_need_data'   => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Kwota musi być większa niż zero.',
     'auto_budget_period_mandatory'    => 'Okres automatycznego budżetu to pole obowiązkowe.',
 ];
+
+// Ignore this comment

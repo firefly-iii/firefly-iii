@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Kesalahan ini terjadi pada file "<span style="font-family: monospace;">:file</span>" pada baris :line dengan kode :code.',
     'stacktrace'              => 'Tumpukan jejak',
     'more_info'               => 'Informasi lebih lanjut',
+
+    // Ignore this comment
+
     'collect_info'            => 'Silakan ambil informasi lebih lanjut di direktori<code>storage/logs</code> di mana Anda dapat menemukan file log. Jika Anda menggunakan Docker, gunakan <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'Anda dapat membaca lebih lanjut dalam mengumpulkan informasi kesalahan di <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Pertanyaan yang sering diajukan</a>.',
     'github_help'             => 'Dapatkan bantuan di GitHub',

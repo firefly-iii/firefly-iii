@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -78,6 +80,9 @@ return [
     'before'                         => ':attribute må være en dato før :date.',
     'unique_object_for_user'         => 'Dette navnet er allerede i bruk.',
     'unique_account_for_user'        => 'Dette konto navnet er allerede i bruk.',
+
+    // Ignore this comment
+
     'between.numeric'                => ':attribute må være en verdi mellom :min og :max.',
     'between.file'                   => ':attribute må være mellom :min og :max kilobyte.',
     'between.string'                 => ':attribute må være mellom :min og :max tegn.',
@@ -146,6 +151,8 @@ return [
     'same_account_type'              => 'Both accounts must be of the same account type',
     'same_account_currency'          => 'Both accounts must have the same currency setting',
 
+    // Ignore this comment
+
     'secure_password'             => 'Dette er ikke et sikkert passord. Vennligst prøv igjen. For mer informasjon, se https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Ugyldig repetisjons type for gjentakende transaksjoner.',
     'valid_recurrence_rep_moment' => 'Ugyldig repetisjons tid for denne type repetisjon.',
@@ -204,6 +211,8 @@ return [
     'deposit_dest_bad_data'    => 'Kunne ikke finne en gyldig destinasjons konto ved å søke etter ID ":id" eller navn ":name".',
     'deposit_dest_wrong_type'  => 'The submitted destination account is not of the right type.',
 
+    // Ignore this comment
+
     'transfer_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
     'transfer_source_bad_data'  => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
     'transfer_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
@@ -232,3 +241,5 @@ return [
     'auto_budget_amount_positive'     => 'Beløpet må være mer enn null.',
     'auto_budget_period_mandatory'    => 'Auto budsjett perioden er et obligatorisk felt.',
 ];
+
+// Ignore this comment

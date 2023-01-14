@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Izvor',
     'next_expected_match'     => 'Naslenje pričakovano ujemanje',
     'automatch'               => 'Samodejno poveži?',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Ponovitev',
     'description'             => 'Opis',
     'amount'                  => 'Znesek',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'External ID',
     'account_at_bunq'         => 'Account with bunq',
     'file_name'               => 'Ime datoteke',
+
+    // Ignore this comment
+
     'file_size'               => 'Velikost datoteke',
     'file_type'               => 'Vrsta datoteke',
     'attached_to'             => 'Attached to',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Secret',
 
 ];
+// Ignore this comment

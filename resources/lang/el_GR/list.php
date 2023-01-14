@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -56,6 +58,9 @@ return [
     'source'                  => 'Προέλευση',
     'next_expected_match'     => 'Επόμενη αναμενόμενη αντιστοίχιση',
     'automatch'               => 'Αυτόματη αντιστοίχιση;',
+
+    // Ignore this comment
+
     'repeat_freq'             => 'Επαναλήψεις',
     'description'             => 'Περιγραφή',
     'amount'                  => 'Ποσό',
@@ -121,6 +126,9 @@ return [
     'external_id'             => 'Εξωτερικό ID',
     'account_at_bunq'         => 'Λογαριασμός με bunq',
     'file_name'               => 'Όνομα αρχείου',
+
+    // Ignore this comment
+
     'file_size'               => 'Μέγεθος αρχείου',
     'file_type'               => 'Τύπος αρχείου',
     'attached_to'             => 'Επισυναπτόμενο σε',
@@ -149,3 +157,4 @@ return [
     'secret'                  => 'Μυστικό',
 
 ];
+// Ignore this comment

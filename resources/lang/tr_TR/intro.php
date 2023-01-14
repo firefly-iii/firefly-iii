@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -52,6 +54,8 @@ return [
     'budgets_index_new_budget'              => 'Uygun gördüğünüz yeni bütçeler oluşturun.',
     'budgets_index_list_of_budgets'         => 'Her bütçe için tutarları ayarlamak ve ne durumda olduğunuzu görmek için bu tabloyu kullanın.',
     'budgets_index_outro'                   => 'Bütçeleme hakkında daha fazla bilgi almak için sağ üst köşedeki yardım simgesini kontrol edin.',
+
+    // Ignore this comment
 
     // reports (index)
     'reports_index_intro'                   => 'Maliyetlerinizde ayrıntılı bilgi edinmek için bu raporları kullanın.',
@@ -89,6 +93,8 @@ return [
     'piggy-banks_index_saved'                                 => 'Bu alan size her bir kumbarada ne kadar biriktirdiğinizi gösterir.',
     'piggy-banks_index_button'                                => 'Her bir kumbaraya para eklemek veya çıkarmak için bu ilerleme çubuğunun yanında iki düğme (+ ve -) bulunur.',
     'piggy-banks_index_accountStatus'                         => 'En az bir kumbarası olan her bir aktif hesap için durum bu tabloda listelenir.',
+
+    // Ignore this comment
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Hedefin nedir? Yeni bir kanepe, bir kamera ya da acil durumlar için para mı?',
@@ -132,6 +138,8 @@ return [
     'rules_create_test_rule_triggers'                         => 'Hangi işlemlerin kurallarınıza uyacağını görmek için bu tuşu kullanın.',
     'rules_create_actions'                                    => 'İstediğiniz kadar eylem belirleyin.',
 
+    // Ignore this comment
+
     // preferences
     'preferences_index_tabs'                                  => 'Bu sekmelerin arkasında daha fazla seçenek bulunmaktadır.',
 
@@ -143,3 +151,4 @@ return [
     // create currency
     'currencies_create_code'                                  => 'Bu kod ISO uyumlu olmalıdır (Yeni para biriminiz için Google\'da arayın).',
 ];
+// Ignore this comment

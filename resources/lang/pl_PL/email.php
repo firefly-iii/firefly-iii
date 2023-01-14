@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -32,6 +34,8 @@ return [
     // admin test
     'admin_test_subject'                      => 'Wiadomość testowa z twojej instalacji Firefly III',
     'admin_test_body'                         => 'To jest wiadomość testowa z twojej instancji Firefly III. Została wysłana na :email.',
+
+    // Ignore this comment
 
     // invite
     'invitation_created_subject'              => 'Zaproszenie zostało utworzone',
@@ -69,6 +73,8 @@ return [
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Resetowanie hasła:',
     'registered_doc_link'                     => 'Dokumentacja:',
+
+    // Ignore this comment
 
     // new version
     'new_version_email_subject'               => 'Dostępna jest nowa wersja Firefly III',
@@ -113,6 +119,8 @@ return [
     'error_stacktrace_below'                  => 'Pełny opis błędu znajduje się poniżej:',
     'error_headers'                           => 'Istotne mogą być również następujące nagłówki:',
 
+    // Ignore this comment
+
     // report new journals
     'new_journals_subject'                    => 'Firefly III stworzył nową transakcję|Firefly III stworzył :count nowych transakcji',
     'new_journals_header'                     => 'Firefly III stworzył dla Ciebie transakcję. Możesz znaleźć ją w Firefly III:|Firefly III stworzył dla Ciebie transakcje :count. Możesz je znaleźć w Firefly III:',
@@ -129,3 +137,4 @@ return [
     'bill_warning_please_action'              => 'Proszę podejmij odpowiednie działania.',
 
 ];
+// Ignore this comment

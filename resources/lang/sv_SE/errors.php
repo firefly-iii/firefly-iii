@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -39,6 +41,9 @@ return [
     'error_location'          => 'Detta fel inträffade i filen <span style="font-family: monospace;">:file</span> på rad :line med kod :code.',
     'stacktrace'              => 'Stackspårning',
     'more_info'               => 'Mer information',
+
+    // Ignore this comment
+
     'collect_info'            => 'Vänligen samla in mer information i katalogen <code>lagring/loggar</code> där du hittar loggfiler. Om du kör Docker, använd <code>dockerloggar -f [container]</code>.',
     'collect_info_more'       => 'Du kan läsa mer om att samla in felinformation i <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
     'github_help'             => 'Få hjälp på GitHub',

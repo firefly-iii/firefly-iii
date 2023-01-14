@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -35,3 +37,5 @@ return [
     'piggy-banks-index'      => 'Gördüğünüz gibi, üç tane banka var. Her domuzcuk bankasındaki para miktarını değiştirmek için artı ve eksi düğmelerini kullanın. Her domuzcuk bankasının yönetimini görmek için domuzcuk\'un üzerine tıklayın.',
     'profile-index'          => 'Demo sitesinin her dört saatte bir sıfırlandığını unutmayın. Erişiminiz herhangi bir zamanda iptal edilebilir. Bu otomatik olarak gerçekleşir ve bir hata değildir.',
 ];
+
+// Ignore this comment

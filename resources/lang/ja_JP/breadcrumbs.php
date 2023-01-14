@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => '収入、所得、入金',
     'transfer_list'          => '振り替え',
     'transfers_list'         => '振り替え',
+
+    // Ignore this comment
+
     'reconciliation_list'    => '調整',
     'create_withdrawal'      => '新規出金を作成',
     'create_deposit'         => '新しい入金を作成する',

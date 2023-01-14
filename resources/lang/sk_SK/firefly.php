@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Zavrieť',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'These search parameters are not valid and have been ignored.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Vytvoriť z vyhľadávaného výrazu nové pravidlo',
     'rule_from_search_words'                              => 'Pravidlo má ťažkosti so spracovaním „:string“. Navrhované pravidlo, ktoré vyhovuje vášmu vyhľadávaciemu pojmu, môže poskytnúť rôzne výsledky. Dôkladne skontrolujte spúšťače pravidiel.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'Pri vyhľadávaní sa použijú aj nasledujúce modifikátory:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1464,6 +1470,8 @@ return [
     'multi_account_warning_withdrawal'          => 'Majte na pamäti, že zdrojový bankový účet následných rozúčtovaní bude prepísaný tým, čo je definované v prvom rozdelení výberu.',
     'multi_account_warning_deposit'             => 'Majte na pamäti, že zdrojový bankový účet následných rozúčtovaní bude prepísaný tým, čo je definované v prvom rozúčtovaní vkladu.',
     'multi_account_warning_transfer'            => 'Majte na pamäti, že zdrojový a cieľový bankový účet následných rozúčtovaní bude prepísaný tým, čo je definované v prvom rozúčtovaní prevodu.',
+
+    // Ignore this comment
 
     // export data:
     'export_data_title'                         => 'Export údajov z Firefly III',
@@ -1839,6 +1847,8 @@ return [
     'stored_category'                           => 'Nová kategória „:name“ bola uložená',
     'without_category_between'                  => 'Bez kategórie medzi :start a :end',
 
+    // Ignore this comment
+
     // transactions:
     'update_withdrawal'                         => 'Upraviť výber',
     'update_deposit'                            => 'Upraviť vklad',
@@ -2057,6 +2067,8 @@ return [
     'classification'                            => 'Klasifikácia',
     'store_transaction'                         => 'Uložiť transakciu',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Predvolený finančný výkaz v období :start a :end',
     'report_audit'                              => 'Prehľad histórie transakcií medzi :start a :end',
@@ -2161,6 +2173,8 @@ return [
     'sum_in_default_currency'                   => 'Suma vždy bude v mene, ktorú ste nastavili jako predvolenú.',
     'net_filtered_prefs'                        => 'Tento graf nikdy nebude obsahovať účty, ktoré nemajú začiarknuté políčko „Zahrnúť do čistého imania“.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Graf',
     'month'                                     => 'Mesiac',
@@ -2248,6 +2262,8 @@ return [
     'att_part_of_journal'                      => 'Uložené pod „:journal“',
     'total_amount'                             => 'Celková suma',
     'number_of_decimals'                       => 'Počet desatinných miest',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2519,6 +2535,8 @@ return [
     'except_weekends'                    => 'Okrem víkendov',
     'recurrence_deleted'                 => 'Opakovaná transakcia ":title" bola odstránená',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Zostatok (:currency)',
     'box_spent_in_currency'              => 'Utratené (:currency)',
@@ -2576,3 +2594,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment
