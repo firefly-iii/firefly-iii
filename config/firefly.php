@@ -163,6 +163,7 @@ return [
         'en_GB' => ['name_locale' => 'English (GB)', 'name_english' => 'English (GB)'],
         'en_US' => ['name_locale' => 'English (US)', 'name_english' => 'English (US)'],
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
+        'ca_ES' => ['name_locale' => 'Español (català)', 'name_english' => 'Spanish (Catalan)'],
         //        'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
         //        'fa_IR' => ['name_locale' => 'فارسی', 'name_english' => 'Persian'],
         'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
