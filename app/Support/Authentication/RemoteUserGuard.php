@@ -81,6 +81,9 @@ class RemoteUserGuard implements Guard
         // Get the user identifier from $_SERVER or apache filtered headers
         $header = config('auth.guard_header', 'REMOTE_USER');
         $userID = request()->server($header) ?? null;
+
+        //$userID = 'james@firefly';
+
         if (function_exists('apache_request_headers')) {
             $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
         }
@@ -146,7 +149,7 @@ class RemoteUserGuard implements Guard
     public function hasUser(): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        // TODO: Implement hasUser() method.
+        throw new FireflyException('Did not implement RemoteUserGuard::hasUser()');
     }
 
     /**
