@@ -106,7 +106,7 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '5.8.0-alpha.1',
+    'version'                      => '6.0.0-alpha.1',
     'api_version'                  => '2.0.0-alpha.1',
     'db_version'                   => 19,
 
@@ -155,7 +155,6 @@ return [
     'languages'                    => [
         // currently enabled languages
         'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
-        //        'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
         'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
         'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],

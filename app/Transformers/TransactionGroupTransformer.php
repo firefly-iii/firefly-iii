@@ -244,10 +244,10 @@ class TransactionGroupTransformer extends AbstractTransformer
             return null;
         }
         if (array_key_exists($key, $array) && null !== $array[$key]) {
-            if(0 === $array[$key]) {
+            if (0 === $array[$key]) {
                 return $default;
             }
-            if('0' === $array[$key]) {
+            if ('0' === $array[$key]) {
                 return $default;
             }
             return (string)$array[$key];

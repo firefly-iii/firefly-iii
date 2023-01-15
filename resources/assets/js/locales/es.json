@@ -46,7 +46,7 @@
         "source_account_reconciliation": "No puedes editar la cuenta de origen de una transacci\u00f3n de reconciliaci\u00f3n.",
         "budget": "Presupuesto",
         "bill": "Factura",
-        "you_create_withdrawal": "Est\u00e1 creando un retiro.",
+        "you_create_withdrawal": "Est\u00e1 creando un gasto.",
         "you_create_transfer": "Est\u00e1 creando una transferencia.",
         "you_create_deposit": "Est\u00e1 creando un dep\u00f3sito.",
         "edit": "Editar",
@@ -86,7 +86,7 @@
         "profile_oauth_confidential": "Confidencial",
         "profile_oauth_confidential_help": "Requerir que el cliente se autentifique con un secreto. Los clientes confidenciales pueden mantener las credenciales de forma segura sin exponerlas a partes no autorizadas. Las aplicaciones p\u00fablicas, como aplicaciones de escritorio nativo o SPA de JavaScript, no pueden guardar secretos de forma segura.",
         "multi_account_warning_unknown": "Dependiendo del tipo de transacci\u00f3n que cree, la cuenta de origen y\/o destino de divisiones posteriores puede ser anulada por lo que se define en la primera divisi\u00f3n de la transacci\u00f3n.",
-        "multi_account_warning_withdrawal": "Tenga en cuenta que la cuenta de origen de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del retiro.",
+        "multi_account_warning_withdrawal": "Tenga en cuenta que la cuenta de origen de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del gasto.",
         "multi_account_warning_deposit": "Tenga en cuenta que la cuenta de destino de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del retiro.",
         "multi_account_warning_transfer": "Tenga en cuenta que la cuenta de origen + destino de divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n de la transferencia.",
         "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
@@ -135,17 +135,17 @@
         "payment_date": "Fecha de pago",
         "invoice_date": "Fecha de la factura",
         "internal_reference": "Referencia interna",
-        "webhook_response": "Response",
-        "webhook_trigger": "Trigger",
+        "webhook_response": "Respuesta",
+        "webhook_trigger": "Disparador",
         "webhook_delivery": "Delivery"
     },
     "list": {
         "active": "\u00bfEst\u00e1 Activo?",
-        "trigger": "Trigger",
-        "response": "Response",
+        "trigger": "Disparador",
+        "response": "Respuesta",
         "delivery": "Delivery",
         "url": "URL",
-        "secret": "Secret"
+        "secret": "Secreto"
     },
     "config": {
         "html_language": "es",

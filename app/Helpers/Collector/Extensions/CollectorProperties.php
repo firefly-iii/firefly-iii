@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 trait CollectorProperties
 {
-    const TEST = 'Test';
+    public const TEST = 'Test';
     private array   $fields;
     private bool    $hasAccountInfo;
     private bool    $hasBillInformation;

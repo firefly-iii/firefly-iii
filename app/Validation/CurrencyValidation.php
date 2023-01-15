@@ -34,7 +34,7 @@ use Log;
  */
 trait CurrencyValidation
 {
-    const TEST = 'Test';
+    public const TEST = 'Test';
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
      *

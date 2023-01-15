@@ -109,7 +109,7 @@
         "webhook_delivery_form_help": "W jakim formacie webhook musi dostarcza\u0107 dane.",
         "webhook_active_form_help": "Webhook musi by\u0107 aktywny lub nie zostanie wywo\u0142any.",
         "edit_webhook_js": "Edytuj webhook \"{title}\"",
-        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. Please wait for results to appear.",
+        "webhook_was_triggered": "Webhook zosta\u0142 uruchomiony na wskazanej transakcji. Poczekaj na wyniki.",
         "view_message": "Podgl\u0105d wiadomo\u015bci",
         "view_attempts": "Podgl\u0105d nieudanych pr\u00f3b",
         "message_content_title": "Tre\u015b\u0107 wiadomo\u015bci webhook'a",
