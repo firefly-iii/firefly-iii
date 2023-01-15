@@ -98,17 +98,23 @@ class MassController extends Controller
      */
     public function destroy(MassDeleteJournalRequest $request)
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $ids   = $request->get('confirm_mass_delete');
         $count = 0;
         if (is_array($ids)) {
+            Log::debug('Array of IDs', $ids);
             /** @var string $journalId */
             foreach ($ids as $journalId) {
+                Log::debug(sprintf('Searching for ID #%d', $journalId));
                 /** @var TransactionJournal $journal */
                 $journal = $this->repository->find((int)$journalId);
-                if (null !== $journal && (int)$journalId === $journal->id) {
+                if (null !== $journal && (int)$journalId === (int) $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
+                    Log::debug(sprintf('Deleted transaction journal #%d', $journalId));
+                    continue;
                 }
+                Log::debug(sprintf('Could not find transaction journal #%d', $journalId));
             }
         }
         app('preferences')->mark();

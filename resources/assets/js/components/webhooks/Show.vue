@@ -290,7 +290,7 @@ export default {
         let button = $('#triggerButton');
         button.prop('disabled', true).addClass('disabled');
 
-        this.success_message = this.$t('firefly.webhook_was_triggered');
+        this.success_message = $.text(this.$t('firefly.webhook_was_triggered'));
         // TODO actually trigger the webhook.
         axios.post('./api/v1/webhooks/' + this.id + '/trigger-transaction/' + journalId, {});
         button.prop('disabled', false).removeClass('disabled');
