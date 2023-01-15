@@ -298,6 +298,11 @@ class AccountUpdateService
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
 
+                // if liability, make sure the amount is positive for a credit, and negative for a debit.
+                if($this->isLiability($account)) {
+                    $openingBalance = 'credit' === $data['liability_direction'] ? app('steam')->positive($openingBalance) : app('steam')->negative($openingBalance);
+                }
+
                 $this->updateOBGroupV2($account, $openingBalance, $openingBalanceDate);
             }
 
