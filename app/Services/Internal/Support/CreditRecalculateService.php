@@ -313,14 +313,29 @@ class CreditRecalculateService
             return $newLeftOfDebt;
         }
 
-        // in any other case, remove amount from left of debt.
-        if (in_array($type, [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
-            $newLeftOfDebt = bcadd($leftOfDebt, bcmul($usedAmount, '-1'));
-            Log::debug(sprintf('[4] transaction is withdrawal/deposit/transfer, remove amount %s from left of debt, = %s.', $usedAmount, $newLeftOfDebt));
+        // case 4
+        // it's a deposit into this liability (from revenue account).
+        // if it's a credit ("I am owed") this increases the amount due.
+        // because the person is having to pay more money.
+        if (
+            $type === TransactionType::DEPOSIT
+            && (int)$account->id === (int)$destTransaction->account_id
+            && 1 === bccomp($usedAmount, '0')
+            && 'credit' === $direction
+        ) {
+            $newLeftOfDebt = bcadd($leftOfDebt, app('steam')->positive($usedAmount));
+            Log::debug(sprintf('[4] Is deposit (%s) into liability, left of debt = %s.', $usedAmount, $newLeftOfDebt));
             return $newLeftOfDebt;
         }
 
-        Log::warning(sprintf('[5] Catch-all, should not happen. Left of debt = %s', $leftOfDebt));
+        // in any other case, remove amount from left of debt.
+        if (in_array($type, [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
+            $newLeftOfDebt = bcadd($leftOfDebt, bcmul($usedAmount, '-1'));
+            Log::debug(sprintf('[5] Fallback: transaction is withdrawal/deposit/transfer, remove amount %s from left of debt, = %s.', $usedAmount, $newLeftOfDebt));
+            return $newLeftOfDebt;
+        }
+
+        Log::warning(sprintf('[6] Catch-all, should not happen. Left of debt = %s', $leftOfDebt));
 
         return $leftOfDebt;
     }
