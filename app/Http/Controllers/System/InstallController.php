@@ -86,7 +86,7 @@ class InstallController extends Controller
             'firefly-iii:migrate-recurrence-type'      => [],
             'firefly-iii:upgrade-liabilities'          => [],
             'firefly-iii:create-group-memberships'     => [],
-            'firefly-iii:liabilities-580'              => [],
+            'firefly-iii:liabilities-600'              => [],
 
             // verify commands
             'firefly-iii:fix-piggies'                  => [],
