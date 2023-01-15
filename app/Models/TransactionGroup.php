@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -94,18 +95,22 @@ class TransactionGroup extends Model
      */
     public static function routeBinder(string $value): TransactionGroup
     {
+        Log::debug(sprintf('Now in %s("%s")', __METHOD__, $value));
         if (auth()->check()) {
             $groupId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
+            Log::debug(sprintf('User authenticated as %s', $user->email));
             /** @var TransactionGroup $group */
             $group = $user->transactionGroups()
                           ->with(['transactionJournals', 'transactionJournals.transactions'])
                           ->where('transaction_groups.id', $groupId)->first(['transaction_groups.*']);
             if (null !== $group) {
+                Log::debug(sprintf('Found group #%d.', $group->id));
                 return $group;
             }
         }
+        Log::debug('Found no group.');
 
         throw new NotFoundHttpException();
     }
