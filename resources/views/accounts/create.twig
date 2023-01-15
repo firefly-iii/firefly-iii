@@ -84,6 +84,10 @@
     </form>
 {% endblock %}
 {% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        var iAmOwed = '{{ 'i_am_owed_amount'|_|escape('js') }}';
+        var iOwe = '{{ 'i_owe_amount'|_|escape('js') }}';
+    </script>
     <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

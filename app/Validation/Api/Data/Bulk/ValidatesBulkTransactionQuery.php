@@ -71,7 +71,7 @@ trait ValidatesBulkTransactionQuery
             // must have same currency:
             // some account types (like expenses) do not have currency, so they have to be omitted
             $sourceCurrency = $repository->getAccountCurrency($source);
-            $destCurrency =  $repository->getAccountCurrency($dest);
+            $destCurrency   = $repository->getAccountCurrency($dest);
             if (
                 $sourceCurrency !== null
                 && $destCurrency !== null

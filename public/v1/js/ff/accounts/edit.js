@@ -30,5 +30,21 @@ $(document).ready(function () {
             }
         );
     }
+    // change the 'ffInput_opening_balance' text based on the
+    // selection of the direction.
+    $("#ffInput_liability_direction").change(triggerDirection);
+    triggerDirection();
 
 });
+
+function triggerDirection() {
+    let obj = $("#ffInput_liability_direction");
+    let direction = obj.val();
+    console.log('Direction is now ' + direction);
+    if('credit' === direction) {
+        $('label[for="ffInput_opening_balance"]').text(iAmOwed);
+    }
+    if('debit' === direction) {
+        $('label[for="ffInput_opening_balance"]').text(iOwe);
+    }
+}

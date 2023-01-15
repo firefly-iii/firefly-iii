@@ -1715,6 +1715,8 @@ return [
     'extension_date_is'                         => 'Extension date is {date}',
 
     // accounts:
+    'i_am_owed_amount'                          => 'I am owed amount',
+    'i_owe_amount'                              => 'I owe amount',
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
     'all_accounts_inactive'                     => 'These are your inactive accounts.',
     'active_account_link'                       => 'This link goes back to your active accounts.',
@@ -2468,7 +2470,7 @@ return [
 
     // recurring transactions
     'create_right_now'                      => 'Create right now',
-    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
+    'no_new_transaction_in_recurrence'      => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Recurring transactions',
     'repeat_until_in_past'                  => 'This recurring transaction stopped repeating on :date.',
     'recurring_calendar_view'               => 'Calendar',
