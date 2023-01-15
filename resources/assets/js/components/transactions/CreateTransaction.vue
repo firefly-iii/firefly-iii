@@ -529,7 +529,7 @@ export default {
       // if count is 0, send user onwards.
       if (this.createAnother) {
         // do message:
-        this.success_message = this.$t('firefly.transaction_stored_link', {ID: groupId, title: title});
+        this.success_message = this.$t('firefly.transaction_stored_link', {ID: groupId, title: $(title).text()});
         this.error_message = '';
         if (this.resetFormAfter) {
           // also clear form.
