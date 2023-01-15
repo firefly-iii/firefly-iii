@@ -28,7 +28,7 @@
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -58,6 +58,5 @@ Računi obveznosti so vaši dolgovi in krediti, kot na primer dolg na kreditni k
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
-

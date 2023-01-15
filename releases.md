@@ -16,7 +16,9 @@ The different alpha and beta builds will be compiled from their corresponding ta
 ### Minor Release Support Matrix
 | Version                          | Supported          |
 |----------------------------------|--------------------|
-| Firefly III v5.7.x               | :white_check_mark: |
+| Firefly III v6.0.x               | :white_check_mark: |
+| Firefly III v5.8.x               | :x:                |
+| Firefly III v5.7.x               | :x:                |
 | Firefly III v5.6.x               | :x:                |
 | Firefly III v5.5.x               | :x:                |
 | Firefly III v5.4.x               | :x:                |
@@ -28,6 +30,7 @@ The upgrade path for Firefly III is:
 
 1. 1.0.x patch releases are always compatible with its major and minor version. For example, previous released 1.8.x can be upgraded to most recent 1.8.4 release. This may be important for API users.
 2. Firefly III supports upgrading over minor or major versions. Starting from version 4.8.2, you can always upgrade directly to the latest version.
+3. Downgrading is generally not supported.
 
 ### Next Release
 The activity for next release isn't currently tracked. 

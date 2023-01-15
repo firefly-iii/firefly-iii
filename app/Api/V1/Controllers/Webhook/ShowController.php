@@ -146,6 +146,5 @@ class ShowController extends Controller
         // trigger event to send them:
         event(new RequestedSendWebhookMessages());
         return response()->json([], 204);
-
     }
 }

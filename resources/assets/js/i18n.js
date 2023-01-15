@@ -24,6 +24,7 @@ module.exports = new vuei18n({
     fallbackLocale: 'en',
     messages: {
         'bg': require('./locales/bg.json'),
+        'ca-es': require('./locales/ca.json'),
         'cs': require('./locales/cs.json'),
         'da': require('./locales/da.json'),
         'de': require('./locales/de.json'),

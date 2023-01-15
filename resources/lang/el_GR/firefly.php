@@ -30,7 +30,7 @@ declare(strict_types=1);
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -344,7 +344,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -716,7 +716,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1211,7 +1211,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1519,7 +1519,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1765,6 +1765,8 @@ return [
     'extension_date_is'                         => 'Η ημερομηνία παράτασης είναι {date}',
 
     // accounts:
+    'i_am_owed_amount'                          => 'I am owed amount',
+    'i_owe_amount'                              => 'I owe amount',
     'inactive_account_link'                     => 'Έχετε :count ανενεργό λογαριασμό (σε αρχειοθέτηση), τον οποίο μπορείτε να δείτε σε αυτή τη ξεχωριστή σελίδα.|Έχετε :count ανενεργούς λογαριασμούς (σε αρχειοθέτηση), τους οποίους μπορείτε να δείτε σε αυτή τη ξεχωριστή σελίδα.',
     'all_accounts_inactive'                     => 'Αυτοί είναι οι ανενεργοί λογαριασμοί σας.',
     'active_account_link'                       => 'Αυτός ο σύνδεσμος πηγαίνει πίσω στους ενεργούς λογαριασμούς σας.',
@@ -1905,7 +1907,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2135,7 +2137,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2251,7 +2253,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2351,7 +2353,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2558,7 +2560,7 @@ return [
 
     // recurring transactions
     'create_right_now'                      => 'Create right now',
-    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
+    'no_new_transaction_in_recurrence'      => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Επαναλαμβανόμενες συναλλαγές',
     'repeat_until_in_past'                  => 'Αυτή η επαναλαμβανόμενη συναλλαγή σταμάτησε να επαναλαμβάνεται στις :date.',
     'recurring_calendar_view'               => 'Ημερολόγιο',
@@ -2633,7 +2635,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2703,6 +2705,5 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
-

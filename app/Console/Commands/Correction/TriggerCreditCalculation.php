@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Models\Account;

@@ -162,7 +162,7 @@ export default {
         "rule_action_set_notes_choice": "Set notes to ..",
         "rule_action_link_to_bill_choice": "Link to a bill ..",
         "rule_action_convert_deposit_choice": "Convierta esta transacci\u00f3n en un dep\u00f3sito",
-        "rule_action_convert_withdrawal_choice": "Convierta esta transacci\u00f3n en un retiro",
+        "rule_action_convert_withdrawal_choice": "Convierta esta transacci\u00f3n en un gasto",
         "rule_action_convert_transfer_choice": "Convierta la transacci\u00f3n a una transferencia",
         "placeholder": "[Placeholder]",
         "recurrences": "Transacciones Recurrentes",

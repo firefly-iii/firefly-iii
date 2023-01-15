@@ -39,7 +39,7 @@ class WebhookEventHandler
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         // kick off the job!
-        $messages = WebhookMessage::where('webhook_messages.sent',false)
+        $messages = WebhookMessage::where('webhook_messages.sent', false)
                                   ->get(['webhook_messages.*'])
                                   ->filter(
                                       function (WebhookMessage $message) {

@@ -30,7 +30,7 @@ declare(strict_types=1);
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -344,7 +344,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -716,7 +716,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1211,7 +1211,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1519,7 +1519,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1765,6 +1765,8 @@ return [
     'extension_date_is'                         => 'Extension date is {date}',
 
     // accounts:
+    'i_am_owed_amount'                          => 'I am owed amount',
+    'i_owe_amount'                              => 'I owe amount',
     'inactive_account_link'                     => '您有 :count 个已停用 (已归档) 的账户，您可以在此独立页面中查看。|您有 :count 个已停用 (已归档) 的账户，您可以在此独立页面中查看。',
     'all_accounts_inactive'                     => '这些是您的已停用账户。',
     'active_account_link'                       => '此链接返回到您的已启用账户。',
@@ -1905,7 +1907,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2135,7 +2137,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2251,7 +2253,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2351,7 +2353,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2558,7 +2560,7 @@ return [
 
     // recurring transactions
     'create_right_now'                      => 'Create right now',
-    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
+    'no_new_transaction_in_recurrence'      => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => '定期交易',
     'repeat_until_in_past'                  => '此定期交易已于 :date 停止重复。',
     'recurring_calendar_view'               => '日历',
@@ -2633,7 +2635,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2703,6 +2705,5 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
-

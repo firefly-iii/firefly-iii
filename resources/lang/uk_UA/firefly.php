@@ -30,7 +30,7 @@ declare(strict_types=1);
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -344,7 +344,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -716,7 +716,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1211,7 +1211,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1519,7 +1519,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1765,6 +1765,8 @@ return [
     'extension_date_is'                         => 'Дата подовження {date}',
 
     // accounts:
+    'i_am_owed_amount'                          => 'I am owed amount',
+    'i_owe_amount'                              => 'I owe amount',
     'inactive_account_link'                     => 'Ви маєте :count неактивний (архівований) рахунок, який ви можете переглянути на цій окремій сторінці. У вас є :count неактивних (архівних) облікових записів, які ви можете переглядати на цій окремій сторінці.',
     'all_accounts_inactive'                     => 'Це ваші неактивні рахунки.',
     'active_account_link'                       => 'Це посилання повертається до ваших активних рахунків.',
@@ -1905,7 +1907,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2135,7 +2137,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2251,7 +2253,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2351,7 +2353,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2558,7 +2560,7 @@ return [
 
     // recurring transactions
     'create_right_now'                      => 'Create right now',
-    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
+    'no_new_transaction_in_recurrence'      => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Recurring transactions',
     'repeat_until_in_past'                  => 'This recurring transaction stopped repeating on :date.',
     'recurring_calendar_view'               => 'Calendar',
@@ -2633,7 +2635,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2703,6 +2705,5 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
-

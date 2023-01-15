@@ -44,19 +44,19 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class UpgradeLiabilitiesEight extends Command
 {
-    public const CONFIG_NAME = '580_upgrade_liabilities';
+    public const CONFIG_NAME = '600_upgrade_liabilities';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Upgrade liabilities to new 5.8.0 structure.';
+    protected $description = 'Upgrade liabilities to new 6.0.0 structure.';
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:liabilities-580 {--F|force : Force the execution of this command.}';
+    protected $signature = 'firefly-iii:liabilities-600 {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -76,7 +76,7 @@ class UpgradeLiabilitiesEight extends Command
         $this->markAsExecuted();
 
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Upgraded liabilities for 5.8.0 in %s seconds.', $end));
+        $this->info(sprintf('Upgraded liabilities for 6.0.0 in %s seconds.', $end));
 
         return 0;
     }

@@ -30,7 +30,7 @@ declare(strict_types=1);
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -345,7 +345,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -717,7 +717,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1212,7 +1212,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1520,7 +1520,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -1766,6 +1766,8 @@ return [
     'extension_date_is'                         => 'Uzantı tarihi {date}',
 
     // accounts:
+    'i_am_owed_amount'                          => 'I am owed amount',
+    'i_owe_amount'                              => 'I owe amount',
     'inactive_account_link'                     => 'Sahipsin :count bu ayrı sayfada görüntüleyebileceğiniz etkin olmayan (arşivlenmiş) hesap.|Sahipsin:count inactive (archived) accounts, which you can view on this separate page.Bu ayrı sayfada görüntüleyebileceğiniz etkin olmayan (arşivlenmiş) hesaplar.',
     'all_accounts_inactive'                     => 'Bunlar aktif olmayan hesaplarınız.',
     'active_account_link'                       => 'Bu bağlantı etkin hesaplarınıza geri döner.',
@@ -1906,7 +1908,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2136,7 +2138,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2252,7 +2254,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2352,7 +2354,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2559,7 +2561,7 @@ return [
 
     // recurring transactions
     'create_right_now'                      => 'Create right now',
-    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
+    'no_new_transaction_in_recurrence'      => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Tekrar Eden İşlemler',
     'repeat_until_in_past'                  => 'This recurring transaction stopped repeating on :date.',
     'recurring_calendar_view'               => 'Calendar',
@@ -2634,7 +2636,7 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
 
 
@@ -2704,6 +2706,5 @@ return [
  * GO TO CROWDIN TO FIX OR CHANGE TRANSLATIONS!
  *
  * https://crowdin.com/project/firefly-iii
- * 
+ *
  */
-

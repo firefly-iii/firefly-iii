@@ -423,16 +423,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.13.1",
+            "version": "v3.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "78d2251dd86b49c609a0fd37c20dcf0a00aea5a7"
+                "reference": "3952f08a81bd3b1b15e11c3de0b6bf037faa8496"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/78d2251dd86b49c609a0fd37c20dcf0a00aea5a7",
-                "reference": "78d2251dd86b49c609a0fd37c20dcf0a00aea5a7",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/3952f08a81bd3b1b15e11c3de0b6bf037faa8496",
+                "reference": "3952f08a81bd3b1b15e11c3de0b6bf037faa8496",
                 "shasum": ""
             },
             "require": {
@@ -500,7 +500,7 @@
             "description": "A tool to automatically fix PHP code style",
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.13.1"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.13.2"
             },
             "funding": [
                 {
@@ -508,7 +508,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-12-18T00:47:22+00:00"
+            "time": "2023-01-02T23:53:50+00:00"
         },
         {
             "name": "psr/cache",
