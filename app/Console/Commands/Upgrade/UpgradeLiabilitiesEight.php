@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -149,7 +150,48 @@ class UpgradeLiabilitiesEight extends Command
             $this->reverseOpeningBalance($account);
             $this->line(sprintf('Fixed correct bad opening for liability #%d ("%s")', $account->id, $account->name));
         }
+        if ('credit' === $direction) {
+            $count = $this->deleteTransactions($account);
+            if ($count > 0) {
+                $this->line(sprintf('Removed %d old format transaction(s) for liability #%d ("%s")', $count, $account->id, $account->name));
+            }
+        }
         Log::debug(sprintf('Done upgrading liability #%d ("%s")', $account->id, $account->name));
+    }
+
+    /**
+     * @param $account
+     * @return void
+     */
+    private function deleteTransactions($account): int
+    {
+        $count    = 0;
+        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                      ->where('transactions.account_id', $account->id)->get([]);
+        Log::debug(sprintf('Found %d journals to analyse.', $journals->count()));
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $delete = false;
+            /** @var Transaction $source */
+            $source = $journal->transactions()->where('amount', '<', 0)->first();
+            /** @var Transaction $dest */
+            $dest = $journal->transactions()->where('amount', '>', 0)->first();
+            // if source is this liability and destination is expense, remove transaction.
+            // if source is revenue and destination is liability, remove transaction.
+            if ((int)$source->account_id === (int)$account->id && $dest->account->accountType->type === AccountType::EXPENSE) {
+                $delete = true;
+            }
+            if ((int)$dest->account_id === (int)$account->id && $source->account->accountType->type === AccountType::REVENUE) {
+                $delete = true;
+            }
+            if ($delete) {
+                Log::debug(sprintf('Will delete journal #%d ("%s")', $journal->id, $journal->description));
+                $service = app(TransactionGroupDestroyService::class);
+                $service->destroy($journal);
+                $count++;
+            }
+        }
+        return $count;
     }
 
     /**
@@ -226,13 +268,13 @@ class UpgradeLiabilitiesEight extends Command
                                             ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
                                             ->first(['transaction_journals.*']);
         /** @var Transaction $source */
-        $source         = $openingJournal->transactions()->where('amount', '<', 0)->first();
+        $source = $openingJournal->transactions()->where('amount', '<', 0)->first();
         /** @var Transaction $dest */
-        $dest           = $openingJournal->transactions()->where('amount', '>', 0)->first();
-        if($source && $dest) {
-            $sourceId = $source->account_id;
-            $destId   = $dest->account_id;
-            $dest->account_id = $sourceId;
+        $dest = $openingJournal->transactions()->where('amount', '>', 0)->first();
+        if ($source && $dest) {
+            $sourceId           = $source->account_id;
+            $destId             = $dest->account_id;
+            $dest->account_id   = $sourceId;
             $source->account_id = $destId;
             $source->save();
             $dest->save();
