@@ -6,7 +6,7 @@ Alpha 2
 
 
 - Data import: when you submit a transaction but give the ID of an account of the wrong type, Firefly III will try to create an account of the right type. For example: you submit a deposit but the source account is an expense account: Firefly III will try to create a revenue account instead. 
-- Security: blocked users can access API, users can unblock themselves using the API.
+- Security: blocked users can access API, users can unblock themselves using the API. Recurrent Nymph CVE-2023-0298
 - New language: catalan
 
 ## 5.8.0-alpha.1 - 2023-01-08
