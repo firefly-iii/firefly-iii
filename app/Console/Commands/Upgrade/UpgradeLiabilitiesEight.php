@@ -73,8 +73,6 @@ class UpgradeLiabilitiesEight extends Command
             return 0;
         }
         $this->upgradeLiabilities();
-
-        // TODO uncomment me
         $this->markAsExecuted();
 
         $end = round(microtime(true) - $start, 2);
@@ -136,10 +134,11 @@ class UpgradeLiabilitiesEight extends Command
      */
     private function upgradeLiability(Account $account): void
     {
+        Log::debug(sprintf('Upgrade liability #%d ("%s")', $account->id, $account->name));
+
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
-        Log::debug(sprintf('Upgrade liability #%d ("%s")', $account->id, $account->name));
 
         $direction = $repository->getMetaValue($account, 'liability_direction');
         if ('debit' === $direction) {
@@ -148,7 +147,7 @@ class UpgradeLiabilitiesEight extends Command
         if ('credit' === $direction && $this->hasBadOpening($account)) {
             $this->deleteCreditTransaction($account);
             $this->reverseOpeningBalance($account);
-            $this->line(sprintf('Fixed correct bad opening for liability #%d ("%s")', $account->id, $account->name));
+            $this->line(sprintf('Corrected opening balance for liability #%d ("%s")', $account->id, $account->name));
         }
         if ('credit' === $direction) {
             $count = $this->deleteTransactions($account);
@@ -167,7 +166,7 @@ class UpgradeLiabilitiesEight extends Command
     {
         $count    = 0;
         $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                      ->where('transactions.account_id', $account->id)->get([]);
+                                      ->where('transactions.account_id', $account->id)->get(['transaction_journals.*']);
         Log::debug(sprintf('Found %d journals to analyse.', $journals->count()));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -176,6 +175,7 @@ class UpgradeLiabilitiesEight extends Command
             $source = $journal->transactions()->where('amount', '<', 0)->first();
             /** @var Transaction $dest */
             $dest = $journal->transactions()->where('amount', '>', 0)->first();
+
             // if source is this liability and destination is expense, remove transaction.
             // if source is revenue and destination is liability, remove transaction.
             if ((int)$source->account_id === (int)$account->id && $dest->account->accountType->type === AccountType::EXPENSE) {
@@ -185,9 +185,18 @@ class UpgradeLiabilitiesEight extends Command
                 $delete = true;
             }
             if ($delete) {
-                Log::debug(sprintf('Will delete journal #%d ("%s")', $journal->id, $journal->description));
+                Log::debug(
+                    sprintf(
+                        'Deleted %s journal #%d ("%s") (%s %s).',
+                        $journal->transactionType->type,
+                        $journal->id,
+                        $journal->description,
+                        $journal->transactionCurrency->code,
+                        $dest->amount
+                    )
+                );
                 $service = app(TransactionGroupDestroyService::class);
-                $service->destroy($journal);
+                $service->destroy($journal->transactionGroup);
                 $count++;
             }
         }
@@ -200,6 +209,7 @@ class UpgradeLiabilitiesEight extends Command
      */
     private function deleteCreditTransaction(Account $account): void
     {
+        Log::debug('Will delete credit transaction.');
         $liabilityType    = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
         $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                               ->where('transactions.account_id', $account->id)
@@ -210,7 +220,9 @@ class UpgradeLiabilitiesEight extends Command
             $service = new TransactionGroupDestroyService();
             $service->destroy($group);
             Log::debug(sprintf('Deleted liability credit group #%d', $group->id));
+            return;
         }
+        Log::debug('No liability credit journal found.');
     }
 
 
