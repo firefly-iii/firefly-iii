@@ -14,17 +14,14 @@
                         <h3 class="box-title">{{ 'pref_two_factor_auth_code'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        <p class="text-info">
+                        <p class="text-info hidden-print">
                             {{ 'pref_two_factor_auth_code_help'|_ }}
                         </p>
                         <div class="form group">
-                            <div class="col-sm-8 col-md-offset-4">
-                                <!--<img src="" alt="" title=""
-                                     style="border:1px #ddd solid;"/>
-                                     -->
+                            <div class="col-sm-8 col-md-offset-4 hidden-print">
                                 {{ image|raw }}
                             </div>
-                            <p>
+                            <p class="hidden-print">
                                 {{ trans('firefly.2fa_use_secret_instead', {secret: secret|escape})|raw }}
                             </p>
                             <p>

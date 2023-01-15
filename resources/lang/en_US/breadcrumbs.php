@@ -20,6 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Ignore this comment
+
 declare(strict_types=1);
 
 return [
@@ -53,6 +55,9 @@ return [
     'deposit_list'           => 'Revenue, income and deposits',
     'transfer_list'          => 'Transfers',
     'transfers_list'         => 'Transfers',
+
+    // Ignore this comment
+
     'reconciliation_list'    => 'Reconciliations',
     'create_withdrawal'      => 'Create new withdrawal',
     'create_deposit'         => 'Create new deposit',

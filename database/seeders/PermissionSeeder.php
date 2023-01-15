@@ -25,7 +25,7 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\Role;
 use Illuminate\Database\Seeder;
-use PDOEXception;
+use PDOException;
 
 /**
  * Class PermissionSeeder.

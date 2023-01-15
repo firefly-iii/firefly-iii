@@ -39,8 +39,7 @@ use Log;
  */
 class AccountTasker implements AccountTaskerInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * @param  Collection  $accounts

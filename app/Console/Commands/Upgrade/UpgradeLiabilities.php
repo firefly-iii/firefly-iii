@@ -145,10 +145,13 @@ class UpgradeLiabilities extends Command
             $this->correctOpeningBalance($account, $openingBalance);
         }
 
-        // add liability direction property
-        /** @var AccountMetaFactory $factory */
-        $factory = app(AccountMetaFactory::class);
-        $factory->crud($account, 'liability_direction', 'debit');
+        // add liability direction property (if it does not yet exist!)
+        $value = $repository->getMetaValue($account, 'liability_direction');
+        if (null === $value) {
+            /** @var AccountMetaFactory $factory */
+            $factory = app(AccountMetaFactory::class);
+            $factory->crud($account, 'liability_direction', 'debit');
+        }
     }
 
     /**

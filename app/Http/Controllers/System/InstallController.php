@@ -86,6 +86,7 @@ class InstallController extends Controller
             'firefly-iii:migrate-recurrence-type'      => [],
             'firefly-iii:upgrade-liabilities'          => [],
             'firefly-iii:create-group-memberships'     => [],
+            'firefly-iii:liabilities-600'              => [],
 
             // verify commands
             'firefly-iii:fix-piggies'                  => [],
@@ -195,8 +196,8 @@ class InstallController extends Controller
     /**
      * @param  string  $command
      * @param  array  $args
-     * @throws FireflyException
      * @return bool
+     * @throws FireflyException
      */
     private function executeCommand(string $command, array $args): bool
     {

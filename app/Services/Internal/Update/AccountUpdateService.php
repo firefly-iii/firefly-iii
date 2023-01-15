@@ -95,8 +95,8 @@ class AccountUpdateService
         // update opening balance.
         $this->updateOpeningBalance($account, $data);
 
-        // update opening balance.
-        $this->updateCreditLiability($account, $data);
+        // Since 5.8.0, delete liability credit transactions, if any:
+        $this->deleteCreditTransaction($account);
 
         // update note:
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
@@ -298,12 +298,21 @@ class AccountUpdateService
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
 
+                // if liability, make sure the amount is positive for a credit, and negative for a debit.
+                if ($this->isLiability($account)) {
+                    $openingBalance = 'credit' === $data['liability_direction'] ? app('steam')->positive($openingBalance) : app('steam')->negative($openingBalance);
+                }
+
                 $this->updateOBGroupV2($account, $openingBalance, $openingBalanceDate);
             }
 
             if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
                 $this->deleteOBGroup($account);
             }
+        }
+        // if cannot have an opening balance, delete it.
+        if (!in_array($type->type, $this->canHaveOpeningBalance, true)) {
+            $this->deleteOBGroup($account);
         }
     }
 
@@ -312,6 +321,7 @@ class AccountUpdateService
      * @param  array  $data
      *
      * @throws FireflyException
+     * @deprecated In Firefly III v5.8.0 and onwards, credit transactions for liabilities are no longer created.
      */
     private function updateCreditLiability(Account $account, array $data): void
     {

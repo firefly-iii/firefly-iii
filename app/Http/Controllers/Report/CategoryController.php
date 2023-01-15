@@ -625,7 +625,6 @@ class CategoryController extends Controller
                 }
             }
         }
-        $cache->store($data);
 
         $report = $data;
 

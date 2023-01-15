@@ -98,22 +98,7 @@ class Authenticate
                 /** @noinspection PhpUndefinedMethodInspection */
                 /** @var User $user */
                 $user = $this->auth->authenticate();
-                if (null === $user) {
-                    Log::warning('User is null, throw exception?');
-                }
-                if (null !== $user) {
-                    Log::debug(get_class($user));
-                    if (1 === (int)$user->blocked) {
-                        $message = (string)trans('firefly.block_account_logout');
-                        if ('email_changed' === $user->blocked_code) {
-                            $message = (string)trans('firefly.email_changed_logout');
-                        }
-                        app('session')->flash('logoutMessage', $message);
-                        $this->auth->logout(); // @phpstan-ignore-line (thinks function is undefined)
-
-                        throw new AuthenticationException('Blocked account.', $guards);
-                    }
-                }
+                $this->validateBlockedUser($user, $guards);
             }
 
             return $this->auth->authenticate(); // @phpstan-ignore-line (thinks function returns void)
@@ -122,17 +107,49 @@ class Authenticate
 
         foreach ($guards as $guard) {
             Log::debug(sprintf('Now in guard loop, guard is "%s"', $guard));
-            if('api' !== $guard) {
+            if ('api' !== $guard) {
+                Log::debug('Guard is "api", call authenticate()');
                 $this->auth->guard($guard)->authenticate();
             }
             $result = $this->auth->guard($guard)->check();
             Log::debug(sprintf('Result is %s', var_export($result, true)));
             if ($result) {
+                Log::debug('Guard says user is authenticated.');
+                $user = $this->auth->guard($guard)->user();
+                $this->validateBlockedUser($user, $guards);
                 // According to PHPstan the method returns void, but we'll see.
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
         }
 
         throw new AuthenticationException('Unauthenticated.', $guards);
+    }
+
+    /**
+     * @param  User|null  $user
+     * @param  array  $guards
+     * @return void
+     * @throws AuthenticationException
+     */
+    private function validateBlockedUser(?User $user, array $guards): void
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        if (null === $user) {
+            Log::warning('User is null, throw exception?');
+        }
+        if (null !== $user) {
+            // Log::debug(get_class($user));
+            if (1 === (int)$user->blocked) {
+                $message = (string)trans('firefly.block_account_logout');
+                if ('email_changed' === $user->blocked_code) {
+                    $message = (string)trans('firefly.email_changed_logout');
+                }
+                Log::warning('User is blocked, cannot use authentication method.');
+                app('session')->flash('logoutMessage', $message);
+                $this->auth->logout(); // @phpstan-ignore-line (thinks function is undefined)
+
+                throw new AuthenticationException('Blocked account.', $guards);
+            }
+        }
     }
 }

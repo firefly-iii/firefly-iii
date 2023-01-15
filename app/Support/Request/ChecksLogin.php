@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Request;
 
+use Illuminate\Support\Facades\Log;
+
 /**
  * Trait ChecksLogin
  */
@@ -35,6 +37,7 @@ trait ChecksLogin
      */
     public function authorize(): bool
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // Only allow logged in users
         return auth()->check();
     }

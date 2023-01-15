@@ -187,6 +187,7 @@ class Kernel extends HttpKernel
             ],
             // do only bindings, no auth
             'api_basic' => [
+                AcceptHeaders::class,
                 'bindings',
             ],
         ];

@@ -212,7 +212,7 @@ class OperatorQuerySearch implements SearchInterface
                 // used to search for x:y
                 $operator   = strtolower($searchNode->getValue());
                 $value      = $searchNode->getNode()->getValue();
-                $prohibited = $searchNode->getBoolOperator()->equals(BoolOperator::PROHIBITED()->getValue());
+                $prohibited = $searchNode->getBoolOperator() === BoolOperator::PROHIBITED;
                 $context    = config(sprintf('search.operators.%s.needs_context', $operator));
 
                 // is an operator that needs no context, and value is false, then prohibited = true.

@@ -2,6 +2,44 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.0-alpha.1 - 2023-01-16
+
+This is the first release of the new 6.0.0 series of Firefly III. It should upgrade the database automatically BUT please make a backup of your database first! I guarantee nothing.
+
+This release was previously tagged "5.8.0" but due to backwards incompatible changes in liability management and a destructive upgrade process, this is now "6.0.0". It will again be alpha.1.
+
+### Warnings
+
+- ⚠️ Make a backup of your database first!
+- ⚠️ This version requires **PHP 8.2**.
+
+You can access the new V3 layout under `/v3/`. If you decide to use or test it:
+
+- ⚠️ Read the instructions under the ☠️ icon FIRST.
+- ⚠️ The new layout is not yet finished. Use it to change your data at your own risk.
+
+### Added
+-  ⚠️ Upgrade code for liability management. See also [this Gist](https://gist.github.com/JC5/909385c5086f9e07ba2c32e047446d68).
+- New language: Catalan!
+
+### Changed
+- The translations now have a warning in the comments so people don't submit translations.
+
+### Fixed
+- [Issue 6824](https://github.com/firefly-iii/firefly-iii/issues/6824) Fix issue with bills.
+- [Issue 6828](https://github.com/firefly-iii/firefly-iii/issues/6828) Catch bad number in API
+- [Issue 6829](https://github.com/firefly-iii/firefly-iii/issues/6829) Better error catching in API
+- [Issue 6831](https://github.com/firefly-iii/firefly-iii/issues/6831) TypeError when using remote authentication
+- [Issue 6834](https://github.com/firefly-iii/firefly-iii/issues/6834) Will use IBAN in account names if account exists already with a different IBAN
+- [Issue 6842](https://github.com/firefly-iii/firefly-iii/issues/6842) Switch from expense to revenue when importing data.
+- [Issue 6855](https://github.com/firefly-iii/firefly-iii/issues/6855) Do not validate currency if currency is NULL, thanks @eps90!
+- Piggy bank actions are created correctly
+- Bad spelling in header check
+
+### Security
+- [Issue 6826](https://github.com/firefly-iii/firefly-iii/issues/6826) Hide 2FA information when printing, thanks @jstebenne!
+- Blocked users can access API, and users can unblock themselves using the API. This was reported in CVE-2023-0298.
+ 
 ## 5.8.0-alpha.1 - 2023-01-08
 
 This is the first release of the new 5.8.0 series of Firefly III. It should upgrade the database automatically BUT 

@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+// Ignore this comment
+
 return [
     // general stuff:
     'close'                                => 'Close',
@@ -323,6 +325,8 @@ return [
     'invalid_operators_list'               => 'These search parameters are not valid and have been ignored.',
 
     // old
+
+    // Ignore this comment
 
     'search_modifier_date_on'                             => 'Transaction date is ":value"',
     'search_modifier_not_date_on'                         => 'Transaction date is not ":value"',
@@ -684,6 +688,7 @@ return [
     'create_rule_from_query'                              => 'Create new rule from search query',
     'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
 
+    // Ignore this comment
 
     // END
     'modifiers_applies_are'                               => 'The following modifiers are applied to the search as well:',
@@ -1168,6 +1173,7 @@ return [
     'rule_trigger_not_destination_is_cash'                => 'Destination account is not a cash account',
     'rule_trigger_not_account_is_cash'                    => 'Neither account is a cash account',
 
+    // Ignore this comment
 
     // actions
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
@@ -1465,6 +1471,8 @@ return [
     'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
     'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
 
+    // Ignore this comment
+
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
     'export_data_menu'                          => 'Export data',
@@ -1707,6 +1715,8 @@ return [
     'extension_date_is'                         => 'Extension date is {date}',
 
     // accounts:
+    'i_am_owed_amount'                          => 'I am owed amount',
+    'i_owe_amount'                              => 'I owe amount',
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
     'all_accounts_inactive'                     => 'These are your inactive accounts.',
     'active_account_link'                       => 'This link goes back to your active accounts.',
@@ -1838,6 +1848,8 @@ return [
     'store_category'                            => 'Store new category',
     'stored_category'                           => 'Stored new category ":name"',
     'without_category_between'                  => 'Without category between :start and :end',
+
+    // Ignore this comment
 
     // transactions:
     'update_withdrawal'                         => 'Update withdrawal',
@@ -2057,6 +2069,8 @@ return [
     'classification'                            => 'Classification',
     'store_transaction'                         => 'Store transaction',
 
+    // Ignore this comment
+
     // reports:
     'report_default'                            => 'Default financial report between :start and :end',
     'report_audit'                              => 'Transaction history overview between :start and :end',
@@ -2161,6 +2175,8 @@ return [
     'sum_in_default_currency'                   => 'The sum will always be in your default currency.',
     'net_filtered_prefs'                        => 'This chart will never include accounts that have the "Include in net worth"-option unchecked.',
 
+    // Ignore this comment
+
     // charts:
     'chart'                                     => 'Chart',
     'month'                                     => 'Month',
@@ -2248,6 +2264,8 @@ return [
     'att_part_of_journal'                      => 'Stored under ":journal"',
     'total_amount'                             => 'Total amount',
     'number_of_decimals'                       => 'Number of decimals',
+
+    // Ignore this comment
 
     // administration
     'invite_new_user_title'                    => 'Invite new user',
@@ -2452,7 +2470,7 @@ return [
 
     // recurring transactions
     'create_right_now'                      => 'Create right now',
-    'no_new_transaction_in_recurrence' => 'No new transaction was created. Perhaps it was already fired for this date?',
+    'no_new_transaction_in_recurrence'      => 'No new transaction was created. Perhaps it was already fired for this date?',
     'recurrences'                           => 'Recurring transactions',
     'repeat_until_in_past'                  => 'This recurring transaction stopped repeating on :date.',
     'recurring_calendar_view'               => 'Calendar',
@@ -2519,6 +2537,8 @@ return [
     'except_weekends'                    => 'Except weekends',
     'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
 
+    // Ignore this comment
+
     // new lines for summary controller.
     'box_balance_in_currency'            => 'Balance (:currency)',
     'box_spent_in_currency'              => 'Spent (:currency)',
@@ -2576,3 +2596,5 @@ return [
     'ale_action_add_tag'                 => 'Added tag',
 
 ];
+
+// Ignore this comment

@@ -25,7 +25,7 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\AccountType;
 use Illuminate\Database\Seeder;
-use PDOEXception;
+use PDOException;
 
 /**
  * Class AccountTypeSeeder.
