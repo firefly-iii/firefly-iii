@@ -140,7 +140,7 @@ export default {
 
       // post!
       axios.post('./api/v1/webhooks', data).then((response) => {
-        this.success_message = response.data.message;
+        this.success_message = $.text(response.data.message);
         // console.log('Will now go to redirectUser()');
         let webhookId = response.data.data.id;
         window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=created';
