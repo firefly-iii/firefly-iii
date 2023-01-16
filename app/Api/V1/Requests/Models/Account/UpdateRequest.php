@@ -76,22 +76,8 @@ class UpdateRequest extends FormRequest
             'liability_amount'        => ['liability_amount', 'convertString'],
             'liability_start_date'    => ['liability_start_date', 'date'],
         ];
-        /** @var Account $account */
-        $account = $this->route()->parameter('account');
         $data    = $this->getAllData($fields);
-        $data    = $this->appendLocationData($data, null);
-        $valid   = config('firefly.valid_liabilities');
-        if (array_key_exists('liability_amount', $data) && in_array($account->accountType->type, $valid, true)) {
-            $data['opening_balance'] = app('steam')->negative($data['liability_amount']);
-            Log::debug(sprintf('Opening balance for liability is "%s".', $data['opening_balance']));
-        }
-
-        if (array_key_exists('liability_start_date', $data) && in_array($account->accountType->type, $valid, true)) {
-            $data['opening_balance_date'] = $data['liability_start_date'];
-            Log::debug(sprintf('Opening balance date for liability is "%s".', $data['opening_balance_date']));
-        }
-
-        return $data;
+        return $this->appendLocationData($data, null);
     }
 
     /**
