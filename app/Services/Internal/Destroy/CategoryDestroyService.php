@@ -46,5 +46,8 @@ class CategoryDestroyService
 
         // also delete all relations between categories and transactions:
         DB::table('category_transaction')->where('category_id', (int)$category->id)->delete();
+
+        // delete references to category from recurring transactions.
+        DB::table('rt_meta')->where('name', 'category_id')->where('value', $category->id)->delete();
     }
 }

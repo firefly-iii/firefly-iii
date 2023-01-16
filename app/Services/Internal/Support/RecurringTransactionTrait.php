@@ -294,7 +294,7 @@ trait RecurringTransactionTrait
 
             return;
         }
-
+        $transaction->recurrenceTransactionMeta()->where('name', 'category_name')->delete();
         $meta = $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->first();
         if (null === $meta) {
             $meta        = new RecurrenceTransactionMeta();
