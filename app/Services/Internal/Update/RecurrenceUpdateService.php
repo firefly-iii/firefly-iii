@@ -224,9 +224,10 @@ class RecurrenceUpdateService
      */
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
+        Log::debug('Now in updateTransactions()');
         $originalCount = $recurrence->recurrenceTransactions()->count();
         if (0 === count($transactions)) {
-            // wont drop transactions, rather avoid.
+            // won't drop transactions, rather avoid.
             return;
         }
         // user added or removed repetitions, delete all and recreate:
@@ -240,12 +241,13 @@ class RecurrenceUpdateService
         $currencyFactory = app(TransactionCurrencyFactory::class);
         // loop all and try to match them:
         if ($originalCount === count($transactions)) {
-            Log::debug('Loop and find');
+            Log::debug(sprintf('Count is equal (%d), update transactions.', $originalCount));
             foreach ($transactions as $current) {
                 $match = $this->matchTransaction($recurrence, $current);
                 if (null === $match) {
                     throw new FireflyException('Cannot match recurring transaction to existing transaction. Not sure what to do. Break.');
                 }
+                // complex loop to find currency:
                 $currency        = null;
                 $foreignCurrency = null;
                 if (array_key_exists('currency_id', $current) || array_key_exists('currency_code', $current)) {
@@ -267,7 +269,7 @@ class RecurrenceUpdateService
                     $current['foreign_currency_id'] = (int)$foreignCurrency->id;
                 }
 
-                // update fields
+                // update fields that are part of the recurring transaction itself.
                 $fields = [
                     'source_id'           => 'source_id',
                     'destination_id'      => 'destination_id',
@@ -293,11 +295,13 @@ class RecurrenceUpdateService
                 // reset category if name is set but empty:
                 // can be removed when v1 is retired.
                 if (array_key_exists('category_name', $current) && '' === (string)$current['category_name']) {
+                    Log::debug('Category name is submitted but is empty. Set category to be empty.');
                     $current['category_name'] = null;
                     $current['category_id']   = 0;
                 }
 
                 if (array_key_exists('category_id', $current)) {
+                    Log::debug(sprintf('Category ID is submitted, set category to be %d.', (int)$current['category_id']));
                     $this->setCategory($match, (int)$current['category_id']);
                 }
 
@@ -319,9 +323,10 @@ class RecurrenceUpdateService
      */
     private function matchTransaction(Recurrence $recurrence, array $data): ?RecurrenceTransaction
     {
+        Log::debug('Now in matchTransaction()');
         $originalCount = $recurrence->recurrenceTransactions()->count();
         if (1 === $originalCount) {
-            Log::debug('Return the first one');
+            Log::debug('Return the first one.');
 
             return $recurrence->recurrenceTransactions()->first();
         }
