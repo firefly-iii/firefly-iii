@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-const DATEFORMAT = DATEFORMAT;
+const DATEFORMAT = '(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}';
 
 Route::group(
     ['namespace' => 'FireflyIII\Http\Controllers\System',
