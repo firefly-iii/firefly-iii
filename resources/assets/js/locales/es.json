@@ -66,6 +66,7 @@
         "profile_oauth_edit_client": "Editar Cliente",
         "profile_oauth_name_help": "Algo que sus usuarios reconocer\u00e1n y confiar\u00e1n.",
         "profile_oauth_redirect_url": "Redirigir URL",
+        "profile_oauth_clients_external_auth": "If you're using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.",
         "profile_oauth_redirect_url_help": "La URL de devoluci\u00f3n de autorizaci\u00f3n de su aplicaci\u00f3n.",
         "profile_authorized_apps": "Aplicaciones autorizadas",
         "profile_authorized_clients": "Clientes autorizados",
