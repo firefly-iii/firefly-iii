@@ -66,6 +66,7 @@
         "profile_oauth_edit_client": "Redigera klient",
         "profile_oauth_name_help": "N\u00e5got som dina anv\u00e4ndare kommer att k\u00e4nna igen och lita p\u00e5.",
         "profile_oauth_redirect_url": "Omdirigera URL",
+        "profile_oauth_clients_external_auth": "If you're using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.",
         "profile_oauth_redirect_url_help": "Din applikations auktorisering callback URL.",
         "profile_authorized_apps": "Auktoriserade applikationer",
         "profile_authorized_clients": "Auktoriserade klienter",

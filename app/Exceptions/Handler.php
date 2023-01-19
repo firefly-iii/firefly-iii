@@ -168,7 +168,7 @@ class Handler extends ExceptionHandler
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
 
-        Log::debug('Error has no Firefly III treatment, parent will handle.');
+        Log::debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', get_class($e)));
 
         return parent::render($request, $e);
     }

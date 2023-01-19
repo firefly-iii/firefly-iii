@@ -66,6 +66,7 @@
         "profile_oauth_edit_client": "Muokkaa asiakasta",
         "profile_oauth_name_help": "Jotain k\u00e4ytt\u00e4jillesi tuttua ja luotettavaa.",
         "profile_oauth_redirect_url": "URL:n uudelleenohjaus",
+        "profile_oauth_clients_external_auth": "If you're using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.",
         "profile_oauth_redirect_url_help": "Sovelluksesi valtuutuksen callback URL.",
         "profile_authorized_apps": "Valtuutetut sovellukset",
         "profile_authorized_clients": "Valtuutetut asiakkaat",

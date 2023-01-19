@@ -66,6 +66,7 @@
         "profile_oauth_edit_client": "Rediger klient",
         "profile_oauth_name_help": "Noget dine brugere vil genkende og stole p\u00e5.",
         "profile_oauth_redirect_url": "Omdirigerings-URL",
+        "profile_oauth_clients_external_auth": "If you're using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.",
         "profile_oauth_redirect_url_help": "Din autoriserings callback URL.",
         "profile_authorized_apps": "Autoriserede programmer",
         "profile_authorized_clients": "Autoriserede klienter",

@@ -66,6 +66,7 @@
         "profile_oauth_edit_client": "Upravi\u0165 klienta",
         "profile_oauth_name_help": "Nie\u010do, \u010do va\u0161i pou\u017eivatelia poznaj\u00fa a bud\u00fa tomu d\u00f4verova\u0165.",
         "profile_oauth_redirect_url": "URL presmerovania",
+        "profile_oauth_clients_external_auth": "If you're using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.",
         "profile_oauth_redirect_url_help": "Sp\u00e4tn\u00e1 URL pre overenie autoriz\u00e1cie va\u0161ej aplik\u00e1cie.",
         "profile_authorized_apps": "Povolen\u00e9 aplik\u00e1cie",
         "profile_authorized_clients": "Autorizovan\u00ed klienti",
