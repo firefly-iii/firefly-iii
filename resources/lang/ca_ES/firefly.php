@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clients OAuth',
     'profile_oauth_no_clients'                  => 'No has creat cap client OAuth.',
+    'profile_oauth_clients_external_auth'       => 'Si estàs fent servir un proveïdor extern d\'autentificació com Authelia, els Clients OAuth no funcionaran. Sols pots fer servir Tokens d\'Accés Personal.',
     'profile_oauth_clients_header'              => 'Clients',
     'profile_oauth_client_id'                   => 'ID de Client',
     'profile_oauth_client_name'                 => 'Nom',
@@ -1765,8 +1766,8 @@ return [
     'extension_date_is'                         => 'La data d\'extensió és {date}',
 
     // accounts:
-    'i_am_owed_amount'                          => 'I am owed amount',
-    'i_owe_amount'                              => 'I owe amount',
+    'i_am_owed_amount'                          => 'Se\'m deu la quantitat',
+    'i_owe_amount'                              => 'Jo dec la quantitat',
     'inactive_account_link'                     => 'Tens :count compte inactiu (arxivat), que pots veure en aquesta pàgina.|Tens :count comptes inactius (arxivats), els pots veure en aquesta pàgina.',
     'all_accounts_inactive'                     => 'Aquests són els teus comptes inactius.',
     'active_account_link'                       => 'Aquest enllaç et retorna als teus comptes actius.',

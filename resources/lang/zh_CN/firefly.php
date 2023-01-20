@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth 授权',
     'profile_oauth_clients'                     => 'OAuth 客户端',
     'profile_oauth_no_clients'                  => '您尚未创建任何 OAuth 客户端。',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => '客户端',
     'profile_oauth_client_id'                   => '客户端 ID',
     'profile_oauth_client_name'                 => '名称',

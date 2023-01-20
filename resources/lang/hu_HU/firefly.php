@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth kliensek',
     'profile_oauth_no_clients'                  => 'Nincs létrehozva egyetlen OAuth kliens sem.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Kliensek',
     'profile_oauth_client_id'                   => 'Kliens ID',
     'profile_oauth_client_name'                 => 'Megnevezés',

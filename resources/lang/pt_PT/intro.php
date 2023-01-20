@@ -52,7 +52,7 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Atribua IBAN\'s válidos nas suas contas. Isto pode ajudar a tornar a importação de dados muito simples no futuro.',
-    'accounts_create_asset_opening_balance' => 'Contas de ativos podem ter um saldo de abertura, desta forma indicando o inicio do seu historial no Firefly III.',
+    'accounts_create_asset_opening_balance' => 'Contas de ativos podem ter um saldo de abertura, desta forma indicando o início do seu historial no Firefly III.',
     'accounts_create_asset_currency'        => 'O Firefly III suporta múltiplas moedas. Contas de ativos tem uma moeda principal, que deve ser definida aqui.',
     'accounts_create_asset_virtual'         => 'Por vezes, pode ajudar dar a tua conta um saldo virtual: uma quantia extra sempre adicionada ou removida do saldo real.',
 
@@ -186,7 +186,7 @@ return [
     // currencies
     'currencies_index_intro'                                  => 'O Firefly III suporta multiplas divisas que podes mudar nesta pagina.',
     'currencies_index_default'                                => 'O Firefly III tem uma divisa de defeito.',
-    'currencies_index_buttons'                                => 'Usa estes botoes para alterar a divisa de defito ou activar outras divisas.',
+    'currencies_index_buttons'                                => 'Use os botões para alterar a moeda padrão ou habilitar outras moedas.',
 
     // create currency
     'currencies_create_code'                                  => 'Este codigo deve ser compativel com ISO (procura pela tua nova moeda no google).',

@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'Bạn đã không tạo ra bất kỳ OAuth clients nào.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Clients',
     'profile_oauth_client_id'                   => 'Client ID',
     'profile_oauth_client_name'                 => 'Tên',
@@ -1765,8 +1766,8 @@ return [
     'extension_date_is'                         => 'Extension date is {date}',
 
     // accounts:
-    'i_am_owed_amount'                          => 'I am owed amount',
-    'i_owe_amount'                              => 'I owe amount',
+    'i_am_owed_amount'                          => 'Tôi đang nợ số tiền',
+    'i_owe_amount'                              => 'Tôi nợ số tiền',
     'inactive_account_link'                     => 'Bạn có :count tài khoản không hoạt động (được lưu trữ) mà bạn có thể xem trên trang này. Bạn có :count tài khoản không hoạt động (đã lưu trữ) mà bạn có thể xem trên trang này.',
     'all_accounts_inactive'                     => 'Đây là những tài khoản không hoạt động của bạn.',
     'active_account_link'                       => 'Liên kết này quay lại tài khoản đang hoạt động của bạn.',

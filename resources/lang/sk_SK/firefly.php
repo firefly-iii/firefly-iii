@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth klienti',
     'profile_oauth_no_clients'                  => 'Zatiaľ ste nevytvorili žiadneho OAuth klienta.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Klienti',
     'profile_oauth_client_id'                   => 'ID klienta',
     'profile_oauth_client_name'                 => 'Meno/Názov',

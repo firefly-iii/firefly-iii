@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth клиенти',
     'profile_oauth_no_clients'                  => 'Не сте създали клиенти на OAuth.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Клиенти',
     'profile_oauth_client_id'                   => 'ИД (ID) на клиент',
     'profile_oauth_client_name'                 => 'Име',
