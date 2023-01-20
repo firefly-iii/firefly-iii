@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -39,6 +40,7 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -90,7 +92,13 @@ class Controller extends BaseController
 
         // some date fields:
         foreach ($dates as $field) {
-            $date = request()->query->get($field);
+            try {
+                $date = request()->query->get($field);
+            } catch(BadRequestException $e) {
+                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
+                Log::error($e->getMessage());
+                $value = null;
+            }
             $obj  = null;
             if (null !== $date) {
                 try {
@@ -105,7 +113,13 @@ class Controller extends BaseController
 
         // integer fields:
         foreach ($integers as $integer) {
-            $value = request()->query->get($integer);
+            try {
+                $value = request()->query->get($integer);
+            } catch(BadRequestException $e) {
+                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
+                Log::error($e->getMessage());
+                $value = null;
+            }
             if (null !== $value) {
                 $bag->set($integer, (int)$value);
             }

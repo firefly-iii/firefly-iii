@@ -142,7 +142,7 @@ class RemoteUserGuard implements Guard
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         $user = $this->user;
-        if(null === $user) {
+        if (null === $user) {
             Log::debug('User is NULL');
             return null;
         }
