@@ -845,31 +845,14 @@ Route::group(
     static function () {
         Route::get('', ['uses' => 'ReportController@index', 'as' => 'index']);
         Route::get('options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'options']);
-        Route::get('default/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@defaultReport', 'as' => 'report.default'])->where(
-            ['start_date' => DATEFORMAT]
-        )
-             ->where(['end_date' => DATEFORMAT]);
-        Route::get('audit/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@auditReport', 'as' => 'report.audit'])->where(
-            ['start_date' => DATEFORMAT]
-        )
-             ->where(['end_date' => DATEFORMAT]);
+        Route::get('default/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@defaultReport', 'as' => 'report.default']);
+        Route::get('audit/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@auditReport', 'as' => 'report.audit']);
         Route::get(
             'category/{accountList}/{categoryList}/{start_date}/{end_date}',
-            ['uses' => 'ReportController@categoryReport', 'as' => 'report.category']
-        )->where(['start_date' => DATEFORMAT])
-             ->where(['end_date' => DATEFORMAT]);
-        Route::get('budget/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'ReportController@budgetReport', 'as' => 'report.budget'])->where(
-            ['start_date' => DATEFORMAT]
-        )
-             ->where(['end_date' => DATEFORMAT]);
-        Route::get('tag/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'ReportController@tagReport', 'as' => 'report.tag'])->where(
-            ['start_date' => DATEFORMAT]
-        )
-             ->where(['end_date' => DATEFORMAT]);
-        Route::get('double/{accountList}/{doubleList}/{start_date}/{end_date}', ['uses' => 'ReportController@doubleReport', 'as' => 'report.double'])->where(
-            ['start_date' => DATEFORMAT]
-        )
-             ->where(['end_date' => DATEFORMAT]);
+            ['uses' => 'ReportController@categoryReport', 'as' => 'report.category']);
+        Route::get('budget/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'ReportController@budgetReport', 'as' => 'report.budget']);
+        Route::get('tag/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'ReportController@tagReport', 'as' => 'report.tag']);
+        Route::get('double/{accountList}/{doubleList}/{start_date}/{end_date}', ['uses' => 'ReportController@doubleReport', 'as' => 'report.double']);
 
         Route::post('', ['uses' => 'ReportController@postIndex', 'as' => 'index.post']);
     }
