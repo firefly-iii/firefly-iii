@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Πελάτες OAuth',
     'profile_oauth_no_clients'                  => 'Δεν έχετε δημιουργήσει πελάτες OAuth.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Πελάτες',
     'profile_oauth_client_id'                   => 'Αναγνωριστικό πελάτη',
     'profile_oauth_client_name'                 => 'Όνομα',

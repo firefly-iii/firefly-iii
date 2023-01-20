@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth-Clients',
     'profile_oauth_no_clients'                  => 'Sie haben noch keine OAuth-Clients erstellt.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Clients',
     'profile_oauth_client_id'                   => 'Client-ID',
     'profile_oauth_client_name'                 => 'Name',
@@ -1765,8 +1766,8 @@ return [
     'extension_date_is'                         => 'Zeitpunkt der Verlängerung ist {date}',
 
     // accounts:
-    'i_am_owed_amount'                          => 'I am owed amount',
-    'i_owe_amount'                              => 'I owe amount',
+    'i_am_owed_amount'                          => 'Mir wird Betrag geschuldet',
+    'i_owe_amount'                              => 'Ich schulde Betrag',
     'inactive_account_link'                     => 'Sie haben :count inaktives (archiviertes) Konto, das Sie auf dieser separaten Seite sehen können.|Sie haben :count inaktive (archivierte) Konten, die Sie auf dieser separaten Seite anzeigen können.',
     'all_accounts_inactive'                     => 'Dies sind Ihre inaktiven Konten.',
     'active_account_link'                       => 'Diese Verknüpfung führt zurück zu Ihren aktiven Konten.',

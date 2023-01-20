@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clients OAuth',
     'profile_oauth_no_clients'                  => 'Vous n’avez pas encore créé de client OAuth.',
+    'profile_oauth_clients_external_auth'       => 'Si vous utilisez un fournisseur d\'authentification externe comme Authelia, les clients OAuth ne fonctionneront pas. Vous ne pouvez utiliser que des jetons d\'accès personnel.',
     'profile_oauth_clients_header'              => 'Clients',
     'profile_oauth_client_id'                   => 'Identifiant',
     'profile_oauth_client_name'                 => 'Nom',
@@ -1765,8 +1766,8 @@ return [
     'extension_date_is'                         => 'La date de l\'extension est {date}',
 
     // accounts:
-    'i_am_owed_amount'                          => 'I am owed amount',
-    'i_owe_amount'                              => 'I owe amount',
+    'i_am_owed_amount'                          => 'On me doit le montant',
+    'i_owe_amount'                              => 'Je dois le montant',
     'inactive_account_link'                     => 'Vous avez :count compte inactif (archivé) que vous pouvez consulter sur cette page dédiée.| Vous avez :count comptes inactifs (archivés) que vous pouvez consulter sur cette page dédiée.',
     'all_accounts_inactive'                     => 'Voici vos comptes inactifs.',
     'active_account_link'                       => 'Ce lien renvoie à vos comptes actifs.',

@@ -38,12 +38,12 @@ return [
     'html_language'            => 'pt-br',
     'locale'                   => 'pt-br, pt_BR.utf8, pt_BR.UTF-8',
     //'month'                   => '%B %Y',
-    'month_js'                 => 'MMMM YYYY',
+    'month_js'                 => 'MMMM [de] YYYY',
 
     //'month_and_day'           => '%B %e, %Y',
-    'month_and_day_moment_js'  => 'DD \de MMMM \de YYYY',
+    'month_and_day_moment_js'  => 'DD [de] MMMM [de] YYYY',
     'month_and_day_fns'        => 'd [de] MMMM [de] y',
-    'month_and_day_js'         => 'MMMM Do, YYYY',
+    'month_and_day_js'         => 'DD [de] MMMM [de] YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
     'month_and_date_day_js'    => 'dddd, D [de] MMMM [de] YYYY',
@@ -64,15 +64,15 @@ return [
 
 
     //'date_time'               => '%B %e, %Y, @ %T',
-    'date_time_js'             => 'MMMM Do, YYYY, @ HH:mm:ss',
+    'date_time_js'             => 'DD [de] MMMM [de] YYYY, [às] HH:mm:ss',
     'date_time_fns'            => 'dd \'de\' MMMM \'de\' yyyy, \'às\' HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
-    'specific_day_js'          => 'D MMMM YYYY',
+    'specific_day_js'          => 'DD [de] MMMM [de] YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
     'week_in_year_js'          => '[Week] s, AAAA',
-    'week_in_year_fns'         => "'Semana' w, yyyy",
+    'week_in_year_fns'         => "'Semana' w 'de' yyyy",
 
     //'year'                    => '%Y',
     'year_js'                  => 'YYYY',

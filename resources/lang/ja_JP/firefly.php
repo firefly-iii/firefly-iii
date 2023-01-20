@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuthクライアント',
     'profile_oauth_no_clients'                  => 'OAuth クライアントを作成していません。',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'クライアント',
     'profile_oauth_client_id'                   => 'クライアント ID',
     'profile_oauth_client_name'                 => '名前',

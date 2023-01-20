@@ -1476,6 +1476,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Klienter',
     'profile_oauth_no_clients'                  => 'Du har ikke oprettet nogen OAuth klienter.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Klienter',
     'profile_oauth_client_id'                   => 'Klient ID',
     'profile_oauth_client_name'                 => 'Navn',
