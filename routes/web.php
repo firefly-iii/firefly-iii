@@ -22,7 +22,7 @@
 declare(strict_types=1);
 
 if (!defined('DATEFORMAT')) {
-    define('DATEFORMAT', '(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}');
+    define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
 }
 
 Route::group(
