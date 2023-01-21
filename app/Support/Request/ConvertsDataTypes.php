@@ -90,8 +90,9 @@ trait ConvertsDataTypes
         if (null === $string) {
             return null;
         }
-        var_dump($string);
-
+        if('' === $string) {
+            return '';
+        }
         $search  = [
             "\0", // NUL
             "\f", // form feed
@@ -152,6 +153,9 @@ trait ConvertsDataTypes
         $string = preg_replace('/\pM/u', '', $string);
         if (null === $string) {
             return null;
+        }
+        if('' === $string) {
+            return '';
         }
         return trim($string);
     }
