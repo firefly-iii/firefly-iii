@@ -24,7 +24,6 @@
     :columns="columns"
     :loading="loading"
     :rows="rows"
-    :title="title"
     class="q-ma-md"
     row-key="group_id"
     @request="onRequest"

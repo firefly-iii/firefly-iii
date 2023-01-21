@@ -55,7 +55,7 @@ module.exports = configure(function (ctx) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v5',
-      'fontawesome-v5',
+      'fontawesome-v6',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -126,7 +126,7 @@ module.exports = configure(function (ctx) {
       },
 
       lang: 'en-US', // Quasar language pack
-      iconSet: 'fontawesome-v5',
+      iconSet: 'fontawesome-v6',
 
       // For special cases outside of where the auto-import strategy can have an impact
       // (like functional components as one of the examples),

@@ -900,6 +900,22 @@ const routes = [
       }
     ]
   },
+  // financial administration
+  {
+    path: '/administrations',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/administration/Index.vue'),
+        name: 'administration.index',
+        meta: {
+          pageTitle: 'firefly.administration_index'
+        }
+      }
+    ]
+  },
+
   // profile
   {
     path: '/profile',
@@ -946,17 +962,17 @@ const routes = [
     ]
   },
 
-  // administration
+  // administration (system settings)
   {
-    path: '/admin',
+    path: '/system',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
-        component: () => import('pages/admin/Index.vue'),
-        name: 'admin.index',
+        component: () => import('pages/system/Index.vue'),
+        name: 'system.index',
         meta: {
-          pageTitle: 'firefly.administration'
+          pageTitle: 'firefly.system'
         }
       }
     ]

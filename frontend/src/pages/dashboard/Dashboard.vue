@@ -19,31 +19,29 @@
   -->
 
 <template>
-  <!-- TODO main DIV always use q-ma-md for the main holder-->
-  <!-- TODO rows use a q-mb-sm to give them space -->
-  <div class="q-ma-md">
-    <div class="row q-mb-sm">
-      <div class="col">
+  <div>
+    <div class="row">
+      <div class="col q-mr-sm">
         <BillInsightBox/>
       </div>
-      <div class="col">
+      <div class="col q-mx-sm">
         <SpendInsightBox/>
       </div>
-      <div class="col">
+      <div class="col q-ml-sm">
         <NetWorthInsightBox/>
       </div>
     </div>
-    <div class="row q-mb-sm">
+    <div class="row">
       <div class="col">
         <AccountChart/>
       </div>
     </div>
-    <div class="row q-mb-sm">
+    <div class="row">
       <div class="col">
         <TransactionLists/>
       </div>
     </div>
-    <div class="row q-mb-sm">
+    <div class="row">
       <div class="col">
         <BudgetBox/>
       </div>
@@ -51,7 +49,7 @@
         Category box
       </div>
     </div>
-    <div class="row q-mb-sm">
+    <div class="row">
       <div class="col">
         Expense Box
       </div>
@@ -59,7 +57,7 @@
         Revenue Box
       </div>
     </div>
-    <div class="row q-mb-sm">
+    <div class="row">
       <div class="col">
         Piggy box
       </div>

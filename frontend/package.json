@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.2",
-    "@quasar/extras": "^1.15.9",
+    "@quasar/extras": "^1.15.10",
     "apexcharts": "^3.32.1",
     "axios": "^0.21.1",
     "axios-cache-adapter": "^2.7.3",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
-    "@quasar/app-webpack": "^3.6.2",
+    "@quasar/app-webpack": "^3.7.1",
     "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
