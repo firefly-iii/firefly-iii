@@ -19,19 +19,9 @@
   -->
 
 <template>
-  <div class="q-mt-sm q-mr-sm">
-    <q-card bordered>
-      <q-item>
-        <q-item-section>
-          <q-item-label><strong>Bla bla accounts</strong></q-item-label>
-        </q-item-section>
-      </q-item>
-      <q-separator/>
+    <q-card flat bordered>
       <ApexChart ref="chart" :options="options" :series="series" height="350" type="line"></ApexChart>
     </q-card>
-  </div>
-  <div>
-  </div>
 </template>
 
 <script>

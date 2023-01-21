@@ -37,7 +37,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
 
     <q-header reveal class="bg-primary text-white">
       <q-toolbar>
-        <q-btn dense flat icon="fas fa-bars" round @click="toggleLeftDrawer"/>
+        <q-btn flat icon="fas fa-bars" round @click="toggleLeftDrawer"/>
 
         <q-toolbar-title>
           <q-avatar>
@@ -45,7 +45,6 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
           </q-avatar>
           Firefly III
         </q-toolbar-title>
-
 
         <q-select
           ref="search" v-model="search" :stack-label="false" class="q-mx-xs" color="black" dark
@@ -156,9 +155,9 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
     </q-header>
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <q-scroll-area class="fit">
-        <div class="q-pt-xs">
-          <q-list :dense="true">
-            <q-item v-ripple :to="{ name: 'index' }" clickable :dense="true">
+        <div class="q-pt-md">
+          <q-list>
+            <q-item v-ripple :to="{ name: 'index' }" clickable>
               <q-item-section avatar>
                 <q-icon name="fas fa-tachometer-alt"/>
               </q-item-section>
@@ -166,7 +165,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
                 Dashboard
               </q-item-section>
             </q-item>
-            <q-item v-ripple :to="{ name: 'budgets.index' }" clickable :dense="true">
+            <q-item v-ripple :to="{ name: 'budgets.index' }" clickable>
               <q-item-section avatar>
                 <q-icon name="fas fa-chart-pie"/>
               </q-item-section>
@@ -174,7 +173,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
                 Budgets
               </q-item-section>
             </q-item>
-            <q-item v-ripple :to="{ name: 'subscriptions.index' }" clickable :dense="true">
+            <q-item v-ripple :to="{ name: 'subscriptions.index' }" clickable>
               <q-item-section avatar>
                 <q-icon name="far fa-calendar-alt"/>
               </q-item-section>
@@ -182,7 +181,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
                 Subscriptions
               </q-item-section>
             </q-item>
-            <q-item v-ripple :to="{ name: 'piggy-banks.index' }" clickable :dense="true">
+            <q-item v-ripple :to="{ name: 'piggy-banks.index' }" clickable>
               <q-item-section avatar>
                 <q-icon name="fas fa-piggy-bank"/>
               </q-item-section>
@@ -191,32 +190,32 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
               </q-item-section>
             </q-item>
 
-            <q-expansion-item :dense="true"
+            <q-expansion-item
               :default-opened="this.$route.name === 'transactions.index' || this.$route.name === 'transactions.show'"
               expand-separator
               icon="fas fa-exchange-alt"
               label="Transactions"
             >
-              <q-item  :dense="true" v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
+              <q-item  v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
                       clickable>
                 <q-item-section>
                   Withdrawals
                 </q-item-section>
               </q-item>
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'deposit'} }"
+              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'deposit'} }"
                       clickable>
                 <q-item-section>
                   Deposits
                 </q-item-section>
               </q-item>
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'transfers'} }"
+              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'transfers'} }"
                       clickable>
 
                 <q-item-section>
                   Transfers
                 </q-item-section>
               </q-item>
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'all'} }"
+              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'all'} }"
                       clickable>
 
                 <q-item-section>
@@ -228,18 +227,18 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
             </q-expansion-item>
 
 
-            <q-expansion-item :dense="true"
+            <q-expansion-item
               default-unopened
               expand-separator
               icon="fas fa-microchip"
               label="Automation"
             >
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'rules.index' }" clickable>
+              <q-item v-ripple :inset-level="1" :to="{ name: 'rules.index' }" clickable>
                 <q-item-section>
                   Rules
                 </q-item-section>
               </q-item>
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'recurring.index' }" clickable>
+              <q-item v-ripple :inset-level="1" :to="{ name: 'recurring.index' }" clickable>
                 <q-item-section>
                   Recurring transactions
                 </q-item-section>
@@ -247,18 +246,18 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
 
             </q-expansion-item>
 
-            <q-expansion-item :dense="true"
+            <q-expansion-item
               :default-opened="this.$route.name === 'accounts.index' || this.$route.name === 'accounts.show'"
               expand-separator
               icon="fas fa-credit-card"
               label="Accounts"
             >
-              <q-item  :dense="true" v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
+              <q-item  v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
                 <q-item-section>
                   Asset accounts
                 </q-item-section>
               </q-item>
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'expense'} }" clickable>
+              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'expense'} }" clickable>
                 <q-item-section>
                   Expense accounts
                 </q-item-section>
@@ -268,7 +267,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
                   Revenue accounts
                 </q-item-section>
               </q-item>
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'liabilities'} }"
+              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'liabilities'} }"
                       clickable>
                 <q-item-section>
                   Liabilities
@@ -277,29 +276,29 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
 
             </q-expansion-item>
 
-            <q-expansion-item :dense="true"
+            <q-expansion-item
               default-unopened
               expand-separator
               icon="fas fa-tags"
               label="Classification"
             >
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'categories.index' }" clickable>
+              <q-item v-ripple :inset-level="1" :to="{ name: 'categories.index' }" clickable>
                 <q-item-section>
                   Categories
                 </q-item-section>
               </q-item>
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'tags.index' }" clickable>
+              <q-item v-ripple :inset-level="1" :to="{ name: 'tags.index' }" clickable>
                 <q-item-section>
                   Tags
                 </q-item-section>
               </q-item>
-              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'groups.index'}" clickable>
+              <q-item v-ripple :inset-level="1" :to="{ name: 'groups.index'}" clickable>
                 <q-item-section>
                   Groups
                 </q-item-section>
               </q-item>
             </q-expansion-item>
-            <q-item :dense="true" v-ripple :to="{ name: 'reports.index'}" clickable>
+            <q-item v-ripple :to="{ name: 'reports.index'}" clickable>
               <q-item-section avatar>
                 <q-icon name="far fa-chart-bar"/>
               </q-item-section>
@@ -313,10 +312,10 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
     </q-drawer>
 
 
-    <q-page-container class="q-ma-xs">
+    <q-page-container>
       <Alert></Alert>
       <!-- breadcrumb, page title? -->
-      <div class="q-mb-md">
+      <div class="q-ma-md">
         <div class="row">
           <div class="col-6">
             <h4 class="q-ma-none q-pa-none">
@@ -333,10 +332,10 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
         </div>
       </div>
 
-      <router-view/>
+      <router-view />
     </q-page-container>
 
-    <q-footer class="bg-grey-8 text-white" elevated>
+    <q-footer class="bg-grey-8 text-white" bordered>
       <q-toolbar>
         <div>
           <small>Firefly III v v6.0.0-alpha.2 &copy; James Cole, AGPL-3.0-or-later.</small>

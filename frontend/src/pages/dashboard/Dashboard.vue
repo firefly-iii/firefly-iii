@@ -19,20 +19,20 @@
   -->
 
 <template>
-  <div>
+  <q-page class="q-ma-md">
     <div class="row">
-      <div class="col q-mr-sm">
+      <div class="col-xl-4 col-lg-4 col-md-6 q-pr-sm">
         <BillInsightBox/>
       </div>
-      <div class="col q-mx-sm">
+      <div class="col-xl-4 col-lg-4 col-md-6 q-px-sm">
         <SpendInsightBox/>
       </div>
-      <div class="col q-ml-sm">
+      <div class="col-xl-4 col-lg-4 col-md-6 q-pl-sm">
         <NetWorthInsightBox/>
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col-12 q-pt-sm q-pb-sm">
         <AccountChart/>
       </div>
     </div>
@@ -75,19 +75,27 @@
         square
         vertical-actions-align="right"
       >
-        <q-fab-action :label="$t('firefly.new_budget')" :to="{ name: 'budgets.create' }" color="primary" icon="fas fa-chart-pie"
+        <q-fab-action :label="$t('firefly.new_budget')" :to="{ name: 'budgets.create' }" color="primary"
+                      icon="fas fa-chart-pie"
                       square/>
-        <q-fab-action :label="$t('firefly.new_asset_account')" :to="{ name: 'accounts.create', params: {type: 'asset'} }" color="primary" icon="far fa-money-bill-alt"
+        <q-fab-action :label="$t('firefly.new_asset_account')"
+                      :to="{ name: 'accounts.create', params: {type: 'asset'} }" color="primary"
+                      icon="far fa-money-bill-alt"
                       square/>
-        <q-fab-action :label="$t('firefly.newTransfer')" :to="{ name: 'transactions.create', params: {type: 'transfer'} }" color="primary" icon="fas fa-exchange-alt"
+        <q-fab-action :label="$t('firefly.newTransfer')"
+                      :to="{ name: 'transactions.create', params: {type: 'transfer'} }" color="primary"
+                      icon="fas fa-exchange-alt"
                       square/>
-        <q-fab-action :label="$t('firefly.newDeposit')" :to="{ name: 'transactions.create', params: {type: 'deposit'} }" color="primary" icon="fas fa-long-arrow-alt-right"
+        <q-fab-action :label="$t('firefly.newDeposit')" :to="{ name: 'transactions.create', params: {type: 'deposit'} }"
+                      color="primary" icon="fas fa-long-arrow-alt-right"
                       square/>
-        <q-fab-action :label="$t('firefly.newWithdrawal')" :to="{ name: 'transactions.create', params: {type: 'withdrawal'} }" color="primary" icon="fas fa-long-arrow-alt-left"
+        <q-fab-action :label="$t('firefly.newWithdrawal')"
+                      :to="{ name: 'transactions.create', params: {type: 'withdrawal'} }" color="primary"
+                      icon="fas fa-long-arrow-alt-left"
                       square/>
       </q-fab>
     </q-page-sticky>
-  </div>
+  </q-page>
 </template>
 
 <script>
