@@ -25,7 +25,7 @@
     <q-card bordered flat>
       <q-item>
         <q-item-section>
-          <q-item-label><strong>{{ $t('firefly.left_to_spend') }} x</strong></q-item-label>
+          <q-item-label><strong>{{ $t('firefly.left_to_spend') }}</strong></q-item-label>
         </q-item-section>
       </q-item>
       <q-separator/>
