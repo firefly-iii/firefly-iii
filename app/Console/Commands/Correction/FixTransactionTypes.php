@@ -139,17 +139,17 @@ class FixTransactionTypes extends Command
             }
         );
         if (0 === $collection->count()) {
-            throw new FireflyException(sprintf('Journal #%d has no source transaction.', $journal->id));
+            throw new FireflyException(sprintf('300001: Journal #%d has no source transaction.', $journal->id));
         }
         if (1 !== $collection->count()) {
-            throw new FireflyException(sprintf('Journal #%d has multiple source transactions.', $journal->id));
+            throw new FireflyException(sprintf('300002: Journal #%d has multiple source transactions.', $journal->id));
         }
         /** @var Transaction $transaction */
         $transaction = $collection->first();
         /** @var Account|null $account */
         $account     = $transaction->account;
         if (null === $account) {
-            throw new FireflyException(sprintf('Journal #%d, transaction #%d has no source account.', $journal->id, $transaction->id));
+            throw new FireflyException(sprintf('300003: Journal #%d, transaction #%d has no source account.', $journal->id, $transaction->id));
         }
 
         return $account;
@@ -169,17 +169,17 @@ class FixTransactionTypes extends Command
             }
         );
         if (0 === $collection->count()) {
-            throw new FireflyException(sprintf('Journal #%d has no destination transaction.', $journal->id));
+            throw new FireflyException(sprintf('300004: Journal #%d has no destination transaction.', $journal->id));
         }
         if (1 !== $collection->count()) {
-            throw new FireflyException(sprintf('Journal #%d has multiple destination transactions.', $journal->id));
+            throw new FireflyException(sprintf('300005: Journal #%d has multiple destination transactions.', $journal->id));
         }
         /** @var Transaction $transaction */
         $transaction = $collection->first();
         /** @var Account|null $account */
         $account     = $transaction->account;
         if (null === $account) {
-            throw new FireflyException(sprintf('Journal #%d, transaction #%d has no destination account.', $journal->id, $transaction->id));
+            throw new FireflyException(sprintf('300006: Journal #%d, transaction #%d has no destination account.', $journal->id, $transaction->id));
         }
 
         return $account;

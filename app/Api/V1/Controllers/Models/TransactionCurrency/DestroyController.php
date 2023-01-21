@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -37,6 +38,7 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
+    private UserRepositoryInterface $userRepository;
 
     /**
      * CurrencyRepository constructor.
@@ -49,6 +51,7 @@ class DestroyController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(CurrencyRepositoryInterface::class);
+                $this->userRepository = app(UserRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);

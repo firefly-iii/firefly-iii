@@ -69,7 +69,7 @@ class DestroyController extends Controller
         $this->unused = $request->boolean('unused', false);
         switch ($objects) {
             default:
-                throw new FireflyException(sprintf('This endpoint can\'t handle object "%s"', $objects));
+                throw new FireflyException(sprintf('200033: This endpoint can\'t handle object "%s"', $objects));
             case 'budgets':
                 $this->destroyBudgets();
                 break;

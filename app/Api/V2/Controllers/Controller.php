@@ -94,18 +94,18 @@ class Controller extends BaseController
         foreach ($dates as $field) {
             try {
                 $date = request()->query->get($field);
-            } catch(BadRequestException $e) {
+            } catch (BadRequestException $e) {
                 Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
                 Log::error($e->getMessage());
                 $value = null;
             }
-            $obj  = null;
+            $obj = null;
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse($date);
                 } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
-                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', $date, $e->getMessage()));
+                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr($date, 0, 20), $e->getMessage()));
                 }
             }
             $bag->set($field, $obj);
@@ -115,7 +115,7 @@ class Controller extends BaseController
         foreach ($integers as $integer) {
             try {
                 $value = request()->query->get($integer);
-            } catch(BadRequestException $e) {
+            } catch (BadRequestException $e) {
                 Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
                 Log::error($e->getMessage());
                 $value = null;
