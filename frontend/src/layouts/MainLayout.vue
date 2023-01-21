@@ -18,10 +18,24 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<!--
+instructions for padding and margin
+
+menu: top padding under top bar: q-pt-xs (padding top, xs)
+page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content some space.
+
+
+
+
+ TODO main DIV always use q-ma-md for the main holder
+ TODO rows use a q-mb-sm to give them space
+
+-->
+
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header class="bg-primary text-white" elevated>
+    <q-header reveal class="bg-primary text-white">
       <q-toolbar>
         <q-btn dense flat icon="fas fa-bars" round @click="toggleLeftDrawer"/>
 
@@ -101,7 +115,7 @@
                 <q-item-section>Currencies</q-item-section>
               </q-item>
               <q-item :to="{ name: 'admin.index' }" clickable>
-                <q-item-section>Administration</q-item-section>
+                <q-item-section>System settings</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -119,8 +133,11 @@
               <q-item :to="{ name: 'profile.index' }" clickable>
                 <q-item-section> Profile</q-item-section>
               </q-item>
-              <q-item :to="{ name: 'profile.daa' }" clickable>
+              <q-item :to="{ name: 'profile.data' }" clickable>
                 <q-item-section> Data management</q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'administration.index' }" clickable>
+                <q-item-section>Administration management</q-item-section>
               </q-item>
               <q-item :to="{ name: 'preferences.index' }" clickable>
                 <q-item-section>Preferences</q-item-section>
@@ -137,11 +154,11 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-drawer v-model="leftDrawerOpen" bordered show-if-above side="left">
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <q-scroll-area class="fit">
-        <div class="q-pa-md">
-          <q-list>
-            <q-item v-ripple :to="{ name: 'index' }" clickable>
+        <div class="q-pt-xs">
+          <q-list :dense="true">
+            <q-item v-ripple :to="{ name: 'index' }" clickable :dense="true">
               <q-item-section avatar>
                 <q-icon name="fas fa-tachometer-alt"/>
               </q-item-section>
@@ -149,7 +166,7 @@
                 Dashboard
               </q-item-section>
             </q-item>
-            <q-item v-ripple :to="{ name: 'budgets.index' }" clickable>
+            <q-item v-ripple :to="{ name: 'budgets.index' }" clickable :dense="true">
               <q-item-section avatar>
                 <q-icon name="fas fa-chart-pie"/>
               </q-item-section>
@@ -157,7 +174,7 @@
                 Budgets
               </q-item-section>
             </q-item>
-            <q-item v-ripple :to="{ name: 'subscriptions.index' }" clickable>
+            <q-item v-ripple :to="{ name: 'subscriptions.index' }" clickable :dense="true">
               <q-item-section avatar>
                 <q-icon name="far fa-calendar-alt"/>
               </q-item-section>
@@ -165,7 +182,7 @@
                 Subscriptions
               </q-item-section>
             </q-item>
-            <q-item v-ripple :to="{ name: 'piggy-banks.index' }" clickable>
+            <q-item v-ripple :to="{ name: 'piggy-banks.index' }" clickable :dense="true">
               <q-item-section avatar>
                 <q-icon name="fas fa-piggy-bank"/>
               </q-item-section>
@@ -174,29 +191,36 @@
               </q-item-section>
             </q-item>
 
-            <q-expansion-item
+            <q-expansion-item :dense="true"
               :default-opened="this.$route.name === 'transactions.index' || this.$route.name === 'transactions.show'"
               expand-separator
               icon="fas fa-exchange-alt"
               label="Transactions"
             >
-              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
+              <q-item  :dense="true" v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
                       clickable>
                 <q-item-section>
                   Withdrawals
                 </q-item-section>
               </q-item>
-              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'deposit'} }"
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'deposit'} }"
                       clickable>
                 <q-item-section>
                   Deposits
                 </q-item-section>
               </q-item>
-              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'transfers'} }"
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'transfers'} }"
                       clickable>
 
                 <q-item-section>
                   Transfers
+                </q-item-section>
+              </q-item>
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'all'} }"
+                      clickable>
+
+                <q-item-section>
+                  All transactions
                 </q-item-section>
               </q-item>
 
@@ -204,18 +228,18 @@
             </q-expansion-item>
 
 
-            <q-expansion-item
+            <q-expansion-item :dense="true"
               default-unopened
               expand-separator
               icon="fas fa-microchip"
               label="Automation"
             >
-              <q-item v-ripple :inset-level="1" :to="{ name: 'rules.index' }" clickable>
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'rules.index' }" clickable>
                 <q-item-section>
                   Rules
                 </q-item-section>
               </q-item>
-              <q-item v-ripple :inset-level="1" :to="{ name: 'recurring.index' }" clickable>
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'recurring.index' }" clickable>
                 <q-item-section>
                   Recurring transactions
                 </q-item-section>
@@ -223,18 +247,18 @@
 
             </q-expansion-item>
 
-            <q-expansion-item
+            <q-expansion-item :dense="true"
               :default-opened="this.$route.name === 'accounts.index' || this.$route.name === 'accounts.show'"
               expand-separator
               icon="fas fa-credit-card"
               label="Accounts"
             >
-              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
+              <q-item  :dense="true" v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
                 <q-item-section>
                   Asset accounts
                 </q-item-section>
               </q-item>
-              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'expense'} }" clickable>
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'expense'} }" clickable>
                 <q-item-section>
                   Expense accounts
                 </q-item-section>
@@ -244,7 +268,7 @@
                   Revenue accounts
                 </q-item-section>
               </q-item>
-              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'liabilities'} }"
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'liabilities'} }"
                       clickable>
                 <q-item-section>
                   Liabilities
@@ -253,29 +277,29 @@
 
             </q-expansion-item>
 
-            <q-expansion-item
+            <q-expansion-item :dense="true"
               default-unopened
               expand-separator
               icon="fas fa-tags"
               label="Classification"
             >
-              <q-item v-ripple :inset-level="1" :to="{ name: 'categories.index' }" clickable>
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'categories.index' }" clickable>
                 <q-item-section>
                   Categories
                 </q-item-section>
               </q-item>
-              <q-item v-ripple :inset-level="1" :to="{ name: 'tags.index' }" clickable>
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'tags.index' }" clickable>
                 <q-item-section>
                   Tags
                 </q-item-section>
               </q-item>
-              <q-item v-ripple :inset-level="1" :to="{ name: 'groups.index'}" clickable>
+              <q-item :dense="true" v-ripple :inset-level="1" :to="{ name: 'groups.index'}" clickable>
                 <q-item-section>
                   Groups
                 </q-item-section>
               </q-item>
             </q-expansion-item>
-            <q-item v-ripple :to="{ name: 'reports.index'}" clickable>
+            <q-item :dense="true" v-ripple :to="{ name: 'reports.index'}" clickable>
               <q-item-section avatar>
                 <q-icon name="far fa-chart-bar"/>
               </q-item-section>
@@ -289,14 +313,15 @@
     </q-drawer>
 
 
-    <q-page-container>
+    <q-page-container class="q-ma-xs">
       <Alert></Alert>
-
       <!-- breadcrumb, page title? -->
-      <div class="q-ma-md">
+      <div class="q-mb-md">
         <div class="row">
           <div class="col-6">
-            <h4 class="q-ma-none q-pa-none">{{ $t($route.meta.pageTitle || 'firefly.welcome_back') }}</h4>
+            <h4 class="q-ma-none q-pa-none">
+              <em class="fa-solid fa-fire"></em>
+              {{ $t($route.meta.pageTitle || 'firefly.welcome_back') }}</h4>
           </div>
           <div class="col-6">
             <q-breadcrumbs align="right">
@@ -314,7 +339,7 @@
     <q-footer class="bg-grey-8 text-white" elevated>
       <q-toolbar>
         <div>
-          <small>Firefly III v TODO &copy; James Cole, AGPL-3.0-or-later.</small>
+          <small>Firefly III v v6.0.0-alpha.2 &copy; James Cole, AGPL-3.0-or-later.</small>
         </div>
       </q-toolbar>
     </q-footer>
@@ -327,6 +352,7 @@
 import {defineComponent, ref} from 'vue';
 import DateRange from "../components/DateRange";
 import Alert from '../components/Alert';
+import {useQuasar} from "quasar";
 
 export default defineComponent(
   {
@@ -339,7 +365,7 @@ export default defineComponent(
     setup() {
       const leftDrawerOpen = ref(true)
       const search = ref('')
-
+      const $q = useQuasar();
       return {
         search,
         leftDrawerOpen,
