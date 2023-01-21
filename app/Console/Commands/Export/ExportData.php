@@ -249,7 +249,7 @@ class ExportData extends Command
             }
         }
         if (0 === $final->count()) {
-            throw new FireflyException('Ended up with zero valid accounts to export from.');
+            throw new FireflyException('300007: Ended up with zero valid accounts to export from.');
         }
 
         return $final;

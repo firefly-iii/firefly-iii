@@ -48,7 +48,7 @@ trait VerifiesAccessToken
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($userId);
         if (null === $user) {
-            throw new FireflyException('User is unexpectedly NULL');
+            throw new FireflyException('300000: User is unexpectedly NULL');
         }
 
         return $user;
