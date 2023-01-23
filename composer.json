@@ -90,7 +90,7 @@
     "jc5/recovery": "^2",
     "laravel/framework": "^9",
     "laravel/passport": "11.*",
-    "laravel/sanctum": "^3.0",
+    "laravel/sanctum": "^3.2",
     "laravel/slack-notification-channel": "^2.4",
     "laravel/ui": "^4.1",
     "laravelcollective/html": "6.*",
