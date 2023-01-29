@@ -32,6 +32,7 @@ use Illuminate\Http\JsonResponse;
 use Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Validator;
 
 /**
  * Class ConfigurationController
@@ -174,8 +175,10 @@ class ConfigurationController extends Controller
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
+        $rules = ['value' => 'required'];
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
-            throw new FireflyException('200005: You need the "owner" role to do this.');
+            $messages = ['value' => '200005: You need the "owner" role to do this.'];
+            Validator::make([], $rules, $messages)->validate();
         }
         $data      = $request->getAll();
         $shortName = str_replace('configuration.', '', $name);

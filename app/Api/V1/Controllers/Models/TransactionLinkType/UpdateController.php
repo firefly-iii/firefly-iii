@@ -35,6 +35,7 @@ use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
+use Validator;
 
 /**
  * Class UpdateController
@@ -87,9 +88,11 @@ class UpdateController extends Controller
 
         /** @var User $admin */
         $admin = auth()->user();
+        $rules = ['name' => 'required'];
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
-            throw new FireflyException('200005: You need the "owner" role to do this.');
+            $messages = ['name' => '200005: You need the "owner" role to do this.'];
+            Validator::make([], $rules, $messages)->validate();
         }
 
         $data = $request->getAll();
