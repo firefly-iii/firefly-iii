@@ -1387,6 +1387,9 @@ return [
     'slack_webhook_url_help'                    => 'Si vous voulez que Firefly III vous avertisse en utilisant Slack, entrez l\'URL du webhook ici. Sinon, laissez le champ vide. Si vous êtes un administrateur, vous devez également définir cette URL dans l\'administration.',
     'slack_url_label'                           => 'URL du webhook entrant de Slack',
 
+    // Financial administrations
+    'administration_index'                      => 'Financial administration',
+
     // profile:
     'purge_data_title'                          => 'Purger des données de Firefly III',
     'purge_data_expl'                           => '« Purger » signifie « supprimer ce qui est déjà supprimé ». En temps normal, Firefly III ne supprime rien définitivement. Il ne fait que le cacher. Le bouton ci-dessous supprime tous ces enregistrements précédemment "supprimés".',

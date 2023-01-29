@@ -1387,6 +1387,9 @@ return [
     'slack_webhook_url_help'                    => '如果您想要 Firefly III 使用 Slack 通知您，请在此处输入 webhook 地址。否则请留空该字段。 如果您是管理员，您还需要在管理设置中设置此地址。',
     'slack_url_label'                           => 'Slack "incoming webhook" URL',
 
+    // Financial administrations
+    'administration_index'                      => 'Financial administration',
+
     // profile:
     'purge_data_title'                          => '从 Frefly III 清除数据',
     'purge_data_expl'                           => '“清除”是指“删除已经删除的内容”。在正常情况下，Firefly III 不会永久删除记录，只是将其隐藏。下面的按钮会将先前“已删除”的记录永久删除。',

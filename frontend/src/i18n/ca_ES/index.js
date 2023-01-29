@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Passius"
     },
     "firefly": {
+        "administration_index": "Financial administration",
         "actions": "Accions",
         "edit": "Editar",
         "delete": "Eliminar",

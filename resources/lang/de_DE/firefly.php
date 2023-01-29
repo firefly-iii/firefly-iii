@@ -1387,6 +1387,9 @@ return [
     'slack_webhook_url_help'                    => 'Wenn Sie möchten, dass Firefly III Sie über Slack benachrichtigt, geben Sie hier die Webhook-URL ein. Ansonsten lassen Sie das Feld leer. Wenn Sie ein Administrator sind, müssen Sie diese URL auch in der Administration festlegen.',
     'slack_url_label'                           => 'Slack "eingehender Webhook" URL',
 
+    // Financial administrations
+    'administration_index'                      => 'Financial administration',
+
     // profile:
     'purge_data_title'                          => 'Daten aus Firefly III vernichten',
     'purge_data_expl'                           => '„Endgültiges Löschen” bedeutet „Löschen, was bereits gelöscht wurde”. Unter normalen Umständen löscht Firefly III nichts dauerhaft. Es verbirgt es nur. Die Schaltfläche unten löscht alle diese zuvor "gelöschten" Datensätze DAUERHAFT.',
@@ -1397,7 +1400,7 @@ return [
     'delete_data_title'                         => 'Daten aus Firefly III löschen',
     'permanent_delete_stuff'                    => 'Sie können Dinge aus Firefly III löschen. Mit den Buttons unten werden Ihre Gegenstände entfernt und ausgeblendet. Es keine Möglichkeit dies rückgängig zu machen, aber die Elemente können in der Datenbank verbleiben, wo sie gegebenenfalls wiederhergestellt werden können.',
     'other_sessions_logged_out'                 => 'Alle Ihre anderen Sitzungen wurden abgemeldet.',
-    'delete_unused_accounts'                    => 'Deleting unused accounts will clean your auto-complete lists.',
+    'delete_unused_accounts'                    => 'Durch das Löschen ungenutzter Konten werden Ihre Listen für die automatische Vervollständigung bereinigt.',
     'delete_all_unused_accounts'                => 'Unbenutzte Konten löschen',
     'deleted_all_unused_accounts'               => 'Alle ungenutzten Konten wurden gelöscht',
     'delete_all_budgets'                        => 'ALLE Ihre Budgets löschen',
@@ -1476,7 +1479,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth-Clients',
     'profile_oauth_no_clients'                  => 'Sie haben noch keine OAuth-Clients erstellt.',
-    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
+    'profile_oauth_clients_external_auth'       => 'Wenn Sie einen externen Authentifizierungsanbieter wie Authelia verwenden, funktionieren OAuth Clients nicht. Sie können ausschließlich persönliche Zugriffstoken verwenden.',
     'profile_oauth_clients_header'              => 'Clients',
     'profile_oauth_client_id'                   => 'Client-ID',
     'profile_oauth_client_name'                 => 'Name',

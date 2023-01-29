@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Lainat"
     },
     "firefly": {
+        "administration_index": "Financial administration",
         "actions": "Toiminnot",
         "edit": "Muokkaa",
         "delete": "Poista",

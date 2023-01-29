@@ -46,7 +46,7 @@ trait CurrencyValidation
         $transactions = $this->getTransactionsArray($validator);
 
         foreach ($transactions as $index => $transaction) {
-            if(!is_array($transaction)) {
+            if (!is_array($transaction)) {
                 continue;
             }
             // if foreign amount is present, then the currency must be as well.
