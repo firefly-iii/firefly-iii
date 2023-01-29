@@ -22,7 +22,7 @@
   <div class="form-group"
        v-bind:class="{ 'has-error': hasError()}">
     <div class="col-sm-12 text-sm">
-      {{ $t('firefly.tags') }} XX
+      {{ $t('firefly.tags') }}
     </div>
     <div class="col-sm-12">
       <div class="input-group">

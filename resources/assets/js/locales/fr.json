@@ -66,7 +66,7 @@
         "profile_oauth_edit_client": "Modifier le client",
         "profile_oauth_name_help": "Quelque chose que vos utilisateurs reconna\u00eetront et qui inspirera confiance.",
         "profile_oauth_redirect_url": "URL de redirection",
-        "profile_oauth_clients_external_auth": "If you're using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.",
+        "profile_oauth_clients_external_auth": "Si vous utilisez un fournisseur d'authentification externe comme Authelia, les clients OAuth ne fonctionneront pas. Vous ne pouvez utiliser que des jetons d'acc\u00e8s personnel.",
         "profile_oauth_redirect_url_help": "URL de callback de votre application.",
         "profile_authorized_apps": "Applications autoris\u00e9es",
         "profile_authorized_clients": "Clients autoris\u00e9s",

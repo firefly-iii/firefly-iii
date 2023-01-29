@@ -368,9 +368,10 @@ class User extends Authenticatable
      * @return int
      * @throws FireflyException
      */
-    public function getAdministrationId(): int {
+    public function getAdministrationId(): int
+    {
         $groupId =  (int)$this->user_group_id;
-        if(0 === $groupId) {
+        if (0 === $groupId) {
             throw new FireflyException('User has no administration ID.');
         }
         return $groupId;

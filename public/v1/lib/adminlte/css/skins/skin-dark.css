@@ -478,6 +478,7 @@
     .table-hover > tbody > tr:hover {
         background-color: #2a2f34;
     }
+    .table > tfoot > tr > td.active {background: #353c42;}
     .ti-autocomplete {background: #353c42 !important;color:#fff;}
     .ti-input {border: 1px solid #353c42 !important;}
     .vue-tags-input {background: #353c42 !important;}

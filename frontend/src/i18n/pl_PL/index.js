@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Zobowi\u0105zania"
     },
     "firefly": {
+        "administration_index": "Financial administration",
         "actions": "Akcje",
         "edit": "Modyfikuj",
         "delete": "Usu\u0144",

@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Skulder"
     },
     "firefly": {
+        "administration_index": "Financial administration",
         "actions": "\u00c5tg\u00e4rder",
         "edit": "Redigera",
         "delete": "Ta bort",

@@ -849,7 +849,8 @@ Route::group(
         Route::get('audit/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@auditReport', 'as' => 'report.audit']);
         Route::get(
             'category/{accountList}/{categoryList}/{start_date}/{end_date}',
-            ['uses' => 'ReportController@categoryReport', 'as' => 'report.category']);
+            ['uses' => 'ReportController@categoryReport', 'as' => 'report.category']
+        );
         Route::get('budget/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'ReportController@budgetReport', 'as' => 'report.budget']);
         Route::get('tag/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'ReportController@tagReport', 'as' => 'report.tag']);
         Route::get('double/{accountList}/{doubleList}/{start_date}/{end_date}', ['uses' => 'ReportController@doubleReport', 'as' => 'report.double']);

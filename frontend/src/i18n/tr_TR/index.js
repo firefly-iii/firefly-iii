@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Sorumluluk"
     },
     "firefly": {
+        "administration_index": "Financial administration",
         "actions": "Eylemler",
         "edit": "D\u00fczenle",
         "delete": "Sil",

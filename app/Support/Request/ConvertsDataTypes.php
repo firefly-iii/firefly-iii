@@ -90,7 +90,7 @@ trait ConvertsDataTypes
         if (null === $string) {
             return null;
         }
-        if('' === $string) {
+        if ('' === $string) {
             return '';
         }
         $search  = [
@@ -154,7 +154,7 @@ trait ConvertsDataTypes
         if (null === $string) {
             return null;
         }
-        if('' === $string) {
+        if ('' === $string) {
             return '';
         }
         return trim($string);

@@ -110,7 +110,7 @@
         "webhook_delivery_form_help": "Geef aan welk dataformaat gebruikt moet worden.",
         "webhook_active_form_help": "De webhook moet actief zijn anders doet-ie het niet.",
         "edit_webhook_js": "Webhook \"{title}\" wijzigen",
-        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. Please wait for results to appear.",
+        "webhook_was_triggered": "De webhook is geactiveerd op de aangegeven transactie. Wacht tot de resultaten verschijnen.",
         "view_message": "Bekijk bericht",
         "view_attempts": "Bekijk mislukte pogingen",
         "message_content_title": "Inhoud van webhook-bericht",
