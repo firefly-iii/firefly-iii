@@ -100,9 +100,15 @@ table.sortable > thead th:not([data-defaultsort=disabled]) {
     top: 0;
     left: 0;
 }
-
-table.sortable > thead th:hover:not([data-defaultsort=disabled]) {
-    background: #efefef;
+@media (prefers-color-scheme: light) {
+    table.sortable > thead th:hover:not([data-defaultsort=disabled]) {
+        background: #efefef;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    table.sortable > thead th:hover:not([data-defaultsort=disabled]) {
+        background: #2a2f34;
+    }
 }
 
 table.sortable > thead th div.mozilla {
