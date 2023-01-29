@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\UserGroup;
@@ -465,5 +466,26 @@ class UserRepository implements UserRepositoryInterface
         $now     = Carbon::now();
         $invitee = InvitedUser::where('invite_code', $code)->where('expires', '>', $now->format('Y-m-d H:i:s'))->where('redeemed', 0)->first();
         return null !== $invitee;
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FireflyException
+     */
+    public function getRolesInGroup(User $user, int $groupId): array
+    {
+        /** @var UserGroup $group */
+        $group = UserGroup::find($groupId);
+        if (null === $group) {
+            throw new FireflyException(sprintf('Could not find group #%d', $groupId));
+        }
+        $memberships = $group->groupMemberships()->where('user_id', $user->id)->get();
+        $roles       = [];
+        /** @var GroupMembership $membership */
+        foreach ($memberships as $membership) {
+            $role    = $membership->userRole;
+            $roles[] = $role->title;
+        }
+        return $roles;
     }
 }

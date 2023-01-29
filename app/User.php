@@ -27,6 +27,7 @@ namespace FireflyIII;
 use Eloquent;
 use Exception;
 use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\AvailableBudget;
@@ -359,6 +360,20 @@ class User extends Authenticatable
     public function groupMemberships(): HasMany
     {
         return $this->hasMany(GroupMembership::class)->with(['userGroup', 'userRole']);
+    }
+
+    /**
+     * A safe method that returns the user's current administration ID (group ID).
+     *
+     * @return int
+     * @throws FireflyException
+     */
+    public function getAdministrationId(): int {
+        $groupId =  (int)$this->user_group_id;
+        if(0 === $groupId) {
+            throw new FireflyException('User has no administration ID.');
+        }
+        return $groupId;
     }
 
     /**
