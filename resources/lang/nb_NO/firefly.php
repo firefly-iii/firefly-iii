@@ -1694,7 +1694,7 @@ return [
     'transferred_away'                          => 'Overført (borte)',
     'auto_budget_none'                          => 'Ingen automatisk budsjett',
     'auto_budget_reset'                         => 'Angi et fast beløp hver periode',
-    'auto_budget_rollover'                      => 'Angi et fast beløp hver periode',
+    'auto_budget_rollover'                      => 'Legg til et fast beløp hver periode',
     'auto_budget_period_daily'                  => 'Daglig',
     'auto_budget_period_weekly'                 => 'Ukentlig',
     'auto_budget_period_monthly'                => 'Månedlig',
