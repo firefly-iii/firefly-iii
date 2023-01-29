@@ -22,7 +22,7 @@
     .skin-firefly-iii .table > tbody > tr > td,
     .skin-firefly-iii .table > tfoot > tr > td {
         color: #bec5cb;
-        border-top: 0px;
+        border-top: 0;
     }
 
     .skin-firefly-iii .table > thead > tr.odd,
@@ -65,6 +65,7 @@
     .skin-firefly-iii .main-sidebar,
     .skin-firefly-iii .left-side {
         background-color: #272c30;
+        /* 454d55 */
     }
 
     .skin-firefly-iii .user-panel > .info,
@@ -180,7 +181,6 @@
     .skin-firefly-iii .box-solid > .box-header,
     .skin-firefly-iii .box > .box-header {
         color: #bec5cb;
-        background: #272c30;
         background-color: #272c30;
     }
 
@@ -469,5 +469,16 @@
     /**
     dropdown menu, color #dee2e6, bg #343a40
      */
-
+    /**
+    Table (odd)
+     */
+    .table-striped > tbody > tr:nth-of-type(2n+1) {
+        background-color: #2a2f34;
+    }
+    .table-hover > tbody > tr:hover {
+        background-color: #2a2f34;
+    }
+    .ti-autocomplete {background: #353c42 !important;color:#fff;}
+    .ti-input {border: 1px solid #353c42 !important;}
+    .vue-tags-input {background: #353c42 !important;}
 }
