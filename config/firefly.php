@@ -128,8 +128,6 @@ return [
     'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
 
     // email flags
-    'send_registration_mail'       => env('SEND_REGISTRATION_MAIL', true),
-    'warn_new_ip'                  => env('SEND_LOGIN_NEW_IP_WARNING', true),
     'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
 
     // info for demo site
