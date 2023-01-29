@@ -1,5 +1,5 @@
 /*
- * Skin: Blue
+ * Skin: Firefly III light
  * ----------
  */
 @media (prefers-color-scheme: light) {
@@ -189,13 +189,14 @@
     border-top-color: #d2d6de;
   }
 
-  .skin-blue.layout-top-nav .main-header > .logo {
+  .skin-firefly-iii.layout-top-nav .main-header > .logo {
     background-color: #3c8dbc;
     color: #ffffff;
     border-bottom: 0 solid transparent;
   }
 
-  .skin-blue.layout-top-nav .main-header > .logo:hover {
+  .skin-firefly-iii.layout-top-nav .main-header > .logo:hover {
     background-color: #3b8ab8;
   }
+
 }
