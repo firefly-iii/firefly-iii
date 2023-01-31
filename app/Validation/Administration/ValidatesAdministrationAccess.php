@@ -63,7 +63,6 @@ trait ValidatesAdministrationAccess
         $repository = app(UserRepositoryInterface::class);
 
         // collect the user's roles in this group:
-        $administrationId = 2;
         $array            = $repository->getRolesInGroup($user, $administrationId);
         if (0 === count($array)) {
             Log::error(sprintf('User #%d ("%s") has no membership in group #%d.', $user->id, $user->email, $administrationId));
