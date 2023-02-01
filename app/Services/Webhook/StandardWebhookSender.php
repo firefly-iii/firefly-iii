@@ -56,7 +56,7 @@ class StandardWebhookSender implements WebhookSenderInterface
     {
         // have the signature generator generate a signature. If it fails, the error thrown will
         // end up in send() to be caught.
-        $signatureGenerator = app(SignatureGeneratorInterface::class);
+        $signatureGenerator  = app(SignatureGeneratorInterface::class);
         $this->message->sent = true;
         $this->message->save();
         try {
@@ -109,7 +109,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         ];
         $client  = new Client();
         try {
-            $res                 = $client->request('POST', $this->message->webhook->url, $options);
+            $res = $client->request('POST', $this->message->webhook->url, $options);
         } catch (RequestException|ConnectException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -122,8 +122,11 @@ class StandardWebhookSender implements WebhookSenderInterface
 
             $attempt = new WebhookAttempt();
             $attempt->webhookMessage()->associate($this->message);
-            $attempt->status_code = $e->hasResponse() ? $e->getResponse()->getStatusCode() : 0;
-            $attempt->logs        = $logs;
+            $attempt->status_code = 0;
+            if (method_exists($e, 'hasResponse') && method_exists($e, 'getResponse')) {
+                $attempt->status_code = $e->hasResponse() ? $e->getResponse()->getStatusCode() : 0;
+            }
+            $attempt->logs = $logs;
             $attempt->save();
 
             return;
