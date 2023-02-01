@@ -79,22 +79,9 @@ class CreateGroupMemberships extends Command
         /** @var User $user */
         foreach ($users as $user) {
             Log::debug(sprintf('Manage group memberships for user #%d', $user->id));
-            if (!$this->hasGroupMembership($user)) {
-                Log::debug(sprintf('User #%d has no main group.', $user->id));
-                $this->createGroupMembership($user);
-            }
+            $this->createGroupMembership($user);
             Log::debug(sprintf('Done with user #%d', $user->id));
         }
-    }
-
-    /**
-     * @param  User  $user
-     *
-     * @return bool
-     */
-    private function hasGroupMembership(User $user): bool
-    {
-        return $user->groupMemberships()->count() > 0;
     }
 
     /**
