@@ -2,7 +2,7 @@
 
 /*
  * CreateGroupMemberships.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Console\Commands\Upgrade;
+namespace FireflyIII\Console\Commands\Integrity;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\GroupMembership;
@@ -31,8 +31,6 @@ use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class CreateGroupMemberships
@@ -51,7 +49,7 @@ class CreateGroupMemberships extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:create-group-memberships {--F|force : Force the execution of this command.}';
+    protected $signature = 'firefly-iii:create-group-memberships';
 
     /**
      * Execute the console command.
@@ -62,34 +60,13 @@ class CreateGroupMemberships extends Command
     public function handle(): int
     {
         $start = microtime(true);
-        if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
 
-            return 0;
-        }
         $this->createGroupMemberships();
-        $this->markAsExecuted();
 
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('in %s seconds.', $end));
+        $this->info(sprintf('Validated group memberships in %s seconds.', $end));
 
         return 0;
-    }
-
-    /**
-     * @return bool
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
-
-        return false;
     }
 
     /**
@@ -127,35 +104,37 @@ class CreateGroupMemberships extends Command
      */
     private function createGroupMembership(User $user): void
     {
-        $userGroup = UserGroup::create(['title' => $user->email]);
-        $userRole  = UserRole::where('title', UserRole::OWNER)->first();
+        // check if membership exists
+        $userGroup = UserGroup::where('title', $user->email)->first();
+        if (null === $userGroup) {
+            $userGroup = UserGroup::create(['title' => $user->email]);
+            Log::debug(sprintf('Created new user group #%d ("%s")', $userGroup->id, $userGroup->title));
+        }
+
+        $userRole = UserRole::where('title', UserRole::OWNER)->first();
 
         if (null === $userRole) {
-            throw new FireflyException('Firefly III could not find a user role. Please make sure all validations have run.');
+            throw new FireflyException('Firefly III could not find a user role. Please make sure all migrations have run.');
         }
-
-        /** @var GroupMembership|null $membership */
-        $membership = GroupMembership::create(
-            [
-                'user_id'       => $user->id,
-                'user_role_id'  => $userRole->id,
-                'user_group_id' => $userGroup->id,
-            ]
-        );
+        $membership = GroupMembership::where('user_id', $user->id)
+                                     ->where('user_group_id', $userGroup->id)
+                                     ->where('user_role_id', $userRole->id)->first();
         if (null === $membership) {
-            throw new FireflyException('Firefly III could not create user group management object. Please make sure all validations have run.');
+            GroupMembership::create(
+                [
+                    'user_id'       => $user->id,
+                    'user_role_id'  => $userRole->id,
+                    'user_group_id' => $userGroup->id,
+                ]
+            );
+            Log::debug('Created new membership.');
         }
-        $user->user_group_id = $userGroup->id;
-        $user->save();
+        if (null === $user->user_group_id) {
+            $user->user_group_id = $userGroup->id;
+            $user->save();
+            Log::debug('Put user in default group.');
+        }
 
         Log::debug(sprintf('User #%d now has main group.', $user->id));
-    }
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }
