@@ -187,17 +187,16 @@ export default {
 
       // post!
       axios.put('./api/v1/webhooks/' + this.id, data).then((response) => {
-        this.success_message = $.text(response.data.message);
-        // console.log('Will now go to redirectUser()');
         let webhookId = response.data.data.id;
         window.location.href = window.previousUrl + '?webhook_id=' + webhookId + '&message=updated';
       }).catch((error) => {
-        this.error_message = error.response.data.message;
-        this.errors.title = error.response.data.errors.title;
-        this.errors.trigger = error.response.data.errors.trigger;
-        this.errors.response = error.response.data.errors.response;
-        this.errors.delivery = error.response.data.errors.delivery;
-        this.errors.url = error.response.data.errors.url;
+        console.log(error);
+        // this.error_message = error.response.data.message;
+        // this.errors.title = error.response.data.errors.title;
+        // this.errors.trigger = error.response.data.errors.trigger;
+        // this.errors.response = error.response.data.errors.response;
+        // this.errors.delivery = error.response.data.errors.delivery;
+        // this.errors.url = error.response.data.errors.url;
 
         // enable button again
         $('#submitButton').prop("disabled", false);
