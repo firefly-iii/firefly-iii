@@ -502,4 +502,15 @@
         background: #55606a;
         color:#fff;
     }
+    .bg-green,
+    .callout.callout-success,
+    .alert-success,
+    .label-success,
+    .modal-success .modal-body {
+        background-color: #007741 !important;
+    }
+    code {
+        background-color:#343941;
+        color:#c9d1d9;
+    }
 }
