@@ -297,7 +297,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             Log::info(sprintf('The amount left is negative, so it will be reset to %s.', $totalAmount));
         }
         if (1 !== bccomp('0', $budgetLeft)) {
-            $totalAmount = bcadd($budgetLeft, $budgetLimit->amount);
+            $totalAmount = bcadd($budgetLeft, $totalAmount);
             Log::info(sprintf('The amount left is positive, so the new amount will be %s.', $totalAmount));
         }
 

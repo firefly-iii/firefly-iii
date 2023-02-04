@@ -112,6 +112,17 @@
   background-color: #343941;
   color: #c9d1d9;
 }
+.skin-firefly-iii .modal-content {
+  position: relative;
+  background-color: #353c42;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+  background-clip: padding-box;
+  outline: 0;
+}
 .skin-firefly-iii h4 {
   color: #44DEF1;
 }
