@@ -1,16 +1,103 @@
 /*
  * Skin: Firefly III dark
- * Built upon the below with some extra things.
+ * Built upon the code below with some extra things.
  * https://raw.githubusercontent.com/anvyst/adminlte-skin-midnight/master/build/less/skins/skin-midnight.less
  * ------------
  */
-/* Make the well darker */
 .skin-firefly-iii {
   color: #bec5cb;
 }
 .skin-firefly-iii .well {
   background-color: #55606a;
   border-color: #454e56;
+}
+.skin-firefly-iii .bg-aqua-gradient {
+  background: #004f63 !important;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #004f63), color-stop(1, #006b87)) !important;
+  background: -ms-linear-gradient(bottom, #004f63, #006b87) !important;
+  background: -moz-linear-gradient(center bottom, #004f63 0%, #006b87 100%) !important;
+  background: -o-linear-gradient(#006b87, #004f63) !important;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#006b87', endColorstr='#004f63', GradientType=0) !important;
+  color: #fff;
+}
+.skin-firefly-iii .bg-teal-gradient {
+  background: #1b6262 !important;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #1b6262), color-stop(1, #2da2a2)) !important;
+  background: -ms-linear-gradient(bottom, #1b6262, #2da2a2) !important;
+  background: -moz-linear-gradient(center bottom, #1b6262 0%, #2da2a2 100%) !important;
+  background: -o-linear-gradient(#2da2a2, #1b6262) !important;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2da2a2', endColorstr='#1b6262', GradientType=0) !important;
+  color: #fff;
+}
+.skin-firefly-iii .bg-green-gradient {
+  background: #006034 !important;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #006034), color-stop(1, #008447)) !important;
+  background: -ms-linear-gradient(bottom, #006034, #008447) !important;
+  background: -moz-linear-gradient(center bottom, #006034 0%, #008447 100%) !important;
+  background: -o-linear-gradient(#008447, #006034) !important;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#008447', endColorstr='#006034', GradientType=0) !important;
+  color: #fff;
+}
+.skin-firefly-iii .bg-blue-gradient {
+  background: #075383 !important;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #075383), color-stop(1, #0968a5)) !important;
+  background: -ms-linear-gradient(bottom, #075383, #0968a5) !important;
+  background: -moz-linear-gradient(center bottom, #075383 0%, #0968a5 100%) !important;
+  background: -o-linear-gradient(#0968a5, #075383) !important;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0968a5', endColorstr='#075383', GradientType=0) !important;
+  color: #fff;
+}
+.skin-firefly-iii a.list-group-item,
+.skin-firefly-iii button.list-group-item {
+  color: #bec5cb;
+}
+.skin-firefly-iii .btn-default {
+  background-color: #55606a;
+  color: #bec5cb;
+  border-color: #454e56;
+}
+.skin-firefly-iii .btn-default:hover,
+.skin-firefly-iii .btn-default:active,
+.skin-firefly-iii .btn-default.hover {
+  background-color: #4a535c;
+}
+.skin-firefly-iii .btn-success {
+  color: #bec5cb;
+  background-color: #006034;
+  border-color: #004726;
+}
+.skin-firefly-iii .btn-success:hover,
+.skin-firefly-iii .btn-success:active,
+.skin-firefly-iii .btn-success.hover {
+  background-color: #004726;
+}
+.skin-firefly-iii .dropdown-menu {
+  box-shadow: none;
+  background-color: #353c42;
+  border-color: #454e56;
+}
+.skin-firefly-iii .dropdown-menu > li > a {
+  color: #bec5cb;
+}
+.skin-firefly-iii .dropdown-menu > li > a > .glyphicon,
+.skin-firefly-iii .dropdown-menu > li > a > .fa,
+.skin-firefly-iii .dropdown-menu > li > a > .ion {
+  margin-right: 10px;
+}
+.skin-firefly-iii .dropdown-menu > li > a:hover {
+  background-color: #404950;
+}
+.skin-firefly-iii .dropdown-menu > .divider {
+  background-color: #eee;
+}
+.skin-firefly-iii .dropdown-menu > li > a {
+  color: #bec5cb !important;
+}
+.skin-firefly-iii .table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #454e56;
+}
+.skin-firefly-iii .table-hover > tbody > tr:hover {
+  background-color: #454e56;
 }
 .skin-firefly-iii h4 {
   color: #44DEF1;
@@ -176,13 +263,13 @@
   border-top-width: 3px;
 }
 .skin-firefly-iii .box.box-info {
-  border-top-color: #00c0ef;
+  border-top-color: #004f63;
 }
 .skin-firefly-iii .box.box-primary {
   border-top-color: #075383;
 }
 .skin-firefly-iii .box.box-success {
-  border-top-color: #00a65a;
+  border-top-color: #006034;
 }
 .skin-firefly-iii .box.box-warning {
   border-top-color: #FF851B;
