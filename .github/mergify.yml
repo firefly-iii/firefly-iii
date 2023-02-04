@@ -1,3 +1,4 @@
+---
 pull_request_rules:
   - name: Close all on main
     conditions:
@@ -5,9 +6,12 @@ pull_request_rules:
       - -author~=^dependabot(|-preview)\[bot\]$
     actions:
       close:
-        message: Please do not open PR's on the `main` branch, but on the `develop` branch only. Thank you!
+        message: Please do not open PR's on the `main` branch, but on the `develop`
+          branch only. Thank you!
   - name: No translations
     conditions:
+      - -author~=^dependabot(|-preview)\[bot\]$
+      - base=develop
       - or:
           - -files=^resources/lang/bg_BG
           - -files=^resources/lang/ca_ES
@@ -50,7 +54,10 @@ pull_request_rules:
           - -files=^resources/lang/zh_TW
     actions:
       comment:
-        message: | 
-          Please do not submit translated strings in your PR. If you need new sentences to be translated, add them to the `en_US` language strings. New or changed translations for other languages can be submitted at https://crowdin.com/project/firefly-iii
-          
+        message: >
+          Please do not submit translated strings in your PR. If you need new
+          sentences to be translated, add them to the `en_US` language strings.
+          New or changed translations for other languages can be submitted at
+          https://crowdin.com/project/firefly-iii
+
           Thank you!
