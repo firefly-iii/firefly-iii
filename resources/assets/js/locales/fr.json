@@ -9,6 +9,8 @@
         "split": "Ventiler",
         "single_split": "Ventilation",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID} (\"{title}\")<\/a> a \u00e9t\u00e9 enregistr\u00e9e.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID}<\/a> (\"{title}\") a \u00e9t\u00e9 mise \u00e0 jour.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID}<\/a> a \u00e9t\u00e9 enregistr\u00e9e.",
         "transaction_journal_information": "Informations sur l'op\u00e9ration",

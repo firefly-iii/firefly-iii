@@ -9,6 +9,8 @@
         "split": "\u0420\u043e\u0437\u0434\u0456\u043b\u0438\u0442\u0438",
         "single_split": "\u0420\u043e\u0437\u0434\u0456\u043b\u0438\u0442\u0438",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Transaction information",

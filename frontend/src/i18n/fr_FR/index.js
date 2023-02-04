@@ -60,7 +60,7 @@ export default {
         "liabilities_accounts": "Passifs"
     },
     "firefly": {
-        "administration_index": "Financial administration",
+        "administration_index": "Administration financi\u00e8re",
         "actions": "Actions",
         "edit": "Modifier",
         "delete": "Supprimer",

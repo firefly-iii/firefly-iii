@@ -106,7 +106,7 @@ return [
     'transactions_create_ffInput_category'                    => 'Dies ist ein Freitextfeld. Zuvor erstellte Kategorien werden vorgeschlagen.',
     'transactions_create_withdrawal_ffInput_budget'           => 'Verknüpfen Sie für eine bessere Finanzkontrolle Ihre Ausgaben mit einem Budget.',
     'transactions_create_withdrawal_currency_dropdown_amount' => 'Verwenden Sie dieses Dropdown, wenn ihre Abbuchung in einer anderen Währung ist.',
-    'transactions_create_deposit_currency_dropdown_amount'    => 'Verwenden Sie dieses Dropdown, wenn ihre Einzahlung in einer anderen Währung ist.',
+    'transactions_create_deposit_currency_dropdown_amount'    => 'Verwenden Sie dieses Dropdown, wenn ihre Einnahme in einer anderen Währung ist.',
     'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Wählen Sie ein Sparschwein aus und verknüpfen Sie diese Umbuchung mit Ihren Ersparnissen.',
 
     // piggy banks index:

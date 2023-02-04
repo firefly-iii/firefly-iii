@@ -282,7 +282,7 @@ return [
     'auto_budget_period_mandatory'    => 'Il periodo per il budget automatico è un campo obbligatorio.',
 
     // no access to administration:
-    'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'no_access_user_group'            => 'Non hai i diritti di accesso corretti per questa amministrazione.',
 ];
 
 /*

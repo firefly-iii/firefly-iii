@@ -9,6 +9,8 @@
         "split": "Dela",
         "single_split": "Dela",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaktion #{ID} (\"{title}\")<\/a> sparades.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaktion #{ID}<\/a> (\"{title}\") uppdaterades.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaktion #{ID}<\/a> sparades.",
         "transaction_journal_information": "Transaktionsinformation",

@@ -35,11 +35,11 @@
 declare(strict_types=1);
 
 return [
-    'missing_where'                  => 'Array is missing "where"-clause',
-    'missing_update'                 => 'Array is missing "update"-clause',
-    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
-    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
-    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
+    'missing_where'                  => '배열에 "where"절이 없습니다',
+    'missing_update'                 => '배열에 "update"절이 없습니다',
+    'invalid_where_key'              => 'JSON의 "where" 절에 유효하지 않은 키가 포함되어 있습니다',
+    'invalid_update_key'             => 'JSON의 "update" 절에 유효하지 않은 키가 포함되어 있습니다',
+    'invalid_query_data'             => '쿼리의 %s:%s 항목에 잘못된 데이터가 있습니다.',
     'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
     'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'This is not a valid IBAN.',
