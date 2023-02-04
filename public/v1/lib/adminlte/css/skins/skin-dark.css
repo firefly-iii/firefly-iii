@@ -99,6 +99,19 @@
 .skin-firefly-iii .table-hover > tbody > tr:hover {
   background-color: #454e56;
 }
+.skin-firefly-iii .form-control {
+  color: #bec5cb;
+}
+.skin-firefly-iii .vue-tags-input {
+  background: #353c42 !important;
+}
+.skin-firefly-iii .ti-input {
+  border: 1px solid #353c42 !important;
+}
+.skin-firefly-iii code {
+  background-color: #343941;
+  color: #c9d1d9;
+}
 .skin-firefly-iii h4 {
   color: #44DEF1;
 }
