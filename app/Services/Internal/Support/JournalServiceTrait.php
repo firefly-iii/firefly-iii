@@ -81,7 +81,7 @@ trait JournalServiceTrait
 
         // if result is NULL but IBAN is set, any result of the search by NAME can't overrule
         // this account. In such a case, the name search must be retried with a new name.
-        if (null !== $result && null === $numberResult && null === $ibanResult && null !== $data['iban']) {
+        if (null !== $result && null === $numberResult && null === $ibanResult && '' !== (string) $data['iban']) {
             $data['name'] = sprintf('%s (%s)', $data['name'], $data['iban']);
             Log::debug(sprintf('Search again using the new name, "%s".', $data['name']));
             $result = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
