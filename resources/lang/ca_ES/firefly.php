@@ -279,6 +279,8 @@ return [
     'response'                             => 'Resposta',
     'visit_webhook_url'                    => 'Visitar l\'URL del webhook',
     'reset_webhook_secret'                 => 'Reiniciar el secret del webhook',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Sol·licitud d\'Autorització',
@@ -1387,6 +1389,9 @@ return [
     'slack_webhook_url_help'                    => 'Si vols que Firefly III et notifiqui utilitzant Slack, introdueix el webhook URL aquí. Altrament, deixa el camp en blanc. Si ets administrador, també has d\'introduir l\'URL a l\'administració.',
     'slack_url_label'                           => 'URL del webhook entrant de Slack',
 
+    // Financial administrations
+    'administration_index'                      => 'Administració financera',
+
     // profile:
     'purge_data_title'                          => 'Purgar dades de Firefly III',
     'purge_data_expl'                           => '"Purgar" vol dir "eliminar allò que ja s\'ha eliminat". En circumstàncies normals, Firefly III no eliminar res permanentment. Només ho oculta. El següent botó elimina tots els registres prèviament "eliminats" PER SEMPRE.',
@@ -1476,6 +1481,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clients OAuth',
     'profile_oauth_no_clients'                  => 'No has creat cap client OAuth.',
+    'profile_oauth_clients_external_auth'       => 'Si estàs fent servir un proveïdor extern d\'autentificació com Authelia, els Clients OAuth no funcionaran. Sols pots fer servir Tokens d\'Accés Personal.',
     'profile_oauth_clients_header'              => 'Clients',
     'profile_oauth_client_id'                   => 'ID de Client',
     'profile_oauth_client_name'                 => 'Nom',
@@ -1765,8 +1771,8 @@ return [
     'extension_date_is'                         => 'La data d\'extensió és {date}',
 
     // accounts:
-    'i_am_owed_amount'                          => 'I am owed amount',
-    'i_owe_amount'                              => 'I owe amount',
+    'i_am_owed_amount'                          => 'Se\'m deu la quantitat',
+    'i_owe_amount'                              => 'Jo dec la quantitat',
     'inactive_account_link'                     => 'Tens :count compte inactiu (arxivat), que pots veure en aquesta pàgina.|Tens :count comptes inactius (arxivats), els pots veure en aquesta pàgina.',
     'all_accounts_inactive'                     => 'Aquests són els teus comptes inactius.',
     'active_account_link'                       => 'Aquest enllaç et retorna als teus comptes actius.',

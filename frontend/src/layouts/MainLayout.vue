@@ -18,12 +18,26 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<!--
+instructions for padding and margin
+
+menu: top padding under top bar: q-pt-xs (padding top, xs)
+page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content some space.
+
+
+
+
+ TODO main DIV always use q-ma-md for the main holder
+ TODO rows use a q-mb-sm to give them space
+
+-->
+
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header class="bg-primary text-white" elevated>
+    <q-header reveal class="bg-primary text-white">
       <q-toolbar>
-        <q-btn dense flat icon="fas fa-bars" round @click="toggleLeftDrawer"/>
+        <q-btn flat icon="fas fa-bars" round @click="toggleLeftDrawer"/>
 
         <q-toolbar-title>
           <q-avatar>
@@ -31,7 +45,6 @@
           </q-avatar>
           Firefly III
         </q-toolbar-title>
-
 
         <q-select
           ref="search" v-model="search" :stack-label="false" class="q-mx-xs" color="black" dark
@@ -101,7 +114,7 @@
                 <q-item-section>Currencies</q-item-section>
               </q-item>
               <q-item :to="{ name: 'admin.index' }" clickable>
-                <q-item-section>Administration</q-item-section>
+                <q-item-section>System settings</q-item-section>
               </q-item>
             </q-list>
           </q-menu>
@@ -119,8 +132,11 @@
               <q-item :to="{ name: 'profile.index' }" clickable>
                 <q-item-section> Profile</q-item-section>
               </q-item>
-              <q-item :to="{ name: 'profile.daa' }" clickable>
+              <q-item :to="{ name: 'profile.data' }" clickable>
                 <q-item-section> Data management</q-item-section>
+              </q-item>
+              <q-item :to="{ name: 'administration.index' }" clickable>
+                <q-item-section>Administration management</q-item-section>
               </q-item>
               <q-item :to="{ name: 'preferences.index' }" clickable>
                 <q-item-section>Preferences</q-item-section>
@@ -137,9 +153,9 @@
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-drawer v-model="leftDrawerOpen" bordered show-if-above side="left">
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <q-scroll-area class="fit">
-        <div class="q-pa-md">
+        <div class="q-pt-md">
           <q-list>
             <q-item v-ripple :to="{ name: 'index' }" clickable>
               <q-item-section avatar>
@@ -180,7 +196,7 @@
               icon="fas fa-exchange-alt"
               label="Transactions"
             >
-              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
+              <q-item  v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
                       clickable>
                 <q-item-section>
                   Withdrawals
@@ -197,6 +213,13 @@
 
                 <q-item-section>
                   Transfers
+                </q-item-section>
+              </q-item>
+              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'all'} }"
+                      clickable>
+
+                <q-item-section>
+                  All transactions
                 </q-item-section>
               </q-item>
 
@@ -229,7 +252,7 @@
               icon="fas fa-credit-card"
               label="Accounts"
             >
-              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
+              <q-item  v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
                 <q-item-section>
                   Asset accounts
                 </q-item-section>
@@ -291,12 +314,13 @@
 
     <q-page-container>
       <Alert></Alert>
-
       <!-- breadcrumb, page title? -->
       <div class="q-ma-md">
         <div class="row">
           <div class="col-6">
-            <h4 class="q-ma-none q-pa-none">{{ $t($route.meta.pageTitle || 'firefly.welcome_back') }}</h4>
+            <h4 class="q-ma-none q-pa-none">
+              <em class="fa-solid fa-fire"></em>
+              {{ $t($route.meta.pageTitle || 'firefly.welcome_back') }}</h4>
           </div>
           <div class="col-6">
             <q-breadcrumbs align="right">
@@ -308,13 +332,13 @@
         </div>
       </div>
 
-      <router-view/>
+      <router-view />
     </q-page-container>
 
-    <q-footer class="bg-grey-8 text-white" elevated>
+    <q-footer class="bg-grey-8 text-white" bordered>
       <q-toolbar>
         <div>
-          <small>Firefly III v TODO &copy; James Cole, AGPL-3.0-or-later.</small>
+          <small>Firefly III v v6.0.0-alpha.2 &copy; James Cole, AGPL-3.0-or-later.</small>
         </div>
       </q-toolbar>
     </q-footer>
@@ -327,6 +351,7 @@
 import {defineComponent, ref} from 'vue';
 import DateRange from "../components/DateRange";
 import Alert from '../components/Alert';
+import {useQuasar} from "quasar";
 
 export default defineComponent(
   {
@@ -339,7 +364,7 @@ export default defineComponent(
     setup() {
       const leftDrawerOpen = ref(true)
       const search = ref('')
-
+      const $q = useQuasar();
       return {
         search,
         leftDrawerOpen,

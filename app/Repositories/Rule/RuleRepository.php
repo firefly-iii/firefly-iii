@@ -426,7 +426,7 @@ class RuleRepository implements RuleRepositoryInterface
             $stopProcessing = $trigger['stop_processing'] ?? false;
             $active         = $trigger['active'] ?? true;
             $type           = $trigger['type'];
-            if (true === $trigger['prohibited']) {
+            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with($type, '-')) {
                 $type = sprintf('-%s', $type);
             }
 

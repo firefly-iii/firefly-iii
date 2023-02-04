@@ -40,7 +40,9 @@
         <p v-if="clients.length === 0" class="mb-0">
           {{ $t('firefly.profile_oauth_no_clients') }}
         </p>
-
+        <p class="mb-2">
+          {{ $t('firefly.profile_oauth_clients_external_auth') }}
+        </p>
         <table v-if="clients.length > 0" class="table table-responsive table-borderless mb-0">
           <caption>{{ $t('firefly.profile_oauth_clients_header') }}</caption>
           <thead>

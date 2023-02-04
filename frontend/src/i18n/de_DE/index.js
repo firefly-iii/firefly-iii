@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Verbindlichkeiten"
     },
     "firefly": {
+        "administration_index": "Finanzverwaltung",
         "actions": "Aktionen",
         "edit": "Bearbeiten",
         "delete": "L\u00f6schen",
@@ -161,7 +162,7 @@ export default {
         "rule_action_clear_notes_choice": "Alle Notizen entfernen",
         "rule_action_set_notes_choice": "Setze Notizen auf ..",
         "rule_action_link_to_bill_choice": "Mit einer Rechnung verkn\u00fcpfen..",
-        "rule_action_convert_deposit_choice": "Buchung in eine Einzahlung umwandeln",
+        "rule_action_convert_deposit_choice": "Buchung in eine Einnahme umwandeln",
         "rule_action_convert_withdrawal_choice": "Buchung in eine Ausgabe umwandeln",
         "rule_action_convert_transfer_choice": "Buchung in eine Umbuchung umwandeln",
         "placeholder": "[Placeholder]",

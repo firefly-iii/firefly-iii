@@ -279,6 +279,8 @@ return [
     'response'                             => 'Svar',
     'visit_webhook_url'                    => 'Besøg webhook-URL',
     'reset_webhook_secret'                 => 'Nulstil webhook-hemmelighed',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Anmodning om Autorisation',
@@ -1387,6 +1389,9 @@ return [
     'slack_webhook_url_help'                    => 'If you want Firefly III to notify you using Slack, enter the webhook URL here. Otherwise leave the field blank. If you are an admin, you need to set this URL in the administration as well.',
     'slack_url_label'                           => 'Slack "incoming webhook" URL',
 
+    // Financial administrations
+    'administration_index'                      => 'Financial administration',
+
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
     'purge_data_expl'                           => '"Purging" means "deleting that which is already deleted". In normal circumstances, Firefly III deletes nothing permanently. It just hides it. The button below deletes all of these previously "deleted" records FOREVER.',
@@ -1476,6 +1481,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Klienter',
     'profile_oauth_no_clients'                  => 'Du har ikke oprettet nogen OAuth klienter.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Klienter',
     'profile_oauth_client_id'                   => 'Klient ID',
     'profile_oauth_client_name'                 => 'Navn',

@@ -279,6 +279,8 @@ return [
     'response'                             => '响应',
     'visit_webhook_url'                    => '访问 webhook URL',
     'reset_webhook_secret'                 => '重置 webhook 密钥',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III :version 版授权请求',
@@ -1387,6 +1389,9 @@ return [
     'slack_webhook_url_help'                    => '如果您想要 Firefly III 使用 Slack 通知您，请在此处输入 webhook 地址。否则请留空该字段。 如果您是管理员，您还需要在管理设置中设置此地址。',
     'slack_url_label'                           => 'Slack "incoming webhook" URL',
 
+    // Financial administrations
+    'administration_index'                      => 'Financial administration',
+
     // profile:
     'purge_data_title'                          => '从 Frefly III 清除数据',
     'purge_data_expl'                           => '“清除”是指“删除已经删除的内容”。在正常情况下，Firefly III 不会永久删除记录，只是将其隐藏。下面的按钮会将先前“已删除”的记录永久删除。',
@@ -1476,6 +1481,7 @@ return [
     'oauth'                                     => 'OAuth 授权',
     'profile_oauth_clients'                     => 'OAuth 客户端',
     'profile_oauth_no_clients'                  => '您尚未创建任何 OAuth 客户端。',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => '客户端',
     'profile_oauth_client_id'                   => '客户端 ID',
     'profile_oauth_client_name'                 => '名称',

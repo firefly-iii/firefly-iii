@@ -22,14 +22,13 @@
   <!-- TODO most left? q-mr-sm -->
   <!-- TODO middle? dan q-mx-sm -->
   <!-- TODO right? dan q-ml-sm -->
-  <div class="q-mr-sm">
-    <q-card bordered>
+    <q-card bordered flat class="fit">
       <q-item>
         <q-item-section>
-          <q-item-label><strong>{{ $t('firefly.bills_to_pay') }}</strong></q-item-label>
+          <q-item-label><strong>{{ $t('firefly.bills') }} </strong></q-item-label>
         </q-item-section>
       </q-item>
-      <q-separator/>
+      <q-separator />
       <q-card-section horizontal>
         <q-card-section>
           <q-circular-progress
@@ -63,7 +62,6 @@
         </q-card-section>
       </q-card-section>
     </q-card>
-  </div>
 </template>
 
 <script>

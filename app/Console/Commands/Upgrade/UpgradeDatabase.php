@@ -74,7 +74,6 @@ class UpgradeDatabase extends Command
             'firefly-iii:migrate-tag-locations',
             'firefly-iii:migrate-recurrence-type',
             'firefly-iii:upgrade-liabilities',
-            'firefly-iii:create-group-memberships',
             'firefly-iii:liabilities-600',
 
             // there are 16 verify commands.
@@ -100,6 +99,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:fix-transaction-types',
             'firefly-iii:fix-frontpage-accounts',
             'firefly-iii:fix-ibans',
+            'firefly-iii:create-group-memberships',
             'firefly-iii:upgrade-group-information',
 
             // two report commands

@@ -103,7 +103,7 @@ class MessageController extends Controller
     public function show(Webhook $webhook, WebhookMessage $message): JsonResponse
     {
         if ($message->webhook_id !== $webhook->id) {
-            throw new FireflyException('Webhook and webhook message are no match');
+            throw new FireflyException('200040: Webhook and webhook message are no match');
         }
 
         $manager = $this->getManager();

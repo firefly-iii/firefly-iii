@@ -162,7 +162,7 @@ class OperatorQuerySearch implements SearchInterface
         } catch (TypeError|LogicException $e) {
             Log::error($e->getMessage());
             Log::error(sprintf('Could not parse search: "%s".', $query));
-            throw new FireflyException('Invalid search value. See the logs.', 0, $e);
+            throw new FireflyException(sprintf('Invalid search value "%s". See the logs.', e($query)), 0, $e);
         }
 
         Log::debug(sprintf('Found %d node(s)', count($query1->getNodes())));

@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Pasivos"
     },
     "firefly": {
+        "administration_index": "Administraci\u00f3n financiera",
         "actions": "Acciones",
         "edit": "Editar",
         "delete": "Eliminar",
@@ -72,7 +73,7 @@ export default {
         "submission_options": "Submission options",
         "apply_rules_checkbox": "Apply rules",
         "fire_webhooks_checkbox": "Fire webhooks",
-        "newDeposit": "Nuevo deposito",
+        "newDeposit": "Nuevo ingreso",
         "newWithdrawal": "Nuevo gasto",
         "bills_paid": "Facturas pagadas",
         "left_to_spend": "Disponible para gastar",
@@ -161,7 +162,7 @@ export default {
         "rule_action_clear_notes_choice": "Eliminar cualquier nota",
         "rule_action_set_notes_choice": "Set notes to ..",
         "rule_action_link_to_bill_choice": "Link to a bill ..",
-        "rule_action_convert_deposit_choice": "Convierta esta transacci\u00f3n en un dep\u00f3sito",
+        "rule_action_convert_deposit_choice": "Convertir transacci\u00f3n en un ingreso",
         "rule_action_convert_withdrawal_choice": "Convierta esta transacci\u00f3n en un gasto",
         "rule_action_convert_transfer_choice": "Convierta la transacci\u00f3n a una transferencia",
         "placeholder": "[Placeholder]",

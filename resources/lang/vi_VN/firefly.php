@@ -279,6 +279,8 @@ return [
     'response'                             => 'Response',
     'visit_webhook_url'                    => 'Visit webhook URL',
     'reset_webhook_secret'                 => 'Reset webhook secret',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III v: phiên bản Yêu cầu ủy quyền',
@@ -1387,6 +1389,9 @@ return [
     'slack_webhook_url_help'                    => 'If you want Firefly III to notify you using Slack, enter the webhook URL here. Otherwise leave the field blank. If you are an admin, you need to set this URL in the administration as well.',
     'slack_url_label'                           => 'Slack "incoming webhook" URL',
 
+    // Financial administrations
+    'administration_index'                      => 'Financial administration',
+
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
     'purge_data_expl'                           => '"Purging" means "deleting that which is already deleted". In normal circumstances, Firefly III deletes nothing permanently. It just hides it. The button below deletes all of these previously "deleted" records FOREVER.',
@@ -1476,6 +1481,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'Bạn đã không tạo ra bất kỳ OAuth clients nào.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Clients',
     'profile_oauth_client_id'                   => 'Client ID',
     'profile_oauth_client_name'                 => 'Tên',
@@ -1765,8 +1771,8 @@ return [
     'extension_date_is'                         => 'Extension date is {date}',
 
     // accounts:
-    'i_am_owed_amount'                          => 'I am owed amount',
-    'i_owe_amount'                              => 'I owe amount',
+    'i_am_owed_amount'                          => 'Tôi đang nợ số tiền',
+    'i_owe_amount'                              => 'Tôi nợ số tiền',
     'inactive_account_link'                     => 'Bạn có :count tài khoản không hoạt động (được lưu trữ) mà bạn có thể xem trên trang này. Bạn có :count tài khoản không hoạt động (đã lưu trữ) mà bạn có thể xem trên trang này.',
     'all_accounts_inactive'                     => 'Đây là những tài khoản không hoạt động của bạn.',
     'active_account_link'                       => 'Liên kết này quay lại tài khoản đang hoạt động của bạn.',

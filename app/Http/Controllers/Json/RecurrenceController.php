@@ -150,6 +150,7 @@ class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
+        $request->validate(['date' => ['required', 'date'],]);
         $string      = $request->get('date') ?? date('Y-m-d');
         $today       = Carbon::now()->startOfDay();
         $date        = Carbon::createFromFormat('Y-m-d', $string)->startOfDay();

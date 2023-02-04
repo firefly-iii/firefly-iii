@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Kewajiban"
     },
     "firefly": {
+        "administration_index": "Financial administration",
         "actions": "Tindakan",
         "edit": "Edit",
         "delete": "Menghapus",

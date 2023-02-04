@@ -1,4 +1,5 @@
 <?php
+
 /**
  * breadcrumbs.php
  * Copyright (c) 2019 james@firefly-iii.org.
@@ -48,7 +49,7 @@ if (!function_exists('limitStringLength')) {
     /**
      * Cuts away the middle of a string when it's very long.
      *
-     * @param string $string
+     * @param  string  $string
      *
      * @return string
      */
@@ -58,7 +59,7 @@ if (!function_exists('limitStringLength')) {
         $length   = strlen($string);
         $result   = $string;
         if ($length > $maxChars) {
-            $result = substr_replace($string, ' ... ', (int) ($maxChars / 2), $length - $maxChars);
+            $result = substr_replace($string, ' ... ', (int)($maxChars / 2), $length - $maxChars);
         }
 
         return $result;
@@ -86,14 +87,14 @@ try {
         'accounts.index',
         static function (Generator $breadcrumbs, string $what) {
             $breadcrumbs->parent('home');
-            $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts'), route('accounts.index', [$what]));
+            $breadcrumbs->push(trans('firefly.'.strtolower(e($what)).'_accounts'), route('accounts.index', [$what]));
         }
     );
     Breadcrumbs::for( // inactive
         'accounts.inactive.index',
         static function (Generator $breadcrumbs, string $what) {
             $breadcrumbs->parent('home');
-            $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts_inactive'), route('accounts.inactive.index', [$what]));
+            $breadcrumbs->push(trans('firefly.'.strtolower(e($what)).'_accounts_inactive'), route('accounts.inactive.index', [$what]));
         }
     );
 
@@ -101,22 +102,24 @@ try {
         'accounts.create',
         static function (Generator $breadcrumbs, string $what) {
             $breadcrumbs->parent('accounts.index', $what);
-            $breadcrumbs->push(trans('firefly.new_' . strtolower(e($what)) . '_account'), route('accounts.create', [$what]));
+            $breadcrumbs->push(trans('firefly.new_'.strtolower(e($what)).'_account'), route('accounts.create', [$what]));
         }
     );
 
     Breadcrumbs::for(
         'accounts.show',
         static function (Generator $breadcrumbs, Account $account, Carbon $start = null, Carbon $end = null) {
-            $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+            $what = config('firefly.shortNamesByFullName.'.$account->accountType->type);
 
             $breadcrumbs->parent('accounts.index', $what);
             $breadcrumbs->push(limitStringLength($account->name), route('accounts.show.all', [$account->id]));
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start' => $start->isoFormat((string) trans('config.month_and_day_js')),
-                     'end'   => $end->isoFormat((string) trans('config.month_and_day_js')),]
+                    [
+                        'start' => $start->isoFormat((string)trans('config.month_and_day_js')),
+                        'end'   => $end->isoFormat((string)trans('config.month_and_day_js')),
+                    ]
                 );
                 $breadcrumbs->push($title, route('accounts.show', $account));
             }
@@ -126,7 +129,7 @@ try {
     Breadcrumbs::for(
         'accounts.show.all',
         static function (Generator $breadcrumbs, Account $account) {
-            $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+            $what = config('firefly.shortNamesByFullName.'.$account->accountType->type);
 
             $breadcrumbs->parent('accounts.index', $what);
             $breadcrumbs->push(limitStringLength($account->name), route('accounts.show', [$account->id]));
@@ -145,7 +148,7 @@ try {
         'accounts.reconcile.show',
         static function (Generator $breadcrumbs, Account $account, TransactionJournal $journal) {
             $breadcrumbs->parent('accounts.show', $account);
-            $title = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
+            $title = trans('firefly.reconciliation').' "'.$journal->description.'"';
             $breadcrumbs->push($title, route('accounts.reconcile.show', [$journal->id]));
         }
     );
@@ -162,10 +165,10 @@ try {
         'accounts.edit',
         static function (Generator $breadcrumbs, Account $account) {
             $breadcrumbs->parent('accounts.show', $account);
-            $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+            $what = config('firefly.shortNamesByFullName.'.$account->accountType->type);
 
             $breadcrumbs->push(
-                trans('firefly.edit_' . $what . '_account', ['name' => limitStringLength($account->name)]),
+                trans('firefly.edit_'.$what.'_account', ['name' => limitStringLength($account->name)]),
                 route('accounts.edit', [$account->id])
             );
         }
@@ -444,8 +447,10 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start' => $start->isoFormat((string) trans('config.month_and_day_js')),
-                     'end'   => $end->isoFormat((string) trans('config.month_and_day_js')),]
+                    [
+                        'start' => $start->isoFormat((string)trans('config.month_and_day_js')),
+                        'end'   => $end->isoFormat((string)trans('config.month_and_day_js')),
+                    ]
                 );
                 $breadcrumbs->push($title, route('budgets.no-budget'));
             }
@@ -478,8 +483,10 @@ try {
 
             $title = trans(
                 'firefly.between_dates_breadcrumb',
-                ['start' => $budgetLimit->start_date->isoFormat((string) trans('config.month_and_day_js')),
-                 'end'   => $budgetLimit->end_date->isoFormat((string) trans('config.month_and_day_js')),]
+                [
+                    'start' => $budgetLimit->start_date->isoFormat((string)trans('config.month_and_day_js')),
+                    'end'   => $budgetLimit->end_date->isoFormat((string)trans('config.month_and_day_js')),
+                ]
             );
 
             $breadcrumbs->push(
@@ -528,8 +535,10 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start' => $start->isoFormat((string) trans('config.month_and_day_js')),
-                     'end'   => $end->isoFormat((string) trans('config.month_and_day_js')),]
+                    [
+                        'start' => $start->isoFormat((string)trans('config.month_and_day_js')),
+                        'end'   => $end->isoFormat((string)trans('config.month_and_day_js')),
+                    ]
                 );
                 $breadcrumbs->push($title, route('categories.show', [$category->id]));
             }
@@ -553,8 +562,10 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start' => $start->isoFormat((string) trans('config.month_and_day_js')),
-                     'end'   => $end->isoFormat((string) trans('config.month_and_day_js')),]
+                    [
+                        'start' => $start->isoFormat((string)trans('config.month_and_day_js')),
+                        'end'   => $end->isoFormat((string)trans('config.month_and_day_js')),
+                    ]
                 );
                 $breadcrumbs->push($title, route('categories.no-category'));
             }
@@ -748,10 +759,10 @@ try {
         static function (Generator $breadcrumbs, string $accountIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string) trans('config.month_and_day_js');
+            $monthFormat = (string)trans('config.month_and_day_js');
             $startString = $start->isoFormat($monthFormat);
             $endString   = $end->isoFormat($monthFormat);
-            $title       = (string) trans('firefly.report_audit', ['start' => $startString, 'end' => $endString]);
+            $title       = (string)trans('firefly.report_audit', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.audit', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -761,10 +772,10 @@ try {
         static function (Generator $breadcrumbs, string $accountIds, string $budgetIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string) trans('config.month_and_day_js');
+            $monthFormat = (string)trans('config.month_and_day_js');
             $startString = $start->isoFormat($monthFormat);
             $endString   = $end->isoFormat($monthFormat);
-            $title       = (string) trans('firefly.report_budget', ['start' => $startString, 'end' => $endString]);
+            $title       = (string)trans('firefly.report_budget', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.budget', [$accountIds, $budgetIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -775,10 +786,10 @@ try {
         static function (Generator $breadcrumbs, string $accountIds, string $tagTags, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string) trans('config.month_and_day_js');
+            $monthFormat = (string)trans('config.month_and_day_js');
             $startString = $start->isoFormat($monthFormat);
             $endString   = $end->isoFormat($monthFormat);
-            $title       = (string) trans('firefly.report_tag', ['start' => $startString, 'end' => $endString]);
+            $title       = (string)trans('firefly.report_tag', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.tag', [$accountIds, $tagTags, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -789,10 +800,10 @@ try {
         static function (Generator $breadcrumbs, string $accountIds, string $categoryIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string) trans('config.month_and_day_js');
+            $monthFormat = (string)trans('config.month_and_day_js');
             $startString = $start->isoFormat($monthFormat);
             $endString   = $end->isoFormat($monthFormat);
-            $title       = (string) trans('firefly.report_category', ['start' => $startString, 'end' => $endString]);
+            $title       = (string)trans('firefly.report_category', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.category', [$accountIds, $categoryIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -803,10 +814,10 @@ try {
         static function (Generator $breadcrumbs, string $accountIds, string $doubleIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string) trans('config.month_and_day_js');
+            $monthFormat = (string)trans('config.month_and_day_js');
             $startString = $start->isoFormat($monthFormat);
             $endString   = $end->isoFormat($monthFormat);
-            $title       = (string) trans('firefly.report_double', ['start' => $startString, 'end' => $endString]);
+            $title       = (string)trans('firefly.report_double', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.double', [$accountIds, $doubleIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -817,10 +828,10 @@ try {
         static function (Generator $breadcrumbs, string $accountIds, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('reports.index');
 
-            $monthFormat = (string) trans('config.month_and_day_js');
+            $monthFormat = (string)trans('config.month_and_day_js');
             $startString = $start->isoFormat($monthFormat);
             $endString   = $end->isoFormat($monthFormat);
-            $title       = (string) trans('firefly.report_default', ['start' => $startString, 'end' => $endString]);
+            $title       = (string)trans('firefly.report_default', ['start' => $startString, 'end' => $endString]);
 
             $breadcrumbs->push($title, route('reports.report.default', [$accountIds, $start->format('Ymd'), $end->format('Ymd')]));
         }
@@ -1030,8 +1041,10 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start' => $start->isoFormat((string) trans('config.month_and_day_js')),
-                     'end'   => $end->isoFormat((string) trans('config.month_and_day_js')),]
+                    [
+                        'start' => $start->isoFormat((string)trans('config.month_and_day_js')),
+                        'end'   => $end->isoFormat((string)trans('config.month_and_day_js')),
+                    ]
                 );
                 $breadcrumbs->push($title, route('tags.show', [$tag->id, $start, $end]));
             }
@@ -1043,7 +1056,7 @@ try {
         static function (Generator $breadcrumbs, Tag $tag) {
             $breadcrumbs->parent('tags.index');
             $breadcrumbs->push($tag->tag, route('tags.show', [$tag->id]));
-            $title = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+            $title = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
             $breadcrumbs->push($title, route('tags.show.all', $tag->id));
         }
     );
@@ -1054,14 +1067,16 @@ try {
         'transactions.index',
         static function (Generator $breadcrumbs, string $what, Carbon $start = null, Carbon $end = null) {
             $breadcrumbs->parent('home');
-            $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
+            $breadcrumbs->push(trans('breadcrumbs.'.$what.'_list'), route('transactions.index', [$what]));
 
             if (null !== $start && null !== $end) {
                 // add date range:
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start' => $start->isoFormat((string) trans('config.month_and_day_js')),
-                     'end'   => $end->isoFormat((string) trans('config.month_and_day_js')),]
+                    [
+                        'start' => $start->isoFormat((string)trans('config.month_and_day_js')),
+                        'end'   => $end->isoFormat((string)trans('config.month_and_day_js')),
+                    ]
                 );
                 $breadcrumbs->push($title, route('transactions.index', [$what, $start, $end]));
             }
@@ -1072,7 +1087,7 @@ try {
         'transactions.index.all',
         static function (Generator $breadcrumbs, string $what) {
             $breadcrumbs->parent('home');
-            $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
+            $breadcrumbs->push(trans('breadcrumbs.'.$what.'_list'), route('transactions.index', [$what]));
         }
     );
 
@@ -1093,7 +1108,7 @@ try {
             $first = $group->transactionJournals()->first();
 
             $breadcrumbs->push(
-                trans('breadcrumbs.edit_journal', ['description' => limitStringLength((string) $first->description)]),
+                trans('breadcrumbs.edit_journal', ['description' => limitStringLength((string)$first->description)]),
                 route('transactions.edit', [$group->id])
             );
         }
@@ -1132,7 +1147,7 @@ try {
             $type  = strtolower($first->transactionType->type);
             $title = limitStringLength($first->description);
             if ($group->transactionJournals()->count() > 1) {
-                $title = limitStringLength((string) $group->title);
+                $title = limitStringLength((string)$group->title);
             }
             if ('opening balance' === $type) {
                 // TODO link to account
@@ -1192,7 +1207,7 @@ try {
         'transactions.bulk.edit',
         static function (Generator $breadcrumbs, array $journals): void {
             if (0 !== count($journals)) {
-                $ids   = Arr::pluck($journals, 'transaction_journal_id');
+                $ids = Arr::pluck($journals, 'transaction_journal_id');
                 $first = reset($journals);
                 $breadcrumbs->parent('transactions.index', strtolower($first['transaction_type_type']));
                 $breadcrumbs->push(trans('firefly.mass_bulk_journals'), route('transactions.bulk.edit', $ids));

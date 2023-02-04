@@ -2,6 +2,43 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.0-alpha.2 - 2023-02-05
+
+### Warnings
+
+- ⚠️ Make a backup of your database first!
+- ⚠️ This version requires **PHP 8.2**.
+
+You can access the new V3 layout under `/v3/`. If you decide to use or test it:
+
+- ⚠️ Read the instructions under the ☠️ icon FIRST.
+- ⚠️ The new layout is not yet finished. Use it to change your data at your own risk.
+
+### Added
+- Warning for remote user guard
+- Improved validation
+- Can now validate a user's financial administration
+- Dark mode CSS
+
+### Changed
+- Various errors no longer throw a 500 but a 422 (validation failed)
+
+### Removed
+- Cryptocurrencies in default currency set
+- Unused environment variables
+
+### Fixed
+- Bad escape in JS code.
+- [Issue 6869](https://github.com/firefly-iii/firefly-iii/issues/6869) Liability created via API is not applying opening balance.
+- [Issue 6870](https://github.com/firefly-iii/firefly-iii/issues/6870) Old inactive recurring transactions do not lose categories when the categories are deleted
+- [Issue 6876](https://github.com/firefly-iii/firefly-iii/issues/6876) Date field is validated in recurring transactions
+- [Issue 6974](https://github.com/firefly-iii/firefly-iii/issues/6974) Auto budget amount fix.
+- Date validation in routes
+- Shorter titles in object groups
+
+### API
+- Various API fixes
+
 ## 6.0.0-alpha.1 - 2023-01-16
 
 This is the first release of the new 6.0.0 series of Firefly III. It should upgrade the database automatically BUT please make a backup of your database first! I guarantee nothing.

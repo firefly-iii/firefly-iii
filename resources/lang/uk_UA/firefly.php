@@ -279,6 +279,8 @@ return [
     'response'                             => 'Відповідь',
     'visit_webhook_url'                    => 'Відвідайте URL-адресу веб-хуку',
     'reset_webhook_secret'                 => 'Відновити сікрет веб-хука',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version запит авторизації',
@@ -1387,6 +1389,9 @@ return [
     'slack_webhook_url_help'                    => 'Якщо ви хочете, щоб Firefly III повідомляв вас за допомогою Slack, введіть тут URL-адресу вебхука. В іншому випадку залиште поле порожнім. Якщо ви адміністратор, вам також потрібно встановити цю URL-адресу в панелі адміністрування.',
     'slack_url_label'                           => 'URL-адреса Slack "вхідного вебхуку"',
 
+    // Financial administrations
+    'administration_index'                      => 'Financial administration',
+
     // profile:
     'purge_data_title'                          => 'Очистити дані з Firefly III',
     'purge_data_expl'                           => '«Очищення» означає «видалення того, що вже видалено». За звичайних обставин Firefly III нічого не видаляє остаточно. Це просто приховує це. Кнопка нижче видаляє всі ці раніше "видалені" записи НАЗАВЖДИ.',
@@ -1476,6 +1481,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Клієнти OAuth',
     'profile_oauth_no_clients'                  => 'Ви не створили жодних клієнтів OAuth.',
+    'profile_oauth_clients_external_auth'       => 'If you\'re using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.',
     'profile_oauth_clients_header'              => 'Клієнти',
     'profile_oauth_client_id'                   => 'ID клієнта',
     'profile_oauth_client_name'                 => 'Ім\'я',

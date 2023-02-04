@@ -48,6 +48,7 @@ trait CreatesObjectGroups
      */
     protected function findOrCreateObjectGroup(string $title): ?ObjectGroup
     {
+        $title    = substr($title, 0, 255);
         $maxOrder = $this->getObjectGroupMaxOrder();
         if (!$this->hasObjectGroup($title)) {
             return ObjectGroup::create(

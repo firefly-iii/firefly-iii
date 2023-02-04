@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="color-scheme" content="light dark">
 
     <title>Firefly III
 
@@ -29,7 +30,19 @@
 
     {# the theme #}
     <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
-    <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <script nonce="{{ JS_NONCE }}">
+        // If `prefers-color-scheme` is not supported, fall back to light mode.
+        // In this case, light.css will be downloaded with `highest` priority.
+        if (window.matchMedia('(prefers-color-scheme: dark)').media === 'not all') {
+            document.documentElement.style.display = 'none';
+            document.head.insertAdjacentHTML(
+                'beforeend',
+                '<link rel="stylesheet" href="v1/lib/adminlte/css/skins/skin-light.css?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}" onload="document.documentElement.style.display = \'\'">',
+            );
+        }
+    </script>
+    <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: light)">
+    <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}"  media="(prefers-color-scheme: dark)">
 
     {# Firefly III customisations #}
     <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">

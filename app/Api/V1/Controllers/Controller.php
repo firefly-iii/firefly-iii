@@ -31,10 +31,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -95,14 +97,20 @@ abstract class Controller extends BaseController
         // some date fields:
         $dates = ['start', 'end', 'date'];
         foreach ($dates as $field) {
-            $date = request()->query->get($field);
-            $obj  = null;
+            try {
+                $date = request()->query->get($field);
+            } catch (BadRequestException $e) {
+                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
+                Log::error($e->getMessage());
+                $value = null;
+            }
+            $obj = null;
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse($date);
                 } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
-                    app('log')->warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', $date, $e->getMessage()));
+                    app('log')->warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', substr($date, 0, 20), $e->getMessage()));
                 }
             }
             $bag->set($field, $obj);
@@ -111,7 +119,13 @@ abstract class Controller extends BaseController
         // integer fields:
         $integers = ['limit'];
         foreach ($integers as $integer) {
-            $value = request()->query->get($integer);
+            try {
+                $value = request()->query->get($integer);
+            } catch (BadRequestException $e) {
+                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
+                Log::error($e->getMessage());
+                $value = null;
+            }
             if (null !== $value) {
                 $bag->set($integer, (int)$value);
             }
@@ -129,7 +143,13 @@ abstract class Controller extends BaseController
     private function getSortParameters(ParameterBag $bag): ParameterBag
     {
         $sortParameters = [];
-        $param          = (string)request()->query->get('sort');
+        try {
+            $param = (string)request()->query->get('sort');
+        } catch (BadRequestException $e) {
+            Log::error('Request field "sort" contains a non-scalar value. Value set to NULL.');
+            Log::error($e->getMessage());
+            $param = '';
+        }
         if ('' === $param) {
             return $bag;
         }

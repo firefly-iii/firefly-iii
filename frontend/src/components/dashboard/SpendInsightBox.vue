@@ -22,8 +22,7 @@
   <!-- TODO most left? q-mr-sm -->
   <!-- TODO middle? dan q-mx-sm -->
   <!-- TODO right? dan q-ml-sm -->
-  <div class="q-mx-sm">
-    <q-card bordered>
+    <q-card bordered flat>
       <q-item>
         <q-item-section>
           <q-item-label><strong>{{ $t('firefly.left_to_spend') }}</strong></q-item-label>
@@ -66,7 +65,6 @@
         </q-card-section>
       </q-card-section>
     </q-card>
-  </div>
 </template>
 
 <script>

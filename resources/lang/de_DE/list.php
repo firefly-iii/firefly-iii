@@ -131,7 +131,7 @@ return [
     'sum'                     => 'Summe',
     'sum_excluding_transfers' => 'Summe (ohne Umbuchungen)',
     'sum_withdrawals'         => 'Summe der Ausgaben',
-    'sum_deposits'            => 'Summe der Einzahlungen',
+    'sum_deposits'            => 'Summe der Einnahmen',
     'sum_transfers'           => 'Summe der Umbuchungen',
     'sum_reconciliations'     => 'Summe der Kontenabgleiche',
     'reconcile'               => 'Abgleichen',

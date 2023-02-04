@@ -85,7 +85,6 @@ class InstallController extends Controller
             'firefly-iii:migrate-tag-locations'        => [],
             'firefly-iii:migrate-recurrence-type'      => [],
             'firefly-iii:upgrade-liabilities'          => [],
-            'firefly-iii:create-group-memberships'     => [],
             'firefly-iii:liabilities-600'              => [],
 
             // verify commands
@@ -111,9 +110,10 @@ class InstallController extends Controller
             'firefly-iii:fix-transaction-types'        => [],
             'firefly-iii:fix-frontpage-accounts'       => [],
             'firefly-iii:fix-ibans'                    => [],
+            'firefly-iii:create-group-memberships'     => [],
             'firefly-iii:upgrade-group-information'    => [],
 
-            // final command to set latest version in DB
+            // final command to set the latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
             'firefly-iii:verify-security-alerts'       => [],
         ];

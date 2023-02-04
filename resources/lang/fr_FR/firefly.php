@@ -279,6 +279,8 @@ return [
     'response'                             => 'Réponse',
     'visit_webhook_url'                    => 'Visiter l\'URL du webhook',
     'reset_webhook_secret'                 => 'Réinitialiser le secret du webhook',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version demande d\'autorisation',
@@ -1387,6 +1389,9 @@ return [
     'slack_webhook_url_help'                    => 'Si vous voulez que Firefly III vous avertisse en utilisant Slack, entrez l\'URL du webhook ici. Sinon, laissez le champ vide. Si vous êtes un administrateur, vous devez également définir cette URL dans l\'administration.',
     'slack_url_label'                           => 'URL du webhook entrant de Slack',
 
+    // Financial administrations
+    'administration_index'                      => 'Administration financière',
+
     // profile:
     'purge_data_title'                          => 'Purger des données de Firefly III',
     'purge_data_expl'                           => '« Purger » signifie « supprimer ce qui est déjà supprimé ». En temps normal, Firefly III ne supprime rien définitivement. Il ne fait que le cacher. Le bouton ci-dessous supprime tous ces enregistrements précédemment "supprimés".',
@@ -1476,6 +1481,7 @@ return [
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clients OAuth',
     'profile_oauth_no_clients'                  => 'Vous n’avez pas encore créé de client OAuth.',
+    'profile_oauth_clients_external_auth'       => 'Si vous utilisez un fournisseur d\'authentification externe comme Authelia, les clients OAuth ne fonctionneront pas. Vous ne pouvez utiliser que des jetons d\'accès personnel.',
     'profile_oauth_clients_header'              => 'Clients',
     'profile_oauth_client_id'                   => 'Identifiant',
     'profile_oauth_client_name'                 => 'Nom',
@@ -1765,8 +1771,8 @@ return [
     'extension_date_is'                         => 'La date de l\'extension est {date}',
 
     // accounts:
-    'i_am_owed_amount'                          => 'I am owed amount',
-    'i_owe_amount'                              => 'I owe amount',
+    'i_am_owed_amount'                          => 'On me doit le montant',
+    'i_owe_amount'                              => 'Je dois le montant',
     'inactive_account_link'                     => 'Vous avez :count compte inactif (archivé) que vous pouvez consulter sur cette page dédiée.| Vous avez :count comptes inactifs (archivés) que vous pouvez consulter sur cette page dédiée.',
     'all_accounts_inactive'                     => 'Voici vos comptes inactifs.',
     'active_account_link'                       => 'Ce lien renvoie à vos comptes actifs.',

@@ -28,12 +28,10 @@
                            data-toggle="tab">{{ 'pref_two_factor_auth'|_ }}</a>
                     </li>
                 {% endif %}
-                {% if true == isInternalAuth and true == isInternalIdentity %}
-                    <li role="presentation">
-                        <a href="#delete" aria-controls="settings" role="tab"
-                           data-toggle="tab">{{ 'delete_stuff_header'|_ }}</a>
-                    </li>
-                {% endif %}
+                <li role="presentation">
+                    <a href="#delete" aria-controls="settings" role="tab"
+                       data-toggle="tab">{{ 'delete_stuff_header'|_ }}</a>
+                </li>
             </ul>
             <div class="tab-content">
 

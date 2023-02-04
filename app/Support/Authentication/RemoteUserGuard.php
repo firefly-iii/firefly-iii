@@ -52,7 +52,7 @@ class RemoteUserGuard implements Guard
     {
         /** @var Request $request */
         $request = $app->get('request');
-        Log::debug(sprintf('Created RemoteUserGuard for "%s"', $request?->getRequestUri()));
+        Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
         $this->application = $app;
         $this->provider    = $provider;
         $this->user        = null;
@@ -82,15 +82,17 @@ class RemoteUserGuard implements Guard
         $header = config('auth.guard_header', 'REMOTE_USER');
         $userID = request()->server($header) ?? null;
 
-        //$userID = 'james@firefly';
-
         if (function_exists('apache_request_headers')) {
+            Log::debug('Use apache_request_headers to find user ID.');
             $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
         }
-        if (null === $userID) {
+
+        if (null === $userID || '' === $userID) {
             Log::error(sprintf('No user in header "%s".', $header));
             throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
         }
+
+        Log::debug(sprintf('User ID found in header is "%s"', $userID));
 
         /** @var User $retrievedUser */
         $retrievedUser = $this->provider->retrieveById($userID);
@@ -139,8 +141,13 @@ class RemoteUserGuard implements Guard
     public function user(): ?User
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        //$this->authenticate();
-        return $this->user;
+        $user = $this->user;
+        if (null === $user) {
+            Log::debug('User is NULL');
+            return null;
+        }
+
+        return $user;
     }
 
     /**

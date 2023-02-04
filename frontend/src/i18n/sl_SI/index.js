@@ -60,6 +60,7 @@ export default {
         "liabilities_accounts": "Obveznosti"
     },
     "firefly": {
+        "administration_index": "Financial administration",
         "actions": "Dejanja",
         "edit": "uredi",
         "delete": "izbri\u0161i",
