@@ -28,7 +28,7 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd">
     <coverage processUncoveredFiles="true">
         <include>
             <directory suffix=".php">./app</directory>
@@ -36,7 +36,7 @@
     </coverage>
     <testsuites>
         <testsuite name="Api">
-            <directory suffix="Test.php">./tests/Api/Models/TransactionCurrency</directory>
+            <directory suffix="Test.php">./tests</directory>
             <!--
             <directory suffix="Test.php">./tests/Api</directory>
 
