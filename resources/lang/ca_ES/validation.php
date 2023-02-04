@@ -282,7 +282,7 @@ return [
     'auto_budget_period_mandatory'    => 'El període de pressupost automàtic és un camp obligatori.',
 
     // no access to administration:
-    'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'no_access_user_group'            => 'No tens accés a aquesta administració.',
 ];
 
 /*

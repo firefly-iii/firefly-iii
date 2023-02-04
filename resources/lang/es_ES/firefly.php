@@ -279,6 +279,8 @@ return [
     'response'                             => 'Response',
     'visit_webhook_url'                    => 'Visit webhook URL',
     'reset_webhook_secret'                 => 'Reset webhook secret',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Solicitud de autorización',
@@ -1388,7 +1390,7 @@ return [
     'slack_url_label'                           => 'Slack "incoming webhook" URL',
 
     // Financial administrations
-    'administration_index'                      => 'Financial administration',
+    'administration_index'                      => 'Administración financiera',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',

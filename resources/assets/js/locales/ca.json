@@ -9,6 +9,8 @@
         "split": "Dividir",
         "single_split": "Divisi\u00f3",
         "transaction_stored_link": "La <a href=\"transactions\/show\/{ID}\">Transacci\u00f3 #{ID} (\"{title}\")<\/a> s'ha desat.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_updated_link": "La <a href=\"transactions\/show\/{ID}\">transacci\u00f3#{ID}<\/a> (\"{title}\") s'ha actualitzat.",
         "transaction_new_stored_link": "La <a href=\"transactions\/show\/{ID}\">Transacci\u00f3 #{ID}<\/a> s'ha desat.",
         "transaction_journal_information": "Informaci\u00f3 de la transacci\u00f3",

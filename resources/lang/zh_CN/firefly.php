@@ -279,6 +279,8 @@ return [
     'response'                             => '响应',
     'visit_webhook_url'                    => '访问 webhook URL',
     'reset_webhook_secret'                 => '重置 webhook 密钥',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III :version 版授权请求',

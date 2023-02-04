@@ -9,6 +9,8 @@
         "split": "Jaa",
         "single_split": "Jako",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Tapahtuma #{ID} (\"{title}\")<\/a> on tallennettu.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Tapahtuma #{ID}<\/a> (\"{title}\") on p\u00e4ivitetty.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Tapahtuma #{ID}<\/a> on tallennettu.",
         "transaction_journal_information": "Tapahtumatiedot",

@@ -279,6 +279,8 @@ return [
     'response'                             => 'Відповідь',
     'visit_webhook_url'                    => 'Відвідайте URL-адресу веб-хуку',
     'reset_webhook_secret'                 => 'Відновити сікрет веб-хука',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version запит авторизації',

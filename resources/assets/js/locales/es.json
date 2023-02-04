@@ -9,6 +9,8 @@
         "split": "Separar",
         "single_split": "Divisi\u00f3n",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID} (\"{title}\")<\/a> ha sido almacenada.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID}<\/a> (\"{title}\") ha sido actualizada.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID}<\/a> ha sido guardada.",
         "transaction_journal_information": "Informaci\u00f3n de transacci\u00f3n",

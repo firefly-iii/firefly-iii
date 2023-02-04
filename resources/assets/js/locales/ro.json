@@ -9,6 +9,8 @@
         "split": "\u00cemparte",
         "single_split": "\u00cemparte",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Tranzac\u021bia #{ID} (\"{title}\")<\/a> a fost stocat\u0103.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Tranzac\u021bia #{ID}<\/a> (\"{title}\") a fost actualizat\u0103.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Tranzac\u021bia #{ID}<\/a> a fost stocat\u0103.",
         "transaction_journal_information": "Informa\u021bii despre tranzac\u021bii",

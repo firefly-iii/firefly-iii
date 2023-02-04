@@ -9,6 +9,8 @@
         "split": "Feloszt\u00e1s",
         "single_split": "Feloszt\u00e1s",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> mentve.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> mentve.",
         "transaction_journal_information": "Tranzakci\u00f3s inform\u00e1ci\u00f3k",

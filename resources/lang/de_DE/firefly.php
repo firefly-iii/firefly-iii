@@ -279,6 +279,8 @@ return [
     'response'                             => 'Antwort',
     'visit_webhook_url'                    => 'Webhook-URL besuchen',
     'reset_webhook_secret'                 => 'Webhook Secret zurücksetzen',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Autorisierungsanfrage',
@@ -794,7 +796,7 @@ return [
     'edit_rule'                                           => 'Regel ":title" bearbeiten',
     'delete_rule'                                         => 'Regel ":title" löschen',
     'update_rule'                                         => 'Regel aktualisieren',
-    'test_rule_triggers'                                  => 'Übereinstimmende Buchungen anzeigen',
+    'test_rule_triggers'                                  => 'Zeige übereinstimmende Buchungen',
     'warning_no_matching_transactions'                    => 'Keine passenden Buchungen gefunden.',
     'warning_no_valid_triggers'                           => 'Keine gültigen Auslöser gefunden.',
     'apply_rule_selection'                                => 'Regel „:title” auf eine Auswahl Ihrer Buchungen anwenden',
@@ -1254,10 +1256,10 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Mit einer Rechnung verknüpfen..',
     'rule_action_link_to_bill'                            => 'Mit Rechnung „:action_value” verknüpfen',
     'rule_action_set_notes'                               => 'Notizen auf „:action_value” setzen',
-    'rule_action_convert_deposit_choice'                  => 'Buchung in eine Einzahlung umwandeln',
-    'rule_action_convert_deposit'                         => 'Buchung von ":action_value" in eine Einzahlung umwandeln',
+    'rule_action_convert_deposit_choice'                  => 'Buchung in eine Einnahme umwandeln',
+    'rule_action_convert_deposit'                         => 'Buchung von ":action_value" in eine Einnahme umwandeln',
     'rule_action_convert_withdrawal_choice'               => 'Buchung in eine Ausgabe umwandeln',
-    'rule_action_convert_withdrawal'                      => 'Buchung von ":action_value" in eine Auszahlung umwandeln',
+    'rule_action_convert_withdrawal'                      => 'Buchung von ":action_value" in eine Ausgabe umwandeln',
     'rule_action_convert_transfer_choice'                 => 'Buchung in eine Umbuchung umwandeln',
     'rule_action_convert_transfer'                        => 'Buchung von ":action_value" in eine Umbuchung umwandeln',
     'rule_action_append_descr_to_notes_choice'            => 'Beschreibung an die Buchungsnotizen anhängen',
@@ -1388,7 +1390,7 @@ return [
     'slack_url_label'                           => 'Slack "eingehender Webhook" URL',
 
     // Financial administrations
-    'administration_index'                      => 'Financial administration',
+    'administration_index'                      => 'Finanzverwaltung',
 
     // profile:
     'purge_data_title'                          => 'Daten aus Firefly III vernichten',
@@ -1418,9 +1420,9 @@ return [
     'delete_all_liabilities'                    => 'ALLE Verbindlichkeiten löschen',
     'delete_all_transactions'                   => 'ALLE Buchungen löschen',
     'delete_all_withdrawals'                    => 'ALLE Ausgaben löschen',
-    'delete_all_deposits'                       => 'ALLE Einzahlungen löschen',
-    'delete_all_transfers'                      => 'ALLE Überweisungen löschen',
-    'also_delete_transactions'                  => 'Beim Löschen von Konten werden auch ALLE damit verbundenen Abhebungen, Einzahlungen und Überweisungen gelöscht!',
+    'delete_all_deposits'                       => 'ALLE Einnahmen löschen',
+    'delete_all_transfers'                      => 'ALLE Umbuchungen löschen',
+    'also_delete_transactions'                  => 'Beim Löschen von Konten werden auch ALLE damit verbundenen Ausgaben, Einnahmen und Überweisungen gelöscht!',
     'deleted_all_budgets'                       => 'Alle Budgets wurden gelöscht',
     'deleted_all_categories'                    => 'Alle Kategorien wurden gelöscht',
     'deleted_all_tags'                          => 'Alle Schlagwörter wurden gelöscht',
@@ -1435,7 +1437,7 @@ return [
     'deleted_all_liabilities'                   => 'Alle Verbindlichkeiten wurden gelöscht',
     'deleted_all_transactions'                  => 'Alle Buchungen wurden gelöscht',
     'deleted_all_withdrawals'                   => 'Alle Ausgaben wurden gelöscht',
-    'deleted_all_deposits'                      => 'Alle Einzahlungen wurden gelöscht',
+    'deleted_all_deposits'                      => 'Alle Einnahmen wurden gelöscht',
     'deleted_all_transfers'                     => 'Alle Umbuchungen wurden gelöscht',
     'deleted_all_recurring'                     => 'Alle Daueraufträge wurden gelöscht',
     'change_your_password'                      => 'Passwort ändern',
@@ -1512,7 +1514,7 @@ return [
     'amounts'                                   => 'Beträge',
     'multi_account_warning_unknown'             => 'Abhängig von der Art der Buchung, die Sie anlegen, kann das Quell- und/oder Zielkonto nachfolgender Aufteilungen durch das überschrieben werden, was in der ersten Aufteilung der Buchung definiert wurde.',
     'multi_account_warning_withdrawal'          => 'Bedenken Sie, dass das Quellkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Abhebung definiert ist, außer Kraft gesetzt wird.',
-    'multi_account_warning_deposit'             => 'Bedenken Sie, dass das Zielkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Einzahlung definiert ist, außer Kraft gesetzt wird.',
+    'multi_account_warning_deposit'             => 'Bedenken Sie, dass das Zielkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Einnahmen definiert ist, außer Kraft gesetzt wird.',
     'multi_account_warning_transfer'            => 'Bedenken Sie, dass das Quell- und Zielkonto nachfolgender Aufteilungen durch das, was in der ersten Aufteilung der Übertragung definiert ist, außer Kraft gesetzt wird.',
 
 /*
@@ -1561,7 +1563,7 @@ return [
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'        => 'Diese Buchung ist bereits eine Ausgabe',
-    'convert_is_already_type_Deposit'           => 'Diese Buchung ist bereits eine Einzahlung',
+    'convert_is_already_type_Deposit'           => 'Diese Buchung ist bereits eine Einnahme',
     'convert_is_already_type_Transfer'          => 'Diese Buchung ist bereits eine Umbuchung',
     'convert_to_Withdrawal'                     => '":description" zu einer Ausgabe konvertieren',
     'convert_to_Deposit'                        => '":description" zu einer Einnahme konvertieren',
@@ -1582,12 +1584,12 @@ return [
     'convert_please_set_asset_destination'      => 'Bitte wählen Sie das Bestandskonto, auf das das Geld überwiesen werden soll.',
     'convert_please_set_expense_destination'    => 'Bitte wählen Sie das Ausgabenkonto, an das das Geld gehen soll.',
     'convert_please_set_asset_source'           => 'Bitte das Bestandskonto wählen, von dem das Geld kommt.',
-    'convert_expl_w_d'                          => 'Bei der Umwandlung von einer Auszahlung in eine Einzahlung wird das Geld auf das angezeigte Zielkonto eingezahlt, anstatt davon abgebucht zu werden.|Bei der Umwandlung von einer Auszahlung in eine Einzahlung wird das Geld auf die angezeigten Zielkonten eingezahlt, anstatt von diesem abgebucht zu werden.',
+    'convert_expl_w_d'                          => 'Bei der Umwandlung von einer Ausgabe in eine Einnahme wird das Geld auf das angezeigte Zielkonto eingezahlt, anstatt davon abgebucht zu werden.|Bei der Umwandlung von einer Ausgabe in eine Einnahme wird das Geld auf die angezeigten Zielkonten eingezahlt, anstatt von diesem abgebucht zu werden.',
     'convert_expl_w_t'                          => 'Bei der Umwandlung einer Ausgabe in eine Überweisung wird das Geld vom Quellkonto auf ein anderes Vermögens- oder Verbindlichkeitskonto überwiesen, anstatt auf das ursprüngliche Ausgabenkonto gebucht zu werden.|Bei der Umwandlung einer Ausgabe in eine Überweisung, wird das Geld von den Quellkonten auf andere Vermögens- oder Verbindlichkeitskonten überwiesen, anstatt auf die ursprünglichen Ausgabenkonten gebucht zu werden.',
-    'convert_expl_d_w'                          => 'Wenn eine Einzahlung in eine Auszahlungumgewandelt wird, wird das Geld von den angezeigten Quellkonten abgehoben, anstatt auf diese eingezahlt zu werden.|Wenn eine Einzahlung in eine Abhebung umgewandelt wird, wird das Geld von den angezeigten Quellkonten abgehoben, anstatt auf diese eingezahlt zu werden.',
-    'convert_expl_d_t'                          => 'Wenn Sie eine Einzahlung in einen Überweisung umwandeln, wird das Geld von einem Ihrer Aktiv- oder Passivkonten auf das aufgelistete Zielkonto eingezahlt.| Wenn Sie eine Einzahlung in einen Überweisung umwandeln, wird das Geld von einem Ihrer Aktiv- oder Passivkonten auf das aufgelistete Zielkonto eingezahlt.',
+    'convert_expl_d_w'                          => 'Wenn eine Einnahme in eine Ausgabe umgewandelt wird, wird das Geld von den angezeigten Quellkonten abgehoben, anstatt auf diese eingezahlt zu werden.|Wenn eine Einnahme in eine Ausgabe umgewandelt wird, wird das Geld von den angezeigten Quellkonten abgehoben, anstatt auf diese eingezahlt zu werden.',
+    'convert_expl_d_t'                          => 'Wenn Sie eine Einnahme in einen Ümbuchung umwandeln, wird das Geld von einem Ihrer Aktiv- oder Passivkonten auf das aufgelistete Zielkonto eingezahlt.| Wenn Sie eine Einnahme in einen Umbuchung umwandeln, wird das Geld von einem Ihrer Aktiv- oder Passivkonten auf das aufgelistete Zielkonto eingezahlt.',
     'convert_expl_t_w'                          => 'Wenn Sie eine Überweisung in eine Abhebung umwandeln, wird das Geld auf dem hier angegebenen Zielkonto ausgegeben, anstatt überwiesen zu werden.| Wenn Sie eine Überweisung in eine Abhebung umwandeln, wird das Geld auf dem hier angegebenen Zielkonto ausgegeben, anstatt überwiesen zu werden.',
-    'convert_expl_t_d'                          => 'Wenn Sie eine Überweisung in eine Einzahlung umwandeln, wird das Geld auf das hier angegebene Zielkonto eingezahlt und nicht auf dieses überwiesen.| Wenn Sie eine Überweisung in eine Einzahlung umwandeln, wird das Geld auf das hier angegebene Zielkonto eingezahlt und nicht auf dieses überwiesen.',
+    'convert_expl_t_d'                          => 'Wenn Sie eine Umbuchung in eine Einnahme umwandeln, wird das Geld auf das hier angegebene Zielkonto eingezahlt und nicht auf dieses überwiesen.| Wenn Sie eine Umbuchung in eine Einnahme umwandeln, wird das Geld auf das hier angegebene Zielkonto eingezahlt und nicht auf dieses überwiesen.',
     'convert_select_sources'                    => 'Um die Umwandlung abzuschließen, wählen Sie bitte unten das neue Quellkonto aus.|Um die Umwandlung abzuschließen, wählen Sie bitte die neuen Quellkonten aus.',
     'convert_select_destinations'               => 'Um die Umwandlung abzuschließen, wählen Sie bitte unten das neue Zielkonto aus.|Um die Umwandlung abzuschließen, wählen Sie bitte die neuen Zielkonten aus.',
     'converted_to_Withdrawal'                   => 'Die Buchung wurde in eine Ausgabe konvertiert',
@@ -1596,7 +1598,7 @@ return [
     'invalid_convert_selection'                 => 'Das von Ihnen ausgewählte Konto wird für diese Buchung bereits verwendet oder ist nicht vorhanden.',
     'source_or_dest_invalid'                    => 'Die korrekten Buchungsdetails konnten nicht gefunden werden. Eine Konvertierung ist nicht möglich.',
     'convert_to_withdrawal'                     => 'In eine Ausgabe umwandeln',
-    'convert_to_deposit'                        => 'In eine Einzahlung umwandeln',
+    'convert_to_deposit'                        => 'In eine Einnahme umwandeln',
     'convert_to_transfer'                       => 'In eine Umbuchung umwandeln',
 
     // create new stuff:
@@ -2423,8 +2425,8 @@ return [
     'split_transaction_title_help'          => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchung geben.',
     'split_title_help'                      => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
     'you_create_transfer'                   => 'Sie erstellen eine Umbuchung.',
-    'you_create_withdrawal'                 => 'Sie haben eine Auszahlung erstellt.',
-    'you_create_deposit'                    => 'Sie haben eine Einzahlung erstellt.',
+    'you_create_withdrawal'                 => 'Sie haben eine Ausgabe erstellt.',
+    'you_create_deposit'                    => 'Sie haben eine Einnahme erstellt.',
 
 
     // links
@@ -2584,10 +2586,10 @@ return [
     'warning_duplicates_repetitions'        => 'In seltenen Fällen werden die Daten zweimal in dieser Liste angezeigt. Dies kann passieren, wenn mehrere Wiederholungen aufeinandertreffen. Firefly III erzeugt immer eine Transaktion pro Tag.',
     'created_transactions'                  => 'Ähnliche Buchungen',
     'expected_withdrawals'                  => 'Erwartete Rückzahlungen',
-    'expected_deposits'                     => 'Erwartete Einzahlungen',
+    'expected_deposits'                     => 'Erwartete Einnahmen',
     'expected_transfers'                    => 'Erwartete Überweisungen',
     'created_withdrawals'                   => 'Erstellte Rückzahlungen',
-    'created_deposits'                      => 'Erstellte Einzahlungen',
+    'created_deposits'                      => 'Erstellte Einnahmen',
     'created_transfers'                     => 'Erstellte Überweisungen',
     'recurring_info'                        => 'Dauerauftrag :count/:total',
     'created_from_recurrence'               => 'Erstellt aus Dauerauftrag „:title” (#:id)',
