@@ -3379,16 +3379,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "2.8.0",
+            "version": "2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50"
+                "reference": "e1c0ae1528ce313a450e5e1ad782765c4a8dd3cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/720488632c590286b88b80e62aa3d3d551ad4a50",
-                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e1c0ae1528ce313a450e5e1ad782765c4a8dd3cb",
+                "reference": "e1c0ae1528ce313a450e5e1ad782765c4a8dd3cb",
                 "shasum": ""
             },
             "require": {
@@ -3403,7 +3403,7 @@
                 "doctrine/couchdb": "~1.0@dev",
                 "elasticsearch/elasticsearch": "^7 || ^8",
                 "ext-json": "*",
-                "graylog2/gelf-php": "^1.4.2",
+                "graylog2/gelf-php": "^1.4.2 || ^2@dev",
                 "guzzlehttp/guzzle": "^7.4",
                 "guzzlehttp/psr7": "^2.2",
                 "mongodb/mongodb": "^1.8",
@@ -3465,7 +3465,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.8.0"
+                "source": "https://github.com/Seldaek/monolog/tree/2.9.0"
             },
             "funding": [
                 {
@@ -3477,7 +3477,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-24T11:55:47+00:00"
+            "time": "2023-02-05T13:07:32+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -8572,26 +8572,26 @@
     "packages-dev": [
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.12.3",
+            "version": "v2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "3ba1e2573b38f72107b8aacc4ee177fcab30a550"
+                "reference": "81d5b223ff067a1f38e14c100997e153b837fe4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/3ba1e2573b38f72107b8aacc4ee177fcab30a550",
-                "reference": "3ba1e2573b38f72107b8aacc4ee177fcab30a550",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/81d5b223ff067a1f38e14c100997e153b837fe4a",
+                "reference": "81d5b223ff067a1f38e14c100997e153b837fe4a",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/reflection-docblock": "^2.0.6",
-                "composer/pcre": "^1 || ^2 || ^3",
+                "composer/class-map-generator": "^1.0",
                 "doctrine/dbal": "^2.6 || ^3",
                 "ext-json": "*",
-                "illuminate/console": "^8 || ^9",
-                "illuminate/filesystem": "^8 || ^9",
-                "illuminate/support": "^8 || ^9",
+                "illuminate/console": "^8 || ^9 || ^10",
+                "illuminate/filesystem": "^8 || ^9 || ^10",
+                "illuminate/support": "^8 || ^9 || ^10",
                 "nikic/php-parser": "^4.7",
                 "php": "^7.3 || ^8.0",
                 "phpdocumentor/type-resolver": "^1.1.0"
@@ -8599,16 +8599,16 @@
             "require-dev": {
                 "ext-pdo_sqlite": "*",
                 "friendsofphp/php-cs-fixer": "^2",
-                "illuminate/config": "^8 || ^9",
-                "illuminate/view": "^8 || ^9",
+                "illuminate/config": "^8 || ^9 || ^10",
+                "illuminate/view": "^8 || ^9 || ^10",
                 "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^6 || ^7",
+                "orchestra/testbench": "^6 || ^7 || ^8",
                 "phpunit/phpunit": "^8.5 || ^9",
                 "spatie/phpunit-snapshot-assertions": "^3 || ^4",
                 "vimeo/psalm": "^3.12"
             },
             "suggest": {
-                "illuminate/events": "Required for automatic helper generation (^6|^7|^8|^9)."
+                "illuminate/events": "Required for automatic helper generation (^6|^7|^8|^9|^10)."
             },
             "type": "library",
             "extra": {
@@ -8650,7 +8650,7 @@
             ],
             "support": {
                 "issues": "https://github.com/barryvdh/laravel-ide-helper/issues",
-                "source": "https://github.com/barryvdh/laravel-ide-helper/tree/v2.12.3"
+                "source": "https://github.com/barryvdh/laravel-ide-helper/tree/v2.13.0"
             },
             "funding": [
                 {
@@ -8662,7 +8662,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-06T14:33:42+00:00"
+            "time": "2023-02-04T13:56:40+00:00"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -8715,6 +8715,79 @@
                 "source": "https://github.com/barryvdh/ReflectionDocBlock/tree/v2.1.0"
             },
             "time": "2022-10-31T15:35:43+00:00"
+        },
+        {
+            "name": "composer/class-map-generator",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/class-map-generator.git",
+                "reference": "1e1cb2b791facb2dfe32932a7718cf2571187513"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/class-map-generator/zipball/1e1cb2b791facb2dfe32932a7718cf2571187513",
+                "reference": "1e1cb2b791facb2dfe32932a7718cf2571187513",
+                "shasum": ""
+            },
+            "require": {
+                "composer/pcre": "^2 || ^3",
+                "php": "^7.2 || ^8.0",
+                "symfony/finder": "^4.4 || ^5.3 || ^6"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.6",
+                "phpstan/phpstan-deprecation-rules": "^1",
+                "phpstan/phpstan-phpunit": "^1",
+                "phpstan/phpstan-strict-rules": "^1.1",
+                "symfony/filesystem": "^5.4 || ^6",
+                "symfony/phpunit-bridge": "^5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\ClassMapGenerator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "https://seld.be"
+                }
+            ],
+            "description": "Utilities to scan PHP code and generate class maps.",
+            "keywords": [
+                "classmap"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/class-map-generator/issues",
+                "source": "https://github.com/composer/class-map-generator/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-06-19T11:31:27+00:00"
         },
         {
             "name": "composer/pcre",
