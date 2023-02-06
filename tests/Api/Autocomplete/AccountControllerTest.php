@@ -51,6 +51,7 @@ class AccountControllerTest extends TestCase
         $response = $this->get(route('api.v1.autocomplete.accounts'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
+        $response->assertSee('Checking Account');
     }
 
     /**
