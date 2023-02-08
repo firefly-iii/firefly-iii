@@ -9,6 +9,7 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   qodana:
+    runs-on: ubuntu-latest
     name: 'Qodana Scan'
     steps:
       - name: 'Qodana Scan'
