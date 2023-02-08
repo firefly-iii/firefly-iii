@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use FireflyIII\Exceptions\FireflyException;
 use Log;
 
@@ -46,6 +47,13 @@ class ParseDateString
             'end of this quarter',
             'start of this year',
             'end of this year',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday',
+            'sunday',
         ];
 
     /**
@@ -142,6 +150,13 @@ class ParseDateString
             'end of this quarter' => $today->endOfQuarter(),
             'start of this year' => $today->startOfYear(),
             'end of this year' => $today->endOfYear(),
+            'monday' => $today->isoWeekday(CarbonInterface::MONDAY),
+            'tuesday' => $today->isoWeekday(CarbonInterface::TUESDAY),
+            'wednesday' => $today->isoWeekday(CarbonInterface::WEDNESDAY),
+            'thursday' => $today->isoWeekday(CarbonInterface::THURSDAY),
+            'friday' => $today->isoWeekday(CarbonInterface::FRIDAY),
+            'saturday' => $today->isoWeekday(CarbonInterface::SATURDAY),
+            'sunday' => $today->isoWeekday(CarbonInterface::SUNDAY),
         };
     }
 
