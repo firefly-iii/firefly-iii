@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Qodana Scan'
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@main
         env:
