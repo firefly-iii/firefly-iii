@@ -1,0 +1,15 @@
+name: Qodana
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  qodana:
+    name: 'Qodana Scan'
+    uses: JetBrains/qodana-action@main
+    env:
+      QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
