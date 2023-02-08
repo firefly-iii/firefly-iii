@@ -1,13 +1,18 @@
 name: Sonarcloud CI
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
       - develop
-      - 5.8-dev
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  qodana:
+    name: 'Qodana Scan'
+    uses: JetBrains/qodana-action@main
+    env:
+      QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
