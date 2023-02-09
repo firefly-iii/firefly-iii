@@ -1,4 +1,4 @@
 profile:
-  name: qodana.sanity
+  name: qodana.starter
 version: "1.0"
 linter: jetbrains/qodana-php:2022.3-eap
