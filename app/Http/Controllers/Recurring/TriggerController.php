@@ -68,7 +68,7 @@ class TriggerController extends Controller
             /** @var TransactionJournal $journal */
             foreach ($group->transactionJournals as $journal) {
                 Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
-                $journal->date = Carbon::today();
+                $journal->date = today(config('app.timezone'));
                 $journal->save();
             }
         }

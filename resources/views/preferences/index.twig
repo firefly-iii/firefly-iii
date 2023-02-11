@@ -196,8 +196,30 @@
                                         <div class="radio">
                                             <label>
                                                 <input type="radio" name="viewRange"
+                                                       value="last7" {% if viewRange == 'last7' %} checked {% endif %}>
+                                                {{ 'pref_last7'|_ }}
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
                                                        value="1M" {% if viewRange == '1M' %} checked {% endif %}>
                                                 {{ 'pref_1M'|_ }}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="last30" {% if viewRange == 'last30' %} checked {% endif %}>
+                                                {{ 'pref_last30'|_ }}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="MTD" {% if viewRange == 'MTD' %} checked {% endif %}>
+                                                {{ 'pref_MTD'|_ }}
                                             </label>
                                         </div>
 
@@ -206,6 +228,20 @@
                                                 <input type="radio" name="viewRange"
                                                        value="3M" {% if viewRange == '3M' %} checked {% endif %}>
                                                 {{ 'pref_3M'|_ }}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="last90" {% if viewRange == 'last90' %} checked {% endif %}>
+                                                {{ 'pref_last90'|_ }}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="QTD" {% if viewRange == 'QTD' %} checked {% endif %}>
+                                                {{ 'pref_QTD'|_ }}
                                             </label>
                                         </div>
 
@@ -221,6 +257,20 @@
                                                 <input type="radio" name="viewRange"
                                                        value="1Y" {% if viewRange == '1Y' %} checked {% endif %}>
                                                 {{ 'pref_1Y'|_ }}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="YTD" {% if viewRange == 'YTD' %} checked {% endif %}>
+                                                {{ 'pref_YTD'|_ }}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="viewRange"
+                                                       value="last365" {% if viewRange == 'last365' %} checked {% endif %}>
+                                                {{ 'pref_last365'|_ }}
                                             </label>
                                         </div>
                                     </div>

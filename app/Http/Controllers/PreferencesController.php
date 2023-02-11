@@ -96,9 +96,7 @@ class PreferencesController extends Controller
         ksort($groupedAccounts);
 
         $accountIds    = $accounts->pluck('id')->toArray();
-        $viewRangePref = app('preferences')->get('viewRange', '1M');
-
-        $viewRange          = $viewRangePref->data;
+        $viewRange = app('navigation')->getViewRange(false);
         $frontPageAccounts  = app('preferences')->get('frontPageAccounts', $accountIds);
         $language           = app('steam')->getLanguage();
         $languages          = config('firefly.languages');

@@ -48,7 +48,7 @@ class BillWarningCronjob extends AbstractCronjob
         $config        = app('fireflyconfig')->get('last_bw_job', 0);
         $lastTime      = (int)$config->data;
         $diff          = time() - $lastTime;
-        $diffForHumans = Carbon::now()->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
+        $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
         if (0 === $lastTime) {
             Log::info('The bill warning cron-job has never fired before.');

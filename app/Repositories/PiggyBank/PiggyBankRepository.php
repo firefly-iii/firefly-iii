@@ -357,7 +357,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             return $savePerMonth;
         }
         if (null !== $piggyBank->targetdate && $repetition->currentamount < $piggyBank->targetamount) {
-            $now             = Carbon::now();
+            $now             = today(config('app.timezone'));
             $startDate       = null !== $piggyBank->startdate && $piggyBank->startdate->gte($now) ? $piggyBank->startdate : $now;
             $diffInMonths    = $startDate->diffInMonths($piggyBank->targetdate, false);
             $remainingAmount = bcsub($piggyBank->targetamount, $repetition->currentamount);

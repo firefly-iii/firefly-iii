@@ -42,8 +42,8 @@ class ExportRequest extends FormRequest
     public function getAll(): array
     {
         $result     = [
-            'start' => $this->getCarbonDate('start') ?? Carbon::now()->subYear(),
-            'end'   => $this->getCarbonDate('end') ?? Carbon::now(),
+            'start' => $this->getCarbonDate('start') ?? today(config('app.timezone'))->subYear(),
+            'end'   => $this->getCarbonDate('end') ?? today(config('app.timezone')),
             'type'  => $this->convertString('type'),
         ];
         $parts      = explode(',', $this->convertString('accounts'));

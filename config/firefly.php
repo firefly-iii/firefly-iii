@@ -106,8 +106,8 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '6.0.0-alpha.2',
-    'api_version'                  => '2.0.0-alpha.2',
+    'version'                      => '6.0.0-beta.1',
+    'api_version'                  => '2.0.0-beta.1',
     'db_version'                   => 19,
 
     // generic settings
@@ -877,6 +877,9 @@ return [
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
+
+    // dynamic date ranges are as follows:
+    'dynamic_date_ranges'       => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
 
     // only used in v1
     'allowed_sort_parameters'   => ['order', 'name', 'iban'],

@@ -157,9 +157,9 @@ class JavascriptController extends Controller
     public function variablesV2(Request $request): Response
     {
         /** @var Carbon $start */
-        $start = clone session('start', Carbon::now()->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end = clone session('end', Carbon::now()->endOfMonth());
+        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
 
         $data = [
             'start' => $start->format('Y-m-d'),

@@ -18,6 +18,11 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<!--
+TODO remember state of boxes
+
+-->
+
 <template>
   <q-page>
     <div class="row q-mx-md q-mb-sm">
