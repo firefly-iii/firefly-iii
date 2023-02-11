@@ -279,8 +279,8 @@ return [
     'response'                             => 'Resposta',
     'visit_webhook_url'                    => 'Visitar l\'URL del webhook',
     'reset_webhook_secret'                 => 'Reiniciar el secret del webhook',
-    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
-    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
+    'webhook_stored_link'                  => 'S\'ha desat <a href="webhooks/show/{ID}">el Webook #{ID} ("{title}")</a> correctament.',
+    'webhook_updated_link'                  => 'S\'ha actualitzat el <a href="webhooks/show/{ID}">Webook #{ID}</a> ("{title}").',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Sol·licitud d\'Autorització',

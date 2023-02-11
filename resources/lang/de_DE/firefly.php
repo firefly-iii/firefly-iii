@@ -279,8 +279,8 @@ return [
     'response'                             => 'Antwort',
     'visit_webhook_url'                    => 'Webhook-URL besuchen',
     'reset_webhook_secret'                 => 'Webhook Secret zurücksetzen',
-    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
-    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
+    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> wurde gespeichert.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") wurde aktualisiert.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Autorisierungsanfrage',

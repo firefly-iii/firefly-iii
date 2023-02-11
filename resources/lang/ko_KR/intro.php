@@ -51,10 +51,10 @@ return [
     'transactions_create_split'             => '거래를 분할하려면 이 버튼을 사용하여 분할을 더 추가하세요',
 
     // create account:
-    'accounts_create_iban'                  => 'Give your accounts a valid IBAN. This could make a data import very easy in the future.',
-    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III supports multiple currencies. Asset accounts have one main currency, which you must set here.',
-    'accounts_create_asset_virtual'         => 'It can sometimes help to give your account a virtual balance: an extra amount always added to or removed from the actual balance.',
+    'accounts_create_iban'                  => '계정에 유효한 IBAN을 부여하세요. 이렇게 하면 향후 데이터 가져오기가 매우 쉬워질 수 있습니다.',
+    'accounts_create_asset_opening_balance' => '자산 계정에 "초기 잔고"가 있을 수 있으며, 이는 Firefly III에서 이 계정의 기록이 시작되었음을 나타냅니다.',
+    'accounts_create_asset_currency'        => 'Firefly III는 여러 통화를 지원합니다. 자산 계정에는 하나의 기본 통화가 있으며 여기에서 설정해야 합니다.',
+    'accounts_create_asset_virtual'         => '계정에 가상 잔고를 제공하는 것이 도움이 될 수 있습니다. 즉, 실제 잔액에서 항상 추가되거나 제거되는 추가 금액입니다.',
 
     // budgets index
     'budgets_index_intro'                   => 'Budgets are used to manage your finances and form one of the core functions of Firefly III.',

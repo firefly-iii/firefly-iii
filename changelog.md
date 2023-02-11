@@ -2,6 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## 6.0.0-beta.1 - 2023-02-12
+
+### Warnings
+
+- ⚠️ Make a backup of your database first!
+- ⚠️ This version requires **PHP 8.2**.
+
+You can access the new V3 layout under `/v3/`. If you decide to use or test it:
+
+- ⚠️ Read the instructions under the ☠️ icon FIRST.
+- ⚠️ The new layout is not yet finished. Use it to change your data at your own risk.
+
+### Added
+- Introduce Jetbrains Qodana code scanning
+- Reintroduced test framework
+
+### Fixed
+- [Issue 6834](https://github.com/firefly-iii/firefly-iii/issues/6834) Better check on IBANs
+- Various small bugs
+
 ## 6.0.0-alpha.2 - 2023-02-05
 
 ### Warnings
