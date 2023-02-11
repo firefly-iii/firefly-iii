@@ -182,7 +182,7 @@ class ShowController extends Controller
         $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $end          = today(config('app.timezone'));
         $today        = today(config('app.timezone'));
-        $start        = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
+        $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;

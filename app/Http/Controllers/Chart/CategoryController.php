@@ -89,7 +89,7 @@ class CategoryController extends Controller
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $start      = $repository->firstUseDate($category) ?? $this->getDate();
-        $range      = app('preferences')->get('viewRange', '1M')->data;
+        $range      = app('navigation')->getViewRange(false);
         $start      = app('navigation')->startOfPeriod($start, $range);
         $end        = $this->getDate();
 
@@ -118,8 +118,8 @@ class CategoryController extends Controller
      */
     public function frontPage(): JsonResponse
     {
-        $start = session('start', Carbon::now()->startOfMonth());
-        $end   = session('end', Carbon::now()->endOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $end   = session('end', today(config('app.timezone'))->endOfMonth());
         // chart properties for cache:
         $cache = new CacheProperties();
         $cache->addProperty($start);
@@ -293,7 +293,7 @@ class CategoryController extends Controller
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(false);
         $start = app('navigation')->startOfPeriod($date, $range);
         $end   = session()->get('end');
         if ($end < $start) {

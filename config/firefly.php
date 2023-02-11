@@ -878,6 +878,9 @@ return [
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
 
+    // dynamic date ranges are as follows:
+    'dynamic_date_ranges'       => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
+
     // only used in v1
     'allowed_sort_parameters'   => ['order', 'name', 'iban'],
 ];

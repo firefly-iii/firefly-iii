@@ -128,7 +128,7 @@ class ParseDateString
      */
     protected function parseKeyword(string $keyword): Carbon
     {
-        $today = Carbon::today()->startOfDay();
+        $today = today(config('app.timezone'))->startOfDay();
 
         return match ($keyword) {
             default => $today,
@@ -164,7 +164,7 @@ class ParseDateString
     {
         Log::debug(sprintf('Now in parseRelativeDate("%s")', $date));
         $parts     = explode(' ', $date);
-        $today     = Carbon::today()->startOfDay();
+        $today     = today(config('app.timezone'))->startOfDay();
         $functions = [
             [
                 'd' => 'subDays',

@@ -65,7 +65,7 @@ class GroupCloneService
     {
         $newJournal                       = $journal->replicate();
         $newJournal->transaction_group_id = $newGroup->id;
-        $newJournal->date                 = Carbon::now();
+        $newJournal->date                 = today(config('app.timezone'));
         $newJournal->save();
 
         foreach ($journal->transactions as $transaction) {

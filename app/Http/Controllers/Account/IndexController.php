@@ -93,9 +93,9 @@ class IndexController extends Controller
         $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */
-        $start = clone session('start', Carbon::now()->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end = clone session('end', Carbon::now()->endOfMonth());
+        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -156,9 +156,9 @@ class IndexController extends Controller
 
         unset($collection);
         /** @var Carbon $start */
-        $start = clone session('start', Carbon::now()->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end = clone session('end', Carbon::now()->endOfMonth());
+        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();

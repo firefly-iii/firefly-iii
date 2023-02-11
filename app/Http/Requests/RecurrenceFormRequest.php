@@ -194,7 +194,7 @@ class RecurrenceFormRequest extends FormRequest
     public function rules(): array
     {
         $today    = today(config('app.timezone'));
-        $tomorrow = Carbon::now()->addDay();
+        $tomorrow = today(config('app.timezone'))->addDay();
         $rules    = [
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',

@@ -106,7 +106,7 @@ class Range
         setlocale(LC_TIME, $localeArray);
         $moneyResult = setlocale(LC_MONETARY, $localeArray);
 
-        // send error to view if could not set money format
+        // send error to view, if could not set money format
         if (false === $moneyResult) {
             Log::error('Could not set locale. The following array doesnt work: ', $localeArray);
             app('view')->share('invalidMonetaryLocale', true);

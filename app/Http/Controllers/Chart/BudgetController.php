@@ -214,7 +214,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-asset');
-        $start = session('first', Carbon::now()->startOfYear());
+        $start = session('first', today(config('app.timezone'))->startOfYear());
         $end   = today();
 
         if (null !== $budgetLimit) {
@@ -282,7 +282,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
-        $start = session('first', Carbon::now()->startOfYear());
+        $start = session('first', today(config('app.timezone'))->startOfYear());
         $end   = today();
         if (null !== $budgetLimit) {
             $start = $budgetLimit->start_date;
@@ -346,7 +346,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-expense');
-        $start = session('first', Carbon::now()->startOfYear());
+        $start = session('first', today(config('app.timezone'))->startOfYear());
         $end   = today();
         if (null !== $budgetLimit) {
             $start = $budgetLimit->start_date;
@@ -402,8 +402,8 @@ class BudgetController extends Controller
      */
     public function frontpage(): JsonResponse
     {
-        $start = session('start', Carbon::now()->startOfMonth());
-        $end   = session('end', Carbon::now()->endOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $end   = session('end', today(config('app.timezone'))->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties();

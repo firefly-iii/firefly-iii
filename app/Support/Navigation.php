@@ -255,9 +255,9 @@ class Navigation
         // and end added to $theCurrentEnd
         if ('custom' === $repeatFreq) {
             /** @var Carbon $tStart */
-            $tStart = session('start', Carbon::now()->startOfMonth());
+            $tStart = session('start', today(config('app.timezone'))->startOfMonth());
             /** @var Carbon $tEnd */
-            $tEnd       = session('end', Carbon::now()->endOfMonth());
+            $tEnd       = session('end', today(config('app.timezone'))->endOfMonth());
             $diffInDays = $tStart->diffInDays($tEnd);
             $currentEnd->addDays($diffInDays);
 
@@ -429,6 +429,35 @@ class Navigation
     }
 
     /**
+     * Returns the user's view range and if necessary, corrects the dynamic view
+     * range to a normal range.
+     * @param  bool  $correct
+     * @return string
+     */
+    public function getViewRange(bool $correct): string
+    {
+        $range = (string)app('preferences')->get('viewRange', '1M')?->data ?? '1M';
+        if (!$correct) {
+            return $range;
+        }
+        switch ($range) {
+            default:
+                return $range;
+            case 'last7':
+                return '1W';
+            case 'last30':
+            case 'MTD':
+                return '1M';
+            case 'last90':
+            case 'QTD':
+                return '3M';
+            case 'last365':
+            case 'YTD':
+                return '1Y';
+        }
+    }
+
+    /**
      * If the date difference between start and end is less than a month, method returns trans(config.month_and_day). If the difference is less than a year,
      * method returns "config.month". If the date difference is larger, method returns "config.year".
      *
@@ -573,9 +602,9 @@ class Navigation
         // this is then subtracted from $theDate (* $subtract).
         if ('custom' === $repeatFreq) {
             /** @var Carbon $tStart */
-            $tStart = session('start', Carbon::now()->startOfMonth());
+            $tStart = session('start', today(config('app.timezone'))->startOfMonth());
             /** @var Carbon $tEnd */
-            $tEnd       = session('end', Carbon::now()->endOfMonth());
+            $tEnd       = session('end', today(config('app.timezone'))->endOfMonth());
             $diffInDays = $tStart->diffInDays($tEnd);
             $date->subDays($diffInDays * $subtract);
 
@@ -621,6 +650,7 @@ class Navigation
      */
     public function updateEndDate(string $range, Carbon $start): Carbon
     {
+        Log::debug(sprintf('updateEndDate("%s", "%s")', $range, $start->format('Y-m-d')));
         $functionMap = [
             '1D'     => 'endOfDay',
             '1W'     => 'endOfWeek',
@@ -664,6 +694,9 @@ class Navigation
             'MTD',
         ];
         if (in_array($range, $list, true)) {
+            $end = today(config('app.timezone'));
+            $end->endOfDay();
+            Log::debug(sprintf('updateEndDate returns "%s"', $end->format('Y-m-d')));
             return $end;
         }
 
@@ -680,6 +713,7 @@ class Navigation
      */
     public function updateStartDate(string $range, Carbon $start): Carbon
     {
+        Log::debug(sprintf('updateStartDate("%s", "%s")', $range, $start->format('Y-m-d')));
         $functionMap = [
             '1D'     => 'startOfDay',
             '1W'     => 'startOfWeek',

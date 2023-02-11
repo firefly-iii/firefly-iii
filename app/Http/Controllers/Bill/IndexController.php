@@ -154,7 +154,7 @@ class IndexController extends Controller
     private function getSums(array $bills): array
     {
         $sums  = [];
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(false);
 
         /** @var array $group */
         foreach ($bills as $groupOrder => $group) {

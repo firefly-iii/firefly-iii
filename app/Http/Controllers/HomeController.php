@@ -119,9 +119,9 @@ class HomeController extends Controller
         $transactions = [];
         $frontPage    = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
         /** @var Carbon $start */
-        $start = session('start', Carbon::now()->startOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->endOfMonth());
+        $end      = session('end', today(config('app.timezone'))->endOfMonth());
         $accounts = $repository->getAccountsById($frontPage->data);
         $today    = today(config('app.timezone'));
 

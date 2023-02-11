@@ -62,8 +62,8 @@ class BillController extends Controller
      */
     public function frontpage(BillRepositoryInterface $repository): JsonResponse
     {
-        $start = session('start', Carbon::now()->startOfMonth());
-        $end   = session('end', Carbon::now()->endOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $end   = session('end', today(config('app.timezone'))->endOfMonth());
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);

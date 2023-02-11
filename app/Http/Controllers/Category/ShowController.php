@@ -88,14 +88,14 @@ class ShowController extends Controller
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
         /** @var Carbon $start */
-        $start = $start ?? session('start', Carbon::now()->startOfMonth());
+        $start = $start ?? session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end          = $end ?? session('end', Carbon::now()->endOfMonth());
+        $end          = $end ?? session('end', today(config('app.timezone'))->endOfMonth());
         $subTitleIcon = 'fa-bookmark';
         $page         = (int)$request->get('page');
         $attachments  = $this->repository->getAttachments($category);
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $oldest       = $this->repository->firstUseDate($category) ?? Carbon::now()->startOfYear();
+        $oldest       = $this->repository->firstUseDate($category) ?? today(config('app.timezone'))->startOfYear();
         $periods      = $this->getCategoryPeriodOverview($category, $oldest, $end);
         $path         = route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $subTitle     = trans(

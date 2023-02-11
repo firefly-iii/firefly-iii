@@ -95,7 +95,7 @@ trait GetConfigurationData
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {
-        $viewRange = (string)app('preferences')->get('viewRange', '1M')->data;
+        $viewRange = app('navigation')->getViewRange(false);
         /** @var Carbon $start */
         $start = session('start');
         /** @var Carbon $end */
@@ -117,18 +117,20 @@ trait GetConfigurationData
             $customPeriodEnd   = app('navigation')->endOfPeriod($customPeriodStart, $viewRange);
             $ranges[$index]    = [$customPeriodStart, $customPeriodEnd];
         }
-        // then add previous range and next range
-        $previousDate   = app('navigation')->subtractPeriod($start, $viewRange);
-        $index          = app('navigation')->periodShow($previousDate, $viewRange);
-        $previousStart  = app('navigation')->startOfPeriod($previousDate, $viewRange);
-        $previousEnd    = app('navigation')->endOfPeriod($previousStart, $viewRange);
-        $ranges[$index] = [$previousStart, $previousEnd];
+        // then add previous range and next range, but skip this for the lastX and YTD stuff.
+        if (!in_array($viewRange, config('firefly.dynamic_date_ranges', []), true)) {
+            $previousDate   = app('navigation')->subtractPeriod($start, $viewRange);
+            $index          = app('navigation')->periodShow($previousDate, $viewRange);
+            $previousStart  = app('navigation')->startOfPeriod($previousDate, $viewRange);
+            $previousEnd    = app('navigation')->endOfPeriod($previousStart, $viewRange);
+            $ranges[$index] = [$previousStart, $previousEnd];
 
-        $nextDate       = app('navigation')->addPeriod($start, $viewRange, 0);
-        $index          = app('navigation')->periodShow($nextDate, $viewRange);
-        $nextStart      = app('navigation')->startOfPeriod($nextDate, $viewRange);
-        $nextEnd        = app('navigation')->endOfPeriod($nextStart, $viewRange);
-        $ranges[$index] = [$nextStart, $nextEnd];
+            $nextDate       = app('navigation')->addPeriod($start, $viewRange, 0);
+            $index          = app('navigation')->periodShow($nextDate, $viewRange);
+            $nextStart      = app('navigation')->startOfPeriod($nextDate, $viewRange);
+            $nextEnd        = app('navigation')->endOfPeriod($nextStart, $viewRange);
+            $ranges[$index] = [$nextStart, $nextEnd];
+        }
 
         // today:
         /** @var Carbon $todayStart */
@@ -140,22 +142,22 @@ trait GetConfigurationData
         }
 
         // last seven days:
-        $seven          = Carbon::now()->subDays(7);
+        $seven          = today(config('app.timezone'))->subDays(7);
         $index          = (string)trans('firefly.last_seven_days');
         $ranges[$index] = [$seven, new Carbon()];
 
         // last 30 days:
-        $thirty         = Carbon::now()->subDays(30);
+        $thirty         = today(config('app.timezone'))->subDays(30);
         $index          = (string)trans('firefly.last_thirty_days');
         $ranges[$index] = [$thirty, new Carbon()];
 
         // month to date:
-        $monthBegin     = Carbon::now()->startOfMonth();
+        $monthBegin     = today(config('app.timezone'))->startOfMonth();
         $index          = (string)trans('firefly.month_to_date');
         $ranges[$index] = [$monthBegin, new Carbon()];
 
         // year to date:
-        $yearBegin      = Carbon::now()->startOfYear();
+        $yearBegin      = today(config('app.timezone'))->startOfYear();
         $index          = (string)trans('firefly.year_to_date');
         $ranges[$index] = [$yearBegin, new Carbon()];
 

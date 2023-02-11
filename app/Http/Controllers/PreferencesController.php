@@ -96,7 +96,7 @@ class PreferencesController extends Controller
         ksort($groupedAccounts);
 
         $accountIds    = $accounts->pluck('id')->toArray();
-        $viewRangePref = app('preferences')->get('viewRange', '1M');
+        $viewRangePref = app('navigation')->getViewRange(false);
 
         $viewRange          = $viewRangePref->data;
         $frontPageAccounts  = app('preferences')->get('frontPageAccounts', $accountIds);

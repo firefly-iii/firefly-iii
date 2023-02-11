@@ -45,7 +45,7 @@ class PiggyBankEventHandler
         if (null !== $event->transactionGroup) {
             $journal = $event->transactionGroup->transactionJournals()->first();
         }
-        $date = $journal?->date ?? Carbon::now();
+        $date = $journal?->date ?? today(config('app.timezone'));
 
         // sanity check: event must not already exist for this journal and piggy bank.
         if (null !== $journal) {

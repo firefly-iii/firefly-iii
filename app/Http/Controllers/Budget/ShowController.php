@@ -159,7 +159,7 @@ class ShowController extends Controller
     public function show(Request $request, Budget $budget)
     {
         /** @var Carbon $allStart */
-        $allStart    = session('first', Carbon::now()->startOfYear());
+        $allStart    = session('first', today(config('app.timezone'))->startOfYear());
         $allEnd      = today();
         $page        = (int)$request->get('page');
         $pageSize    = (int)app('preferences')->get('listPageSize', 50)->data;
@@ -221,7 +221,7 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
         /** @var Carbon $start */
-        $start       = session('first', Carbon::now()->startOfYear());
+        $start       = session('first', today(config('app.timezone'))->startOfYear());
         $end         = today(config('app.timezone'));
         $attachments = $this->repository->getAttachments($budget);
         $limits      = $this->getLimits($budget, $start, $end);

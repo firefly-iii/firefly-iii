@@ -56,7 +56,7 @@ class CronRequest extends FormRequest
     {
         $data = [
             'force' => false,
-            'date'  => Carbon::now(),
+            'date'  => today(config('app.timezone')),
         ];
         if ($this->has('force')) {
             $data['force'] = $this->boolean('force');

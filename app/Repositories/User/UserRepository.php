@@ -282,7 +282,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function inviteUser(User $user, string $email): InvitedUser
     {
-        $now = Carbon::now();
+        $now = today(config('app.timezone'));
         $now->addDays(2);
         $invitee = new InvitedUser();
         $invitee->user()->associate($user);
@@ -463,7 +463,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function validateInviteCode(string $code): bool
     {
-        $now     = Carbon::now();
+        $now     = today(config('app.timezone'));
         $invitee = InvitedUser::where('invite_code', $code)->where('expires', '>', $now->format('Y-m-d H:i:s'))->where('redeemed', 0)->first();
         return null !== $invitee;
     }
