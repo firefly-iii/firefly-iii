@@ -356,7 +356,7 @@ class BasicController extends Controller
             /** @var Carbon $date */
             $date = session('end', today(config('app.timezone'))->endOfMonth());
         }
-        
+
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUser($user);
