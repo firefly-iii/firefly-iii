@@ -87,7 +87,7 @@ class IndexController extends Controller
         $collection = $this->piggyRepos->getPiggyBanks();
         $accounts   = [];
         /** @var Carbon $end */
-        $end = session('end', Carbon::now()->endOfMonth());
+        $end = session('end', today(config('app.timezone'))->endOfMonth());
 
         // transform piggies using the transformer:
         $parameters = new ParameterBag();

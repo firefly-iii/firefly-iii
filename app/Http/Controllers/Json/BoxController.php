@@ -60,9 +60,9 @@ class BoxController extends Controller
         /** @var AvailableBudgetRepositoryInterface $abRepository */
         $abRepository = app(AvailableBudgetRepositoryInterface::class);
         /** @var Carbon $start */
-        $start = session('start', Carbon::now()->startOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end      = session('end', Carbon::now()->endOfMonth());
+        $end      = session('end', today(config('app.timezone'))->endOfMonth());
         $today    = today(config('app.timezone'));
         $display  = 2; // see method docs.
         $boxTitle = (string)trans('firefly.spent');
@@ -135,9 +135,9 @@ class BoxController extends Controller
     {
         // Cache result, return cache if present.
         /** @var Carbon $start */
-        $start = session('start', Carbon::now()->startOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end   = session('end', Carbon::now()->endOfMonth());
+        $end   = session('end', today(config('app.timezone'))->endOfMonth());
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -216,12 +216,12 @@ class BoxController extends Controller
      */
     public function netWorth(): JsonResponse
     {
-        $date = Carbon::now()->endOfDay();
+        $date = today(config('app.timezone'))->endOfDay();
 
         // start and end in the future? use $end
         if ($this->notInSessionRange($date)) {
             /** @var Carbon $date */
-            $date = session('end', Carbon::now()->endOfMonth());
+            $date = session('end', today(config('app.timezone'))->endOfMonth());
         }
 
         /** @var NetWorthInterface $netWorthHelper */

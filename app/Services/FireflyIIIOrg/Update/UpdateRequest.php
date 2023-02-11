@@ -74,7 +74,7 @@ class UpdateRequest implements UpdateRequestInterface
         // always fall back to current version:
         $return = [
             'version' => config('firefly.version'),
-            'date'    => Carbon::today()->startOfDay(),
+            'date'    => today(config('app.timezone'))->startOfDay(),
             'level'   => 'error',
             'message' => (string)trans('firefly.unknown_error'),
         ];
@@ -171,7 +171,7 @@ class UpdateRequest implements UpdateRequestInterface
         // a newer version is available!
         /** @var Carbon $released */
         $released     = $information['date'];
-        $today        = Carbon::today()->startOfDay();
+        $today        = today(config('app.timezone'))->startOfDay();
         $diff         = $today->diffInDays($released);
         $expectedDiff = config('firefly.update_minimum_age') ?? 6;
         // it's still very fresh, and user wants a stable release:

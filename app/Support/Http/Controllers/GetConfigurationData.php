@@ -140,22 +140,22 @@ trait GetConfigurationData
         }
 
         // last seven days:
-        $seven          = Carbon::now()->subDays(7);
+        $seven          = today(config('app.timezone'))->subDays(7);
         $index          = (string)trans('firefly.last_seven_days');
         $ranges[$index] = [$seven, new Carbon()];
 
         // last 30 days:
-        $thirty         = Carbon::now()->subDays(30);
+        $thirty         = today(config('app.timezone'))->subDays(30);
         $index          = (string)trans('firefly.last_thirty_days');
         $ranges[$index] = [$thirty, new Carbon()];
 
         // month to date:
-        $monthBegin     = Carbon::now()->startOfMonth();
+        $monthBegin     = today(config('app.timezone'))->startOfMonth();
         $index          = (string)trans('firefly.month_to_date');
         $ranges[$index] = [$monthBegin, new Carbon()];
 
         // year to date:
-        $yearBegin      = Carbon::now()->startOfYear();
+        $yearBegin      = today(config('app.timezone'))->startOfYear();
         $index          = (string)trans('firefly.year_to_date');
         $ranges[$index] = [$yearBegin, new Carbon()];
 

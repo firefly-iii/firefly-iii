@@ -67,7 +67,7 @@ class General extends AbstractExtension
                     return '0';
                 }
                 /** @var Carbon $date */
-                $date = session('end', Carbon::now()->endOfMonth());
+                $date = session('end', today(config('app.timezone'))->endOfMonth());
 
                 return app('steam')->balance($account, $date);
             }

@@ -152,7 +152,7 @@ class RecurrenceController extends Controller
     {
         $request->validate(['date' => ['required', 'date'],]);
         $string      = $request->get('date') ?? date('Y-m-d');
-        $today       = Carbon::now()->startOfDay();
+        $today       = today(config('app.timezone'))->startOfDay();
         $date        = Carbon::createFromFormat('Y-m-d', $string)->startOfDay();
         $preSelected = (string)$request->get('pre_select');
         $locale      = app('steam')->getLocale();

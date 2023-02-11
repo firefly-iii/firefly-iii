@@ -48,20 +48,20 @@ class Date implements BinderInterface
         $fiscalHelper = app(FiscalHelperInterface::class);
 
         $magicWords = [
-            'currentMonthStart' => Carbon::now()->startOfMonth(),
-            'currentMonthEnd'   => Carbon::now()->endOfMonth(),
-            'currentYearStart'  => Carbon::now()->startOfYear(),
-            'currentYearEnd'    => Carbon::now()->endOfYear(),
+            'currentMonthStart' => today(config('app.timezone'))->startOfMonth(),
+            'currentMonthEnd'   => today(config('app.timezone'))->endOfMonth(),
+            'currentYearStart'  => today(config('app.timezone'))->startOfYear(),
+            'currentYearEnd'    => today(config('app.timezone'))->endOfYear(),
 
-            'previousMonthStart' => Carbon::now()->startOfMonth()->subDay()->startOfMonth(),
-            'previousMonthEnd'   => Carbon::now()->startOfMonth()->subDay()->endOfMonth(),
-            'previousYearStart'  => Carbon::now()->startOfYear()->subDay()->startOfYear(),
-            'previousYearEnd'    => Carbon::now()->startOfYear()->subDay()->endOfYear(),
+            'previousMonthStart' => today(config('app.timezone'))->startOfMonth()->subDay()->startOfMonth(),
+            'previousMonthEnd'   => today(config('app.timezone'))->startOfMonth()->subDay()->endOfMonth(),
+            'previousYearStart'  => today(config('app.timezone'))->startOfYear()->subDay()->startOfYear(),
+            'previousYearEnd'    => today(config('app.timezone'))->startOfYear()->subDay()->endOfYear(),
 
-            'currentFiscalYearStart'  => $fiscalHelper->startOfFiscalYear(Carbon::now()),
-            'currentFiscalYearEnd'    => $fiscalHelper->endOfFiscalYear(Carbon::now()),
-            'previousFiscalYearStart' => $fiscalHelper->startOfFiscalYear(Carbon::now())->subYear(),
-            'previousFiscalYearEnd'   => $fiscalHelper->endOfFiscalYear(Carbon::now())->subYear(),
+            'currentFiscalYearStart'  => $fiscalHelper->startOfFiscalYear(today(config('app.timezone'))),
+            'currentFiscalYearEnd'    => $fiscalHelper->endOfFiscalYear(today(config('app.timezone'))),
+            'previousFiscalYearStart' => $fiscalHelper->startOfFiscalYear(today(config('app.timezone')))->subYear(),
+            'previousFiscalYearEnd'   => $fiscalHelper->endOfFiscalYear(today(config('app.timezone')))->subYear(),
         ];
         if (array_key_exists($value, $magicWords)) {
             $return = $magicWords[$value];

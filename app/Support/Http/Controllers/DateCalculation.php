@@ -45,7 +45,7 @@ trait DateCalculation
     public function activeDaysLeft(Carbon $start, Carbon $end): int
     {
         $difference = $start->diffInDays($end) + 1;
-        $today      = Carbon::now()->startOfDay();
+        $today      = today(config('app.timezone'))->startOfDay();
 
         if ($start->lte($today) && $end->gte($today)) {
             $difference = $today->diffInDays($end);
@@ -67,7 +67,7 @@ trait DateCalculation
     protected function activeDaysPassed(Carbon $start, Carbon $end): int
     {
         $difference = $start->diffInDays($end) + 1;
-        $today      = Carbon::now()->startOfDay();
+        $today      = today(config('app.timezone'))->startOfDay();
 
         if ($start->lte($today) && $end->gte($today)) {
             $difference = $start->diffInDays($today) + 1;

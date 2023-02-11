@@ -350,13 +350,13 @@ class BasicController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
-        $date = Carbon::now()->startOfDay();
+        $date = today(config('app.timezone'))->startOfDay();
         // start and end in the future? use $end
         if ($this->notInDateRange($date, $start, $end)) {
             /** @var Carbon $date */
-            $date = session('end', Carbon::now()->endOfMonth());
+            $date = session('end', today(config('app.timezone'))->endOfMonth());
         }
-
+        
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUser($user);

@@ -100,7 +100,7 @@ class ReconcileController extends Controller
         $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
         // no start or end:
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(false);
 
         // get start and end
 

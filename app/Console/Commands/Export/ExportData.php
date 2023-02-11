@@ -191,7 +191,7 @@ class ExportData extends Command
      */
     private function getDateParameter(string $field): Carbon
     {
-        $date  = Carbon::now()->subYear();
+        $date  = today(config('app.timezone'))->subYear();
         $error = false;
         if (null !== $this->option($field)) {
             try {
@@ -209,7 +209,7 @@ class ExportData extends Command
 
         if (true === $error && 'start' === $field) {
             $journal = $this->journalRepository->firstNull();
-            $date    = null === $journal ? Carbon::now()->subYear() : $journal->date;
+            $date    = null === $journal ? today(config('app.timezone'))->subYear() : $journal->date;
             $date->startOfDay();
         }
 

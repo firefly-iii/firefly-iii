@@ -534,7 +534,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
         if ('yearly' === $repetition->repetition_type) {
             //
-            $today       = Carbon::now()->endOfYear();
+            $today       = today(config('app.timezone'))->endOfYear();
             $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
             $diffInYears = $today->diffInYears($repDate);
             $repDate->addYears($diffInYears); // technically not necessary.

@@ -90,9 +90,9 @@ class AccountController extends Controller
     public function expenseAccounts(): JsonResponse
     {
         /** @var Carbon $start */
-        $start = clone session('start', Carbon::now()->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end   = clone session('end', Carbon::now()->endOfMonth());
+        $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
@@ -184,8 +184,8 @@ class AccountController extends Controller
      */
     public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
-        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
-        $end   = Carbon::now();
+        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $end   = today(config('app.timezone'));
 
         return $this->expenseBudget($account, $start, $end);
     }
@@ -259,8 +259,8 @@ class AccountController extends Controller
      */
     public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
-        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
-        $end   = Carbon::now();
+        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $end   = today(config('app.timezone'));
 
         return $this->expenseCategory($account, $start, $end);
     }
@@ -334,8 +334,8 @@ class AccountController extends Controller
      */
     public function frontpage(AccountRepositoryInterface $repository): JsonResponse
     {
-        $start      = clone session('start', Carbon::now()->startOfMonth());
-        $end        = clone session('end', Carbon::now()->endOfMonth());
+        $start      = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $end        = clone session('end', today(config('app.timezone'))->endOfMonth());
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
         $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
@@ -360,8 +360,8 @@ class AccountController extends Controller
      */
     public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
-        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
-        $end   = Carbon::now();
+        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $end   = today(config('app.timezone'));
 
         return $this->incomeCategory($account, $start, $end);
     }
@@ -540,9 +540,9 @@ class AccountController extends Controller
     public function revenueAccounts(): JsonResponse
     {
         /** @var Carbon $start */
-        $start = clone session('start', Carbon::now()->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
-        $end   = clone session('end', Carbon::now()->endOfMonth());
+        $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
