@@ -1,12 +1,6 @@
 name: Sonarcloud CI
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - 5.8-dev
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 jobs:
   sonarcloud:
     name: SonarCloud
