@@ -85,7 +85,7 @@ trait PeriodOverview
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
@@ -95,7 +95,7 @@ trait PeriodOverview
         $cache->addProperty('account-show-period-entries');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -276,7 +276,7 @@ trait PeriodOverview
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for entries with their amounts.
@@ -356,7 +356,7 @@ trait PeriodOverview
      */
     protected function getNoBudgetPeriodOverview(Carbon $start, Carbon $end): array
     {
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(true);
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
@@ -412,7 +412,7 @@ trait PeriodOverview
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
         Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(true);
         $first = $this->journalRepos->firstNull();
         $start = null === $first ? new Carbon() : $first->date;
         $end   = clone $theDate;
@@ -483,7 +483,7 @@ trait PeriodOverview
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
@@ -558,7 +558,7 @@ trait PeriodOverview
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('navigation')->getViewRange(true);
         $types = config(sprintf('firefly.transactionTypesByType.%s', $transactionType));
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 

@@ -694,7 +694,7 @@ class Navigation
             'MTD',
         ];
         if (in_array($range, $list, true)) {
-            $end = Carbon::now(config('app.timezone'));
+            $end = today(config('app.timezone'));
             $end->endOfDay();
             Log::debug(sprintf('updateEndDate returns "%s"', $end->format('Y-m-d')));
             return $end;

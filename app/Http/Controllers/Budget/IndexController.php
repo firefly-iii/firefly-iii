@@ -104,8 +104,8 @@ class IndexController extends Controller
         Log::debug('Start of IndexController::index()');
 
         // collect some basic vars:
-        $range           = (string)app('preferences')->get('viewRange', '1M')->data;
-        $start           = $start ?? session('start', Carbon::now()->startOfMonth());
+        $range           = app('navigation')->getViewRange(true);
+        $start           = $start ?? session('start', today(config('app.timezone'))->startOfMonth());
         $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $currencies      = $this->currencyRepository->get();
