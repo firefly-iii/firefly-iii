@@ -343,7 +343,7 @@ Route::group(
         Route::put('{account}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{account}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
-        Route::get('{account}/piggy_banks', ['uses' => 'ListController@piggyBanks', 'as' => 'piggy_banks']);
+        Route::get('{account}/piggy-banks', ['uses' => 'ListController@piggyBanks', 'as' => 'piggy-banks']);
         Route::get('{account}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
         Route::get('{account}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
     }
@@ -391,8 +391,8 @@ Route::group(
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\AvailableBudget',
-        'prefix'    => 'v1/available_budgets',
-        'as'        => 'api.v1.available_budgets.',
+        'prefix'    => 'v1/available-budgets',
+        'as'        => 'api.v1.available-budgets.',
     ],
     static function () {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
@@ -466,7 +466,7 @@ Route::group(
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\ObjectGroup',
-        'prefix'    => 'v1/object_groups',
+        'prefix'    => 'v1/object-groups',
         'as'        => 'api.v1.object-groups.',
     ],
     static function () {
@@ -475,7 +475,7 @@ Route::group(
         Route::put('{objectGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{objectGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
-        Route::get('{objectGroup}/piggy_banks', ['uses' => 'ListController@piggyBanks', 'as' => 'piggy_banks']);
+        Route::get('{objectGroup}/piggy-banks', ['uses' => 'ListController@piggyBanks', 'as' => 'piggy-banks']);
         Route::get('{objectGroup}/bills', ['uses' => 'ListController@bills', 'as' => 'bills']);
     }
 );
@@ -484,8 +484,8 @@ Route::group(
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\PiggyBank',
-        'prefix'    => 'v1/piggy_banks',
-        'as'        => 'api.v1.piggy_banks.',
+        'prefix'    => 'v1/piggy-banks',
+        'as'        => 'api.v1.piggy-banks.',
     ],
     static function () {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
@@ -543,8 +543,8 @@ Route::group(
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\RuleGroup',
-        'prefix'    => 'v1/rule_groups',
-        'as'        => 'api.v1.rule_groups.',
+        'prefix'    => 'v1/rule-groups',
+        'as'        => 'api.v1.rule-groups.',
     ],
     static function () {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
@@ -592,7 +592,7 @@ Route::group(
         Route::delete('{transactionGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
         Route::get('{transactionGroup}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
-        Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'ListController@piggyBankEvents', 'as' => 'piggy_bank_events']);
+        Route::get('{transactionGroup}/piggy-bank-events', ['uses' => 'ListController@piggyBankEvents', 'as' => 'piggy-bank-events']);
     }
 );
 
@@ -606,7 +606,7 @@ Route::group(
         Route::get('{tj}', ['uses' => 'ShowController@showJournal', 'as' => 'show']);
         Route::delete('{tj}', ['uses' => 'DestroyController@destroyJournal', 'as' => 'delete']);
 
-        Route::get('{tj}/links', ['uses' => 'ListController@transactionLinks', 'as' => 'transaction_links']);
+        Route::get('{tj}/links', ['uses' => 'ListController@transactionLinks', 'as' => 'transaction-links']);
     }
 );
 
@@ -630,9 +630,9 @@ Route::group(
         Route::post('{currency_code}/default', ['uses' => 'UpdateController@makeDefault', 'as' => 'default']);
 
         Route::get('{currency_code}/accounts', ['uses' => 'ListController@accounts', 'as' => 'accounts']);
-        Route::get('{currency_code}/available_budgets', ['uses' => 'ListController@availableBudgets', 'as' => 'available_budgets']);
+        Route::get('{currency_code}/available-budgets', ['uses' => 'ListController@availableBudgets', 'as' => 'available-budgets']);
         Route::get('{currency_code}/bills', ['uses' => 'ListController@bills', 'as' => 'bills']);
-        Route::get('{currency_code}/budget_limits', ['uses' => 'ListController@budgetLimits', 'as' => 'budget_limits']);
+        Route::get('{currency_code}/budget-limits', ['uses' => 'ListController@budgetLimits', 'as' => 'budget-limits']);
         Route::get('{currency_code}/cer', ['uses' => 'ListController@cer', 'as' => 'cer']);
         Route::get('{currency_code}/recurrences', ['uses' => 'ListController@recurrences', 'as' => 'recurrences']);
         Route::get('{currency_code}/rules', ['uses' => 'ListController@rules', 'as' => 'rules']);
@@ -644,8 +644,8 @@ Route::group(
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionLink',
-        'prefix'    => 'v1/transaction_links',
-        'as'        => 'api.v1.transaction_links.',
+        'prefix'    => 'v1/transaction-links',
+        'as'        => 'api.v1.transaction-links.',
     ],
     static function () {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
@@ -660,8 +660,8 @@ Route::group(
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionLinkType',
-        'prefix'    => 'v1/link_types',
-        'as'        => 'api.v1.link_types.',
+        'prefix'    => 'v1/link-types',
+        'as'        => 'api.v1.link-types.',
     ],
     static function () {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);

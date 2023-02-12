@@ -36,6 +36,7 @@ use Illuminate\Http\Request;
 class ShowController extends Controller
 {
     /**
+     * TODO this endpoint is not yet reachable.
      * @param  Account  $account
      * @return JsonResponse
      */

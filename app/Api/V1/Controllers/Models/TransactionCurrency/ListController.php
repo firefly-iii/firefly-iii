@@ -87,7 +87,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/listAccountByCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAccountByCurrency
      * Display a list of accounts.
      *
      * @param  Request  $request
@@ -141,7 +141,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/listAvailableBudgetByCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAvailableBudgetByCurrency
      *
      * Display a listing of the resource.
      *
@@ -180,7 +180,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/listBillByCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listBillByCurrency
      *
      * List all bills
      *
@@ -224,7 +224,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/listBudgetLimitByCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listBudgetLimitByCurrency
      *
      * List all budget limits
      *
@@ -259,7 +259,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/listRecurrenceByCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listRecurrenceByCurrency
      *
      * List all recurring transactions.
      *
@@ -312,7 +312,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/listRuleByCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listRuleByCurrency
      *
      * List all of them.
      *
@@ -364,7 +364,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/listTransactionByCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listTransactionByCurrency
      *
      * Show all transactions.
      *

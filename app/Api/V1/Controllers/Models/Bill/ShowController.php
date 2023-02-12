@@ -61,7 +61,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/bills/listBill
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/listBill
      *
      * Display a listing of the resource.
      *
@@ -91,7 +91,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/bills/getBill
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/getBill
      *
      * Show the specified bill.
      *

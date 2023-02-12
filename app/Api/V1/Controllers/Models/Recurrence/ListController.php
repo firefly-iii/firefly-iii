@@ -65,7 +65,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/recurrences/listTransactionByRecurrence
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/listTransactionByRecurrence
      *
      * Show transactions for this recurrence.
      *

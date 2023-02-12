@@ -46,7 +46,7 @@ class PreferencesController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/preferences/listPreference
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/listPreference
      *
      * List all of them.
      *
@@ -78,7 +78,7 @@ class PreferencesController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/preferences/getPreference
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/getPreference
      *
      * Return a single preference by name.
      *
@@ -101,7 +101,7 @@ class PreferencesController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/preferences/storePreference
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/storePreference
      *
      * @param  PreferenceStoreRequest  $request
      *
@@ -125,7 +125,7 @@ class PreferencesController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/preferences/updatePreference
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/updatePreference
      *
      * @param  PreferenceUpdateRequest  $request
      * @param  Preference  $preference

@@ -71,7 +71,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/accounts/listAttachmentByAccount
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listAttachmentByAccount
      *
      * @param  Account  $account
      *
@@ -104,7 +104,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/accounts/listPiggyBankByAccount
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listPiggyBankByAccount
      *
      * @param  Account  $account
      *
@@ -141,7 +141,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/accounts/listTransactionByAccount
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listTransactionByAccount
      *
      * Show all transaction groups related to the account.
      *

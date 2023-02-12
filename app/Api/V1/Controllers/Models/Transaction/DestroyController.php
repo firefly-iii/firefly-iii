@@ -69,7 +69,7 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/deleteTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/deleteTransaction
      *
      * Remove the specified resource from storage.
      *
@@ -110,7 +110,7 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/deleteTransactionJournal
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/deleteTransactionJournal
      *
      * Remove the specified resource from storage.
      *

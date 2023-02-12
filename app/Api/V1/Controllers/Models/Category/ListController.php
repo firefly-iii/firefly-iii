@@ -67,7 +67,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/categories/listAttachmentByCategory
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/listAttachmentByCategory
      *
      * @param  Category  $category
      *
@@ -100,7 +100,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/categories/listTransactionByCategory
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/listTransactionByCategory
      *
      * Show all transactions.
      *

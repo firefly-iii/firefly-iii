@@ -47,7 +47,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/listTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listTransaction
      *
      * Show all transactions.
      *
@@ -100,7 +100,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/getTransactionByJournal
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransactionByJournal
      *
      * Show a single transaction, by transaction journal.
      *
@@ -116,7 +116,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/getTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransaction
      *
      * Show a single transaction.
      *
