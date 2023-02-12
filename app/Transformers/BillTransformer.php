@@ -42,7 +42,7 @@ class BillTransformer extends AbstractTransformer
     /**
      * BillTransformer constructor.
      *
-    
+
      */
     public function __construct()
     {

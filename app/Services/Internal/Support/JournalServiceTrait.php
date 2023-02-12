@@ -54,7 +54,7 @@ trait JournalServiceTrait
      * @param  array  $data
      *
      * @return Account|null
-    
+
      * @throws FireflyException
      */
     protected function getAccount(string $transactionType, string $direction, array $data): ?Account
@@ -329,7 +329,7 @@ trait JournalServiceTrait
      *
      * @return string
      * @throws FireflyException
-    
+
      */
     protected function getAmount(string $amount): string
     {
@@ -348,7 +348,7 @@ trait JournalServiceTrait
      * @param  string|null  $amount
      *
      * @return string|null
-    
+
      */
     protected function getForeignAmount(?string $amount): ?string
     {
@@ -376,7 +376,7 @@ trait JournalServiceTrait
      * @param  TransactionJournal  $journal
      * @param  NullArrayObject  $data
      *
-    
+
      */
     protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
     {
@@ -400,7 +400,7 @@ trait JournalServiceTrait
      * @param  TransactionJournal  $journal
      * @param  NullArrayObject  $data
      *
-    
+
      */
     protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
     {
@@ -419,7 +419,7 @@ trait JournalServiceTrait
      * @param  TransactionJournal  $journal
      * @param  string|null  $notes
      *
-    
+
      */
     protected function storeNotes(TransactionJournal $journal, ?string $notes): void
     {
@@ -448,7 +448,7 @@ trait JournalServiceTrait
      * @param  TransactionJournal  $journal
      * @param  array|null  $tags
      *
-    
+
      */
     protected function storeTags(TransactionJournal $journal, ?array $tags): void
     {

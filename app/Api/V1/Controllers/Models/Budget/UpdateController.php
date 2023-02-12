@@ -41,7 +41,7 @@ class UpdateController extends Controller
     /**
      * UpdateController constructor.
      *
-    
+
      */
     public function __construct()
     {

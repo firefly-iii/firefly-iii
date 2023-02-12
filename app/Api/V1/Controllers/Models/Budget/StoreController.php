@@ -41,7 +41,7 @@ class StoreController extends Controller
     /**
      * StoreController constructor.
      *
-    
+
      */
     public function __construct()
     {

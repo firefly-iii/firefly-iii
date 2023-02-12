@@ -41,7 +41,7 @@ class UpdateController extends Controller
     /**
      * BillController constructor.
      *
-    
+
      */
     public function __construct()
     {

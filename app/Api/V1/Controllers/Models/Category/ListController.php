@@ -50,7 +50,7 @@ class ListController extends Controller
     /**
      * CategoryController constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -73,7 +73,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-    
+
      */
     public function attachments(Category $category): JsonResponse
     {
@@ -110,7 +110,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-    
+
      */
     public function transactions(Request $request, Category $category): JsonResponse
     {

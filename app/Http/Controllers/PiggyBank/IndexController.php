@@ -51,7 +51,7 @@ class IndexController extends Controller
     /**
      * PiggyBankController constructor.
      *
-    
+
      */
     public function __construct()
     {

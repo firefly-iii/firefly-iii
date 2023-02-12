@@ -44,7 +44,7 @@ class RecurrenceController extends Controller
     /**
      * RecurrenceController constructor.
      *
-    
+
      */
     public function __construct()
     {

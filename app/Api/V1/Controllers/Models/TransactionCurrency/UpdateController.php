@@ -50,7 +50,7 @@ class UpdateController extends Controller
     /**
      * CurrencyRepository constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -76,7 +76,7 @@ class UpdateController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-    
+
      */
     public function disable(TransactionCurrency $currency): JsonResponse
     {
@@ -109,7 +109,7 @@ class UpdateController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-    
+
      */
     public function makeDefault(TransactionCurrency $currency): JsonResponse
     {
@@ -142,7 +142,7 @@ class UpdateController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-    
+
      */
     public function enable(TransactionCurrency $currency): JsonResponse
     {

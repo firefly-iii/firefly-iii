@@ -44,7 +44,7 @@ class ShowController extends Controller
     /**
      * BillController constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -67,7 +67,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-    
+
      */
     public function index(): JsonResponse
     {
@@ -98,7 +98,7 @@ class ShowController extends Controller
      * @param  Bill  $bill
      *
      * @return JsonResponse
-    
+
      */
     public function show(Bill $bill): JsonResponse
     {

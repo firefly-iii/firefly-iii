@@ -73,7 +73,7 @@ class TransactionJournalFactory
      * Constructor.
      *
      * @throws Exception
-    
+
      */
     public function __construct()
     {

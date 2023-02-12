@@ -218,7 +218,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to accounts.
      *
      * @return HasMany
@@ -229,7 +229,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to attachments
      *
      * @return HasMany
@@ -240,7 +240,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to available budgets
      *
      * @return HasMany
@@ -251,7 +251,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to bills.
      *
      * @return HasMany
@@ -262,7 +262,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to budgets.
      *
      * @return HasMany
@@ -273,7 +273,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to categories
      *
      * @return HasMany
@@ -284,7 +284,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to currency exchange rates
      *
      * @return HasMany
@@ -295,7 +295,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Generates access token.
      *
      * @return string
@@ -353,7 +353,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      *
      * @return HasMany
      */
@@ -378,7 +378,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to object groups.
      *
      * @return HasMany
@@ -389,7 +389,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to piggy banks.
      *
      * @return HasManyThrough
@@ -400,7 +400,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to preferences.
      *
      * @return HasMany
@@ -411,7 +411,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to recurring transactions.
      *
      * @return HasMany
@@ -462,7 +462,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to roles.
      *
      * @return BelongsToMany
@@ -497,7 +497,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to rule groups.
      *
      * @return HasMany
@@ -508,7 +508,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to rules.
      *
      * @return HasMany
@@ -519,7 +519,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Send the password reset notification.
      *
      * @param  string  $token
@@ -559,7 +559,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to tags.
      *
      * @return HasMany
@@ -570,7 +570,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to transaction groups.
      *
      * @return HasMany
@@ -581,7 +581,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to transaction journals.
      *
      * @return HasMany
@@ -592,7 +592,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * Link to transactions.
      *
      * @return HasManyThrough
@@ -603,7 +603,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      * @return BelongsTo
      */
     public function userGroup(): BelongsTo
@@ -612,7 +612,7 @@ class User extends Authenticatable
     }
 
     /**
-    
+
      *
      * Link to webhooks
      *

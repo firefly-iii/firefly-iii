@@ -53,7 +53,7 @@ class ExpenseReportController extends Controller
     /**
      * ExpenseReportController constructor.
      *
-    
+
      */
     public function __construct()
     {

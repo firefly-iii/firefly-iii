@@ -80,7 +80,7 @@ class RecurrenceTransactionMeta extends Model
 
     /**
      * @return BelongsTo
-    
+
      */
     public function recurrenceTransaction(): BelongsTo
     {

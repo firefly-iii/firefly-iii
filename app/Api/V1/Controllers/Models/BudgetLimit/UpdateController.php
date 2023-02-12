@@ -47,7 +47,7 @@ class UpdateController extends Controller
      *
      * BudgetLimitController constructor.
      *
-    
+
      */
     public function __construct()
     {

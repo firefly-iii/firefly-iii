@@ -52,7 +52,7 @@ class CreateController extends Controller
     /**
      * RuleController constructor.
      *
-    
+
      */
     public function __construct()
     {

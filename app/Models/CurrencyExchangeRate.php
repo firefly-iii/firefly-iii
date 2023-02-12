@@ -79,7 +79,7 @@ class CurrencyExchangeRate extends Model
     protected $fillable = ['user_id', 'from_currency_id', 'to_currency_id', 'date', 'rate'];
 
     /**
-    
+
      * @return BelongsTo
      */
     public function fromCurrency(): BelongsTo
@@ -88,7 +88,7 @@ class CurrencyExchangeRate extends Model
     }
 
     /**
-    
+
      * @return BelongsTo
      */
     public function toCurrency(): BelongsTo
@@ -97,7 +97,7 @@ class CurrencyExchangeRate extends Model
     }
 
     /**
-    
+
      * @return BelongsTo
      */
     public function user(): BelongsTo

@@ -53,7 +53,7 @@ class CreateController extends Controller
     /**
      * CreateController constructor.
      *
-    
+
      */
     public function __construct()
     {

@@ -43,7 +43,7 @@ class OperationsController extends Controller
     /**
      * OperationsController constructor.
      *
-    
+
      */
     public function __construct()
     {

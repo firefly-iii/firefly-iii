@@ -51,7 +51,7 @@ class ShowController extends Controller
     /**
      * CurrencyRepository constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -75,7 +75,7 @@ class ShowController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-    
+
      */
     public function index(): JsonResponse
     {
@@ -111,7 +111,7 @@ class ShowController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-    
+
      */
     public function show(TransactionCurrency $currency): JsonResponse
     {
@@ -137,7 +137,7 @@ class ShowController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-    
+
      */
     public function showDefault(): JsonResponse
     {

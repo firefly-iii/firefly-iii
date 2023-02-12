@@ -83,7 +83,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * OperatorQuerySearch constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -115,7 +115,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-    
+
      */
     public function getModifiers(): Collection
     {
@@ -124,7 +124,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-    
+
      */
     public function getOperators(): Collection
     {
@@ -133,7 +133,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-    
+
      */
     public function getWordsAsString(): string
     {
@@ -142,7 +142,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-    
+
      */
     public function hasModifiers(): bool
     {
@@ -1992,7 +1992,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-    
+
      */
     public function searchTime(): float
     {
@@ -2029,7 +2029,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-    
+
      */
     public function setPage(int $page): void
     {
@@ -2039,7 +2039,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-    
+
      */
     public function setUser(User $user): void
     {

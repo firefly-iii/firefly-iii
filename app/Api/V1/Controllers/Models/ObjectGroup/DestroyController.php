@@ -39,7 +39,7 @@ class DestroyController extends Controller
     /**
      * ObjectGroupController constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -64,7 +64,7 @@ class DestroyController extends Controller
      *
      * @param  ObjectGroup  $objectGroup
      *
-    
+
      * @return JsonResponse
      */
     public function destroy(ObjectGroup $objectGroup): JsonResponse

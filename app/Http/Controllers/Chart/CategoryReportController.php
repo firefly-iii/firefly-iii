@@ -51,7 +51,7 @@ class CategoryReportController extends Controller
     /**
      * CategoryReportController constructor.
      *
-    
+
      */
     public function __construct()
     {

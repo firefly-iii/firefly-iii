@@ -44,7 +44,7 @@ class ListController extends Controller
     /**
      * RuleGroupController constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -70,7 +70,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-    
+
      */
     public function rules(RuleGroup $group): JsonResponse
     {

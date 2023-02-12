@@ -50,7 +50,7 @@ class ShowController extends Controller
     /**
      * LinkTypeController constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -74,7 +74,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-    
+
      */
     public function index(): JsonResponse
     {
@@ -110,7 +110,7 @@ class ShowController extends Controller
      * @param  LinkType  $linkType
      *
      * @return JsonResponse
-    
+
      */
     public function show(LinkType $linkType): JsonResponse
     {

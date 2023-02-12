@@ -46,7 +46,7 @@ class ShowController extends Controller
     /**
      * ObjectGroupController constructor.
      *
-    
+
      */
     public function __construct()
     {
@@ -73,7 +73,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-    
+
      */
     public function index(Request $request): JsonResponse
     {

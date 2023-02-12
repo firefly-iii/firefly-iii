@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -41,7 +40,6 @@ class DestroyController extends Controller
     use TransactionFilter;
 
     private LinkTypeRepositoryInterface $repository;
-    private UserRepositoryInterface     $userRepository;
 
     /**
      * LinkTypeController constructor.
@@ -54,9 +52,8 @@ class DestroyController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user                 = auth()->user();
-                $this->repository     = app(LinkTypeRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
+                $user             = auth()->user();
+                $this->repository = app(LinkTypeRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -74,7 +71,6 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function destroy(LinkType $linkType): JsonResponse
     {

@@ -44,7 +44,7 @@ class EditController extends Controller
     /**
      * EditController constructor.
      *
-    
+
      */
     public function __construct()
     {

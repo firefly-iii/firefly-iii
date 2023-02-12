@@ -195,7 +195,7 @@ class Webhook extends Model
     }
 
     /**
-    
+
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -204,7 +204,7 @@ class Webhook extends Model
     }
 
     /**
-    
+
      * @return HasMany
      */
     public function webhookMessages(): HasMany
