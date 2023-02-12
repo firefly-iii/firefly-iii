@@ -73,11 +73,14 @@ class OperatorQuerySearch implements SearchInterface
     private int                         $limit;
     private Collection                  $operators;
     private int                         $page;
-    private array                       $prohibitedWords;
-    private float                       $startTime;
-    private TagRepositoryInterface      $tagRepository;
-    private array                       $validOperators;
-    private array                       $words;
+    protected Carbon                    $date;
+
+
+    private array                  $prohibitedWords;
+    private float                  $startTime;
+    private TagRepositoryInterface $tagRepository;
+    private array                  $validOperators;
+    private array                  $words;
 
     /**
      * OperatorQuerySearch constructor.
@@ -113,7 +116,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-
      */
     public function getModifiers(): Collection
     {
@@ -122,7 +124,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-
      */
     public function getOperators(): Collection
     {
@@ -131,7 +132,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-
      */
     public function getWordsAsString(): string
     {
@@ -140,7 +140,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-
      */
     public function hasModifiers(): bool
     {
@@ -1990,7 +1989,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-
      */
     public function searchTime(): float
     {
@@ -2019,7 +2017,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-
      */
     public function setPage(int $page): void
     {
@@ -2029,7 +2026,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-
      */
     public function setUser(User $user): void
     {
@@ -2052,5 +2048,13 @@ class OperatorQuerySearch implements SearchInterface
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
+    }
+
+    /**
+     * @param  Carbon  $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
     }
 }
