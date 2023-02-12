@@ -297,7 +297,7 @@ class GenericRequest extends FormRequest
      */
     public function rules(): array
     {
-        // this is cheating but it works to initialize the collections.
+        // this is cheating, but it works to initialize the collections.
         $this->accounts   = new Collection();
         $this->budgets    = new Collection();
         $this->categories = new Collection();
@@ -306,7 +306,7 @@ class GenericRequest extends FormRequest
 
         return [
             'start' => 'required|date',
-            'end'   => 'required|date|after:start',
+            'end'   => 'required|date|after_or_equal:start',
         ];
     }
 }
