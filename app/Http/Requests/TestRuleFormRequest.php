@@ -30,7 +30,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class TestRuleFormRequest.
  *
- * @codeCoverageIgnore
+
  */
 class TestRuleFormRequest extends FormRequest
 {

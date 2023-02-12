@@ -38,7 +38,7 @@ class DestroyController extends Controller
     /**
      * Constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -62,7 +62,7 @@ class DestroyController extends Controller
      * @param  PiggyBank  $piggyBank
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(PiggyBank $piggyBank): JsonResponse
     {

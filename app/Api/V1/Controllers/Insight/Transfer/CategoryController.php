@@ -44,7 +44,7 @@ class CategoryController extends Controller
     /**
      * AccountController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

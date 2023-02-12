@@ -43,7 +43,7 @@ use ValueError;
 /**
  * Class Steam.
  *
- * @codeCoverageIgnore
+
  */
 class Steam
 {

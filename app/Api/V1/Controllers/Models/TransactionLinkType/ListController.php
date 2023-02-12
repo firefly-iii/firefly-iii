@@ -50,7 +50,7 @@ class ListController extends Controller
     /**
      * LinkTypeController constructor.
      *
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {
@@ -76,7 +76,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+    
      */
     public function transactions(Request $request, LinkType $linkType): JsonResponse
     {

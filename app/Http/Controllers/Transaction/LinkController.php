@@ -47,7 +47,7 @@ class LinkController extends Controller
     /**
      * LinkController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

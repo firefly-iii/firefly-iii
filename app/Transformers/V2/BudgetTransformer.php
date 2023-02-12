@@ -38,7 +38,7 @@ class BudgetTransformer extends AbstractTransformer
     /**
      * BudgetTransformer constructor.
      *
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {

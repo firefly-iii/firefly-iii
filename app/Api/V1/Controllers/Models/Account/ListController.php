@@ -54,7 +54,7 @@ class ListController extends Controller
     /**
      * AccountController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -76,7 +76,7 @@ class ListController extends Controller
      * @param  Account  $account
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      * @throws FireflyException
      */
     public function attachments(Account $account): JsonResponse
@@ -110,7 +110,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function piggyBanks(Account $account): JsonResponse
     {
@@ -145,7 +145,7 @@ class ListController extends Controller
      *
      * Show all transaction groups related to the account.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  Request  $request
      * @param  Account  $account

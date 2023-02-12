@@ -49,7 +49,7 @@ class ListController extends Controller
     /**
      * BudgetLimitController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -77,7 +77,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function transactions(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {

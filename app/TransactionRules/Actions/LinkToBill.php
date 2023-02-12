@@ -42,7 +42,7 @@ class LinkToBill implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  RuleAction  $action
      */

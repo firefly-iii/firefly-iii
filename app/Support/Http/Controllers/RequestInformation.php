@@ -220,7 +220,7 @@ trait RequestInformation
      * @param  array  $data
      *
      * @return ValidatorContract
-     * @codeCoverageIgnore
+
      */
     final protected function validator(array $data): ValidatorContract
     {

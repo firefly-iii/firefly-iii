@@ -46,7 +46,7 @@ class ShowController extends Controller
     /**
      * ListController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -71,7 +71,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -105,7 +105,7 @@ class ShowController extends Controller
      * @param  Budget  $budget
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(Budget $budget): JsonResponse
     {

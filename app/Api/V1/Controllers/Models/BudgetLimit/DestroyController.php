@@ -41,7 +41,7 @@ class DestroyController extends Controller
     /**
      * BudgetLimitController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -69,7 +69,7 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function destroy(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {

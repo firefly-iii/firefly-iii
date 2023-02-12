@@ -45,7 +45,7 @@ class ShowController extends Controller
     /**
      * RuleGroupController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -70,7 +70,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -106,7 +106,7 @@ class ShowController extends Controller
      * @param  RuleGroup  $ruleGroup
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(RuleGroup $ruleGroup): JsonResponse
     {

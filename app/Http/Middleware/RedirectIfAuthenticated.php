@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Auth;
 /**
  * Class RedirectIfAuthenticated
  *
- * @codeCoverageIgnore
+
  */
 class RedirectIfAuthenticated
 {

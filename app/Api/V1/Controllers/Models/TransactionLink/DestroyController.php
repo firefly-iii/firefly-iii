@@ -37,7 +37,7 @@ class DestroyController extends Controller
     /**
      * TransactionLinkController constructor.
      *
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {
@@ -65,7 +65,7 @@ class DestroyController extends Controller
      * @param  TransactionJournalLink  $link
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+    
      */
     public function destroy(TransactionJournalLink $link): JsonResponse
     {

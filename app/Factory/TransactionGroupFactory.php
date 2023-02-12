@@ -33,7 +33,7 @@ use Log;
 /**
  * Class TransactionGroupFactory
  *
- * @codeCoverageIgnore
+
  */
 class TransactionGroupFactory
 {

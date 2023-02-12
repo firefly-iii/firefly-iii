@@ -35,7 +35,7 @@ use Mail;
 /**
  * Class MailError.
  *
- * @codeCoverageIgnore
+
  */
 class MailError extends Job implements ShouldQueue
 {

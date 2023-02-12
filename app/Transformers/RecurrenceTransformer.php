@@ -51,7 +51,7 @@ class RecurrenceTransformer extends AbstractTransformer
     /**
      * RecurrenceTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

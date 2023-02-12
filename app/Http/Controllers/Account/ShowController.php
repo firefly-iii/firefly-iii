@@ -53,7 +53,7 @@ class ShowController extends Controller
     /**
      * ShowController constructor.
      *
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {

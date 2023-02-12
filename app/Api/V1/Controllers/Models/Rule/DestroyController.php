@@ -39,7 +39,7 @@ class DestroyController extends Controller
     /**
      * RuleController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -66,7 +66,7 @@ class DestroyController extends Controller
      * @param  Rule  $rule
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(Rule $rule): JsonResponse
     {

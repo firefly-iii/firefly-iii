@@ -26,7 +26,7 @@ namespace FireflyIII\Support;
 /**
  * Class Domain.
  *
- * @codeCoverageIgnore
+
  */
 class Domain
 {

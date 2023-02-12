@@ -29,7 +29,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class ProfileFormRequest.
  *
- * @codeCoverageIgnore
+
  */
 class ProfileFormRequest extends FormRequest
 {

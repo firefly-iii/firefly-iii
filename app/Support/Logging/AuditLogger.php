@@ -31,7 +31,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 /**
  * Class AuditLogger
  *
- * @codeCoverageIgnore
+
  */
 class AuditLogger
 {

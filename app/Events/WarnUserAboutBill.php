@@ -30,7 +30,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class WarnUserAboutBill.
  *
- * @codeCoverageIgnore
+
  */
 class WarnUserAboutBill extends Event
 {

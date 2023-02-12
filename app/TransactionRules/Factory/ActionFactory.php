@@ -32,7 +32,7 @@ use Log;
 /**
  * Class ActionFactory can create actions.
  *
- * @codeCoverageIgnore
+
  */
 class ActionFactory
 {

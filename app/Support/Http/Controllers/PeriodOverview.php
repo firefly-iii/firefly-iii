@@ -200,7 +200,7 @@ trait PeriodOverview
      * @param  array  $journals
      *
      * @return array
-     * @codeCoverageIgnore
+
      */
     private function filterTransferredIn(Account $account, array $journals): array
     {
@@ -219,7 +219,7 @@ trait PeriodOverview
      * @param  array  $journals
      *
      * @return array
-     * @codeCoverageIgnore
+
      */
     private function groupByCurrency(array $journals): array
     {

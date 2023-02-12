@@ -73,7 +73,7 @@ class TransactionJournalFactory
      * Constructor.
      *
      * @throws Exception
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {

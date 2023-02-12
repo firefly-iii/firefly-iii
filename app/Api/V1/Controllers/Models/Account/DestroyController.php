@@ -40,7 +40,7 @@ class DestroyController extends Controller
     /**
      * AccountController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -63,7 +63,7 @@ class DestroyController extends Controller
      *
      * @param  Account  $account
      *
-     * @codeCoverageIgnore
+
      * @return JsonResponse
      */
     public function destroy(Account $account): JsonResponse

@@ -44,7 +44,7 @@ class ListController extends Controller
     /**
      * Constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -67,7 +67,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function attachments(PiggyBank $piggyBank): JsonResponse
     {
@@ -102,7 +102,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {

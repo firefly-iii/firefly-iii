@@ -50,7 +50,7 @@ class ListController extends Controller
     /**
      * TagController constructor.
      *
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {
@@ -76,7 +76,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+    
      */
     public function attachments(Tag $tag): JsonResponse
     {
@@ -112,7 +112,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+    
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
     {

@@ -39,7 +39,7 @@ class UpdateController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

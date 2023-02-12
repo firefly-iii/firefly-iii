@@ -154,7 +154,7 @@ class Account extends Model
 
     /**
      * @return BelongsTo
-     * @codeCoverageIgnore
+
      */
     public function user(): BelongsTo
     {
@@ -163,7 +163,7 @@ class Account extends Model
 
     /**
      * @return BelongsTo
-     * @codeCoverageIgnore
+
      */
     public function accountType(): BelongsTo
     {
@@ -171,7 +171,7 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -196,7 +196,7 @@ class Account extends Model
 
     /**
      * @return HasMany
-     * @codeCoverageIgnore
+
      */
     public function accountMeta(): HasMany
     {
@@ -205,7 +205,7 @@ class Account extends Model
 
     /**
      * @return string
-     * @codeCoverageIgnore
+
      */
     public function getEditNameAttribute(): string
     {
@@ -219,7 +219,7 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return MorphMany
      */
     public function locations(): MorphMany
@@ -228,7 +228,7 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * Get all of the notes.
      */
     public function notes(): MorphMany
@@ -246,7 +246,7 @@ class Account extends Model
 
     /**
      * @return HasMany
-     * @codeCoverageIgnore
+
      */
     public function piggyBanks(): HasMany
     {
@@ -254,7 +254,7 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      *
      * @param  EloquentBuilder  $query
      * @param  array  $types
@@ -269,11 +269,11 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      *
      * @param  mixed  $value
      *
-     * @codeCoverageIgnore
+
      */
     public function setVirtualBalanceAttribute($value): void
     {
@@ -286,7 +286,7 @@ class Account extends Model
 
     /**
      * @return HasMany
-     * @codeCoverageIgnore
+
      */
     public function transactions(): HasMany
     {

@@ -40,7 +40,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
     /**
      * CurrencyTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

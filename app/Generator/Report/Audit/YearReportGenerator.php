@@ -26,7 +26,7 @@ namespace FireflyIII\Generator\Report\Audit;
 /**
  * Class YearReportGenerator.
  *
- * @codeCoverageIgnore
+
  */
 class YearReportGenerator extends MonthReportGenerator
 {

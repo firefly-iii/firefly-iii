@@ -79,7 +79,7 @@ class AuditLogEntry extends Model
     ];
 
     /**
-     * @codeCoverageIgnore
+
      */
     public function auditable(): MorphTo
     {
@@ -87,7 +87,7 @@ class AuditLogEntry extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      */
     public function changer(): MorphTo
     {

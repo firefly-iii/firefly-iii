@@ -42,7 +42,7 @@ class UpdateController extends Controller
     /**
      * TransactionLinkController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

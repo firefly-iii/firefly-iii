@@ -29,7 +29,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class MassDeleteJournalRequest.
  *
- * @codeCoverageIgnore
+
  */
 class MassDeleteJournalRequest extends FormRequest
 {

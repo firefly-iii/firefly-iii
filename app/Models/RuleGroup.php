@@ -116,7 +116,7 @@ class RuleGroup extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -125,7 +125,7 @@ class RuleGroup extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function rules(): HasMany

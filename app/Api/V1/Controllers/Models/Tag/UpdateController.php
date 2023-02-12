@@ -42,7 +42,7 @@ class UpdateController extends Controller
     /**
      * TagController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

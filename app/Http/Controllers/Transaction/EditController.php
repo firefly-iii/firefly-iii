@@ -39,7 +39,7 @@ class EditController extends Controller
     /**
      * EditController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

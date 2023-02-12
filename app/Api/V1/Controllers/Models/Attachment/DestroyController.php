@@ -40,7 +40,7 @@ class DestroyController extends Controller
     /**
      * DestroyController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -64,7 +64,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  Attachment  $attachment
      *

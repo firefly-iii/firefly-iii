@@ -28,7 +28,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
 /**
  * Class VerifyCsrfToken.
  *
- * @codeCoverageIgnore
+
  */
 class VerifyCsrfToken extends Middleware
 {

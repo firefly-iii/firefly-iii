@@ -105,7 +105,7 @@ class BudgetLimit extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function budget(): BelongsTo
@@ -114,7 +114,7 @@ class BudgetLimit extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo

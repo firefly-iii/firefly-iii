@@ -41,7 +41,7 @@ class UpdateController extends Controller
     /**
      * BillController constructor.
      *
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {

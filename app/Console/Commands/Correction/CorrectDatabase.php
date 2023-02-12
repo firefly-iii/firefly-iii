@@ -30,7 +30,7 @@ use Schema;
 /**
  * Class CorrectDatabase
  *
- * @codeCoverageIgnore
+
  */
 class CorrectDatabase extends Command
 {

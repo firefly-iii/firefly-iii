@@ -50,7 +50,7 @@ class UpdateController extends Controller
     /**
      * LinkTypeController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

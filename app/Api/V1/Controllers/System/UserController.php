@@ -48,7 +48,7 @@ class UserController extends Controller
     /**
      * UserController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -72,7 +72,7 @@ class UserController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function destroy(User $user): JsonResponse
     {
@@ -98,7 +98,7 @@ class UserController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -135,7 +135,7 @@ class UserController extends Controller
      * @param  User  $user
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(User $user): JsonResponse
     {

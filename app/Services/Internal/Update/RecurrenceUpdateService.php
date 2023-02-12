@@ -38,7 +38,7 @@ use Log;
 /**
  * Class RecurrenceUpdateService
  *
- * @codeCoverageIgnore
+
  */
 class RecurrenceUpdateService
 {

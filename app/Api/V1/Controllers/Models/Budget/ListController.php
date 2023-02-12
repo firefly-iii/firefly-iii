@@ -53,7 +53,7 @@ class ListController extends Controller
     /**
      * ListController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -78,7 +78,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function attachments(Budget $budget): JsonResponse
     {
@@ -113,7 +113,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function budgetLimits(Budget $budget): JsonResponse
     {
@@ -147,7 +147,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
@@ -211,7 +211,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function withoutBudget(Request $request): JsonResponse
     {

@@ -30,7 +30,7 @@ use JsonException;
 /**
  * Class CacheProperties.
  *
- * @codeCoverageIgnore
+
  */
 class CacheProperties
 {

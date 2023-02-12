@@ -30,7 +30,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class NewUserFormRequest.
  *
- * @codeCoverageIgnore
+
  */
 class NewUserFormRequest extends FormRequest
 {

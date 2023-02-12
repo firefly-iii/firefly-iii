@@ -49,7 +49,7 @@ class DoubleReportController extends Controller
     /**
      * CategoryReportController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

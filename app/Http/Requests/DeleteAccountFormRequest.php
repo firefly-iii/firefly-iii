@@ -29,7 +29,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class DeleteAccountFormRequest.
  *
- * @codeCoverageIgnore
+
  */
 class DeleteAccountFormRequest extends FormRequest
 {

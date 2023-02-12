@@ -46,7 +46,7 @@ class TagController extends Controller
     /**
      * ExpenseReportController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

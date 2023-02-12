@@ -103,7 +103,7 @@ class ObjectGroup extends Model
 
     /**
      * @return BelongsTo
-     * @codeCoverageIgnore
+
      */
     public function user(): BelongsTo
     {

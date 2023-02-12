@@ -28,7 +28,7 @@ use ArrayObject;
 /**
  * Class NullArrayObject
  *
- * @codeCoverageIgnore
+
  */
 class NullArrayObject extends ArrayObject
 {

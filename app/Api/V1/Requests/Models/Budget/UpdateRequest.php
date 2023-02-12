@@ -34,7 +34,7 @@ use Illuminate\Validation\Validator;
 /**
  * Class UpdateRequest
  *
- * @codeCoverageIgnore
+
  */
 class UpdateRequest extends FormRequest
 {

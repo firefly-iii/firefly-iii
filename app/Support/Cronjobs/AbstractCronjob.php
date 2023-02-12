@@ -28,7 +28,7 @@ use Carbon\Carbon;
 /**
  * Class AbstractCronjob
  *
- * @codeCoverageIgnore
+
  */
 abstract class AbstractCronjob
 {

@@ -28,7 +28,7 @@ use FireflyIII\Models\TransactionCurrency;
 /**
  * Class CurrencyUpdateService
  *
- * @codeCoverageIgnore
+
  */
 class CurrencyUpdateService
 {

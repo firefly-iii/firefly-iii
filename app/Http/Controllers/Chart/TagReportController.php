@@ -50,7 +50,7 @@ class TagReportController extends Controller
     /**
      * TagReportController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

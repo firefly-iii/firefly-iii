@@ -32,7 +32,7 @@ use FireflyIII\Models\TransactionJournalMeta;
 use Log;
 
 /**
- * @codeCoverageIgnore
+
  * Class JournalDestroyService
  */
 class JournalDestroyService

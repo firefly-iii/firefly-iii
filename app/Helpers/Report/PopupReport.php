@@ -36,7 +36,7 @@ use Illuminate\Support\Collection;
 /**
  * Class PopupReport.
  *
- * @codeCoverageIgnore
+
  */
 class PopupReport implements PopupReportInterface
 {

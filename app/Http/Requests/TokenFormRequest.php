@@ -29,7 +29,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class TokenFormRequest.
  *
- * @codeCoverageIgnore
+
  */
 class TokenFormRequest extends FormRequest
 {

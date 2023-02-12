@@ -88,7 +88,7 @@ class WebhookAttempt extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function webhookMessage(): BelongsTo

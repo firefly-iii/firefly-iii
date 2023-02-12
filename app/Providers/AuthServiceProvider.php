@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Passport;
 
 /**
- * @codeCoverageIgnore
+
  * Class AuthServiceProvider
  */
 class AuthServiceProvider extends ServiceProvider

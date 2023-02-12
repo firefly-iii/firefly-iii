@@ -111,7 +111,7 @@ class AvailableBudget extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -120,7 +120,7 @@ class AvailableBudget extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo

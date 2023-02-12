@@ -28,7 +28,7 @@ use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
 /**
  * Class TrimStrings
  *
- * @codeCoverageIgnore
+
  */
 class TrimStrings extends Middleware
 {

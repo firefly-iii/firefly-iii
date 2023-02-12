@@ -52,7 +52,7 @@ class DebugController extends Controller
     /**
      * DebugController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

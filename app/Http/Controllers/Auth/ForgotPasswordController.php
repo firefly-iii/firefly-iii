@@ -39,7 +39,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class ForgotPasswordController
  *
- * @codeCoverageIgnore
+
  */
 class ForgotPasswordController extends Controller
 {
@@ -109,7 +109,7 @@ class ForgotPasswordController extends Controller
     /**
      * Show form for email recovery.
      *
-     * @codeCoverageIgnore
+
      *
      * @return Factory|View
      * @throws FireflyException

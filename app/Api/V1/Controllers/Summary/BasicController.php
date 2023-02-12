@@ -58,7 +58,7 @@ class BasicController extends Controller
     /**
      * BasicController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

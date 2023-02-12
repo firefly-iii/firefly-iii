@@ -49,7 +49,7 @@ class ShowController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -72,7 +72,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {

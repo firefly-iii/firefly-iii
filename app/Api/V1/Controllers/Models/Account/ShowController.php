@@ -50,7 +50,7 @@ class ShowController extends Controller
     /**
      * AccountController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -75,7 +75,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(Request $request): JsonResponse
     {

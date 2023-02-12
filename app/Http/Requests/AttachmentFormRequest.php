@@ -30,7 +30,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class AttachmentFormRequest.
  *
- * @codeCoverageIgnore
+
  */
 class AttachmentFormRequest extends FormRequest
 {

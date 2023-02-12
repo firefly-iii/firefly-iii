@@ -40,7 +40,7 @@ trait RuleManagement
      * @param  Request  $request
      *
      * @return array
-     * @codeCoverageIgnore
+
      */
     protected function getPreviousActions(Request $request): array
     {
@@ -75,7 +75,7 @@ trait RuleManagement
      * @param  Request  $request
      *
      * @return array
-     * @codeCoverageIgnore
+
      */
     protected function getPreviousTriggers(Request $request): array
     {

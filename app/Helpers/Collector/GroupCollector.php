@@ -48,7 +48,7 @@ use Log;
 /**
  * Class GroupCollector
  *
- * @codeCoverageIgnore
+
  */
 class GroupCollector implements GroupCollectorInterface
 {

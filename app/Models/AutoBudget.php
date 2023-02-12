@@ -71,7 +71,7 @@ class AutoBudget extends Model
     public const AUTO_BUDGET_ROLLOVER = 2;
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function budget(): BelongsTo
@@ -80,7 +80,7 @@ class AutoBudget extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo

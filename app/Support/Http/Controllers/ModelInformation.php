@@ -69,7 +69,7 @@ trait ModelInformation
     }
 
     /**
-     * @codeCoverageIgnore
+
      *
      * @return string[]
      *
@@ -94,7 +94,7 @@ trait ModelInformation
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return array
      */
     protected function getRoles(): array

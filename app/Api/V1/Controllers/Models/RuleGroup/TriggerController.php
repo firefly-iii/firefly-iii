@@ -48,7 +48,7 @@ class TriggerController extends Controller
     /**
      * RuleGroupController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

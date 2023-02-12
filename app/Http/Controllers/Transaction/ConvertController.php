@@ -60,7 +60,7 @@ class ConvertController extends Controller
     /**
      * ConvertController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

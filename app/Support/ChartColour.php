@@ -26,7 +26,7 @@ namespace FireflyIII\Support;
 /**
  * Class ChartColour.
  *
- * @codeCoverageIgnore
+
  */
 class ChartColour
 {

@@ -42,7 +42,7 @@ class StoreController extends Controller
     /**
      * BudgetLimitController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

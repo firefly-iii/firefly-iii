@@ -48,7 +48,7 @@ class StoreController extends Controller
     /**
      * CurrencyRepository constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

@@ -47,7 +47,7 @@ class StoreController extends Controller
     /**
      * StoreController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -95,7 +95,7 @@ class StoreController extends Controller
     /**
      * Upload an attachment.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  Request  $request
      * @param  Attachment  $attachment

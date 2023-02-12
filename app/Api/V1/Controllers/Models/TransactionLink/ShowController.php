@@ -44,7 +44,7 @@ class ShowController extends Controller
     /**
      * TransactionLinkController constructor.
      *
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {
@@ -73,7 +73,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+    
      */
     public function index(Request $request): JsonResponse
     {
@@ -114,7 +114,7 @@ class ShowController extends Controller
      * @param  TransactionJournalLink  $journalLink
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+    
      */
     public function show(TransactionJournalLink $journalLink): JsonResponse
     {

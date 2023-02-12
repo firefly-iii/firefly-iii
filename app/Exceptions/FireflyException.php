@@ -29,7 +29,7 @@ use Exception;
 /**
  * Class FireflyException.
  *
- * @codeCoverageIgnore
+
  */
 class FireflyException extends Exception
 {

@@ -44,7 +44,7 @@ class ShowController extends Controller
     /**
      * CategoryController constructor.
      *
-     * @codeCoverageIgnore
+    
      */
     public function __construct()
     {
@@ -67,7 +67,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+    
      */
     public function index(): JsonResponse
     {
@@ -103,7 +103,7 @@ class ShowController extends Controller
      * @param  Category  $category
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+    
      */
     public function show(Category $category): JsonResponse
     {

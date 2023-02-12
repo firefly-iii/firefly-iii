@@ -48,7 +48,7 @@ class ListController extends Controller
     /**
      * TransactionController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -74,7 +74,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -110,7 +110,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -149,7 +149,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function transactionLinks(TransactionJournal $transactionJournal): JsonResponse
     {

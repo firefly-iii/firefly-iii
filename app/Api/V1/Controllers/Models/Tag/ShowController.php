@@ -45,7 +45,7 @@ class ShowController extends Controller
     /**
      * TagController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -71,7 +71,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -107,7 +107,7 @@ class ShowController extends Controller
      * @param  Tag  $tag
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(Tag $tag): JsonResponse
     {

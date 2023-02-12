@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class Controller.
  *
- * @codeCoverageIgnore
+
  */
 abstract class Controller extends BaseController
 {

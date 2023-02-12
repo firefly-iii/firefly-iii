@@ -46,7 +46,7 @@ class DestroyController extends Controller
     /**
      * LinkTypeController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -74,7 +74,7 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function destroy(LinkType $linkType): JsonResponse
     {

@@ -48,7 +48,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * validation and creation. By default this controller uses a trait to
  * provide this functionality without requiring any additional code.
  *
- * @codeCoverageIgnore
+
  */
 class RegisterController extends Controller
 {

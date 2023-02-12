@@ -54,7 +54,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * AttachmentHelper constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -69,7 +69,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Returns the content of an attachment.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  Attachment  $attachment
      *
@@ -93,7 +93,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @param  Attachment  $attachment
      *
-     * @codeCoverageIgnore
+
      * @return string
      */
     public function getAttachmentLocation(Attachment $attachment): string
@@ -104,7 +104,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Get all attachments.
      *
-     * @codeCoverageIgnore
+
      * @return Collection
      */
     public function getAttachments(): Collection
@@ -116,7 +116,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Get all errors.
      *
      * @return MessageBag
-     * @codeCoverageIgnore
+
      */
     public function getErrors(): MessageBag
     {
@@ -127,7 +127,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Get all messages.
      *
      * @return MessageBag
-     * @codeCoverageIgnore
+
      */
     public function getMessages(): MessageBag
     {
@@ -336,7 +336,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Verify if the size of a file is valid.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  UploadedFile  $file
      *

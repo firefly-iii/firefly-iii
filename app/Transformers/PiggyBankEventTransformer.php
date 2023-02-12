@@ -42,7 +42,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
     /**
      * PiggyBankEventTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

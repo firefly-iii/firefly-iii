@@ -55,7 +55,7 @@ use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 /**
  * Class Kernel
  *
- * @codeCoverageIgnore
+
  */
 class Kernel extends HttpKernel
 {
