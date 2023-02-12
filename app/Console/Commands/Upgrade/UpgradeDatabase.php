@@ -31,7 +31,7 @@ use Illuminate\Console\Command;
 /**
  * Class UpgradeDatabase
  *
- * @codeCoverageIgnore
+
  */
 class UpgradeDatabase extends Command
 {

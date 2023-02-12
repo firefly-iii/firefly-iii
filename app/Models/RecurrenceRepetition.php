@@ -91,7 +91,7 @@ class RecurrenceRepetition extends Model
 
     /**
      * @return BelongsTo
-     * @codeCoverageIgnore
+
      */
     public function recurrence(): BelongsTo
     {

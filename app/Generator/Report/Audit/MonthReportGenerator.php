@@ -50,7 +50,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @return string
      * @throws FireflyException
      * @throws JsonException
-     * @codeCoverageIgnore
+
      */
     public function generate(): string
     {
@@ -186,7 +186,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $accounts
      *
      * @return ReportGeneratorInterface
-     * @codeCoverageIgnore
+
      */
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
@@ -201,7 +201,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $budgets
      *
      * @return ReportGeneratorInterface
-     * @codeCoverageIgnore
+
      */
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
@@ -214,7 +214,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
-     * @codeCoverageIgnore
+
      */
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
@@ -227,7 +227,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
-     * @codeCoverageIgnore
+
      */
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
@@ -242,7 +242,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
-     * @codeCoverageIgnore
+
      */
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
@@ -256,7 +256,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
-     * @codeCoverageIgnore
+
      */
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
@@ -271,7 +271,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
-     * @codeCoverageIgnore
+
      */
     public function setTags(Collection $tags): ReportGeneratorInterface
     {

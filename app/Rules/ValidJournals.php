@@ -31,7 +31,7 @@ use Log;
 /**
  * Class ValidJournals
  *
- * @codeCoverageIgnore
+
  */
 class ValidJournals implements Rule
 {

@@ -32,7 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class StoreRequest
  *
- * @codeCoverageIgnore
+
  */
 class StoreRequest extends FormRequest
 {

@@ -29,7 +29,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class MassEditJournalRequest.
  *
- * @codeCoverageIgnore
+
  */
 class MassEditJournalRequest extends FormRequest
 {

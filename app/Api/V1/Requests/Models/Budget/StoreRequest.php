@@ -33,7 +33,7 @@ use Illuminate\Validation\Validator;
 /**
  * Class StoreRequest
  *
- * @codeCoverageIgnore
+
  */
 class StoreRequest extends FormRequest
 {

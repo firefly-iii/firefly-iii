@@ -28,7 +28,7 @@ use FireflyIII\Models\AccountType;
 /**
  * Trait AccountFilter
  *
- * @codeCoverageIgnore
+
  */
 trait AccountFilter
 {

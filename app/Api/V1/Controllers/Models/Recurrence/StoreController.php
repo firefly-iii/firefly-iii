@@ -41,7 +41,7 @@ class StoreController extends Controller
     /**
      * RecurrenceController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

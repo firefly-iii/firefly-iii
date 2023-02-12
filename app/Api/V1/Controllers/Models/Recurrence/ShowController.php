@@ -44,7 +44,7 @@ class ShowController extends Controller
     /**
      * RecurrenceController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -67,7 +67,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -104,7 +104,7 @@ class ShowController extends Controller
      * @param  Recurrence  $recurrence
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(Recurrence $recurrence): JsonResponse
     {

@@ -36,7 +36,7 @@ use Throwable;
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  *
- * @codeCoverageIgnore
+
  */
 class ExpandedForm
 {

@@ -73,7 +73,7 @@ class PiggyBankRepetition extends Model
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function piggyBank(): BelongsTo
@@ -82,7 +82,7 @@ class PiggyBankRepetition extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      *
      * @param  EloquentBuilder  $query
      * @param  Carbon  $start
@@ -96,7 +96,7 @@ class PiggyBankRepetition extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      *
      * @param  EloquentBuilder  $query
      * @param  Carbon  $date
@@ -120,7 +120,7 @@ class PiggyBankRepetition extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      *
      * @param  mixed  $value
      */

@@ -41,7 +41,7 @@ class AccountTransformer extends AbstractTransformer
      *
      * AccountTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

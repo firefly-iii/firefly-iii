@@ -45,7 +45,7 @@ class ExecutionController extends Controller
     /**
      * ExecutionController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

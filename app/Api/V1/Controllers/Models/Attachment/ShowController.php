@@ -47,7 +47,7 @@ class ShowController extends Controller
     /**
      * ShowController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -73,7 +73,7 @@ class ShowController extends Controller
      *
      * @param  Attachment  $attachment
      *
-     * @codeCoverageIgnore
+
      * @return LaravelResponse
      * @throws   FireflyException
      */
@@ -118,7 +118,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {

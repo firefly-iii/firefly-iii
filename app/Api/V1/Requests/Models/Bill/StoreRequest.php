@@ -34,7 +34,7 @@ use Log;
 /**
  * Class StoreRequest
  *
- * @codeCoverageIgnore
+
  */
 class StoreRequest extends FormRequest
 {

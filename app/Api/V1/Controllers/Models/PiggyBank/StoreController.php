@@ -41,7 +41,7 @@ class StoreController extends Controller
     /**
      * Constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

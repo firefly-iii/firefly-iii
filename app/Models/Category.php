@@ -117,7 +117,7 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -126,7 +126,7 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -135,7 +135,7 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * Get all of the category's notes.
      */
     public function notes(): MorphMany
@@ -144,7 +144,7 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsToMany
      */
     public function transactionJournals(): BelongsToMany
@@ -153,7 +153,7 @@ class Category extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsToMany
      */
     public function transactions(): BelongsToMany

@@ -81,7 +81,7 @@ class AccountType extends Model
 
     /**
      * @return HasMany
-     * @codeCoverageIgnore
+
      */
     public function accounts(): HasMany
     {

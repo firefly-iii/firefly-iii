@@ -40,7 +40,7 @@ class UniqueAccountNumber implements Rule
     /**
      * Create a new rule instance.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  Account|null  $account
      * @param  string|null  $expectedType
@@ -66,7 +66,7 @@ class UniqueAccountNumber implements Rule
     /**
      * Get the validation error message.
      *
-     * @codeCoverageIgnore
+
      *
      * @return string
      */

@@ -167,7 +167,7 @@ class Bill extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -176,7 +176,7 @@ class Bill extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -185,7 +185,7 @@ class Bill extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * Get all of the notes.
      */
     public function notes(): MorphMany
@@ -202,7 +202,7 @@ class Bill extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      *
      * @param  mixed  $value
      */
@@ -214,7 +214,7 @@ class Bill extends Model
     /**
      * @param  mixed  $value
      *
-     * @codeCoverageIgnore
+
      */
     public function setAmountMinAttribute($value): void
     {
@@ -222,7 +222,7 @@ class Bill extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo
@@ -231,7 +231,7 @@ class Bill extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function transactionJournals(): HasMany

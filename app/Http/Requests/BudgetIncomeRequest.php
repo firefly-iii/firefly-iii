@@ -29,7 +29,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class BudgetIncomeRequest.
  *
- * @codeCoverageIgnore
+
  */
 class BudgetIncomeRequest extends FormRequest
 {

@@ -29,7 +29,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class UserRegistrationRequest.
  *
- * @codeCoverageIgnore
+
  */
 class UserRegistrationRequest extends FormRequest
 {

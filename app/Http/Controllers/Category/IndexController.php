@@ -46,7 +46,7 @@ class IndexController extends Controller
     /**
      * CategoryController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

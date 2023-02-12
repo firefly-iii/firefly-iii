@@ -31,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
- * @codeCoverageIgnore
+
  * Class BudgetFormUpdateRequest
  */
 class BudgetFormUpdateRequest extends FormRequest

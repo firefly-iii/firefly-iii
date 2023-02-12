@@ -160,7 +160,7 @@ class UpgradeLiabilitiesEight extends Command
 
     /**
      * @param $account
-     * @return void
+     * @return int
      */
     private function deleteTransactions($account): int
     {
@@ -279,9 +279,9 @@ class UpgradeLiabilitiesEight extends Command
                                             ->where('transactions.account_id', $account->id)
                                             ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
                                             ->first(['transaction_journals.*']);
-        /** @var Transaction $source */
+        /** @var Transaction|null $source */
         $source = $openingJournal->transactions()->where('amount', '<', 0)->first();
-        /** @var Transaction $dest */
+        /** @var Transaction|null $dest */
         $dest = $openingJournal->transactions()->where('amount', '>', 0)->first();
         if ($source && $dest) {
             $sourceId           = $source->account_id;

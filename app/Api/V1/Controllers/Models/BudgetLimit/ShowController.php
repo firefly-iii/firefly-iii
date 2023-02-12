@@ -50,7 +50,7 @@ class ShowController extends Controller
     /**
      * BudgetLimitController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -80,7 +80,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(Request $request, Budget $budget): JsonResponse
     {
@@ -113,7 +113,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function indexAll(DateRequest $request): JsonResponse
     {

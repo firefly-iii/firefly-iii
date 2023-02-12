@@ -42,7 +42,7 @@ use phpseclib3\Crypt\RSA;
 /**
  * Class InstallController
  *
- * @codeCoverageIgnore
+
  */
 class InstallController extends Controller
 {

@@ -30,7 +30,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class UpdatedTransactionGroup.
  *
- * @codeCoverageIgnore
+
  */
 class UpdatedTransactionGroup extends Event
 {

@@ -49,7 +49,7 @@ class StoreController extends Controller
     /**
      * LinkTypeController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

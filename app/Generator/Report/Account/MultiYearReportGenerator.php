@@ -26,7 +26,7 @@ namespace FireflyIII\Generator\Report\Account;
 /**
  * Class MultiYearReportGenerator.
  *
- * @codeCoverageIgnore
+
  */
 class MultiYearReportGenerator extends MonthReportGenerator
 {

@@ -108,7 +108,7 @@ class TransactionCurrency extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function budgetLimits(): HasMany
@@ -117,7 +117,7 @@ class TransactionCurrency extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function transactionJournals(): HasMany
@@ -126,7 +126,7 @@ class TransactionCurrency extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function transactions(): HasMany

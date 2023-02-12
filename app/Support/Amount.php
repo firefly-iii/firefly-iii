@@ -36,7 +36,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class Amount.
  *
- * @codeCoverageIgnore
+
  */
 class Amount
 {

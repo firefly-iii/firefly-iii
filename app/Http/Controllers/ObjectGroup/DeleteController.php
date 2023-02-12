@@ -41,7 +41,7 @@ class DeleteController extends Controller
     /**
      * PiggyBankController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

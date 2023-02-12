@@ -33,7 +33,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * @codeCoverageIgnore
+
  * Class AccountServiceProvider.
  */
 class AccountServiceProvider extends ServiceProvider

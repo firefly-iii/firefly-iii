@@ -44,7 +44,7 @@ class EditController extends Controller
     /**
      * PiggyBankController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

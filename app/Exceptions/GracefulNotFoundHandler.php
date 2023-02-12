@@ -221,7 +221,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $user         = auth()->user();
         $route        = $request->route();
         $attachmentId = (int)$route->parameter('attachment');
-        /** @var Attachment $attachment */
+        /** @var Attachment|null $attachment */
         $attachment = $user->attachments()->withTrashed()->find($attachmentId);
         if (null === $attachment) {
             Log::error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));

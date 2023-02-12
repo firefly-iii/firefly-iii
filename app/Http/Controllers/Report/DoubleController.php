@@ -53,7 +53,7 @@ class DoubleController extends Controller
     /**
      * Constructor for ExpenseController
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

@@ -47,7 +47,7 @@ class TransactionFactory
     /**
      * Constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -156,7 +156,7 @@ class TransactionFactory
     /**
      * @param  Account  $account
      *
-     * @codeCoverageIgnore
+
      */
     public function setAccount(Account $account): void
     {
@@ -166,7 +166,7 @@ class TransactionFactory
     /**
      * @param  TransactionCurrency  $currency
      *
-     * @codeCoverageIgnore
+
      */
     public function setCurrency(TransactionCurrency $currency): void
     {
@@ -176,7 +176,7 @@ class TransactionFactory
     /**
      * @param  TransactionCurrency|null  $foreignCurrency  |null
      *
-     * @codeCoverageIgnore
+
      */
     public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
     {
@@ -186,7 +186,7 @@ class TransactionFactory
     /**
      * @param  TransactionJournal  $journal
      *
-     * @codeCoverageIgnore
+
      */
     public function setJournal(TransactionJournal $journal): void
     {
@@ -196,7 +196,7 @@ class TransactionFactory
     /**
      * @param  bool  $reconciled
      *
-     * @codeCoverageIgnore
+
      */
     public function setReconciled(bool $reconciled): void
     {
@@ -206,7 +206,7 @@ class TransactionFactory
     /**
      * @param  User  $user
      *
-     * @codeCoverageIgnore
+
      */
     public function setUser(User $user): void
     {

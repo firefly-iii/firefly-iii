@@ -30,7 +30,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class RequestedNewPassword.
  *
- * @codeCoverageIgnore
+
  */
 class RequestedNewPassword extends Event
 {

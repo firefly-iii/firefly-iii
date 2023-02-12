@@ -195,7 +195,7 @@ class Webhook extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -204,7 +204,7 @@ class Webhook extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function webhookMessages(): HasMany

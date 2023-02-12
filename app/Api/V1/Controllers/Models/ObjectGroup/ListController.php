@@ -45,7 +45,7 @@ class ListController extends Controller
     /**
      * ObjectGroupController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -72,7 +72,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function bills(ObjectGroup $objectGroup): JsonResponse
     {
@@ -108,7 +108,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function piggyBanks(ObjectGroup $objectGroup): JsonResponse
     {

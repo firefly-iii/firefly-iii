@@ -96,7 +96,7 @@ class TransactionType extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return bool
      */
     public function isDeposit(): bool
@@ -105,7 +105,7 @@ class TransactionType extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return bool
      */
     public function isOpeningBalance(): bool
@@ -114,7 +114,7 @@ class TransactionType extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return bool
      */
     public function isTransfer(): bool
@@ -123,7 +123,7 @@ class TransactionType extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return bool
      */
     public function isWithdrawal(): bool
@@ -132,7 +132,7 @@ class TransactionType extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function transactionJournals(): HasMany

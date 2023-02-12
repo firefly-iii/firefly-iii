@@ -47,7 +47,7 @@ class CreateController extends Controller
     /**
      * CreateController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * @codeCoverageIgnore
+
  * Class BroadcastServiceProvider
  */
 class BroadcastServiceProvider extends ServiceProvider

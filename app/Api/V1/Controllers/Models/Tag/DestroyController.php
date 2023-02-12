@@ -39,7 +39,7 @@ class DestroyController extends Controller
     /**
      * TagController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -66,7 +66,7 @@ class DestroyController extends Controller
      * @param  Tag  $tag
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(Tag $tag): JsonResponse
     {

@@ -38,7 +38,7 @@ class TransactionLinkTransformer extends AbstractTransformer
     /**
      * Constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

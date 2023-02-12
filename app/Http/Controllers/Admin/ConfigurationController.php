@@ -42,7 +42,7 @@ class ConfigurationController extends Controller
     /**
      * ConfigurationController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

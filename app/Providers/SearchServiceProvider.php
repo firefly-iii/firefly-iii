@@ -29,7 +29,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * @codeCoverageIgnore
+
  * Class SearchServiceProvider.
  */
 class SearchServiceProvider extends ServiceProvider

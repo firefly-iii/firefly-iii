@@ -35,7 +35,7 @@ use Session;
 /**
  * Class Preferences.
  *
- * @codeCoverageIgnore
+
  */
 class Preferences
 {

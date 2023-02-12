@@ -76,7 +76,7 @@ class RuleTrigger extends Model
     protected $fillable = ['rule_id', 'trigger_type', 'trigger_value', 'order', 'active', 'stop_processing'];
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function rule(): BelongsTo

@@ -42,7 +42,7 @@ class UpdateController extends Controller
     /**
      * RuleGroupController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

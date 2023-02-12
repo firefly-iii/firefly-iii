@@ -70,7 +70,7 @@ class ListController extends Controller
     /**
      * CurrencyRepository constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -95,7 +95,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -149,7 +149,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
     {
@@ -188,7 +188,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function bills(TransactionCurrency $currency): JsonResponse
     {
@@ -232,7 +232,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
     {
@@ -267,7 +267,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
     {
@@ -320,7 +320,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function rules(TransactionCurrency $currency): JsonResponse
     {
@@ -374,7 +374,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {

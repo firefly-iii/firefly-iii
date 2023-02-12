@@ -164,7 +164,7 @@ trait AccountServiceTrait
      * @param  Account  $account
      * @param  string  $note
      *
-     * @codeCoverageIgnore
+
      * @return bool
      */
     public function updateNote(Account $account, string $note): bool

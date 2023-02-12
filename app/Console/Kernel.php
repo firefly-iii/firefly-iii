@@ -31,7 +31,7 @@ use Log;
 /**
  * File to make sure commands work.
  *
- * @codeCoverageIgnore
+
  */
 class Kernel extends ConsoleKernel
 {

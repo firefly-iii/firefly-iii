@@ -29,7 +29,7 @@ use Illuminate\Console\Command;
 /**
  * Class UpgradeFireflyInstructions.
  *
- * @codeCoverageIgnore
+
  */
 class UpgradeFireflyInstructions extends Command
 {

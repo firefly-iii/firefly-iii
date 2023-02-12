@@ -49,7 +49,7 @@ use Throwable;
 /**
  * Class Handler
  *
- * @codeCoverageIgnore
+
  */
 class Handler extends ExceptionHandler
 {

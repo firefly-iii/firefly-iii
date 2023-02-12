@@ -50,7 +50,7 @@ class WarnAboutBills implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  Carbon|null  $date
      */

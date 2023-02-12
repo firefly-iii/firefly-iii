@@ -46,7 +46,7 @@ class DestroyController extends Controller
     /**
      * TransactionController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -76,7 +76,7 @@ class DestroyController extends Controller
      * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -116,7 +116,7 @@ class DestroyController extends Controller
      *
      * @param  TransactionJournal  $transactionJournal
      *
-     * @codeCoverageIgnore
+
      * @return JsonResponse
      */
     public function destroyJournal(TransactionJournal $transactionJournal): JsonResponse

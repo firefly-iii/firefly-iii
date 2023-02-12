@@ -38,7 +38,7 @@ class DestroyController extends Controller
     /**
      * BillController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -62,7 +62,7 @@ class DestroyController extends Controller
      * @param  Bill  $bill
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(Bill $bill): JsonResponse
     {

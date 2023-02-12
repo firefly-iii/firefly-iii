@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 /**
  * Class CurrencyDestroyService
  *
- * @codeCoverageIgnore
+
  */
 class CurrencyDestroyService
 {

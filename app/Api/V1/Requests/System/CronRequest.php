@@ -31,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class CronRequest
  *
- * @codeCoverageIgnore
+
  */
 class CronRequest extends FormRequest
 {

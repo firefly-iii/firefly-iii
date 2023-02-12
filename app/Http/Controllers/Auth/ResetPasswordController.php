@@ -44,7 +44,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * and uses a simple trait to include this behavior. You're free to
  * explore this trait and override any methods you wish to tweak.
  *
- * @codeCoverageIgnore
+
  */
 class ResetPasswordController extends Controller
 {

@@ -66,7 +66,7 @@ class InvitedUser extends Model
     protected $fillable = ['user_id', 'email', 'invite_code', 'expires', 'redeemed'];
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function user(): BelongsTo

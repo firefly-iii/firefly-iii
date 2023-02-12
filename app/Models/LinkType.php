@@ -104,7 +104,7 @@ class LinkType extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function transactionJournalLinks(): HasMany

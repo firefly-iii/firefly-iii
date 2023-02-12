@@ -29,7 +29,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @codeCoverageIgnore
+
  * Class Amount.
  *
  * @method string formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true)

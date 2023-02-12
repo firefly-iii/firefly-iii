@@ -40,7 +40,7 @@ class DestroyController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -64,7 +64,7 @@ class DestroyController extends Controller
      * @param  Webhook  $webhook
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(Webhook $webhook): JsonResponse
     {
@@ -86,7 +86,7 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function destroyAttempt(Webhook $webhook, WebhookMessage $message, WebhookAttempt $attempt): JsonResponse
     {
@@ -114,7 +114,7 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function destroyMessage(Webhook $webhook, WebhookMessage $message): JsonResponse
     {

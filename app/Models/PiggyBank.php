@@ -129,7 +129,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function account(): BelongsTo
@@ -138,7 +138,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -147,7 +147,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * Get all of the piggy bank's notes.
      */
     public function notes(): MorphMany
@@ -164,7 +164,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function piggyBankEvents(): HasMany
@@ -173,7 +173,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function piggyBankRepetitions(): HasMany
@@ -182,7 +182,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      *
      * @param  mixed  $value
      */

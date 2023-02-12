@@ -47,7 +47,7 @@ class BudgetController extends Controller
     /**
      * IndexController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

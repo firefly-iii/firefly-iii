@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Facade;
  * @method string positive(string $amount)
  * @method array balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date)
  *
- * @codeCoverageIgnore
+
  */
 class Steam extends Facade
 {
