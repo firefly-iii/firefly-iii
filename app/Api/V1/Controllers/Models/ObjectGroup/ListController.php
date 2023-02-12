@@ -64,7 +64,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/object_groups/listBillByObjectGroup
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/listBillByObjectGroup
      *
      * List all bills in this object group
      *
@@ -100,7 +100,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/object_groups/listPiggyBankByObjectGroup
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/listPiggyBankByObjectGroup
      *
      * List all piggies under the object group.
      *

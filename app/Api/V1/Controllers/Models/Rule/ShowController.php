@@ -65,7 +65,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/rules/listRule
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/listRule
      *
      * List all of them.
      *
@@ -101,7 +101,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/rules/getRule
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/getRule
      *
      * List single resource.
      *

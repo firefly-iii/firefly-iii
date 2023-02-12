@@ -57,7 +57,7 @@ class BillController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/insight/insightExpenseBill
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightExpenseBill
      *
      * Expenses per bill, possibly filtered by bill and account.
      *
@@ -120,7 +120,7 @@ class BillController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/insight/insightExpenseNoBill
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightExpenseNoBill
      *
      * Expenses for no bill filtered by account.
      *

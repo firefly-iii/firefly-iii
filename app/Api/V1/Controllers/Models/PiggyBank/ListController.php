@@ -61,7 +61,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/piggy_banks/listAttachmentByPiggyBank
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listAttachmentByPiggyBank
      *
      * @param  PiggyBank  $piggyBank
      *
@@ -94,7 +94,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/piggy_banks/listEventByPiggyBank
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listEventByPiggyBank
      *
      * List single resource.
      *

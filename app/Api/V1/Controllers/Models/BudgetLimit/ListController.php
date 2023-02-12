@@ -68,7 +68,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/budgets/listTransactionByBudgetLimit
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listTransactionByBudgetLimit
      * Show all transactions.
      *
      * @param  Request  $request

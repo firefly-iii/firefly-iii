@@ -68,7 +68,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/listAttachmentByTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listAttachmentByTransaction
      *
      * @param  TransactionGroup  $transactionGroup
      *
@@ -104,7 +104,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/listEventByTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listEventByTransaction
      *
      * @param  TransactionGroup  $transactionGroup
      *
@@ -143,7 +143,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/listLinksByJournal
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listLinksByJournal
      *
      * @param  TransactionJournal  $transactionJournal
      *

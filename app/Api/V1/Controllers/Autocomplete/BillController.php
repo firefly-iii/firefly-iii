@@ -57,7 +57,7 @@ class BillController extends Controller
 
     /**
      * Documentation for this endpoint is at:
-     * https://api-docs.firefly-iii.org/#/autocomplete/getBillsAC
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getBillsAC
      * TODO expand API to add active field.
      *
      * @param  AutocompleteRequest  $request
@@ -71,9 +71,9 @@ class BillController extends Controller
         $filtered = $result->map(
             static function (Bill $item) {
                 return [
-                    'id'   => (string)$item->id,
-                    'name' => $item->name,
-                    'active' => $item->active
+                    'id'     => (string)$item->id,
+                    'name'   => $item->name,
+                    'active' => $item->active,
                 ];
             }
         );

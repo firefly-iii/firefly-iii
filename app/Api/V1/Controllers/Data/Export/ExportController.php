@@ -55,7 +55,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportAccounts
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportAccounts
      *
      * @param  ExportRequest  $request
      *
@@ -99,7 +99,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportBills
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBills
      *
      * @param  ExportRequest  $request
      *
@@ -115,7 +115,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportBudgets
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBudgets
      *
      * @param  ExportRequest  $request
      *
@@ -131,7 +131,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportCategories
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportCategories
      *
      * @param  ExportRequest  $request
      *
@@ -147,7 +147,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportPiggies
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportPiggies
      *
      * @param  ExportRequest  $request
      *
@@ -163,7 +163,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportRecurring
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRecurring
      *
      * @param  ExportRequest  $request
      *
@@ -179,7 +179,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportRules
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRules
      *
      * @param  ExportRequest  $request
      *
@@ -195,7 +195,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportTags
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTags
      *
      * @param  ExportRequest  $request
      *
@@ -211,7 +211,7 @@ class ExportController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/data/exportTransactions
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTransactions
      *
      * @param  ExportRequest  $request
      *

@@ -61,7 +61,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/piggy_banks/listPiggyBank
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listPiggyBank
      *
      * List all of them.
      *
@@ -96,7 +96,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/piggy_banks/getPiggyBank
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/getPiggyBank
      *
      * List single resource.
      *

@@ -65,7 +65,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/object_groups/listObjectGroups
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/listObjectGroups
      *
      * Display a listing of the resource.
      *
@@ -103,7 +103,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/object_groups/getObjectGroup
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/getObjectGroup
      *
      * Show single instance.
      *
