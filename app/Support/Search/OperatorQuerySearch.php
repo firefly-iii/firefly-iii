@@ -69,7 +69,6 @@ class OperatorQuerySearch implements SearchInterface
     private CategoryRepositoryInterface $categoryRepository;
     private GroupCollectorInterface     $collector;
     private CurrencyRepositoryInterface $currencyRepository;
-    private Carbon                      $date;
     private array                       $invalidOperators;
     private int                         $limit;
     private Collection                  $operators;
@@ -94,7 +93,6 @@ class OperatorQuerySearch implements SearchInterface
         $this->prohibitedWords    = [];
         $this->invalidOperators   = [];
         $this->limit              = 25;
-        $this->date               = today(config('app.timezone'));
         $this->validOperators     = array_keys(config('search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
@@ -2017,14 +2015,6 @@ class OperatorQuerySearch implements SearchInterface
     public function getWords(): array
     {
         return $this->words;
-    }
-
-    /**
-     * @param  Carbon  $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $this->date = $date;
     }
 
     /**

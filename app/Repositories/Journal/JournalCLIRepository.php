@@ -36,9 +36,6 @@ use stdClass;
  */
 class JournalCLIRepository implements JournalCLIRepositoryInterface
 {
-    /** @var User */
-    private $user;
-
     /**
      * Get all transaction journals with a specific type, regardless of user.
      *
@@ -234,6 +231,6 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
+        return;
     }
 }
