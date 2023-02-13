@@ -118,7 +118,7 @@
     "phpstan/phpstan": "^1.9",
     "phpstan/phpstan-deprecation-rules": "^1.0",
     "phpstan/phpstan-strict-rules": "^1.4",
-    "phpunit/phpunit": "^9",
+    "phpunit/phpunit": "^10",
     "thecodingmachine/phpstan-strict-rules": "^1.0"
   },
   "suggest": {
