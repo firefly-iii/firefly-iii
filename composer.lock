@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "052f139e8202508ed3608b6447bec7dd",
+    "content-hash": "b88b46f4acccd4b40e0ce98015c29585",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3828,38 +3828,38 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v6.4.0",
+            "version": "v7.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "f05978827b9343cba381ca05b8c7deee346b6015"
+                "reference": "15e5fe35305419c9c6cf196be8d62cf70087a20c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/f05978827b9343cba381ca05b8c7deee346b6015",
-                "reference": "f05978827b9343cba381ca05b8c7deee346b6015",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/15e5fe35305419c9c6cf196be8d62cf70087a20c",
+                "reference": "15e5fe35305419c9c6cf196be8d62cf70087a20c",
                 "shasum": ""
             },
             "require": {
-                "filp/whoops": "^2.14.5",
-                "php": "^8.0.0",
-                "symfony/console": "^6.0.2"
+                "filp/whoops": "^2.14.6",
+                "nunomaduro/termwind": "^1.15.1",
+                "php": "^8.1.0",
+                "symfony/console": "^6.2.5"
             },
             "require-dev": {
-                "brianium/paratest": "^6.4.1",
-                "laravel/framework": "^9.26.1",
-                "laravel/pint": "^1.1.1",
-                "nunomaduro/larastan": "^1.0.3",
-                "nunomaduro/mock-final-classes": "^1.1.0",
-                "orchestra/testbench": "^7.7",
-                "phpunit/phpunit": "^9.5.23",
-                "spatie/ignition": "^1.4.1"
+                "laravel/framework": "^10.0.0",
+                "laravel/pint": "^1.4.1",
+                "laravel/sail": "^1.20.1",
+                "laravel/sanctum": "^3.2.1",
+                "laravel/tinker": "^2.8.0",
+                "nunomaduro/larastan": "^2.4.0",
+                "orchestra/testbench-core": "^8.0.0",
+                "pestphp/pest": "^2.0.0",
+                "phpunit/phpunit": "^10.0.7",
+                "spatie/laravel-ignition": "^2.0.0"
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-develop": "6.x-dev"
-                },
                 "laravel": {
                     "providers": [
                         "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider"
@@ -3867,6 +3867,9 @@
                 }
             },
             "autoload": {
+                "files": [
+                    "./src/Adapters/Phpunit/Autoload.php"
+                ],
                 "psr-4": {
                     "NunoMaduro\\Collision\\": "src/"
                 }
@@ -3912,7 +3915,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-01-03T12:54:54+00:00"
+            "time": "2023-02-11T18:10:08+00:00"
         },
         {
             "name": "nunomaduro/termwind",
