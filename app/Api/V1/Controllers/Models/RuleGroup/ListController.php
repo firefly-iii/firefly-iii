@@ -85,7 +85,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rule_groups.rules', [$group->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.rule-groups.rules', [$group->id]).$this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);

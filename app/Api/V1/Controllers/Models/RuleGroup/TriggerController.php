@@ -108,7 +108,7 @@ class TriggerController extends Controller
         $count        = $transactions->count();
 
         $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rule_groups.test', [$group->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.rule-groups.test', [$group->id]).$this->buildParams());
 
         // resulting list is presented as JSON thing.
         $manager = $this->getManager();
