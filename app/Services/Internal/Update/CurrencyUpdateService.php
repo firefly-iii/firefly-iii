@@ -41,23 +41,23 @@ class CurrencyUpdateService
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
         if (array_key_exists('code', $data) && '' !== (string)$data['code']) {
-            $currency->code = $data['code'];
+            $currency->code = e($data['code']);
         }
 
         if (array_key_exists('symbol', $data) && '' !== (string)$data['symbol']) {
-            $currency->symbol = $data['symbol'];
+            $currency->symbol = e($data['symbol']);
         }
 
         if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
-            $currency->name = $data['name'];
+            $currency->name = e($data['name']);
         }
 
         if (array_key_exists('enabled', $data) && is_bool($data['enabled'])) {
-            $currency->enabled = $data['enabled'];
+            $currency->enabled = (bool) $data['enabled'];
         }
 
         if (array_key_exists('decimal_places', $data) && is_int($data['decimal_places'])) {
-            $currency->decimal_places = $data['decimal_places'];
+            $currency->decimal_places = (int) $data['decimal_places'];
         }
 
         $currency->save();
