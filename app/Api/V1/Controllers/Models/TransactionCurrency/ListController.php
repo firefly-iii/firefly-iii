@@ -166,7 +166,7 @@ class ListController extends Controller
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         // make paginator:
         $paginator = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.available_budgets', [$currency->code]).$this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.available-budgets', [$currency->code]).$this->buildParams());
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);
@@ -245,7 +245,7 @@ class ListController extends Controller
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.budget_limits', [$currency->code]).$this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.budget-limits', [$currency->code]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);

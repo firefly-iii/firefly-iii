@@ -125,7 +125,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.object-groups.piggy_banks', [$objectGroup->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.object-groups.piggy-banks', [$objectGroup->id]).$this->buildParams());
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);

@@ -93,7 +93,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transaction_links.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.transaction-links.index').$this->buildParams());
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);

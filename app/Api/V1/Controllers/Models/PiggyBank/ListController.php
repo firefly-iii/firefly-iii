@@ -80,7 +80,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy_banks.attachments', [$piggyBank->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.piggy-banks.attachments', [$piggyBank->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -116,7 +116,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy_banks.events', [$piggyBank->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.piggy-banks.events', [$piggyBank->id]).$this->buildParams());
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);

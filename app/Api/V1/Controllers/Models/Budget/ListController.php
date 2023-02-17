@@ -124,7 +124,7 @@ class ListController extends Controller
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.budget_limits', [$budget->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.budget-limits', [$budget->id]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
