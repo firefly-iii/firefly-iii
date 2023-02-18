@@ -117,8 +117,11 @@ Route::group(
         Route::get('', ['uses' => 'Budget\ListController@index', 'as' => 'index']);
         Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
         Route::get('{budget}/limits', ['uses' => 'BudgetLimit\ListController@index', 'as' => 'budget-limits.index']);
-        Route::get('sum/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'sum.budgeted']);
+        Route::get('sum/budgeted', ['uses' => 'Budget\ShowController@budgeted', 'as' => 'sum.budgeted']);
         Route::get('sum/spent', ['uses' => 'Budget\SumController@spent', 'as' => 'sum.spent']);
+        Route::get('{budget}/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'budget.budgeted']);
+        Route::get('{budget}/spent', ['uses' => 'Budget\ShowController@spent', 'as' => 'budget.spent']);
+
     }
 );
 

@@ -61,6 +61,16 @@ interface BudgetRepositoryInterface
     public function budgetedInPeriod(Carbon $start, Carbon $end): array;
 
     /**
+     * Returns the amount that is budgeted in a period.
+     *
+     * @param Budget $budget
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @return array
+     */
+    public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
+
+    /**
      * @return bool
      */
     public function cleanupBudgets(): bool;
@@ -194,6 +204,16 @@ interface BudgetRepositoryInterface
      * @return array
      */
     public function spentInPeriod(Carbon $start, Carbon $end): array;
+
+    /**
+     * Used in the v2 API to calculate the amount of money spent in a single budget..
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return array
+     */
+    public function spentInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
 
     /**
      * @param  array  $data
