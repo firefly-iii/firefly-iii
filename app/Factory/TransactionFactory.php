@@ -29,9 +29,12 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Rules\UniqueIban;
+use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Log;
+use Validator;
 
 /**
  * Class TransactionFactory
@@ -43,6 +46,7 @@ class TransactionFactory
     private ?TransactionCurrency $foreignCurrency;
     private TransactionJournal   $journal;
     private bool                 $reconciled;
+    private array                $accountInformation;
 
     /**
      * Constructor.
@@ -51,7 +55,8 @@ class TransactionFactory
      */
     public function __construct()
     {
-        $this->reconciled = false;
+        $this->reconciled         = false;
+        $this->accountInformation = [];
     }
 
     /**
@@ -128,6 +133,9 @@ class TransactionFactory
             $result->foreign_amount      = $foreignAmount;
         }
         $result->save();
+
+        // if present, update account with relevant account information from the array
+        $this->updateAccountInformation();
 
         return $result;
     }
@@ -211,5 +219,46 @@ class TransactionFactory
     public function setUser(User $user): void
     {
         // empty function.
+    }
+
+    /**
+     * @param  array  $accountInformation
+     */
+    public function setAccountInformation(array $accountInformation): void
+    {
+        $this->accountInformation = $accountInformation;
+    }
+
+
+    /**
+     * @return void
+     * @throws FireflyException
+     */
+    private function updateAccountInformation(): void
+    {
+        if (!array_key_exists('iban', $this->accountInformation)) {
+            Log::debug('No IBAN information in array, will not update.');
+            return;
+        }
+        if ('' !== (string)$this->account->iban) {
+            Log::debug('Account already has IBAN information, will not update.');
+            return;
+        }
+        if ($this->account->iban === $this->accountInformation['iban']) {
+            Log::debug('Account already has this IBAN, will not update.');
+            return;
+        }
+        // validate info:
+        $validator = Validator::make(['iban' => $this->accountInformation['iban']], [
+            'iban' => ['required', new UniqueIban($this->account, $this->account->accountType->type)],
+        ]);
+        if ($validator->fails()) {
+            Log::debug('Invalid or non-unique IBAN, will not update.');
+            return;
+        }
+
+        Log::debug('Will update account with IBAN information.');
+        $service = app(AccountUpdateService::class);
+        $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
     }
 }

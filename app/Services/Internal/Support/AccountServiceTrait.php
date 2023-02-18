@@ -125,7 +125,7 @@ trait AccountServiceTrait
             }
         }
 
-        // the account role may not be set in the data but we may have it already:
+        // the account role may not be set in the data, but we may have it already:
         if (!array_key_exists('account_role', $data)) {
             $data['account_role'] = null;
         }
