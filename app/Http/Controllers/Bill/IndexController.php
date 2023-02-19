@@ -215,15 +215,19 @@ class IndexController extends Controller
 
         // per period:
         $division  = [
-            '1Y'  => '1',
-            '6M'  => '2',
-            '3M'  => '4',
-            '1M'  => '12',
-            '1W'  => '52.16',
-            '1D'  => '365.24',
-            'YTD' => '1',
-            'QTD' => '4',
-            'MTD' => '12',
+            '1Y'      => '1',
+            '6M'      => '2',
+            '3M'      => '4',
+            '1M'      => '12',
+            '1W'      => '52.16',
+            '1D'      => '365.24',
+            'YTD'     => '1',
+            'QTD'     => '4',
+            'MTD'     => '12',
+            'last7'   => '52.16',
+            'last30'  => '12',
+            'last90'  => '4',
+            'last365' => '1',
         ];
         $perPeriod = bcdiv($yearAmount, $division[$range]);
 
