@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -63,9 +64,9 @@ interface OperationsRepositoryInterface
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void;
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * Sum of withdrawal journals in period for a set of tags, grouped per currency. Amounts are always negative.

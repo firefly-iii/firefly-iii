@@ -27,6 +27,7 @@ use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -124,11 +125,9 @@ interface LinkTypeRepositoryInterface
     public function getLinks(TransactionJournal $journal): Collection;
 
     /**
-     * Set the user for this instance.
-     *
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void;
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * @param  array  $data

@@ -29,6 +29,7 @@ use FireflyIII\Models\Location;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -150,11 +151,9 @@ interface TransactionGroupRepositoryInterface
     public function getTags(int $journalId): array;
 
     /**
-     * Set the user.
-     *
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void;
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * Create a new transaction group.

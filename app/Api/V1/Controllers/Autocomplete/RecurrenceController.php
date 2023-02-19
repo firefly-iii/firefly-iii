@@ -45,6 +45,7 @@ class RecurrenceController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(RecurringRepositoryInterface::class);
+
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);
