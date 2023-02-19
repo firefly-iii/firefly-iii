@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Artisan;
-use Carbon\Carbon;
 use DB;
 use Exception;
 use FireflyConfig;
@@ -35,11 +34,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Routing\Route;
 use Illuminate\View\View;
 use Log;
 use Monolog\Handler\RotatingFileHandler;
-use Route as RouteFacade;
 
 /**
  * Class DebugController
@@ -141,6 +138,9 @@ class DebugController extends Controller
         $cacheDriver     = config('cache.default');
         $logChannel      = config('logging.default');
         $appLogLevel     = config('logging.level');
+        $maxFileSize     = app('steam')->phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize     = app('steam')->phpBytes(ini_get('post_max_size'));
+        $uploadSize      = min($maxFileSize, $maxPostSize);
         $displayErrors   = ini_get('display_errors');
         $errorReporting  = $this->errorReporting((int)ini_get('error_reporting'));
         $interface       = PHP_SAPI;
@@ -179,7 +179,7 @@ class DebugController extends Controller
         setlocale(LC_ALL, $original);
 
         // get latest log file:
-        $logger     = Log::driver();
+        $logger = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
         $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
         $logContent = '';
@@ -208,6 +208,7 @@ class DebugController extends Controller
                 'logChannel',
                 'stateful',
                 'tz',
+                'uploadSize',
                 'appLogLevel',
                 'remoteHeader',
                 'remoteMailHeader',
