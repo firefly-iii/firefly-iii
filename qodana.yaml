@@ -6,3 +6,4 @@ exclude:
   - name: All
     paths:
       - .ci
+      - _ide_helper.php
