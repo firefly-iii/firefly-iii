@@ -30,6 +30,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use JsonException;
 use Log;
@@ -309,10 +310,12 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void
+    public function setUser(User|Authenticatable|null $user): void
     {
-        $this->user = $user;
+        if(null !== $user) {
+            $this->user = $user;
+        }
     }
 }
