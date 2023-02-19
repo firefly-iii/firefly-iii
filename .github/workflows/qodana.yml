@@ -24,8 +24,11 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Install dependencies
-        run: composer install --no-scripts
-        
+        run: |
+          composer install --no-scripts
+          php artisan clear-compiled
+          php artisan ide-helper:generate;
+
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@main
         env:
