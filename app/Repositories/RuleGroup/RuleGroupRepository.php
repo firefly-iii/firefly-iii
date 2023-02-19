@@ -448,7 +448,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function setUser(User|Authenticatable|null $user): void
     {
-        if(null !== $user) {
+        if (null !== $user) {
             $this->user = $user;
         }
     }

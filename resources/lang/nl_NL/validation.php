@@ -282,7 +282,7 @@ return [
     'auto_budget_period_mandatory'    => 'De auto-budgetperiode is verplicht.',
 
     // no access to administration:
-    'no_access_user_group'            => 'U hebt niet de juiste toegangsrechten voor deze administratie.',
+    'no_access_user_group'            => 'Je hebt niet de juiste toegangsrechten voor deze administratie.',
 ];
 
 /*

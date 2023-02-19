@@ -9,13 +9,13 @@
         "split": "Del opp",
         "single_split": "Del opp",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
-        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
-        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> er lagret.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") er oppdatert.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Transaksjonsinformasjon",
-        "submission_options": "Submission options",
-        "apply_rules_checkbox": "Apply rules",
+        "submission_options": "Alternativer for innsending",
+        "apply_rules_checkbox": "Bruk regler",
         "fire_webhooks_checkbox": "Fire webhooks",
         "no_budget_pointer": "Det ser ikke ut til at du har noen budsjetter enn\u00e5. Du b\u00f8r opprette noen p\u00e5 <a href=\"\/budgets\">budsjett<\/a>-siden. Budsjetter kan hjelpe deg med \u00e5 holde oversikt over utgifter.",
         "no_bill_pointer": "Det ser ut til at du ikke har noen regninger enn\u00e5. Du b\u00f8r opprette noen p\u00e5 <a href=\"bills\">regninger<\/a>-side. Regninger kan hjelpe deg med \u00e5 holde oversikt over utgifter.",
@@ -31,12 +31,12 @@
         "date": "Dato",
         "tags": "Tagger",
         "no_budget": "(ingen budsjett)",
-        "no_bill": "(no bill)",
+        "no_bill": "(ingen regning)",
         "category": "Kategori",
         "attachments": "Vedlegg",
         "notes": "Notater",
         "external_url": "Ekstern URL",
-        "update_transaction": "Update transaction",
+        "update_transaction": "Oppdater transaksjonen",
         "after_update_create_another": "G\u00e5 tilbake hit etter oppdatering, for \u00e5 fortsette \u00e5 redigere.",
         "store_as_new": "Lagre som en ny transaksjon istedenfor \u00e5 oppdatere.",
         "split_title_help": "Hvis du oppretter en splittet transaksjon, m\u00e5 du ha en global beskrivelse for alle deler av transaksjonen.",
@@ -68,7 +68,7 @@
         "profile_oauth_edit_client": "Rediger Klient",
         "profile_oauth_name_help": "Noe brukerne dine vil gjenkjenne og stole p\u00e5.",
         "profile_oauth_redirect_url": "Videresendings-URL",
-        "profile_oauth_clients_external_auth": "If you're using an external authentication provider like Authelia, OAuth Clients will not work. You can use Personal Access Tokens only.",
+        "profile_oauth_clients_external_auth": "Hvis du bruker en ekstern autentiseringsleverand\u00f8r, som Authelia, vil ikke OAuth klienter fungere. Du kan bare bruke personlige tilgangstokener.",
         "profile_oauth_redirect_url_help": "Programmets tilbakekallingslenke til din adresse.",
         "profile_authorized_apps": "Dine autoriserte applikasjoner",
         "profile_authorized_clients": "Autoriserte klienter",
@@ -127,7 +127,7 @@
         "reset_webhook_secret": "Tilbakestill Webhook n\u00f8kkel"
     },
     "form": {
-        "url": "URL",
+        "url": "Nettadresse",
         "active": "Aktiv",
         "interest_date": "Rentedato",
         "title": "Tittel",
@@ -138,20 +138,20 @@
         "payment_date": "Betalingsdato",
         "invoice_date": "Fakturadato",
         "internal_reference": "Intern referanse",
-        "webhook_response": "Response",
-        "webhook_trigger": "Trigger",
-        "webhook_delivery": "Delivery"
+        "webhook_response": "Respons",
+        "webhook_trigger": "Utl\u00f8ser",
+        "webhook_delivery": "Levering"
     },
     "list": {
         "active": "Er aktiv?",
-        "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
-        "url": "URL",
-        "secret": "Secret"
+        "trigger": "Utl\u00f8ser",
+        "response": "Respons",
+        "delivery": "Levering",
+        "url": "Nettadresse",
+        "secret": "Hemmelighet"
     },
     "config": {
         "html_language": "nb",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "do MMMM, yyyy @ HH:mm:ss"
     }
 }
