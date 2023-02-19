@@ -18,13 +18,17 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: >
-            This issue has been automatically marked as stale because it has not had
-            recent activity. It will be closed if no further activity occurs. Thank you
-            for your contributions.
+            Hi there! This is an automatic reply. `Share and enjoy`
+
+            This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. 
+            
+            Thank you for your contributions.
           stale-pr-message: >
-            This issue has been automatically marked as stale because it has not had
-            recent activity. It will be closed if no further activity occurs. Thank you
-            for your contributions.
+            Hi there! This is an automatic reply. `Share and enjoy`
+
+            This PR has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. 
+
+            Thank you for your contributions.
           days-before-stale: 14
           days-before-close: 7
           exempt-issue-labels: 'enhancement,feature,bug,announcement,layout-v3'
