@@ -26,6 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer install --no-scripts
+          php artisan key:generate
           php artisan clear-compiled
           php artisan ide-helper:generate;
 
