@@ -92,6 +92,7 @@ class Controller extends BaseController
 
         // some date fields:
         foreach ($dates as $field) {
+            $date = null;
             try {
                 $date = request()->query->get($field);
             } catch (BadRequestException $e) {

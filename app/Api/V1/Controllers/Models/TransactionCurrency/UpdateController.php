@@ -50,7 +50,7 @@ class UpdateController extends Controller
     /**
      * CurrencyRepository constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -67,7 +67,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/disableCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/disableCurrency
      *
      * Disable a currency.
      *
@@ -76,7 +76,7 @@ class UpdateController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-     * @codeCoverageIgnore
+
      */
     public function disable(TransactionCurrency $currency): JsonResponse
     {
@@ -101,7 +101,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/defaultCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/defaultCurrency
      *
      * Make the currency a default currency.
      *
@@ -109,7 +109,7 @@ class UpdateController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function makeDefault(TransactionCurrency $currency): JsonResponse
     {
@@ -133,7 +133,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/enableCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/enableCurrency
      *
      * Enable a currency.
      *
@@ -142,7 +142,7 @@ class UpdateController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-     * @codeCoverageIgnore
+
      */
     public function enable(TransactionCurrency $currency): JsonResponse
     {
@@ -163,7 +163,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/currencies/updateCurrency
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/updateCurrency
      *
      * Update a currency.
      *

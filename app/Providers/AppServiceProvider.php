@@ -31,7 +31,7 @@ use Laravel\Sanctum\Sanctum;
 use URL;
 
 /**
- * @codeCoverageIgnore
+
  * Class AppServiceProvider
  */
 class AppServiceProvider extends ServiceProvider

@@ -30,7 +30,7 @@ use FireflyIII\Models\Budget;
 /**
  * Class BudgetDestroyService
  *
- * @codeCoverageIgnore
+
  */
 class BudgetDestroyService
 {

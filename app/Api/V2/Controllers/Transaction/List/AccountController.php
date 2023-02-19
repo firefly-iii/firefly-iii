@@ -41,6 +41,9 @@ class AccountController extends Controller
     use TransactionFilter;
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/accounts/listTransactionByAccount
+     *
      * @param  ListRequest  $request
      * @param  Account  $account
      * @return JsonResponse

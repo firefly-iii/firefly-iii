@@ -44,6 +44,7 @@ class SumController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(BillRepositoryInterface::class);
@@ -53,6 +54,9 @@ class SumController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/transactions-sum/getBillsPaidTrSum
+     *
      * @param  DateRequest  $request
      * @return JsonResponse
      */
@@ -67,6 +71,9 @@ class SumController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/transactions-sum/getBillsUnpaidTrSum
+     *
      * @param  DateRequest  $request
      * @return JsonResponse
      */

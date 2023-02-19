@@ -43,11 +43,11 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/budgets/updateBudgetLimit
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/updateBudgetLimit
      *
      * BudgetLimitController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -66,6 +66,8 @@ class UpdateController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/updateBudgetLimit
      *
      * @param  UpdateRequest  $request
      * @param  Budget  $budget

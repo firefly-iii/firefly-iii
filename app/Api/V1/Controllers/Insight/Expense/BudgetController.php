@@ -44,7 +44,7 @@ class BudgetController extends Controller
     /**
      * AccountController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -66,7 +66,7 @@ class BudgetController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/insight/insightExpenseBudget
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightExpenseBudget
      *
      * @param  GenericRequest  $request
      *
@@ -103,7 +103,7 @@ class BudgetController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/insight/insightExpenseNoBudget
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightExpenseNoBudget
      *
      * @param  GenericRequest  $request
      *

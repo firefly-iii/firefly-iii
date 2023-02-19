@@ -45,7 +45,7 @@ class ShowController extends Controller
     /**
      * RuleGroupController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -65,12 +65,12 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/rule_groups/listRuleGroup
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/listRuleGroup
      * List all of them.
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -85,7 +85,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($ruleGroups, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rule_groups.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.rule-groups.index').$this->buildParams());
 
         /** @var RuleGroupTransformer $transformer */
         $transformer = app(RuleGroupTransformer::class);
@@ -99,14 +99,14 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/rule_groups/getRuleGroup
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/getRuleGroup
      *
      * List single resource.
      *
      * @param  RuleGroup  $ruleGroup
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(RuleGroup $ruleGroup): JsonResponse
     {

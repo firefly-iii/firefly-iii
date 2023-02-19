@@ -37,7 +37,7 @@ class ObjectGroupTransformer extends AbstractTransformer
      *
      * AccountTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

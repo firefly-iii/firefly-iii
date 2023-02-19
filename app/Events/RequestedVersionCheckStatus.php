@@ -30,7 +30,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class RequestedVersionCheckStatus
  *
- * @codeCoverageIgnore
+
  */
 class RequestedVersionCheckStatus extends Event
 {

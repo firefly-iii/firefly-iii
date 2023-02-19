@@ -40,6 +40,9 @@ use Illuminate\Http\JsonResponse;
 class PurgeController extends Controller
 {
     /**
+     * TODO cleanup and use repositories.
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/purgeData
      * @return JsonResponse
      */
     public function purge(): JsonResponse
@@ -47,7 +50,6 @@ class PurgeController extends Controller
         $user = auth()->user();
 
         // some manual code, too lazy to call all repositories.
-        //,transactions,withdrawals,deposits,transfers';
 
         // budgets:
         Budget::whereUserId($user->id)->onlyTrashed()->forceDelete();

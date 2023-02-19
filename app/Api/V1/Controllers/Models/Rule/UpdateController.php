@@ -42,7 +42,7 @@ class UpdateController extends Controller
     /**
      * RuleController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -62,7 +62,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/rules/updateRule
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/updateRule
      *
      * Update a rule.
      *

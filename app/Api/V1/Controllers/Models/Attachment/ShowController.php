@@ -47,7 +47,7 @@ class ShowController extends Controller
     /**
      * ShowController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -67,13 +67,13 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/attachments/downloadAttachment
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/attachments/downloadAttachment
      *
      * Download an attachment.
      *
      * @param  Attachment  $attachment
      *
-     * @codeCoverageIgnore
+
      * @return LaravelResponse
      * @throws   FireflyException
      */
@@ -112,13 +112,13 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/attachments/listAttachment
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/attachments/listAttachment
      *
      * Display a listing of the resource.
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -148,7 +148,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/attachments/getAttachment
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/attachments/getAttachment
      *
      * Display the specified resource.
      *

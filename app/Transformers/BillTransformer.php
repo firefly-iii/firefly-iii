@@ -42,7 +42,7 @@ class BillTransformer extends AbstractTransformer
     /**
      * BillTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

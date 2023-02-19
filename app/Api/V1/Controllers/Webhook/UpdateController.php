@@ -39,7 +39,7 @@ class UpdateController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -56,7 +56,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/webhooks/updateWebhook
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/updateWebhook
      *
      * @param  Webhook  $webhook
      * @param  UpdateRequest  $request

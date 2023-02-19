@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Copy .env
         run: test -f .env || cp .ci/.env.ci .env
       - name: Prepare dependencies
@@ -51,7 +51,7 @@ jobs:
       - prepare
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Copy .env
         run: test -f .env || cp .ci/.env.ci .env
       - name: Download database
@@ -86,7 +86,7 @@ jobs:
       - prepare
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Copy .env
         run: test -f .env || cp .ci/.env.ci .env
       - name: Download database
@@ -120,7 +120,7 @@ jobs:
       - prepare
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Copy .env
         run: test -f .env || cp .ci/.env.ci .env
       - name: Download database

@@ -57,7 +57,7 @@ class TagController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/insight/insightIncomeTag
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeTag
      *
      * Expenses for no tag filtered by account.
      *
@@ -113,7 +113,7 @@ class TagController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/insight/insightIncomeNoTag
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeNoTag
      *
      * Expenses per tag, possibly filtered by tag and account.
      *

@@ -45,7 +45,7 @@ class StoreController extends Controller
     /**
      * TransactionLinkController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -68,7 +68,7 @@ class StoreController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/links/storeTransactionLink
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/links/storeTransactionLink
      *
      * Store new object.
      *

@@ -38,7 +38,7 @@ class BudgetTransformer extends AbstractTransformer
     /**
      * BudgetTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -97,8 +97,8 @@ class BudgetTransformer extends AbstractTransformer
             'id'         => (string)$budget->id,
             'created_at' => $budget->created_at->toAtomString(),
             'updated_at' => $budget->updated_at->toAtomString(),
-            'active'     => $budget->active,
             'name'       => $budget->name,
+            'active'     => $budget->active,
             'order'      => $budget->order,
             //            'notes'                     => $notes,
             //            'auto_budget_type'          => $abType,

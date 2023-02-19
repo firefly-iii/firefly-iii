@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\Account;
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -60,9 +61,9 @@ interface OperationsRepositoryInterface
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void;
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * Sum of withdrawal journals in period for a set of accounts, grouped per currency. Amounts are always negative.

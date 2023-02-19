@@ -37,7 +37,7 @@ use Log;
 /**
  * Class Cron
  *
- * @codeCoverageIgnore
+
  */
 class Cron extends Command
 {

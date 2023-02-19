@@ -50,7 +50,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     /**
      * Constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

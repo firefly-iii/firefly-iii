@@ -34,7 +34,7 @@ use Log;
 /**
  * Class RequestedReportOnJournals
  *
- * @codeCoverageIgnore
+
  */
 class RequestedReportOnJournals
 {

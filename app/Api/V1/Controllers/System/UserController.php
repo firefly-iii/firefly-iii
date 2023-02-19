@@ -48,7 +48,7 @@ class UserController extends Controller
     /**
      * UserController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -64,7 +64,7 @@ class UserController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/users/deleteUser
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/users/deleteUser
      *
      * Remove the specified resource from storage.
      *
@@ -72,7 +72,7 @@ class UserController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function destroy(User $user): JsonResponse
     {
@@ -92,13 +92,13 @@ class UserController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/users/listUser
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/users/listUser
      *
      * Display a listing of the resource.
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -128,14 +128,14 @@ class UserController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/users/getUser
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/users/getUser
      *
      * Show a single user.
      *
      * @param  User  $user
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(User $user): JsonResponse
     {
@@ -153,7 +153,7 @@ class UserController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/users/storeUser
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/users/storeUser
      *
      * Store a new user.
      *
@@ -180,7 +180,7 @@ class UserController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/users/updateUser
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/users/updateUser
      *
      * Update a user.
      *

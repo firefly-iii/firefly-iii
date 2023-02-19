@@ -30,7 +30,7 @@ use Illuminate\Session\Middleware\StartSession;
 /**
  * Class StartFireflySession.
  *
- * @codeCoverageIgnore
+
  */
 class StartFireflySession extends StartSession
 {

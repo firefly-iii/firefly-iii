@@ -46,7 +46,7 @@ class DestroyController extends Controller
     /**
      * TransactionController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -69,14 +69,14 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/deleteTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/deleteTransaction
      *
      * Remove the specified resource from storage.
      *
      * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -110,13 +110,13 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/deleteTransactionJournal
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/deleteTransactionJournal
      *
      * Remove the specified resource from storage.
      *
      * @param  TransactionJournal  $transactionJournal
      *
-     * @codeCoverageIgnore
+
      * @return JsonResponse
      */
     public function destroyJournal(TransactionJournal $transactionJournal): JsonResponse

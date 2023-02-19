@@ -54,7 +54,7 @@ class MassController extends Controller
     /**
      * MassController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -239,7 +239,7 @@ class MassController extends Controller
      * @param  string  $key
      *
      * @return Carbon|null
-     * @codeCoverageIgnore
+
      */
     private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
     {
@@ -267,7 +267,7 @@ class MassController extends Controller
      * @param  string  $string
      *
      * @return string|null
-     * @codeCoverageIgnore
+
      */
     private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
     {
@@ -288,7 +288,7 @@ class MassController extends Controller
      * @param  string  $string
      *
      * @return int|null
-     * @codeCoverageIgnore
+
      */
     private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
     {

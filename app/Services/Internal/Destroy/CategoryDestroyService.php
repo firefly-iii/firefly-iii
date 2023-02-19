@@ -30,7 +30,7 @@ use FireflyIII\Models\Category;
 /**
  * Class CategoryDestroyService
  *
- * @codeCoverageIgnore
+
  */
 class CategoryDestroyService
 {

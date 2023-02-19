@@ -102,7 +102,7 @@ class WebhookMessage extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function webhook(): BelongsTo
@@ -111,7 +111,7 @@ class WebhookMessage extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function webhookAttempts(): HasMany

@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -60,7 +61,7 @@ interface AccountTaskerInterface
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user);
+    public function setUser(User|Authenticatable|null $user): void;
 }

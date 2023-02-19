@@ -32,7 +32,7 @@ use Illuminate\Validation\Validator;
 /**
  * Class Request
  *
- * @codeCoverageIgnore
+
  */
 class Request extends FormRequest
 {

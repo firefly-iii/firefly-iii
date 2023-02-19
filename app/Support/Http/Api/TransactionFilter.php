@@ -28,7 +28,7 @@ use FireflyIII\Models\TransactionType;
 /**
  * Trait TransactionFilter
  *
- * @codeCoverageIgnore
+
  */
 trait TransactionFilter
 {

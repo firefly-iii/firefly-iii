@@ -29,7 +29,7 @@ use Exception;
 /**
  * Class NotImplementedException.
  *
- * @codeCoverageIgnore
+
  */
 class NotImplementedException extends Exception
 {

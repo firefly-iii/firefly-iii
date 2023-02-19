@@ -25,7 +25,6 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use DB;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -42,6 +41,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use JsonException;
@@ -145,11 +145,13 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void
+    public function setUser(User|Authenticatable|null $user): void
     {
-        $this->user = $user;
+        if (null !== $user) {
+            $this->user = $user;
+        }
     }
 
     /**
@@ -751,5 +753,123 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getMaxOrder(): int
     {
         return (int)$this->user->budgets()->max('order');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function spentInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        $start->startOfDay();
+        $end->endOfDay();
+
+        // exclude specific liabilities
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
+        $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection = new Collection();
+        /** @var Account $account */
+        foreach ($subset as $account) {
+            if ('credit' === $repository->getMetaValue($account, 'liability_direction')) {
+                $selection->push($account);
+            }
+        }
+
+        // start collecting:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)
+                  ->setRange($start, $end)
+                  ->excludeDestinationAccounts($selection)
+                  ->setTypes([TransactionType::WITHDRAWAL])
+                  ->setBudget($budget);
+
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                'id'             => (string)$currencyId,
+                'name'           => $journal['currency_name'],
+                'symbol'         => $journal['currency_symbol'],
+                'code'           => $journal['currency_code'],
+                'decimal_places' => $journal['currency_decimal_places'],
+                'sum'            => '0',
+            ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
+
+            // also do foreign amount:
+            $foreignId = (int)$journal['foreign_currency_id'];
+            if (0 !== $foreignId) {
+                $array[$foreignId]        = $array[$foreignId] ?? [
+                    'id'             => (string)$foreignId,
+                    'name'           => $journal['foreign_currency_name'],
+                    'symbol'         => $journal['foreign_currency_symbol'],
+                    'code'           => $journal['foreign_currency_code'],
+                    'decimal_places' => $journal['foreign_currency_decimal_places'],
+                    'sum'            => '0',
+                ];
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->negative($journal['foreign_amount']));
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
+    {
+        Log::debug(sprintf('Now in budgetedInPeriod(#%d, "%s", "%s")', $budget->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
+        $return = [];
+        /** @var BudgetLimitRepository $limitRepository */
+        $limitRepository = app(BudgetLimitRepository::class);
+        $limitRepository->setUser($this->user);
+
+        Log::debug(sprintf('Budget #%d: "%s"', $budget->id, $budget->name));
+        $limits = $limitRepository->getBudgetLimits($budget, $start, $end);
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            Log::debug(sprintf('Budget limit #%d', $limit->id));
+            $currency              = $limit->transactionCurrency;
+            $return[$currency->id] = $return[$currency->id] ?? [
+                'id'             => (string)$currency->id,
+                'name'           => $currency->name,
+                'symbol'         => $currency->symbol,
+                'code'           => $currency->code,
+                'decimal_places' => $currency->decimal_places,
+                'sum'            => '0',
+            ];
+            // same period
+            if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
+                Log::debug(sprintf('Add full amount [1]: %s', $limit->amount));
+                continue;
+            }
+            // limit is inside of date range
+            if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
+                Log::debug(sprintf('Add full amount [2]: %s', $limit->amount));
+                continue;
+            }
+            $total                        = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
+            $days                         = $this->daysInOverlap($limit, $start, $end);
+            $amount                       = bcmul(bcdiv((string)$limit->amount, (string)$total), (string)$days);
+            $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
+            Log::debug(
+                sprintf(
+                    'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
+                    bcdiv((string)$limit->amount, (string)$total),
+                    $limit->amount,
+                    $total,
+                    $days,
+                    $amount
+                )
+            );
+        }
+        return $return;
     }
 }

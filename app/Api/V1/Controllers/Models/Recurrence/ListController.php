@@ -48,7 +48,7 @@ class ListController extends Controller
     /**
      * RecurrenceController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -65,7 +65,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/recurrences/listTransactionByRecurrence
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/listTransactionByRecurrence
      *
      * Show transactions for this recurrence.
      *
@@ -74,7 +74,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function transactions(Request $request, Recurrence $recurrence): JsonResponse
     {

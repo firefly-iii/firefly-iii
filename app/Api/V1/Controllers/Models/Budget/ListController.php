@@ -53,7 +53,7 @@ class ListController extends Controller
     /**
      * ListController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -72,13 +72,13 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/budgets/listAttachmentByBudget
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listAttachmentByBudget
      *
      * @param  Budget  $budget
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function attachments(Budget $budget): JsonResponse
     {
@@ -105,7 +105,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/budgets/listBudgetLimitByBudget
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listBudgetLimitByBudget
      *
      * Display a listing of the resource.
      *
@@ -113,7 +113,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function budgetLimits(Budget $budget): JsonResponse
     {
@@ -124,7 +124,7 @@ class ListController extends Controller
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.budget_limits', [$budget->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.budget-limits', [$budget->id]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -137,7 +137,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/budgets/listTransactionByBudget
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listTransactionByBudget
      *
      * Show all transactions.
      *
@@ -147,7 +147,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
@@ -203,7 +203,7 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/budgets/listTransactionWithoutBudget
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listTransactionWithoutBudget
      *
      * Show all transactions.
      *
@@ -211,7 +211,7 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function withoutBudget(Request $request): JsonResponse
     {

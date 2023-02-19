@@ -45,6 +45,7 @@ class RecurrenceController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(RecurringRepositoryInterface::class);
+
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);
@@ -54,7 +55,7 @@ class RecurrenceController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/autocomplete/getRecurringAC
+     * * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getRecurringAC
      *
      * @param  AutocompleteRequest  $request
      *

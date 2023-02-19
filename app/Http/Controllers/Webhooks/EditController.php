@@ -38,7 +38,7 @@ class EditController extends Controller
     /**
      * DeleteController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

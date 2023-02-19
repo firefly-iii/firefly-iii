@@ -44,7 +44,7 @@ class StoreController extends Controller
     /**
      * BillController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -61,7 +61,7 @@ class StoreController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/bills/storeBill
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/storeBill
      *
      * Store a bill.
      *

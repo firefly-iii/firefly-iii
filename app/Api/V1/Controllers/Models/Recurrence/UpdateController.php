@@ -41,7 +41,7 @@ class UpdateController extends Controller
     /**
      * RecurrenceController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -58,7 +58,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/recurrences/updateRecurrence
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/updateRecurrence
      *
      * Update single recurrence.
      *

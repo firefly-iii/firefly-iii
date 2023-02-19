@@ -1,4 +1,9 @@
 profile:
-  name: qodana.starter
+  name: qodana.recommended
 version: "1.0"
 linter: jetbrains/qodana-php:2022.3-eap
+exclude:
+  - name: All
+    paths:
+      - .ci
+      - _ide_helper.php

@@ -55,7 +55,7 @@ use Log;
 /**
  * Class EventServiceProvider.
  *
- * @codeCoverageIgnore
+
  */
 class EventServiceProvider extends ServiceProvider
 {

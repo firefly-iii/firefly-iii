@@ -54,7 +54,7 @@ class ListController extends Controller
     /**
      * AccountController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -71,12 +71,12 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/accounts/listAttachmentByAccount
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listAttachmentByAccount
      *
      * @param  Account  $account
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      * @throws FireflyException
      */
     public function attachments(Account $account): JsonResponse
@@ -104,13 +104,13 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/accounts/listPiggyBankByAccount
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listPiggyBankByAccount
      *
      * @param  Account  $account
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function piggyBanks(Account $account): JsonResponse
     {
@@ -127,7 +127,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.accounts.piggy_banks', [$account->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.accounts.piggy-banks', [$account->id]).$this->buildParams());
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -141,11 +141,11 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/accounts/listTransactionByAccount
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listTransactionByAccount
      *
      * Show all transaction groups related to the account.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  Request  $request
      * @param  Account  $account

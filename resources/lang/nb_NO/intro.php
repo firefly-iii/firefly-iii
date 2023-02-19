@@ -36,18 +36,18 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Velkommen til forsiden til Firefly III. Ta deg tid til å gå gjennom denne introen for å få en følelse av hvordan Firefly III fungerer.',
+    'index_intro'                           => 'Velkommen til indekssiden i Firefly III. Ta deg tid til å gå gjennom denne introduksjonen for å få en følelse av hvordan Firefly III fungerer.',
     'index_accounts-chart'                  => 'Dette diagrammet viser gjeldende saldo på aktivakontoene dine. Du kan velge kontoene som er synlige her under innstillinger.',
     'index_box_out_holder'                  => 'Denne lille boksen og boksene ved siden av gir deg rask oversikt over din økonomiske situasjon.',
     'index_help'                            => 'Hvis du trenger hjelp til en side eller et skjema, trykker du på denne knappen.',
     'index_outro'                           => 'De fleste sidene av Firefly III vil starte med en liten gjennomgang slik som denne. Ta kontakt med meg hvis du har spørsmål eller kommentarer. Sett igang!',
     'index_sidebar-toggle'                  => 'For å opprette nye transaksjoner, kontoer eller andre ting, bruk menyen under dette ikonet.',
-    'index_cash_account'                    => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                    => 'Dette er kontoene som er opprettet så langt. Du kan bruke kontantkontoen til å spore kontantutgifter, men det er selvfølgelig ikke obligatorisk.',
 
     // transactions
     'transactions_create_basic_info'        => 'Skriv inn grunnleggende informasjon om din transaksjon. Kilde, destinasjon, dato og beskrivelse.',
     'transactions_create_amount_info'       => 'Angi mengde for transaksjonen. Hvis nødvendig vil feltene auto-oppdatere for utenlansk beløp info.',
-    'transactions_create_optional_info'     => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
+    'transactions_create_optional_info'     => 'Alle disse feltene er valgfrie. Å legge til meta-data her vil gjøre transaksjonene dine bedre organisert.',
     'transactions_create_split'             => 'Hvis du vil dele en transaksjon, kan du legge til flere deler med denne knappen',
 
     // create account:

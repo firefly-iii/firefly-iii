@@ -2,6 +2,103 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.0 - 2023-03-xx
+
+This is release **6.0.0** of Firefly III. 
+
+### Warnings
+
+- The upgrade is not backwards compatible for people who manage outgoing loans (money borrowed to other people). Transactions will be removed or changed. See [this Gist](https://gist.github.com/JC5/909385c5086f9e07ba2c32e047446d68) for more information.
+- You will need to make a backup of your database.
+- You must use PHP 8.2 or use the Docker container.
+
+### Notes
+
+- The new **v3** layout is not yet finished, and it should **not** be used to edit or add data.
+
+### Added
+- Introduce Jetbrains Qodana code scanning for code quality.
+- Reintroduced PHPUnit tests
+- Added a warning for people using the "remote user guard" in combination with Personal Access Tokens.
+- Improved validation across the board.
+- First code to validate a user's financial administration
+- Dark mode CSS
+- New language: Catalan
+- "Working" beta of the new layout under `/v3/`
+- There is a page for webhooks.
+- [Issue 4975](https://github.com/firefly-iii/firefly-iii/issues/4975) Rules can copy/move description to notes and vice versa
+- [Issue 5031](https://github.com/firefly-iii/firefly-iii/issues/5031) You can invite users to your installation when registration is off
+- [Issue 5213](https://github.com/firefly-iii/firefly-iii/issues/5213) You can trigger recurring transactions beforehand
+- [Issue 5592](https://github.com/firefly-iii/firefly-iii/issues/5592) Transactions have a little history box to show how rules changed them
+- [Issue 5752](https://github.com/firefly-iii/firefly-iii/issues/5752) Firefly III can send Slack notifications instead of emails
+- [Issue 5862](https://github.com/firefly-iii/firefly-iii/issues/5862) Search can filter on reconciled transactions
+- [Issue 6086](https://github.com/firefly-iii/firefly-iii/issues/6086) All search filters can be negative by putting `-` in front of them
+- [Issue 6441](https://github.com/firefly-iii/firefly-iii/issues/6441) Buttons to purge deleted data, which is easy for data imports
+- [Issue 6457](https://github.com/firefly-iii/firefly-iii/issues/6457) Rule trigger 'transaction exists', that will always trigger
+- [Issue 6526](https://github.com/firefly-iii/firefly-iii/issues/6526) Option to disable rules and/or webhooks when saving transactions
+- [Issue 6605](https://github.com/firefly-iii/firefly-iii/issues/6605) You can search for external ID values
+
+### Changed
+- Completely rewritten documentation at https://docs.firefly-iii.org
+- Bad escape in JS code has been fixed.
+- Added date validation in routes for better script kiddie protection
+- Shorter titles in object groups
+- Piggy bank actions are created correctly
+- Some bad spelling in a header check
+- Various errors no longer throw a 500 but a 422 (validation failed)
+- The translations now have a warning in the comments so people don't submit translations.
+- [Issue 6824](https://github.com/firefly-iii/firefly-iii/issues/6824) Fix issue with bills.
+- [Issue 6828](https://github.com/firefly-iii/firefly-iii/issues/6828) Catch bad number in API
+- [Issue 6829](https://github.com/firefly-iii/firefly-iii/issues/6829) Better error catching in API
+- [Issue 6831](https://github.com/firefly-iii/firefly-iii/issues/6831) TypeError when using remote authentication
+- [Issue 6834](https://github.com/firefly-iii/firefly-iii/issues/6834) Will use IBAN in account names if account exists already with a different IBAN
+- [Issue 6842](https://github.com/firefly-iii/firefly-iii/issues/6842) Switch from expense to revenue when importing data.
+- [Issue 6855](https://github.com/firefly-iii/firefly-iii/issues/6855) Do not validate currency if currency is NULL, thanks @eps90!
+- [Issue 6869](https://github.com/firefly-iii/firefly-iii/issues/6869) Liability created via API is not applying opening balance.
+- [Issue 6870](https://github.com/firefly-iii/firefly-iii/issues/6870) Old inactive recurring transactions do not lose categories when the categories are deleted
+- [Issue 6974](https://github.com/firefly-iii/firefly-iii/issues/6974) Auto budget amount fix.
+- [Issue 6876](https://github.com/firefly-iii/firefly-iii/issues/6876) Date field is validated in recurring transactions
+- [Issue 6581](https://github.com/firefly-iii/firefly-iii/issues/6581) Fields were not cleared in the transaction screen in some cases
+
+### Removed
+- [Issue 4198](https://github.com/firefly-iii/firefly-iii/issues/4198) The total available budget amount bar on the `/budgets` page is no longer manageable but will be auto-calculated
+- Cryptocurrencies in default currency set
+- Unused environment variables
+
+### API
+- URLs with underscores in them have been updated to use dashes instead (`piggy_banks` -> `piggy-banks`).
+- [Issue 6130](https://github.com/firefly-iii/firefly-iii/issues/6130) You can now create a reconciliation transaction
+- New `v2` endpoints, see new documentation at https://api-docs.firefly-iii.org
+- Various API fixes
+
+### Security
+- [Issue 6826](https://github.com/firefly-iii/firefly-iii/issues/6826) Hide 2FA information when printing, thanks @jstebenne!
+- Blocked users can access API, and users can unblock themselves using the API. This was reported in CVE-2023-0298.
+
+## 6.0.0-beta.2 - 2023-02-20
+
+### Warnings
+
+- ⚠️ Make a backup of your database first!
+- ⚠️ This version requires **PHP 8.2**.
+
+You can access the new V3 layout under `/v3/`. If you decide to use or test it:
+
+- ⚠️ Read the instructions under the ☠️ icon FIRST.
+- ⚠️ The new layout is not yet finished. Use it to change your data at your own risk.
+
+### Added
+- Add max upload to debug page.
+
+### Fixed
+- Missing indexes in bill overview.
+- Various dark mode fixes
+
+### Security
+- Bad escape in transaction currencies could cause XSS attacks.
+
+### API
+- All v1 and v2 routes checked and documented properly.
 
 ## 6.0.0-beta.1 - 2023-02-12
 

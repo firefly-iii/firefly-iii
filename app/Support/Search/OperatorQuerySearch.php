@@ -69,21 +69,23 @@ class OperatorQuerySearch implements SearchInterface
     private CategoryRepositoryInterface $categoryRepository;
     private GroupCollectorInterface     $collector;
     private CurrencyRepositoryInterface $currencyRepository;
-    private Carbon                      $date;
     private array                       $invalidOperators;
     private int                         $limit;
     private Collection                  $operators;
     private int                         $page;
-    private array                       $prohibitedWords;
-    private float                       $startTime;
-    private TagRepositoryInterface      $tagRepository;
-    private array                       $validOperators;
-    private array                       $words;
+    protected Carbon                    $date;
+
+
+    private array                  $prohibitedWords;
+    private float                  $startTime;
+    private TagRepositoryInterface $tagRepository;
+    private array                  $validOperators;
+    private array                  $words;
 
     /**
      * OperatorQuerySearch constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -94,7 +96,6 @@ class OperatorQuerySearch implements SearchInterface
         $this->prohibitedWords    = [];
         $this->invalidOperators   = [];
         $this->limit              = 25;
-        $this->date               = today(config('app.timezone'));
         $this->validOperators     = array_keys(config('search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
@@ -115,7 +116,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-     * @codeCoverageIgnore
      */
     public function getModifiers(): Collection
     {
@@ -124,7 +124,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-     * @codeCoverageIgnore
      */
     public function getOperators(): Collection
     {
@@ -133,7 +132,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-     * @codeCoverageIgnore
      */
     public function getWordsAsString(): string
     {
@@ -142,7 +140,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-     * @codeCoverageIgnore
      */
     public function hasModifiers(): bool
     {
@@ -1992,7 +1989,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-     * @codeCoverageIgnore
      */
     public function searchTime(): float
     {
@@ -2020,16 +2016,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  Carbon  $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $this->date = $date;
-    }
-
-    /**
      * @inheritDoc
-     * @codeCoverageIgnore
      */
     public function setPage(int $page): void
     {
@@ -2039,7 +2026,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-     * @codeCoverageIgnore
      */
     public function setUser(User $user): void
     {
@@ -2062,5 +2048,13 @@ class OperatorQuerySearch implements SearchInterface
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
+    }
+
+    /**
+     * @param  Carbon  $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
     }
 }

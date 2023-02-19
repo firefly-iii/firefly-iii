@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionGroupDestroyService
  *
- * @codeCoverageIgnore
+
  */
 class TransactionGroupDestroyService
 {

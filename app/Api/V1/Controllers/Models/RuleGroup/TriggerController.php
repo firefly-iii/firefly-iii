@@ -48,7 +48,7 @@ class TriggerController extends Controller
     /**
      * RuleGroupController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -68,7 +68,7 @@ class TriggerController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/rule_groups/testRuleGroup
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/testRuleGroup
      *
      * @param  TestRequest  $request
      * @param  RuleGroup  $group
@@ -108,7 +108,7 @@ class TriggerController extends Controller
         $count        = $transactions->count();
 
         $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rule_groups.test', [$group->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.rule-groups.test', [$group->id]).$this->buildParams());
 
         // resulting list is presented as JSON thing.
         $manager = $this->getManager();
@@ -124,7 +124,7 @@ class TriggerController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/rule_groups/fireRuleGroup
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/fireRuleGroup
      *
      * Execute the given rule group on a set of existing transactions.
      *

@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class Controller.
  *
- * @codeCoverageIgnore
+
  */
 abstract class Controller extends BaseController
 {
@@ -97,6 +97,7 @@ abstract class Controller extends BaseController
         // some date fields:
         $dates = ['start', 'end', 'date'];
         foreach ($dates as $field) {
+            $date = null;
             try {
                 $date = request()->query->get($field);
             } catch (BadRequestException $e) {

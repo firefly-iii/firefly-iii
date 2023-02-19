@@ -51,7 +51,7 @@ abstract class Controller extends BaseController
     /**
      * Controller constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

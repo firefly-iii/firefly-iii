@@ -54,7 +54,6 @@ trait JournalServiceTrait
      * @param  array  $data
      *
      * @return Account|null
-     * @codeCoverageIgnore
      * @throws FireflyException
      */
     protected function getAccount(string $transactionType, string $direction, array $data): ?Account
@@ -78,10 +77,11 @@ trait JournalServiceTrait
         $result       = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
         $numberResult = $result;
         $result       = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
+        $nameResult =$result;
 
-        // if result is NULL but IBAN is set, any result of the search by NAME can't overrule
+        // if $result (find by name) is NULL, but IBAN is set, any result of the search by NAME can't overrule
         // this account. In such a case, the name search must be retried with a new name.
-        if (null !== $result && null === $numberResult && null === $ibanResult && '' !== (string) $data['iban']) {
+        if (null !== $nameResult && null === $numberResult && null === $ibanResult && '' !== (string)$data['iban'] && '' !== (string) $nameResult->iban) {
             $data['name'] = sprintf('%s (%s)', $data['name'], $data['iban']);
             Log::debug(sprintf('Search again using the new name, "%s".', $data['name']));
             $result = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
@@ -101,11 +101,15 @@ trait JournalServiceTrait
                 $result   = $this->createAccount(null, $tempData, $expectedTypes[$transactionType][0]);
             }
         }
-
-        Log::debug('If nothing is found, create it.');
-        $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
-        Log::debug('If cant be created, return cash account.');
-        return $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
+        if (null === $result) {
+            Log::debug('If nothing is found, create it.');
+            $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
+        }
+        if (null === $result) {
+            Log::debug('If cant be created, return cash account.');
+            $result = $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
+        }
+        return $result;
     }
 
     /**
@@ -329,7 +333,6 @@ trait JournalServiceTrait
      *
      * @return string
      * @throws FireflyException
-     * @codeCoverageIgnore
      */
     protected function getAmount(string $amount): string
     {
@@ -348,7 +351,6 @@ trait JournalServiceTrait
      * @param  string|null  $amount
      *
      * @return string|null
-     * @codeCoverageIgnore
      */
     protected function getForeignAmount(?string $amount): ?string
     {
@@ -376,7 +378,7 @@ trait JournalServiceTrait
      * @param  TransactionJournal  $journal
      * @param  NullArrayObject  $data
      *
-     * @codeCoverageIgnore
+
      */
     protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
     {
@@ -400,7 +402,7 @@ trait JournalServiceTrait
      * @param  TransactionJournal  $journal
      * @param  NullArrayObject  $data
      *
-     * @codeCoverageIgnore
+
      */
     protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
     {
@@ -419,7 +421,7 @@ trait JournalServiceTrait
      * @param  TransactionJournal  $journal
      * @param  string|null  $notes
      *
-     * @codeCoverageIgnore
+
      */
     protected function storeNotes(TransactionJournal $journal, ?string $notes): void
     {
@@ -448,7 +450,7 @@ trait JournalServiceTrait
      * @param  TransactionJournal  $journal
      * @param  array|null  $tags
      *
-     * @codeCoverageIgnore
+
      */
     protected function storeTags(TransactionJournal $journal, ?array $tags): void
     {

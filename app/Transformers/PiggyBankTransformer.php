@@ -43,7 +43,7 @@ class PiggyBankTransformer extends AbstractTransformer
     /**
      * PiggyBankTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

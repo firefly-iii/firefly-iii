@@ -38,7 +38,7 @@ use Log;
 /**
  * Class RecurrenceUpdateService
  *
- * @codeCoverageIgnore
+
  */
 class RecurrenceUpdateService
 {
@@ -193,8 +193,9 @@ class RecurrenceUpdateService
         $originalCount = $recurrence->recurrenceRepetitions()->count();
         if (1 === $originalCount) {
             Log::debug('Return the first one');
-
-            return $recurrence->recurrenceRepetitions()->first();
+            /** @var RecurrenceRepetition $result */
+            $result = $recurrence->recurrenceRepetitions()->first();
+            return $result;
         }
         // find it:
         $fields = [

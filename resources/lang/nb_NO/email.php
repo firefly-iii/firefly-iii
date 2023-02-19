@@ -37,8 +37,8 @@ declare(strict_types=1);
 return [
     // common items
     'greeting'                                => 'Hei der,',
-    'closing'                                 => 'Pip Boop,',
-    'signature'                               => 'The Firefly III Mail Robot',
+    'closing'                                 => 'Biip Boop,',
+    'signature'                               => 'Fra din vennlige Firefly III epost robot',
     'footer_ps'                               => 'PS: Denne meldingen ble sendt fordi en forespørsel fra IP :ipAddress utløste den.',
 
     // admin test
@@ -58,16 +58,16 @@ return [
 
 
     // invite
-    'invitation_created_subject'              => 'An invitation has been created',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
-    'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
-    'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
+    'invitation_created_subject'              => 'En invitasjon har blitt opprettet',
+    'invitation_created_body'                 => 'Admin bruker ":email" opprettet en brukerinvitasjon til ":invitee. Invitasjonen vil være gyldig i 48 timer.',
+    'invite_user_subject'                     => 'Du har blitt invitert til å lage en Firefly III-konto.',
+    'invitation_introduction'                 => 'Du har blitt invitert til å lage en Firefly III konto på **:host**. Firefly III er en personlig, "self-hosted" privat finansforvalter. Alle de kule barna bruker den.',
+    'invitation_invited_by'                   => 'Du har blitt invitert av ":admin" og denne invitasjonen ble sendt til ":invitee. Det er deg, ikke sant?',
+    'invitation_url'                          => 'Invitasjonen er gyldig i 48 timer og kan løses inn ved å gå til [Firefly III](:url. Nyt!',
 
     // new IP
     'login_from_new_ip'                       => 'Ny pålogging på Firefly III',
-    'slack_login_from_new_ip'                 => 'New Firefly III login from IP :ip (:host)',
+    'slack_login_from_new_ip'                 => 'Ny Firefly III innlogging fra IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III oppdaget en ny pålogging på kontoen fra en ukjent IP-adresse. Hvis du aldri har logget inn fra IP-adressen under, eller det har vært mer enn et halvt år siden, vil Firefly III advare deg.',
     'new_ip_warning'                          => 'Hvis du gjenkjenner denne IP-adressen eller påloggingen, kan du ignorere denne meldingen. Hvis du ikke har logget inn, så har du ikke peiling på hva dette gjelder, bekreft passordsikkerhet, endre det, og logg ut alle økter. For å gjøre dette, gå til profilsiden. Selvsagt har du 2FA aktivert allerede, ikke sant? Vær trygg!',
     'ip_address'                              => 'IP-adresse',
@@ -82,8 +82,8 @@ return [
 
     // registered
     'registered_subject'                      => 'Velkommen til Firefly III!',
-    'registered_subject_admin'                => 'A new user has registered',
-    'admin_new_user_registered'               => 'A new user has registered. User **:email** was given user ID #:id.',
+    'registered_subject_admin'                => 'En ny bruker har registrert seg',
+    'admin_new_user_registered'               => 'En ny bruker har registrert seg. Bruker **:email har fått ID #:id.',
     'registered_welcome'                      => 'Velkommen til [Firefly III](:address). Din registrering er fullført, og denne e-posten er her for å bekrefte det. Kanon!',
     'registered_pw'                           => 'Hvis du har glemt passordet ditt allerede, kan du tilbakestille det ved å bruke [passord reset tool](:address/password/reset).',
     'registered_help'                         => 'Det er et hjelp-ikon i hjørnet øverst til høyre på hver side. Hvis du trenger hjelp, kan du klikke på den!',
@@ -107,7 +107,7 @@ return [
 
 
     // new version
-    'new_version_email_subject'               => 'A new Firefly III version is available',
+    'new_version_email_subject'               => 'En ny Firefly III versjon er tilgjengelig',
 
     // email change
     'email_change_subject'                    => 'Din Firefly III e-postadresse er endret',
@@ -140,14 +140,14 @@ return [
     'error_location'                          => 'Denne feilen oppstod i filen "<span style="font-family: monospace;">:file</span>" på linje :line med kode :code.',
     'error_user'                              => 'Feilen oppstod på av brukeren #:id, <a href="mailto::email">:email</a>.',
     'error_no_user'                           => 'Det var ingen bruker som var pålogget for denne feilen, eller ingen bruker ble oppdaget.',
-    'error_ip'                                => 'The IP address related to this error is: :ip',
-    'error_url'                               => 'URL is: :url',
-    'error_user_agent'                        => 'User agent: :userAgent',
-    'error_stacktrace'                        => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
-    'error_github_html'                       => 'If you prefer, you can also open a new issue on <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
-    'error_github_text'                       => 'If you prefer, you can also open a new issue on https://github.com/firefly-iii/firefly-iii/issues.',
-    'error_stacktrace_below'                  => 'The full stacktrace is below:',
-    'error_headers'                           => 'The following headers may also be relevant:',
+    'error_ip'                                => 'IP-adressen relatert til denne feilen er: :ip',
+    'error_url'                               => 'URL er: :url',
+    'error_user_agent'                        => 'Brukeragent: :userAgent',
+    'error_stacktrace'                        => 'Hele informasjonen er under. Hvis du tror dette er en feil i Firefly III, kan du videresende denne meldingen til <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-ii. rg</a>. Dette kan hjelpe med å rette opp feilen du nettopp har funnet.',
+    'error_github_html'                       => 'Hvis du foretrekker, kan du også åpne et nytt problem på <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
+    'error_github_text'                       => 'Hvis du foretrekker, kan du også åpne et nytt problem på https://github.com/firefly-ii/firefly-ii/issues.',
+    'error_stacktrace_below'                  => 'Hele informasjonen er:',
+    'error_headers'                           => 'Følgende headers kan også være relevant:',
 
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
@@ -162,19 +162,19 @@ return [
 
 
     // report new journals
-    'new_journals_subject'                    => 'Firefly III has created a new transaction|Firefly III has created :count new transactions',
-    'new_journals_header'                     => 'Firefly III has created a transaction for you. You can find it in your Firefly III installation:|Firefly III has created :count transactions for you. You can find them in your Firefly III installation:',
+    'new_journals_subject'                    => 'Firefly III har opprettet en ny transaksjon|Firefly III har skapt :count nye transaksjoner',
+    'new_journals_header'                     => 'Firefly III har opprettet en transaksjon for deg. Du finner den i din Firefly III installasjon|:Firefly III har laget :count transaksjoner for deg. Du kan finne dem i Firefly III installasjonen:',
 
     // bill warning
-    'bill_warning_subject_end_date'           => 'Your bill ":name" is due to end in :diff days',
-    'bill_warning_subject_now_end_date'       => 'Your bill ":name" is due to end TODAY',
-    'bill_warning_subject_extension_date'     => 'Your bill ":name" is due to be extended or cancelled in :diff days',
-    'bill_warning_subject_now_extension_date' => 'Your bill ":name" is due to be extended or cancelled TODAY',
-    'bill_warning_end_date'                   => 'Your bill **":name"** is due to end on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_extension_date'             => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass in about **:diff days**.',
-    'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
-    'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
-    'bill_warning_please_action'              => 'Please take the appropriate action.',
+    'bill_warning_subject_end_date'           => 'Regningen din ":name" har forfallsdato om :diff dager',
+    'bill_warning_subject_now_end_date'       => 'Regningen din ":name" har forfallsdato I DAG',
+    'bill_warning_subject_extension_date'     => 'Regningen din ":name vil bli forlenget eller kansellert om :diff dager',
+    'bill_warning_subject_now_extension_date' => 'Regningen din ":name vil bli forlenget eller kansellert I DAG',
+    'bill_warning_end_date'                   => 'Regningen din **":name"** avsluttes :date. Dette er om **:diff dager**.',
+    'bill_warning_extension_date'             => 'Regningen din **":name"** vil bli forlenget eller annullert :date. Dette er om **:diff dager**.',
+    'bill_warning_end_date_zero'              => 'Regningen din **":name"** avsluttes :date. Dette er **I DAG!**',
+    'bill_warning_extension_date_zero'        => 'Regningen din **":name"** skal forlenges eller annulleres :date. Dette er **I DAG!**',
+    'bill_warning_please_action'              => 'Vennligst gjør de rette tiltakene.',
 
 ];
 /*

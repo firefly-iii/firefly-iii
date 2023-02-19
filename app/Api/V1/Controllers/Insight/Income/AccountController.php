@@ -37,7 +37,7 @@ use Illuminate\Http\JsonResponse;
  * Class AccountController
  *
  * Shows income information grouped or limited by date.
- * Ie. all income grouped by account + currency.
+ * I.e. all income grouped by account + currency.
  */
 class AccountController extends Controller
 {
@@ -50,7 +50,7 @@ class AccountController extends Controller
     /**
      * AccountController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -74,7 +74,7 @@ class AccountController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/insight/insightIncomeAsset
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeAsset
      *
      * @param  GenericRequest  $request
      *
@@ -104,7 +104,7 @@ class AccountController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/insight/insightIncomeRevenue
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeRevenue
      *
      * @param  GenericRequest  $request
      *

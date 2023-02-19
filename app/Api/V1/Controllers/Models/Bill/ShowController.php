@@ -44,7 +44,7 @@ class ShowController extends Controller
     /**
      * BillController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -61,13 +61,13 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/bills/listBill
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/listBill
      *
      * Display a listing of the resource.
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -91,14 +91,14 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/bills/getBill
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/getBill
      *
      * Show the specified bill.
      *
      * @param  Bill  $bill
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(Bill $bill): JsonResponse
     {

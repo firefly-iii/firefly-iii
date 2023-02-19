@@ -41,7 +41,7 @@ class MessageController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -58,7 +58,7 @@ class MessageController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/webhooks/getWebhookMessages
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/getWebhookMessages
      *
      * @param  Webhook  $webhook
      *
@@ -90,7 +90,7 @@ class MessageController extends Controller
 
     /**
      * This endpoint is documented:
-     * https://api-docs.firefly-iii.org/#/webhooks/getSingleWebhookMessage
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/getSingleWebhookMessage
      *
      * Show single instance.
      *

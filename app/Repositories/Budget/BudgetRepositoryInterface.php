@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -59,6 +60,16 @@ interface BudgetRepositoryInterface
      * @return array
      */
     public function budgetedInPeriod(Carbon $start, Carbon $end): array;
+
+    /**
+     * Returns the amount that is budgeted in a period.
+     *
+     * @param Budget $budget
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @return array
+     */
+    public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
 
     /**
      * @return bool
@@ -181,9 +192,9 @@ interface BudgetRepositoryInterface
     public function setBudgetOrder(Budget $budget, int $order): void;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user);
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * Used in the v2 API to calculate the amount of money spent in all active budgets.
@@ -194,6 +205,16 @@ interface BudgetRepositoryInterface
      * @return array
      */
     public function spentInPeriod(Carbon $start, Carbon $end): array;
+
+    /**
+     * Used in the v2 API to calculate the amount of money spent in a single budget..
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return array
+     */
+    public function spentInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
 
     /**
      * @param  array  $data

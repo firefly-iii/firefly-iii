@@ -29,6 +29,7 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -226,11 +227,9 @@ interface RecurringRepositoryInterface
     public function searchRecurrence(string $query, int $limit): Collection;
 
     /**
-     * Set user for in repository.
-     *
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void;
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * Store a new recurring transaction.

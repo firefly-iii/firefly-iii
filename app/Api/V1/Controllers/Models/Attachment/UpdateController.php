@@ -43,7 +43,7 @@ class UpdateController extends Controller
     /**
      * UpdateController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -63,7 +63,7 @@ class UpdateController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/attachments/updateAttachment
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/attachments/updateAttachment
      *
      * Update the specified resource in storage.
      *

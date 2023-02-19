@@ -46,7 +46,7 @@ class RecurrenceFactory
     /**
      * Constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

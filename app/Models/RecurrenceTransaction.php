@@ -112,7 +112,7 @@ class RecurrenceTransaction extends Model
     protected $table = 'recurrences_transactions';
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function destinationAccount(): BelongsTo
@@ -121,7 +121,7 @@ class RecurrenceTransaction extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function foreignCurrency(): BelongsTo
@@ -131,7 +131,7 @@ class RecurrenceTransaction extends Model
 
     /**
      * @return BelongsTo
-     * @codeCoverageIgnore
+
      */
     public function recurrence(): BelongsTo
     {
@@ -140,7 +140,7 @@ class RecurrenceTransaction extends Model
 
     /**
      * @return HasMany
-     * @codeCoverageIgnore
+
      */
     public function recurrenceTransactionMeta(): HasMany
     {
@@ -148,7 +148,7 @@ class RecurrenceTransaction extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function sourceAccount(): BelongsTo
@@ -157,7 +157,7 @@ class RecurrenceTransaction extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo
@@ -166,7 +166,7 @@ class RecurrenceTransaction extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function transactionType(): BelongsTo

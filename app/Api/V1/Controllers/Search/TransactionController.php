@@ -40,7 +40,7 @@ class TransactionController extends Controller
 {
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/search/searchTransactions
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/search/searchTransactions
      *
      * @param  Request  $request
      * @param  SearchInterface  $searcher

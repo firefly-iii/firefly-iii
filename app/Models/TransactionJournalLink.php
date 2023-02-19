@@ -103,7 +103,7 @@ class TransactionJournalLink extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function destination(): BelongsTo
@@ -112,7 +112,7 @@ class TransactionJournalLink extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function linkType(): BelongsTo
@@ -121,7 +121,7 @@ class TransactionJournalLink extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * Get all of the notes.
      */
     public function notes(): MorphMany
@@ -130,7 +130,7 @@ class TransactionJournalLink extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function source(): BelongsTo

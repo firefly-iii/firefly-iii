@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -163,9 +164,9 @@ interface TagRepositoryInterface
     public function searchTags(string $query, int $limit): Collection;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user);
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * This method stores a tag.

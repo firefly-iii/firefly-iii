@@ -28,6 +28,7 @@ use DB;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use stdClass;
 
@@ -36,9 +37,6 @@ use stdClass;
  */
 class JournalCLIRepository implements JournalCLIRepositoryInterface
 {
-    /** @var User */
-    private $user;
-
     /**
      * Get all transaction journals with a specific type, regardless of user.
      *
@@ -230,10 +228,10 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     }
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void
+    public function setUser(User|Authenticatable|null $user): void
     {
-        $this->user = $user;
+        // empty
     }
 }

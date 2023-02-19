@@ -27,7 +27,7 @@ use Exception;
 use FireflyIII\Models\Bill;
 
 /**
- * @codeCoverageIgnore
+
  * Class BillDestroyService
  */
 class BillDestroyService

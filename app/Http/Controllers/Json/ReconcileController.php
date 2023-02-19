@@ -51,7 +51,7 @@ class ReconcileController extends Controller
     /**
      * ReconcileController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

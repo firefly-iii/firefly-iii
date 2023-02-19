@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\Journal;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -70,7 +71,7 @@ interface JournalAPIRepositoryInterface
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user);
+    public function setUser(User|Authenticatable|null $user): void;
 }

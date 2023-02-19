@@ -33,7 +33,7 @@ use Log;
  *
  * Verifies user access token for sensitive commands.
  *
- * @codeCoverageIgnore
+
  */
 trait VerifiesAccessToken
 {

@@ -53,7 +53,7 @@ class IsValidAttachmentModel implements Rule
     /**
      * IsValidAttachmentModel constructor.
      *
-     * @codeCoverageIgnore
+
      *
      * @param  string  $model
      */
@@ -80,7 +80,7 @@ class IsValidAttachmentModel implements Rule
     /**
      * Get the validation error message.
      *
-     * @codeCoverageIgnore
+
      * @return string
      */
     public function message(): string

@@ -50,7 +50,7 @@ class ShowController extends Controller
     /**
      * LinkTypeController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -69,12 +69,12 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/links/listLinkType
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/links/listLinkType
      *
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(): JsonResponse
     {
@@ -89,7 +89,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($linkTypes, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.link_types.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.link-types.index').$this->buildParams());
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
@@ -103,14 +103,14 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/links/getLinkType
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/links/getLinkType
      *
      * List single resource.
      *
      * @param  LinkType  $linkType
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(LinkType $linkType): JsonResponse
     {

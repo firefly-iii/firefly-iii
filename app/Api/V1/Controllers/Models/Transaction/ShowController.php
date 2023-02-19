@@ -47,7 +47,7 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/listTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listTransaction
      *
      * Show all transactions.
      *
@@ -55,7 +55,7 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function index(Request $request): JsonResponse
     {
@@ -100,14 +100,14 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/getTransactionByJournal
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransactionByJournal
      *
      * Show a single transaction, by transaction journal.
      *
      * @param  TransactionJournal  $transactionJournal
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function showJournal(TransactionJournal $transactionJournal): JsonResponse
     {
@@ -116,14 +116,14 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/getTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransaction
      *
      * Show a single transaction.
      *
      * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function show(TransactionGroup $transactionGroup): JsonResponse
     {

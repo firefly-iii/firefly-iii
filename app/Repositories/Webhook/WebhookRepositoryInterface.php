@@ -27,6 +27,7 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -78,11 +79,9 @@ interface WebhookRepositoryInterface
     public function getReadyMessages(Webhook $webhook): Collection;
 
     /**
-     * Set user.
-     *
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void;
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * @param  array  $data

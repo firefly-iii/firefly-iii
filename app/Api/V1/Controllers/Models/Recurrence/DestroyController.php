@@ -38,7 +38,7 @@ class DestroyController extends Controller
     /**
      * RecurrenceController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -55,14 +55,14 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/recurrences/deleteRecurrence
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/deleteRecurrence
      *
      * Delete the resource.
      *
      * @param  Recurrence  $recurrence
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(Recurrence $recurrence): JsonResponse
     {

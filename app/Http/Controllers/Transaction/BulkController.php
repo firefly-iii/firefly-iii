@@ -48,7 +48,7 @@ class BulkController extends Controller
     /**
      * BulkController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

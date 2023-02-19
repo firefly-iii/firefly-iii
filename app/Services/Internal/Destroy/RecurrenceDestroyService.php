@@ -27,7 +27,7 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 
 /**
- * @codeCoverageIgnore
+
  * Class RecurrenceDestroyService
  */
 class RecurrenceDestroyService

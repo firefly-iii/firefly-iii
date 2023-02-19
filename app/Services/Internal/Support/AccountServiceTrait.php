@@ -125,7 +125,7 @@ trait AccountServiceTrait
             }
         }
 
-        // the account role may not be set in the data but we may have it already:
+        // the account role may not be set in the data, but we may have it already:
         if (!array_key_exists('account_role', $data)) {
             $data['account_role'] = null;
         }
@@ -164,7 +164,7 @@ trait AccountServiceTrait
      * @param  Account  $account
      * @param  string  $note
      *
-     * @codeCoverageIgnore
+
      * @return bool
      */
     public function updateNote(Account $account, string $note): bool

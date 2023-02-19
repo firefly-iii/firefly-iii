@@ -36,7 +36,7 @@ use Throwable;
  * Class MonthReportGenerator.
  * TODO include info about tags.
  *
- * @codeCoverageIgnore
+
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {

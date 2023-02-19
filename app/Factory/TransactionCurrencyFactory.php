@@ -41,6 +41,11 @@ class TransactionCurrencyFactory
      */
     public function create(array $data): TransactionCurrency
     {
+        $data['code']           = e($data['code']);
+        $data['symbol']         = e($data['symbol']);
+        $data['name']           = e($data['name']);
+        $data['decimal_places'] = (int)$data['decimal_places'];
+        $data['enabled']        = (bool)$data['enabled'];
         // if the code already exists (deleted)
         // force delete it and then create the transaction:
         $count = TransactionCurrency::withTrashed()->whereCode($data['code'])->count();
@@ -78,7 +83,7 @@ class TransactionCurrencyFactory
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        $currencyCode = (string)$currencyCode;
+        $currencyCode = (string)e($currencyCode);
         $currencyId   = (int)$currencyId;
 
         if ('' === $currencyCode && 0 === $currencyId) {

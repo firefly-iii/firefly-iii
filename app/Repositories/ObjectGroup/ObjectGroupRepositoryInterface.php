@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\ObjectGroup;
 
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -89,9 +90,9 @@ interface ObjectGroupRepositoryInterface
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      */
-    public function setUser(User $user): void;
+    public function setUser(User|Authenticatable|null $user): void;
 
     /**
      * @param  ObjectGroup  $objectGroup

@@ -40,7 +40,7 @@ class DestroyController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -57,14 +57,14 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/webhooks/deleteWebhook
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/deleteWebhook
      *
      * Remove the specified resource from storage.
      *
      * @param  Webhook  $webhook
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(Webhook $webhook): JsonResponse
     {
@@ -76,7 +76,7 @@ class DestroyController extends Controller
 
     /**
      * This webhook is documented at:
-     * https://api-docs.firefly-iii.org/#/webhooks/deleteWebhookMessageAttempt
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/deleteWebhookMessageAttempt
      *
      * Remove the specified resource from storage.
      *
@@ -86,7 +86,7 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function destroyAttempt(Webhook $webhook, WebhookMessage $message, WebhookAttempt $attempt): JsonResponse
     {
@@ -105,7 +105,7 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/webhooks/deleteWebhookMessage
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/deleteWebhookMessage
      *
      * Remove the specified resource from storage.
      *
@@ -114,7 +114,7 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function destroyMessage(Webhook $webhook, WebhookMessage $message): JsonResponse
     {

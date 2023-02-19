@@ -74,7 +74,7 @@ class ProfileController extends Controller
     /**
      * ProfileController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

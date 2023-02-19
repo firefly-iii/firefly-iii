@@ -39,7 +39,7 @@ class CategoryTransformer extends AbstractTransformer
     /**
      * CategoryTransformer constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

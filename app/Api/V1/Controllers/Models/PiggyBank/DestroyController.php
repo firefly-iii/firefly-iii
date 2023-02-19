@@ -38,7 +38,7 @@ class DestroyController extends Controller
     /**
      * Constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -55,14 +55,14 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/piggy_banks/deletePiggyBank
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/deletePiggyBank
      *
      * Delete the resource.
      *
      * @param  PiggyBank  $piggyBank
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
+
      */
     public function destroy(PiggyBank $piggyBank): JsonResponse
     {

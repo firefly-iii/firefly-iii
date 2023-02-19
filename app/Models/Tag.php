@@ -127,7 +127,7 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -136,7 +136,7 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -145,7 +145,7 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return MorphMany
      */
     public function locations(): MorphMany
@@ -154,7 +154,7 @@ class Tag extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsToMany
      */
     public function transactionJournals(): BelongsToMany

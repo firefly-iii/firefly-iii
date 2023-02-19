@@ -48,7 +48,7 @@ class ListController extends Controller
     /**
      * TransactionController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -68,13 +68,13 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/listAttachmentByTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listAttachmentByTransaction
      *
      * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -104,13 +104,13 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/listEventByTransaction
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listEventByTransaction
      *
      * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -124,7 +124,7 @@ class ListController extends Controller
         $events = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         // make paginator:
         $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transactions.piggy_bank_events', [$transactionGroup->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.transactions.piggy-bank-events', [$transactionGroup->id]).$this->buildParams());
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);
@@ -143,13 +143,13 @@ class ListController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/transactions/listLinksByJournal
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listLinksByJournal
      *
      * @param  TransactionJournal  $transactionJournal
      *
      * @return JsonResponse
      * @throws FireflyException
-     * @codeCoverageIgnore
+
      */
     public function transactionLinks(TransactionJournal $transactionJournal): JsonResponse
     {
@@ -161,7 +161,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transaction-journals.transaction_links', [$transactionJournal->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.transaction-journals.transaction-links', [$transactionJournal->id]).$this->buildParams());
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);

@@ -57,7 +57,7 @@ class AccountFactory
     /**
      * AccountFactory constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {

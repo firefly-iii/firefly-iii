@@ -44,7 +44,6 @@ class FrontpageChartGenerator
     private Carbon                          $end;
     private string                          $monthAndDayFormat;
     private Carbon                          $start;
-    private User                            $user;
 
     /**
      * FrontpageChartGenerator constructor.
@@ -226,7 +225,6 @@ class FrontpageChartGenerator
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
         $this->budgetRepository->setUser($user);
         $this->blRepository->setUser($user);
         $this->opsRepository->setUser($user);

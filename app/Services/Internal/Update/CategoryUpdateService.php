@@ -34,7 +34,7 @@ use Log;
 /**
  * Class CategoryUpdateService
  *
- * @codeCoverageIgnore
+
  */
 class CategoryUpdateService
 {

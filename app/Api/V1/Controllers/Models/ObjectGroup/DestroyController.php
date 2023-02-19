@@ -39,7 +39,7 @@ class DestroyController extends Controller
     /**
      * ObjectGroupController constructor.
      *
-     * @codeCoverageIgnore
+
      */
     public function __construct()
     {
@@ -58,13 +58,13 @@ class DestroyController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/#/object_groups/deleteObjectGroup
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/deleteObjectGroup
      *
      * Remove the specified resource from storage.
      *
      * @param  ObjectGroup  $objectGroup
      *
-     * @codeCoverageIgnore
+
      * @return JsonResponse
      */
     public function destroy(ObjectGroup $objectGroup): JsonResponse

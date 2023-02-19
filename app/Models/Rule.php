@@ -125,7 +125,7 @@ class Rule extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -134,7 +134,7 @@ class Rule extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function ruleActions(): HasMany
@@ -143,7 +143,7 @@ class Rule extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return BelongsTo
      */
     public function ruleGroup(): BelongsTo
@@ -152,7 +152,7 @@ class Rule extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+
      * @return HasMany
      */
     public function ruleTriggers(): HasMany
@@ -163,7 +163,7 @@ class Rule extends Model
     /**
      * @param  mixed  $value
      *
-     * @codeCoverageIgnore
+
      */
     public function setDescriptionAttribute($value): void
     {

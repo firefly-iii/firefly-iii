@@ -27,7 +27,7 @@ namespace FireflyIII\Events;
 /**
  * Class Event.
  *
- * @codeCoverageIgnore
+
  */
 abstract class Event
 {

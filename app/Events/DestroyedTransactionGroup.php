@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class DestroyedTransactionGroup.
  *
- * @codeCoverageIgnore
+
  */
 class DestroyedTransactionGroup extends Event
 {
