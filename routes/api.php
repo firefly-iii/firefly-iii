@@ -121,7 +121,6 @@ Route::group(
         Route::get('sum/spent', ['uses' => 'Budget\SumController@spent', 'as' => 'sum.spent']);
         Route::get('{budget}/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'budget.budgeted']);
         Route::get('{budget}/spent', ['uses' => 'Budget\ShowController@spent', 'as' => 'budget.spent']);
-
     }
 );
 

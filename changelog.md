@@ -18,9 +18,9 @@ This is release **6.0.0** of Firefly III.
 
 ### Added
 - Introduce Jetbrains Qodana code scanning for code quality.
-- Reintroduced PHPunit tests
+- Reintroduced PHPUnit tests
 - Added a warning for people using the "remote user guard" in combination with Personal Access Tokens.
-- Improved validation accross the board.
+- Improved validation across the board.
 - First code to validate a user's financial administration
 - Dark mode CSS
 - New language: Catalan
@@ -74,6 +74,31 @@ This is release **6.0.0** of Firefly III.
 ### Security
 - [Issue 6826](https://github.com/firefly-iii/firefly-iii/issues/6826) Hide 2FA information when printing, thanks @jstebenne!
 - Blocked users can access API, and users can unblock themselves using the API. This was reported in CVE-2023-0298.
+
+## 6.0.0-beta.2 - 2023-02-20
+
+### Warnings
+
+- ⚠️ Make a backup of your database first!
+- ⚠️ This version requires **PHP 8.2**.
+
+You can access the new V3 layout under `/v3/`. If you decide to use or test it:
+
+- ⚠️ Read the instructions under the ☠️ icon FIRST.
+- ⚠️ The new layout is not yet finished. Use it to change your data at your own risk.
+
+### Added
+- Add max upload to debug page.
+
+### Fixed
+- Missing indexes in bill overview.
+- Various dark mode fixes
+
+### Security
+- Bad escape in transaction currencies could cause XSS attacks.
+
+### API
+- All v1 and v2 routes checked and documented properly.
 
 ## 6.0.0-beta.1 - 2023-02-12
 

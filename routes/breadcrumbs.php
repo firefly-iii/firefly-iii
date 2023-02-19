@@ -321,7 +321,7 @@ try {
                 $breadcrumbs->parent('transactions.show', $object->transactionGroup);
             }
             if ($object instanceof Bill) {
-                $breadcrumbs->parent('bills.show',$object);
+                $breadcrumbs->parent('bills.show', $object);
             }
             $breadcrumbs->push(
                 trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]),
@@ -388,7 +388,7 @@ try {
     Breadcrumbs::for(
         'subscriptions.edit',
         static function (Generator $breadcrumbs, Bill $bill) {
-            $breadcrumbs->parent('subscriptions.show',$bill);
+            $breadcrumbs->parent('subscriptions.show', $bill);
             $breadcrumbs->push(trans('breadcrumbs.edit_bill', ['name' => limitStringLength($bill->name)]), route('subscriptions.edit', [$bill->id]));
         }
     );
@@ -1197,7 +1197,7 @@ try {
         'transactions.mass.delete',
         static function (Generator $breadcrumbs, array $journals) {
             $objectType = strtolower(reset($journals)['transaction_type_type']);
-            $breadcrumbs->parent('transactions.index',$objectType);
+            $breadcrumbs->parent('transactions.index', $objectType);
             $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.delete', ['']));
         }
     );
