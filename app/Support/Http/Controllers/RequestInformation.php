@@ -89,7 +89,6 @@ trait RequestInformation
      * Returns if user has seen demo.
      *
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

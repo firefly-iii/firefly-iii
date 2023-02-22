@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -94,6 +95,7 @@ class DownloadExchangeRates implements ShouldQueue
     /**
      * @param  TransactionCurrency  $currency
      * @return void
+     * @throws GuzzleException
      */
     private function downloadRates(TransactionCurrency $currency): void
     {
@@ -117,11 +119,6 @@ class DownloadExchangeRates implements ShouldQueue
         $this->saveRates($currency, $date, $json['rates']);
     }
 
-    /**
-     * @param  TransactionCurrency  $currency
-     * @param  array  $rates
-     * @return void
-     */
     private function saveRates(TransactionCurrency $currency, Carbon $date, array $rates): void
     {
         foreach ($rates as $code => $rate) {

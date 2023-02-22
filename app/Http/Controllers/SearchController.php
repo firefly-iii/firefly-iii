@@ -103,6 +103,7 @@ class SearchController extends Controller
      * @param  SearchInterface  $searcher
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {

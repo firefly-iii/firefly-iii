@@ -149,12 +149,6 @@ trait ConvertsExchangeRates
         return $result;
     }
 
-    /**
-     * @param  string  $amount
-     * @param  TransactionCurrency  $from
-     * @param  TransactionCurrency  $to
-     * @return string
-     */
     private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string
     {
         Log::debug(sprintf('Converting %s from %s to %s', $amount, $from->code, $to->code));

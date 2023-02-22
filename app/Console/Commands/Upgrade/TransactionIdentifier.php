@@ -68,7 +68,9 @@ class TransactionIdentifier extends Command
      * think. So each set gets a number (1,2,3) to keep them apart.
      *
      * @return int
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -121,7 +123,6 @@ class TransactionIdentifier extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

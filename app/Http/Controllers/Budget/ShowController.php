@@ -83,7 +83,6 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -121,7 +120,6 @@ class ShowController extends Controller
      * @param  Request  $request
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -151,8 +149,6 @@ class ShowController extends Controller
      * @param  Budget  $budget
      *
      * @return Factory|View
-     * @throws FireflyException
-     * @throws JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -190,7 +186,6 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

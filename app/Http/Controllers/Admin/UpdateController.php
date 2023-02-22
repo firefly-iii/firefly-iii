@@ -63,7 +63,6 @@ class UpdateController extends Controller
      * Show page with update options.
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

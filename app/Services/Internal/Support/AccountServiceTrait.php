@@ -218,6 +218,7 @@ trait AccountServiceTrait
      *
      * @return TransactionGroup
      * @throws FireflyException
+     * @throws JsonException
      * @deprecated
      */
     protected function createOBGroup(Account $account, array $data): TransactionGroup
@@ -396,11 +397,7 @@ trait AccountServiceTrait
     /**
      * Create the opposing "credit liability" transaction for credit liabilities.
      *
-     * @param  Account  $account
-     * @param  string  $openingBalance
-     * @param  Carbon  $openingBalanceDate
      *
-     * @return TransactionGroup
      * @throws FireflyException
      */
     protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
@@ -462,6 +459,7 @@ trait AccountServiceTrait
      *
      * @return TransactionGroup
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function createCreditTransaction(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
@@ -674,6 +672,7 @@ trait AccountServiceTrait
      *
      * @return TransactionGroup
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function createOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {

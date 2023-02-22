@@ -230,6 +230,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param  array  $data
      *
      * @return Budget
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function update(Budget $budget, array $data): Budget
     {

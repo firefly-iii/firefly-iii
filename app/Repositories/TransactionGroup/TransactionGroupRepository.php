@@ -470,6 +470,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      * @return TransactionGroup
      * @throws DuplicateTransactionException
      * @throws FireflyException
+     * @throws JsonException
      */
     public function store(array $data): TransactionGroup
     {
@@ -495,6 +496,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      *
      * @return TransactionGroup
      *
+     * @throws DuplicateTransactionException
      * @throws FireflyException
      */
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup

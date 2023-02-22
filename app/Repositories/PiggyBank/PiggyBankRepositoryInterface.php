@@ -45,10 +45,6 @@ interface PiggyBankRepositoryInterface
      */
     public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool;
 
-    /**
-     * @param  PiggyBankRepetition  $repetition
-     * @param  string  $amount
-     */
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void;
 
     /**

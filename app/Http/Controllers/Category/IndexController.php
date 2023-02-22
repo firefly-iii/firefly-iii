@@ -69,7 +69,6 @@ class IndexController extends Controller
      * @param  Request  $request
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

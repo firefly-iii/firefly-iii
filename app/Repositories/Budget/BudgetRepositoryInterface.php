@@ -209,10 +209,7 @@ interface BudgetRepositoryInterface
     /**
      * Used in the v2 API to calculate the amount of money spent in a single budget..
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
      *
-     * @return array
      */
     public function spentInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
 

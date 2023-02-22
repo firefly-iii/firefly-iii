@@ -186,6 +186,7 @@ trait RecurringTransactionTrait
      * @param  string|null  $accountName
      *
      * @return Account
+     * @throws JsonException
      */
     protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
     {

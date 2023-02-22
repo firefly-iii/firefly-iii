@@ -504,6 +504,7 @@ class GroupCollector implements GroupCollectorInterface
      * @param  Collection  $collection
      *
      * @return Collection
+     * @throws FireflyException
      */
     private function parseArray(Collection $collection): Collection
     {
@@ -556,6 +557,7 @@ class GroupCollector implements GroupCollectorInterface
      * @param  TransactionJournal  $augumentedJournal
      *
      * @return array
+     * @throws FireflyException
      */
     private function parseAugmentedJournal(TransactionJournal $augumentedJournal): array
     {

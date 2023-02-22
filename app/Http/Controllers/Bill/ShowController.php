@@ -126,7 +126,6 @@ class ShowController extends Controller
      * @param  Bill  $bill
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

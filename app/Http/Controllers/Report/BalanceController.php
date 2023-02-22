@@ -67,6 +67,7 @@ class BalanceController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {

@@ -287,6 +287,7 @@ class UserEventHandler
     /**
      * @param  InvitationCreated  $event
      * @return void
+     * @throws FireflyException
      */
     public function sendRegistrationInvite(InvitationCreated $event): void
     {

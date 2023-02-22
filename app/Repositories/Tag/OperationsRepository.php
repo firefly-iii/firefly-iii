@@ -53,6 +53,8 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param  Collection|null  $tags
      *
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
@@ -150,6 +152,8 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param  Collection|null  $tags
      *
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {

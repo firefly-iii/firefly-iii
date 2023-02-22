@@ -166,6 +166,7 @@ class FixAccountTypes extends Command
      * @param  Transaction  $dest
      *
      * @throws FireflyException
+     * @throws \JsonException
      */
     private function fixJournal(TransactionJournal $journal, string $type, Transaction $source, Transaction $dest): void
     {

@@ -245,6 +245,7 @@ class Steam
      * @param  Carbon  $date
      *
      * @return array
+     * @throws FireflyException
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
@@ -277,7 +278,6 @@ class Steam
      * @param  Carbon  $date
      *
      * @return array
-     * @throws JsonException
      */
     public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
     {

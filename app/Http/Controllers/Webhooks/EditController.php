@@ -61,7 +61,7 @@ class EditController extends Controller
      *
      * @param  Webhook  $webhook
      *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\View
      */
     public function index(Webhook $webhook)
     {

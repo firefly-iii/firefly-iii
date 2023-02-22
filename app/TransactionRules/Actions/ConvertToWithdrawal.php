@@ -131,6 +131,7 @@ class ConvertToWithdrawal implements ActionInterface
      *
      * @return bool
      * @throws FireflyException
+     * @throws \JsonException
      */
     private function convertTransferArray(array $journal): bool
     {

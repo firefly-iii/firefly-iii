@@ -221,7 +221,6 @@ class FrontpageChartGenerator
      * A basic setter for the user. Also updates the repositories with the right user.
      *
      * @param  User  $user
-     * @throws FireflyException
      */
     public function setUser(User $user): void
     {

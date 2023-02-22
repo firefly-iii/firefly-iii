@@ -188,7 +188,6 @@ class RecurrenceFormRequest extends FormRequest
      * The rules for this request.
      *
      * @return array
-     * @throws FireflyException
      *
      */
     public function rules(): array

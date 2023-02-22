@@ -241,10 +241,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $operator
-     * @param  string  $value
      *
-     * @return bool
      * @throws FireflyException
      */
     private function updateCollector(string $operator, string $value, bool $prohibited): bool
@@ -1568,7 +1565,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -1627,7 +1623,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -1666,7 +1661,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -1705,9 +1699,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
-     * @return void
      * @throws FireflyException
      */
     private function setExactMetaDateParams(string $field, array $range, bool $prohibited = false): void
@@ -1767,9 +1758,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
-     * @return void
      * @throws FireflyException
      */
     private function setMetaDateBeforeParams(string $field, array $range, bool $prohibited = false): void
@@ -1807,9 +1795,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
-     * @return void
      * @throws FireflyException
      */
     private function setMetaDateAfterParams(string $field, array $range, bool $prohibited = false): void
@@ -1847,9 +1832,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
-     * @return void
      * @throws FireflyException
      */
     private function setExactObjectDateParams(string $field, array $range, bool $prohibited = false): void
@@ -1908,8 +1890,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -1948,8 +1928,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
      *
      * @throws FireflyException
      */

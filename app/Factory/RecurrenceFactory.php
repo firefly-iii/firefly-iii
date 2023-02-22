@@ -58,6 +58,7 @@ class RecurrenceFactory
      *
      * @return Recurrence
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function create(array $data): Recurrence
     {

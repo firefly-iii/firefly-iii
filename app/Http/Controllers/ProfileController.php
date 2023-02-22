@@ -216,7 +216,6 @@ class ProfileController extends Controller
     /**
      * Delete 2FA routine.
      *
-     * @return RedirectResponse|Redirector
      */
     public function deleteCode(Request $request): RedirectResponse|Redirector
     {
@@ -245,7 +244,6 @@ class ProfileController extends Controller
     /**
      * Enable 2FA screen.
      *
-     * @return RedirectResponse|Redirector
      */
     public function enable2FA(Request $request): RedirectResponse|Redirector
     {
@@ -643,7 +641,7 @@ class ProfileController extends Controller
      * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
-     * @throws FireflyException
+     * @throws \Exception
      */
     public function regenerate(Request $request)
     {

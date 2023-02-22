@@ -32,6 +32,8 @@ use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class RemoteUserGuard
@@ -47,6 +49,8 @@ class RemoteUserGuard implements Guard
      *
      * @param  UserProvider  $provider
      * @param  Application  $app
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __construct(UserProvider $provider, Application $app)
     {

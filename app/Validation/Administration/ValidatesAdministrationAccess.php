@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Administration;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
@@ -40,6 +41,7 @@ trait ValidatesAdministrationAccess
      * @param  array  $allowedRoles
      * @return void
      * @throws AuthenticationException
+     * @throws FireflyException
      */
     protected function validateAdministration(Validator $validator, array $allowedRoles): void
     {

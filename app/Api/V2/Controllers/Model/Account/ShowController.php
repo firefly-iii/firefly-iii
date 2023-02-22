@@ -37,8 +37,6 @@ class ShowController extends Controller
 {
     /**
      * TODO this endpoint is not yet reachable.
-     * @param  Account  $account
-     * @return JsonResponse
      */
     public function show(Request $request, Account $account): JsonResponse
     {

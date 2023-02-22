@@ -81,6 +81,7 @@ class DebugController extends Controller
      * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function flush(Request $request)
     {

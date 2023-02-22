@@ -81,7 +81,6 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param  Request  $request
      *
      * @throws ValidationException
      */

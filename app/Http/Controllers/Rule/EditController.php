@@ -78,6 +78,7 @@ class EditController extends Controller
      * @param  Rule  $rule
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function edit(Request $request, Rule $rule)
     {
@@ -142,6 +143,7 @@ class EditController extends Controller
      * @param  array  $submittedOperators
      *
      * @return array
+     * @throws FireflyException
      */
     private function parseFromOperators(array $submittedOperators): array
     {

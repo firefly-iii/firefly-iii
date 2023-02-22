@@ -98,7 +98,6 @@ class TransactionController extends Controller
      * @param  Carbon  $end
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function categories(string $objectType, Carbon $start, Carbon $end)
     {
@@ -152,7 +151,6 @@ class TransactionController extends Controller
      * @param  Carbon  $end
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function destinationAccounts(string $objectType, Carbon $start, Carbon $end)
     {
@@ -206,7 +204,6 @@ class TransactionController extends Controller
      * @param  Carbon  $end
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function sourceAccounts(string $objectType, Carbon $start, Carbon $end)
     {

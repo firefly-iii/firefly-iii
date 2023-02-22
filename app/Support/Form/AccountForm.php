@@ -122,6 +122,7 @@ class AccountForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function assetAccountCheckList(string $name, array $options = null): string
     {

@@ -450,6 +450,8 @@ class TransactionJournalFactory
      * @param  Account  $destination
      *
      * @return TransactionCurrency
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
     {
@@ -510,6 +512,8 @@ class TransactionJournalFactory
      * @param  Account  $destination
      *
      * @return TransactionCurrency|null
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function getForeignByAccount(string $type, ?TransactionCurrency $foreignCurrency, Account $destination): ?TransactionCurrency
     {

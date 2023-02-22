@@ -57,8 +57,6 @@ class ShowController extends Controller
      * This endpoint is documented at:
      * TODO add URL
      *
-     * @param  DateRequest  $request
-     * @return JsonResponse
      */
     public function budgeted(DateRequest $request, Budget $budget): JsonResponse
     {
@@ -73,8 +71,6 @@ class ShowController extends Controller
      * This endpoint is documented at:
      * TODO add URL
      *
-     * @param  DateRequest  $request
-     * @return JsonResponse
      */
     public function spent(DateRequest $request, Budget $budget): JsonResponse
     {

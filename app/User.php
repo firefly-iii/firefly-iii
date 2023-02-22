@@ -69,6 +69,8 @@ use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -477,6 +479,8 @@ class User extends Authenticatable
      *
      * @param  Notification  $notification
      * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function routeNotificationForSlack(Notification $notification): string
     {

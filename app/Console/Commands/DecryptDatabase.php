@@ -90,6 +90,8 @@ class DecryptDatabase extends Command
     /**
      * @param  string  $table
      * @param  array  $fields
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function decryptTable(string $table, array $fields): void
     {

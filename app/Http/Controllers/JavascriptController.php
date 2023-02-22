@@ -51,7 +51,6 @@ class JavascriptController extends Controller
      * @param  CurrencyRepositoryInterface  $currencyRepository
      *
      * @return Response
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

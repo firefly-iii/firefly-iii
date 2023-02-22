@@ -72,7 +72,9 @@ class MigrateToGroups extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -130,7 +132,6 @@ class MigrateToGroups extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

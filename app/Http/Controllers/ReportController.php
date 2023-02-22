@@ -265,7 +265,6 @@ class ReportController extends Controller
      * @param  AccountRepositoryInterface  $repository
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -309,7 +308,7 @@ class ReportController extends Controller
      * @param  string  $reportType
      *
      * @return JsonResponse
-     *
+     * @throws FireflyException
      */
     public function options(string $reportType)
     {

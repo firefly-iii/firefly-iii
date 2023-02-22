@@ -81,7 +81,6 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -126,7 +125,6 @@ class ShowController extends Controller
      * @param  Category  $category
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

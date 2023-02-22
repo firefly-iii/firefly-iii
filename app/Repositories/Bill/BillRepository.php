@@ -188,6 +188,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @return Bill
      * @throws FireflyException
+     * @throws JsonException
      */
     public function store(array $data): Bill
     {
@@ -911,6 +912,8 @@ class BillRepository implements BillRepositoryInterface
      * @param  array  $data
      *
      * @return Bill
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function update(Bill $bill, array $data): Bill
     {

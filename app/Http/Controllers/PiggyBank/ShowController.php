@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -67,6 +68,8 @@ class ShowController extends Controller
      * @param  PiggyBank  $piggyBank
      *
      * @return Factory|View
+     * @throws FireflyException
+     * @throws \JsonException
      */
     public function show(PiggyBank $piggyBank)
     {

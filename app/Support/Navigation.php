@@ -27,6 +27,8 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Navigation.
@@ -433,6 +435,8 @@ class Navigation
      * range to a normal range.
      * @param  bool  $correct
      * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getViewRange(bool $correct): string
     {
@@ -465,7 +469,6 @@ class Navigation
      * @param  Carbon  $end
      *
      * @return string
-     * @throws FireflyException
      */
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {

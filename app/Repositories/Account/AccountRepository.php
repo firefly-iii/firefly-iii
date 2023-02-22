@@ -261,6 +261,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @return Account
      *
      * @throws FireflyException
+     * @throws JsonException
      */
     public function getCashAccount(): Account
     {

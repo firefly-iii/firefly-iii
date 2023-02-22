@@ -67,7 +67,9 @@ class OtherCurrenciesCorrections extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -110,7 +112,6 @@ class OtherCurrenciesCorrections extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

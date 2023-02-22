@@ -102,7 +102,9 @@ class ExportDataGenerator
 
     /**
      * @return array
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function export(): array
     {

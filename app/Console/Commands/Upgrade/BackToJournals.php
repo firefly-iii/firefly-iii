@@ -58,7 +58,9 @@ class BackToJournals extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -86,6 +88,8 @@ class BackToJournals extends Command
 
     /**
      * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function isMigrated(): bool
     {
@@ -96,7 +100,6 @@ class BackToJournals extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

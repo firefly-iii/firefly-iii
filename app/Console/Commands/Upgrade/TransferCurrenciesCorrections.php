@@ -138,7 +138,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

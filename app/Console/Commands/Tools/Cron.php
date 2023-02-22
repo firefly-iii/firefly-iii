@@ -33,6 +33,8 @@ use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Cron
@@ -124,7 +126,6 @@ class Cron extends Command
     /**
      * @param  bool  $force
      * @param  Carbon|null  $date
-     * @throws FireflyException
      */
     private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
     {
@@ -152,7 +153,9 @@ class Cron extends Command
      * @param  bool  $force
      * @param  Carbon|null  $date
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     private function recurringCronJob(bool $force, ?Carbon $date): void
     {
@@ -207,6 +210,8 @@ class Cron extends Command
      * @param  bool  $force
      * @param  Carbon|null  $date
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function billWarningCronJob(bool $force, ?Carbon $date): void
     {
