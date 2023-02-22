@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\User;
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
@@ -165,19 +166,19 @@ interface UserRepositoryInterface
     public function getUserData(User $user): array;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      * @param  string  $role
      *
      * @return bool
      */
-    public function hasRole(User $user, string $role): bool;
+    public function hasRole(User|Authenticatable|null $user, string $role): bool;
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      * @param  string  $email
      * @return InvitedUser
      */
-    public function inviteUser(User $user, string $email): InvitedUser;
+    public function inviteUser(User|Authenticatable|null $user, string $email): InvitedUser;
 
     /**
      * @param  string  $code

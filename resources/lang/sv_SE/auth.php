@@ -36,6 +36,6 @@ declare(strict_types=1);
 
 
 return [
-    'failed'   => 'Inloggningssuppgifterna kunde inte hittas.',
+    'failed'   => 'Inloggningsuppgifterna kunde inte hittas.',
     'throttle' => 'För många inloggningsförsök. Vänligen försök igen om :seconds sekunder.',
 ];

@@ -56,7 +56,7 @@ return [
     'balanceDiff'             => 'Diferencia de saldo',
     'other_meta_data'         => 'Otros metadatos',
     'invited_at'              => 'Invitada el',
-    'expires'                 => 'Invitation expires',
+    'expires'                 => 'La invitación caduca',
     'invited_by'              => 'Invitado por',
     'invite_link'             => 'Enlace de invitación',
     'account_type'            => 'Tipo de cuenta',
@@ -182,7 +182,7 @@ return [
     'start_date'              => 'Fecha de inicio',
     'trigger'                 => 'Disparador',
     'response'                => 'Respuesta',
-    'delivery'                => 'Delivery',
+    'delivery'                => 'Entrega',
     'url'                     => 'URL',
     'secret'                  => 'Secreto',
 
