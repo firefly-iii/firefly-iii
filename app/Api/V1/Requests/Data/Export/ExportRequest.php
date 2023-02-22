@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Data\Export;
 
-use Carbon\Carbon;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;

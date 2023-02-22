@@ -69,7 +69,6 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Returns the content of an attachment.
      *
-
      *
      * @param  Attachment  $attachment
      *
@@ -93,7 +92,6 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @param  Attachment  $attachment
      *
-
      * @return string
      */
     public function getAttachmentLocation(Attachment $attachment): string
@@ -104,7 +102,6 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Get all attachments.
      *
-
      * @return Collection
      */
     public function getAttachments(): Collection
@@ -116,7 +113,6 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Get all errors.
      *
      * @return MessageBag
-
      */
     public function getErrors(): MessageBag
     {
@@ -127,7 +123,6 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Get all messages.
      *
      * @return MessageBag
-
      */
     public function getMessages(): MessageBag
     {
@@ -232,7 +227,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
         if (false !== $validation) {
-            $user  = $model->user; // @phpstan-ignore-line
+            $user = $model->user; // @phpstan-ignore-line
             // ignore lines about polymorphic calls.
             if ($model instanceof PiggyBank) {
                 $user = $model->account->user;
@@ -336,7 +331,6 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Verify if the size of a file is valid.
      *
-
      *
      * @param  UploadedFile  $file
      *
@@ -377,7 +371,8 @@ class AttachmentHelper implements AttachmentHelperInterface
             $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
         if ($model instanceof PiggyBank) {
-            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(); // @phpstan-ignore-line
+            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(
+            ); // @phpstan-ignore-line
         }
         $result = false;
         if ($count > 0) {

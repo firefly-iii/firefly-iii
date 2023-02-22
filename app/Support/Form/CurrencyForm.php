@@ -46,6 +46,7 @@ class CurrencyForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function amount(string $name, $value = null, array $options = null): string
     {
@@ -59,6 +60,7 @@ class CurrencyForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     protected function currencyField(string $name, string $view, mixed $value = null, array $options = null): string
     {
@@ -114,6 +116,7 @@ class CurrencyForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function balanceAll(string $name, $value = null, array $options = null): string
     {
@@ -129,6 +132,7 @@ class CurrencyForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
     {

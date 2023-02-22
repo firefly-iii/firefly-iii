@@ -167,7 +167,6 @@ class Bill extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -176,7 +175,6 @@ class Bill extends Model
     }
 
     /**
-
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -185,7 +183,6 @@ class Bill extends Model
     }
 
     /**
-
      * Get all of the notes.
      */
     public function notes(): MorphMany
@@ -202,7 +199,6 @@ class Bill extends Model
     }
 
     /**
-
      *
      * @param  mixed  $value
      */
@@ -222,7 +218,6 @@ class Bill extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo
@@ -231,7 +226,6 @@ class Bill extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function transactionJournals(): HasMany

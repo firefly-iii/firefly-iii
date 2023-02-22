@@ -76,7 +76,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function attachments(Tag $tag): JsonResponse
     {
@@ -112,7 +111,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
     {

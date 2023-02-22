@@ -94,6 +94,8 @@ class CorrectOpeningBalanceCurrencies extends Command
      * @param  TransactionJournal  $journal
      *
      * @return int
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function correctJournal(TransactionJournal $journal): int
     {

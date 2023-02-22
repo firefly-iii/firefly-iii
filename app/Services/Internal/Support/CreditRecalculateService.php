@@ -331,7 +331,9 @@ class CreditRecalculateService
         // in any other case, remove amount from left of debt.
         if (in_array($type, [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
             $newLeftOfDebt = bcadd($leftOfDebt, bcmul($usedAmount, '-1'));
-            Log::debug(sprintf('[5] Fallback: transaction is withdrawal/deposit/transfer, remove amount %s from left of debt, = %s.', $usedAmount, $newLeftOfDebt));
+            Log::debug(
+                sprintf('[5] Fallback: transaction is withdrawal/deposit/transfer, remove amount %s from left of debt, = %s.', $usedAmount, $newLeftOfDebt)
+            );
             return $newLeftOfDebt;
         }
 

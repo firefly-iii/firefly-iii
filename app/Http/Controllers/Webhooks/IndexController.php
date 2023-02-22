@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Webhooks;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -59,7 +58,6 @@ class IndexController extends Controller
      * @param  Request  $request
      *
      * @return Factory|View
-     * @throws FireflyException
      */
     public function index(Request $request)
     {

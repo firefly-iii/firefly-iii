@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Popup;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
 use Illuminate\Http\JsonResponse;
@@ -42,7 +43,7 @@ class ReportController extends Controller
      * @param  Request  $request
      *
      * @return JsonResponse
-     *
+     * @throws FireflyException
      */
     public function general(Request $request): JsonResponse
     {

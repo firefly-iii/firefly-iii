@@ -88,7 +88,7 @@ class ParseDateString
         }
 
         // if regex for YYYY-MM-DD:
-        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
+        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
         if (preg_match($pattern, $date)) {
             return $this->parseDefaultDate($date);
         }
@@ -101,7 +101,7 @@ class ParseDateString
             throw new FireflyException(sprintf('[a] Not a recognised date format: "%s"', $date));
         }
         // can't do a partial year:
-        $substrCount = substr_count(substr($date, 0, 4), 'x', 0);
+        $substrCount = substr_count(substr($date, 0, 4), 'x');
         if (10 === strlen($date) && $substrCount > 0 && $substrCount < 4) {
             throw new FireflyException(sprintf('[b] Not a recognised date format: "%s"', $date));
         }
@@ -254,7 +254,7 @@ class ParseDateString
     protected function isDayRange(string $date): bool
     {
         // if regex for xxxx-xx-DD:
-        $pattern = '/^xxxx-xx-(0[1-9]|[12][\d]|3[01])$/';
+        $pattern = '/^xxxx-xx-(0[1-9]|[12]\d|3[01])$/';
         if (preg_match($pattern, $date)) {
             Log::debug(sprintf('"%s" is a day range.', $date));
 
@@ -361,7 +361,7 @@ class ParseDateString
     protected function isMonthDayRange(string $date): bool
     {
         // if regex for xxxx-MM-DD:
-        $pattern = '/^xxxx-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
+        $pattern = '/^xxxx-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
         if (preg_match($pattern, $date)) {
             Log::debug(sprintf('"%s" is a month/day range.', $date));
 
@@ -398,7 +398,7 @@ class ParseDateString
     protected function isDayYearRange(string $date): bool
     {
         // if regex for YYYY-xx-DD:
-        $pattern = '/^(19|20)\d\d-xx-(0[1-9]|[12][\d]|3[01])$/';
+        $pattern = '/^(19|20)\d\d-xx-(0[1-9]|[12]\d|3[01])$/';
         if (preg_match($pattern, $date)) {
             Log::debug(sprintf('"%s" is a day/year range.', $date));
 

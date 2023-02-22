@@ -33,7 +33,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
-
  * Class AccountServiceProvider.
  */
 class AccountServiceProvider extends ServiceProvider

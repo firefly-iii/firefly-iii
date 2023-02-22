@@ -79,7 +79,6 @@ class TransactionJournalMeta extends Model
     protected $table = 'journal_meta';
 
     /**
-
      *
      * @param  mixed  $value
      *
@@ -91,7 +90,6 @@ class TransactionJournalMeta extends Model
     }
 
     /**
-
      *
      * @param  mixed  $value
      */
@@ -103,7 +101,6 @@ class TransactionJournalMeta extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionJournal(): BelongsTo

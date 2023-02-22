@@ -39,7 +39,6 @@ class UniqueIban implements Rule
     /**
      * Create a new rule instance.
      *
-
      *
      * @param  Account|null  $account
      * @param  string|null  $expectedType
@@ -63,7 +62,6 @@ class UniqueIban implements Rule
     /**
      * Get the validation error message.
      *
-
      *
      * @return string
      */

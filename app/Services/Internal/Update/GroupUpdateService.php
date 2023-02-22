@@ -141,6 +141,7 @@ class GroupUpdateService
      * @return array
      * @throws DuplicateTransactionException
      * @throws FireflyException
+     * @throws JsonException
      */
     private function updateTransactions(TransactionGroup $transactionGroup, array $transactions): array
     {

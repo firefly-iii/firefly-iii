@@ -71,7 +71,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {
@@ -105,7 +104,6 @@ class ShowController extends Controller
      * @param  Budget  $budget
      *
      * @return JsonResponse
-
      */
     public function show(Budget $budget): JsonResponse
     {

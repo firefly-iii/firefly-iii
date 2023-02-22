@@ -71,7 +71,7 @@ class RecurrenceController extends Controller
      */
     public function events(Request $request): JsonResponse
     {
-        $occurrences = [];
+        $occurrences      = [];
         $return           = [];
         $start            = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end              = Carbon::createFromFormat('Y-m-d', $request->get('end'));

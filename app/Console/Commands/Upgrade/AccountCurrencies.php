@@ -66,7 +66,9 @@ class AccountCurrencies extends Command
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
      *
      * @return int
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -110,7 +112,6 @@ class AccountCurrencies extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

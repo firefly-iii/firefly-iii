@@ -102,7 +102,9 @@ class ExportDataGenerator
 
     /**
      * @return array
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function export(): array
     {
@@ -827,6 +829,14 @@ class ExportDataGenerator
     }
 
     /**
+     * @inheritDoc
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return null;
+    }
+
+    /**
      * @return string
      * @throws FireflyException
      */
@@ -996,6 +1006,14 @@ class ExportDataGenerator
     }
 
     /**
+     * @inheritDoc
+     */
+    public function has(mixed $key): mixed
+    {
+        return null;
+    }
+
+    /**
      * @param  Carbon  $end
      */
     public function setEnd(Carbon $end): void
@@ -1081,21 +1099,5 @@ class ExportDataGenerator
     public function setStart(Carbon $start): void
     {
         $this->start = $start;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get(string $key, mixed $default = null): mixed
-    {
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function has(mixed $key): mixed
-    {
-        return null;
     }
 }

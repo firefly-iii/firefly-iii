@@ -45,6 +45,7 @@ trait ModelInformation
      * @param  Bill  $bill
      *
      * @return array
+     * @throws FireflyException
      */
     protected function getActionsForBill(Bill $bill): array // get info and augument
     {
@@ -69,7 +70,6 @@ trait ModelInformation
     }
 
     /**
-
      *
      * @return string[]
      *
@@ -94,7 +94,6 @@ trait ModelInformation
     }
 
     /**
-
      * @return array
      */
     protected function getRoles(): array
@@ -113,6 +112,7 @@ trait ModelInformation
      * @param  Bill  $bill
      *
      * @return array
+     * @throws FireflyException
      */
     protected function getTriggersForBill(Bill $bill): array // get info and augument
     {
@@ -164,6 +164,7 @@ trait ModelInformation
      * @param  TransactionJournal  $journal
      *
      * @return array
+     * @throws FireflyException
      */
     private function getTriggersForJournal(TransactionJournal $journal): array
     {

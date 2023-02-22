@@ -43,6 +43,7 @@ class BillController extends Controller
      * @param  Carbon  $end
      *
      * @return mixed|string
+     * @throws FireflyException
      */
     public function overview(Collection $accounts, Carbon $start, Carbon $end)
     {   // chart properties for cache:

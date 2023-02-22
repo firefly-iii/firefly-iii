@@ -30,6 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
+use JsonException;
 use Log;
 
 /**
@@ -166,6 +167,7 @@ class FixAccountTypes extends Command
      * @param  Transaction  $dest
      *
      * @throws FireflyException
+     * @throws JsonException
      */
     private function fixJournal(TransactionJournal $journal, string $type, Transaction $source, Transaction $dest): void
     {

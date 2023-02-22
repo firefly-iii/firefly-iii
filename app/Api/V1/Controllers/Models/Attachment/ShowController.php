@@ -73,7 +73,6 @@ class ShowController extends Controller
      *
      * @param  Attachment  $attachment
      *
-
      * @return LaravelResponse
      * @throws   FireflyException
      */
@@ -118,7 +117,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {

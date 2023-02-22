@@ -32,7 +32,6 @@ use FireflyIII\Models\TransactionJournalMeta;
 use Log;
 
 /**
-
  * Class JournalDestroyService
  */
 class JournalDestroyService

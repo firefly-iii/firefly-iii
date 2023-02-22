@@ -63,7 +63,6 @@ class DestroyController extends Controller
      *
      * @param  Account  $account
      *
-
      * @return JsonResponse
      */
     public function destroy(Account $account): JsonResponse

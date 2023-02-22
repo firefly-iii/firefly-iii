@@ -132,7 +132,7 @@ class SelectController extends Controller
      * @param  TestRuleFormRequest  $request
      *
      * @return JsonResponse
-     *
+     * @throws FireflyException
      */
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
@@ -194,7 +194,7 @@ class SelectController extends Controller
      * @param  Rule  $rule
      *
      * @return JsonResponse
-     *
+     * @throws FireflyException
      */
     public function testTriggersByRule(Rule $rule): JsonResponse
     {

@@ -27,6 +27,8 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait CronRunner
@@ -69,6 +71,8 @@ trait CronRunner
      * @param  Carbon  $date
      *
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function runRecurring(bool $force, Carbon $date): array
     {

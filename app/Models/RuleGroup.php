@@ -116,7 +116,6 @@ class RuleGroup extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -125,7 +124,6 @@ class RuleGroup extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function rules(): HasMany

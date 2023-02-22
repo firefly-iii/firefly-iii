@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
-
  * Class CurrencyForm.
  *
  */

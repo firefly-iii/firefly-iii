@@ -31,7 +31,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
-
  * Class BudgetFormUpdateRequest
  */
 class BudgetFormUpdateRequest extends FormRequest

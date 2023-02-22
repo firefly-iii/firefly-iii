@@ -76,7 +76,6 @@ class RuleAction extends Model
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 
     /**
-
      * @return BelongsTo
      */
     public function rule(): BelongsTo

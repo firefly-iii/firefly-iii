@@ -108,7 +108,7 @@ class MassController extends Controller
                 Log::debug(sprintf('Searching for ID #%d', $journalId));
                 /** @var TransactionJournal $journal */
                 $journal = $this->repository->find((int)$journalId);
-                if (null !== $journal && (int)$journalId === (int) $journal->id) {
+                if (null !== $journal && (int)$journalId === (int)$journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
                     Log::debug(sprintf('Deleted transaction journal #%d', $journalId));
@@ -239,7 +239,6 @@ class MassController extends Controller
      * @param  string  $key
      *
      * @return Carbon|null
-
      */
     private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
     {
@@ -267,7 +266,6 @@ class MassController extends Controller
      * @param  string  $string
      *
      * @return string|null
-
      */
     private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
     {
@@ -288,7 +286,6 @@ class MassController extends Controller
      * @param  string  $string
      *
      * @return int|null
-
      */
     private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
     {

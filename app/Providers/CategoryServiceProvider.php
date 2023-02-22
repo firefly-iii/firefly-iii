@@ -33,7 +33,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
-
  * Class CategoryServiceProvider.
  */
 class CategoryServiceProvider extends ServiceProvider

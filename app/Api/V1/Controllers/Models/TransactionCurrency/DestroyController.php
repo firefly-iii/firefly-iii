@@ -39,7 +39,7 @@ use Validator;
 class DestroyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
-    private UserRepositoryInterface $userRepository;
+    private UserRepositoryInterface     $userRepository;
 
     /**
      * CurrencyRepository constructor.
@@ -51,7 +51,7 @@ class DestroyController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(CurrencyRepositoryInterface::class);
+                $this->repository     = app(CurrencyRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
@@ -70,7 +70,6 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function destroy(TransactionCurrency $currency): JsonResponse
     {

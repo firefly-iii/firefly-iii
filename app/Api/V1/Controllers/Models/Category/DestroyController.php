@@ -62,7 +62,6 @@ class DestroyController extends Controller
      * @param  Category  $category
      *
      * @return JsonResponse
-
      */
     public function destroy(Category $category): JsonResponse
     {

@@ -71,7 +71,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {
@@ -108,7 +107,6 @@ class ShowController extends Controller
      * @param  Rule  $rule
      *
      * @return JsonResponse
-
      */
     public function show(Rule $rule): JsonResponse
     {

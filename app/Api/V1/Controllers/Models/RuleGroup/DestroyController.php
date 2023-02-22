@@ -66,7 +66,6 @@ class DestroyController extends Controller
      * @param  RuleGroup  $ruleGroup
      *
      * @return JsonResponse
-
      */
     public function destroy(RuleGroup $ruleGroup): JsonResponse
     {

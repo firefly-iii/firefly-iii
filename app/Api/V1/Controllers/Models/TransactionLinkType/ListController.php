@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
@@ -58,8 +57,8 @@ class ListController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user                 = auth()->user();
-                $this->repository     = app(LinkTypeRepositoryInterface::class);
+                $user             = auth()->user();
+                $this->repository = app(LinkTypeRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -76,7 +75,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function transactions(Request $request, LinkType $linkType): JsonResponse
     {

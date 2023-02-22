@@ -112,7 +112,6 @@ class RecurrenceTransaction extends Model
     protected $table = 'recurrences_transactions';
 
     /**
-
      * @return BelongsTo
      */
     public function destinationAccount(): BelongsTo
@@ -121,7 +120,6 @@ class RecurrenceTransaction extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function foreignCurrency(): BelongsTo
@@ -131,7 +129,6 @@ class RecurrenceTransaction extends Model
 
     /**
      * @return BelongsTo
-
      */
     public function recurrence(): BelongsTo
     {
@@ -140,7 +137,6 @@ class RecurrenceTransaction extends Model
 
     /**
      * @return HasMany
-
      */
     public function recurrenceTransactionMeta(): HasMany
     {
@@ -148,7 +144,6 @@ class RecurrenceTransaction extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function sourceAccount(): BelongsTo
@@ -157,7 +152,6 @@ class RecurrenceTransaction extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo
@@ -166,7 +160,6 @@ class RecurrenceTransaction extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionType(): BelongsTo
@@ -180,7 +173,7 @@ class RecurrenceTransaction extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 
@@ -190,7 +183,7 @@ class RecurrenceTransaction extends Model
     protected function foreignAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string) $value,
+            get: fn ($value) => (string)$value,
         );
     }
 }

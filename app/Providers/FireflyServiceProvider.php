@@ -76,7 +76,6 @@ use Validator;
  *
  * Class FireflyServiceProvider.
  *
-
  *
  */
 class FireflyServiceProvider extends ServiceProvider

@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Trait ModifiesPiggyBanks
@@ -42,12 +43,6 @@ trait ModifiesPiggyBanks
 {
     use CreatesObjectGroups;
 
-    /**
-     * @param  PiggyBankRepetition  $repetition
-     * @param  string  $amount
-     *
-     * @return void
-     */
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
     {
         Log::debug(sprintf('addAmountToRepetition: %s', $amount));
@@ -61,12 +56,6 @@ trait ModifiesPiggyBanks
         }
     }
 
-    /**
-     * @param  PiggyBank  $piggyBank
-     * @param  string  $amount
-     *
-     * @return bool
-     */
     public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
         $repetition = $this->getRepetition($piggyBank);
@@ -109,6 +98,7 @@ trait ModifiesPiggyBanks
      * @param  string  $amount
      *
      * @return bool
+     * @throws JsonException
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Cache;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;

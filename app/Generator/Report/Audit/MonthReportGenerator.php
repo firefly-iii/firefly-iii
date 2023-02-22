@@ -50,7 +50,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @return string
      * @throws FireflyException
      * @throws JsonException
-
      */
     public function generate(): string
     {
@@ -186,7 +185,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $accounts
      *
      * @return ReportGeneratorInterface
-
      */
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
@@ -201,7 +199,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $budgets
      *
      * @return ReportGeneratorInterface
-
      */
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
@@ -214,7 +211,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $categories
      *
      * @return ReportGeneratorInterface
-
      */
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
@@ -227,7 +223,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
-
      */
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
@@ -242,7 +237,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $expense
      *
      * @return ReportGeneratorInterface
-
      */
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
@@ -256,7 +250,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Carbon  $date
      *
      * @return ReportGeneratorInterface
-
      */
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
@@ -271,7 +264,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @param  Collection  $tags
      *
      * @return ReportGeneratorInterface
-
      */
     public function setTags(Collection $tags): ReportGeneratorInterface
     {

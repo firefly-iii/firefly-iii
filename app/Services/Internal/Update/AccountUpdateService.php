@@ -31,6 +31,7 @@ use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
+use JsonException;
 use Log;
 
 /**
@@ -70,6 +71,7 @@ class AccountUpdateService
      *
      * @return Account
      * @throws FireflyException
+     * @throws JsonException
      */
     public function update(Account $account, array $data): Account
     {
@@ -300,7 +302,9 @@ class AccountUpdateService
 
                 // if liability, make sure the amount is positive for a credit, and negative for a debit.
                 if ($this->isLiability($account)) {
-                    $openingBalance = 'credit' === $data['liability_direction'] ? app('steam')->positive($openingBalance) : app('steam')->negative($openingBalance);
+                    $openingBalance = 'credit' === $data['liability_direction'] ? app('steam')->positive($openingBalance) : app('steam')->negative(
+                        $openingBalance
+                    );
                 }
 
                 $this->updateOBGroupV2($account, $openingBalance, $openingBalanceDate);
@@ -313,37 +317,6 @@ class AccountUpdateService
         // if cannot have an opening balance, delete it.
         if (!in_array($type->type, $this->canHaveOpeningBalance, true)) {
             $this->deleteOBGroup($account);
-        }
-    }
-
-    /**
-     * @param  Account  $account
-     * @param  array  $data
-     *
-     * @throws FireflyException
-     * @deprecated In Firefly III v5.8.0 and onwards, credit transactions for liabilities are no longer created.
-     */
-    private function updateCreditLiability(Account $account, array $data): void
-    {
-        $type  = $account->accountType;
-        $valid = config('firefly.valid_liabilities');
-        if (in_array($type->type, $valid, true)) {
-            $direction = array_key_exists('liability_direction', $data) ? $data['liability_direction'] : 'empty';
-            // check if is submitted as empty, that makes it valid:
-            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
-                $openingBalance     = $data['opening_balance'];
-                $openingBalanceDate = $data['opening_balance_date'];
-                if ('credit' === $direction) {
-                    $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
-                }
-            }
-
-            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
-                $this->deleteCreditTransaction($account);
-            }
-            if ($this->validOBData($data) && !$this->isEmptyOBData($data) && 'credit' !== $direction) {
-                $this->deleteCreditTransaction($account);
-            }
         }
     }
 
@@ -375,5 +348,36 @@ class AccountUpdateService
         }
         Log::debug('Final new array is', $new);
         app('preferences')->setForUser($account->user, 'frontpageAccounts', $new);
+    }
+
+    /**
+     * @param  Account  $account
+     * @param  array  $data
+     *
+     * @throws FireflyException
+     * @deprecated In Firefly III v5.8.0 and onwards, credit transactions for liabilities are no longer created.
+     */
+    private function updateCreditLiability(Account $account, array $data): void
+    {
+        $type  = $account->accountType;
+        $valid = config('firefly.valid_liabilities');
+        if (in_array($type->type, $valid, true)) {
+            $direction = array_key_exists('liability_direction', $data) ? $data['liability_direction'] : 'empty';
+            // check if is submitted as empty, that makes it valid:
+            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
+                $openingBalance     = $data['opening_balance'];
+                $openingBalanceDate = $data['opening_balance_date'];
+                if ('credit' === $direction) {
+                    $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
+                }
+            }
+
+            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
+                $this->deleteCreditTransaction($account);
+            }
+            if ($this->validOBData($data) && !$this->isEmptyOBData($data) && 'credit' !== $direction) {
+                $this->deleteCreditTransaction($account);
+            }
+        }
     }
 }

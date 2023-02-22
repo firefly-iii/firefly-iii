@@ -45,6 +45,7 @@ class AccountController extends Controller
      * @param  Carbon  $end
      *
      * @return mixed|string
+     * @throws FireflyException
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {

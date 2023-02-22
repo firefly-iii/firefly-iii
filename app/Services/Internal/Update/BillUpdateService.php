@@ -37,7 +37,6 @@ use JsonException;
 use Log;
 
 /**
-
  * Class BillUpdateService
  */
 class BillUpdateService

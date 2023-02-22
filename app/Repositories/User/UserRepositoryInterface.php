@@ -41,13 +41,6 @@ interface UserRepositoryInterface
     public function all(): Collection;
 
     /**
-     * @param  User  $user
-     * @param  int  $groupId
-     * @return array
-     */
-    public function getRolesInGroup(User $user, int $groupId): array;
-
-    /**
      * Gives a user a role.
      *
      * @param  User  $user
@@ -154,6 +147,13 @@ interface UserRepositoryInterface
      * @return string|null
      */
     public function getRoleByUser(User $user): ?string;
+
+    /**
+     * @param  User  $user
+     * @param  int  $groupId
+     * @return array
+     */
+    public function getRolesInGroup(User $user, int $groupId): array;
 
     /**
      * Return basic user information.

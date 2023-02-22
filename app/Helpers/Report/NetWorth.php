@@ -32,7 +32,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -112,7 +111,6 @@ class NetWorth implements NetWorthInterface
                 $netWorth[$currencyId] = '0';
             }
             $netWorth[$currencyId] = bcadd($balance, $netWorth[$currencyId]);
-
 //            Log::debug(sprintf('Total net worth for currency #%d is %s', $currencyId, $netWorth[$currencyId]));
         }
         ksort($netWorth);
@@ -184,7 +182,9 @@ class NetWorth implements NetWorthInterface
      */
     private function getAccounts(): Collection
     {
-        $accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $accounts = $this->accountRepository->getAccountsByType(
+            [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
+        );
         $filtered = new Collection();
         /** @var Account $account */
         foreach ($accounts as $account) {

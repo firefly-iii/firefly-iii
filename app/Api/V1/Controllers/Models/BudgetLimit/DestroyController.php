@@ -69,7 +69,6 @@ class DestroyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function destroy(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
-use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use Closure;
 use Exception;
@@ -504,6 +503,7 @@ class GroupCollector implements GroupCollectorInterface
      * @param  Collection  $collection
      *
      * @return Collection
+     * @throws FireflyException
      */
     private function parseArray(Collection $collection): Collection
     {
@@ -514,8 +514,8 @@ class GroupCollector implements GroupCollectorInterface
 
             if (!array_key_exists($groupId, $groups)) {
                 // make new array
-                $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
-                $groupArray                             = [
+                $parsedGroup = $this->parseAugmentedJournal($augumentedJournal);
+                $groupArray  = [
                     'id'               => (int)$augumentedJournal->transaction_group_id,
                     'user_id'          => (int)$augumentedJournal->user_id,
                     // Field transaction_group_title was added by the query.
@@ -556,6 +556,7 @@ class GroupCollector implements GroupCollectorInterface
      * @param  TransactionJournal  $augumentedJournal
      *
      * @return array
+     * @throws FireflyException
      */
     private function parseAugmentedJournal(TransactionJournal $augumentedJournal): array
     {

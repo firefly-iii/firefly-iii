@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;

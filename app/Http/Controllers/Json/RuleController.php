@@ -41,6 +41,7 @@ class RuleController extends Controller
      * @param  Request  $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function action(Request $request): JsonResponse
     {
@@ -67,6 +68,7 @@ class RuleController extends Controller
      * @param  Request  $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function trigger(Request $request): JsonResponse
     {

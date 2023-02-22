@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -98,7 +97,6 @@ class TransactionController extends Controller
      * @param  Carbon  $end
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function categories(string $objectType, Carbon $start, Carbon $end)
     {
@@ -152,7 +150,6 @@ class TransactionController extends Controller
      * @param  Carbon  $end
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function destinationAccounts(string $objectType, Carbon $start, Carbon $end)
     {
@@ -206,7 +203,6 @@ class TransactionController extends Controller
      * @param  Carbon  $end
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function sourceAccounts(string $objectType, Carbon $start, Carbon $end)
     {

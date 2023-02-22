@@ -98,7 +98,6 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
         $searchArray = [];
 
-        /** @var Collection $triggers */
         $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
 
         /** @var RuleTrigger $ruleTrigger */

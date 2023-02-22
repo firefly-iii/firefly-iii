@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Webhook;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
-use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionGroup;
@@ -49,7 +47,6 @@ class ShowController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-
      */
     public function __construct()
     {
@@ -72,7 +69,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {

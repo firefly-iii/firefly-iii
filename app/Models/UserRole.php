@@ -68,7 +68,6 @@ class UserRole extends Model
     protected $fillable = ['title'];
 
     /**
-
      *
      * @return HasMany
      */

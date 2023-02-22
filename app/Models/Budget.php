@@ -127,7 +127,6 @@ class Budget extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -136,7 +135,6 @@ class Budget extends Model
     }
 
     /**
-
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -145,7 +143,6 @@ class Budget extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function autoBudgets(): HasMany
@@ -154,7 +151,6 @@ class Budget extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function budgetlimits(): HasMany
@@ -163,7 +159,6 @@ class Budget extends Model
     }
 
     /**
-
      * Get all of the notes.
      */
     public function notes(): MorphMany
@@ -172,7 +167,6 @@ class Budget extends Model
     }
 
     /**
-
      * @return BelongsToMany
      */
     public function transactionJournals(): BelongsToMany
@@ -181,7 +175,6 @@ class Budget extends Model
     }
 
     /**
-
      * @return BelongsToMany
      */
     public function transactions(): BelongsToMany

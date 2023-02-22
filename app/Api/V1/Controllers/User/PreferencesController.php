@@ -52,7 +52,6 @@ class PreferencesController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {
@@ -85,7 +84,6 @@ class PreferencesController extends Controller
      * @param  Preference  $preference
      *
      * @return JsonResponse
-
      */
     public function show(Preference $preference): JsonResponse
     {

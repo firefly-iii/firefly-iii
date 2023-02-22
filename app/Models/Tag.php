@@ -127,7 +127,6 @@ class Tag extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -136,7 +135,6 @@ class Tag extends Model
     }
 
     /**
-
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -145,7 +143,6 @@ class Tag extends Model
     }
 
     /**
-
      * @return MorphMany
      */
     public function locations(): MorphMany
@@ -154,7 +151,6 @@ class Tag extends Model
     }
 
     /**
-
      * @return BelongsToMany
      */
     public function transactionJournals(): BelongsToMany

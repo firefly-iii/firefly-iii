@@ -138,7 +138,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -238,7 +237,6 @@ class TransferCurrenciesCorrections extends Command
      * @param  TransactionJournal  $transfer
      *
      * @return bool
-
      */
     private function isSplitJournal(TransactionJournal $transfer): bool
     {
@@ -263,7 +261,6 @@ class TransferCurrenciesCorrections extends Command
      * @param  TransactionJournal  $transfer
      *
      * @return Transaction|null
-
      */
     private function getSourceTransaction(TransactionJournal $transfer): ?Transaction
     {
@@ -313,7 +310,6 @@ class TransferCurrenciesCorrections extends Command
      * @param  TransactionJournal  $transfer
      *
      * @return Transaction|null
-
      */
     private function getDestinationTransaction(TransactionJournal $transfer): ?Transaction
     {
@@ -324,7 +320,6 @@ class TransferCurrenciesCorrections extends Command
      * Is either the source or destination transaction NULL?
      *
      * @return bool
-
      */
     private function isEmptyTransactions(): bool
     {
@@ -335,7 +330,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * @return bool
-
      */
     private function isNoCurrencyPresent(): bool
     {

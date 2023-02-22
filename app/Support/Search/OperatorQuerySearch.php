@@ -63,6 +63,7 @@ use TypeError;
  */
 class OperatorQuerySearch implements SearchInterface
 {
+    protected Carbon                    $date;
     private AccountRepositoryInterface  $accountRepository;
     private BillRepositoryInterface     $billRepository;
     private BudgetRepositoryInterface   $budgetRepository;
@@ -73,9 +74,6 @@ class OperatorQuerySearch implements SearchInterface
     private int                         $limit;
     private Collection                  $operators;
     private int                         $page;
-    protected Carbon                    $date;
-
-
     private array                  $prohibitedWords;
     private float                  $startTime;
     private TagRepositoryInterface $tagRepository;
@@ -241,10 +239,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $operator
-     * @param  string  $value
      *
-     * @return bool
      * @throws FireflyException
      */
     private function updateCollector(string $operator, string $value, bool $prohibited): bool
@@ -1568,7 +1563,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -1627,7 +1621,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -1666,7 +1659,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -1705,9 +1697,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
-     * @return void
      * @throws FireflyException
      */
     private function setExactMetaDateParams(string $field, array $range, bool $prohibited = false): void
@@ -1767,9 +1756,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
-     * @return void
      * @throws FireflyException
      */
     private function setMetaDateBeforeParams(string $field, array $range, bool $prohibited = false): void
@@ -1807,9 +1793,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
-     * @return void
      * @throws FireflyException
      */
     private function setMetaDateAfterParams(string $field, array $range, bool $prohibited = false): void
@@ -1847,9 +1830,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
-     * @return void
      * @throws FireflyException
      */
     private function setExactObjectDateParams(string $field, array $range, bool $prohibited = false): void
@@ -1908,8 +1888,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -1948,8 +1926,6 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $range
      *
      * @throws FireflyException
      */
@@ -2016,6 +1992,14 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
+     * @param  Carbon  $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
+    }
+
+    /**
      * @inheritDoc
      */
     public function setPage(int $page): void
@@ -2048,13 +2032,5 @@ class OperatorQuerySearch implements SearchInterface
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
-    }
-
-    /**
-     * @param  Carbon  $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $this->date = $date;
     }
 }

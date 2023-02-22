@@ -67,7 +67,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function attachments(PiggyBank $piggyBank): JsonResponse
     {
@@ -102,7 +101,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {

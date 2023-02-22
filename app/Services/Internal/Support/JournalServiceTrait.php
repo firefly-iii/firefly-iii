@@ -77,11 +77,11 @@ trait JournalServiceTrait
         $result       = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
         $numberResult = $result;
         $result       = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
-        $nameResult =$result;
+        $nameResult   = $result;
 
         // if $result (find by name) is NULL, but IBAN is set, any result of the search by NAME can't overrule
         // this account. In such a case, the name search must be retried with a new name.
-        if (null !== $nameResult && null === $numberResult && null === $ibanResult && '' !== (string)$data['iban'] && '' !== (string) $nameResult->iban) {
+        if (null !== $nameResult && null === $numberResult && null === $ibanResult && '' !== (string)$data['iban'] && '' !== (string)$nameResult->iban) {
             $data['name'] = sprintf('%s (%s)', $data['name'], $data['iban']);
             Log::debug(sprintf('Search again using the new name, "%s".', $data['name']));
             $result = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
