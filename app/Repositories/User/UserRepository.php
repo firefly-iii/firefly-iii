@@ -31,6 +31,7 @@ use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
@@ -280,27 +281,30 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param  User  $user
+     * @param  User|Authenticatable|null  $user
      * @param  string  $role
      *
      * @return bool
      */
-    public function hasRole(User $user, string $role): bool
-    {
-        /** @var Role $userRole */
-        foreach ($user->roles as $userRole) {
-            if ($userRole->name === $role) {
-                return true;
+        public function hasRole(User|Authenticatable|null $user, string $role): bool
+        {
+            if (null === $user) {
+                return false;
             }
+            /** @var Role $userRole */
+            foreach ($user->roles as $userRole) {
+                if ($userRole->name === $role) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        return false;
-    }
-
     /**
-     * @inheritDoc
-     */
-    public function inviteUser(User $user, string $email): InvitedUser
+         * @inheritDoc
+         */
+    public function inviteUser(User|Authenticatable|null $user, string $email): InvitedUser
     {
         $now = today(config('app.timezone'));
         $now->addDays(2);
