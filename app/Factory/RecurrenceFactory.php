@@ -30,6 +30,7 @@ use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
+use JsonException;
 use Log;
 
 /**
@@ -58,7 +59,7 @@ class RecurrenceFactory
      *
      * @return Recurrence
      * @throws FireflyException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function create(array $data): Recurrence
     {

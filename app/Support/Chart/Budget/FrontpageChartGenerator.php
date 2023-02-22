@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Chart\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;

@@ -125,7 +125,6 @@ class Attachment extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -136,7 +135,6 @@ class Attachment extends Model
     /**
      * Get all of the owning attachable models.
      *
-
      *
      * @return MorphTo
      */
@@ -148,7 +146,6 @@ class Attachment extends Model
     /**
      * Returns the expected filename for this attachment.
      *
-
      * @return string
      */
     public function fileName(): string
@@ -157,7 +154,6 @@ class Attachment extends Model
     }
 
     /**
-
      * Get all of the notes.
      */
     public function notes(): MorphMany

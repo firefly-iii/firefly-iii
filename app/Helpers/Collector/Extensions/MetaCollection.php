@@ -197,6 +197,19 @@ trait MetaCollection
     }
 
     /**
+     * Join table to get tag information.
+     */
+    protected function joinMetaDataTables(): void
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+            $this->fields[] = 'journal_meta.name as meta_name';
+            $this->fields[] = 'journal_meta.data as meta_data';
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     public function excludeExternalUrl(string $url): GroupCollectorInterface
@@ -243,19 +256,6 @@ trait MetaCollection
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $externalId));
 
         return $this;
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinMetaDataTables(): void
-    {
-        if (false === $this->hasJoinedMetaTables) {
-            $this->hasJoinedMetaTables = true;
-            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[] = 'journal_meta.name as meta_name';
-            $this->fields[] = 'journal_meta.data as meta_data';
-        }
     }
 
     /**

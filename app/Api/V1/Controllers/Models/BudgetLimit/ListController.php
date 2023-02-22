@@ -77,7 +77,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function transactions(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {

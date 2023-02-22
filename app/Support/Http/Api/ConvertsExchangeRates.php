@@ -75,60 +75,6 @@ trait ConvertsExchangeRates
     }
 
     /**
-     * For a sum of entries, get the exchange rate to the native currency of
-     * the user.
-     * @param  array  $entries
-     * @return array
-     */
-    public function cerSum(array $entries): array
-    {
-        if (null === $this->enabled) {
-            $this->getPreference();
-        }
-
-        // if false, return the same array without conversion info
-        if (false === $this->enabled) {
-            $return = [];
-            /** @var array $entry */
-            foreach ($entries as $entry) {
-                $entry['converted'] = false;
-                $return[]           = $entry;
-            }
-            return $return;
-        }
-
-
-        /** @var TransactionCurrency $native */
-        $native = app('amount')->getDefaultCurrency();
-        $return = [];
-        /** @var array $entry */
-        foreach ($entries as $entry) {
-            $currency = $this->getCurrency((int)$entry['id']);
-            if ($currency->id !== $native->id) {
-                $amount                         = $this->convertAmount($entry['sum'], $currency, $native);
-                $entry['converted']             = true;
-                $entry['native_sum']            = $amount;
-                $entry['native_id']             = (string)$native->id;
-                $entry['native_name']           = $native->name;
-                $entry['native_symbol']         = $native->symbol;
-                $entry['native_code']           = $native->code;
-                $entry['native_decimal_places'] = $native->decimal_places;
-            }
-            if ($currency->id === $native->id) {
-                $entry['converted']             = false;
-                $entry['native_sum']            = $entry['sum'];
-                $entry['native_id']             = (string)$native->id;
-                $entry['native_name']           = $native->name;
-                $entry['native_symbol']         = $native->symbol;
-                $entry['native_code']           = $native->code;
-                $entry['native_decimal_places'] = $native->decimal_places;
-            }
-            $return[] = $entry;
-        }
-        return $return;
-    }
-
-    /**
      * @return void
      */
     private function getPreference(): void
@@ -147,15 +93,6 @@ trait ConvertsExchangeRates
             return app('amount')->getDefaultCurrency();
         }
         return $result;
-    }
-
-    private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string
-    {
-        Log::debug(sprintf('Converting %s from %s to %s', $amount, $from->code, $to->code));
-        $date = $date ?? today(config('app.timezone'));
-        $rate = $this->getRate($from, $to, $date);
-
-        return bcmul($amount, $rate);
     }
 
     /**
@@ -259,5 +196,68 @@ trait ConvertsExchangeRates
 
         Log::debug(sprintf('No rate for %s to EUR.', $currency->code));
         return '0';
+    }
+
+    /**
+     * For a sum of entries, get the exchange rate to the native currency of
+     * the user.
+     * @param  array  $entries
+     * @return array
+     */
+    public function cerSum(array $entries): array
+    {
+        if (null === $this->enabled) {
+            $this->getPreference();
+        }
+
+        // if false, return the same array without conversion info
+        if (false === $this->enabled) {
+            $return = [];
+            /** @var array $entry */
+            foreach ($entries as $entry) {
+                $entry['converted'] = false;
+                $return[]           = $entry;
+            }
+            return $return;
+        }
+
+
+        /** @var TransactionCurrency $native */
+        $native = app('amount')->getDefaultCurrency();
+        $return = [];
+        /** @var array $entry */
+        foreach ($entries as $entry) {
+            $currency = $this->getCurrency((int)$entry['id']);
+            if ($currency->id !== $native->id) {
+                $amount                         = $this->convertAmount($entry['sum'], $currency, $native);
+                $entry['converted']             = true;
+                $entry['native_sum']            = $amount;
+                $entry['native_id']             = (string)$native->id;
+                $entry['native_name']           = $native->name;
+                $entry['native_symbol']         = $native->symbol;
+                $entry['native_code']           = $native->code;
+                $entry['native_decimal_places'] = $native->decimal_places;
+            }
+            if ($currency->id === $native->id) {
+                $entry['converted']             = false;
+                $entry['native_sum']            = $entry['sum'];
+                $entry['native_id']             = (string)$native->id;
+                $entry['native_name']           = $native->name;
+                $entry['native_symbol']         = $native->symbol;
+                $entry['native_code']           = $native->code;
+                $entry['native_decimal_places'] = $native->decimal_places;
+            }
+            $return[] = $entry;
+        }
+        return $return;
+    }
+
+    private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string
+    {
+        Log::debug(sprintf('Converting %s from %s to %s', $amount, $from->code, $to->code));
+        $date = $date ?? today(config('app.timezone'));
+        $rate = $this->getRate($from, $to, $date);
+
+        return bcmul($amount, $rate);
     }
 }

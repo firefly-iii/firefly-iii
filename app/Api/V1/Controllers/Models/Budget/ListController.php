@@ -78,7 +78,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function attachments(Budget $budget): JsonResponse
     {
@@ -113,7 +112,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function budgetLimits(Budget $budget): JsonResponse
     {
@@ -147,7 +145,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
@@ -211,7 +208,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function withoutBudget(Request $request): JsonResponse
     {

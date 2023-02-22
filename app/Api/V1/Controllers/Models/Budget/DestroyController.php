@@ -62,7 +62,6 @@ class DestroyController extends Controller
      * @param  Budget  $budget
      *
      * @return JsonResponse
-
      */
     public function destroy(Budget $budget): JsonResponse
     {

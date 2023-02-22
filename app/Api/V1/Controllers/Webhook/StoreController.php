@@ -39,7 +39,6 @@ class StoreController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-
      */
     public function __construct()
     {

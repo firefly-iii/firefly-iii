@@ -26,7 +26,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

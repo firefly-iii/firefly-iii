@@ -139,6 +139,7 @@ class AccountFormRequest extends FormRequest
 
         return $rules;
     }
+
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
      *

@@ -25,7 +25,6 @@ namespace FireflyIII\Services\Internal\Update;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;

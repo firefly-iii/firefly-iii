@@ -42,7 +42,7 @@ class FiscalHelper implements FiscalHelperInterface
      */
     public function __construct()
     {
-        $this->useCustomFiscalYear = (bool) app('preferences')->get('customFiscalYear', false)->data;
+        $this->useCustomFiscalYear = (bool)app('preferences')->get('customFiscalYear', false)->data;
     }
 
     /**

@@ -36,7 +36,6 @@ use FireflyIII\Support\Report\Category\CategoryReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use JsonException;
 use Log;
 use Throwable;
 

@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Trait ModifiesPiggyBanks
@@ -97,7 +98,7 @@ trait ModifiesPiggyBanks
      * @param  string  $amount
      *
      * @return bool
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {

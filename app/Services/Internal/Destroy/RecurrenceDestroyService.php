@@ -27,7 +27,6 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 
 /**
-
  * Class RecurrenceDestroyService
  */
 class RecurrenceDestroyService

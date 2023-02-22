@@ -73,7 +73,6 @@ class Configuration extends Model
     /**
      * TODO can be replaced with native laravel code.
      *
-
      *
      * @param  mixed  $value
      *
@@ -85,7 +84,6 @@ class Configuration extends Model
     }
 
     /**
-
      *
      * @param  mixed  $value
      */

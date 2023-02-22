@@ -70,7 +70,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function rules(RuleGroup $group): JsonResponse
     {

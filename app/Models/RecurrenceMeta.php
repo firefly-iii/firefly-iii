@@ -80,7 +80,6 @@ class RecurrenceMeta extends Model
 
     /**
      * @return BelongsTo
-
      */
     public function recurrence(): BelongsTo
     {

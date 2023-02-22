@@ -70,7 +70,6 @@ trait ModelInformation
     }
 
     /**
-
      *
      * @return string[]
      *
@@ -95,7 +94,6 @@ trait ModelInformation
     }
 
     /**
-
      * @return array
      */
     protected function getRoles(): array

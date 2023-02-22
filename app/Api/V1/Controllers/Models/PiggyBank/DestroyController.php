@@ -62,7 +62,6 @@ class DestroyController extends Controller
      * @param  PiggyBank  $piggyBank
      *
      * @return JsonResponse
-
      */
     public function destroy(PiggyBank $piggyBank): JsonResponse
     {

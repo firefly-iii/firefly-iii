@@ -429,6 +429,21 @@ class Steam
     }
 
     /**
+     * @param  string  $ipAddress
+     * @return string
+     * @throws FireflyException
+     */
+    public function getHostName(string $ipAddress): string
+    {
+        try {
+            $hostName = gethostbyaddr($ipAddress);
+        } catch (Exception $e) { // intentional generic exception
+            throw new FireflyException($e->getMessage(), 0, $e);
+        }
+        return $hostName;
+    }
+
+    /**
      * @param  array  $accounts
      *
      * @return array
@@ -667,20 +682,5 @@ class Steam
         }
 
         return $amount;
-    }
-
-    /**
-     * @param  string  $ipAddress
-     * @return string
-     * @throws FireflyException
-     */
-    public function getHostName(string $ipAddress): string
-    {
-        try {
-            $hostName = gethostbyaddr($ipAddress);
-        } catch (Exception $e) { // intentional generic exception
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-        return $hostName;
     }
 }

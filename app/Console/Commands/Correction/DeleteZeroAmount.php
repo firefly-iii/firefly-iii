@@ -26,7 +26,6 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Illuminate\Database\QueryException;
 
 /**
  * Class DeleteZeroAmount

@@ -55,7 +55,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(Request $request): JsonResponse
     {
@@ -107,7 +106,6 @@ class ShowController extends Controller
      * @param  TransactionJournal  $transactionJournal
      *
      * @return JsonResponse
-
      */
     public function showJournal(TransactionJournal $transactionJournal): JsonResponse
     {
@@ -123,7 +121,6 @@ class ShowController extends Controller
      * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
-
      */
     public function show(TransactionGroup $transactionGroup): JsonResponse
     {

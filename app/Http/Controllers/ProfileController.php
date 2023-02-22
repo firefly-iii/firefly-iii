@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Auth;
 use DB;
+use Exception;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
@@ -641,7 +642,7 @@ class ProfileController extends Controller
      * @param  Request  $request
      *
      * @return RedirectResponse|Redirector
-     * @throws \Exception
+     * @throws Exception
      */
     public function regenerate(Request $request)
     {

@@ -70,7 +70,6 @@ class AccountMeta extends Model
 
     /**
      * @return BelongsTo
-
      */
     public function account(): BelongsTo
     {
@@ -82,7 +81,6 @@ class AccountMeta extends Model
      *
      * @return mixed
      * @throws JsonException
-
      */
     public function getDataAttribute($value)
     {

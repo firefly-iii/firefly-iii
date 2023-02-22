@@ -331,6 +331,37 @@ class Navigation
     }
 
     /**
+     * Returns the user's view range and if necessary, corrects the dynamic view
+     * range to a normal range.
+     * @param  bool  $correct
+     * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getViewRange(bool $correct): string
+    {
+        $range = (string)app('preferences')->get('viewRange', '1M')?->data ?? '1M';
+        if (!$correct) {
+            return $range;
+        }
+        switch ($range) {
+            default:
+                return $range;
+            case 'last7':
+                return '1W';
+            case 'last30':
+            case 'MTD':
+                return '1M';
+            case 'last90':
+            case 'QTD':
+                return '3M';
+            case 'last365':
+            case 'YTD':
+                return '1Y';
+        }
+    }
+
+    /**
      * @param  Carbon  $start
      * @param  Carbon  $end
      *
@@ -428,37 +459,6 @@ class Navigation
         Log::error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
 
         return $date->format('Y-m-d');
-    }
-
-    /**
-     * Returns the user's view range and if necessary, corrects the dynamic view
-     * range to a normal range.
-     * @param  bool  $correct
-     * @return string
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function getViewRange(bool $correct): string
-    {
-        $range = (string)app('preferences')->get('viewRange', '1M')?->data ?? '1M';
-        if (!$correct) {
-            return $range;
-        }
-        switch ($range) {
-            default:
-                return $range;
-            case 'last7':
-                return '1W';
-            case 'last30':
-            case 'MTD':
-                return '1M';
-            case 'last90':
-            case 'QTD':
-                return '3M';
-            case 'last365':
-            case 'YTD':
-                return '1Y';
-        }
     }
 
     /**

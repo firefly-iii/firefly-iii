@@ -88,7 +88,6 @@ class WebhookAttempt extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function webhookMessage(): BelongsTo

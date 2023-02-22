@@ -368,7 +368,7 @@ class UserEventHandler
         }
         $preference = array_values($preference);
         /** @var bool $send */
-        $send       = app('preferences')->getForUser($user, 'notification_user_login', true)->data;
+        $send = app('preferences')->getForUser($user, 'notification_user_login', true)->data;
         app('preferences')->setForUser($user, 'login_ip_history', $preference);
 
         if (false === $inArray && true === $send) {

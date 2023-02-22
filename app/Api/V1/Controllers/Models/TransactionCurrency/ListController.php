@@ -41,7 +41,6 @@ use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
@@ -67,6 +66,7 @@ class ListController extends Controller
     use TransactionFilter;
 
     private CurrencyRepositoryInterface $repository;
+
     /**
      * CurrencyRepository constructor.
      *
@@ -77,7 +77,7 @@ class ListController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository     = app(CurrencyRepositoryInterface::class);
+                $this->repository = app(CurrencyRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
 
                 return $next($request);
@@ -95,7 +95,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -149,7 +148,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
     {
@@ -188,7 +186,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function bills(TransactionCurrency $currency): JsonResponse
     {
@@ -232,7 +229,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
     {
@@ -267,7 +263,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
     {
@@ -320,7 +315,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function rules(TransactionCurrency $currency): JsonResponse
     {
@@ -374,7 +368,6 @@ class ListController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {

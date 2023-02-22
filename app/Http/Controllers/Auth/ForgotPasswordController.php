@@ -109,7 +109,6 @@ class ForgotPasswordController extends Controller
     /**
      * Show form for email recovery.
      *
-
      *
      * @return Factory|View
      * @throws FireflyException

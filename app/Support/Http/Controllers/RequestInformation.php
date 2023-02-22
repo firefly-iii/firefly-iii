@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Http\Requests\RuleFormRequest;
@@ -219,7 +218,6 @@ trait RequestInformation
      * @param  array  $data
      *
      * @return ValidatorContract
-
      */
     final protected function validator(array $data): ValidatorContract
     {

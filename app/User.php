@@ -220,7 +220,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to accounts.
      *
      * @return HasMany
@@ -231,7 +230,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to attachments
      *
      * @return HasMany
@@ -242,7 +240,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to available budgets
      *
      * @return HasMany
@@ -253,7 +250,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to bills.
      *
      * @return HasMany
@@ -264,7 +260,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to budgets.
      *
      * @return HasMany
@@ -275,7 +270,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to categories
      *
      * @return HasMany
@@ -286,7 +280,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to currency exchange rates
      *
      * @return HasMany
@@ -297,7 +290,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Generates access token.
      *
      * @return string
@@ -308,6 +300,21 @@ class User extends Authenticatable
         $bytes = random_bytes(16);
 
         return bin2hex($bytes);
+    }
+
+    /**
+     * A safe method that returns the user's current administration ID (group ID).
+     *
+     * @return int
+     * @throws FireflyException
+     */
+    public function getAdministrationId(): int
+    {
+        $groupId = (int)$this->user_group_id;
+        if (0 === $groupId) {
+            throw new FireflyException('User has no administration ID.');
+        }
+        return $groupId;
     }
 
     /**
@@ -355,7 +362,6 @@ class User extends Authenticatable
     }
 
     /**
-
      *
      * @return HasMany
      */
@@ -365,22 +371,6 @@ class User extends Authenticatable
     }
 
     /**
-     * A safe method that returns the user's current administration ID (group ID).
-     *
-     * @return int
-     * @throws FireflyException
-     */
-    public function getAdministrationId(): int
-    {
-        $groupId =  (int)$this->user_group_id;
-        if (0 === $groupId) {
-            throw new FireflyException('User has no administration ID.');
-        }
-        return $groupId;
-    }
-
-    /**
-
      * Link to object groups.
      *
      * @return HasMany
@@ -391,7 +381,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to piggy banks.
      *
      * @return HasManyThrough
@@ -402,7 +391,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to preferences.
      *
      * @return HasMany
@@ -413,7 +401,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to recurring transactions.
      *
      * @return HasMany
@@ -464,7 +451,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to roles.
      *
      * @return BelongsToMany
@@ -501,7 +487,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to rule groups.
      *
      * @return HasMany
@@ -512,7 +497,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to rules.
      *
      * @return HasMany
@@ -523,7 +507,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Send the password reset notification.
      *
      * @param  string  $token
@@ -563,7 +546,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to tags.
      *
      * @return HasMany
@@ -574,7 +556,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to transaction groups.
      *
      * @return HasMany
@@ -585,7 +566,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to transaction journals.
      *
      * @return HasMany
@@ -596,7 +576,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * Link to transactions.
      *
      * @return HasManyThrough
@@ -607,7 +586,6 @@ class User extends Authenticatable
     }
 
     /**
-
      * @return BelongsTo
      */
     public function userGroup(): BelongsTo
@@ -616,7 +594,6 @@ class User extends Authenticatable
     }
 
     /**
-
      *
      * Link to webhooks
      *

@@ -64,7 +64,7 @@ interface BudgetRepositoryInterface
     /**
      * Returns the amount that is budgeted in a period.
      *
-     * @param Budget $budget
+     * @param  Budget  $budget
      * @param  Carbon  $start
      * @param  Carbon  $end
      * @return array

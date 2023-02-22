@@ -65,7 +65,6 @@ class DestroyController extends Controller
      * @param  TransactionJournalLink  $link
      *
      * @return JsonResponse
-
      */
     public function destroy(TransactionJournalLink $link): JsonResponse
     {

@@ -185,7 +185,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -194,7 +193,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -203,7 +201,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function bill(): BelongsTo
@@ -212,7 +209,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return BelongsToMany
      */
     public function budgets(): BelongsToMany
@@ -221,7 +217,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return BelongsToMany
      */
     public function categories(): BelongsToMany
@@ -230,7 +225,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function destJournalLinks(): HasMany
@@ -239,7 +233,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return bool
      */
     public function isTransfer(): bool
@@ -252,7 +245,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return MorphMany
      */
     public function locations(): MorphMany
@@ -261,7 +253,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * Get all of the notes.
      */
     public function notes(): MorphMany
@@ -270,7 +261,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function piggyBankEvents(): HasMany
@@ -279,7 +269,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      *
      * @param  EloquentBuilder  $query
      * @param  Carbon  $date
@@ -292,7 +281,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      *
      * @param  EloquentBuilder  $query
      * @param  Carbon  $date
@@ -305,7 +293,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      *
      * @param  EloquentBuilder  $query
      * @param  array  $types
@@ -323,7 +310,6 @@ class TransactionJournal extends Model
     /**
      * Checks if tables are joined.
      *
-
      *
      * @param  Builder  $query
      * @param  string  $table
@@ -346,7 +332,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function sourceJournalLinks(): HasMany
@@ -355,7 +340,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return BelongsToMany
      */
     public function tags(): BelongsToMany
@@ -364,7 +348,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo
@@ -373,7 +356,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionGroup(): BelongsTo
@@ -382,7 +364,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function transactionJournalMeta(): HasMany
@@ -391,7 +372,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionType(): BelongsTo
@@ -400,7 +380,6 @@ class TransactionJournal extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function transactions(): HasMany

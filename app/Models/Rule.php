@@ -125,7 +125,6 @@ class Rule extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -134,7 +133,6 @@ class Rule extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function ruleActions(): HasMany
@@ -143,7 +141,6 @@ class Rule extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function ruleGroup(): BelongsTo
@@ -152,7 +149,6 @@ class Rule extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function ruleTriggers(): HasMany

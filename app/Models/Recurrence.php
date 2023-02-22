@@ -143,7 +143,6 @@ class Recurrence extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -152,7 +151,6 @@ class Recurrence extends Model
     }
 
     /**
-
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -161,7 +159,6 @@ class Recurrence extends Model
     }
 
     /**
-
      * Get all the notes.
      */
     public function notes(): MorphMany
@@ -171,7 +168,6 @@ class Recurrence extends Model
 
     /**
      * @return HasMany
-
      */
     public function recurrenceMeta(): HasMany
     {
@@ -180,7 +176,6 @@ class Recurrence extends Model
 
     /**
      * @return HasMany
-
      */
     public function recurrenceRepetitions(): HasMany
     {
@@ -189,7 +184,6 @@ class Recurrence extends Model
 
     /**
      * @return HasMany
-
      */
     public function recurrenceTransactions(): HasMany
     {
@@ -197,7 +191,6 @@ class Recurrence extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo
@@ -206,7 +199,6 @@ class Recurrence extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionType(): BelongsTo

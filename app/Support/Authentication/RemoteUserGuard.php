@@ -63,15 +63,6 @@ class RemoteUserGuard implements Guard
     }
 
     /**
-     * @return bool
-     */
-    public function viaRemember(): bool
-    {
-        Log::debug(sprintf('Now at %s', __METHOD__));
-        return false;
-    }
-
-    /**
      *
      */
     public function authenticate(): void
@@ -188,5 +179,14 @@ class RemoteUserGuard implements Guard
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         throw new FireflyException('Did not implement RemoteUserGuard::validate()');
+    }
+
+    /**
+     * @return bool
+     */
+    public function viaRemember(): bool
+    {
+        Log::debug(sprintf('Now at %s', __METHOD__));
+        return false;
     }
 }

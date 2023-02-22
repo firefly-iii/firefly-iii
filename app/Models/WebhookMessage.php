@@ -102,7 +102,6 @@ class WebhookMessage extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function webhook(): BelongsTo
@@ -111,13 +110,13 @@ class WebhookMessage extends Model
     }
 
     /**
-
      * @return HasMany
      */
     public function webhookAttempts(): HasMany
     {
         return $this->hasMany(WebhookAttempt::class);
     }
+
     /**
      * Get the amount
      *

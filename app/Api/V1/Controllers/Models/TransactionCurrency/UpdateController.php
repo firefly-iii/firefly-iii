@@ -29,7 +29,6 @@ use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\UpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
@@ -76,7 +75,6 @@ class UpdateController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-
      */
     public function disable(TransactionCurrency $currency): JsonResponse
     {
@@ -109,7 +107,6 @@ class UpdateController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function makeDefault(TransactionCurrency $currency): JsonResponse
     {
@@ -142,7 +139,6 @@ class UpdateController extends Controller
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
-
      */
     public function enable(TransactionCurrency $currency): JsonResponse
     {

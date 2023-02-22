@@ -29,7 +29,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
-
  * Class AttachmentServiceProvider.
  */
 class AttachmentServiceProvider extends ServiceProvider
