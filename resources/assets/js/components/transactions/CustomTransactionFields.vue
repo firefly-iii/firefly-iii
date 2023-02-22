@@ -20,7 +20,7 @@
 
 <template>
   <div>
-    <p class="help-block" v-text="$t('firefly.hidden_fields_preferences')"></p>
+    <p class="help-block" v-html="$t('firefly.hidden_fields_preferences')"></p>
     <component
         v-bind:is="dateComponent"
         v-if="this.fields.interest_date" v-model="value.interest_date" :error="error.interest_date"

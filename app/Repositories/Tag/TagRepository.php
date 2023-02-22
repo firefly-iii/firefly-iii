@@ -136,6 +136,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function findByTag(string $tag): ?Tag
     {
+        /** @var Tag|null */
         return $this->user->tags()->where('tag', $tag)->first();
     }
 
@@ -146,12 +147,8 @@ class TagRepository implements TagRepositoryInterface
      */
     public function firstUseDate(Tag $tag): ?Carbon
     {
-        $journal = $tag->transactionJournals()->orderBy('date', 'ASC')->first();
-        if (null !== $journal) {
-            return $journal->date;
-        }
-
-        return null;
+        /** @var Carbon|null */
+        return $tag->transactionJournals()->orderBy('date', 'ASC')->first()?->date;
     }
 
     /**
@@ -236,12 +233,8 @@ class TagRepository implements TagRepositoryInterface
      */
     public function lastUseDate(Tag $tag): ?Carbon
     {
-        $journal = $tag->transactionJournals()->orderBy('date', 'DESC')->first();
-        if (null !== $journal) {
-            return $journal->date;
-        }
-
-        return null;
+        /** @var Carbon|null */
+        return $tag->transactionJournals()->orderBy('date', 'DESC')->first()?->date;
     }
 
     /**
@@ -251,6 +244,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function newestTag(): ?Tag
     {
+        /** @var Tag|null */
         return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
     }
 
@@ -259,6 +253,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function oldestTag(): ?Tag
     {
+        /** @var Tag|null */
         return $this->user->tags()->whereNotNull('date')->orderBy('date', 'ASC')->first();
     }
 
@@ -370,7 +365,6 @@ class TagRepository implements TagRepositoryInterface
                 ];
                 // add foreign amount to correct type:
                 $amount = app('steam')->positive((string)$journal['foreign_amount']);
-                $type   = $journal['transaction_type_type'];
                 if (TransactionType::WITHDRAWAL === $type) {
                     $amount = bcmul($amount, '-1');
                 }
@@ -458,6 +452,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function getLocation(Tag $tag): ?Location
     {
+        /** @var Location|null */
         return $tag->locations()->first();
     }
 }
