@@ -36,7 +36,6 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use Log;
-use phpseclib\Crypt\RSA as LegacyRSA;
 use phpseclib3\Crypt\RSA;
 
 /**
@@ -228,18 +227,8 @@ class InstallController extends Controller
         // switch on PHP version.
         $keys = [];
         // switch on class existence.
-        Log::info(sprintf('PHP version is %s', phpversion()));
-        if (class_exists(LegacyRSA::class)) {
-            // PHP 7
-            Log::info('Will run PHP7 code.');
-            $keys = (new LegacyRSA())->createKey(4096);
-        }
-
-        if (!class_exists(LegacyRSA::class)) {
-            // PHP 8
-            Log::info('Will run PHP8 code.');
-            $keys = RSA::createKey(4096);
-        }
+        Log::info('Will run PHP8 code.');
+        $keys = RSA::createKey(4096);
 
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
