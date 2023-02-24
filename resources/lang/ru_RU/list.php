@@ -180,7 +180,7 @@ return [
     'payment_info'            => 'Иформация о платеже',
     'expected_info'           => 'Следующая ожидаемая операция',
     'start_date'              => 'Начальная дата',
-    'trigger'                 => 'Trigger',
+    'trigger'                 => 'Событие',
     'response'                => 'Ответ',
     'delivery'                => 'Доставка',
     'url'                     => 'Ссылка',

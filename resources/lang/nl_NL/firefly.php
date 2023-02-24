@@ -265,7 +265,7 @@ return [
     'updated_webhook'                      => 'Webhook ":title" bijgewerkt',
     'edit_webhook_js'                      => 'Webhook "{title}" wijzigen',
     'show_webhook'                         => 'Webhook ":title"',
-    'webhook_was_triggered'                => 'De webhook is geactiveerd op de aangegeven transactie. Wacht tot de resultaten verschijnen.',
+    'webhook_was_triggered'                => 'De webhook is getriggerd op de aangegeven transactie. Het resultaat zie je zometeen.',
     'webhook_messages'                     => 'Webhook-bericht',
     'view_message'                         => 'Bekijk bericht',
     'view_attempts'                        => 'Bekijk mislukte pogingen',
