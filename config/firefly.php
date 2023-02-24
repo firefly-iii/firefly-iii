@@ -106,8 +106,8 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '6.0.0-beta.2',
-    'api_version'                  => '2.0.0-beta.2',
+    'version'                      => '6.0.0',
+    'api_version'                  => '2.0.0',
     'db_version'                   => 19,
 
     // generic settings

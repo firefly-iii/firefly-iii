@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.0.0 - 2023-03-xx
+## 6.0.0 - 2023-03-03
 
 This is release **6.0.0** of Firefly III. 
 
@@ -74,6 +74,7 @@ This is release **6.0.0** of Firefly III.
 ### Security
 - [Issue 6826](https://github.com/firefly-iii/firefly-iii/issues/6826) Hide 2FA information when printing, thanks @jstebenne!
 - Blocked users can access API, and users can unblock themselves using the API. This was reported in CVE-2023-0298.
+- Several other low-key fixes.
 
 ## 6.0.0-beta.2 - 2023-02-20
 
