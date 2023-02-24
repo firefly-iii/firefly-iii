@@ -88,7 +88,7 @@
     "guzzlehttp/guzzle": "^7.5",
     "jc5/google2fa-laravel": "^2.0",
     "jc5/recovery": "^2",
-    "laravel/framework": "^9",
+    "laravel/framework": "^10",
     "laravel/passport": "11.*",
     "laravel/sanctum": "^3.2",
     "laravel/slack-notification-channel": "^2.4",
@@ -103,8 +103,7 @@
     "psr/log": "<4",
     "ramsey/uuid": "^4.7",
     "rcrowe/twigbridge": "^0.14",
-    "spatie/data-transfer-object": "^3.9",
-    "spatie/laravel-ignition": "^1.5",
+    "spatie/laravel-ignition": "^2",
     "symfony/http-client": "^6.0",
     "symfony/mailgun-mailer": "^6.0"
   },
@@ -118,7 +117,7 @@
     "phpstan/phpstan": "^1.9",
     "phpstan/phpstan-deprecation-rules": "^1.0",
     "phpstan/phpstan-strict-rules": "^1.4",
-    "phpunit/phpunit": "^9",
+    "phpunit/phpunit": "^10",
     "thecodingmachine/phpstan-strict-rules": "^1.0"
   },
   "suggest": {
