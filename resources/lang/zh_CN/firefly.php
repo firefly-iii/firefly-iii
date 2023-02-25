@@ -2274,7 +2274,7 @@ return [
     'earned'                                    => '收入',
     'overspent'                                 => '超支',
     'left'                                      => '剩余',
-    'max-amount'                                => '最小金额',
+    'max-amount'                                => '最大',
     'min-amount'                                => '最小金额',
     'journal-amount'                            => '目前账单条目',
     'name'                                      => '名称',
