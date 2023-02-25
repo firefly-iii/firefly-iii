@@ -60,6 +60,9 @@ This is release **6.0.0** of Firefly III.
 - [Issue 6876](https://github.com/firefly-iii/firefly-iii/issues/6876) Date field is validated in recurring transactions
 - [Issue 6581](https://github.com/firefly-iii/firefly-iii/issues/6581) Fields were not cleared in the transaction screen in some cases
 
+### Fixed
+- [Issue 7079](https://github.com/firefly-iii/firefly-iii/issues/7079) Bad date range in chart
+
 ### Removed
 - [Issue 4198](https://github.com/firefly-iii/firefly-iii/issues/4198) The total available budget amount bar on the `/budgets` page is no longer manageable but will be auto-calculated
 - Cryptocurrencies in default currency set
