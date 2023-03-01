@@ -172,8 +172,8 @@
         var lineColor = 'red';
         var lineTextColor = '#000';
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            var lineColor = '#a00';
-            var lineTextColor = '#bec5cb';
+            lineColor = '#a00';
+            lineTextColor = '#bec5cb';
         }
         var billCount = {{ billCount }};
         var accountFrontpageUrl = '{{ route('chart.account.frontpage') }}';
