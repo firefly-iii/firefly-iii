@@ -65,7 +65,7 @@ trait ModifiesPiggyBanks
         $repetition->currentamount = bcsub($repetition->currentamount, $amount);
         $repetition->save();
 
-        Log::debug('addAmount: Trigger change for negative amount.');
+        Log::debug('addAmount [a]: Trigger change for negative amount.');
         event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
 
         return true;
@@ -87,7 +87,7 @@ trait ModifiesPiggyBanks
         $repetition->currentamount = bcadd($currentAmount, $amount);
         $repetition->save();
 
-        Log::debug('addAmount: Trigger change for positive amount.');
+        Log::debug('addAmount [b]: Trigger change for positive amount.');
         event(new ChangedPiggyBankAmount($piggyBank, $amount, $journal, null));
 
         return true;
@@ -186,12 +186,12 @@ trait ModifiesPiggyBanks
         $repetition->save();
 
         if (-1 === bccomp($difference, '0')) {
-            Log::debug('addAmount: Trigger change for negative amount.');
-            event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), null, null));
+            Log::debug('addAmount [c]: Trigger change for negative amount.');
+            event(new ChangedPiggyBankAmount($piggyBank, $difference, null, null));
         }
         if (1 === bccomp($difference, '0')) {
-            Log::debug('addAmount: Trigger change for positive amount.');
-            event(new ChangedPiggyBankAmount($piggyBank, $amount, null, null));
+            Log::debug('addAmount [d]: Trigger change for positive amount.');
+            event(new ChangedPiggyBankAmount($piggyBank, $difference, null, null));
         }
 
         return $piggyBank;
