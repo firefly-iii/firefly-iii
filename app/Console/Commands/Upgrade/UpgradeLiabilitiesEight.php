@@ -269,6 +269,11 @@ class UpgradeLiabilitiesEight extends Command
             if ((int)$dest->account_id === (int)$account->id && $source->account->accountType->type === AccountType::REVENUE) {
                 $delete = true;
             }
+
+            // overruled. No transaction will be deleted, ever.
+            // code is kept in place so i can revisit my reasoning.
+            $delete = false;
+
             if ($delete) {
                 Log::debug(
                     sprintf(
