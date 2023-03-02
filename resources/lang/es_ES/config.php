@@ -65,13 +65,13 @@ return [
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'D MMMM YYYY, HH:mm:ss',
-    'date_time_fns'            => 'MMMM do, yyyy @ HH:mm:ss',
+    'date_time_fns'            => 'El MMMM hacer, yyyy a las HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'D MMMM YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'          => '[Week] w, YYYY',
+    'week_in_year_js'          => '[Week] W, GGG',
     'week_in_year_fns'         => "'Semana' w, yyyy",
 
     //'year'                    => '%Y',

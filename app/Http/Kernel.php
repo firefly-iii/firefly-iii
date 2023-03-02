@@ -179,14 +179,14 @@ class Kernel extends HttpKernel
             ],
 
             // full API authentication
-            'api'  => [
+            'api'                   => [
                 AcceptHeaders::class,
                 EnsureFrontendRequestsAreStateful::class,
                 'auth:api,sanctum',
                 'bindings',
             ],
             // do only bindings, no auth
-            'api_basic' => [
+            'api_basic'             => [
                 AcceptHeaders::class,
                 'bindings',
             ],
@@ -213,7 +213,7 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $routeMiddleware
+    protected $middlewareAliases
         = [
             'auth'       => Authenticate::class,
             'auth.basic' => AuthenticateWithBasicAuth::class,

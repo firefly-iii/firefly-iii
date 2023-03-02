@@ -42,7 +42,7 @@ class Authenticate
      *
      * @var Auth
      */
-    protected $auth;
+    protected Auth $auth;
 
     /**
      * Create a new middleware instance.
@@ -101,7 +101,8 @@ class Authenticate
                 $this->validateBlockedUser($user, $guards);
             }
 
-            return $this->auth->authenticate(); // @phpstan-ignore-line (thinks function returns void)
+            /** @noinspection PhpUndefinedMethodInspection */
+            return $this->auth->authenticate();
         }
         Log::debug('Guard array is not empty.');
 
@@ -146,6 +147,7 @@ class Authenticate
                 }
                 Log::warning('User is blocked, cannot use authentication method.');
                 app('session')->flash('logoutMessage', $message);
+                /** @noinspection PhpUndefinedMethodInspection */
                 $this->auth->logout(); // @phpstan-ignore-line (thinks function is undefined)
 
                 throw new AuthenticationException('Blocked account.', $guards);

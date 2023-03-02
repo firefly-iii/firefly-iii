@@ -62,7 +62,6 @@ class DestroyController extends Controller
      * @param  Recurrence  $recurrence
      *
      * @return JsonResponse
-
      */
     public function destroy(Recurrence $recurrence): JsonResponse
     {

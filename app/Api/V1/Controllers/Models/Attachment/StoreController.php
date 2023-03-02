@@ -95,7 +95,6 @@ class StoreController extends Controller
     /**
      * Upload an attachment.
      *
-
      *
      * @param  Request  $request
      * @param  Attachment  $attachment

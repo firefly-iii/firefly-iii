@@ -40,7 +40,7 @@ trait RuleManagement
      * @param  Request  $request
      *
      * @return array
-
+     * @throws FireflyException
      */
     protected function getPreviousActions(Request $request): array
     {
@@ -75,7 +75,7 @@ trait RuleManagement
      * @param  Request  $request
      *
      * @return array
-
+     * @throws FireflyException
      */
     protected function getPreviousTriggers(Request $request): array
     {
@@ -122,6 +122,7 @@ trait RuleManagement
      * @param  array  $submittedOperators
      *
      * @return array
+     * @throws FireflyException
      */
     protected function parseFromOperators(array $submittedOperators): array
     {

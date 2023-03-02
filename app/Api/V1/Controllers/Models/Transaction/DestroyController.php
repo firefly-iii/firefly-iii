@@ -76,7 +76,6 @@ class DestroyController extends Controller
      * @param  TransactionGroup  $transactionGroup
      *
      * @return JsonResponse
-
      */
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -116,7 +115,6 @@ class DestroyController extends Controller
      *
      * @param  TransactionJournal  $transactionJournal
      *
-
      * @return JsonResponse
      */
     public function destroyJournal(TransactionJournal $transactionJournal): JsonResponse

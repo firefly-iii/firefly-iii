@@ -43,7 +43,6 @@ class BelongsUser implements Rule
      * Create a new rule instance.
      *
      * @return void
-
      */
     public function __construct()
     {
@@ -54,7 +53,6 @@ class BelongsUser implements Rule
      * Get the validation error message.
      *
      * @return string
-
      */
     public function message(): string
     {

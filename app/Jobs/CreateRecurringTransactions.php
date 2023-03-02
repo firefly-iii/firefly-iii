@@ -69,7 +69,6 @@ class CreateRecurringTransactions implements ShouldQueue
     /**
      * Create a new job instance.
      *
-
      *
      * @param  Carbon|null  $date
      */

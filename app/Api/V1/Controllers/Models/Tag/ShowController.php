@@ -71,7 +71,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {
@@ -107,7 +106,6 @@ class ShowController extends Controller
      * @param  Tag  $tag
      *
      * @return JsonResponse
-
      */
     public function show(Tag $tag): JsonResponse
     {

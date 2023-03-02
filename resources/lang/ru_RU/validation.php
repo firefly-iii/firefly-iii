@@ -268,8 +268,8 @@ return [
     'generic_invalid_source'      => 'Вы не можете использовать этот счёт в качестве счёта-источника.',
     'generic_invalid_destination' => 'Вы не можете использовать этот счёт в качестве счёта назначения.',
 
-    'generic_no_source'      => 'You must submit source account information.',
-    'generic_no_destination' => 'You must submit destination account information.',
+    'generic_no_source'      => 'Вы должны предоставить информацию об учетной записи источника.',
+    'generic_no_destination' => 'Вы должны предоставить данные учетной записи назначения.',
 
     'gte.numeric' => 'Значение :attribute должно быть больше или равно :value.',
     'gt.numeric'  => 'Значение :attribute должно быть больше :value.',
@@ -282,7 +282,7 @@ return [
     'auto_budget_period_mandatory'    => 'Период авто-бюджета - это обязательно поле.',
 
     // no access to administration:
-    'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'no_access_user_group'            => 'У вас нет необходимых прав доступа для данного административного действия.',
 ];
 
 /*

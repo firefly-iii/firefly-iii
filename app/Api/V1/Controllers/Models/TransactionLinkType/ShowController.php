@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
@@ -58,8 +57,8 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user                 = auth()->user();
-                $this->repository     = app(LinkTypeRepositoryInterface::class);
+                $user             = auth()->user();
+                $this->repository = app(LinkTypeRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -74,7 +73,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {
@@ -110,7 +108,6 @@ class ShowController extends Controller
      * @param  LinkType  $linkType
      *
      * @return JsonResponse
-
      */
     public function show(LinkType $linkType): JsonResponse
     {

@@ -75,7 +75,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(Request $request): JsonResponse
     {

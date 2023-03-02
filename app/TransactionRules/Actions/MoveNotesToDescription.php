@@ -39,7 +39,6 @@ class MoveNotesToDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-
      *
      * @param  RuleAction  $action
      */

@@ -48,6 +48,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function amountNoCurrency(string $name, $value = null, array $options = null): string
     {
@@ -81,6 +82,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function checkbox(string $name, int $value = null, $checked = null, array $options = null): string
     {
@@ -116,6 +118,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function date(string $name, $value = null, array $options = null): string
     {
@@ -140,6 +143,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function file(string $name, array $options = null): string
     {
@@ -164,6 +168,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function integer(string $name, $value = null, array $options = null): string
     {
@@ -190,6 +195,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function location(string $name, $value = null, array $options = null): string
     {
@@ -243,6 +249,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function nonSelectableAmount(string $name, $value = null, array $options = null): string
     {
@@ -275,6 +282,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function number(string $name, $value = null, array $options = null): string
     {
@@ -300,6 +308,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function objectGroup($value = null, array $options = null): string
     {
@@ -330,7 +339,7 @@ class ExpandedForm
      * @param  string  $name
      *
      * @return string
-     *
+     * @throws FireflyException
      */
     public function optionsList(string $type, string $name): string
     {
@@ -350,6 +359,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function password(string $name, array $options = null): string
     {
@@ -375,6 +385,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function percentage(string $name, $value = null, array $options = null): string
     {
@@ -401,6 +412,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function staticText(string $name, $value, array $options = null): string
     {
@@ -424,6 +436,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function text(string $name, $value = null, array $options = null): string
     {
@@ -448,6 +461,7 @@ class ExpandedForm
      * @param  array|null  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function textarea(string $name, $value = null, array $options = null): string
     {

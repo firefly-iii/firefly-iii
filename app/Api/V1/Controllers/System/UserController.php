@@ -72,7 +72,6 @@ class UserController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function destroy(User $user): JsonResponse
     {
@@ -98,7 +97,6 @@ class UserController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {
@@ -135,7 +133,6 @@ class UserController extends Controller
      * @param  User  $user
      *
      * @return JsonResponse
-
      */
     public function show(User $user): JsonResponse
     {
@@ -191,7 +188,7 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
-        $data    = $request->getAll();
+        $data = $request->getAll();
 
         // can only update 'blocked' when user is admin.
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {

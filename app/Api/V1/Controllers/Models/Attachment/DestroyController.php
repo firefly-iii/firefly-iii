@@ -64,7 +64,6 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-
      *
      * @param  Attachment  $attachment
      *

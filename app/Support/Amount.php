@@ -49,7 +49,7 @@ class Amount
      * @param  bool  $coloured
      *
      * @return string
-     *
+     * @throws FireflyException
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
@@ -204,6 +204,7 @@ class Amount
      * Used only in one place.
      *
      * @return array
+     * @throws FireflyException
      */
     public function getJsConfig(): array
     {

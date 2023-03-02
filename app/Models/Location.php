@@ -97,7 +97,6 @@ class Location extends Model
     }
 
     /**
-
      * Get all of the accounts.
      */
     public function accounts(): MorphMany
@@ -108,7 +107,6 @@ class Location extends Model
     /**
      * Get all of the owning attachable models.
      *
-
      *
      * @return MorphTo
      */

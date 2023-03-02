@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Recurrence;
@@ -188,7 +187,6 @@ class RecurrenceFormRequest extends FormRequest
      * The rules for this request.
      *
      * @return array
-     * @throws FireflyException
      *
      */
     public function rules(): array
@@ -313,20 +311,20 @@ class RecurrenceFormRequest extends FormRequest
 
         // TODO typeOverrule: the account validator may have another opinion the transaction type.
         // TODO either use 'withdrawal' or the strtolower() variant, not both.
-        $type = $this->convertString('transaction_type');
+        $type       = $this->convertString('transaction_type');
         $throwError = true;
         if ('withdrawal' === $type) {
-            $throwError = false;
+            $throwError    = false;
             $sourceId      = (int)$data['source_id'];
             $destinationId = (int)$data['withdrawal_destination_id'];
         }
         if ('deposit' === $type) {
-            $throwError = false;
+            $throwError    = false;
             $sourceId      = (int)$data['deposit_source_id'];
             $destinationId = (int)$data['destination_id'];
         }
         if ('transfer' === $type) {
-            $throwError = false;
+            $throwError    = false;
             $sourceId      = (int)$data['source_id'];
             $destinationId = (int)$data['destination_id'];
         }

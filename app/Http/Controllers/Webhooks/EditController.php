@@ -25,10 +25,9 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 
 /**
  * Class EditController
@@ -61,7 +60,7 @@ class EditController extends Controller
      *
      * @param  Webhook  $webhook
      *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|Application|View
      */
     public function index(Webhook $webhook)
     {

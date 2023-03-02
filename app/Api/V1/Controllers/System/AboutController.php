@@ -33,7 +33,6 @@ use League\Fractal\Resource\Item;
 /**
  * Returns basic information about this installation.
  *
-
  * Class AboutController.
  */
 class AboutController extends Controller

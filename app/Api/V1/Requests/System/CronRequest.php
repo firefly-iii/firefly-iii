@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\System;
 
-use Carbon\Carbon;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 

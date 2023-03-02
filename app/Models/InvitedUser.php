@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 /**
  * Class InvitedUser
@@ -59,14 +59,13 @@ use Carbon\Carbon;
 class InvitedUser extends Model
 {
     protected $casts
-        = [
+                        = [
             'expires'  => 'datetime',
             'redeemed' => 'boolean',
         ];
     protected $fillable = ['user_id', 'email', 'invite_code', 'expires', 'redeemed'];
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo

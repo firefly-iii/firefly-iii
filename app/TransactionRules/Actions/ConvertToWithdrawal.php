@@ -32,6 +32,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use JsonException;
 use Log;
 
 /**
@@ -131,6 +132,7 @@ class ConvertToWithdrawal implements ActionInterface
      *
      * @return bool
      * @throws FireflyException
+     * @throws JsonException
      */
     private function convertTransferArray(array $journal): bool
     {

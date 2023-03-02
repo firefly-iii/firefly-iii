@@ -51,6 +51,7 @@ trait RenderPartialViews
      * @param  array  $attributes
      *
      * @return string
+     * @throws FireflyException
      */
     protected function budgetEntry(array $attributes): string // generate view for report.
     {
@@ -81,6 +82,7 @@ trait RenderPartialViews
      * Get options for budget report.
      *
      * @return string
+     * @throws FireflyException
      */
     protected function budgetReportOptions(): string // render a view
     {
@@ -105,6 +107,7 @@ trait RenderPartialViews
      * @param  array  $attributes
      *
      * @return string
+     * @throws FireflyException
      */
     protected function budgetSpentAmount(array $attributes): string // generate view for report.
     {
@@ -137,6 +140,7 @@ trait RenderPartialViews
      * @param  array  $attributes
      *
      * @return string
+     * @throws FireflyException
      */
     protected function categoryEntry(array $attributes): string // generate view for report.
     {
@@ -163,6 +167,7 @@ trait RenderPartialViews
      * Get options for category report.
      *
      * @return string
+     * @throws FireflyException
      */
     protected function categoryReportOptions(): string // render a view
     {
@@ -185,6 +190,7 @@ trait RenderPartialViews
      * Get options for double report.
      *
      * @return string
+     * @throws FireflyException
      */
     protected function doubleReportOptions(): string // render a view
     {
@@ -229,6 +235,7 @@ trait RenderPartialViews
      * @param  array  $attributes
      *
      * @return string
+     * @throws FireflyException
      */
     protected function expenseEntry(array $attributes): string // generate view for report.
     {
@@ -263,6 +270,7 @@ trait RenderPartialViews
      * @param  Rule  $rule
      *
      * @return array
+     * @throws FireflyException
      */
     protected function getCurrentActions(Rule $rule): array // get info from object and present.
     {
@@ -301,7 +309,7 @@ trait RenderPartialViews
      * @param  Rule  $rule
      *
      * @return array
-     *
+     * @throws FireflyException
      */
     protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
     {
@@ -357,6 +365,7 @@ trait RenderPartialViews
      * @param  array  $attributes
      *
      * @return string
+     * @throws FireflyException
      */
     protected function incomeEntry(array $attributes): string // generate view for report.
     {
@@ -388,6 +397,7 @@ trait RenderPartialViews
      * Get options for default report.
      *
      * @return string
+     * @throws FireflyException
      */
     protected function noReportOptions(): string // render a view
     {
@@ -406,6 +416,7 @@ trait RenderPartialViews
      * Get options for tag report.
      *
      * @return string
+     * @throws FireflyException
      */
     protected function tagReportOptions(): string // render a view
     {

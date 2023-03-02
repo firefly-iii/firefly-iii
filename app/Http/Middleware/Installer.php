@@ -35,7 +35,6 @@ use Log;
 /**
  * Class Installer
  *
-
  *
  */
 class Installer

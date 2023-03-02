@@ -270,6 +270,7 @@ class TagController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function avgExpenses(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -322,6 +323,7 @@ class TagController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function avgIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -482,6 +484,7 @@ class TagController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function topExpenses(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -532,6 +535,7 @@ class TagController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function topIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {

@@ -144,7 +144,6 @@ class RegisterController extends Controller
     /**
      * Show the application registration form if the invitation code is valid.
      *
-     * @param  Request  $request
      *
      * @return Factory|View
      * @throws ContainerExceptionInterface

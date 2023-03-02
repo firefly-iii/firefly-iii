@@ -53,11 +53,11 @@ class CurrencyUpdateService
         }
 
         if (array_key_exists('enabled', $data) && is_bool($data['enabled'])) {
-            $currency->enabled = (bool) $data['enabled'];
+            $currency->enabled = (bool)$data['enabled'];
         }
 
         if (array_key_exists('decimal_places', $data) && is_int($data['decimal_places'])) {
-            $currency->decimal_places = (int) $data['decimal_places'];
+            $currency->decimal_places = (int)$data['decimal_places'];
         }
 
         $currency->save();

@@ -37,7 +37,6 @@ class SubmitController extends Controller
     private WebhookRepositoryInterface $repository;
 
     /**
-
      */
     public function __construct()
     {
@@ -59,7 +58,6 @@ class SubmitController extends Controller
      * @param  Webhook  $webhook
      *
      * @return JsonResponse
-
      */
     public function submit(Webhook $webhook): JsonResponse
     {

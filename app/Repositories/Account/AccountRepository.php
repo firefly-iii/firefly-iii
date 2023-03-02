@@ -128,7 +128,7 @@ class AccountRepository implements AccountRepositoryInterface
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }
-
+        /** @var Account|null */
         return $dbQuery->first(['accounts.*']);
     }
 
@@ -147,6 +147,7 @@ class AccountRepository implements AccountRepositoryInterface
             $query->whereIn('account_types.type', $types);
         }
 
+        /** @var Account|null */
         return $query->where('iban', $iban)->first(['accounts.*']);
     }
 
@@ -261,6 +262,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @return Account
      *
      * @throws FireflyException
+     * @throws JsonException
      */
     public function getCashAccount(): Account
     {
@@ -329,6 +331,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getLocation(Account $account): ?Location
     {
+        /** @var Location|null */
         return $account->locations()->first();
     }
 

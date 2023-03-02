@@ -103,6 +103,8 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     /**
      * @param  Webhook  $webhook
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function runWebhook(Webhook $webhook): void
     {

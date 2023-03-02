@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\RequestedReportOnJournals;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -40,6 +41,7 @@ class AutomationHandler
      * Respond to the creation of X journals.
      *
      * @param  RequestedReportOnJournals  $event
+     * @throws FireflyException
      */
     public function reportJournals(RequestedReportOnJournals $event): void
     {

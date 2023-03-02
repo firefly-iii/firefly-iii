@@ -25,7 +25,6 @@ namespace FireflyIII\Services\Internal\Update;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
@@ -323,7 +322,7 @@ class JournalUpdateService
         $validator->setTransactionType($expectedType);
         $validator->setUser($this->transactionJournal->user);
         $validator->source = $this->getValidSourceAccount();
-        $result            = $validator->validateDestination(['id' => $destId]);
+        $result            = $validator->validateDestination(['id' => $destId, 'name' =>  $destName]);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
         // TODO typeOverrule: the account validator may have another opinion on the transaction type.

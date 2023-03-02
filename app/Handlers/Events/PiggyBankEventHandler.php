@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Carbon\Carbon;
 use FireflyIII\Events\ChangedPiggyBankAmount;
 use FireflyIII\Models\PiggyBankEvent;
 use Illuminate\Support\Facades\Log;

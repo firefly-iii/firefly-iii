@@ -60,7 +60,9 @@ class UpgradeLiabilities extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -82,7 +84,6 @@ class UpgradeLiabilities extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

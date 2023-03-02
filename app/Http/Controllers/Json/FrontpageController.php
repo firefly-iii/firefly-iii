@@ -42,6 +42,7 @@ class FrontpageController extends Controller
      * @param  PiggyBankRepositoryInterface  $repository
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function piggyBanks(PiggyBankRepositoryInterface $repository): JsonResponse
     {

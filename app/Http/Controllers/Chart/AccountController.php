@@ -180,7 +180,6 @@ class AccountController extends Controller
      * @param  Account  $account
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
@@ -255,7 +254,6 @@ class AccountController extends Controller
      * @param  Account  $account
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
@@ -356,7 +354,6 @@ class AccountController extends Controller
      * @param  Account  $account
      *
      * @return JsonResponse
-     * @throws JsonException
      */
     public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {

@@ -73,7 +73,6 @@ class PiggyBankEvent extends Model
     protected $hidden = ['amount_encrypted'];
 
     /**
-
      * @return BelongsTo
      */
     public function piggyBank(): BelongsTo
@@ -82,7 +81,6 @@ class PiggyBankEvent extends Model
     }
 
     /**
-
      *
      * @param  mixed  $value
      */
@@ -92,7 +90,6 @@ class PiggyBankEvent extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionJournal(): BelongsTo

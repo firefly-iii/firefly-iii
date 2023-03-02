@@ -58,7 +58,6 @@ class TransactionTypeController extends Controller
      * @param  AutocompleteRequest  $request
      *
      * @return JsonResponse
-
      */
     public function transactionTypes(AutocompleteRequest $request): JsonResponse
     {

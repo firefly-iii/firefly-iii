@@ -205,6 +205,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $this->user = $user;
         }
     }
+
     /**
      * @param  Category  $category
      */

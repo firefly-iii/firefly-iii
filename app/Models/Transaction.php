@@ -126,7 +126,6 @@ class Transaction extends Model
     /**
      * Get the account this object belongs to.
      *
-
      * @return BelongsTo
      */
     public function account(): BelongsTo
@@ -137,7 +136,6 @@ class Transaction extends Model
     /**
      * Get the budget(s) this object belongs to.
      *
-
      * @return BelongsToMany
      */
     public function budgets(): BelongsToMany
@@ -148,7 +146,6 @@ class Transaction extends Model
     /**
      * Get the category(ies) this object belongs to.
      *
-
      * @return BelongsToMany
      */
     public function categories(): BelongsToMany
@@ -159,7 +156,6 @@ class Transaction extends Model
     /**
      * Get the currency this object belongs to.
      *
-
      * @return BelongsTo
      */
     public function foreignCurrency(): BelongsTo
@@ -170,7 +166,6 @@ class Transaction extends Model
     /**
      * Check for transactions AFTER a specified date.
      *
-
      *
      * @param  Builder  $query
      * @param  Carbon  $date
@@ -190,7 +185,6 @@ class Transaction extends Model
      * @param  string  $table
      *
      * @return bool
-
      */
     public static function isJoined(Builder $query, string $table): bool
     {
@@ -210,7 +204,6 @@ class Transaction extends Model
     /**
      * Check for transactions BEFORE the specified date.
      *
-
      *
      * @param  Builder  $query
      * @param  Carbon  $date
@@ -224,7 +217,6 @@ class Transaction extends Model
     }
 
     /**
-
      *
      * @param  Builder  $query
      * @param  array  $types
@@ -242,7 +234,6 @@ class Transaction extends Model
     }
 
     /**
-
      *
      * @param  mixed  $value
      */
@@ -252,7 +243,6 @@ class Transaction extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo
@@ -261,7 +251,6 @@ class Transaction extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionJournal(): BelongsTo

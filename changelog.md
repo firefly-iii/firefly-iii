@@ -2,13 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.0.0 - 2023-03-xx
+## 6.0.0 - 2023-03-03
 
 This is release **6.0.0** of Firefly III. 
 
 ### Warnings
 
-- The upgrade is not backwards compatible for people who manage outgoing loans (money borrowed to other people). Transactions will be removed or changed. See [this Gist](https://gist.github.com/JC5/909385c5086f9e07ba2c32e047446d68) for more information.
+- The upgrade may not be backwards compatible for people who manage outgoing loans (money borrowed to other people). Transactions will be removed or changed. See [this Gist](https://gist.github.com/JC5/909385c5086f9e07ba2c32e047446d68) for more information.
 - You will need to make a backup of your database.
 - You must use PHP 8.2 or use the Docker container.
 
@@ -60,6 +60,9 @@ This is release **6.0.0** of Firefly III.
 - [Issue 6876](https://github.com/firefly-iii/firefly-iii/issues/6876) Date field is validated in recurring transactions
 - [Issue 6581](https://github.com/firefly-iii/firefly-iii/issues/6581) Fields were not cleared in the transaction screen in some cases
 
+### Fixed
+- [Issue 7079](https://github.com/firefly-iii/firefly-iii/issues/7079) Bad date range in chart
+
 ### Removed
 - [Issue 4198](https://github.com/firefly-iii/firefly-iii/issues/4198) The total available budget amount bar on the `/budgets` page is no longer manageable but will be auto-calculated
 - Cryptocurrencies in default currency set
@@ -74,6 +77,7 @@ This is release **6.0.0** of Firefly III.
 ### Security
 - [Issue 6826](https://github.com/firefly-iii/firefly-iii/issues/6826) Hide 2FA information when printing, thanks @jstebenne!
 - Blocked users can access API, and users can unblock themselves using the API. This was reported in CVE-2023-0298.
+- Several other low-key fixes.
 
 ## 6.0.0-beta.2 - 2023-02-20
 

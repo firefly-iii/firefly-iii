@@ -28,7 +28,6 @@ use Illuminate\Session\SessionManager;
 use Illuminate\Support\ServiceProvider;
 
 /**
-
  * Class FireflySessionProvider
  */
 class FireflySessionProvider extends ServiceProvider

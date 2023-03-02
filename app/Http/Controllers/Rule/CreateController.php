@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Bill;
@@ -77,6 +78,7 @@ class CreateController extends Controller
      * @param  RuleGroup|null  $ruleGroup
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function create(Request $request, RuleGroup $ruleGroup = null)
     {
@@ -139,6 +141,7 @@ class CreateController extends Controller
      * @param  Bill  $bill
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function createFromBill(Request $request, Bill $bill)
     {
@@ -190,6 +193,7 @@ class CreateController extends Controller
      * @param  TransactionJournal  $journal
      *
      * @return Factory|\Illuminate\Contracts\View\View
+     * @throws FireflyException
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
     {

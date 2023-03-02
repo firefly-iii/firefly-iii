@@ -279,8 +279,8 @@ return [
     'response'                             => 'Resposta',
     'visit_webhook_url'                    => 'Acesse a URL do webhook',
     'reset_webhook_secret'                 => 'Redefinir chave do webhook',
-    'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
-    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
+    'webhook_stored_link'                  => '<a href="transactions/show/{ID}">Webhooh #{ID} ("{title}")</a> foi salva.',
+    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") foi atualizado.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Pedido de autorização',
@@ -1115,14 +1115,14 @@ return [
     'rule_trigger_not_account_nr_contains'                => 'Nenhum número de conta / IBAN contém ":trigger_value"',
     'rule_trigger_not_account_nr_ends'                    => 'Nenhum número de conta / IBAN termina em ":trigger_value"',
     'rule_trigger_not_account_nr_starts'                  => 'Nenhum número de conta / IBAN começa com ":trigger_value"',
-    'rule_trigger_not_category_is'                        => 'Nenhuma categoria é ":trigger_value"',
-    'rule_trigger_not_category_contains'                  => 'Nenhuma categoria contém ":trigger_value"',
-    'rule_trigger_not_category_ends'                      => 'Nenhuma categoria termina em ":trigger_value"',
-    'rule_trigger_not_category_starts'                    => 'Nenhuma categoria começa com ":trigger_value"',
-    'rule_trigger_not_budget_is'                          => 'Nenhum orçamento é ":trigger_value"',
-    'rule_trigger_not_budget_contains'                    => 'Nenhum orçamento contém ":trigger_value"',
-    'rule_trigger_not_budget_ends'                        => 'Nenhum orçamento termina em ":trigger_value"',
-    'rule_trigger_not_budget_starts'                      => 'Nenhum orçamento começa com ":trigger_value"',
+    'rule_trigger_not_category_is'                        => 'Categoria não é ":trigger_value"',
+    'rule_trigger_not_category_contains'                  => 'Categoria não contém ":trigger_value"',
+    'rule_trigger_not_category_ends'                      => 'Categoria não termina em ":trigger_value"',
+    'rule_trigger_not_category_starts'                    => 'Categoria não começa com ":trigger_value"',
+    'rule_trigger_not_budget_is'                          => 'Orçamento não é ":trigger_value"',
+    'rule_trigger_not_budget_contains'                    => 'Orçamento não contém ":trigger_value"',
+    'rule_trigger_not_budget_ends'                        => 'Orçamento não termina em ":trigger_value"',
+    'rule_trigger_not_budget_starts'                      => 'Orçamento não começa com ":trigger_value"',
     'rule_trigger_not_bill_is'                            => 'Fatura não é ":trigger_value"',
     'rule_trigger_not_bill_contains'                      => 'Fatura não contém ":trigger_value"',
     'rule_trigger_not_bill_ends'                          => 'Fatura não termina em ":trigger_value"',
@@ -1390,7 +1390,7 @@ return [
     'slack_url_label'                           => 'URL do webhook de entrada do Slack',
 
     // Financial administrations
-    'administration_index'                      => 'Financial administration',
+    'administration_index'                      => 'Administração financeira',
 
     // profile:
     'purge_data_title'                          => 'Excluir dados do Firefly III',

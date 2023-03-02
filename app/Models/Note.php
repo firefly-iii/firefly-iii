@@ -77,7 +77,6 @@ class Note extends Model
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
-
      *
      * Get all the owning noteable models.
      */

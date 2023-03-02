@@ -111,7 +111,6 @@ class AvailableBudget extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function user(): BelongsTo
@@ -120,7 +119,6 @@ class AvailableBudget extends Model
     }
 
     /**
-
      * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo

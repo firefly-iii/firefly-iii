@@ -71,7 +71,7 @@ return [
     'specific_day_js'          => 'D. MMMM YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'          => '[Week] t, RRRR',
+    'week_in_year_js'          => '[Week] W, GGGG',
     'week_in_year_fns'         => "'Týždeň' w, yyyy",
 
     //'year'                    => '%Y',

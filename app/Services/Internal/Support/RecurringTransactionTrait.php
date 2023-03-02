@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\BillFactory;
@@ -186,6 +185,7 @@ trait RecurringTransactionTrait
      * @param  string|null  $accountName
      *
      * @return Account
+     * @throws JsonException
      */
     protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
     {

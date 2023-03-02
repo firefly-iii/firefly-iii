@@ -67,7 +67,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(): JsonResponse
     {
@@ -104,7 +103,6 @@ class ShowController extends Controller
      * @param  Recurrence  $recurrence
      *
      * @return JsonResponse
-
      */
     public function show(Recurrence $recurrence): JsonResponse
     {

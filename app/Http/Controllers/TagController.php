@@ -280,7 +280,6 @@ class TagController extends Controller
      * @param  Tag  $tag
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

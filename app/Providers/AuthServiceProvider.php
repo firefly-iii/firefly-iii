@@ -30,7 +30,6 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Passport;
 
 /**
-
  * Class AuthServiceProvider
  */
 class AuthServiceProvider extends ServiceProvider
@@ -66,7 +65,6 @@ class AuthServiceProvider extends ServiceProvider
             }
         );
 
-        $this->registerPolicies();
         Passport::tokensExpireIn(now()->addDays(14));
     }
 }

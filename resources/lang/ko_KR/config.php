@@ -71,7 +71,7 @@ return [
     'specific_day_js'          => 'YYYY년 MM월 D일',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'          => 'YYYY년 w주',
+    'week_in_year_js'          => '[Week] W, GGGG',
     'week_in_year_fns'         => "YYYY년 w주",
 
     //'year'                    => '%Y',

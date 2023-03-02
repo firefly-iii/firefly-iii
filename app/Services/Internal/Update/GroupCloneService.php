@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use Carbon\Carbon;
 use FireflyIII\Factory\PiggyBankEventFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;

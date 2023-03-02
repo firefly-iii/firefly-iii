@@ -123,6 +123,8 @@ class AccountTasker implements AccountTaskerInterface
      * @param  Collection  $accounts
      *
      * @return array
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
@@ -221,6 +223,8 @@ class AccountTasker implements AccountTaskerInterface
      * @param  Collection  $accounts
      *
      * @return array
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
     {

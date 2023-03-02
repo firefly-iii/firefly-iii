@@ -36,7 +36,6 @@ use FireflyIII\Support\Report\Category\CategoryReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use JsonException;
 use Log;
 use Throwable;
 
@@ -278,6 +277,7 @@ class CategoryController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function avgExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
@@ -330,6 +330,7 @@ class CategoryController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function avgIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
@@ -491,7 +492,7 @@ class CategoryController extends Controller
      * @param  Carbon  $end
      *
      * @return mixed|string
-     * @throws JsonException
+     * @throws FireflyException
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -572,7 +573,7 @@ class CategoryController extends Controller
      * @param  Carbon  $end
      *
      * @return string
-     * @throws JsonException
+     * @throws FireflyException
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
@@ -650,6 +651,7 @@ class CategoryController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): string
     {
@@ -691,6 +693,7 @@ class CategoryController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function topExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
@@ -741,6 +744,7 @@ class CategoryController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function topIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {

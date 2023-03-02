@@ -29,7 +29,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
-
  * Class RuleGroupServiceProvider.
  */
 class RuleGroupServiceProvider extends ServiceProvider

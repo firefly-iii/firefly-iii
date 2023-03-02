@@ -61,7 +61,9 @@ class ConfigurationController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/configuration/getConfiguration
      *
      * @return JsonResponse
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function index(): JsonResponse
     {
@@ -96,7 +98,6 @@ class ConfigurationController extends Controller
      * Get all config values.
      *
      * @return array
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -136,7 +137,9 @@ class ConfigurationController extends Controller
      * @param  string  $configKey
      *
      * @return JsonResponse
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function show(string $configKey): JsonResponse
     {
@@ -171,7 +174,9 @@ class ConfigurationController extends Controller
      * @param  string  $name
      *
      * @return JsonResponse
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {

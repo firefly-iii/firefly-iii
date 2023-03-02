@@ -62,7 +62,9 @@ class UpgradeLiabilitiesEight extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -83,7 +85,6 @@ class UpgradeLiabilitiesEight extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -159,82 +160,6 @@ class UpgradeLiabilitiesEight extends Command
     }
 
     /**
-     * @param $account
-     * @return int
-     */
-    private function deleteTransactions($account): int
-    {
-        $count    = 0;
-        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                      ->where('transactions.account_id', $account->id)->get(['transaction_journals.*']);
-        Log::debug(sprintf('Found %d journals to analyse.', $journals->count()));
-        /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            $delete = false;
-            /** @var Transaction $source */
-            $source = $journal->transactions()->where('amount', '<', 0)->first();
-            /** @var Transaction $dest */
-            $dest = $journal->transactions()->where('amount', '>', 0)->first();
-
-            // if source is this liability and destination is expense, remove transaction.
-            // if source is revenue and destination is liability, remove transaction.
-            if ((int)$source->account_id === (int)$account->id && $dest->account->accountType->type === AccountType::EXPENSE) {
-                $delete = true;
-            }
-            if ((int)$dest->account_id === (int)$account->id && $source->account->accountType->type === AccountType::REVENUE) {
-                $delete = true;
-            }
-            if ($delete) {
-                Log::debug(
-                    sprintf(
-                        'Deleted %s journal #%d ("%s") (%s %s).',
-                        $journal->transactionType->type,
-                        $journal->id,
-                        $journal->description,
-                        $journal->transactionCurrency->code,
-                        $dest->amount
-                    )
-                );
-                $service = app(TransactionGroupDestroyService::class);
-                $service->destroy($journal->transactionGroup);
-                $count++;
-            }
-        }
-        return $count;
-    }
-
-    /**
-     * @param  Account  $account
-     * @return void
-     */
-    private function deleteCreditTransaction(Account $account): void
-    {
-        Log::debug('Will delete credit transaction.');
-        $liabilityType    = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
-        $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                              ->where('transactions.account_id', $account->id)
-                                              ->where('transaction_journals.transaction_type_id', $liabilityType->id)
-                                              ->first(['transaction_journals.*']);
-        if (null !== $liabilityJournal) {
-            $group   = $liabilityJournal->transactionGroup;
-            $service = new TransactionGroupDestroyService();
-            $service->destroy($group);
-            Log::debug(sprintf('Deleted liability credit group #%d', $group->id));
-            return;
-        }
-        Log::debug('No liability credit journal found.');
-    }
-
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
-    /**
      * @param  Account  $account
      * @return bool
      */
@@ -271,6 +196,28 @@ class UpgradeLiabilitiesEight extends Command
      * @param  Account  $account
      * @return void
      */
+    private function deleteCreditTransaction(Account $account): void
+    {
+        Log::debug('Will delete credit transaction.');
+        $liabilityType    = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
+        $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                              ->where('transactions.account_id', $account->id)
+                                              ->where('transaction_journals.transaction_type_id', $liabilityType->id)
+                                              ->first(['transaction_journals.*']);
+        if (null !== $liabilityJournal) {
+            $group   = $liabilityJournal->transactionGroup;
+            $service = new TransactionGroupDestroyService();
+            $service->destroy($group);
+            Log::debug(sprintf('Deleted liability credit group #%d', $group->id));
+            return;
+        }
+        Log::debug('No liability credit journal found.');
+    }
+
+    /**
+     * @param  Account  $account
+     * @return void
+     */
     private function reverseOpeningBalance(Account $account): void
     {
         $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
@@ -294,5 +241,63 @@ class UpgradeLiabilitiesEight extends Command
             return;
         }
         Log::warning('Did not find opening balance.');
+    }
+
+    /**
+     * @param $account
+     * @return int
+     */
+    private function deleteTransactions($account): int
+    {
+        $count    = 0;
+        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                      ->where('transactions.account_id', $account->id)->get(['transaction_journals.*']);
+        Log::debug(sprintf('Found %d journals to analyse.', $journals->count()));
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $delete = false;
+            /** @var Transaction $source */
+            $source = $journal->transactions()->where('amount', '<', 0)->first();
+            /** @var Transaction $dest */
+            $dest = $journal->transactions()->where('amount', '>', 0)->first();
+
+            // if source is this liability and destination is expense, remove transaction.
+            // if source is revenue and destination is liability, remove transaction.
+            if ((int)$source->account_id === (int)$account->id && $dest->account->accountType->type === AccountType::EXPENSE) {
+                $delete = true;
+            }
+            if ((int)$dest->account_id === (int)$account->id && $source->account->accountType->type === AccountType::REVENUE) {
+                $delete = true;
+            }
+
+            // overruled. No transaction will be deleted, ever.
+            // code is kept in place so i can revisit my reasoning.
+            $delete = false;
+
+            if ($delete) {
+                Log::debug(
+                    sprintf(
+                        'Deleted %s journal #%d ("%s") (%s %s).',
+                        $journal->transactionType->type,
+                        $journal->id,
+                        $journal->description,
+                        $journal->transactionCurrency->code,
+                        $dest->amount
+                    )
+                );
+                $service = app(TransactionGroupDestroyService::class);
+                $service->destroy($journal->transactionGroup);
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

@@ -176,11 +176,11 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $result = [];
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
-            $journalId                = (int)$attachment->attachable_id;
-            $result[$journalId]       = $result[$journalId] ?? [];
-            $current                  = $attachment->toArray();
-            $current['file_exists']   = true;
-            $current['notes']         = $repository->getNoteText($attachment);
+            $journalId              = (int)$attachment->attachable_id;
+            $result[$journalId]     = $result[$journalId] ?? [];
+            $current                = $attachment->toArray();
+            $current['file_exists'] = true;
+            $current['notes']       = $repository->getNoteText($attachment);
             // already determined that this attachable is a TransactionJournal.
             $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
             $result[$journalId][]     = $current;
@@ -470,6 +470,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      * @return TransactionGroup
      * @throws DuplicateTransactionException
      * @throws FireflyException
+     * @throws JsonException
      */
     public function store(array $data): TransactionGroup
     {
@@ -495,6 +496,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      *
      * @return TransactionGroup
      *
+     * @throws DuplicateTransactionException
      * @throws FireflyException
      */
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup

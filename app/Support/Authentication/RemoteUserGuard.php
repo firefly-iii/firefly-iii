@@ -32,6 +32,8 @@ use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class RemoteUserGuard
@@ -47,6 +49,8 @@ class RemoteUserGuard implements Guard
      *
      * @param  UserProvider  $provider
      * @param  Application  $app
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __construct(UserProvider $provider, Application $app)
     {
@@ -56,15 +60,6 @@ class RemoteUserGuard implements Guard
         $this->application = $app;
         $this->provider    = $provider;
         $this->user        = null;
-    }
-
-    /**
-     * @return bool
-     */
-    public function viaRemember(): bool
-    {
-        Log::debug(sprintf('Now at %s', __METHOD__));
-        return false;
     }
 
     /**
@@ -184,5 +179,14 @@ class RemoteUserGuard implements Guard
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         throw new FireflyException('Did not implement RemoteUserGuard::validate()');
+    }
+
+    /**
+     * @return bool
+     */
+    public function viaRemember(): bool
+    {
+        Log::debug(sprintf('Now at %s', __METHOD__));
+        return false;
     }
 }

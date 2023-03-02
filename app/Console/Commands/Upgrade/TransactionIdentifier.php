@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Log;
@@ -68,7 +67,9 @@ class TransactionIdentifier extends Command
      * think. So each set gets a number (1,2,3) to keep them apart.
      *
      * @return int
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -115,13 +116,12 @@ class TransactionIdentifier extends Command
      */
     private function stupidLaravel(): void
     {
-        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
-        $this->count             = 0;
+        $this->cliRepository = app(JournalCLIRepositoryInterface::class);
+        $this->count         = 0;
     }
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
-use Illuminate\Database\QueryException;
 use Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -55,7 +54,9 @@ class MigrateJournalNotes extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -102,7 +103,6 @@ class MigrateJournalNotes extends Command
 
     /**
      * @return bool
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

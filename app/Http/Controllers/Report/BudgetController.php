@@ -74,6 +74,8 @@ class BudgetController extends Controller
      * @param  Carbon  $end
      *
      * @return Factory|View
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function accountPerBudget(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
@@ -155,6 +157,7 @@ class BudgetController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function avgExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
@@ -276,6 +279,8 @@ class BudgetController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -301,7 +306,7 @@ class BudgetController extends Controller
      * @param  Carbon  $end
      *
      * @return mixed|string
-     * @throws JsonException
+     * @throws FireflyException
      */
     public function period(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -365,6 +370,7 @@ class BudgetController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function topExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {

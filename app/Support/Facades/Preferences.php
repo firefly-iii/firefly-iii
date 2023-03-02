@@ -29,7 +29,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
-
  * Class Preferences.
  *
  * @method Collection beginsWith(User $user, string $search)

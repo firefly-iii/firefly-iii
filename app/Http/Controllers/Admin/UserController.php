@@ -36,6 +36,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class UserController.
@@ -142,6 +144,8 @@ class UserController extends Controller
      * Show index of user manager.
      *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index()
     {

@@ -209,7 +209,7 @@ class ReconcileController extends Controller
      *
      * @return RedirectResponse|Redirector|string
      * @throws DuplicateTransactionException
-     *
+     * @throws JsonException
      */
     private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference)
     {

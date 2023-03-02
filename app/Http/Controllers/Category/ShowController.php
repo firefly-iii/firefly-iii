@@ -34,7 +34,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -81,7 +80,6 @@ class ShowController extends Controller
      *
      * @return Factory|View
      * @throws FireflyException
-     * @throws JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -126,7 +124,6 @@ class ShowController extends Controller
      * @param  Category  $category
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

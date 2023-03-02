@@ -80,7 +80,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function index(Request $request, Budget $budget): JsonResponse
     {
@@ -113,7 +112,6 @@ class ShowController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
-
      */
     public function indexAll(DateRequest $request): JsonResponse
     {

@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Trait ModifiesPiggyBanks
@@ -42,12 +43,6 @@ trait ModifiesPiggyBanks
 {
     use CreatesObjectGroups;
 
-    /**
-     * @param  PiggyBankRepetition  $repetition
-     * @param  string  $amount
-     *
-     * @return void
-     */
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
     {
         Log::debug(sprintf('addAmountToRepetition: %s', $amount));
@@ -61,12 +56,6 @@ trait ModifiesPiggyBanks
         }
     }
 
-    /**
-     * @param  PiggyBank  $piggyBank
-     * @param  string  $amount
-     *
-     * @return bool
-     */
     public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
         $repetition = $this->getRepetition($piggyBank);
@@ -76,7 +65,7 @@ trait ModifiesPiggyBanks
         $repetition->currentamount = bcsub($repetition->currentamount, $amount);
         $repetition->save();
 
-        Log::debug('addAmount: Trigger change for negative amount.');
+        Log::debug('addAmount [a]: Trigger change for negative amount.');
         event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
 
         return true;
@@ -98,7 +87,7 @@ trait ModifiesPiggyBanks
         $repetition->currentamount = bcadd($currentAmount, $amount);
         $repetition->save();
 
-        Log::debug('addAmount: Trigger change for positive amount.');
+        Log::debug('addAmount [b]: Trigger change for positive amount.');
         event(new ChangedPiggyBankAmount($piggyBank, $amount, $journal, null));
 
         return true;
@@ -109,6 +98,7 @@ trait ModifiesPiggyBanks
      * @param  string  $amount
      *
      * @return bool
+     * @throws JsonException
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {
@@ -196,12 +186,12 @@ trait ModifiesPiggyBanks
         $repetition->save();
 
         if (-1 === bccomp($difference, '0')) {
-            Log::debug('addAmount: Trigger change for negative amount.');
-            event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), null, null));
+            Log::debug('addAmount [c]: Trigger change for negative amount.');
+            event(new ChangedPiggyBankAmount($piggyBank, $difference, null, null));
         }
         if (1 === bccomp($difference, '0')) {
-            Log::debug('addAmount: Trigger change for positive amount.');
-            event(new ChangedPiggyBankAmount($piggyBank, $amount, null, null));
+            Log::debug('addAmount [d]: Trigger change for positive amount.');
+            event(new ChangedPiggyBankAmount($piggyBank, $difference, null, null));
         }
 
         return $piggyBank;

@@ -93,6 +93,21 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
+     * Returns all of the user's recurring transactions.
+     *
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->recurrences()
+                          ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
+                          ->orderBy('active', 'DESC')
+                          ->orderBy('transaction_type_id', 'ASC')
+                          ->orderBy('title', 'ASC')
+                          ->get();
+    }
+
+    /**
      * Destroy a recurring transaction.
      *
      * @param  Recurrence  $recurrence
@@ -124,21 +139,6 @@ class RecurringRepository implements RecurringRepositoryInterface
                          ->orderBy('active', 'DESC')
                          ->orderBy('title', 'ASC')
                          ->get();
-    }
-
-    /**
-     * Returns all of the user's recurring transactions.
-     *
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return $this->user->recurrences()
-                          ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
-                          ->orderBy('active', 'DESC')
-                          ->orderBy('transaction_type_id', 'ASC')
-                          ->orderBy('title', 'ASC')
-                          ->get();
     }
 
     /**

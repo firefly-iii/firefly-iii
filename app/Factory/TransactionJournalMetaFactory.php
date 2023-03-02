@@ -25,7 +25,6 @@ namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionJournalMeta;
-use Illuminate\Database\QueryException;
 use Log;
 
 /**

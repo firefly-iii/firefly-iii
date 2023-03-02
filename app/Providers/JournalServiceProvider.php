@@ -37,7 +37,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 /**
-
  * Class JournalServiceProvider.
  */
 class JournalServiceProvider extends ServiceProvider

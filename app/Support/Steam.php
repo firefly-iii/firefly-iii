@@ -245,6 +245,7 @@ class Steam
      * @param  Carbon  $date
      *
      * @return array
+     * @throws FireflyException
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
@@ -277,7 +278,6 @@ class Steam
      * @param  Carbon  $date
      *
      * @return array
-     * @throws JsonException
      */
     public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
     {
@@ -426,6 +426,21 @@ class Steam
         $string = preg_replace('/\pM/u', '', $string);
 
         return str_replace($search, '', $string);
+    }
+
+    /**
+     * @param  string  $ipAddress
+     * @return string
+     * @throws FireflyException
+     */
+    public function getHostName(string $ipAddress): string
+    {
+        try {
+            $hostName = gethostbyaddr($ipAddress);
+        } catch (Exception $e) { // intentional generic exception
+            throw new FireflyException($e->getMessage(), 0, $e);
+        }
+        return $hostName;
     }
 
     /**
@@ -667,20 +682,5 @@ class Steam
         }
 
         return $amount;
-    }
-
-    /**
-     * @param  string  $ipAddress
-     * @return string
-     * @throws FireflyException
-     */
-    public function getHostName(string $ipAddress): string
-    {
-        try {
-            $hostName = gethostbyaddr($ipAddress);
-        } catch (Exception $e) { // intentional generic exception
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-        return $hostName;
     }
 }

@@ -77,6 +77,7 @@ class DoubleController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function avgExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -129,6 +130,7 @@ class DoubleController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function avgIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -425,6 +427,7 @@ class DoubleController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function topExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -475,6 +478,7 @@ class DoubleController extends Controller
      * @param  Carbon  $end
      *
      * @return string
+     * @throws FireflyException
      */
     public function topIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {

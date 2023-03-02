@@ -23,11 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use Exception;
 use FireflyIII\Models\Bill;
 
 /**
-
  * Class BillDestroyService
  */
 class BillDestroyService

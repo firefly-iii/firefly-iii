@@ -27,6 +27,8 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Navigation.
@@ -329,6 +331,37 @@ class Navigation
     }
 
     /**
+     * Returns the user's view range and if necessary, corrects the dynamic view
+     * range to a normal range.
+     * @param  bool  $correct
+     * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getViewRange(bool $correct): string
+    {
+        $range = (string)app('preferences')->get('viewRange', '1M')?->data ?? '1M';
+        if (!$correct) {
+            return $range;
+        }
+        switch ($range) {
+            default:
+                return $range;
+            case 'last7':
+                return '1W';
+            case 'last30':
+            case 'MTD':
+                return '1M';
+            case 'last90':
+            case 'QTD':
+                return '3M';
+            case 'last365':
+            case 'YTD':
+                return '1Y';
+        }
+    }
+
+    /**
      * @param  Carbon  $start
      * @param  Carbon  $end
      *
@@ -429,35 +462,6 @@ class Navigation
     }
 
     /**
-     * Returns the user's view range and if necessary, corrects the dynamic view
-     * range to a normal range.
-     * @param  bool  $correct
-     * @return string
-     */
-    public function getViewRange(bool $correct): string
-    {
-        $range = (string)app('preferences')->get('viewRange', '1M')?->data ?? '1M';
-        if (!$correct) {
-            return $range;
-        }
-        switch ($range) {
-            default:
-                return $range;
-            case 'last7':
-                return '1W';
-            case 'last30':
-            case 'MTD':
-                return '1M';
-            case 'last90':
-            case 'QTD':
-                return '3M';
-            case 'last365':
-            case 'YTD':
-                return '1Y';
-        }
-    }
-
-    /**
      * If the date difference between start and end is less than a month, method returns trans(config.month_and_day). If the difference is less than a year,
      * method returns "config.month". If the date difference is larger, method returns "config.year".
      *
@@ -465,7 +469,6 @@ class Navigation
      * @param  Carbon  $end
      *
      * @return string
-     * @throws FireflyException
      */
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {

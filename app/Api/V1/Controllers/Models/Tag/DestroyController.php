@@ -66,7 +66,6 @@ class DestroyController extends Controller
      * @param  Tag  $tag
      *
      * @return JsonResponse
-
      */
     public function destroy(Tag $tag): JsonResponse
     {

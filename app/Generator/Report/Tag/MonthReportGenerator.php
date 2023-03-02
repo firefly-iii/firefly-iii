@@ -55,6 +55,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * Generate the report.
      *
      * @return string
+     * @throws FireflyException
      */
     public function generate(): string
     {
