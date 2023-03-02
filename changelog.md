@@ -8,7 +8,7 @@ This is release **6.0.0** of Firefly III.
 
 ### Warnings
 
-- The upgrade is not backwards compatible for people who manage outgoing loans (money borrowed to other people). Transactions will be removed or changed. See [this Gist](https://gist.github.com/JC5/909385c5086f9e07ba2c32e047446d68) for more information.
+- The upgrade may not be backwards compatible for people who manage outgoing loans (money borrowed to other people). Transactions will be removed or changed. See [this Gist](https://gist.github.com/JC5/909385c5086f9e07ba2c32e047446d68) for more information.
 - You will need to make a backup of your database.
 - You must use PHP 8.2 or use the Docker container.
 
