@@ -1638,7 +1638,7 @@ return [
     'make_default_currency'                     => 'Gör till standard',
     'default_currency'                          => 'standard',
     'currency_is_disabled'                      => 'Inaktiverad',
-    'enable_currency'                           => 'Aktiverad',
+    'enable_currency'                           => 'Aktivera',
     'disable_currency'                          => 'Inaktivera',
     'currencies_default_disabled'               => 'De flesta valutor är inaktiverade som standard. För att använda dem, så måste de aktiveras först.',
     'currency_is_now_enabled'                   => 'Valuta ":name" har aktiverats',
