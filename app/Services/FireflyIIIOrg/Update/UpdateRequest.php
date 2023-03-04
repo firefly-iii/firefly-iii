@@ -147,6 +147,12 @@ class UpdateRequest implements UpdateRequestInterface
         ];
         $current = config('firefly.version');
         $latest  = $information['version'];
+
+        // strip the 'v' from the version if it's there.
+        if (str_starts_with($latest, 'v')) {
+            $latest = substr($latest, 1);
+        }
+
         $compare = version_compare($latest, $current);
 
         Log::debug(sprintf('Current version is "%s", latest is "%s", result is: %d', $current, $latest, $compare));
