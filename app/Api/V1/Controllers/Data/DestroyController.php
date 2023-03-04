@@ -94,19 +94,39 @@ class DestroyController extends Controller
             case 'object_groups':
                 $this->destroyObjectGroups();
                 break;
+            case 'not_assets_liabilities':
+                $this->destroyAccounts(
+                    [
+                        AccountType::BENEFICIARY,
+                        AccountType::CASH,
+                        AccountType::CREDITCARD,
+                        AccountType::DEFAULT,
+                        AccountType::EXPENSE,
+                        AccountType::IMPORT,
+                        AccountType::INITIAL_BALANCE,
+                        AccountType::LIABILITY_CREDIT,
+                        AccountType::RECONCILIATION,
+                        AccountType::REVENUE,
+                    ]
+                );
+                break;
             case 'accounts':
                 $this->destroyAccounts(
                     [
                         AccountType::ASSET,
-                        AccountType::DEFAULT,
                         AccountType::BENEFICIARY,
-                        AccountType::EXPENSE,
-                        AccountType::REVENUE,
-                        AccountType::INITIAL_BALANCE,
+                        AccountType::CASH,
+                        AccountType::CREDITCARD,
                         AccountType::DEBT,
+                        AccountType::DEFAULT,
+                        AccountType::EXPENSE,
+                        AccountType::IMPORT,
+                        AccountType::INITIAL_BALANCE,
+                        AccountType::LIABILITY_CREDIT,
                         AccountType::LOAN,
                         AccountType::MORTGAGE,
-                        AccountType::CREDITCARD,
+                        AccountType::RECONCILIATION,
+                        AccountType::REVENUE,
                     ]
                 );
                 break;
