@@ -318,7 +318,7 @@
                     url = '{{ route('api.v1.data.purge') }}';
                 }
                 if (link.data('type') === 'unused_accounts') {
-                    url = deleteAPIRoute + '?objects=accounts&unused=true';
+                    url = deleteAPIRoute + '?objects=not_assets_liabilities&unused=true';
                 }
 
                 // replace icon with loading thing
