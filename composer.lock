@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7de460f25e29fa2bf56806de51c5ab1a",
+    "content-hash": "846fe1074abcdb4e5bd1f1458eaf7e67",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3479,6 +3479,60 @@
                 }
             ],
             "time": "2021-06-28T04:27:21+00:00"
+        },
+        {
+            "name": "mailchimp/transactional",
+            "version": "1.0.50",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailchimp/mailchimp-transactional-php.git",
+                "reference": "701b00f538f36a2a5b138f880ab5eebbfeff4b7d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailchimp/mailchimp-transactional-php/zipball/701b00f538f36a2a5b138f880ab5eebbfeff4b7d",
+                "reference": "701b00f538f36a2a5b138f880ab5eebbfeff4b7d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.4 || ^7.2",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.12",
+                "phpunit/phpunit": "^7",
+                "squizlabs/php_codesniffer": "~2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MailchimpTransactional\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Mailchimp",
+                    "homepage": "https://github.com/mailchimp/mailchimp-transactional-php"
+                }
+            ],
+            "homepage": "http://swagger.io",
+            "keywords": [
+                "api",
+                "php",
+                "sdk",
+                "swagger"
+            ],
+            "support": {
+                "source": "https://github.com/mailchimp/mailchimp-transactional-php/tree/v1.0.50"
+            },
+            "time": "2022-11-07T20:12:03+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -8250,6 +8304,68 @@
                 }
             ],
             "time": "2023-02-24T10:42:00+00:00"
+        },
+        {
+            "name": "therobfonz/laravel-mandrill-driver",
+            "version": "5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/luisdalmolin/laravel-mandrill-driver.git",
+                "reference": "a492a580e984c9bae5d59bbc2660f75af4ea2c0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/luisdalmolin/laravel-mandrill-driver/zipball/a492a580e984c9bae5d59bbc2660f75af4ea2c0d",
+                "reference": "a492a580e984c9bae5d59bbc2660f75af4ea2c0d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^10.0",
+                "mailchimp/transactional": "^1.0",
+                "php": "^8.1",
+                "symfony/mailer": "^6.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4.4",
+                "phpunit/phpunit": "^9.5.10"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LaravelMandrill\\MandrillServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LaravelMandrill\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rob Fonseca",
+                    "email": "robfonseca@gmail.com"
+                },
+                {
+                    "name": "Brandon Ferens",
+                    "email": "brandon@kirschbaumdevelopment.com"
+                }
+            ],
+            "description": "Mandrill Driver for Laravel 9+",
+            "keywords": [
+                "laravel",
+                "mandrill"
+            ],
+            "support": {
+                "issues": "https://github.com/luisdalmolin/laravel-mandrill-driver/issues",
+                "source": "https://github.com/luisdalmolin/laravel-mandrill-driver/tree/5.0.0"
+            },
+            "time": "2023-01-31T13:48:27+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

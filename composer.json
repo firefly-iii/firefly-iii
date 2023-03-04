@@ -105,7 +105,8 @@
     "rcrowe/twigbridge": "^0.14",
     "spatie/laravel-ignition": "^2",
     "symfony/http-client": "^6.0",
-    "symfony/mailgun-mailer": "^6.0"
+    "symfony/mailgun-mailer": "^6.0",
+    "therobfonz/laravel-mandrill-driver": "*"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "2.*",
