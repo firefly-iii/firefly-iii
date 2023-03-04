@@ -88,7 +88,8 @@ function stopSorting() {
         //$.post('api/v1/accounts/' + id, {order: newOrder, _token: token});
         $.ajax({
                    url: 'api/v1/accounts/' + id,
-                   data: {order: newOrder},
+                   data: JSON.stringify({order: newOrder}),
+                   headers: {"Content-Type": "application/json"},
                    type: 'PUT',
                });
     });
