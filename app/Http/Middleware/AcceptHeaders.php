@@ -56,11 +56,11 @@ class AcceptHeaders
         }
         // if bad 'Content-Type' header, refuse service.
         if (('POST' === $method || 'PUT' === $method) && !$request->hasHeader('Content-Type')) {
-            $error             = new BadHttpHeaderException('Content-Type header cannot be empty');
+            $error             = new BadHttpHeaderException('Content-Type header cannot be empty.');
             $error->statusCode = 415;
             throw $error;
         }
-        if (('POST' === $method || 'PUT' === $method) && !in_array($submitted, $contentTypes, true)) {
+        if (('POST' === $method || 'PUT' === $method) && !$this->acceptsHeader($submitted, $contentTypes)) {
             $error             = new BadHttpHeaderException(sprintf('Content-Type cannot be "%s"', $submitted));
             $error->statusCode = 415;
             throw $error;
@@ -73,5 +73,18 @@ class AcceptHeaders
         }
 
         return $next($request);
+    }
+
+    /**
+     * @param  string  $content
+     * @param  array  $accepted
+     * @return bool
+     */
+    private function acceptsHeader(string $content, array $accepted): bool
+    {
+        if (str_contains($content, ';')) {
+            $content = trim(explode(';', $content)[0]);
+        }
+        return in_array($content, $accepted, true);
     }
 }
