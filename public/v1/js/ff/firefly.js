@@ -20,8 +20,17 @@
 /** global: moment, token, dateRangeMeta,dateRangeConfig, accountingConfig, accounting, currencySymbol, mon_decimal_point, frac_digits, showFullList, showOnlyTop, mon_thousands_sep */
 
 
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+        'Content-Type': 'application/json'
+
+    }
+});
+
 $(function () {
     "use strict";
+
 
     configAccounting(currencySymbol);
 
@@ -37,11 +46,7 @@ $(function () {
         $('button[type="submit"]').prop('disabled', true);
     });
 
-    $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+
 
     // when you click on a currency, this happens:
     $('.currency-option').on('click', currencySelect);
