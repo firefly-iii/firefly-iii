@@ -204,6 +204,21 @@ class Navigation
             return $date;
         }
 
+        $result = match ($repeatFreq) {
+            'last7' => $date->subDays(7)->startOfDay(),
+            'last30' => $date->subDays(30)->startOfDay(),
+            'last90' => $date->subDays(90)->startOfDay(),
+            'last365' => $date->subDays(365)->startOfDay(),
+            'MTD' => $date->startOfMonth()->startOfDay(),
+            'QTD' => $date->firstOfQuarter()->startOfDay(),
+            'YTD' => $date->startOfYear()->startOfDay(),
+            default => null,
+        };
+        if (null !== $result) {
+            return $result;
+        }
+
+
         if ('custom' === $repeatFreq) {
             return $date; // the date is already at the start.
         }
