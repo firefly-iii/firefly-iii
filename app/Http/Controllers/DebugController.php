@@ -187,7 +187,7 @@ class DebugController extends Controller
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
                 $logFile = $handler->getUrl();
-                if (null !== $logFile) {
+                if (null !== $logFile && file_exists($logFile)) {
                     $logContent = file_get_contents($logFile);
                 }
             }
