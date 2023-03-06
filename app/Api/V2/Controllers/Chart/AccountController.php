@@ -32,8 +32,13 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use Illuminate\Http\JsonResponse;
+use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Illuminate\Support\Collection;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Models\TransactionType;
 
 /**
  * Class AccountController
@@ -43,6 +48,7 @@ class AccountController extends Controller
     use ConvertsExchangeRates;
 
     private AccountRepositoryInterface $repository;
+    private GeneratorInterface $generator;
 
     /**
      *
@@ -50,6 +56,8 @@ class AccountController extends Controller
     public function __construct()
     {
         parent::__construct();
+        // create chart generator:
+        $this->generator = app(GeneratorInterface::class);
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
@@ -129,5 +137,116 @@ class AccountController extends Controller
         }
 
         return response()->json($chartData);
+    }
+
+
+
+    /**
+     * Shows income and expense, debit/credit: operations.
+     *
+     * @param  Collection  $accounts
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return JsonResponse
+     * @throws JsonException
+     */
+    public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
+    {
+        $format         = app('navigation')->preferredCarbonFormat($start, $end);
+        $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $ids            = $accounts->pluck('id')->toArray();
+
+        // get journals for entire period:
+        $data      = [];
+        $chartData = [];
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)->withAccountInformation();
+        $collector->setXorAccounts($accounts);
+        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER]);
+        $journals = $collector->getExtractedJournals();
+
+        // loop. group by currency and by period.
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $period                     = $journal['date']->format($format);
+            $currencyId                 = (int)$journal['currency_id'];
+            $data[$currencyId]          = $data[$currencyId] ?? [
+                'currency_id'             => $currencyId,
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_name'           => $journal['currency_name'],
+                'currency_decimal_places' => (int)$journal['currency_decimal_places'],
+            ];
+            $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
+                'period' => $period,
+                'spent'  => '0',
+                'earned' => '0',
+            ];
+            // in our outgoing?
+            $key    = 'spent';
+            $amount = app('steam')->positive($journal['amount']);
+
+            // deposit = incoming
+            // transfer or reconcile or opening balance, and these accounts are the destination.
+            if (
+                TransactionType::DEPOSIT === $journal['transaction_type_type']
+                ||
+
+                (
+                    (
+                        TransactionType::TRANSFER === $journal['transaction_type_type']
+                        || TransactionType::RECONCILIATION === $journal['transaction_type_type']
+                        || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+                    )
+                    && in_array($journal['destination_account_id'], $ids, true)
+                )
+            ) {
+                $key = 'earned';
+            }
+            $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
+        }
+
+        // loop this data, make chart bars for each currency:
+        /** @var array $currency */
+        foreach ($data as $currency) {
+            $income  = [
+                'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                'currency_id'     => $currency['currency_id'],
+                'currency_symbol' => $currency['currency_symbol'],
+                'currency_code'   => $currency['currency_code'],
+                'entries'         => [],
+            ];
+            $expense = [
+                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+                'currency_id'     => $currency['currency_id'],
+                'currency_symbol' => $currency['currency_symbol'],
+                'currency_code'   => $currency['currency_code'],
+                'entries'         => [],
+            ];
+            // loop all possible periods between $start and $end
+            $currentStart = clone $start;
+            while ($currentStart <= $end) {
+                $key                        = $currentStart->format($format);
+                $title                      = $currentStart->isoFormat($titleFormat);
+                $income['entries'][$title]  = app('steam')->bcround(($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
+                $expense['entries'][$title] = app('steam')->bcround(($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
+                $currentStart               = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
+            }
+
+            $chartData[] = $income;
+            $chartData[] = $expense;
+        }
+
+        $data = $this->generator->multiSet($chartData);
+
+        return response()->json($data);
     }
 }

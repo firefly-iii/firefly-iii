@@ -22,6 +22,10 @@
 
 declare(strict_types=1);
 
+if (!defined('DATEFORMAT')) {
+    define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
+}
+
 /**
  * V2 API route for TransactionSum API endpoints
  * TODO what to do with these routes
@@ -73,6 +77,7 @@ Route::group(
     ],
     static function () {
         Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'dashboard']);
+        Route::get('account/operations/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@operations', 'as' => 'operations'])->where(['start_date' => DATEFORMAT])->where(['end_date' => DATEFORMAT]);
     }
 );
 
