@@ -8,9 +8,9 @@ body:
       options:
         - label: I've read the [support guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/support.md)
           required: true
-        - label: My request is not listed as [a very good idea, but unfortunately...](https://docs.firefly-iii.org/firefly-iii/about-firefly-iii/what-its-not/)
+        - label: My request is not listed as [a very good idea, but unfortunately...](https://docs.firefly-iii.org/firefly-iii/more-information/what-its-not/)
           required: true
-        - label: I've used [the search](https://github.com/firefly-iii/firefly-iii/issues?q=is%3Aissue) and this has not been discussed before.
+        - label: I've used [the search](https://github.com/firefly-iii/firefly-iii/issues?q=is%3Aissue) and this has not been requested before.
           required: true
 
   - type: textarea
@@ -18,9 +18,9 @@ body:
       label: Description
       description: Please describe your feature request
       placeholder: |
-        - I would like Firefly III to do ABC.
-        - What if you would add feature XYZ?
-        - Firefly III doesn't do DEF.
+        - I would like Firefly III to do (thing).
+        - What if you would add feature (feature here)?
+        - Firefly III doesn't do (thing).
     validations:
       required: true
 
