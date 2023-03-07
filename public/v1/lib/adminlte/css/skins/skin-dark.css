@@ -192,6 +192,13 @@
   border-color: #15181a;
   cursor: not-allowed;
 }
+.skin-firefly-iii .text-warning {
+  color: #f39c12 !important;
+}
+.skin-firefly-iii a.text-warning:hover,
+.skin-firefly-iii a.text-warning:focus {
+  color: #d39e00 !important;
+}
 .skin-firefly-iii h4 {
   color: #44DEF1;
 }
