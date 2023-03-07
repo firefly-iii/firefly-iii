@@ -40,7 +40,7 @@
                 :value="cBill.id">{{ cBill.name }}
         </option>
       </select>
-      <p v-if="this.bills.length === 1" class="help-block" v-text="$t('firefly.no_bill_pointer')"></p>
+      <p v-if="this.bills.length === 1" class="help-block" v-html="$t('firefly.no_bill_pointer')"></p>
       <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
