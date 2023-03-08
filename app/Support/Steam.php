@@ -423,7 +423,7 @@ class Steam
         ];
 
         // clear zalgo text
-        $string = preg_replace('/\pM/u', '', $string);
+        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
 
         return str_replace($search, '', $string);
     }
