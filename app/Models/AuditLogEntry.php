@@ -42,7 +42,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|AuditLogEntry query()
  * @method static \Illuminate\Database\Query\Builder|AuditLogEntry withTrashed()
  * @method static \Illuminate\Database\Query\Builder|AuditLogEntry withoutTrashed()
- * @mixin Eloquent
  * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -65,6 +64,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|AuditLogEntry whereDeletedAt($value)
  * @method static Builder|AuditLogEntry whereId($value)
  * @method static Builder|AuditLogEntry whereUpdatedAt($value)
+ * @mixin Eloquent
  */
 class AuditLogEntry extends Model
 {

@@ -120,6 +120,15 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function deleteInvite(InvitedUser $invite): void
+    {
+        Log::debug(sprintf('Deleting invite #%d', $invite->id));
+        $invite->delete();
+    }
+
+    /**
      * @param  User  $user
      *
      * @return bool
@@ -286,24 +295,24 @@ class UserRepository implements UserRepositoryInterface
      *
      * @return bool
      */
-        public function hasRole(User|Authenticatable|null $user, string $role): bool
-        {
-            if (null === $user) {
-                return false;
-            }
-            /** @var Role $userRole */
-            foreach ($user->roles as $userRole) {
-                if ($userRole->name === $role) {
-                    return true;
-                }
-            }
-
+    public function hasRole(User|Authenticatable|null $user, string $role): bool
+    {
+        if (null === $user) {
             return false;
         }
+        /** @var Role $userRole */
+        foreach ($user->roles as $userRole) {
+            if ($userRole->name === $role) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
-         * @inheritDoc
-         */
+     * @inheritDoc
+     */
     public function inviteUser(User|Authenticatable|null $user, string $email): InvitedUser
     {
         $now = today(config('app.timezone'));

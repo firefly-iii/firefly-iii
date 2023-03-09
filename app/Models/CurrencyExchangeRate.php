@@ -60,9 +60,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|CurrencyExchangeRate whereUpdatedAt($value)
  * @method static Builder|CurrencyExchangeRate whereUserId($value)
  * @method static Builder|CurrencyExchangeRate whereUserRate($value)
- * @mixin Eloquent
  * @property int|null $user_group_id
  * @method static Builder|CurrencyExchangeRate whereUserGroupId($value)
+ * @mixin Eloquent
  */
 class CurrencyExchangeRate extends Model
 {

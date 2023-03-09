@@ -85,9 +85,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserId($value)
  * @method static Builder|Recurrence withTrashed()
  * @method static Builder|Recurrence withoutTrashed()
- * @mixin Eloquent
  * @property int|null $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserGroupId($value)
+ * @mixin Eloquent
  */
 class Recurrence extends Model
 {

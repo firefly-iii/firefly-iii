@@ -84,8 +84,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Transaction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
- * @mixin Eloquent
  * @property int $the_count
+ * @mixin Eloquent
  */
 class Transaction extends Model
 {
