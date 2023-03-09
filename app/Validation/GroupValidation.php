@@ -90,7 +90,7 @@ trait GroupValidation
      */
     protected function validateDescriptions(Validator $validator): void
     {
-        if($validator->errors()->count() > 0) {
+        if ($validator->errors()->count() > 0) {
             return;
         }
         Log::debug('Now in GroupValidation::validateDescriptions()');
@@ -116,7 +116,7 @@ trait GroupValidation
      */
     protected function validateGroupDescription(Validator $validator): void
     {
-        if($validator->errors()->count() > 0) {
+        if ($validator->errors()->count() > 0) {
             return;
         }
         Log::debug('Now in validateGroupDescription()');

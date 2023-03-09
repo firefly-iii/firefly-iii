@@ -73,10 +73,10 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction whereUpdatedAt($value)
  * @method static Builder|RecurrenceTransaction withTrashed()
  * @method static Builder|RecurrenceTransaction withoutTrashed()
- * @mixin Eloquent
  * @property int|null $transaction_type_id
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction whereTransactionTypeId($value)
  * @property-read TransactionType|null $transactionType
+ * @mixin Eloquent
  */
 class RecurrenceTransaction extends Model
 {

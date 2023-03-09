@@ -63,9 +63,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|WebhookMessage whereUpdatedAt($value)
  * @method static Builder|WebhookMessage whereUuid($value)
  * @method static Builder|WebhookMessage whereWebhookId($value)
- * @mixin Eloquent
  * @property-read Collection|WebhookAttempt[] $webhookAttempts
  * @property-read int|null $webhook_attempts_count
+ * @mixin Eloquent
  */
 class WebhookMessage extends Model
 {

@@ -1341,8 +1341,8 @@ Route::group(
         Route::post('users/destroy/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
 
         // invitee management
-        Route::get('users/delete_invite/{invitedUser}', ['uses' => 'UserController@deleteInvite', 'as' => 'users.delete-invite']);
         Route::post('users/invite', ['uses' => 'UserController@invite', 'as' => 'users.invite']);
+        Route::post('users/delete-invite/{invitedUser}', ['uses' => 'UserController@deleteInvite', 'as' => 'users.delete-invite']);
 
         // journal links manager
         Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);

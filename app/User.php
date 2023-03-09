@@ -122,7 +122,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereReset($value)
  * @method static Builder|User whereUpdatedAt($value)
- * @mixin Eloquent
  * @property string|null $objectguid
  * @property-read int|null $accounts_count
  * @property-read int|null $attachments_count
@@ -165,6 +164,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null $group_memberships_count
  * @property-read UserGroup|null $userGroup
  * @method static Builder|User whereUserGroupId($value)
+ * @mixin Eloquent
  */
 class User extends Authenticatable
 {
