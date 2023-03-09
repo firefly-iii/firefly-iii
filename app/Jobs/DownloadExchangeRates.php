@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -102,7 +103,12 @@ class DownloadExchangeRates implements ShouldQueue
         $base       = sprintf('%s/%s/%s', (string)config('cer.url'), $this->date->year, $this->date->isoWeek);
         $client     = new Client();
         $url        = sprintf('%s/%s.json', $base, $currency->code);
-        $res        = $client->get($url);
+        try {
+            $res = $client->get($url);
+        } catch(RequestException $e) {
+            app('log')->warning(sprintf('Trying to grab "%s" resulted in error "%d".', $url, $e->getMessage()));
+            return;
+        }
         $statusCode = $res->getStatusCode();
         if (200 !== $statusCode) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in status code %d.', $url, $statusCode));
