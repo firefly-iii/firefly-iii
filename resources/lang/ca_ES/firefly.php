@@ -280,7 +280,7 @@ return [
     'visit_webhook_url'                    => 'Visitar l\'URL del webhook',
     'reset_webhook_secret'                 => 'Reiniciar el secret del webhook',
     'webhook_stored_link'                  => 'S\'ha desat <a href="webhooks/show/{ID}">el Webook #{ID} ("{title}")</a> correctament.',
-    'webhook_updated_link'                  => 'S\'ha actualitzat el <a href="webhooks/show/{ID}">Webook #{ID}</a> ("{title}").',
+    'webhook_updated_link'                 => 'S\'ha actualitzat el <a href="webhooks/show/{ID}">Webook #{ID}</a> ("{title}").',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Sol·licitud d\'Autorització',
@@ -2364,6 +2364,8 @@ return [
 
 
     // administration
+    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
+    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
     'invite_new_user_title'                    => 'Invitar nou usuari',
     'invite_new_user_text'                     => 'Com a administrador, pots convidar usuaris a l\'administració de Firefly III. Amb aquest enllaç podran crear un compte. L\'usuari convidat, i el seu compte d\'invitació apareixeran a la taula inferior. Pots compartir l\'enllaç.',
     'invited_user_mail'                        => 'Correu electrònic',

@@ -90,7 +90,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|Account whereVirtualBalance($value)
  * @method static Builder|Account withTrashed()
  * @method static Builder|Account withoutTrashed()
- * @mixin Eloquent
  * @property Carbon $lastActivityDate
  * @property string $startBalance
  * @property string $endBalance
@@ -103,6 +102,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $current_debt
  * @property int|null $user_group_id
  * @method static EloquentBuilder|Account whereUserGroupId($value)
+ * @mixin Eloquent
  */
 class Account extends Model
 {

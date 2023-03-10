@@ -31,6 +31,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
@@ -106,8 +107,8 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '6.0.0',
-    'api_version'                  => '2.0.0',
+    'version'                      => '6.0.1',
+    'api_version'                  => '2.0.1',
     'db_version'                   => 19,
 
     // generic settings
@@ -445,6 +446,7 @@ return [
         'webhook'          => Webhook::class,
         'webhookMessage'   => WebhookMessage::class,
         'webhookAttempt'   => WebhookAttempt::class,
+        'invitedUser'      => InvitedUser::class,
 
         // strings
         'currency_code'    => CurrencyCode::class,
@@ -469,6 +471,7 @@ return [
         'tagOrId'          => TagOrId::class,
         'dynamicConfigKey' => DynamicConfigKey::class,
         'eitherConfigKey'  => EitherConfigKey::class,
+
 
     ],
     'rule-actions'         => [

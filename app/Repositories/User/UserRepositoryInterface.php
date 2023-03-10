@@ -103,6 +103,12 @@ interface UserRepositoryInterface
     public function deleteEmptyGroups(): void;
 
     /**
+     * @param  InvitedUser  $invite
+     * @return void
+     */
+    public function deleteInvite(InvitedUser $invite): void;
+
+    /**
      * @param  User  $user
      *
      * @return bool

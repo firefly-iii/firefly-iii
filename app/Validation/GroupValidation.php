@@ -90,6 +90,9 @@ trait GroupValidation
      */
     protected function validateDescriptions(Validator $validator): void
     {
+        if ($validator->errors()->count() > 0) {
+            return;
+        }
         Log::debug('Now in GroupValidation::validateDescriptions()');
         $transactions      = $this->getTransactionsArray($validator);
         $validDescriptions = 0;
@@ -113,6 +116,9 @@ trait GroupValidation
      */
     protected function validateGroupDescription(Validator $validator): void
     {
+        if ($validator->errors()->count() > 0) {
+            return;
+        }
         Log::debug('Now in validateGroupDescription()');
         $data         = $validator->getData();
         $transactions = $this->getTransactionsArray($validator);

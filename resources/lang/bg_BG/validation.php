@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Съдържанието на това поле е невалидно без информация за валута.',
     'not_transfer_account'           => 'Този акаунт не е акаунт, който може да се използва за прехвърляния.',
     'require_currency_amount'        => 'Съдържанието на това поле е невалидно без стойност в другата валута.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Описанието на транзакцията не трябва да е равно на общото описание.',
     'file_invalid_mime'              => 'Файлът ":name" е от тип ":mime", който не се приема за качване.',
     'file_too_large'                 => 'Файлът ":name" е твърде голям.',

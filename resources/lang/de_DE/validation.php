@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
     'not_transfer_account'           => 'Dieses Konto ist kein Konto, welches für Buchungen genutzt werden kann.',
     'require_currency_amount'        => 'Der Inhalt dieses Feldes ist ohne Eingabe eines Betrags in Fremdwährung ungültig.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Die Transaktionsbeschreibung darf nicht der globalen Beschreibung entsprechen.',
     'file_invalid_mime'              => 'Die Datei „:name” ist vom Typ „:mime”, welcher nicht zum Hochladen zugelassen ist.',
     'file_too_large'                 => 'Die Datei „:name” ist zu groß.',

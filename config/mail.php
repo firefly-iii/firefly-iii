@@ -33,7 +33,7 @@ return [
     | and used as needed; however, this mailer will be used by default.
     |
     */
-    'default' => env('MAIL_MAILER', 'smtp'),
+    'default' => envNonEmpty('MAIL_MAILER', 'log'),
 
     'mailers' => [
         'smtp' => [
@@ -53,6 +53,10 @@ return [
 
         'mailgun' => [
             'transport' => 'mailgun',
+        ],
+
+        'mandrill' => [
+            'transport' => 'mandrill',
         ],
 
         'postmark' => [

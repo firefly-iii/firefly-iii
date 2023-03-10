@@ -19,9 +19,9 @@
         "fire_webhooks_checkbox": "Fire webhooks",
         "no_budget_pointer": "You seem to have no budgets yet. You should create some on the <a href=\"budgets\">budgets<\/a>-page. Budgets can help you keep track of expenses.",
         "no_bill_pointer": "You seem to have no bills yet. You should create some on the <a href=\"bills\">bills<\/a>-page. Bills can help you keep track of expenses.",
-        "source_account": "Source account",
+        "source_account": "\u4f86\u6e90\u5e33\u6236",
         "hidden_fields_preferences": "You can enable more transaction options in your <a href=\"preferences\">preferences<\/a>.",
-        "destination_account": "Destination account",
+        "destination_account": "\u76ee\u6a19\u5e33\u6236",
         "add_another_split": "\u589e\u52a0\u62c6\u5206",
         "submission": "Submission",
         "create_another": "After storing, return here to create another one.",
@@ -144,8 +144,8 @@
     },
     "list": {
         "active": "\u662f\u5426\u555f\u7528\uff1f",
-        "trigger": "Trigger",
-        "response": "Response",
+        "trigger": "\u89f8\u767c\u5668",
+        "response": "\u56de\u61c9",
         "delivery": "Delivery",
         "url": "URL",
         "secret": "Secret"

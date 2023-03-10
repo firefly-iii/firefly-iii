@@ -97,7 +97,7 @@
     "league/commonmark": "2.*",
     "league/csv": "^9.7",
     "league/fractal": "0.*",
-    "nunomaduro/collision": "^7.0",
+    "nunomaduro/collision": "^7.1",
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^2.1",
     "psr/log": "<4",
@@ -105,7 +105,8 @@
     "rcrowe/twigbridge": "^0.14",
     "spatie/laravel-ignition": "^2",
     "symfony/http-client": "^6.0",
-    "symfony/mailgun-mailer": "^6.0"
+    "symfony/mailgun-mailer": "^6.0",
+    "therobfonz/laravel-mandrill-driver": "^5.0"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "2.*",
@@ -113,7 +114,7 @@
     "fakerphp/faker": "1.*",
     "filp/whoops": "2.*",
     "mockery/mockery": "1.*",
-    "nunomaduro/larastan": "^2.0",
+    "nunomaduro/larastan": "^2.5",
     "phpstan/phpstan": "^1.10",
     "phpstan/phpstan-deprecation-rules": "^1.0",
     "phpstan/phpstan-strict-rules": "^1.4",

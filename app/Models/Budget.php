@@ -74,12 +74,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserId($value)
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
- * @mixin Eloquent
  * @property string $email
  * @property int|null $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserGroupId($value)
  * @property-read Collection|Note[] $notes
  * @property-read int|null $notes_count
+ * @mixin Eloquent
  */
 class Budget extends Model
 {

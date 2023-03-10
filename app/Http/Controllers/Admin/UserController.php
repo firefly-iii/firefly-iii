@@ -28,10 +28,12 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\InviteUserFormRequest;
 use FireflyIII\Http\Requests\UserFormRequest;
+use FireflyIII\Models\InvitedUser;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
@@ -85,6 +87,24 @@ class UserController extends Controller
         $subTitle = (string)trans('firefly.delete_user', ['email' => $user->email]);
 
         return view('admin.users.delete', compact('user', 'subTitle'));
+    }
+
+    /**
+     * @param  InvitedUser  $invitedUser
+     * @return RedirectResponse
+     */
+    public function deleteInvite(InvitedUser $invitedUser): JsonResponse
+    {
+        Log::debug('Will now delete invitation');
+        if ($invitedUser->redeemed) {
+            Log::debug('Is already redeemed.');
+            session()->flash('error', trans('firefly.invite_is_already_redeemed', ['address' => $invitedUser->email]));
+            return response()->json(['success' => false]);
+        }
+        Log::debug('Delete!');
+        session()->flash('success', trans('firefly.invite_is_deleted', ['address' => $invitedUser->email]));
+        $this->repository->deleteInvite($invitedUser);
+        return response()->json(['success' => true]);
     }
 
     /**

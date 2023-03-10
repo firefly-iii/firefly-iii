@@ -141,7 +141,7 @@ trait ConvertsDataTypes
         $string       = str_replace($secondSearch, '', $string);
 
         // clear zalgo text (TODO also in API v2)
-        $string = preg_replace('/\pM/u', '', $string);
+        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
         if (null === $string) {
             return null;
         }

@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'この項目の内容は通貨情報がなければ無効です。',
     'not_transfer_account'           => 'このアカウントは送金に使用できるアカウントではありません。',
     'require_currency_amount'        => 'この項目の内容は、外部金額情報がなければ無効です。',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => '取引の説明はグローバルな説明と同じであってはいけません。',
     'file_invalid_mime'              => '「:mime」タイプのファイル ":name" は新しいアップロードとして受け付けられません。',
     'file_too_large'                 => 'ファイル ":name"は大きすぎます。',

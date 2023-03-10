@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Obsah tohto poľa je bez informácií o mene neplatný.',
     'not_transfer_account'           => 'Tento účet nie je účet, ktorý je možné použiť pre prevody.',
     'require_currency_amount'        => 'Obsah tohto poľa je bez informácie o cudzej mene neplatný.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Popis transakcie nesmie byť rovnaký ako globálny popis.',
     'file_invalid_mime'              => 'Súbor ":name" je typu ":mime", ktorý nie je pre nahrávanie schválený.',
     'file_too_large'                 => 'Súbor ":name" je príliš veľký.',

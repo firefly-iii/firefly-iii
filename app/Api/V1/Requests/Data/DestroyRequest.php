@@ -53,7 +53,8 @@ class DestroyRequest extends FormRequest
     public function rules(): array
     {
         $valid = 'budgets,bills,piggy_banks,rules,recurring,categories,tags,object_groups'.
-                 ',accounts,asset_accounts,expense_accounts,revenue_accounts,liabilities,transactions,withdrawals,deposits,transfers';
+                 ',accounts,asset_accounts,expense_accounts,revenue_accounts,liabilities,transactions,withdrawals,deposits,transfers'.
+                 ',not_assets_liabilities';
 
         return [
             'objects' => sprintf('required|min:1|string|in:%s', $valid),

@@ -112,12 +112,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|TransactionJournal whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
- * @mixin Eloquent
  * @property-read Collection|Location[] $locations
  * @property-read int|null $locations_count
  * @property int $the_count
  * @property int|null $user_group_id
  * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
+ * @mixin Eloquent
  */
 class TransactionJournal extends Model
 {

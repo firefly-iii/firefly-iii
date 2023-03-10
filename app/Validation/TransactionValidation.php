@@ -43,6 +43,9 @@ trait TransactionValidation
      */
     public function validateAccountInformation(Validator $validator): void
     {
+        if ($validator->errors()->count() > 0) {
+            return;
+        }
         Log::debug('Now in validateAccountInformation (TransactionValidation) ()');
         $transactions = $this->getTransactionsArray($validator);
         $data         = $validator->getData();
@@ -137,9 +140,49 @@ trait TransactionValidation
             $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
             $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
         }
-
         // sanity check for reconciliation accounts. They can't both be null.
         $this->sanityCheckReconciliation($validator, $transactionType, $index, $source, $destination);
+
+        // deposit and the source is a liability or an asset account with a different
+        // currency than submitted? then the foreign currency info must be present as well (and filled in).
+        if (0 === $validator->errors()->count() && null !== $accountValidator->source && TransactionType::DEPOSIT === ucfirst($transactionType)) {
+            $accountType = $accountValidator?->source?->accountType?->type;
+            if (in_array($accountType, config('firefly.valid_currency_account_types'), true) && !$this->hasForeignCurrencyInfo($transaction)) {
+                $validator->errors()->add(sprintf('transactions.%d.foreign_amount', $index), (string)trans('validation.require_foreign_currency'));
+            }
+        }
+
+        // withdrawal or transfer and the destination is a liability or an asset account with a different
+        // currency than submitted? then the foreign currency info must be present as well (and filled in).
+        if (0 === $validator->errors()->count() && null !== $accountValidator->destination &&
+            (TransactionType::WITHDRAWAL === ucfirst($transactionType) || (TransactionType::TRANSFER === ucfirst($transactionType)))) {
+            $accountType = $accountValidator?->destination?->accountType?->type;
+            if (in_array($accountType, config('firefly.valid_currency_account_types'), true) && !$this->hasForeignCurrencyInfo($transaction)) {
+                $validator->errors()->add(sprintf('transactions.%d.foreign_amount', $index), (string)trans('validation.require_foreign_currency'));
+            }
+        }
+        // account validator has a valid source and a valid destination
+    }
+
+    /**
+     * @param  array  $transaction
+     * @return bool
+     */
+    private function hasForeignCurrencyInfo(array $transaction): bool
+    {
+        if (!array_key_exists('foreign_currency_code', $transaction) && !array_key_exists('foreign_currency_id', $transaction)) {
+            return false;
+        }
+        if (!array_key_exists('foreign_amount', $transaction)) {
+            return false;
+        }
+        if ('' === $transaction['foreign_amount']) {
+            return false;
+        }
+        if (bccomp('0', $transaction['foreign_amount']) === 0) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -324,6 +367,9 @@ trait TransactionValidation
      */
     public function validateOneTransaction(Validator $validator): void
     {
+        if ($validator->errors()->count() > 0) {
+            return;
+        }
         Log::debug('Now in validateOneTransaction()');
         $transactions = $this->getTransactionsArray($validator);
         // need at least one transaction
@@ -341,6 +387,9 @@ trait TransactionValidation
      */
     public function validateTransactionArray(Validator $validator): void
     {
+        if ($validator->errors()->count() > 0) {
+            return;
+        }
         $transactions = $this->getTransactionsArray($validator);
         foreach ($transactions as $key => $value) {
             if (!is_int($key)) {
@@ -359,6 +408,9 @@ trait TransactionValidation
      */
     public function validateTransactionTypes(Validator $validator): void
     {
+        if ($validator->errors()->count() > 0) {
+            return;
+        }
         Log::debug('Now in validateTransactionTypes()');
         $transactions = $this->getTransactionsArray($validator);
 
@@ -427,6 +479,9 @@ trait TransactionValidation
      */
     private function validateEqualAccounts(Validator $validator): void
     {
+        if ($validator->errors()->count() > 0) {
+            return;
+        }
         Log::debug('Now in validateEqualAccounts()');
         $transactions = $this->getTransactionsArray($validator);
 

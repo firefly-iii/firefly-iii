@@ -75,9 +75,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereZoomLevel($value)
  * @method static Builder|Tag withTrashed()
  * @method static Builder|Tag withoutTrashed()
- * @mixin Eloquent
  * @property int|null $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserGroupId($value)
+ * @mixin Eloquent
  */
 class Tag extends Model
 {

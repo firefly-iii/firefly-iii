@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Nội dung của trường này không hợp lệ nếu không có thông tin về tiền tệ.',
     'not_transfer_account'           => 'Tài khoản này không phải là tài khoản có thể được sử dụng để chuyển khoản.',
     'require_currency_amount'        => 'Nội dung của trường này không hợp lệ nếu không có thông tin về số lượng nước ngoài.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Mô tả giao dịch không nên bằng mô tả toàn cầu.',
     'file_invalid_mime'              => 'File ":name" là loại ":mime" không được chấp nhận khi tải lên mới.',
     'file_too_large'                 => 'File ":name" quá lớn.',
