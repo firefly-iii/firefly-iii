@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Innholdet i dette feltet er ugyldig uten valutainformasjon.',
     'not_transfer_account'           => 'Denne kontoen er ikke en konto som kan benyttes for overføringer.',
     'require_currency_amount'        => 'Innholdet i dette feltet er ugyldig uten utenlandsk beløpsinformasjon.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Transaksjonsbeskrivelsen bør ikke være lik global beskrivelse.',
     'file_invalid_mime'              => 'Kan ikke akseptere fil ":name" av typen ":mime" for opplasting.',
     'file_too_large'                 => '":name"-filen er for stor.',

@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => '이 필드의 내용은 통화 정보가 없으면 유효하지 않습니다.',
     'not_transfer_account'           => '이 계정은 이체에 사용할 수 있는 계정이 아닙니다.',
     'require_currency_amount'        => '이 필드의 내용은 외화 수량 정보가 없으면 유효하지 않습니다.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => '거래 설명은 전역 설명과 같지 않아야 합니다.',
     'file_invalid_mime'              => '":name" 파일은 새로운 업로드를 허용하지 않는 ":mime" 타입입니다.',
     'file_too_large'                 => '":name" 파일이 너무 큽니다.',

@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => '此字段需要货币信息',
     'not_transfer_account'           => '此账户无法用于转账',
     'require_currency_amount'        => '此字段需要外币信息',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => '交易描述和全局描述不应相同',
     'file_invalid_mime'              => '文件“:name”的类型为“:mime”，系统禁止上传此类型的文件',
     'file_too_large'                 => '文件“:name”过大',

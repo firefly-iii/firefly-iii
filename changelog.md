@@ -2,6 +2,34 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.1 - 2023-03-11
+
+### Changed
+- [Issue 7129](https://github.com/firefly-iii/firefly-iii/issues/7129) Catch common email errors as log errors.
+
+### Fixed
+- [Issue 7109](https://github.com/firefly-iii/firefly-iii/issues/7109) Fix CSS in subdirectories, thanks @GaneshKandu
+- [Issue 7112](https://github.com/firefly-iii/firefly-iii/issues/7112) Version number parsing
+- [Issue 6985](https://github.com/firefly-iii/firefly-iii/issues/6985) Mandrill mail support
+- [Issue 7131](https://github.com/firefly-iii/firefly-iii/issues/7131) Fix account sorting, thanks @lflare
+- [Issue 7130](https://github.com/firefly-iii/firefly-iii/issues/7130) Fix missing date range parsers 
+- [Issue 7156](https://github.com/firefly-iii/firefly-iii/issues/7156) Default values for email settings break tokens
+- [Issue 7140](https://github.com/firefly-iii/firefly-iii/issues/7140) Header with charset would break API validation
+- [Issue 7144](https://github.com/firefly-iii/firefly-iii/issues/7144) Debug page could not handle missing log files
+- [Issue 7159](https://github.com/firefly-iii/firefly-iii/issues/7159) Bad parsing in success messages
+- [Issue 7104](https://github.com/firefly-iii/firefly-iii/issues/7104) Missing colors in dark mode
+- [Issue 7120](https://github.com/firefly-iii/firefly-iii/issues/7120) Missing borders in dark mode
+- [Issue 7156](https://github.com/firefly-iii/firefly-iii/issues/7156) Bad HTML parsing in transaction form
+- [Issue 7166](https://github.com/firefly-iii/firefly-iii/issues/7166) Rule trigger would trigger on the wrong transaction set
+- [Issue 7112](https://github.com/firefly-iii/firefly-iii/issues/7112) Content filter would strip emojis
+- [Issue 7175](https://github.com/firefly-iii/firefly-iii/issues/7175) Could not delete user invite
+- [Issue 7177](https://github.com/firefly-iii/firefly-iii/issues/7177) Missing currency info would break cron job
+
+### API
+- [Issue 7127](https://github.com/firefly-iii/firefly-iii/issues/7127) Expand API with new option for "destroy" button.
+- [Issue 7124](https://github.com/firefly-iii/firefly-iii/issues/7124) API would not break on missing foreign currency information
+
+
 ## 6.0.0 - 2023-03-03
 
 This is release **6.0.0** of Firefly III. 

@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Содержимое этого поля недействительно без информации о валюте.',
     'not_transfer_account'           => 'Этот счёт нельзя использовать для перевода.',
     'require_currency_amount'        => 'Содержимое этого поля недействительно без информации о валюте.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Описание транзакции не должно совпадать с глобальным описанием.',
     'file_invalid_mime'              => 'Файл ":name" имеет тип ":mime". Загрузка файлов такого типа невозможна.',
     'file_too_large'                 => 'Файл ":name" слишком большой.',

@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Obsah tohoto pole je neplatný bez informace o měně.',
     'not_transfer_account'           => 'Tento účet není účet, který lze použít pro převody.',
     'require_currency_amount'        => 'Obsah tohoto pole je neplatný bez informace o měně.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Popis transakce nesmí být stejný jako globální popis.',
     'file_invalid_mime'              => 'Soubor ":name" je typu ":mime", který není schválen pro nahrání.',
     'file_too_large'                 => 'Soubor ":name" je příliš velký.',

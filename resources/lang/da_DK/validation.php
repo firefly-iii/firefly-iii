@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Indholdet af dette felt er ugyldigt uden møntfodsinformation.',
     'not_transfer_account'           => 'Denne konto kan ikke benyttes til overførsler.',
     'require_currency_amount'        => 'Indholdet af dette felt er ugyldigt uden information om det udenlandske beløb.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Overførselsbeskrivelse bør ikke være den samme som den generelle beskrivelse.',
     'file_invalid_mime'              => 'Filen ":name" er af typen ":mime", som ikke er gyldig som en ny upload.',
     'file_too_large'                 => 'Filen ":name" er for stor.',

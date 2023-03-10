@@ -280,7 +280,7 @@ return [
     'visit_webhook_url'                    => 'Visiter l\'URL du webhook',
     'reset_webhook_secret'                 => 'Réinitialiser le secret du webhook',
     'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Le Webhook #{ID} ("{title}")</a> a été enregistré.',
-    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Le webhook #{ID}</a> ("{title}") a été mis à jour.',
+    'webhook_updated_link'                 => '<a href="webhooks/show/{ID}">Le webhook #{ID}</a> ("{title}") a été mis à jour.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version demande d\'autorisation',
@@ -1379,12 +1379,12 @@ return [
     'optional_field_attachments'                => 'Pièces jointes',
     'optional_field_meta_data'                  => 'Métadonnées facultatives',
     'external_url'                              => 'URL externe',
-    'pref_notification_bill_reminder'           => 'Rappel au renouvellement des factures',
+    'pref_notification_bill_reminder'           => 'Rappel à l\'expiration des factures',
     'pref_notification_new_access_token'        => 'Alerte à la création d\'un nouveau jeton d\'accès API',
     'pref_notification_transaction_creation'    => 'Alerte à la création automatique d\'une opération',
     'pref_notification_user_login'              => 'Alerte à la connexion depuis un nouvel emplacement',
     'pref_notifications'                        => 'Notifications',
-    'pref_notifications_help'                   => 'Indiquez si ce sont des notifications que vous souhaitez obtenir. Certaines notifications peuvent contenir des informations financières sensibles.',
+    'pref_notifications_help'                   => 'Sélectionnez les notifications que vous souhaitez recevoir. Certaines notifications peuvent contenir des informations financières sensibles.',
     'slack_webhook_url'                         => 'Webhook URL de Slack',
     'slack_webhook_url_help'                    => 'Si vous voulez que Firefly III vous avertisse en utilisant Slack, entrez l\'URL du webhook ici. Sinon, laissez le champ vide. Si vous êtes un administrateur, vous devez également définir cette URL dans l\'administration.',
     'slack_url_label'                           => 'URL du webhook entrant de Slack',
@@ -2364,6 +2364,8 @@ return [
 
 
     // administration
+    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
+    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
     'invite_new_user_title'                    => 'Inviter un nouvel utilisateur',
     'invite_new_user_text'                     => 'En tant qu\'administrateur, vous pouvez inviter des utilisateurs à s\'inscrire sur votre administration Firefly III. En partageant avec eux le lien direct, ils seront en mesure de créer un compte. L\'utilisateur invité et son lien d\'invitation apparaîtront dans le tableau ci-dessous. Vous êtes libre de partager le lien d\'invitation avec eux.',
     'invited_user_mail'                        => 'Adresse e-mail',
@@ -2415,7 +2417,7 @@ return [
     'admin_notification_check_admin_new_reg'   => 'Les administrateurs reçoivent une notification à l\'inscription de nouveaux utilisateurs',
     'admin_notification_check_new_version'     => 'Une nouvelle version est disponible',
     'admin_notification_check_invite_created'  => 'Un utilisateur est invité à rejoindre Firefly III',
-    'admin_notification_check_invite_redeemed' => 'Une invitation d\'utilisateur a été présentée',
+    'admin_notification_check_invite_redeemed' => 'Une invitation d\'utilisateur a été utilisée',
     'all_invited_users'                        => 'Tous les utilisateurs invités',
     'save_notification_settings'               => 'Enregistrer les paramètres',
     'notification_settings_saved'              => 'Les paramètres de notification ont été enregistrés',

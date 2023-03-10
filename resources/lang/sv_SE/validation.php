@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Innehållet i det här fältet är ogiltigt utan valutainformation.',
     'not_transfer_account'           => 'Detta är inte ett konto som kan användas för transaktioner.',
     'require_currency_amount'        => 'Innehållet i det här fältet är ogiltigt utan utländskt belopp.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Transaktions beskrivning bör inte vara samma som den globala beskrivningen.',
     'file_invalid_mime'              => 'Filen ”:name” är av typ ”:mime” som inte accepteras som en ny uppladdning.',
     'file_too_large'                 => 'Filen ”:name” är för stor.',

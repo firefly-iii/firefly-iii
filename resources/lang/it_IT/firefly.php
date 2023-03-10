@@ -280,7 +280,7 @@ return [
     'visit_webhook_url'                    => 'Visita URL webhook',
     'reset_webhook_secret'                 => 'Reimposta il segreto del webhook',
     'webhook_stored_link'                  => 'Il <a href="webhooks/show/{ID}">webhook #{ID} ("{title}")</a> è stato archiviato.',
-    'webhook_updated_link'                  => 'Il <a href="webhooks/show/{ID}">webhook #{ID} ("{title}")</a> è stato aggiornato.',
+    'webhook_updated_link'                 => 'Il <a href="webhooks/show/{ID}">webhook #{ID} ("{title}")</a> è stato aggiornato.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version Richiesta Autorizzazione',
@@ -2364,6 +2364,8 @@ return [
 
 
     // administration
+    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
+    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
     'invite_new_user_title'                    => 'Invite new user',
     'invite_new_user_text'                     => 'As an administrator, you can invite users to register on your Firefly III administration. Using the direct link you can share with them, they will be able to register an account. The invited user and their invite link will appear in the table below. You are free to share the invitation link with them.',
     'invited_user_mail'                        => 'Email address',

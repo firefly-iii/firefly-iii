@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Treść tego pola jest nieprawidłowa bez informacji o walucie.',
     'not_transfer_account'           => 'To konto nie jest kontem, które może być używane do przelewów.',
     'require_currency_amount'        => 'Treść tego pola jest nieprawidłowa bez informacji o obcej kwocie.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Opis transakcji nie powinien być równy globalnemu opisowi.',
     'file_invalid_mime'              => 'Plik ":name" jest typu ":mime", który nie jest akceptowany jako nowy plik do przekazania.',
     'file_too_large'                 => 'Plik ":name" jest zbyt duży.',

@@ -280,7 +280,7 @@ return [
     'visit_webhook_url'                    => 'Besøk URL til webhook',
     'reset_webhook_secret'                 => 'Tilbakestill Webhook nøkkel',
     'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> er lagret.',
-    'webhook_updated_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") er oppdatert.',
+    'webhook_updated_link'                 => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") er oppdatert.',
 
     // API access
     'authorization_request'                => 'Firefly III v:version autorisasjonsforespørsel',
@@ -1115,13 +1115,13 @@ return [
     'rule_trigger_not_account_nr_contains'                => 'Ingen kontonummer / IBAN inneholder ":trigger_value"',
     'rule_trigger_not_account_nr_ends'                    => 'Ingen kontonummer / IBAN slutter på":trigger_value"',
     'rule_trigger_not_account_nr_starts'                  => 'Ingen kontonummer / IBAN starter med ":trigger_value"',
-    'rule_trigger_not_category_is'                        => 'Category is not ":trigger_value"',
-    'rule_trigger_not_category_contains'                  => 'Category does not contain ":trigger_value"',
-    'rule_trigger_not_category_ends'                      => 'Category does not end on ":trigger_value"',
-    'rule_trigger_not_category_starts'                    => 'Category does not start with ":trigger_value"',
-    'rule_trigger_not_budget_is'                          => 'Budget is not ":trigger_value"',
-    'rule_trigger_not_budget_contains'                    => 'Budget does not contain ":trigger_value"',
-    'rule_trigger_not_budget_ends'                        => 'Budget does not end on ":trigger_value"',
+    'rule_trigger_not_category_is'                        => 'Kategori er ikke ":trigger_value"',
+    'rule_trigger_not_category_contains'                  => 'Kategori inneholder ikke ":trigger_value"',
+    'rule_trigger_not_category_ends'                      => 'Kategori slutter ikke på ":trigger_value"',
+    'rule_trigger_not_category_starts'                    => 'Kategori starter ikke med ":trigger_value"',
+    'rule_trigger_not_budget_is'                          => 'Budsjett er ikke ":trigger_value"',
+    'rule_trigger_not_budget_contains'                    => 'Budsjett inneholder ikke ":trigger_value"',
+    'rule_trigger_not_budget_ends'                        => 'Budsjett slutter ikke på ":trigger_value"',
     'rule_trigger_not_budget_starts'                      => 'Budget does not start with ":trigger_value"',
     'rule_trigger_not_bill_is'                            => 'Regningen er ikke ":trigger_value"',
     'rule_trigger_not_bill_contains'                      => 'Regningen inneholder ikke ":trigger_value"',
@@ -2364,6 +2364,8 @@ return [
 
 
     // administration
+    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
+    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
     'invite_new_user_title'                    => 'Invite new user',
     'invite_new_user_text'                     => 'As an administrator, you can invite users to register on your Firefly III administration. Using the direct link you can share with them, they will be able to register an account. The invited user and their invite link will appear in the table below. You are free to share the invitation link with them.',
     'invited_user_mail'                        => 'Email address',

@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Conținutul acestui câmp este nevalid fără informații despre monedă.',
     'not_transfer_account'           => 'Acest cont nu este un cont care poate fi utilizat pentru transferuri.',
     'require_currency_amount'        => 'Conținutul acestui câmp este nevalid fără informații despre monedă.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Descrierea tranzacției nu trebuie să fie egală cu descrierea globală.',
     'file_invalid_mime'              => 'Fișierul ":name" este de tip ":mime" și nu este acceptat ca o încărcare nouă.',
     'file_too_large'                 => 'Fișierul ":name" este prea mare.',
