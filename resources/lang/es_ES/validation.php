@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'El contenido de este campo no es válido sin la información montearia.',
     'not_transfer_account'           => 'Esta cuenta no es una cuenta que se pueda utilizar para transferencias.',
     'require_currency_amount'        => 'El contenido de este campo no es válido sin información de cantidad extranjera.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'La descripción de la transacción no debería ser igual a la descripción global.',
     'file_invalid_mime'              => 'El archivo ":name" es de tipo ":mime", el cual no se acepta.',
     'file_too_large'                 => 'El archivo ":name" es demasiado grande.',
@@ -166,8 +167,8 @@ return [
     'unique_piggy_bank_for_user' => 'En nombre de la hucha debe ser único.',
     'unique_object_group'        => 'El nombre del grupo debe ser único',
     'starts_with'                => 'El valor debe comenzar con :values.',
-    'unique_webhook'             => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'    => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
+    'unique_webhook'             => 'Ya tiene un webhook con esta combinación de URL, activador, respuesta y entrega.',
+    'unique_existing_webhook'    => 'Ya tiene otro webhook con esta combinación de URL, activador, respuesta y entrega.',
     'same_account_type'          => 'Ambas cuentas deben ser del mismo tipo de cuenta',
     'same_account_currency'      => 'Ambas cuentas deben tener la misma configuración de moneda',
 
@@ -231,7 +232,7 @@ return [
     'withdrawal_dest_need_data'   => 'Necesita obtener un ID de cuenta de destino válido y/o nombre de cuenta de destino válido para continuar.',
     'withdrawal_dest_bad_data'    => 'No se pudo encontrar una cuenta de destino válida buscando ID ":id" o nombre ":name".',
 
-    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+    'reconciliation_source_bad_data' => 'No se ha podido encontrar una cuenta de reconciliación válida al buscar por ID ":id" o nombre ":name".',
 
     'generic_source_bad_data' => 'No se pudo encontrar una cuenta de origen válida al buscar el ID ":id" o nombre ":name".',
 
@@ -263,7 +264,7 @@ return [
     'lc_source_need_data'           => 'Necesita obtener un ID de cuenta de origen válido para continuar.',
     'ob_dest_need_data'             => 'Necesita obtener un ID de cuenta de destino válido y/o nombre de cuenta de destino válido para continuar.',
     'ob_dest_bad_data'              => 'No se pudo encontrar una cuenta de destino válida buscando ID ":id" o nombre ":name".',
-    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
+    'reconciliation_either_account' => 'Para enviar una reconciliación, debe enviar una cuenta de origen o de destino. Ni ambas ni ninguna de las dos.',
 
     'generic_invalid_source'      => 'No puedes usar esta cuenta como cuenta de origen.',
     'generic_invalid_destination' => 'No puede usar esta cuenta como cuenta de destino.',

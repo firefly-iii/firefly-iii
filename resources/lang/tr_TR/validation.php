@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Bu alanın içeriği para birimi bilgileri geçersiz.',
     'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'İşlem açıklaması genel açıklama eşit değildir.',
     'file_invalid_mime'              => '":name" dosyası ":mime" türünde olup yeni bir yükleme olarak kabul edilemez.',
     'file_too_large'                 => '":name" dosyası çok büyük.',

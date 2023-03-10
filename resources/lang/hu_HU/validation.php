@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Ennek a mezőnek a tartalma érvénytelen pénznem információ nélkül.',
     'not_transfer_account'           => 'Ez a fiók nem használható fel tranzakciókhoz.',
     'require_currency_amount'        => 'Ennek a mezőnek a tartalma érvénytelen devizanem információ nélkül.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'A tranzakció leírása nem egyezhet meg a globális leírással.',
     'file_invalid_mime'              => '":name" fájl ":mime" típusú ami nem lehet új feltöltés.',
     'file_too_large'                 => '":name" fájl túl nagy.',

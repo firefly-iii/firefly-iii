@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'The content of this field is invalid without currency information.',
     'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => 'Vsebina tega polja ni veljavna brez podatkov o tujih zneskih.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Transaction description should not equal global description.',
     'file_invalid_mime'              => 'File ":name" is of type ":mime" which is not accepted as a new upload.',
     'file_too_large'                 => 'File ":name" is too large.',

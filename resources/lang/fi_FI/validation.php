@@ -66,6 +66,7 @@ return [
     'require_currency_info'          => 'Ilman valuuttatietoa tämän kentän sisältö on virheellinen.',
     'not_transfer_account'           => 'Tätä tiliä ei voi käyttää siirroissa.',
     'require_currency_amount'        => 'Tämän kentän sisältö on virheellinen ilman ulkomaanvaluuttatietoa.',
+    'require_foreign_currency'       => 'This field requires a number',
     'equal_description'              => 'Tapahtuman kuvaus ei saisi olla sama kuin yleiskuvaus.',
     'file_invalid_mime'              => 'Lähetettävän tiedoston ":name" tyyppi ei voi olla ":mime".',
     'file_too_large'                 => 'Tiedoston ":name" koko on liian suuri.',
