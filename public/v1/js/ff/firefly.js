@@ -74,11 +74,19 @@ $(function () {
         function (start, end, label) {
 
             // send post.
-            $.post(dateRangeMeta.url, {
-                start: start.format('YYYY-MM-DD'),
-                end: end.format('YYYY-MM-DD'),
-                label: label,
-                _token: token
+            $.ajax({
+                url: dateRangeMeta.url,
+                data: {
+                    start: start.format('YYYY-MM-DD'),
+                    end: end.format('YYYY-MM-DD'),
+                    label: label,
+                    _token: token
+                },
+                type: 'POST',
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).done(function () {
                 window.location.reload(true);
             }).fail(function () {
