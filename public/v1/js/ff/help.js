@@ -45,7 +45,7 @@ function showHelp(e) {
 }
 
 function enableGuidance(route, specialPage) {
-    $.post('json/intro/enable/' + route + '/' + specialPage, {_token: token}).done(function (data) {
+    $.post('json/intro/enable/' + route + '/' + specialPage).done(function (data) {
         alert(data.message);
     }).fail(function () {
         console.error('Could not re-enable introduction.');

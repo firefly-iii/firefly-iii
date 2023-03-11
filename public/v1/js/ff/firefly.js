@@ -22,9 +22,7 @@
 
 $.ajaxSetup({
     headers: {
-        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
-        'Content-Type': 'application/json'
-
+        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
     }
 });
 
@@ -79,8 +77,7 @@ $(function () {
                 data: {
                     start: start.format('YYYY-MM-DD'),
                     end: end.format('YYYY-MM-DD'),
-                    label: label,
-                    _token: token
+                    label: label
                 },
                 type: 'POST',
                 headers: {
