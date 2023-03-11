@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Deze account kan je niet gebruiken voor overschrijvingen.',
     'require_currency_amount'        => 'De inhoud van dit veld is ongeldig zonder bedrag in vreemde valuta.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'Transactiebeschrijving mag niet gelijk zijn aan globale beschrijving.',
     'file_invalid_mime'              => 'Bestand ":name" is van het type ":mime", en die kan je niet uploaden.',
     'file_too_large'                 => 'Bestand ":name" is te groot.',

@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Цей рахунок не є рахунком, який може бути використаний для переказу.',
     'require_currency_amount'        => 'Вміст цього поля є недійсним без інформації про валюту.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'Опис транзакції має відрізнятися від глобального опису.',
     'file_invalid_mime'              => 'Файл ":name" має заборонений для завантаження тип ":mime".',
     'file_too_large'                 => 'Файл ":name" надто великий.',

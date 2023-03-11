@@ -264,4 +264,32 @@ class AccountValidator
 
         return null;
     }
+
+    /**
+     * @param  Account|null  $account
+     */
+    public function setDestination(?Account $account): void
+    {
+        if (null === $account) {
+            Log::debug('AccountValidator destination is set to NULL');
+        }
+        if (null !== $account) {
+            Log::debug(sprintf('AccountValidator destination is set to #%d: "%s" (%s)', $account->id, $account->name, $account?->accountType->type));
+        }
+        $this->destination = $account;
+    }
+
+    /**
+     * @param  Account|null  $account
+     */
+    public function setSource(?Account $account): void
+    {
+        if (null === $account) {
+            Log::debug('AccountValidator source is set to NULL');
+        }
+        if (null !== $account) {
+            Log::debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account?->accountType->type));
+        }
+        $this->source = $account;
+    }
 }

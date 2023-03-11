@@ -91,7 +91,7 @@ trait LiabilityValidation
                 return false;
             }
             Log::debug(sprintf('Return true, found #%d ("%s")', $result->id, $result->name));
-            $this->source = $result;
+            $this->setSource($result);
             return true;
         }
 
@@ -109,7 +109,7 @@ trait LiabilityValidation
             $account              = new Account();
             $accountType          = AccountType::whereType(AccountType::LIABILITY_CREDIT)->first();
             $account->accountType = $accountType;
-            $this->source         = $account;
+            $this->setSource($account);
         }
 
         return $result;

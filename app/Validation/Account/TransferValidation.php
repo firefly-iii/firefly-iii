@@ -59,7 +59,7 @@ trait TransferValidation
 
             return false;
         }
-        $this->destination = $search;
+        $this->setDestination($search);
 
         // must not be the same as the source account
         if (null !== $this->source && $this->source->id === $this->destination->id) {
@@ -116,7 +116,7 @@ trait TransferValidation
 
             return false;
         }
-        $this->source = $search;
+        $this->setSource($search);
         Log::debug('Valid source!');
 
         return true;

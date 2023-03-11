@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## v6.0.2 - 2023-03-11
+
+### Fixed
+- [Issue 7186](https://github.com/firefly-iii/firefly-iii/issues/7186) Fix broken date range
+- [Issue 7188](https://github.com/firefly-iii/firefly-iii/issues/7188) Fix broken search
+- [Issue 7189](https://github.com/firefly-iii/firefly-iii/issues/7189) Too strict account validation
+- [Issue 7142](https://github.com/firefly-iii/firefly-iii/issues/7142) Better contrast in dark mode
+
 ## 6.0.1 - 2023-03-11
 
 ### Changed

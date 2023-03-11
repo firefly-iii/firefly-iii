@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Aquest compte no és un compte que puguis fer servir per transferències.',
     'require_currency_amount'        => 'El contingut d\'aquest camp no és vàlid sense informació de la quantitat estrangera.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'La descripció de la transacció no hauria de ser igual a la descripció global.',
     'file_invalid_mime'              => 'El fitxer ":name" és de tipus ":mime", el qual no s\'accepta com a pujada.',
     'file_too_large'                 => 'El fitxer ":name" és massa gran.',

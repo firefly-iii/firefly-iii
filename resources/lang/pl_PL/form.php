@@ -221,7 +221,7 @@ return [
     'login_name'                  => 'Login',
     'is_owner'                    => 'Czy admin?',
     'url'                         => 'URL',
-    'bill_end_date'               => 'End date',
+    'bill_end_date'               => 'Data końcowa',
 
     // import
     'apply_rules'                 => 'Zastosuj reguły',
