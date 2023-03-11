@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Validation;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Validation\Validator;
 use Log;
 
@@ -143,25 +145,133 @@ trait TransactionValidation
         // sanity check for reconciliation accounts. They can't both be null.
         $this->sanityCheckReconciliation($validator, $transactionType, $index, $source, $destination);
 
-        // deposit and the source is a liability or an asset account with a different
-        // currency than submitted? then the foreign currency info must be present as well (and filled in).
-        if (0 === $validator->errors()->count() && null !== $accountValidator->source && TransactionType::DEPOSIT === ucfirst($transactionType)) {
-            $accountType = $accountValidator?->source?->accountType?->type;
-            if (in_array($accountType, config('firefly.valid_currency_account_types'), true) && !$this->hasForeignCurrencyInfo($transaction)) {
-                $validator->errors()->add(sprintf('transactions.%d.foreign_amount', $index), (string)trans('validation.require_foreign_currency'));
-            }
+        // sanity check for currency information.
+        $this->sanityCheckForeignCurrency($validator, $accountValidator, $transaction, $transactionType, $index);
+    }
+
+    /**
+     * TODO describe this method.
+     * @param  Validator  $validator
+     * @param  AccountValidator  $accountValidator
+     * @param  array  $transaction
+     * @param  string  $transactionType
+     * @param  int  $index
+     * @return void
+     */
+    private function sanityCheckForeignCurrency(
+        Validator $validator,
+        AccountValidator $accountValidator,
+        array $transaction,
+        string $transactionType,
+        int $index
+    ): void {
+        Log::debug('Now in sanityCheckForeignCurrency()');
+        if (0 !== $validator->errors()->count()) {
+            Log::debug('Already have errors, return');
+            return;
+        }
+        if (null === $accountValidator->source) {
+            Log::debug('No source, return');
+            return;
+        }
+        if (null === $accountValidator->destination) {
+            Log::debug('No destination, return');
+            return;
+        }
+        $source      = $accountValidator->source;
+        $destination = $accountValidator->destination;
+
+        Log::debug(sprintf('Source: #%d "%s (%s)"', $source->id, $source->name, $source->accountType->type));
+        Log::debug(sprintf('Destination: #%d "%s" (%s)', $destination->id, $destination->name, $source->accountType->type));
+
+        if (!$this->isLiabilityOrAsset($source) || !$this->isLiabilityOrAsset($destination)) {
+            Log::debug('Any account must be liability or asset account to continue.');
+            return;
         }
 
-        // withdrawal or transfer and the destination is a liability or an asset account with a different
-        // currency than submitted? then the foreign currency info must be present as well (and filled in).
-        if (0 === $validator->errors()->count() && null !== $accountValidator->destination &&
-            (TransactionType::WITHDRAWAL === ucfirst($transactionType) || (TransactionType::TRANSFER === ucfirst($transactionType)))) {
-            $accountType = $accountValidator?->destination?->accountType?->type;
-            if (in_array($accountType, config('firefly.valid_currency_account_types'), true) && !$this->hasForeignCurrencyInfo($transaction)) {
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository   = app(AccountRepositoryInterface::class);
+        $defaultCurrency     = app('amount')->getDefaultCurrency();
+        $sourceCurrency      = $accountRepository->getAccountCurrency($source) ?? $defaultCurrency;
+        $destinationCurrency = $accountRepository->getAccountCurrency($destination) ?? $defaultCurrency;
+        // if both accounts have the same currency, continue.
+        if ($sourceCurrency->code === $destinationCurrency->code) {
+            Log::debug('Both accounts have the same currency, continue.');
+            return;
+        }
+
+        if (TransactionType::DEPOSIT === ucfirst($transactionType)) {
+            // use case: deposit from liability account to an asset account
+            // the foreign amount must be in the currency of the source
+            // the amount must be in the currency of the destination
+
+            // no foreign currency information is present:
+            if (!$this->hasForeignCurrencyInfo($transaction)) {
                 $validator->errors()->add(sprintf('transactions.%d.foreign_amount', $index), (string)trans('validation.require_foreign_currency'));
+                return;
+            }
+
+            // wrong currency information is present
+            $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
+            if ($foreignCurrencyCode !== $sourceCurrency->code) {
+                $validator->errors()->add(sprintf('transactions.%d.foreign_currency_code', $index), (string)trans('validation.require_foreign_src'));
+                return;
             }
         }
-        // account validator has a valid source and a valid destination
+        if (TransactionType::TRANSFER === ucfirst($transactionType) || TransactionType::WITHDRAWAL === ucfirst($transactionType)) {
+            // use case: withdrawal from asset account to a liability account.
+            // the foreign amount must be in the currency of the destination
+            // the amount must be in the currency of the source
+
+            // use case: transfer between accounts with different currencies.
+            // the foreign amount must be in the currency of the destination
+            // the amount must be in the currency of the source
+
+            // no foreign currency information is present:
+            if (!$this->hasForeignCurrencyInfo($transaction)) {
+                $validator->errors()->add(sprintf('transactions.%d.foreign_amount', $index), (string)trans('validation.require_foreign_currency'));
+                return;
+            }
+
+            // wrong currency information is present
+            $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
+            if ($foreignCurrencyCode !== $destinationCurrency->code) {
+                $validator->errors()->add(sprintf('transactions.%d.foreign_currency_code', $index), (string)trans('validation.require_foreign_dest'));
+            }
+        }
+    }
+
+    /**
+     * @param  Account  $account
+     * @return bool
+     */
+    private function isLiabilityOrAsset(Account $account): bool
+    {
+        return $this->isLiability($account) || $this->isAsset($account);
+    }
+
+    /**
+     * @param  Account  $account
+     * @return bool
+     */
+    private function isLiability(Account $account): bool
+    {
+        $type = $account->accountType?->type;
+        if (in_array($type, config('firefly.valid_liabilities'), true)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param  Account  $account
+     * @return bool
+     */
+    private function isAsset(Account $account): bool
+    {
+        $type = $account->accountType?->type;
+        return $type === AccountType::ASSET;
     }
 
     /**

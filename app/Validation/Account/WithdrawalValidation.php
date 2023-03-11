@@ -61,7 +61,7 @@ trait WithdrawalValidation
 
             return false;
         }
-        $this->source = $search;
+        $this->setSource($search);
         Log::debug('Valid source account!');
 
         return true;
@@ -108,7 +108,7 @@ trait WithdrawalValidation
             if (null !== $found) {
                 $type = $found->accountType->type;
                 if (in_array($type, $validTypes, true)) {
-                    $this->destination = $found;
+                    $this->setDestination($found);
                     return true;
                 }
                 $this->destError = (string)trans('validation.withdrawal_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
@@ -151,7 +151,7 @@ trait WithdrawalValidation
 
             return false;
         }
-        $this->source = $search;
+        $this->setSource($search);
         Log::debug('Valid source account!');
 
         return true;

@@ -70,7 +70,7 @@ trait OBValidation
             }
             if (null !== $search) {
                 Log::debug(sprintf('findExistingAccount() returned #%d ("%s"), so the result is true.', $search->id, $search->name));
-                $this->destination = $search;
+                $this->setDestination($search);
                 $result            = true;
             }
         }
@@ -127,7 +127,7 @@ trait OBValidation
             // the source resulted in an account, AND it's of a valid type.
             if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug(sprintf('Found account of correct type: #%d, "%s"', $search->id, $search->name));
-                $this->source = $search;
+                $this->setSource($search);
                 $result       = true;
             }
         }
@@ -141,7 +141,7 @@ trait OBValidation
             $account              = new Account();
             $accountType          = AccountType::whereType(AccountType::INITIAL_BALANCE)->first();
             $account->accountType = $accountType;
-            $this->source         = $account;
+            $this->setSource($account);
         }
 
         return $result ?? false;
