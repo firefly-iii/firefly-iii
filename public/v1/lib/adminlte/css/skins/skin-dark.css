@@ -12,6 +12,9 @@
   background-color: #55606a;
   border-color: #454e56;
 }
+.skin-firefly-iii .progress {
+  background-color: #3a4148;
+}
 .skin-firefly-iii .bootstrap-tagsinput {
   background-color: #353c42;
   border: 1px solid #353c42 !important;
@@ -99,7 +102,7 @@
   color: #bec5cb !important;
 }
 .skin-firefly-iii .table-striped > tbody > tr:nth-of-type(odd) {
-  background-color: #454e56;
+  background-color: #373f45;
 }
 .skin-firefly-iii .table-hover > tbody > tr:hover {
   background-color: #454e56;
@@ -497,4 +500,7 @@
 }
 .skin-firefly-iii .select2-container--default.select2-container--open {
   background-color: #272c30;
+}
+.skin-firefly-iii .sidebar-menu > li.header {
+  color: #85929e;
 }
