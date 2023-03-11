@@ -649,8 +649,8 @@ return [
     'search_modifier_created_at_on_year'                  => 'La transacción fue creada en el año":value"',
     'search_modifier_created_at_on_month'                 => 'La transacción fue creada en el mes ":value"',
     'search_modifier_created_at_on_day'                   => 'Transaction was created on day of month ":value"',
-    'search_modifier_not_created_at_on_year'              => 'Transaction was not created in year ":value"',
-    'search_modifier_not_created_at_on_month'             => 'Transaction was not created in month ":value"',
+    'search_modifier_not_created_at_on_year'              => 'La transacción no fue creada en el año ":value"',
+    'search_modifier_not_created_at_on_month'             => 'La transacción no fue creada en el mes ":value"',
     'search_modifier_not_created_at_on_day'               => 'Transaction was not created on day of month ":value"',
     'search_modifier_created_at_before_year'              => 'Transaction was created in or before year ":value"',
     'search_modifier_created_at_before_month'             => 'Transaction was created in or before month ":value"',
@@ -2364,8 +2364,8 @@ return [
 
 
     // administration
-    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
-    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
+    'invite_is_already_redeemed'               => 'La invitación a ":address" ya ha sido canjeada.',
+    'invite_is_deleted'                        => 'La invitación a ":address" ha sido eliminada.',
     'invite_new_user_title'                    => 'Invite new user',
     'invite_new_user_text'                     => 'As an administrator, you can invite users to register on your Firefly III administration. Using the direct link you can share with them, they will be able to register an account. The invited user and their invite link will appear in the table below. You are free to share the invitation link with them.',
     'invited_user_mail'                        => 'Email address',

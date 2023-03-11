@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Denne konto kan ikke benyttes til overførsler.',
     'require_currency_amount'        => 'Indholdet af dette felt er ugyldigt uden information om det udenlandske beløb.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'Overførselsbeskrivelse bør ikke være den samme som den generelle beskrivelse.',
     'file_invalid_mime'              => 'Filen ":name" er af typen ":mime", som ikke er gyldig som en ny upload.',
     'file_too_large'                 => 'Filen ":name" er for stor.',

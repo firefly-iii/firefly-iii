@@ -2364,8 +2364,8 @@ return [
 
 
     // administration
-    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
-    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
+    'invite_is_already_redeemed'               => 'L\'invitation à ":address" a déjà été utilisée.',
+    'invite_is_deleted'                        => 'L\'invitation à ":address" a été supprimée.',
     'invite_new_user_title'                    => 'Inviter un nouvel utilisateur',
     'invite_new_user_text'                     => 'En tant qu\'administrateur, vous pouvez inviter des utilisateurs à s\'inscrire sur votre administration Firefly III. En partageant avec eux le lien direct, ils seront en mesure de créer un compte. L\'utilisateur invité et son lien d\'invitation apparaîtront dans le tableau ci-dessous. Vous êtes libre de partager le lien d\'invitation avec eux.',
     'invited_user_mail'                        => 'Adresse e-mail',
