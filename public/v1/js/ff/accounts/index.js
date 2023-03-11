@@ -87,10 +87,14 @@ function stopSorting() {
         // post new position via API!
         //$.post('api/v1/accounts/' + id, {order: newOrder, _token: token});
         $.ajax({
-                   url: 'api/v1/accounts/' + id,
-                   data: JSON.stringify({order: newOrder}),
-                   type: 'PUT',
-               });
+            url: 'api/v1/accounts/' + id,
+            data: JSON.stringify({order: newOrder}),
+            type: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+            },
+        });
     });
 
 }
