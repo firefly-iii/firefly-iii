@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Ez a fiók nem használható fel tranzakciókhoz.',
     'require_currency_amount'        => 'Ennek a mezőnek a tartalma érvénytelen devizanem információ nélkül.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'A tranzakció leírása nem egyezhet meg a globális leírással.',
     'file_invalid_mime'              => '":name" fájl ":mime" típusú ami nem lehet új feltöltés.',
     'file_too_large'                 => '":name" fájl túl nagy.',

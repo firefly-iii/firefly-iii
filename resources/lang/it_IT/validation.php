@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Questo conto non è un conto che può essere usato per i trasferimenti.',
     'require_currency_amount'        => 'Il contenuto di questo campo non è valido senza le informazioni sull\'importo estero.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'La descrizione della transazione non deve essere uguale alla descrizione globale.',
     'file_invalid_mime'              => 'Il file ":name" è di tipo ":mime" che non è accettato come nuovo caricamento.',
     'file_too_large'                 => 'Il file ":name" è troppo grande.',

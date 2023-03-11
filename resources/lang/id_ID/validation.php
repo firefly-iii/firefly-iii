@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Akun ini bukan sebuah akun yang dapat digunakan untuk transfer.',
     'require_currency_amount'        => 'Isi dalam bidang ini tidak valid jika tidak disertai informasi jumlah mata uang asing.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'Deskripsi transaksi harus berbeda dari deskripsi umum.',
     'file_invalid_mime'              => 'File ":name" adalah tipe ":mime" yang tidak diterima sebagai upload baru.',
     'file_too_large'                 => 'File "; name" terlalu besar.',

@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Αυτός ο λογαριασμός δεν είναι λογαριασμός που μπορεί να χρησιμοποιηθεί για συναλλαγές.',
     'require_currency_amount'        => 'Το περιεχόμενο αυτού του πεδίου δεν είναι έγκυρο χωρίς πληροφορίες ετερόχθονος ποσού.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'Η περιγραφή της συναλλαγής δεν πρέπει να ισούται με καθολική περιγραφή.',
     'file_invalid_mime'              => 'Το αρχείο ":name" είναι τύπου ":mime" που δεν είναι αποδεκτός ως νέας μεταφόρτωσης.',
     'file_too_large'                 => 'Το αρχείο ":name" είναι πολύ μεγάλο.',

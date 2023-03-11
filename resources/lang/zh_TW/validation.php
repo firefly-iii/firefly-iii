@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'This account is not an account that can be used for transfers.',
     'require_currency_amount'        => '此欄位內容須要外幣資訊。',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => '交易描述不應等同全域描述。',
     'file_invalid_mime'              => '檔案 ":name" 類型為 ":mime"，不允許上載。',
     'file_too_large'                 => '檔案 ":name" 過大。',

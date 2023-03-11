@@ -67,6 +67,8 @@ return [
     'not_transfer_account'           => 'Този акаунт не е акаунт, който може да се използва за прехвърляния.',
     'require_currency_amount'        => 'Съдържанието на това поле е невалидно без стойност в другата валута.',
     'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
+    'require_foreign_src'            => 'This field value must match the currency of the source account.',
     'equal_description'              => 'Описанието на транзакцията не трябва да е равно на общото описание.',
     'file_invalid_mime'              => 'Файлът ":name" е от тип ":mime", който не се приема за качване.',
     'file_too_large'                 => 'Файлът ":name" е твърде голям.',

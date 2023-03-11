@@ -2364,8 +2364,8 @@ return [
 
 
     // administration
-    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
-    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
+    'invite_is_already_redeemed'               => 'Die Einladung zu „:address“ wurde bereits eingelöst.',
+    'invite_is_deleted'                        => 'Die Einladung zu „:address“ wurde gelöscht.',
     'invite_new_user_title'                    => 'Neuen Nutzer einladen',
     'invite_new_user_text'                     => 'Als Administrator können Sie Benutzer einladen, sich auf Ihrer Firefly III Administration zu registrieren. Über den direkten Link, den Sie mit ihnen teilen können, können diese ein Konto registrieren. Der eingeladene Benutzer und sein Einladungslink erscheinen in der unten stehenden Tabelle. Sie können den Einladungslink mit ihm teilen.',
     'invited_user_mail'                        => 'E-Mail Adresse',
