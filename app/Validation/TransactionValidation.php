@@ -203,6 +203,8 @@ trait TransactionValidation
         Log::debug(sprintf('Source account expects %s', $sourceCurrency->code));
         Log::debug(sprintf('Destination account expects %s', $destinationCurrency->code));
 
+        Log::debug(sprintf('Amount is %s', $transaction['amount']));
+
         if (TransactionType::DEPOSIT === ucfirst($transactionType)) {
             Log::debug(sprintf('Processing as a "%s"', $transactionType));
             // use case: deposit from liability account to an asset account
@@ -219,7 +221,7 @@ trait TransactionValidation
             $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
             $foreignCurrencyId   = (int)($transaction['foreign_currency_id'] ?? 0);
             Log::debug(sprintf('Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
-            if ($foreignCurrencyCode !== $sourceCurrency->code && $foreignCurrencyId !== $sourceCurrency->id) {
+            if ($foreignCurrencyCode !== $sourceCurrency->code && $foreignCurrencyId !== (int)$sourceCurrency->id) {
                 $validator->errors()->add(sprintf('transactions.%d.foreign_currency_code', $index), (string)trans('validation.require_foreign_src'));
                 return;
             }
@@ -244,7 +246,9 @@ trait TransactionValidation
             $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
             $foreignCurrencyId   = (int)($transaction['foreign_currency_id'] ?? 0);
             Log::debug(sprintf('Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
-            if ($foreignCurrencyCode !== $destinationCurrency->code && $foreignCurrencyId !== $destinationCurrency->id) {
+            if ($foreignCurrencyCode !== $destinationCurrency->code && $foreignCurrencyId !== (int)$destinationCurrency->id) {
+                Log::debug(sprintf('No match on code, "%s" vs "%s"', $foreignCurrencyCode, $destinationCurrency->code));
+                Log::debug(sprintf('No match on ID, #%d vs #%d', $foreignCurrencyId, $destinationCurrency->id));
                 $validator->errors()->add(sprintf('transactions.%d.foreign_amount', $index), (string)trans('validation.require_foreign_dest'));
             }
         }
