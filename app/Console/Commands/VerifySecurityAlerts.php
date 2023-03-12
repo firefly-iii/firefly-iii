@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 use League\Flysystem\FilesystemException;
 use Log;
 use Storage;
@@ -55,9 +56,7 @@ class VerifySecurityAlerts extends Command
      */
     public function handle(): int
     {
-        // remove old advisory
-        app('fireflyconfig')->delete('upgrade_security_message');
-        app('fireflyconfig')->delete('upgrade_security_level');
+        $this->removeOldAdvisory();
 
         // check for security advisories.
         $version = config('firefly.version');
@@ -76,8 +75,7 @@ class VerifySecurityAlerts extends Command
             if ($version === $array['version'] && true === $array['advisory']) {
                 Log::debug(sprintf('Version %s has an alert!', $array['version']));
                 // add advisory to configuration.
-                app('fireflyconfig')->set('upgrade_security_message', $array['message']);
-                app('fireflyconfig')->set('upgrade_security_level', $array['level']);
+                $this->saveSecurityAdvisory($array);
 
                 // depends on level
                 if ('info' === $array['level']) {
@@ -109,5 +107,32 @@ class VerifySecurityAlerts extends Command
         Log::debug('This version is not mentioned.');
 
         return 0;
+    }
+
+    /**
+     * @return void
+     */
+    private function removeOldAdvisory(): void
+    {
+        try {
+            app('fireflyconfig')->delete('upgrade_security_message');
+            app('fireflyconfig')->delete('upgrade_security_level');
+        } catch (QueryException $e) {
+            Log::debug(sprintf('Could not delete old security advisory, but thats OK: %s', $e->getMessage()));
+        }
+    }
+
+    /**
+     * @param  array  $array
+     * @return void
+     */
+    private function saveSecurityAdvisory(array $array): void
+    {
+        try {
+            app('fireflyconfig')->set('upgrade_security_message', $array['message']);
+            app('fireflyconfig')->set('upgrade_security_level', $array['level']);
+        } catch (QueryException $e) {
+            Log::debug(sprintf('Could not save new security advisory, but thats OK: %s', $e->getMessage()));
+        }
     }
 }
