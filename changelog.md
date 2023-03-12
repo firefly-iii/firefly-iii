@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.0.3 - 2023-03-13
+
+### Fixed
+- [Issue 7201](https://github.com/firefly-iii/firefly-iii/issues/7201) Security-related console automatically command runs before a database is set, and may error out.
 
 ## v6.0.2 - 2023-03-11
 
