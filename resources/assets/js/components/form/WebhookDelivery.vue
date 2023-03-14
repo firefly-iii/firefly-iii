@@ -29,7 +29,6 @@
           v-model="delivery"
           :title="$t('form.webhook_delivery')"
           class="form-control"
-          @input="handleInput"
           name="webhook_delivery"
       >
         <option v-for="delivery in this.deliveries"
@@ -78,15 +77,15 @@ export default {
   watch: {
     value() {
       this.delivery = this.value;
+    },
+    delivery(newValue) {
+      this.$emit('input', newValue);
     }
   },
   methods: {
     hasError() {
       return this.error?.length > 0;
-    },
-    handleInput() {
-      this.$emit('input', this.delivery);
-    },
+    }
   },
 }
 </script>
