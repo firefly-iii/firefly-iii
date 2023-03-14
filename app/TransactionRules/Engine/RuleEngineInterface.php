@@ -73,4 +73,10 @@ interface RuleEngineInterface
      * @param  User  $user
      */
     public function setUser(User $user): void;
+
+    /**
+     * @param  bool  $refreshTriggers
+     * @return void
+     */
+    public function setRefreshTriggers(bool $refreshTriggers): void;
 }

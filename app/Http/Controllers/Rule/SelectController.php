@@ -164,6 +164,7 @@ class SelectController extends Controller
 
         // set rules:
         $newRuleEngine->setRules(new Collection([$rule]));
+        $newRuleEngine->setRefreshTriggers(false);
         $collection = $newRuleEngine->find();
         $collection = $collection->slice(0, 20);
 
