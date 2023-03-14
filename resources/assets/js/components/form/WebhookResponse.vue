@@ -29,7 +29,6 @@
           v-model="response"
           :title="$t('form.webhook_response')"
           class="form-control"
-          @input="handleInput"
           name="webhook_response"
       >
         <option v-for="response in this.responses"
@@ -70,7 +69,10 @@ export default {
   watch: {
     value() {
       this.response = this.value;
-    }
+    },
+  response(newValue) {
+    this.$emit('input', newValue);
+  }
   },
   mounted() {
     this.response = this.value;
@@ -83,10 +85,7 @@ export default {
   methods: {
     hasError() {
       return this.error?.length > 0;
-    },
-    handleInput() {
-      this.$emit('input', this.response);
-    },
+    }
   },
 }
 </script>
