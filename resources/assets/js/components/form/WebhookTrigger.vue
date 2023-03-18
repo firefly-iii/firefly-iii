@@ -29,7 +29,6 @@
           v-model="trigger"
           :title="$t('form.webhook_trigger')"
           class="form-control"
-          @input="handleInput"
           name="webhook_trigger"
       >
         <option v-for="trigger in this.triggers"
@@ -78,15 +77,15 @@ export default {
   watch: {
     value() {
       this.trigger = this.value;
+    },
+    trigger(newValue) {
+      this.$emit('input', newValue);
     }
   },
   methods: {
     hasError() {
       return this.error?.length > 0;
-    },
-    handleInput() {
-      this.$emit('input', this.trigger);
-    },
+    }
   },
 }
 </script>

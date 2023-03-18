@@ -47,6 +47,7 @@ class SearchRuleEngine implements RuleEngineInterface
     private array      $resultCount;
     private Collection $rules;
     private User       $user;
+    private bool       $refreshTriggers;
 
     public function __construct()
     {
@@ -54,6 +55,9 @@ class SearchRuleEngine implements RuleEngineInterface
         $this->groups      = new Collection();
         $this->operators   = [];
         $this->resultCount = [];
+
+        // always collect the triggers from the database, unless indicated otherwise.
+        $this->refreshTriggers = true;
     }
 
     /**
@@ -97,8 +101,13 @@ class SearchRuleEngine implements RuleEngineInterface
     {
         Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
         $searchArray = [];
-
-        $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        $triggers    = [];
+        if ($this->refreshTriggers) {
+            $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        }
+        if (!$this->refreshTriggers) {
+            $triggers = $rule->ruleTriggers;
+        }
 
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
@@ -224,11 +233,15 @@ class SearchRuleEngine implements RuleEngineInterface
     private function findNonStrictRule(Rule $rule): Collection
     {
         // start a search query for individual each trigger:
-        $total = new Collection();
-        $count = 0;
-
-        /** @var Collection $triggers */
-        $triggers = $rule->ruleTriggers;
+        $total    = new Collection();
+        $count    = 0;
+        $triggers = [];
+        if ($this->refreshTriggers) {
+            $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        }
+        if (!$this->refreshTriggers) {
+            $triggers = $rule->ruleTriggers;
+        }
 
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
@@ -548,5 +561,13 @@ class SearchRuleEngine implements RuleEngineInterface
                 $this->rules->push($rule);
             }
         }
+    }
+
+    /**
+     * @param  bool  $refreshTriggers
+     */
+    public function setRefreshTriggers(bool $refreshTriggers): void
+    {
+        $this->refreshTriggers = $refreshTriggers;
     }
 }

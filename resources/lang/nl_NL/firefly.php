@@ -2364,8 +2364,8 @@ return [
 
 
     // administration
-    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
-    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
+    'invite_is_already_redeemed'               => 'De uitnodiging aan ":address" is al gebruikt.',
+    'invite_is_deleted'                        => 'De uitnodiging aan ":address" is verwijderd.',
     'invite_new_user_title'                    => 'Nieuwe gebruiker uitnodigen',
     'invite_new_user_text'                     => 'Als beheerder kun je gebruikers uitnodigen om zich te registreren bij jouw Firefly III-installatie. Je kan een directe link maken en deze vervolgens delen met gebruiker. Hiermee kunnen ze een account maken. De uitgenodigde gebruiker en hun uitnodigingslink verschijnen in de onderstaande tabel. Je kan die link met ze delen.',
     'invited_user_mail'                        => 'E-mailadres',
