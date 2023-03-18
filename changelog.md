@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.0.5 - 2023-03-19
+
+### Changed
+- Mathematical accuracy is set to 12 decimals. This is accurate enough for most currencies and prevents rounding issues for systems that don't support more.
+
+### Fixed
+- [Issue 7227](https://github.com/firefly-iii/firefly-iii/issues/7227) Could not set webhooks to the correct trigger.
+- [Issue 7221](https://github.com/firefly-iii/firefly-iii/issues/7221) Could not see the result of a rule test.
+
 ## v6.0.4 - 2023-03-13
 
 ### Fixed

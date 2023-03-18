@@ -67,8 +67,8 @@ return [
     'not_transfer_account'           => 'To konto nie jest kontem, które może być używane do przelewów.',
     'require_currency_amount'        => 'Treść tego pola jest nieprawidłowa bez informacji o obcej kwocie.',
     'require_foreign_currency'       => 'Wymagane jest wprowadzenie liczby w tym polu',
-    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
-    'require_foreign_src'            => 'This field value must match the currency of the source account.',
+    'require_foreign_dest'           => 'Wartość tego pola musi odpowiadać walucie konta docelowego.',
+    'require_foreign_src'            => 'Wartość tego pola musi odpowiadać walucie konta źródłowego.',
     'equal_description'              => 'Opis transakcji nie powinien być równy globalnemu opisowi.',
     'file_invalid_mime'              => 'Plik ":name" jest typu ":mime", który nie jest akceptowany jako nowy plik do przekazania.',
     'file_too_large'                 => 'Plik ":name" jest zbyt duży.',
@@ -285,7 +285,7 @@ return [
     'auto_budget_period_mandatory'    => 'Okres automatycznego budżetu to pole obowiązkowe.',
 
     // no access to administration:
-    'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'no_access_user_group'            => 'Nie masz odpowiednich praw dostępu dla tej administracji.',
 ];
 
 /*
