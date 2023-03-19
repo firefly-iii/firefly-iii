@@ -54,7 +54,7 @@ class ChangesForV430 extends Migration
                 $table->softDeletes();
                 $table->integer('user_id', false, true);
                 $table->integer('transaction_currency_id', false, true);
-                $table->decimal('amount', 36, 24);
+                $table->decimal('amount', 32, 12);
                 $table->date('start_date');
                 $table->date('end_date');
 
