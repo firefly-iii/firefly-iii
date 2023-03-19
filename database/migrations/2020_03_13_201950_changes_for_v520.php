@@ -59,7 +59,7 @@ class ChangesForV520 extends Migration
                     $table->integer('budget_id', false, true);
                     $table->integer('transaction_currency_id', false, true);
                     $table->tinyInteger('auto_budget_type', false, true)->default(1);
-                    $table->decimal('amount', 36, 24);
+                    $table->decimal('amount', 32, 12);
                     $table->string('period', 50);
 
                     $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
