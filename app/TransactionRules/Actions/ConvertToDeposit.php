@@ -31,6 +31,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use JsonException;
 use Log;
@@ -109,10 +110,18 @@ class ConvertToDeposit implements ActionInterface
         $factory = app(AccountFactory::class);
         $factory->setUser($user);
 
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($user);
+
         // get the action value, or use the original destination name in case the action value is empty:
-        // this becomes a new or existing revenue account.
+        // this becomes a new or existing (revenue) account, which is the source of the new deposit.
         $revenueName = '' === $this->action->action_value ? $journal['destination_account_name'] : $this->action->action_value;
-        $revenue     = $factory->findOrCreate($revenueName, AccountType::REVENUE);
+        // we check all possible source account types if one exists:
+        $validTypes = config('firefly.expected_source_types.source.Deposit');
+        $revenue    = $repository->findByName($revenueName, $validTypes);
+        if (null === $revenue) {
+            $revenue = $factory->findOrCreate($revenueName, AccountType::REVENUE);
+        }
 
         Log::debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $this->action->action_value, $journal['destination_account_name']));
 
