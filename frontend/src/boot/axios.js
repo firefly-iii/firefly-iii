@@ -34,7 +34,7 @@ const cache = setupCache({
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-const url = process.env.DEBUGGING ? 'https://firefly.sd.home' : '/';
+const url = process.env.DEBUGGING ? 'https://firefly.sd.local' : '/';
 const api = axios.create({baseURL: url, withCredentials: true, adapter: cache.adapter});
 
 export default boot(({app}) => {

@@ -63,4 +63,14 @@ class UserGroup extends Model
     {
         return $this->hasMany(GroupMembership::class);
     }
+
+    /**
+     * Link to accounts.
+     *
+     * @return HasMany
+     */
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class);
+    }
 }
