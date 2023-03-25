@@ -127,7 +127,7 @@
                                     {% if first.transactiontype.type == 'Withdrawal' or first.transactiontype.type == 'Deposit' %}
                                         {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     {% elseif first.transactiontype.type == 'Transfer' %}
-                                        <span class="text-info">
+                                        <span class="text-info money-transfer">
                                         {{ formatAmountBySymbol(amount.amount, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     </span>
                                     {% elseif first.transactiontype.type == 'Opening balance' %}
@@ -233,11 +233,11 @@
                                     {% if first.transactiontype.type == 'Withdrawal' or first.transactiontype.type == 'Deposit' %}
                                         {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                                     {% elseif first.transactiontype.type == 'Transfer' or first.transactiontype.type == 'Opening balance' %}
-                                        <span class="text-info">
+                                        <span class="text-info money-transfer">
                                         {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                     </span>
                                     {% elseif first.transactiontype.type == 'Liability credit' %}
-                                        <span class="text-info">
+                                        <span class="text-info money-transfer">
                                         {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                     </span>
                                     {% endif %}
@@ -247,7 +247,7 @@
                                         {% if first.transactiontype.type == 'Withdrawal' or first.transactiontype.type == 'Deposit' %}
                                             ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
                                         {% elseif first.transactiontype.type == 'Transfer' %}
-                                            <span class="text-info">
+                                            <span class="text-info money-transfer">
                                         ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
                                     </span>
                                         {% endif %}
