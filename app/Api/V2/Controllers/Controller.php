@@ -79,7 +79,7 @@ class Controller extends BaseController
             $page = 1;
         }
 
-        $integers = ['limit'];
+        $integers = ['limit', 'administration'];
         $dates    = ['start', 'end', 'date'];
 
         if ($page < 1) {
