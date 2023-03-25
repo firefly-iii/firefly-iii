@@ -27,9 +27,9 @@ export default class Accounts {
    * @param types
    * @returns {Promise<AxiosResponse<any>>}
    */
-  get(types) {
+  get(types, query) {
     let url = 'api/v2/autocomplete/accounts';
-    return api.get(url, {params: {types: types}})
+    return api.get(url, {params: {types: types, query: query, limit: 25}})
   }
 
 }

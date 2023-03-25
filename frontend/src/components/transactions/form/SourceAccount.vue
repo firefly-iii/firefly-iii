@@ -22,22 +22,22 @@
   <q-select
     v-model="model"
     use-input
-    input-debounce="0"
     :options="options"
     @filter="filterFn"
-    hint="filter bla bla"
-
     dense
+    :loading="loading"
     outlined
+    :disable="disabledInput"
     :error="hasSubmissionError"
     :label="$t('firefly.source_account')"
     :error-message="submissionError"
     bottom-slots
     clearable
-
   >
     <!--
-    :disable="disabledInput"
+
+    input-debounce="0"
+
     label="Lazy filter"
     -->
     <template v-slot:option="scope">
@@ -76,10 +76,8 @@ export default {
     return {
       model: null,
       transactionTypeString: '',
-      stringOptions: [],
-      options: [
-
-      ],
+      options: [],
+      loading: true,
     }
   },
   props: {
@@ -107,17 +105,20 @@ export default {
     }
   },
   mounted() {
+    console.log('Mounted');
     //this.options.value = this.stringOptions
-    this.getAccounts();
+    this.getAccounts('');
   },
   methods: {
-    getAccounts: function() {
+    getAccounts: function (query) {
+      this.loading = true;
+      console.log('getAccounts("'+query+'")');
       // default set of account types, will later be set by the transaction type.
       let types = 'Asset account,Revenue account,Loan,Debt,Mortgage';
-      (new Accounts).get(types).then(response => {
+      (new Accounts).get(types, query).then(response => {
         this.stringOptions = [];
-        for(let i in response.data) {
-          let entry =   response.data[i];
+        for (let i in response.data) {
+          let entry = response.data[i];
           let current = {
             label: entry.name,
             value: entry.id,
@@ -127,14 +128,35 @@ export default {
           this.stringOptions.push(current);
         }
         //this.stringOptions = response.data.data;
-        this.options.value = this.stringOptions;
+        this.options   = this.stringOptions;
+        this.loading = false;
+        console.log('getAccounts done!');
       });
     },
-    filterFn (val, update, abort) {
+    filterFn(val, update, abort) {
+      console.log('filterFn(' + val + ')');
+      if (val === '') {
+        update(() => {
+          this.getAccounts('');
+          //this.options = stringOptions
+
+          // here you have access to "ref" which
+          // is the Vue reference of the QSelect
+        })
+        return
+      }
       update(() => {
-        const needle = val.toLowerCase()
-        this.options.value = this.stringOptions.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
+        this.getAccounts(val);
+        //const needle = val.toLowerCase()
+        //this.options = this.options.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
       })
+      // console.log('filterFn(' + val + ')');
+      // if (this.loading) {
+      //   console.log('return');
+      //   return
+      // }
+      // const needle = val.toLowerCase()
+      // this.options = this.stringOptions.filter(v => v.label.toLowerCase().indexOf(needle) > -1);
     }
   }
 }
