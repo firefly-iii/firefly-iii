@@ -554,11 +554,11 @@ return [
         ],
         'destination' => [
             TransactionTypeModel::WITHDRAWAL       => [
-                AccountType::EXPENSE,
-                AccountType::CASH,
                 AccountType::LOAN,
                 AccountType::DEBT,
                 AccountType::MORTGAGE,
+                AccountType::EXPENSE,
+                AccountType::CASH,
             ],
             TransactionTypeEnum::DEPOSIT->value    => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
