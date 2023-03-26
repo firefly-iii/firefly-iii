@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Authentication;
 
+use FireflyIII\Console\Commands\Integrity\CreateGroupMemberships;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -68,6 +69,8 @@ class RemoteUserProvider implements UserProvider
                 $roleObject = Role::where('name', 'owner')->first();
                 $user->roles()->attach($roleObject);
             }
+            // make sure the user gets an administration as well.
+            CreateGroupMemberships::createGroupMembership($user);
         }
         Log::debug(sprintf('Going to return user #%d (%s)', $user->id, $user->email));
 
