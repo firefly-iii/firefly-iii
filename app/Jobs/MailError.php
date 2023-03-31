@@ -100,7 +100,8 @@ class MailError extends Job implements ShouldQueue
                     Log::warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
                     return;
                 }
-                throw new FireflyException($e->getMessage(), 0, $e);
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
             }
         }
     }
