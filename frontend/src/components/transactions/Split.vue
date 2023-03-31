@@ -42,12 +42,19 @@
                   :has-submission-error="hasSubmissionErrors.description"
                   :disabled-input="disabledInput"
                   :description="transaction.description"
-                  @update:description="updateDescription"/>
+                  @update:description="updateDescription"
+                />
               </div>
             </div>
             <div class="row">
               <div class="col-4 q-mb-xs q-pr-xs">
-                <SourceAccount name="Test" :disabled-input="false" submission-error="" :has-submission-error="false" />
+                <SourceAccount
+                  :name="''"
+                  @update:source="updateSource"
+                  :disabled-input="false"
+                  submission-error=""
+                  :transaction-type="transactionType"
+                  :has-submission-error="false"/>
               </div>
               <div class="col-4 q-px-xs">
                 <q-input
@@ -60,14 +67,13 @@
                   outlined reverse-fill-mask/>
               </div>
               <div class="col-4 q-pl-xs">
-                <q-input dense
-                         v-model="transaction.destination"
-                         :disable="disabledInput"
-                         :error="hasSubmissionErrors.destination"
-                         :error-message="submissionErrors.destination" :label="$t('firefly.destination_account')"
-                         bottom-slots
-                         clearable
-                         outlined/>
+                <DestinationAccount
+                  :name="''"
+                  @update:destination="updateDestination"
+                  :disabled-input="false"
+                  submission-error=""
+                  :transaction-type="transactionType"
+                  :has-submission-error="false"/>
               </div>
             </div>
             <div class="row">
@@ -268,13 +274,19 @@
 <script>
 import TransactionDescription from "components/transactions/form/TransactionDescription.vue";
 import SourceAccount from "components/transactions/form/SourceAccount.vue";
+import DestinationAccount from "components/transactions/form/DestinationAccount.vue";
 
 export default {
   name: "Split",
-  components: {SourceAccount, TransactionDescription},
+  components: {DestinationAccount, SourceAccount, TransactionDescription},
   props: {
     index: {
       type: Number,
+      required: true
+    },
+    transactionType: {
+      type: String,
+      default: 'unknown',
       required: true
     },
     disabledInput: {
@@ -297,6 +309,17 @@ export default {
   methods: {
     updateDescription(newVal) {
       this.transaction.description = newVal;
+      console.log('Description is now "' + newVal + '"');
+    },
+    updateSource(newVal) {
+      this.transaction.source = newVal;
+      console.log('Source is now:');
+      console.log(newVal);
+    },
+    updateDestination(newVal) {
+      this.transaction.destination = newVal;
+      console.log('Destination is now:');
+      console.log(newVal);
     }
   },
   watch: {
