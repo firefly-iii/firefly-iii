@@ -30,7 +30,7 @@
     new-value-mode="add-unique"
     :disable="disabledInput"
     :error="hasSubmissionError"
-    :label="$t('firefly.source_account')"
+    :label="$t('firefly.destination_account')"
     :error-message="submissionError"
     bottom-slots
     clearable
@@ -72,7 +72,7 @@ if the index is not null the field shall be disabled and empty.
 import Accounts from '../../../api/v2/autocomplete/accounts'
 
 export default {
-  name: "SourceAccount",
+  name: "DestinationAccount",
   data() {
     return {
       model: null,
@@ -115,9 +115,9 @@ export default {
     getAccounts: function (query) {
       this.loading = true;
       // default set of account types, will later be set by the transaction type.
-      let types = 'Asset account,Revenue account,Loan,Debt,Mortgage';
+      let types = 'Expense account, Loan, Debt, Mortgage';
       if('deposit' === this.transactionType) {
-        console.log('NOW DEPOSIT');
+        let types = 'Asset account, Loan, Debt, Mortgage';
       }
       (new Accounts).get(types, query).then(response => {
         this.stringOptions = [];
@@ -146,7 +146,7 @@ export default {
     model: {
       handler: function (newVal) {
         if(newVal !== undefined) {
-          this.$emit('update:source', newVal);
+          this.$emit('update:destination', newVal);
         }
       },
       deep: true

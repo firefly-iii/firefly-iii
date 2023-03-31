@@ -59,6 +59,7 @@
             <Split
               :transaction="transaction"
               :index="index"
+              :transaction-type="transactionType"
               :disabled-input="disabledInput"
               :has-submission-errors="hasSubmissionErrors[index]"
               :submission-errors="submissionErrors[index]"
@@ -112,6 +113,7 @@ import format from 'date-fns/format';
 import formatISO from 'date-fns/formatISO';
 import Post from "../../api/transactions/post";
 import Split from "components/transactions/Split.vue";
+import CalculateType from "src/support/transactions/calculate-type";
 
 export default {
   name: 'Create',
@@ -119,6 +121,7 @@ export default {
   data() {
     return {
       tab: 'split-0',
+      transactionType: 'unknown',
       transactions: [],
       submissionErrors: [],
       hasSubmissionErrors: [],
@@ -165,7 +168,7 @@ export default {
       this.tab = 'split-' + index;
     },
     getSplitLabel: function (index) {
-      console.log('Get split label ('  + index + ')');
+      //console.log('Get split label ('  + index + ')');
       if (this.transactions.hasOwnProperty(index) &&
         null !== this.transactions[index].description &&
         this.transactions[index].description.length > 0) {
@@ -196,10 +199,9 @@ export default {
     },
     updateTransaction: function (obj) {
       const index = obj.index;
-      const transaction = obj.transaction;
-      console.log('Update transaction ' + index);
-      console.log(transaction);
-      this.transactions[index] = transaction;
+      this.transactions[index] = obj.transaction;
+      // TODO needs to update all splits if necessary and warn user about it.
+      this.transactionType = (new CalculateType()).calculateType(this.transactions[0].source, this.transactions[0].destination);
     },
     processSuccess: function (response) {
       console.log('process success');
