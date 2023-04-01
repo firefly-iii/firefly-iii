@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Cronjobs;
 use Carbon\Carbon;
 use FireflyIII\Jobs\DownloadExchangeRates;
 use FireflyIII\Models\Configuration;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ExchangeRatesCronjob

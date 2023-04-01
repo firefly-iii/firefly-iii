@@ -29,7 +29,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait AttachmentCollection

@@ -28,7 +28,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class DeleteEmptyJournals

@@ -45,7 +45,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Storage;
 
 /**

@@ -25,7 +25,7 @@ namespace FireflyIII\Helpers\Update;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

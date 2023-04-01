@@ -39,7 +39,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

@@ -31,7 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait UserNavigation

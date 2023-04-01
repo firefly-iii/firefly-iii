@@ -28,7 +28,7 @@ use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Events\AccessTokenCreated;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class APIEventHandler

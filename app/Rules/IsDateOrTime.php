@@ -28,7 +28,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Contracts\Validation\Rule;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IsDateOrTime

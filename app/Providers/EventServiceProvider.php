@@ -50,7 +50,7 @@ use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Events\AccessTokenCreated;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class EventServiceProvider.

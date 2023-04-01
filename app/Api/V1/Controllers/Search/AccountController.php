@@ -35,7 +35,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use JsonException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountController

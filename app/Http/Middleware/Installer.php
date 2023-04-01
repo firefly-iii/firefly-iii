@@ -30,7 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Installer

@@ -26,7 +26,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransferBudgets

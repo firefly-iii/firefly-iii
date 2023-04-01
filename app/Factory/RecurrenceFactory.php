@@ -31,7 +31,7 @@ use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RecurrenceFactory

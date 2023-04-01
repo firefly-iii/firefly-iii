@@ -27,7 +27,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Create piggy bank events.

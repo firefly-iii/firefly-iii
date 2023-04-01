@@ -28,7 +28,7 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait RecurrenceValidation

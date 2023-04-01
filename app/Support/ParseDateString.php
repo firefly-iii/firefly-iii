@@ -26,7 +26,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ParseDateString

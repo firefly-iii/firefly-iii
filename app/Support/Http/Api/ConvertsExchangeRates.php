@@ -28,7 +28,7 @@ use Carbon\Carbon;
 use DateTimeInterface;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ConvertsExchangeRates

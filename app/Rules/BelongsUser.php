@@ -32,7 +32,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\Rule;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BelongsUser
