@@ -86,13 +86,11 @@ class CreditRecalculateService
     {
         /** @var TransactionJournal $journal */
         foreach ($this->group->transactionJournals as $journal) {
-            if (0 === count($this->work)) {
-                try {
-                    $this->findByJournal($journal);
-                } catch (FireflyException $e) {
-                    Log::error($e->getTraceAsString());
-                    Log::error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
-                }
+            try {
+                $this->findByJournal($journal);
+            } catch (FireflyException $e) {
+                Log::error($e->getTraceAsString());
+                Log::error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
             }
         }
         Log::debug(sprintf('Done with %s', __METHOD__));
