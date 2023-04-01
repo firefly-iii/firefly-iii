@@ -35,7 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\NullArrayObject;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait JournalServiceTrait
@@ -86,9 +86,14 @@ trait JournalServiceTrait
             Log::debug(sprintf('Search again using the new name, "%s".', $data['name']));
             $result = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
         }
+
+        // the account that Firefly III creates must be "creatable", aka select the one we can create from the list just in case
+        $creatableType = $this->getCreatableType($expectedTypes[$transactionType]);
+
+
         // if the result is NULL but the ID is set, an account could exist of the wrong type.
         // that data can be used to create a new account of the right type.
-        if (null === $result && null !== $data['id']) {
+        if (null === $result && null !== $data['id'] && null !== $creatableType) {
             Log::debug(sprintf('Account #%d may exist and be of the wrong type, use data to create one of the right type.', $data['id']));
             $temp = $this->findAccountById(['id' => $data['id']], []);
             if (null !== $temp) {
@@ -98,12 +103,12 @@ trait JournalServiceTrait
                     'number' => null,
                     'bic'    => null,
                 ];
-                $result   = $this->createAccount(null, $tempData, $expectedTypes[$transactionType][0]);
+                $result   = $this->createAccount(null, $tempData, $creatableType);
             }
         }
-        if (null === $result) {
+        if (null === $result && null !== $creatableType) {
             Log::debug('If nothing is found, create it.');
-            $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
+            $result = $this->createAccount($result, $data, $creatableType);
         }
         if (null === $result) {
             Log::debug('If cant be created, return cash account.');
@@ -235,6 +240,24 @@ trait JournalServiceTrait
         }
         Log::debug(sprintf('Found no account with account name "%s" of expected types', $data['name']), $types);
         return null;
+    }
+
+    /**
+     * @param  array  $types
+     * @return null|string
+     */
+    private function getCreatableType(array $types): ?string
+    {
+        $result = null;
+        $list   = config('firefly.dynamic_creation_allowed');
+        /** @var string $type */
+        foreach ($types as $type) {
+            if (true === in_array($type, $list, true)) {
+                $result = $type;
+                break;
+            }
+        }
+        return $result;
     }
 
     /**
