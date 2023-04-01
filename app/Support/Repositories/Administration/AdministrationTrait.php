@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * AdministrationTrait.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -75,7 +77,7 @@ trait AdministrationTrait
 
     public function setUser(Authenticatable|User|null $user): void
     {
-        if(null !== $user) {
+        if (null !== $user) {
             $this->user = $user;
         }
     }

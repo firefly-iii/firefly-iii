@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * AccountRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
