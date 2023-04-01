@@ -35,7 +35,7 @@ use FireflyIII\Validation\Account\OBValidation;
 use FireflyIII\Validation\Account\ReconciliationValidation;
 use FireflyIII\Validation\Account\TransferValidation;
 use FireflyIII\Validation\Account\WithdrawalValidation;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountValidator

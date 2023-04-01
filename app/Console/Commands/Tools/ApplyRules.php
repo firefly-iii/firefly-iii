@@ -36,7 +36,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ApplyRules

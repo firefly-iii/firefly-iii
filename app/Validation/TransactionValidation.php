@@ -31,7 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Validation\Validator;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait TransactionValidation

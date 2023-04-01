@@ -27,7 +27,7 @@ use Closure;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IsDemoUser.

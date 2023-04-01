@@ -28,7 +28,7 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RemoveTag.

@@ -30,7 +30,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

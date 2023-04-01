@@ -32,7 +32,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountUpdateService

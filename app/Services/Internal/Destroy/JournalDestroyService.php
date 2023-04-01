@@ -29,7 +29,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class JournalDestroyService

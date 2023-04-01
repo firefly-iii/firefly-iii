@@ -38,7 +38,7 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BoxController.

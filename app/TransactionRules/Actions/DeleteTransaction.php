@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class DeleteTransaction.

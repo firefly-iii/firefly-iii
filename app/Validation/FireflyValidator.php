@@ -43,7 +43,7 @@ use FireflyIII\User;
 use Google2FA;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
-use Log;
+use Illuminate\Support\Facades\Log;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;

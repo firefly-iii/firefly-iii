@@ -27,7 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

@@ -32,7 +32,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

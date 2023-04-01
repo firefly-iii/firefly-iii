@@ -31,7 +31,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class StandardWebhookSender

@@ -28,7 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupFactory

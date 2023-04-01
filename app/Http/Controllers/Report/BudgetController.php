@@ -36,7 +36,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

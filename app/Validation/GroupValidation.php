@@ -26,7 +26,7 @@ namespace FireflyIII\Validation;
 
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Validation\Validator;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait GroupValidation.

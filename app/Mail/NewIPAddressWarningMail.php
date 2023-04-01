@@ -28,7 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class NewIPAddressWarningMail

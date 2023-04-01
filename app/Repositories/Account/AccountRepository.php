@@ -43,7 +43,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Storage;
 
 /**

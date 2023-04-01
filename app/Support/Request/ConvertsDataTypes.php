@@ -25,7 +25,7 @@ namespace FireflyIII\Support\Request;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ConvertsDataTypes

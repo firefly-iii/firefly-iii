@@ -26,7 +26,7 @@ namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait LiabilityValidation

@@ -27,7 +27,7 @@ use DB;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 /**

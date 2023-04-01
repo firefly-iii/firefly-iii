@@ -36,7 +36,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

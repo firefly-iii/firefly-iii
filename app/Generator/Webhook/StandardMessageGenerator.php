@@ -38,7 +38,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\ParameterBag;
 

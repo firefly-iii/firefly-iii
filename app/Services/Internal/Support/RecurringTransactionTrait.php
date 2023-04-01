@@ -41,7 +41,7 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait RecurringTransactionTrait

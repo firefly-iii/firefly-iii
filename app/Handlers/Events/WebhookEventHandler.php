@@ -25,7 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\WebhookMessage;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class WebhookEventHandler

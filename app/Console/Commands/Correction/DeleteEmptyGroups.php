@@ -26,7 +26,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use Exception;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class DeleteEmptyGroups

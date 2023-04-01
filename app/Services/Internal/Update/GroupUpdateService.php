@@ -30,7 +30,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class GroupUpdateService

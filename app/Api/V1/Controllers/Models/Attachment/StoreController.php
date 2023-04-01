@@ -35,7 +35,7 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class StoreController

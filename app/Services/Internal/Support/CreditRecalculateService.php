@@ -32,7 +32,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class CreditRecalculateService
 {

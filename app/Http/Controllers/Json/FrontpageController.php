@@ -28,7 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\JsonResponse;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

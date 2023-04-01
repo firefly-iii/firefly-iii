@@ -42,7 +42,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\AccountValidator;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class to centralise code that updates a journal given the input by system.
@@ -322,7 +322,7 @@ class JournalUpdateService
         $validator->setTransactionType($expectedType);
         $validator->setUser($this->transactionJournal->user);
         $validator->source = $this->getValidSourceAccount();
-        $result            = $validator->validateDestination(['id' => $destId, 'name' =>  $destName]);
+        $result            = $validator->validateDestination(['id' => $destId, 'name' => $destName]);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
         // TODO typeOverrule: the account validator may have another opinion on the transaction type.
@@ -497,10 +497,10 @@ class JournalUpdateService
     {
         $type = $this->transactionJournal->transactionType->type;
         if ((
-            array_key_exists('bill_id', $this->data)
-            || array_key_exists('bill_name', $this->data)
-        )
-        && TransactionType::WITHDRAWAL === $type
+                array_key_exists('bill_id', $this->data)
+                || array_key_exists('bill_name', $this->data)
+            )
+            && TransactionType::WITHDRAWAL === $type
         ) {
             $billId                            = (int)($this->data['bill_id'] ?? 0);
             $billName                          = (string)($this->data['bill_name'] ?? '');

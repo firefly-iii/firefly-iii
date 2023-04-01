@@ -25,7 +25,7 @@ namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionJournalMeta;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionJournalMetaFactory

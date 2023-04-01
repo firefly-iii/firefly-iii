@@ -32,7 +32,7 @@ use FireflyIII\Validation\Api\Data\Bulk\ValidatesBulkTransactionQuery;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionRequest

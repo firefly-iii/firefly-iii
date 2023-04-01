@@ -34,7 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  *

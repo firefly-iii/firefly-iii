@@ -30,7 +30,7 @@ use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Str;
 
 /**

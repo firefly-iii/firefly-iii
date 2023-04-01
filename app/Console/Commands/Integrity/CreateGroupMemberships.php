@@ -30,7 +30,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreateGroupMemberships

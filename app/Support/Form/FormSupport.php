@@ -27,7 +27,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

@@ -35,7 +35,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UpdatedGroupEventHandler

@@ -27,7 +27,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use Illuminate\Routing\Route;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
