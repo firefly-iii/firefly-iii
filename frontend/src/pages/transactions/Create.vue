@@ -30,7 +30,6 @@
         </q-banner>
       </div>
     </div>
-    <!--
     <div class="row q-ma-md">
       <div class="col-12">
         <q-card>
@@ -43,163 +42,29 @@
                 align="left"
                 class="text-teal col"
               >
-                <q-tab v-for="(transaction,index) in transactions" :name="'split-' + index" :label="getSplitLabel(index)"/>
-                <q-btn @click="addTransaction" flat label="Add split" icon="fas fa-plus-circle" class="text-orange"></q-btn>
+                <q-tab v-for="(transaction,index) in transactions" :name="'split-' + index"
+                       :label="getSplitLabel(index)"/>
+                <q-btn @click="addTransaction" flat label="Add split" icon="fas fa-plus-circle"
+                       class="text-orange"></q-btn>
               </q-tabs>
             </div>
           </q-card-section>
         </q-card>
       </div>
     </div>
-    -->
     <div class="row">
       <div class="col-12">
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel v-for="(transaction,index) in transactions" :key="index" :name="'split-' + index">
-            <q-card bordered>
-              <q-card-section>
-                <div class="text-h6">Info for {{ $route.params.type }} {{ index }}</div>
-              </q-card-section>
-              <q-card-section>
-                <div class="row">
-                  <div class="col-12 q-mb-xs">
-                    <q-input
-                      v-model="transaction.description"
-                      :disable="disabledInput"
-                      :error="hasSubmissionErrors[index].description" :error-message="submissionErrors[index].description" :label="$t('firefly.description')" bottom-slots clearable
-                      outlined
-                      type="text"/>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-4 q-mb-xs q-pr-xs">
-                    <q-input
-                      v-model="transaction.source"
-                      :disable="disabledInput"
-                      :error="hasSubmissionErrors[index].source" :error-message="submissionErrors[index].source" :label="$t('firefly.source_account')" bottom-slots
-                      clearable outlined/>
-                  </div>
-                  <div class="col-4 q-px-xs">
-                    <q-input
-                      v-model="transaction.amount"
-                      :disable="disabledInput"
-                      :error="hasSubmissionErrors[index].amount" :error-message="submissionErrors[index].amount" :label="$t('firefly.amount')" bottom-slots clearable fill-mask="0"
-                      hint="Expects #.##"
-                      mask="#.##"
-                      outlined reverse-fill-mask/>
-                  </div>
-                  <div class="col-4 q-pl-xs">
-                    <q-input
-                      v-model="transaction.destination"
-                      :disable="disabledInput"
-                      :error="hasSubmissionErrors[index].destination" :error-message="submissionErrors[index].destination" :label="$t('firefly.destination_account')" bottom-slots
-                      clearable
-                      outlined/>
-                  </div>
-                </div>
-                <!--
-                <div class="row">
-                  <div class="col-4 offset-4">
-                    Foreign
-                  </div>
-
-                </div>
-                -->
-                <div class="row">
-                  <div class="col-4">
-                    <div class="row">
-                      <div class="col">
-                        <q-input
-                          v-model="transaction.date"
-                          :disable="disabledInput"
-                          :error="hasSubmissionErrors[index].date" :error-message="submissionErrors[index].date" :hint="$t('firefly.date')" bottom-slots outlined
-                          type="date"/>
-                      </div>
-                      <div class="col">
-                        <q-input v-model="transaction.time" :disable="disabledInput" :hint="$t('firefly.time')" bottom-slots outlined
-                                 type="time"/>
-                      </div>
-                    </div>
-                  </div>
-                  <!--
-  <div class="col-4 offset-4">
-    <q-input v-model="transaction.interest_date" filled type="date" hint="Interest date"/>
-    <q-input v-model="transaction.book_date" filled type="date" hint="Book date"/>
-    <q-input v-model="transaction.process_date" filled type="date" hint="Processing date"/>
-    <q-input v-model="transaction.due_date" filled type="date" hint="Due date"/>
-    <q-input v-model="transaction.payment_date" filled type="date" hint="Payment date"/>
-    <q-input v-model="transaction.invoice_date" filled type="date" hint="Invoice date"/>
-  </div>
--->
-                </div>
-              </q-card-section>
-            </q-card>
-            <!--
-            <q-card bordered class="q-mt-md">
-              <q-card-section>
-                <div class="text-h6">Meta for {{ $route.params.type }}</div>
-              </q-card-section>
-              <q-card-section>
-                <div class="row">
-                  <div class="col-6">
-                    <q-select filled v-model="transaction.budget" :options="tempBudgets" label="Budget"/>
-                  </div>
-                  <div class="col-6">
-                    <q-input filled clearable v-model="transaction.category" :label="$t('firefly.category')" outlined/>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    <q-select filled v-model="transaction.subscription" :options="tempSubscriptions" label="Subscription"/>
-                  </div>
-                  <div class="col-6">
-                    Tags
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    Bill
-                  </div>
-                  <div class="col-6">
-                    ???
-                  </div>
-                </div>
-              </q-card-section>
-            </q-card>
-            -->
-            <!--
-            <q-card bordered class="q-mt-md">
-              <q-card-section>
-                <div class="text-h6">Extr for {{ $route.params.type }}</div>
-              </q-card-section>
-              <q-card-section>
-                <div class="row">
-                  <div class="col-6">
-                    Notes
-                  </div>
-                  <div class="col-6">
-                    attachments
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    Links
-                  </div>
-                  <div class="col-6">
-                    reference
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    url
-                  </div>
-                  <div class="col-6">
-                    location
-                  </div>
-                </div>
-              </q-card-section>
-            </q-card>
-            -->
+            <Split
+              :transaction="transaction"
+              :index="index"
+              :transaction-type="transactionType"
+              :disabled-input="disabledInput"
+              :has-submission-errors="hasSubmissionErrors[index]"
+              :submission-errors="submissionErrors[index]"
+              @update:transaction="updateTransaction"
+            />
           </q-tab-panel>
 
           <!--
@@ -219,7 +84,7 @@
 
     <div class="row q-mx-md">
       <div class="col-12">
-        <q-card class="q-mt-xs">
+        <q-card class="q-mt-xs" bordered flat>
           <q-card-section>
             <div class="row">
               <div class="col-12 text-right">
@@ -231,7 +96,8 @@
                 <q-checkbox v-model="doReturnHere" :disable="disabledInput" label="Return here to create another one"
                             left-label/>
                 <br/>
-                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput" label="Reset form after submission"
+                <q-checkbox v-model="doResetForm" :disable="!doReturnHere || disabledInput"
+                            label="Reset form after submission"
                             left-label/>
               </div>
             </div>
@@ -246,12 +112,16 @@
 import format from 'date-fns/format';
 import formatISO from 'date-fns/formatISO';
 import Post from "../../api/transactions/post";
+import Split from "components/transactions/Split.vue";
+import CalculateType from "src/support/transactions/calculate-type";
 
 export default {
   name: 'Create',
+  components: {Split},
   data() {
     return {
       tab: 'split-0',
+      transactionType: 'unknown',
       transactions: [],
       submissionErrors: [],
       hasSubmissionErrors: [],
@@ -268,35 +138,50 @@ export default {
   },
   computed: {
     disabledInput: function () {
-      return this.submitting;
+      return this.submitting ?? false;
     }
   },
   created() {
+    console.log('Created');
     this.resetForm();
   },
   methods: {
     resetForm: function () {
+      console.log('ResetForm');
       this.transactions = [];
-      const info = this.getDefaultTransaction();
-      this.transactions.push(info.transaction);
-      this.submissionErrors.push(info.submissionError);
-      this.hasSubmissionErrors.push(info.hasSubmissionError);
+      this.addTransaction();
+      // const info = this.getDefaultTransaction();
+      // this.transactions.push(info.transaction);
+      // this.submissionErrors.push(info.submissionError);
+      // this.hasSubmissionErrors.push(info.hasSubmissionError);
     },
     addTransaction: function () {
       const transaction = this.getDefaultTransaction();
-      this.transactions.push(transaction);
-      this.tab = 'split-' + (parseInt(this.transactions.length) - 1);
+
+      // push all three
+      this.transactions.push(transaction.transaction);
+      this.submissionErrors.push(transaction.submissionError);
+      this.hasSubmissionErrors.push(transaction.hasSubmissionError);
+
+      const index = String(this.transactions.length - 1);
+      console.log('AddTransaction '  + index);
+      this.tab = 'split-' + index;
     },
     getSplitLabel: function (index) {
-      if (this.transactions.hasOwnProperty(index) && null !== this.transactions[index].description && this.transactions[index].description.length > 0) {
+      //console.log('Get split label ('  + index + ')');
+      if (this.transactions.hasOwnProperty(index) &&
+        null !== this.transactions[index].description &&
+        this.transactions[index].description.length > 0) {
         return this.transactions[index].description
       }
       return this.$t('firefly.single_split') + ' ' + (index + 1);
     },
     dismissBanner: function () {
+      console.log('Dismiss banner');
       this.errorMessage = '';
     },
     submitTransaction: function () {
+      console.log('submit transaction');
       this.submitting = true;
       this.errorMessage = '';
 
@@ -312,7 +197,14 @@ export default {
         .catch(this.processErrors)
         .then(this.processSuccess);
     },
+    updateTransaction: function (obj) {
+      const index = obj.index;
+      this.transactions[index] = obj.transaction;
+      // TODO needs to update all splits if necessary and warn user about it.
+      this.transactionType = (new CalculateType()).calculateType(this.transactions[0].source, this.transactions[0].destination);
+    },
     processSuccess: function (response) {
+      console.log('process success');
       this.submitting = false;
       let message = {
         level: 'success',
@@ -340,6 +232,7 @@ export default {
 
     },
     resetErrors: function () {
+      console.log('reset errors');
       let length = this.transactions.length;
       let transaction = this.getDefaultTransaction();
       for (let i = 0; i < length; i++) {
@@ -348,6 +241,7 @@ export default {
       }
     },
     processErrors: function (error) {
+      console.log('process errors');
       if (error.response) {
         let errors = error.response.data; // => the response payload
         this.errorMessage = errors.message;
@@ -360,7 +254,8 @@ export default {
       this.submitting = false;
     },
     processSingleError: function (key, errors) {
-      // lol dumbest way to explode "transactions.0.something" ever.
+      console.log('process single error');
+      // lol the dumbest way to explode "transactions.0.something" ever.
       let index = parseInt(key.split('.')[1]);
       let fieldName = key.split('.')[2];
       switch (fieldName) {
@@ -383,6 +278,7 @@ export default {
       }
     },
     buildTransaction: function () {
+      console.log('build transaction');
       const obj = {
         transactions: []
       };
@@ -401,6 +297,7 @@ export default {
       return obj;
     },
     getDefaultTransaction: function () {
+      console.log('get default transaction');
       let date = '';
       let time = '00:00';
 

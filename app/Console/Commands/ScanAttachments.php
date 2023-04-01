@@ -27,7 +27,7 @@ use Crypt;
 use FireflyIII\Models\Attachment;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Storage;
 
 /**

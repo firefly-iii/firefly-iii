@@ -29,7 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Laravel\Passport\Passport;
-use Log;
+use Illuminate\Support\Facades\Log;
 use phpseclib3\Crypt\RSA;
 
 /**

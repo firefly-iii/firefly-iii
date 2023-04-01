@@ -29,7 +29,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CategoryUpdateService

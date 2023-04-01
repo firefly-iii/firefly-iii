@@ -29,7 +29,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Mail;
 
 /**
@@ -100,7 +100,8 @@ class MailError extends Job implements ShouldQueue
                     Log::warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
                     return;
                 }
-                throw new FireflyException($e->getMessage(), 0, $e);
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
             }
         }
     }

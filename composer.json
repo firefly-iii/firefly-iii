@@ -116,7 +116,7 @@
     "mockery/mockery": "1.*",
     "nunomaduro/larastan": "^2.5",
     "phpstan/phpstan": "^1.10",
-    "phpstan/phpstan-deprecation-rules": "^1.0",
+    "phpstan/phpstan-deprecation-rules": "^1.1",
     "phpstan/phpstan-strict-rules": "^1.4",
     "phpunit/phpunit": "^10",
     "thecodingmachine/phpstan-strict-rules": "^1.0"

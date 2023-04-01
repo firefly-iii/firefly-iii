@@ -27,7 +27,7 @@ namespace FireflyIII\Support\Cronjobs;
 use Carbon\Carbon;
 use FireflyIII\Jobs\CreateAutoBudgetLimits;
 use FireflyIII\Models\Configuration;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AutoBudgetCronjob

@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ReconciliationValidation

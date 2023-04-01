@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.0.6 - 2023-04-02
+
+### Changed
+- Database migrations are capped at 12 decimals.
+- Currency processing is capped at 12 decimals.
+- Mail errors no longer crash the app but report the error in logs
+- Disabled Sonarcloud runs
+
+### Fixed
+- "Change transaction type"-rule actions would create a new expense account instead of finding a liability.
+- New users from remote user repositories would not be able to create new asset accounts.
+- Firefly III would create "Loan" instead of "Expense account" when faced with unknown accounts during API calls.
+- Icons would not show up in the minimized left-hand menu.
+- Contrast for dark mode improved.
+- Better credit calculation for liabilities in case of complex transactions.
+
+### API
+- Fixed: Could not give piggy bank an unlimited amount.
+
 ## v6.0.5 - 2023-03-19
 
 ### Changed

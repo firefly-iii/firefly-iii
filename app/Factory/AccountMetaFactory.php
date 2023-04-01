@@ -26,7 +26,7 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountMetaFactory

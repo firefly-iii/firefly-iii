@@ -35,7 +35,7 @@ use FireflyIII\Support\Search\SearchInterface;
 use FireflyIII\TransactionRules\Factory\ActionFactory;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SearchRuleEngine

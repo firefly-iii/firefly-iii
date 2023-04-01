@@ -26,7 +26,7 @@ namespace FireflyIII\Console\Commands;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait VerifiesAccessToken.

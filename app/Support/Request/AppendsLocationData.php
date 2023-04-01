@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Request;
 
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait AppendsLocationData

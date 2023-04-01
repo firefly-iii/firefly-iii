@@ -99,7 +99,7 @@ class CreateMainTables extends Migration
                     $table->integer('user_id', false, true);
                     $table->integer('account_type_id', false, true);
                     $table->string('name', 1024);
-                    $table->decimal('virtual_balance', 36, 24)->nullable();
+                    $table->decimal('virtual_balance', 32, 12)->nullable();
                     $table->string('iban', 255)->nullable();
                     $table->boolean('active')->default(1);
                     $table->boolean('encrypted')->default(0);
@@ -135,7 +135,7 @@ class CreateMainTables extends Migration
                     $table->softDeletes();
                     $table->integer('account_id', false, true);
                     $table->string('name', 1024);
-                    $table->decimal('targetamount', 36, 24);
+                    $table->decimal('targetamount', 32, 12);
                     $table->date('startdate')->nullable();
                     $table->date('targetdate')->nullable();
                     $table->integer('order', false, true)->default(0);
@@ -155,7 +155,7 @@ class CreateMainTables extends Migration
                     $table->integer('piggy_bank_id', false, true);
                     $table->date('startdate')->nullable();
                     $table->date('targetdate')->nullable();
-                    $table->decimal('currentamount', 36, 24);
+                    $table->decimal('currentamount', 32, 12);
                     $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
                 }
             );
@@ -202,8 +202,8 @@ class CreateMainTables extends Migration
                     $table->integer('user_id', false, true);
                     $table->string('name', 1024);
                     $table->string('match', 1024);
-                    $table->decimal('amount_min', 36, 24);
-                    $table->decimal('amount_max', 36, 24);
+                    $table->decimal('amount_min', 32, 12);
+                    $table->decimal('amount_max', 32, 12);
                     $table->date('date');
                     $table->string('repeat_freq', 30);
                     $table->smallInteger('skip', false, true)->default(0);
@@ -247,7 +247,7 @@ class CreateMainTables extends Migration
                     $table->timestamps();
                     $table->integer('budget_id', false, true);
                     $table->date('startdate');
-                    $table->decimal('amount', 36, 24);
+                    $table->decimal('amount', 32, 12);
                     $table->string('repeat_freq', 30);
                     $table->boolean('repeats')->default(0);
                     $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
@@ -263,7 +263,7 @@ class CreateMainTables extends Migration
                     $table->integer('budget_limit_id', false, true);
                     $table->date('startdate');
                     $table->date('enddate');
-                    $table->decimal('amount', 36, 24);
+                    $table->decimal('amount', 32, 12);
                     $table->foreign('budget_limit_id')->references('id')->on('budget_limits')->onDelete('cascade');
                 }
             );
@@ -463,8 +463,8 @@ class CreateMainTables extends Migration
                     $table->string('tagMode', 1024);
                     $table->date('date')->nullable();
                     $table->text('description')->nullable();
-                    $table->decimal('latitude', 36, 24)->nullable();
-                    $table->decimal('longitude', 36, 24)->nullable();
+                    $table->decimal('latitude', 12, 8)->nullable();
+                    $table->decimal('longitude', 12, 8)->nullable();
                     $table->smallInteger('zoomLevel', false, true)->nullable();
 
                     // link user id to users table
@@ -575,7 +575,7 @@ class CreateMainTables extends Migration
                     $table->integer('piggy_bank_id', false, true);
                     $table->integer('transaction_journal_id', false, true)->nullable();
                     $table->date('date');
-                    $table->decimal('amount', 36, 24);
+                    $table->decimal('amount', 32, 12);
 
                     $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
                     $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('set null');
@@ -593,7 +593,7 @@ class CreateMainTables extends Migration
                     $table->integer('account_id', false, true);
                     $table->integer('transaction_journal_id', false, true);
                     $table->string('description', 1024)->nullable();
-                    $table->decimal('amount', 36, 24);
+                    $table->decimal('amount', 32, 12);
 
                     $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
                     $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');

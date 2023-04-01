@@ -34,7 +34,7 @@ use FireflyIII\Services\Internal\Support\LocationServiceTrait;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Factory to create or return accounts.

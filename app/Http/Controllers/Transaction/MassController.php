@@ -41,7 +41,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View as IlluminateView;
 use InvalidArgumentException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class MassController.

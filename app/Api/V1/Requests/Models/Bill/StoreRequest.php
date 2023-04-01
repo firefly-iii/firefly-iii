@@ -29,7 +29,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class StoreRequest

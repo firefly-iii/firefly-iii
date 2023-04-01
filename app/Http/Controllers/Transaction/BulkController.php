@@ -35,7 +35,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BulkController

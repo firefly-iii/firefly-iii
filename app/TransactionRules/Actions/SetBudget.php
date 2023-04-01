@@ -29,7 +29,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetBudget.

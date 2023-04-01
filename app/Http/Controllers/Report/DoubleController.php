@@ -33,7 +33,7 @@ use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

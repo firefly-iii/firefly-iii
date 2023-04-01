@@ -26,7 +26,7 @@ namespace FireflyIII\Console\Commands\Integrity;
 
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RestoreOAuthKeys

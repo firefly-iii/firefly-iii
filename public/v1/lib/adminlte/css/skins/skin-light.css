@@ -3,6 +3,18 @@
  * Slight changes for FF3
  * ----------
  */
+.skin-firefly-iii .money-neutral {
+  color: #999;
+}
+.skin-firefly-iii .money-positive {
+  color: #00a65a;
+}
+.skin-firefly-iii .money-negative {
+  color: #dd4b39;
+}
+.skin-firefly-iii .money-transfer {
+  color: #0073b7;
+}
 .skin-firefly-iii .main-header .navbar {
   background-color: #3c8dbc;
 }

@@ -26,7 +26,7 @@ namespace FireflyIII\Rules;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\Rule;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UniqueIban

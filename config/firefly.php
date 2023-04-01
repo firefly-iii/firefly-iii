@@ -107,7 +107,7 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '6.0.5',
+    'version'                      => '6.0.6',
     'api_version'                  => '2.0.1',
     'db_version'                   => 19,
 
@@ -531,7 +531,7 @@ return [
     'expected_source_types'     => [
         'source'      => [
             TransactionTypeModel::WITHDRAWAL       => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeEnum::DEPOSIT->value    => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeEnum::DEPOSIT->value    => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::REVENUE, AccountType::CASH],
             TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::OPENING_BALANCE  => [
                 AccountType::INITIAL_BALANCE,
@@ -554,11 +554,11 @@ return [
         ],
         'destination' => [
             TransactionTypeModel::WITHDRAWAL       => [
-                AccountType::EXPENSE,
-                AccountType::CASH,
                 AccountType::LOAN,
                 AccountType::DEBT,
                 AccountType::MORTGAGE,
+                AccountType::EXPENSE,
+                AccountType::CASH,
             ],
             TransactionTypeEnum::DEPOSIT->value    => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
@@ -877,6 +877,7 @@ return [
     ],
     'can_have_virtual_amounts'  => [AccountType::ASSET],
     'can_have_opening_balance'  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+    'dynamic_creation_allowed'  => [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION],
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],

@@ -36,7 +36,7 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ExportData

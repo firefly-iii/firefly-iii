@@ -42,7 +42,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  *

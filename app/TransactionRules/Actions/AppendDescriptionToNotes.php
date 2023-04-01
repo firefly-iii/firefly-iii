@@ -30,6 +30,9 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class AppendDescriptionToNotes
+ */
 class AppendDescriptionToNotes implements ActionInterface
 {
     private RuleAction $action;

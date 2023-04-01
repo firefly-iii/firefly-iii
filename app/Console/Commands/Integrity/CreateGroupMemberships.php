@@ -30,7 +30,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreateGroupMemberships
@@ -79,17 +79,18 @@ class CreateGroupMemberships extends Command
         /** @var User $user */
         foreach ($users as $user) {
             Log::debug(sprintf('Manage group memberships for user #%d', $user->id));
-            $this->createGroupMembership($user);
+            self::createGroupMembership($user);
             Log::debug(sprintf('Done with user #%d', $user->id));
         }
     }
 
     /**
+     * TODO move to helper.
      * @param  User  $user
      *
      * @throws FireflyException
      */
-    private function createGroupMembership(User $user): void
+    public static function createGroupMembership(User $user): void
     {
         // check if membership exists
         $userGroup = UserGroup::where('title', $user->email)->first();

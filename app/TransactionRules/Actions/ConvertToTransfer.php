@@ -26,13 +26,12 @@ namespace FireflyIII\TransactionRules\Actions;
 use DB;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  *
@@ -78,11 +77,23 @@ class ConvertToTransfer implements ActionInterface
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($user);
-        $asset = $repository->findByName($this->action->action_value, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        if (null === $asset) {
+        $opposing = null;
+        $expectedType = null;
+        if (TransactionType::WITHDRAWAL === $type) {
+            $expectedType = $this->getSourceType($journal['transaction_journal_id']);
+            // Withdrawal? Replace destination with account with same type as source.
+        }
+        if (TransactionType::DEPOSIT === $type) {
+            $expectedType = $this->getDestinationType($journal['transaction_journal_id']);
+            // Deposit? Replace source with account with same type as destination.
+        }
+        $opposing = $repository->findByName($this->action->action_value, [$expectedType]);
+
+        if (null === $opposing) {
             Log::error(
                 sprintf(
-                    'Journal #%d cannot be converted because no asset with name "%s" exists (rule #%d).',
+                    'Journal #%d cannot be converted because no valid %s account with name "%s" exists (rule #%d).',
+                    $expectedType,
                     $journal['transaction_journal_id'],
                     $this->action->action_value,
                     $this->action->rule_id
@@ -96,7 +107,7 @@ class ConvertToTransfer implements ActionInterface
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::TRANSFER));
 
-            return $this->convertWithdrawalArray($journal, $asset);
+            return $this->convertWithdrawalArray($journal, $opposing);
         }
         if (TransactionType::DEPOSIT === $type) {
             Log::debug('Going to transform a deposit to a transfer.');
@@ -104,7 +115,7 @@ class ConvertToTransfer implements ActionInterface
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
 
-            return $this->convertDepositArray($journal, $asset);
+            return $this->convertDepositArray($journal, $opposing);
         }
 
         return false;
@@ -113,19 +124,20 @@ class ConvertToTransfer implements ActionInterface
     /**
      * A withdrawal is from Asset to Expense.
      * We replace the Expense with another asset.
+     * So this replaces the destination
      *
      * @param  array  $journal
-     * @param  Account  $asset
+     * @param  Account  $opposing
      *
      * @return bool
      */
-    private function convertWithdrawalArray(array $journal, Account $asset): bool
+    private function convertWithdrawalArray(array $journal, Account $opposing): bool
     {
-        if ($journal['source_account_id'] === $asset->id) {
+        if ($journal['source_account_id'] === $opposing->id) {
             Log::error(
                 vsprintf(
                     'Journal #%d has already has "%s" as a source asset. ConvertToTransfer failed. (rule #%d).',
-                    [$journal['transaction_journal_id'], $asset->name, $this->action->rule_id]
+                    [$journal['transaction_journal_id'], $opposing->name, $this->action->rule_id]
                 )
             );
 
@@ -136,7 +148,7 @@ class ConvertToTransfer implements ActionInterface
         DB::table('transactions')
           ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
           ->where('amount', '>', 0)
-          ->update(['account_id' => $asset->id]);
+          ->update(['account_id' => $opposing->id]);
 
         // change transaction type of journal:
         $newType = TransactionType::whereType(TransactionType::TRANSFER)->first();
@@ -155,17 +167,17 @@ class ConvertToTransfer implements ActionInterface
      * We replace the Revenue with another asset.
      *
      * @param  array  $journal
-     * @param  Account  $asset
+     * @param  Account  $opposing
      *
      * @return bool
      */
-    private function convertDepositArray(array $journal, Account $asset): bool
+    private function convertDepositArray(array $journal, Account $opposing): bool
     {
-        if ($journal['destination_account_id'] === $asset->id) {
+        if ($journal['destination_account_id'] === $opposing->id) {
             Log::error(
                 vsprintf(
                     'Journal #%d has already has "%s" as a destination asset. ConvertToTransfer failed. (rule #%d).',
-                    [$journal['transaction_journal_id'], $asset->name, $this->action->rule_id]
+                    [$journal['transaction_journal_id'], $opposing->name, $this->action->rule_id]
                 )
             );
 
@@ -176,7 +188,7 @@ class ConvertToTransfer implements ActionInterface
         DB::table('transactions')
           ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
           ->where('amount', '<', 0)
-          ->update(['account_id' => $asset->id]);
+          ->update(['account_id' => $opposing->id]);
 
         // change transaction type of journal:
         $newType = TransactionType::whereType(TransactionType::TRANSFER)->first();
@@ -188,5 +200,35 @@ class ConvertToTransfer implements ActionInterface
         Log::debug('Converted deposit to transfer.');
 
         return true;
+    }
+
+    /**
+     * @param  int  $journalId
+     * @return string
+     */
+    private function getSourceType(int $journalId): string
+    {
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::find($journalId);
+        if (null === $journal) {
+            Log::error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
+            return '';
+        }
+        return (string)$journal->transactions()->where('amount', '<', 0)->first()?->account?->accountType?->type;
+    }
+
+    /**
+     * @param  int  $journalId
+     * @return string
+     */
+    private function getDestinationType(int $journalId): string
+    {
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::find($journalId);
+        if (null === $journal) {
+            Log::error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
+            return '';
+        }
+        return (string)$journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
     }
 }

@@ -31,9 +31,10 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use JsonException;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  *
@@ -89,6 +90,12 @@ class ConvertToWithdrawal implements ActionInterface
         return false;
     }
 
+    /**
+     * @param  array  $journal
+     * @return bool
+     * @throws FireflyException
+     * @throws JsonException
+     */
     private function convertDepositArray(array $journal): bool
     {
         $user = User::find($journal['user_id']);
@@ -96,10 +103,21 @@ class ConvertToWithdrawal implements ActionInterface
         $factory = app(AccountFactory::class);
         $factory->setUser($user);
 
-        $expenseName   = '' === $this->action->action_value ? $journal['source_account_name'] : $this->action->action_value;
-        $expense       = $factory->findOrCreate($expenseName, AccountType::EXPENSE);
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($user);
+
+        // get the action value, or use the original source name in case the action value is empty:
+        // this becomes a new or existing (expense) account, which is the destination of the new withdrawal.
+        $opposingName = '' === $this->action->action_value ? $journal['source_account_name'] : $this->action->action_value;
+        // we check all possible source account types if one exists:
+        $validTypes = config('firefly.expected_source_types.destination.Withdrawal');
+        $opposingAccount    = $repository->findByName($opposingName, $validTypes);
+        if (null === $opposingAccount) {
+            $opposingAccount = $factory->findOrCreate($opposingName, AccountType::EXPENSE);
+        }
+
         $destinationId = $journal['destination_account_id'];
-        Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $this->action->action_value, $expenseName));
+        Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $this->action->action_value, $opposingName));
 
         // update source transaction(s) to be the original destination account
         DB::table('transactions')
@@ -111,7 +129,7 @@ class ConvertToWithdrawal implements ActionInterface
         DB::table('transactions')
           ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
           ->where('amount', '>', 0)
-          ->update(['account_id' => $expense->id]);
+          ->update(['account_id' => $opposingAccount->id]);
 
         // change transaction type of journal:
         $newType = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
@@ -141,16 +159,27 @@ class ConvertToWithdrawal implements ActionInterface
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($user);
-        $expenseName = '' === $this->action->action_value ? $journal['destination_account_name'] : $this->action->action_value;
-        $expense     = $factory->findOrCreate($expenseName, AccountType::EXPENSE);
 
-        Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $this->action->action_value, $expenseName));
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($user);
+
+        // get the action value, or use the original source name in case the action value is empty:
+        // this becomes a new or existing (expense) account, which is the destination of the new withdrawal.
+        $opposingName = '' === $this->action->action_value ? $journal['destination_account_name'] : $this->action->action_value;
+        // we check all possible source account types if one exists:
+        $validTypes = config('firefly.expected_source_types.destination.Withdrawal');
+        $opposingAccount    = $repository->findByName($opposingName, $validTypes);
+        if (null === $opposingAccount) {
+            $opposingAccount = $factory->findOrCreate($opposingName, AccountType::EXPENSE);
+        }
+
+        Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", destination name is "%s"', $this->action->action_value, $opposingName));
 
         // update destination transaction(s) to be new expense account.
         DB::table('transactions')
           ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
           ->where('amount', '>', 0)
-          ->update(['account_id' => $expense->id]);
+          ->update(['account_id' => $opposingAccount->id]);
 
         // change transaction type of journal:
         $newType = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();

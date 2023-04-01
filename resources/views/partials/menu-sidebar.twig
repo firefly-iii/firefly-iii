@@ -1,7 +1,7 @@
 <ul class="sidebar-menu" data-widget="tree">
     <li class="{{ activeRouteStrict('index') }}">
         <a href="{{ route('index') }}">
-            <span class="fa fa-dashboard fa-fw"></span>
+            <em class="fa fa-dashboard fa-fw"></em>
             <span>{{ 'dashboard'|_ }}</span>
         </a>
     </li>
@@ -10,21 +10,21 @@
 
     <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">
         <a href="{{ route('budgets.index') }}">
-            <span class="fa fa-pie-chart fa-fw"></span>
+            <em class="fa fa-pie-chart fa-fw"></em>
             <span>{{ 'budgets'|_ }}</span>
         </a>
     </li>
 
     <li class="{{ activeRoutePartial('bills') }}">
         <a href="{{ route('bills.index') }}">
-            <span class="fa fa-calendar-o fa-fw"></span>
+            <em class="fa fa-calendar-o fa-fw"></em>
             <span>{{ 'bills'|_ }}</span>
         </a>
     </li>
 
     <li class="{{ activeRoutePartial('piggy-banks') }}">
         <a href="{{ route('piggy-banks.index') }}">
-            <span class="fa fa-bullseye fa-fw"></span>
+            <em class="fa fa-bullseye fa-fw"></em>
             <span>{{ 'piggyBanks'|_ }}</span>
         </a>
     </li>
@@ -33,7 +33,7 @@
 
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">
         <a href="#">
-            <span class="fa fa-exchange fa-fw"></span>
+            <em class="fa fa-exchange fa-fw"></em>
             <span>{{ 'transactions'|_ }}</span>
             <span class="pull-right-container">
         <span class="fa fa-angle-left pull-right"></span>
@@ -64,7 +64,7 @@
 
     <li class="{{ activeRoutePartial('recurring') }} {{ activeRoutePartial('rules') }} treeview">
         <a href="#">
-            <span class="fa fa-microchip fa-fw"></span>
+            <em class="fa fa-microchip fa-fw"></em>
             <span>{{ 'automation'|_ }}</span>
             <span class="pull-right-container">
         <span class="fa fa-angle-left pull-right"></span>
@@ -97,7 +97,7 @@
 
     <li class="{{ activeRoutePartial('accounts') }} treeview" id="account-menu">
         <a href="#">
-            <span class="fa fa-credit-card fa-fw"></span>
+            <em class="fa fa-credit-card fa-fw"></em>
             <span>{{ 'accounts'|_ }}</span>
             <span class="pull-right-container">
         <span class="fa fa-angle-left pull-right"></span>
@@ -134,7 +134,7 @@
 
     <li class="{{ activeRoutePartial('categories') }} {{ activeRoutePartial('tags') }} {{ activeRoutePartial('groups') }} treeview">
         <a href="#">
-            <span class="fa fa-tags fa-fw"></span>
+            <em class="fa fa-tags fa-fw"></em>
             <span>{{ 'classification'|_ }}</span>
             <span class="pull-right-container">
         <span class="fa fa-angle-left pull-right"></span>
@@ -165,7 +165,7 @@
 
     <li class="{{ activeRoutePartial('reports') }}" id="report-menu">
         <a href="{{ route('reports.index') }}">
-            <span class="fa fa-bar-chart fa-fw"></span>
+            <em class="fa fa-bar-chart fa-fw"></em>
             <span>{{ 'reports'|_ }}</span>
         </a>
     </li>
@@ -174,7 +174,7 @@
     {% if config('firefly.feature_flags.export') %}
         <li class="{{ activeRoutePartial('export') }}" id="report-menu">
             <a href="{{ route('export.index') }}">
-                <span class="fa fa-upload fa-fw"></span>
+                <em class="fa fa-upload fa-fw"></em>
                 <span>{{ 'export_data_menu'|_ }}</span>
             </a>
         </li>
@@ -183,7 +183,7 @@
     <li class="{{ activeRoutePartial('admin') }} {{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currencies') }} treeview"
         id="option-menu">
         <a href="#">
-            <span class="fa fa-sliders fa-fw"></span>
+            <em class="fa fa-sliders fa-fw"></em>
             <span>{{ 'options'|_ }}</span>
             <span class="pull-right-container">
         <span class="fa fa-angle-left pull-right"></span>
@@ -232,7 +232,7 @@
     {% if 'remote_user_guard' != authGuard or '' != logoutUri %}
         <li>
             <a href="{{ route('logout') }}" class="logout-link">
-                <span class="fa fa-sign-out fa-fw"></span>
+                <em class="fa fa-sign-out fa-fw"></em>
                 <span>{{ 'logout'|_ }}</span>
             </a>
         </li>

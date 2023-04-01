@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\System;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CronController

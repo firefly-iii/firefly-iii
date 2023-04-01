@@ -30,6 +30,13 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class MoveNotesToDescription
+ */
+
+/**
+ * Class MoveNotesToDescription
+ */
 class MoveNotesToDescription implements ActionInterface
 {
     use ConvertsDataTypes;

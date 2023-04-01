@@ -35,7 +35,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
-use Log;
+use Illuminate\Support\Facades\Log;
 use phpseclib3\Crypt\RSA;
 
 /**

@@ -33,7 +33,7 @@ use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UpdateRequest

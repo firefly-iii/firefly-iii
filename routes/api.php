@@ -49,6 +49,21 @@ Route::group(
 );
 
 /**
+ * V2 API routes for auto complete
+ */
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Autocomplete',
+        'prefix'    => 'v2/autocomplete',
+        'as'        => 'api.v2.autocomplete.',
+    ],
+    static function () {
+        // Auto complete routes
+        Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
+    }
+);
+
+/**
  * V2 API route for net worth endpoint(s);
  */
 Route::group(
