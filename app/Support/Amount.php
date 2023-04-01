@@ -83,13 +83,13 @@ class Amount
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
-                return sprintf('<span class="text-success">%s</span>', $result);
+                return sprintf('<span class="text-success money-positive">%s</span>', $result);
             }
             if (-1 === bccomp($rounded, '0')) {
-                return sprintf('<span class="text-danger">%s</span>', $result);
+                return sprintf('<span class="text-danger money-negative">%s</span>', $result);
             }
 
-            return sprintf('<span style="color:#999">%s</span>', $result);
+            return sprintf('<span class="money-neutral">%s</span>', $result);
         }
 
         return $result;

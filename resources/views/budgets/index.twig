@@ -114,7 +114,7 @@
                                 {# info about the amount budgeted #}
                                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                     <small>{{ 'budgeted'|_ }}:
-                                        <span class="text-success budgeted_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}">
+                                        <span class="text-success money-positive budgeted_amount" data-id="{{ budget.id }}" data-currency="{{ budget.transaction_currency.id }}">
                                         {{ formatAmountBySymbol(budget.budgeted, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, false) }}
                                     </span>
                                     </small>

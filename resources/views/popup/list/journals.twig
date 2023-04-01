@@ -77,7 +77,7 @@
                     {% endif %}
                     {% set sum = (sum + (transaction.amount*-1)) %}
                 {% elseif transaction.transaction_type_type == 'Transfer' %}
-                    <span class="text-info">
+                    <span class="text-info money-transfer">
                         {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})

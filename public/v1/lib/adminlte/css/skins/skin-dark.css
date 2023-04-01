@@ -12,6 +12,28 @@
   background-color: #55606a;
   border-color: #454e56;
 }
+.skin-firefly-iii .text-muted {
+  color: #b0b8c0;
+}
+.skin-firefly-iii .money-neutral {
+  color: #999;
+}
+.skin-firefly-iii .money-positive {
+  color: #00ad5d;
+}
+.skin-firefly-iii .money-negative {
+  color: #e47365;
+}
+.skin-firefly-iii .money-transfer {
+  color: #47b2f5;
+}
+.skin-firefly-iii h1 small,
+.skin-firefly-iii h3 small {
+  color: #bec5cb;
+}
+.skin-firefly-iii .breadcrumb .active {
+  color: #bec5cb;
+}
 .skin-firefly-iii .progress {
   background-color: #3a4148;
 }
@@ -54,6 +76,9 @@
   background: -o-linear-gradient(#0968a5, #075383) !important;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0968a5', endColorstr='#075383', GradientType=0) !important;
   color: #fff;
+}
+.skin-firefly-iii a {
+  color: #5fa4cc;
 }
 .skin-firefly-iii a.list-group-item,
 .skin-firefly-iii button.list-group-item {
