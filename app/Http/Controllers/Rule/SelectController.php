@@ -38,8 +38,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Throwable;
 
 /**
@@ -150,9 +150,13 @@ class SelectController extends Controller
         }
 
         foreach ($textTriggers as $textTrigger) {
-            $trigger                = new RuleTrigger();
-            $trigger->trigger_type  = $textTrigger['type'];
-            $trigger->trigger_value = $textTrigger['value'];
+            $trigger                  = new RuleTrigger();
+            $trigger->trigger_type    = $textTrigger['type'];
+            $trigger->trigger_value   = $textTrigger['value'];
+            $trigger->stop_processing = $textTrigger['stop_processing'];
+            if ($textTrigger['prohibited']) {
+                $trigger->trigger_type = sprintf('-%s', $textTrigger['type']);
+            }
             $triggers->push($trigger);
         }
 
