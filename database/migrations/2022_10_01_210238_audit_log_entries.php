@@ -23,10 +23,12 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -34,21 +36,25 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('audit_log_entries', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->softDeletes();
+        try {
+            Schema::create('audit_log_entries', function (Blueprint $table) {
+                $table->id();
+                $table->timestamps();
+                $table->softDeletes();
 
-            $table->integer('auditable_id', false, true);
-            $table->string('auditable_type');
+                $table->integer('auditable_id', false, true);
+                $table->string('auditable_type');
 
-            $table->integer('changer_id', false, true);
-            $table->string('changer_type');
+                $table->integer('changer_id', false, true);
+                $table->string('changer_type');
 
-            $table->string('action', 255);
-            $table->text('before')->nullable();
-            $table->text('after')->nullable();
-        });
+                $table->string('action', 255);
+                $table->text('before')->nullable();
+                $table->text('after')->nullable();
+            });
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create table "audit_log_entries": %s', $e->getMessage()));
+        }
     }
 
     /**

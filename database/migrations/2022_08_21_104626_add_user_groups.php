@@ -23,13 +23,15 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 /**
  *
  */
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
      *
@@ -41,8 +43,16 @@ return new class () extends Migration {
             'currency_exchange_rates',
             function (Blueprint $table) {
                 if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
-                    $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
-                    $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                    try {
+                        $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
+                    } catch (QueryException $e) {
+                        Log::error(sprintf('Could not add column "user_group_id" to table "currency_exchange_rates": %s', $e->getMessage()));
+                    }
+                    try {
+                        $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                    } catch (QueryException $e) {
+                        Log::error(sprintf('Could not add foreign key "cer_to_ugi" to table "currency_exchange_rates": %s', $e->getMessage()));
+                    }
                 }
             }
         );
@@ -58,9 +68,17 @@ return new class () extends Migration {
         Schema::table(
             'currency_exchange_rates',
             function (Blueprint $table) {
-                $table->dropForeign('cer_to_ugi');
+                try {
+                    $table->dropForeign('cer_to_ugi');
+                } catch (QueryException $e) {
+                    Log::error(sprintf('Could not drop foreign key "cer_to_ugi" from table "currency_exchange_rates": %s', $e->getMessage()));
+                }
                 if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
-                    $table->dropColumn('user_group_id');
+                    try {
+                        $table->dropColumn('user_group_id');
+                    } catch (QueryException $e) {
+                        Log::error(sprintf('Could not drop column "user_group_id" from table "currency_exchange_rates": %s', $e->getMessage()));
+                    }
                 }
             }
         );
