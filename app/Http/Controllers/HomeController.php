@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
@@ -66,12 +67,24 @@ class HomeController extends Controller
      */
     public function dateRange(Request $request): JsonResponse
     {
-        $start         = new Carbon($request->get('start'));
-        $end           = new Carbon($request->get('end'));
+        try {
+            $stringStart = e((string)$request->get('start'));
+            $start  = Carbon::createFromFormat('Y-m-d', $stringStart);
+        } catch (InvalidFormatException $e) {
+            Log::error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
+            $start = Carbon::now()->startOfMonth();
+        }
+        try {
+            $stringEnd = e((string)$request->get('end'));
+            $end    = Carbon::createFromFormat('Y-m-d', $stringEnd);
+        } catch (InvalidFormatException $e) {
+            Log::error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
+            $end = Carbon::now()->endOfMonth();
+        }
         $label         = $request->get('label');
         $isCustomRange = false;
 
-        Log::debug('Received dateRange', ['start' => $request->get('start'), 'end' => $request->get('end'), 'label' => $request->get('label')]);
+        Log::debug('Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
