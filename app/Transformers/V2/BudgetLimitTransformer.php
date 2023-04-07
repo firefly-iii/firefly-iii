@@ -67,11 +67,11 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
-//        $repository = app(OperationsRepository::class);
-//        $repository->setUser($budgetLimit->budget->user);
-//        $expenses              = $repository->sumExpenses(
-//            $budgetLimit->start_date, $budgetLimit->end_date, null, new Collection([$budgetLimit->budget]), $budgetLimit->transactionCurrency
-//        );
+        //        $repository = app(OperationsRepository::class);
+        //        $repository->setUser($budgetLimit->budget->user);
+        //        $expenses              = $repository->sumExpenses(
+        //            $budgetLimit->start_date, $budgetLimit->end_date, null, new Collection([$budgetLimit->budget]), $budgetLimit->transactionCurrency
+        //        );
         $currency              = $budgetLimit->transactionCurrency;
         $amount                = $budgetLimit->amount;
         $currencyDecimalPlaces = 2;

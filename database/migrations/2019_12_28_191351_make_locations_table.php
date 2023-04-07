@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -38,7 +39,7 @@ class MakeLocationsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('locations');
     }
@@ -48,22 +49,27 @@ class MakeLocationsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create(
-            'locations',
-            static function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->timestamps();
-                $table->softDeletes();
+        try {
+            Schema::create(
+                'locations',
+                static function (Blueprint $table) {
+                    $table->bigIncrements('id');
+                    $table->timestamps();
+                    $table->softDeletes();
 
-                $table->integer('locatable_id', false, true);
-                $table->string('locatable_type', 255);
+                    $table->integer('locatable_id', false, true);
+                    $table->string('locatable_type', 255);
 
-                $table->decimal('latitude', 12, 8)->nullable();
-                $table->decimal('longitude', 12, 8)->nullable();
-                $table->smallInteger('zoom_level', false, true)->nullable();
-            }
-        );
+                    $table->decimal('latitude', 12, 8)->nullable();
+                    $table->decimal('longitude', 12, 8)->nullable();
+                    $table->smallInteger('zoom_level', false, true)->nullable();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create table "locations": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        }
     }
 }

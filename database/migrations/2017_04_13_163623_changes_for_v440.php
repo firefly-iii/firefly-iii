@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -62,24 +63,29 @@ class ChangesForV440 extends Migration
     public function up(): void
     {
         if (!Schema::hasTable('currency_exchange_rates')) {
-            Schema::create(
-                'currency_exchange_rates',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('user_id', false, true);
-                    $table->integer('from_currency_id', false, true);
-                    $table->integer('to_currency_id', false, true);
-                    $table->date('date');
-                    $table->decimal('rate', 32, 12);
-                    $table->decimal('user_rate', 32, 12)->nullable();
+            try {
+                Schema::create(
+                    'currency_exchange_rates',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->integer('user_id', false, true);
+                        $table->integer('from_currency_id', false, true);
+                        $table->integer('to_currency_id', false, true);
+                        $table->date('date');
+                        $table->decimal('rate', 32, 12);
+                        $table->decimal('user_rate', 32, 12)->nullable();
 
-                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                    $table->foreign('from_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-                    $table->foreign('to_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-                }
-            );
+                        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                        $table->foreign('from_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
+                        $table->foreign('to_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "notifications": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
 
         Schema::table(

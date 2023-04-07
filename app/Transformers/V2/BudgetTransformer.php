@@ -68,30 +68,30 @@ class BudgetTransformer extends AbstractTransformer
         $start = $this->parameters->get('start');
         $end   = $this->parameters->get('end');
         //$autoBudget = $this->repository->getAutoBudget($budget);
-//        $spent      = [];
-//        if (null !== $start && null !== $end) {
-//            $spent = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
-//        }
+        //        $spent      = [];
+        //        if (null !== $start && null !== $end) {
+        //            $spent = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
+        //        }
 
-//        $abCurrencyId   = null;
-//        $abCurrencyCode = null;
-//        $abType         = null;
-//        $abAmount       = null;
-//        $abPeriod       = null;
-//        $notes          = $this->repository->getNoteText($budget);
-//
-//        $types = [
-//            AutoBudget::AUTO_BUDGET_RESET    => 'reset',
-//            AutoBudget::AUTO_BUDGET_ROLLOVER => 'rollover',
-//        ];
-//
-//        if (null !== $autoBudget) {
-//            $abCurrencyId   = (string) $autoBudget->transactionCurrency->id;
-//            $abCurrencyCode = $autoBudget->transactionCurrency->code;
-//            $abType         = $types[$autoBudget->auto_budget_type];
-//            $abAmount       = number_format((float) $autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
-//            $abPeriod       = $autoBudget->period;
-//        }
+        //        $abCurrencyId   = null;
+        //        $abCurrencyCode = null;
+        //        $abType         = null;
+        //        $abAmount       = null;
+        //        $abPeriod       = null;
+        //        $notes          = $this->repository->getNoteText($budget);
+        //
+        //        $types = [
+        //            AutoBudget::AUTO_BUDGET_RESET    => 'reset',
+        //            AutoBudget::AUTO_BUDGET_ROLLOVER => 'rollover',
+        //        ];
+        //
+        //        if (null !== $autoBudget) {
+        //            $abCurrencyId   = (string) $autoBudget->transactionCurrency->id;
+        //            $abCurrencyCode = $autoBudget->transactionCurrency->code;
+        //            $abType         = $types[$autoBudget->auto_budget_type];
+        //            $abAmount       = number_format((float) $autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
+        //            $abPeriod       = $autoBudget->period;
+        //        }
 
         return [
             'id'         => (string)$budget->id,

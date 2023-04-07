@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-return new class() extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -47,11 +47,13 @@ return new class() extends Migration {
                         $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
                     } catch (QueryException $e) {
                         Log::error(sprintf('Could not add column "user_group_id" to table "currency_exchange_rates": %s', $e->getMessage()));
+                        Log::error('If the column exists already (see error), this is not a problem. Otherwise, please create a GitHub discussion.');
                     }
                     try {
                         $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
                     } catch (QueryException $e) {
                         Log::error(sprintf('Could not add foreign key "cer_to_ugi" to table "currency_exchange_rates": %s', $e->getMessage()));
+                        Log::error('If the foreign key exists already (see error), this is not a problem. Otherwise, please create a GitHub discussion.');
                     }
                 }
             }
@@ -72,12 +74,14 @@ return new class() extends Migration {
                     $table->dropForeign('cer_to_ugi');
                 } catch (QueryException $e) {
                     Log::error(sprintf('Could not drop foreign key "cer_to_ugi" from table "currency_exchange_rates": %s', $e->getMessage()));
+                    Log::error('If the foreign key does not exist (see error message), this is not a problem. Otherwise, please create a GitHub discussion.');
                 }
                 if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
                     try {
                         $table->dropColumn('user_group_id');
                     } catch (QueryException $e) {
                         Log::error(sprintf('Could not drop column "user_group_id" from table "currency_exchange_rates": %s', $e->getMessage()));
+                        Log::error('If the column does not exist (see error message), this is not a problem. Otherwise, please create a GitHub discussion.');
                     }
                 }
             }
