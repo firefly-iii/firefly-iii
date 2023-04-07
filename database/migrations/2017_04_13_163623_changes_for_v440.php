@@ -21,6 +21,7 @@
  */
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
@@ -37,22 +38,24 @@ class ChangesForV440 extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasTable('currency_exchange_rates')) {
-            Schema::dropIfExists('currency_exchange_rates');
-        }
-
-        Schema::table(
-            'transactions',
-            static function (Blueprint $table) {
-                if (Schema::hasColumn('transactions', 'transaction_currency_id')) {
-                    // cannot drop foreign keys in SQLite:
-                    if ('sqlite' !== config('database.default')) {
-                        $table->dropForeign('transactions_transaction_currency_id_foreign');
+        Schema::dropIfExists('currency_exchange_rates');
+        try {
+            Schema::table(
+                'transactions',
+                static function (Blueprint $table) {
+                    if (Schema::hasColumn('transactions', 'transaction_currency_id')) {
+                        // cannot drop foreign keys in SQLite:
+                        if ('sqlite' !== config('database.default')) {
+                            $table->dropForeign('transactions_transaction_currency_id_foreign');
+                        }
+                        $table->dropColumn('transaction_currency_id');
                     }
-                    $table->dropColumn('transaction_currency_id');
                 }
-            }
-        );
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 
     /**
@@ -88,14 +91,19 @@ class ChangesForV440 extends Migration
             }
         }
 
-        Schema::table(
-            'transactions',
-            static function (Blueprint $table) {
-                if (!Schema::hasColumn('transactions', 'transaction_currency_id')) {
-                    $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
-                    $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+        try {
+            Schema::table(
+                'transactions',
+                static function (Blueprint $table) {
+                    if (!Schema::hasColumn('transactions', 'transaction_currency_id')) {
+                        $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
+                        $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+                    }
                 }
-            }
-        );
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }

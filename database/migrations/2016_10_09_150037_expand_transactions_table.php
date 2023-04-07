@@ -21,7 +21,9 @@
  */
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -36,12 +38,17 @@ class ExpandTransactionsTable extends Migration
      */
     public function down(): void
     {
-        Schema::table(
-            'transactions',
-            static function (Blueprint $table) {
-                $table->dropColumn('identifier');
-            }
-        );
+        try {
+            Schema::table(
+                'transactions',
+                static function (Blueprint $table) {
+                    $table->dropColumn('identifier');
+                }
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not drop column "extended_status": %s', $e->getMessage()));
+            Log::error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 
     /**
@@ -51,11 +58,16 @@ class ExpandTransactionsTable extends Migration
      */
     public function up(): void
     {
-        Schema::table(
-            'transactions',
-            static function (Blueprint $table) {
-                $table->smallInteger('identifier', false, true)->default(0);
-            }
-        );
+        try {
+            Schema::table(
+                'transactions',
+                static function (Blueprint $table) {
+                    $table->smallInteger('identifier', false, true)->default(0);
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }

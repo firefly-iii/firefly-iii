@@ -85,93 +85,93 @@ class ChangesForV475 extends Migration
             Log::error(sprintf('Could not create table "recurrences": %s', $e->getMessage()));
             Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
         }
-try {
-    Schema::create(
-        'recurrences_transactions',
-        static function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->integer('recurrence_id', false, true);
-            $table->integer('transaction_currency_id', false, true);
-            $table->integer('foreign_currency_id', false, true)->nullable();
-            $table->integer('source_id', false, true);
-            $table->integer('destination_id', false, true);
+        try {
+            Schema::create(
+                'recurrences_transactions',
+                static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('recurrence_id', false, true);
+                    $table->integer('transaction_currency_id', false, true);
+                    $table->integer('foreign_currency_id', false, true)->nullable();
+                    $table->integer('source_id', false, true);
+                    $table->integer('destination_id', false, true);
 
-            $table->decimal('amount', 32, 12);
-            $table->decimal('foreign_amount', 32, 12)->nullable();
-            $table->string('description', 1024);
+                    $table->decimal('amount', 32, 12);
+                    $table->decimal('foreign_amount', 32, 12)->nullable();
+                    $table->string('description', 1024);
 
-            $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');
-            $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-            $table->foreign('foreign_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
-            $table->foreign('source_id')->references('id')->on('accounts')->onDelete('cascade');
-            $table->foreign('destination_id')->references('id')->on('accounts')->onDelete('cascade');
+                    $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');
+                    $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
+                    $table->foreign('foreign_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+                    $table->foreign('source_id')->references('id')->on('accounts')->onDelete('cascade');
+                    $table->foreign('destination_id')->references('id')->on('accounts')->onDelete('cascade');
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create table "recurrences_transactions": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
         }
-    );
-} catch (QueryException $e) {
-    Log::error(sprintf('Could not create table "recurrences_transactions": %s', $e->getMessage()));
-    Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
-}
 
-try {
-    Schema::create(
-        'recurrences_repetitions',
-        static function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->integer('recurrence_id', false, true);
-            $table->string('repetition_type', 50);
-            $table->string('repetition_moment', 50);
-            $table->smallInteger('repetition_skip', false, true);
-            $table->smallInteger('weekend', false, true);
+        try {
+            Schema::create(
+                'recurrences_repetitions',
+                static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('recurrence_id', false, true);
+                    $table->string('repetition_type', 50);
+                    $table->string('repetition_moment', 50);
+                    $table->smallInteger('repetition_skip', false, true);
+                    $table->smallInteger('weekend', false, true);
 
-            $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');
+                    $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create table "recurrences_repetitions": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
         }
-    );
-} catch (QueryException $e) {
-    Log::error(sprintf('Could not create table "recurrences_repetitions": %s', $e->getMessage()));
-    Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
-}
 
-try {
-    Schema::create(
-        'recurrences_meta',
-        static function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->integer('recurrence_id', false, true);
+        try {
+            Schema::create(
+                'recurrences_meta',
+                static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('recurrence_id', false, true);
 
-            $table->string('name', 50);
-            $table->text('value');
+                    $table->string('name', 50);
+                    $table->text('value');
 
-            $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');
+                    $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create table "recurrences_meta": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
         }
-    );
-} catch (QueryException $e) {
-    Log::error(sprintf('Could not create table "recurrences_meta": %s', $e->getMessage()));
-    Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
-}
-try {
-    Schema::create(
-        'rt_meta',
-        static function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-            $table->softDeletes();
-            $table->integer('rt_id', false, true);
+        try {
+            Schema::create(
+                'rt_meta',
+                static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('rt_id', false, true);
 
-            $table->string('name', 50);
-            $table->text('value');
+                    $table->string('name', 50);
+                    $table->text('value');
 
-            $table->foreign('rt_id')->references('id')->on('recurrences_transactions')->onDelete('cascade');
+                    $table->foreign('rt_id')->references('id')->on('recurrences_transactions')->onDelete('cascade');
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create table "rt_meta": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
         }
-    );
-} catch (QueryException $e) {
-    Log::error(sprintf('Could not create table "rt_meta": %s', $e->getMessage()));
-    Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
-}
     }
 }

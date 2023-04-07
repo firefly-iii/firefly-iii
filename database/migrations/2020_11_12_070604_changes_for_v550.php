@@ -22,6 +22,7 @@
 
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
@@ -64,25 +65,35 @@ class ChangesForV550 extends Migration
         }
 
         // expand budget / transaction journal table.
-        Schema::table(
-            'budget_transaction_journal',
-            function (Blueprint $table) {
-                $table->dropForeign('budget_id_foreign');
-                $table->dropColumn('budget_limit_id');
-            }
-        );
+        try {
+            Schema::table(
+                'budget_transaction_journal',
+                function (Blueprint $table) {
+                    $table->dropForeign('budget_id_foreign');
+                    $table->dropColumn('budget_limit_id');
+                }
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
 
         // drop failed jobs table.
         Schema::dropIfExists('failed_jobs');
 
         // drop fields from budget limits
-        Schema::table(
-            'budget_limits',
-            static function (Blueprint $table) {
-                $table->dropColumn('period');
-                $table->dropColumn('generated');
-            }
-        );
+        try {
+            Schema::table(
+                'budget_limits',
+                static function (Blueprint $table) {
+                    $table->dropColumn('period');
+                    $table->dropColumn('generated');
+                }
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
         Schema::dropIfExists('webhook_attempts');
         Schema::dropIfExists('webhook_messages');
         Schema::dropIfExists('webhooks');
@@ -138,29 +149,39 @@ class ChangesForV550 extends Migration
         }
 
         // update budget / transaction journal table.
-        Schema::table(
-            'budget_transaction_journal',
-            function (Blueprint $table) {
-                if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
-                    $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
-                    $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
+        try {
+            Schema::table(
+                'budget_transaction_journal',
+                function (Blueprint $table) {
+                    if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+                        $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
+                        $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
+                    }
                 }
-            }
-        );
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
 
         // append budget limits table.
         // i swear I dropped & recreated this field 15 times already.
-        Schema::table(
-            'budget_limits',
-            static function (Blueprint $table) {
-                if (!Schema::hasColumn('budget_limits', 'period')) {
-                    $table->string('period', 12)->nullable();
+        try {
+            Schema::table(
+                'budget_limits',
+                static function (Blueprint $table) {
+                    if (!Schema::hasColumn('budget_limits', 'period')) {
+                        $table->string('period', 12)->nullable();
+                    }
+                    if (!Schema::hasColumn('budget_limits', 'generated')) {
+                        $table->boolean('generated')->default(false);
+                    }
                 }
-                if (!Schema::hasColumn('budget_limits', 'generated')) {
-                    $table->boolean('generated')->default(false);
-                }
-            }
-        );
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
 
         // new webhooks table
         if (!Schema::hasTable('webhooks')) {

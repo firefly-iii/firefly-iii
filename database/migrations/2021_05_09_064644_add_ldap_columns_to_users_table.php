@@ -22,7 +22,9 @@
 
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -33,12 +35,17 @@ class AddLdapColumnsToUsersTable extends Migration
      */
     public function down(): void
     {
-        Schema::table(
-            'users',
-            function (Blueprint $table) {
-                $table->dropColumn(['domain']);
-            }
-        );
+        try {
+            Schema::table(
+                'users',
+                function (Blueprint $table) {
+                    $table->dropColumn(['domain']);
+                }
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 
     /**
@@ -46,11 +53,16 @@ class AddLdapColumnsToUsersTable extends Migration
      */
     public function up(): void
     {
-        Schema::table(
-            'users',
-            function (Blueprint $table) {
-                $table->string('domain')->nullable();
-            }
-        );
+        try {
+            Schema::table(
+                'users',
+                function (Blueprint $table) {
+                    $table->string('domain')->nullable();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }

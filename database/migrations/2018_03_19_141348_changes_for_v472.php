@@ -22,7 +22,9 @@
 
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -39,18 +41,29 @@ class ChangesForV472 extends Migration
      */
     public function down(): void
     {
-        Schema::table(
-            'attachments',
-            static function (Blueprint $table) {
-                $table->text('notes')->nullable();
-            }
-        );
-        Schema::table(
-            'budgets',
-            static function (Blueprint $table) {
-                $table->dropColumn('order');
-            }
-        );
+        try {
+            Schema::table(
+                'attachments',
+                static function (Blueprint $table) {
+                    $table->text('notes')->nullable();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
+
+        try {
+            Schema::table(
+                'budgets',
+                static function (Blueprint $table) {
+                    $table->dropColumn('order');
+                }
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 
     /**
@@ -61,18 +74,28 @@ class ChangesForV472 extends Migration
      */
     public function up(): void
     {
-        Schema::table(
-            'attachments',
-            static function (Blueprint $table) {
-                $table->dropColumn('notes');
-            }
-        );
+        try {
+            Schema::table(
+                'attachments',
+                static function (Blueprint $table) {
+                    $table->dropColumn('notes');
+                }
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
 
-        Schema::table(
-            'budgets',
-            static function (Blueprint $table) {
-                $table->mediumInteger('order', false, true)->default(0);
-            }
-        );
+        try {
+            Schema::table(
+                'budgets',
+                static function (Blueprint $table) {
+                    $table->mediumInteger('order', false, true)->default(0);
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }

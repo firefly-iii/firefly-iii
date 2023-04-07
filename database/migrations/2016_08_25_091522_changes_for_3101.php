@@ -22,7 +22,6 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ChangesFor3101.
@@ -36,14 +35,6 @@ class ChangesFor3101 extends Migration
      */
     public function down(): void
     {
-        Schema::table(
-            'import_jobs',
-            static function (Blueprint $table) {
-                if (Schema::hasColumn('import_jobs', 'extended_status')) {
-                    $table->dropColumn('extended_status');
-                }
-            }
-        );
     }
 
     /**
@@ -53,13 +44,5 @@ class ChangesFor3101 extends Migration
      */
     public function up(): void
     {
-        Schema::table(
-            'import_jobs',
-            static function (Blueprint $table) {
-                if (!Schema::hasColumn('import_jobs', 'extended_status')) {
-                    $table->text('extended_status')->nullable();
-                }
-            }
-        );
     }
 }

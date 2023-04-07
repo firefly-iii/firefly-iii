@@ -21,7 +21,9 @@
  */
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -37,12 +39,17 @@ class ChangesForV470a extends Migration
      */
     public function down(): void
     {
-        Schema::table(
-            'transactions',
-            static function (Blueprint $table) {
-                $table->dropColumn('reconciled');
-            }
-        );
+        try {
+            Schema::table(
+                'transactions',
+                static function (Blueprint $table) {
+                    $table->dropColumn('reconciled');
+                }
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 
     /**
@@ -52,11 +59,16 @@ class ChangesForV470a extends Migration
      */
     public function up(): void
     {
-        Schema::table(
-            'transactions',
-            static function (Blueprint $table) {
-                $table->boolean('reconciled')->after('deleted_at')->default(0);
-            }
-        );
+        try {
+            Schema::table(
+                'transactions',
+                static function (Blueprint $table) {
+                    $table->boolean('reconciled')->after('deleted_at')->default(0);
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }

@@ -22,6 +22,7 @@
 
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
@@ -59,26 +60,36 @@ class UserGroups extends Migration
         // remove columns from tables
         /** @var string $tableName */
         foreach ($this->tables as $tableName) {
+            try {
+                Schema::table(
+                    $tableName,
+                    function (Blueprint $table) use ($tableName) {
+                        $table->dropForeign(sprintf('%s_to_ugi', $tableName));
+                        if (Schema::hasColumn($tableName, 'user_group_id')) {
+                            $table->dropColumn('user_group_id');
+                        }
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
+        }
+
+        try {
             Schema::table(
-                $tableName,
-                function (Blueprint $table) use ($tableName) {
-                    $table->dropForeign(sprintf('%s_to_ugi', $tableName));
-                    if (Schema::hasColumn($tableName, 'user_group_id')) {
+                'users',
+                function (Blueprint $table) {
+                    $table->dropForeign('type_user_group_id');
+                    if (Schema::hasColumn('users', 'user_group_id')) {
                         $table->dropColumn('user_group_id');
                     }
                 }
             );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
-
-        Schema::table(
-            'users',
-            function (Blueprint $table) {
-                $table->dropForeign('type_user_group_id');
-                if (Schema::hasColumn('users', 'user_group_id')) {
-                    $table->dropColumn('user_group_id');
-                }
-            }
-        );
 
         Schema::dropIfExists('group_memberships');
         Schema::dropIfExists('user_roles');
@@ -150,30 +161,40 @@ class UserGroups extends Migration
             Log::error(sprintf('Could not create table "group_memberships": %s', $e->getMessage()));
             Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
         }
-        Schema::table(
-            'users',
-            function (Blueprint $table) {
-                if (!Schema::hasColumn('users', 'user_group_id')) {
-                    $table->bigInteger('user_group_id', false, true)->nullable();
-                    $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+        try {
+            Schema::table(
+                'users',
+                function (Blueprint $table) {
+                    if (!Schema::hasColumn('users', 'user_group_id')) {
+                        $table->bigInteger('user_group_id', false, true)->nullable();
+                        $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                    }
                 }
-            }
-        );
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
 
         // ADD columns from tables
         /** @var string $tableName */
         foreach ($this->tables as $tableName) {
-            Schema::table(
-                $tableName,
-                function (Blueprint $table) use ($tableName) {
-                    if (!Schema::hasColumn($tableName, 'user_group_id')) {
-                        $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
-                        $table->foreign('user_group_id', sprintf('%s_to_ugi', $tableName))->references('id')->on('user_groups')->onDelete('set null')->onUpdate(
-                            'cascade'
-                        );
+            try {
+                Schema::table(
+                    $tableName,
+                    function (Blueprint $table) use ($tableName) {
+                        if (!Schema::hasColumn($tableName, 'user_group_id')) {
+                            $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
+                            $table->foreign('user_group_id', sprintf('%s_to_ugi', $tableName))->references('id')->on('user_groups')->onDelete(
+                                'set null'
+                            )->onUpdate('cascade');
+                        }
                     }
-                }
-            );
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }
