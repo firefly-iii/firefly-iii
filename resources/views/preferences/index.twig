@@ -283,6 +283,19 @@
                                         <p class="text-info">{{ 'list_page_size_help'|_ }}</p>
                                         {{ ExpandedForm.integer('listPageSize',listPageSize,{'label' : 'list_page_size_label'|_}) }}
                                     </div>
+                                    <div class="preferences-box">
+                                        <h3>{{ 'dark_mode_preference'|_ }}</h3>
+                                        <p class="text-info">{{ 'dark_mode_preference_help'|_ }}</p>
+                                        {% for mode in availableDarkModes %}
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="darkMode"
+                                                       value="{{ mode }}" {% if darkMode == mode %} checked {% endif %}>
+                                                {{ ('dark_mode_option_'~mode)|_ }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         </div>

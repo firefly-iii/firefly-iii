@@ -100,11 +100,12 @@ abstract class Controller extends BaseController
                 $this->monthFormat       = (string)trans('config.month_js', [], $locale);
                 $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
                 $this->dateTimeFormat    = (string)trans('config.date_time_js', [], $locale);
-
+                $darkMode                = 'browser';
                 // get shown-intro-preference:
                 if (auth()->check()) {
                     $language  = app('steam')->getLanguage();
                     $locale    = app('steam')->getLocale();
+                    $darkMode  = app('preferences')->get('darkMode', 'browser')->data;
                     $page      = $this->getPageName();
                     $shownDemo = $this->hasSeenDemo();
                     app('view')->share('language', $language);
@@ -113,6 +114,7 @@ abstract class Controller extends BaseController
                     app('view')->share('current_route_name', $page);
                     app('view')->share('original_route_name', Route::currentRouteName());
                 }
+                app('view')->share('darkMode', $darkMode);
 
                 return $next($request);
             }
