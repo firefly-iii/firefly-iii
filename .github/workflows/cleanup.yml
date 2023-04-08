@@ -55,7 +55,6 @@ jobs:
             // because we track the duration of runs over time
             
             const workflows = [
-              'build.yml',
               'cleanup.yml',
               'depsreview.yaml',
               'laravel.yml',
