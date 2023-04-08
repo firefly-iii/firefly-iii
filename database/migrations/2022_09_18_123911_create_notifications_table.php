@@ -28,13 +28,13 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         try {
             Schema::create('notifications', function (Blueprint $table) {
@@ -47,6 +47,7 @@ return new class() extends Migration {
             });
         } catch (QueryException $e) {
             Log::error(sprintf('Could not create table "notifications": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
         }
     }
 
@@ -55,7 +56,7 @@ return new class() extends Migration {
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('notifications');
     }

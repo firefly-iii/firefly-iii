@@ -28,7 +28,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -49,6 +49,7 @@ return new class() extends Migration {
             });
         } catch (QueryException $e) {
             Log::error(sprintf('Could not create table "invited_users": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
         }
     }
 

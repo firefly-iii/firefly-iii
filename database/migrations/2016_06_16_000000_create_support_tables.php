@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -67,177 +68,257 @@ class CreateSupportTables extends Migration
         $this->createConfigurationTable();
     }
 
+    /**
+     * @return void
+     */
     private function createAccountTypeTable(): void
     {
         if (!Schema::hasTable('account_types')) {
-            Schema::create(
-                'account_types',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->string('type', 50);
+            try {
+                Schema::create(
+                    'account_types',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->string('type', 50);
 
-                    // type must be unique.
-                    $table->unique(['type']);
-                }
-            );
+                        // type must be unique.
+                        $table->unique(['type']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "account_types": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createConfigurationTable(): void
     {
         if (!Schema::hasTable('configuration')) {
-            Schema::create(
-                'configuration',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->string('name', 50);
-                    $table->text('data');
-                }
-            );
+            try {
+                Schema::create(
+                    'configuration',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->string('name', 50);
+                        $table->text('data');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "configuration": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createCurrencyTable(): void
     {
         if (!Schema::hasTable('transaction_currencies')) {
-            Schema::create(
-                'transaction_currencies',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->string('code', 3);
-                    $table->string('name', 255);
-                    $table->string('symbol', 12);
+            try {
+                Schema::create(
+                    'transaction_currencies',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->string('code', 3);
+                        $table->string('name', 255);
+                        $table->string('symbol', 12);
 
-                    // code must be unique.
-                    $table->unique(['code']);
-                }
-            );
+                        // code must be unique.
+                        $table->unique(['code']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "transaction_currencies": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createJobsTable(): void
     {
         if (!Schema::hasTable('jobs')) {
-            Schema::create(
-                'jobs',
-                static function (Blueprint $table) {
-                    // straight from Laravel
-                    $table->bigIncrements('id');
-                    $table->string('queue');
-                    $table->longText('payload');
-                    $table->tinyInteger('attempts')->unsigned();
-                    $table->tinyInteger('reserved')->unsigned();
-                    $table->unsignedInteger('reserved_at')->nullable();
-                    $table->unsignedInteger('available_at');
-                    $table->unsignedInteger('created_at');
-                    $table->index(['queue', 'reserved', 'reserved_at']);
-                }
-            );
+            try {
+                Schema::create(
+                    'jobs',
+                    static function (Blueprint $table) {
+                        // straight from Laravel
+                        $table->bigIncrements('id');
+                        $table->string('queue');
+                        $table->longText('payload');
+                        $table->tinyInteger('attempts')->unsigned();
+                        $table->tinyInteger('reserved')->unsigned();
+                        $table->unsignedInteger('reserved_at')->nullable();
+                        $table->unsignedInteger('available_at');
+                        $table->unsignedInteger('created_at');
+                        $table->index(['queue', 'reserved', 'reserved_at']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createPasswordTable(): void
     {
         if (!Schema::hasTable('password_resets')) {
-            Schema::create(
-                'password_resets',
-                static function (Blueprint $table) {
-                    // straight from laravel
-                    $table->string('email')->index();
-                    $table->string('token')->index();
-                    $table->timestamp('created_at')->nullable();
-                }
-            );
+            try {
+                Schema::create(
+                    'password_resets',
+                    static function (Blueprint $table) {
+                        // straight from laravel
+                        $table->string('email')->index();
+                        $table->string('token')->index();
+                        $table->timestamp('created_at')->nullable();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "password_resets": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createPermissionRoleTable(): void
     {
         if (!Schema::hasTable('permission_role')) {
-            Schema::create(
-                'permission_role',
-                static function (Blueprint $table) {
-                    $table->integer('permission_id')->unsigned();
-                    $table->integer('role_id')->unsigned();
+            try {
+                Schema::create(
+                    'permission_role',
+                    static function (Blueprint $table) {
+                        $table->integer('permission_id')->unsigned();
+                        $table->integer('role_id')->unsigned();
 
-                    $table->foreign('permission_id')->references('id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
-                    $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
+                        $table->foreign('permission_id')->references('id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
+                        $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
 
-                    $table->primary(['permission_id', 'role_id']);
-                }
-            );
+                        $table->primary(['permission_id', 'role_id']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "permission_role": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createPermissionsTable(): void
     {
         if (!Schema::hasTable('permissions')) {
-            Schema::create(
-                'permissions',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->string('name')->unique();
-                    $table->string('display_name')->nullable();
-                    $table->string('description')->nullable();
-                }
-            );
+            try {
+                Schema::create(
+                    'permissions',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->string('name')->unique();
+                        $table->string('display_name')->nullable();
+                        $table->string('description')->nullable();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "permissions": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createRolesTable(): void
     {
         if (!Schema::hasTable('roles')) {
-            Schema::create(
-                'roles',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->string('name')->unique();
-                    $table->string('display_name')->nullable();
-                    $table->string('description')->nullable();
-                }
-            );
+            try {
+                Schema::create(
+                    'roles',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->string('name')->unique();
+                        $table->string('display_name')->nullable();
+                        $table->string('description')->nullable();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "roles": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createSessionsTable(): void
     {
         if (!Schema::hasTable('sessions')) {
-            Schema::create(
-                'sessions',
-                static function (Blueprint $table) {
-                    $table->string('id')->unique();
-                    $table->integer('user_id')->nullable();
-                    $table->string('ip_address', 45)->nullable();
-                    $table->text('user_agent')->nullable();
-                    $table->text('payload');
-                    $table->integer('last_activity');
-                }
-            );
+            try {
+                Schema::create(
+                    'sessions',
+                    static function (Blueprint $table) {
+                        $table->string('id')->unique();
+                        $table->integer('user_id')->nullable();
+                        $table->string('ip_address', 45)->nullable();
+                        $table->text('user_agent')->nullable();
+                        $table->text('payload');
+                        $table->integer('last_activity');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "sessions": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
+    /**
+     * @return void
+     */
     private function createTransactionTypeTable(): void
     {
         if (!Schema::hasTable('transaction_types')) {
-            Schema::create(
-                'transaction_types',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->string('type', 50);
+            try {
+                Schema::create(
+                    'transaction_types',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->string('type', 50);
 
-                    // type must be unique.
-                    $table->unique(['type']);
-                }
-            );
+                        // type must be unique.
+                        $table->unique(['type']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "transaction_types": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 }

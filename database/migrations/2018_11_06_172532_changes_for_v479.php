@@ -22,7 +22,9 @@
 
 declare(strict_types=1);
 
+use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -37,14 +39,19 @@ class ChangesForV479 extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table(
-            'transaction_currencies',
-            static function (Blueprint $table) {
-                $table->dropColumn(['enabled']);
-            }
-        );
+        try {
+            Schema::table(
+                'transaction_currencies',
+                static function (Blueprint $table) {
+                    $table->dropColumn(['enabled']);
+                }
+            );
+        } catch (QueryException|ColumnDoesNotExist $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 
     /**
@@ -53,13 +60,18 @@ class ChangesForV479 extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table(
-            'transaction_currencies',
-            static function (Blueprint $table) {
-                $table->boolean('enabled')->default(0)->after('deleted_at');
-            }
-        );
+        try {
+            Schema::table(
+                'transaction_currencies',
+                static function (Blueprint $table) {
+                    $table->boolean('enabled')->default(0)->after('deleted_at');
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }
