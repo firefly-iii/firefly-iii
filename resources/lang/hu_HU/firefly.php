@@ -1302,7 +1302,12 @@ return [
 
 
     // preferences
+    'dark_mode_option_browser'                  => 'Let your browser decide',
+    'dark_mode_option_light'                    => 'Always light',
+    'dark_mode_option_dark'                     => 'Always dark',
     'equal_to_language'                         => '(nyelvvel megegyező)',
+    'dark_mode_preference'                      => 'Dark mode',
+    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
     'pref_home_screen_accounts'                 => 'Kezdőoldali számlák',
     'pref_home_screen_accounts_help'            => 'Melyik számlák legyenek megjelenítve a kezdőoldalon?',
     'pref_view_range'                           => 'Tartomány mutatása',

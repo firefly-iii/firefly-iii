@@ -104,7 +104,6 @@ class ChangesForV480 extends Migration
 
     /**
      * Run the migrations.
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
      * @return void
      */

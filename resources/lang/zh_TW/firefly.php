@@ -1302,7 +1302,12 @@ return [
 
 
     // preferences
+    'dark_mode_option_browser'                  => 'Let your browser decide',
+    'dark_mode_option_light'                    => 'Always light',
+    'dark_mode_option_dark'                     => 'Always dark',
     'equal_to_language'                         => '(equal to language)',
+    'dark_mode_preference'                      => 'Dark mode',
+    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
     'pref_home_screen_accounts'                 => '主畫面帳戶',
     'pref_home_screen_accounts_help'            => '哪些帳戶應該顯示在主頁面上？',
     'pref_view_range'                           => '檢視範圍',

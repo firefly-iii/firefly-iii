@@ -1302,7 +1302,12 @@ return [
 
 
     // preferences
+    'dark_mode_option_browser'                  => 'Je browser bepaalt',
+    'dark_mode_option_light'                    => 'Altijd licht',
+    'dark_mode_option_dark'                     => 'Altijd donker',
     'equal_to_language'                         => '(zelfde als taal)',
+    'dark_mode_preference'                      => 'Nachtmodus',
+    'dark_mode_preference_help'                 => 'Stel nachtmodus in.',
     'pref_home_screen_accounts'                 => 'Voorpaginarekeningen',
     'pref_home_screen_accounts_help'            => 'Welke betaalrekeningen wil je op de voorpagina zien?',
     'pref_view_range'                           => 'Bereik',
