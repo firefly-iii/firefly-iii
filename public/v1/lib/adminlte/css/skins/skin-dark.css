@@ -12,6 +12,9 @@
   background-color: #55606a;
   border-color: #454e56;
 }
+.skin-firefly-iii .alert-success > a {
+  color: #fff;
+}
 .skin-firefly-iii .text-muted {
   color: #b0b8c0;
 }

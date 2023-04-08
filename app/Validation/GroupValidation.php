@@ -165,7 +165,6 @@ trait GroupValidation
      * @param  array  $transaction
      * @param  TransactionGroup  $transactionGroup
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function validateJournalId(Validator $validator, int $index, array $transaction, TransactionGroup $transactionGroup): void
     {

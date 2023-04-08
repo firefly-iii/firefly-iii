@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -36,26 +37,35 @@ class ChangesForV420 extends Migration
      */
     public function down(): void
     {
-        Schema::table(
-            'journal_meta',
-            static function (Blueprint $table) {
-                $table->dropSoftDeletes();
-            }
-        );
+        try {
+            Schema::table(
+                'journal_meta',
+                static function (Blueprint $table) {
+                    $table->dropSoftDeletes();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
-        Schema::table(
-            'journal_meta',
-            static function (Blueprint $table) {
-                $table->softDeletes();
-            }
-        );
+        try {
+            Schema::table(
+                'journal_meta',
+                static function (Blueprint $table) {
+                    $table->softDeletes();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }

@@ -23,7 +23,9 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
@@ -32,23 +34,28 @@ return new class () extends Migration {
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('audit_log_entries', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->softDeletes();
+        try {
+            Schema::create('audit_log_entries', function (Blueprint $table) {
+                $table->id();
+                $table->timestamps();
+                $table->softDeletes();
 
-            $table->integer('auditable_id', false, true);
-            $table->string('auditable_type');
+                $table->integer('auditable_id', false, true);
+                $table->string('auditable_type');
 
-            $table->integer('changer_id', false, true);
-            $table->string('changer_type');
+                $table->integer('changer_id', false, true);
+                $table->string('changer_type');
 
-            $table->string('action', 255);
-            $table->text('before')->nullable();
-            $table->text('after')->nullable();
-        });
+                $table->string('action', 255);
+                $table->text('before')->nullable();
+                $table->text('after')->nullable();
+            });
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create table "audit_log_entries": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        }
     }
 
     /**
@@ -56,7 +63,7 @@ return new class () extends Migration {
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('audit_log_entries');
     }

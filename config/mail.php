@@ -38,11 +38,11 @@ return [
     'mailers' => [
         'smtp' => [
             'transport'   => 'smtp',
-            'host'        => env('MAIL_HOST', 'smtp.mailtrap.io'),
+            'host'        => envNonEmpty('MAIL_HOST', 'smtp.mailtrap.io'),
             'port'        => (int)env('MAIL_PORT', 2525),
-            'encryption'  => env('MAIL_ENCRYPTION', 'tls'),
-            'username'    => env('MAIL_USERNAME'),
-            'password'    => env('MAIL_PASSWORD'),
+            'encryption'  => envNonEmpty('MAIL_ENCRYPTION', 'tls'),
+            'username'    => envNonEmpty('MAIL_USERNAME', 'user@example.com'),
+            'password'    => envNonEmpty('MAIL_PASSWORD', 'password'),
             'timeout'     => null,
             'verify_peer' => null !== env('MAIL_ENCRYPTION'),
         ],
@@ -68,6 +68,11 @@ return [
             'path'      => '/usr/sbin/sendmail -bs',
         ],
         'log'      => [
+            'transport' => 'log',
+            'channel'   => env('MAIL_LOG_CHANNEL', 'stack'),
+            'level'     => 'notice',
+        ],
+        'null'      => [
             'transport' => 'log',
             'channel'   => env('MAIL_LOG_CHANNEL', 'stack'),
             'level'     => 'notice',

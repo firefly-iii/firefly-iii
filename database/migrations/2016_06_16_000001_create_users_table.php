@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -42,24 +43,28 @@ class CreateUsersTable extends Migration
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
         if (!Schema::hasTable('users')) {
-            Schema::create(
-                'users',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->string('email', 255);
-                    $table->string('password', 60);
-                    $table->string('remember_token', 100)->nullable();
-                    $table->string('reset', 32)->nullable();
-                    $table->tinyInteger('blocked', false, true)->default('0');
-                    $table->string('blocked_code', 25)->nullable();
-                }
-            );
+            try {
+                Schema::create(
+                    'users',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->string('email', 255);
+                        $table->string('password', 60);
+                        $table->string('remember_token', 100)->nullable();
+                        $table->string('reset', 32)->nullable();
+                        $table->tinyInteger('blocked', false, true)->default('0');
+                        $table->string('blocked_code', 25)->nullable();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "users": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 }

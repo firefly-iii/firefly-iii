@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -45,7 +46,6 @@ class ChangesForV4711 extends Migration
 
     /**
      * Run the migrations.
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
      * @return void
      */
@@ -59,18 +59,28 @@ class ChangesForV4711 extends Migration
          * datetime (without a time zone) for all database engines because MySQL refuses to play
          * nice.
          */
-        Schema::table(
-            'transaction_journals',
-            static function (Blueprint $table) {
-                $table->dateTime('date')->change();
-            }
-        );
+        try {
+            Schema::table(
+                'transaction_journals',
+                static function (Blueprint $table) {
+                    $table->dateTime('date')->change();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
 
-        Schema::table(
-            'preferences',
-            static function (Blueprint $table) {
-                $table->text('data')->nullable()->change();
-            }
-        );
+        try {
+            Schema::table(
+                'preferences',
+                static function (Blueprint $table) {
+                    $table->text('data')->nullable()->change();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }

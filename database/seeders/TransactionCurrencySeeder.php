@@ -33,8 +33,6 @@ use PDOException;
 class TransactionCurrencySeeder extends Seeder
 {
     /**
-     * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function run()
     {

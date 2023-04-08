@@ -45,8 +45,8 @@ class AcceptHeaders
     public function handle($request, $next): mixed
     {
         $method       = $request->getMethod();
-        $accepts      = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json', '*/*'];
-        $contentTypes = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json'];
+        $accepts      = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json', 'application/octet-stream', '*/*'];
+        $contentTypes = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json', 'application/octet-stream'];
         $submitted    = (string)$request->header('Content-Type');
 
 

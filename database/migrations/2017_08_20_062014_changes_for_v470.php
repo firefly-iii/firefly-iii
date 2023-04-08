@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -44,45 +45,54 @@ class ChangesForV470 extends Migration
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
         if (!Schema::hasTable('link_types')) {
-            Schema::create(
-                'link_types',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->string('name');
-                    $table->string('outward');
-                    $table->string('inward');
-                    $table->boolean('editable');
+            try {
+                Schema::create(
+                    'link_types',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->string('name');
+                        $table->string('outward');
+                        $table->string('inward');
+                        $table->boolean('editable');
 
-                    $table->unique(['name', 'outward', 'inward']);
-                }
-            );
+                        $table->unique(['name', 'outward', 'inward']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "link_types": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
 
         if (!Schema::hasTable('journal_links')) {
-            Schema::create(
-                'journal_links',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->integer('link_type_id', false, true);
-                    $table->integer('source_id', false, true);
-                    $table->integer('destination_id', false, true);
-                    $table->text('comment')->nullable();
+            try {
+                Schema::create(
+                    'journal_links',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->integer('link_type_id', false, true);
+                        $table->integer('source_id', false, true);
+                        $table->integer('destination_id', false, true);
+                        $table->text('comment')->nullable();
 
-                    $table->foreign('link_type_id')->references('id')->on('link_types')->onDelete('cascade');
-                    $table->foreign('source_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-                    $table->foreign('destination_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                        $table->foreign('link_type_id')->references('id')->on('link_types')->onDelete('cascade');
+                        $table->foreign('source_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                        $table->foreign('destination_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
-                    $table->unique(['link_type_id', 'source_id', 'destination_id']);
-                }
-            );
+                        $table->unique(['link_type_id', 'source_id', 'destination_id']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "journal_links": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 }

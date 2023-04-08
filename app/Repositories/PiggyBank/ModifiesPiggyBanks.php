@@ -178,7 +178,7 @@ trait ModifiesPiggyBanks
             return $piggyBank;
         }
         $max = $piggyBank->targetamount;
-        if (1 === bccomp($amount, $max)) {
+        if (1 === bccomp($amount, $max) && 0 !== bccomp($piggyBank->targetamount, '0')) {
             $amount = $max;
         }
         $difference                = bcsub($amount, $repetition->currentamount);

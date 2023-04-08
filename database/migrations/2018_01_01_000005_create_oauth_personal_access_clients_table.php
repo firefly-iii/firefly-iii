@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -43,17 +44,21 @@ class CreateOauthPersonalAccessClientsTable extends Migration
 
     /**
      * Run the migrations.
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
-        Schema::create(
-            'oauth_personal_access_clients',
-            static function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('client_id')->index();
-                $table->timestamps();
-            }
-        );
+        try {
+            Schema::create(
+                'oauth_personal_access_clients',
+                static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->integer('client_id')->index();
+                    $table->timestamps();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create table "oauth_personal_access_clients": %s', $e->getMessage()));
+            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        }
     }
 }

@@ -107,7 +107,7 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '6.0.6',
+    'version'                      => '6.0.7',
     'api_version'                  => '2.0.1',
     'db_version'                   => 19,
 
@@ -205,6 +205,7 @@ return [
     ],
 
     // default user-related values
+    'darkMode'                     => 'browser',
     'list_length'                  => 10, // to be removed if v1 is cancelled.
     'default_preferences'          => [
         'frontPageAccounts'  => [],
@@ -241,6 +242,7 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
+    'available_dark_modes'         => ['light', 'dark', 'browser'],
     'bill_reminder_periods'        => [90, 30, 14, 7, 0],
     'valid_view_ranges'            => ['1D', '1W', '1M', '3M', '6M', '1Y',],
     'allowedMimes'                 => [

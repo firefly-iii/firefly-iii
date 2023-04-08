@@ -1302,7 +1302,12 @@ return [
 
 
     // preferences
+    'dark_mode_option_browser'                  => 'Pozwól Twojej przeglądarce decydować',
+    'dark_mode_option_light'                    => 'Zawsze jasny',
+    'dark_mode_option_dark'                     => 'Zawsze ciemny',
     'equal_to_language'                         => '(równe językowi)',
+    'dark_mode_preference'                      => 'Tryb ciemny',
+    'dark_mode_preference_help'                 => 'Powiedz Firefly III, kiedy użyć trybu ciemnego.',
     'pref_home_screen_accounts'                 => 'Konta na stronie domowej',
     'pref_home_screen_accounts_help'            => 'Które konta powinny być wyświetlane na stronie głównej?',
     'pref_view_range'                           => 'Zakres widzenia',

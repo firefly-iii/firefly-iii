@@ -32,9 +32,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -102,14 +102,15 @@ class PreferencesController extends Controller
         $languages          = config('firefly.languages');
         $locale             = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
         $listPageSize       = app('preferences')->get('listPageSize', 50)->data;
+        $darkMode           = app('preferences')->get('darkMode', 'browser')->data;
         $slackUrl           = app('preferences')->get('slack_webhook_url', '')->data;
         $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart    = date('Y').'-'.$fiscalYearStartStr;
         $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
+        $availableDarkModes = config('firefly.available_dark_modes');
 
         // notification preferences (single value for each):
-
         $notifications = [];
         foreach (config('firefly.available_notifications') as $notification) {
             $notifications[$notification] = app('preferences')->get(sprintf('notification_%s', $notification), true)->data;
@@ -140,6 +141,8 @@ class PreferencesController extends Controller
                 'isDocker',
                 'frontPageAccounts',
                 'languages',
+                'darkMode',
+                'availableDarkModes',
                 'notifications',
                 'slackUrl',
                 'locales',
@@ -256,6 +259,12 @@ class PreferencesController extends Controller
             'links'              => array_key_exists('links', $setOptions),
         ];
         app('preferences')->set('transaction_journal_optional_fields', $optionalTj);
+
+        // dark mode
+        $darkMode = $request->get('darkMode') ?? 'browser';
+        if(in_array($darkMode, config('firefly.available_dark_modes'), true)) {
+            app('preferences')->set('darkMode', $darkMode);
+        }
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();

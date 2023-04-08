@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -50,40 +51,27 @@ class ChangesForV520 extends Migration
     public function up(): void
     {
         if (!Schema::hasTable('auto_budgets')) {
-            Schema::create(
-                'auto_budgets',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('budget_id', false, true);
-                    $table->integer('transaction_currency_id', false, true);
-                    $table->tinyInteger('auto_budget_type', false, true)->default(1);
-                    $table->decimal('amount', 32, 12);
-                    $table->string('period', 50);
+            try {
+                Schema::create(
+                    'auto_budgets',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->integer('budget_id', false, true);
+                        $table->integer('transaction_currency_id', false, true);
+                        $table->tinyInteger('auto_budget_type', false, true)->default(1);
+                        $table->decimal('amount', 32, 12);
+                        $table->string('period', 50);
 
-                    $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-                    $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
-                }
-            );
-        }
-
-        if (!Schema::hasTable('telemetry')) {
-            Schema::create(
-                'telemetry',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->dateTime('submitted')->nullable();
-                    $table->integer('user_id', false, true)->nullable();
-                    $table->string('installation_id', 50);
-                    $table->string('type', 25);
-                    $table->string('key', 50);
-                    $table->text('value');
-
-                    $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-                }
-            );
+                        $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
+                        $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "auto_budgets": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 }

@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -36,7 +37,7 @@ class ExtendCurrencyInfo extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }
@@ -46,14 +47,19 @@ class ExtendCurrencyInfo extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table(
-            'transaction_currencies',
-            function (Blueprint $table) {
-                $table->string('code', 51)->change();
-                $table->string('symbol', 51)->change();
-            }
-        );
+        try {
+            Schema::table(
+                'transaction_currencies',
+                function (Blueprint $table) {
+                    $table->string('code', 51)->change();
+                    $table->string('symbol', 51)->change();
+                }
+            );
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
     }
 }

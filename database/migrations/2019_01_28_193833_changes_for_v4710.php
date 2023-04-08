@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
@@ -46,42 +47,51 @@ class ChangesForV4710 extends Migration
 
     /**
      * Run the migrations.
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
      * @return void
      */
     public function up(): void
     {
         if (!Schema::hasTable('transaction_groups')) {
-            Schema::create(
-                'transaction_groups',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('user_id', false, true);
-                    $table->string('title', 1024)->nullable();
+            try {
+                Schema::create(
+                    'transaction_groups',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->integer('user_id', false, true);
+                        $table->string('title', 1024)->nullable();
 
-                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                }
-            );
+                        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "transaction_groups": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
 
         if (!Schema::hasTable('group_journals')) {
-            Schema::create(
-                'group_journals',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->integer('transaction_group_id', false, true);
-                    $table->integer('transaction_journal_id', false, true);
+            try {
+                Schema::create(
+                    'group_journals',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->integer('transaction_group_id', false, true);
+                        $table->integer('transaction_journal_id', false, true);
 
-                    $table->foreign('transaction_group_id')->references('id')->on('transaction_groups')->onDelete('cascade');
-                    $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                        $table->foreign('transaction_group_id')->references('id')->on('transaction_groups')->onDelete('cascade');
+                        $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
-                    // unique combi:
-                    $table->unique(['transaction_group_id', 'transaction_journal_id'], 'unique_in_group');
-                }
-            );
+                        // unique combi:
+                        $table->unique(['transaction_group_id', 'transaction_journal_id'], 'unique_in_group');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "group_journals": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 }

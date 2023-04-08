@@ -33,9 +33,9 @@ use FireflyIII\User;
 use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Route as RouteFacade;
@@ -75,6 +75,7 @@ trait RequestInformation
                 $current    = [
                     'type'            => $triggerInfo['type'] ?? '',
                     'value'           => $triggerInfo['value'] ?? '',
+                    'prohibited'      => $triggerInfo['prohibited'] ?? false,
                     'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
                 ];
                 $current    = RuleFormRequest::replaceAmountTrigger($current);

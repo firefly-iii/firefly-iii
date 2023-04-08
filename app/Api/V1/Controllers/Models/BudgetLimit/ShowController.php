@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Api\V1\Requests\Data\SameDateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -108,12 +108,12 @@ class ShowController extends Controller
      *
      * Display a listing of the budget limits for this budget.
      *
-     * @param  DateRequest  $request
+     * @param  SameDateRequest  $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function indexAll(DateRequest $request): JsonResponse
+    public function indexAll(SameDateRequest $request): JsonResponse
     {
         $manager = $this->getManager();
         $manager->parseIncludes('budget');
