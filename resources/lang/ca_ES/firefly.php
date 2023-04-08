@@ -1302,7 +1302,12 @@ return [
 
 
     // preferences
+    'dark_mode_option_browser'                  => 'Let your browser decide',
+    'dark_mode_option_light'                    => 'Always light',
+    'dark_mode_option_dark'                     => 'Always dark',
     'equal_to_language'                         => '(igual a l\'idioma)',
+    'dark_mode_preference'                      => 'Dark mode',
+    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
     'pref_home_screen_accounts'                 => 'Comptes a la pantalla d\'inici',
     'pref_home_screen_accounts_help'            => 'Quins comptes s\'han de mostrar a la pàgina d\'inici?',
     'pref_view_range'                           => 'Interval de visió',

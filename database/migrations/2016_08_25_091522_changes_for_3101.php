@@ -40,7 +40,6 @@ class ChangesFor3101 extends Migration
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {

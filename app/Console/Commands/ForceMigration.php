@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Exceptions\FireflyException;

@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.0.7 - 2023-04-09
+
+### Added
+- Lots of error catching in DB migrations for smoother upgrades.
+- New command `firefly-iii:force-migration` which will force database migrations to run. It will probably also destroy your database so don't use it.
+- You can now force light/dark mode in your settings.
+
+### Fixed
+- [Issue 7137](https://github.com/firefly-iii/firefly-iii/issues/7137) Inconsistent rule test form
+- [Issue 7320](https://github.com/firefly-iii/firefly-iii/issues/7320) Standard email values so less errors
+- [Issue 7311](https://github.com/firefly-iii/firefly-iii/issues/7311) Fix issue with date validation
+- [Issue 7310](https://github.com/firefly-iii/firefly-iii/issues/7310) Better color contrast in dark mode.
+
+### API
+- [Issue 7308](https://github.com/firefly-iii/firefly-iii/issues/7308) Could not set current amount for certain piggy banks
+
 ## v6.0.6 - 2023-04-02
 
 ### Changed
@@ -20,6 +36,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### API
 - Fixed: Could not give piggy bank an unlimited amount.
+- [Issue 7335](https://github.com/firefly-iii/firefly-iii/issues/7335) Fix upload of attachments, thanks @fengkaijia
 
 ## v6.0.5 - 2023-03-19
 

@@ -947,10 +947,10 @@ return [
     'rule_trigger_user_action_choice'                     => 'La acción del usuario es ":trigger_value"',
     'rule_trigger_tag_is_not_choice'                      => 'Ninguna etiqueta es..',
     'rule_trigger_tag_is_not'                             => 'Ninguna etiqueta es ":trigger_value"',
-    'rule_trigger_account_is_choice'                      => 'Either account is exactly..',
-    'rule_trigger_account_is'                             => 'Either account is exactly ":trigger_value"',
-    'rule_trigger_account_contains_choice'                => 'Either account contains..',
-    'rule_trigger_account_contains'                       => 'Either account contains ":trigger_value"',
+    'rule_trigger_account_is_choice'                      => 'Cualquiera de las cuentas es exactamente..',
+    'rule_trigger_account_is'                             => 'Cualquiera de las cuentas es exactamente:trigger_value',
+    'rule_trigger_account_contains_choice'                => 'Cualquier cuenta contiene..',
+    'rule_trigger_account_contains'                       => 'Cualquier cuenta contiene ":trigger_value " "',
     'rule_trigger_account_ends_choice'                    => 'Either account ends with..',
     'rule_trigger_account_ends'                           => 'Either account ends with ":trigger_value"',
     'rule_trigger_account_starts_choice'                  => 'Either account starts with..',
@@ -1302,7 +1302,12 @@ return [
 
 
     // preferences
+    'dark_mode_option_browser'                  => 'Let your browser decide',
+    'dark_mode_option_light'                    => 'Always light',
+    'dark_mode_option_dark'                     => 'Always dark',
     'equal_to_language'                         => '(igual al idioma)',
+    'dark_mode_preference'                      => 'Dark mode',
+    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
     'pref_home_screen_accounts'                 => 'Cuentas de la pantalla de inicio',
     'pref_home_screen_accounts_help'            => '¿Qué cuentas se deben mostrar en la página de inicio?',
     'pref_view_range'                           => 'Rango de vision',

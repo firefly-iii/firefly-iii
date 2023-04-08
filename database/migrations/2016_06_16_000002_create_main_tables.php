@@ -70,7 +70,6 @@ class CreateMainTables extends Migration
     /**
      * Run the migrations.
      *
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -202,7 +201,6 @@ class CreateMainTables extends Migration
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped.
      */
     private function createBudgetTables(): void
     {
@@ -393,10 +391,6 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot be helped.
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // its exactly five
-     */
     private function createRuleTables(): void
     {
         if (!Schema::hasTable('rule_groups')) {

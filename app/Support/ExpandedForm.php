@@ -34,7 +34,6 @@ use Throwable;
 /**
  * Class ExpandedForm.
  *
- * @SuppressWarnings(PHPMD.TooManyMethods)
  *
 
  */
