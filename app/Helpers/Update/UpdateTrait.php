@@ -41,7 +41,6 @@ trait UpdateTrait
      * 'level' => 'info' / 'success' / 'error'
      *
      * @return array
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
