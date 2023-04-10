@@ -43,7 +43,7 @@ use VerifiesAccessToken;
         $question = $this->confirm('Do you want to continue?');
         if (true === $question) {
             $user = $this->getUser();
-            Log::channel('audit')->info(sprintf('User #%d ("%s") forced migrations.', $user->id, $user->email));
+            Log::channel('audit')->info(sprintf('User #%d ("%s") forced DECIMAL size.', $user->id, $user->email));
             $this->updateDecimals();
             return 0;
         }
