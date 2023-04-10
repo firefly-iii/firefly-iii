@@ -43,57 +43,65 @@ class ChangesForV550 extends Migration
         // recreate jobs table.
         Schema::dropIfExists('jobs');
 
-        try {
-            Schema::create(
-                'jobs',
-                static function (Blueprint $table) {
-                    // straight from Laravel (this is the OLD table)
-                    $table->bigIncrements('id');
-                    $table->string('queue');
-                    $table->longText('payload');
-                    $table->tinyInteger('attempts')->unsigned();
-                    $table->tinyInteger('reserved')->unsigned();
-                    $table->unsignedInteger('reserved_at')->nullable();
-                    $table->unsignedInteger('available_at');
-                    $table->unsignedInteger('created_at');
-                    $table->index(['queue', 'reserved', 'reserved_at']);
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        if (!Schema::hasTable('jobs')) {
+            try {
+                Schema::create(
+                    'jobs',
+                    static function (Blueprint $table) {
+                        // straight from Laravel (this is the OLD table)
+                        $table->bigIncrements('id');
+                        $table->string('queue');
+                        $table->longText('payload');
+                        $table->tinyInteger('attempts')->unsigned();
+                        $table->tinyInteger('reserved')->unsigned();
+                        $table->unsignedInteger('reserved_at')->nullable();
+                        $table->unsignedInteger('available_at');
+                        $table->unsignedInteger('created_at');
+                        $table->index(['queue', 'reserved', 'reserved_at']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
 
         // expand budget / transaction journal table.
-        try {
-            Schema::table(
-                'budget_transaction_journal',
-                function (Blueprint $table) {
-                    $table->dropForeign('budget_id_foreign');
-                    $table->dropColumn('budget_limit_id');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+            try {
+                Schema::table(
+                    'budget_transaction_journal',
+                    function (Blueprint $table) {
+                        $table->dropForeign('budget_id_foreign');
+                        $table->dropColumn('budget_limit_id');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
 
         // drop failed jobs table.
         Schema::dropIfExists('failed_jobs');
 
         // drop fields from budget limits
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->dropColumn('period');
-                    $table->dropColumn('generated');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(Schema::hasColumn('budget_limits', 'period') && Schema::hasColumn('budget_limits', 'generated')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->dropColumn('period');
+                        $table->dropColumn('generated');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
+
+        // drop other tables
         Schema::dropIfExists('webhook_attempts');
         Schema::dropIfExists('webhook_messages');
         Schema::dropIfExists('webhooks');
@@ -109,63 +117,70 @@ class ChangesForV550 extends Migration
         // drop and recreate jobs table.
         Schema::dropIfExists('jobs');
         // this is the NEW table
-        try {
-            Schema::create(
-                'jobs',
-                function (Blueprint $table) {
-                    $table->bigIncrements('id');
-                    $table->string('queue')->index();
-                    $table->longText('payload');
-                    $table->unsignedTinyInteger('attempts');
-                    $table->unsignedInteger('reserved_at')->nullable();
-                    $table->unsignedInteger('available_at');
-                    $table->unsignedInteger('created_at');
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        if (!Schema::hasTable('jobs')) {
+            try {
+                Schema::create(
+                    'jobs',
+                    function (Blueprint $table) {
+                        $table->bigIncrements('id');
+                        $table->string('queue')->index();
+                        $table->longText('payload');
+                        $table->unsignedTinyInteger('attempts');
+                        $table->unsignedInteger('reserved_at')->nullable();
+                        $table->unsignedInteger('available_at');
+                        $table->unsignedInteger('created_at');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
         // drop failed jobs table.
         Schema::dropIfExists('failed_jobs');
 
         // create new failed_jobs table.
-        try {
-            Schema::create(
-                'failed_jobs',
-                function (Blueprint $table) {
-                    $table->bigIncrements('id');
-                    $table->string('uuid')->unique();
-                    $table->text('connection');
-                    $table->text('queue');
-                    $table->longText('payload');
-                    $table->longText('exception');
-                    $table->timestamp('failed_at')->useCurrent();
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "failed_jobs": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        if (!Schema::hasTable('failed_jobs')) {
+            try {
+                Schema::create(
+                    'failed_jobs',
+                    function (Blueprint $table) {
+                        $table->bigIncrements('id');
+                        $table->string('uuid')->unique();
+                        $table->text('connection');
+                        $table->text('queue');
+                        $table->longText('payload');
+                        $table->longText('exception');
+                        $table->timestamp('failed_at')->useCurrent();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "failed_jobs": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
 
         // update budget / transaction journal table.
-        try {
-            Schema::table(
-                'budget_transaction_journal',
-                function (Blueprint $table) {
-                    if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
-                        $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
-                        $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
+        if(!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+            try {
+                Schema::table(
+                    'budget_transaction_journal',
+                    function (Blueprint $table) {
+                        if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+                            $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
+                            $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
+                        }
                     }
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
 
         // append budget limits table.
-        // i swear I dropped & recreated this field 15 times already.
+        // I swear I dropped & recreated this field 15 times already.
+
         try {
             Schema::table(
                 'budget_limits',

@@ -41,21 +41,23 @@ class ChangesForV477 extends Migration
      */
     public function down(): void
     {
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    // cannot drop foreign keys in SQLite:
-                    if ('sqlite' !== config('database.default')) {
-                        $table->dropForeign('budget_limits_transaction_currency_id_foreign');
-                    }
+        if(Schema::hasColumn('budget_limits', 'transaction_currency_id')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        // cannot drop foreign keys in SQLite:
+                        if ('sqlite' !== config('database.default')) {
+                            $table->dropForeign('budget_limits_transaction_currency_id_foreign');
+                        }
 
-                    $table->dropColumn(['transaction_currency_id']);
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                        $table->dropColumn(['transaction_currency_id']);
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 
@@ -66,17 +68,19 @@ class ChangesForV477 extends Migration
      */
     public function up(): void
     {
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->integer('transaction_currency_id', false, true)->nullable()->after('budget_id');
-                    $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(!Schema::hasColumn('budget_limits', 'transaction_currency_id')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->integer('transaction_currency_id', false, true)->nullable()->after('budget_id');
+                        $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }

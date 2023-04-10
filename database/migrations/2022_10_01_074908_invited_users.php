@@ -36,20 +36,22 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        try {
-            Schema::create('invited_users', function (Blueprint $table) {
-                $table->id();
-                $table->timestamps();
-                $table->integer('user_id', false, true);
-                $table->string('email', 255);
-                $table->string('invite_code', 64);
-                $table->dateTime('expires');
-                $table->boolean('redeemed');
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            });
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "invited_users": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        if (!Schema::hasTable('invited_users')) {
+            try {
+                Schema::create('invited_users', function (Blueprint $table) {
+                    $table->id();
+                    $table->timestamps();
+                    $table->integer('user_id', false, true);
+                    $table->string('email', 255);
+                    $table->string('invite_code', 64);
+                    $table->dateTime('expires');
+                    $table->boolean('redeemed');
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                });
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "invited_users": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 

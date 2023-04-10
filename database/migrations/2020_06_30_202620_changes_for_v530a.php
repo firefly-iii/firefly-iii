@@ -42,16 +42,18 @@ class ChangesForV530a extends Migration
      */
     public function down(): void
     {
-        try {
-            Schema::table(
-                'bills',
-                static function (Blueprint $table) {
-                    $table->dropColumn('order');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(Schema::hasColumn('bills', 'order')) {
+            try {
+                Schema::table(
+                    'bills',
+                    static function (Blueprint $table) {
+                        $table->dropColumn('order');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 
@@ -62,16 +64,18 @@ class ChangesForV530a extends Migration
      */
     public function up(): void
     {
-        try {
-            Schema::table(
-                'bills',
-                static function (Blueprint $table) {
-                    $table->integer('order', false, true)->default(0);
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(!Schema::hasColumn('bills', 'order')) {
+            try {
+                Schema::table(
+                    'bills',
+                    static function (Blueprint $table) {
+                        $table->integer('order', false, true)->default(0);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }

@@ -36,25 +36,27 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        try {
-            Schema::create('audit_log_entries', function (Blueprint $table) {
-                $table->id();
-                $table->timestamps();
-                $table->softDeletes();
+        if (!Schema::hasTable('audit_log_entries')) {
+            try {
+                Schema::create('audit_log_entries', function (Blueprint $table) {
+                    $table->id();
+                    $table->timestamps();
+                    $table->softDeletes();
 
-                $table->integer('auditable_id', false, true);
-                $table->string('auditable_type');
+                    $table->integer('auditable_id', false, true);
+                    $table->string('auditable_type');
 
-                $table->integer('changer_id', false, true);
-                $table->string('changer_type');
+                    $table->integer('changer_id', false, true);
+                    $table->string('changer_type');
 
-                $table->string('action', 255);
-                $table->text('before')->nullable();
-                $table->text('after')->nullable();
-            });
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "audit_log_entries": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                    $table->string('action', 255);
+                    $table->text('before')->nullable();
+                    $table->text('after')->nullable();
+                });
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "audit_log_entries": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 

@@ -39,65 +39,74 @@ class ChangesForV431 extends Migration
     public function down(): void
     {
         // reinstate "repeats" and "repeat_freq".
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->string('repeat_freq', 30)->nullable();
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (!Schema::hasColumn('budget_limits', 'repeat_freq')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->string('repeat_freq', 30)->nullable();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->boolean('repeats')->default(0);
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (!Schema::hasColumn('budget_limits', 'repeats')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->boolean('repeats')->default(0);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
-
         // change field "start_date" to "startdate"
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->renameColumn('start_date', 'startdate');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (Schema::hasColumn('budget_limits', 'start_date') && !Schema::hasColumn('budget_limits', 'startdate')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->renameColumn('start_date', 'startdate');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
 
         // remove date field "end_date"
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->dropColumn('end_date');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (Schema::hasColumn('budget_limits', 'end_date')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->dropColumn('end_date');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
         // remove decimal places
-        try {
-            Schema::table(
-                'transaction_currencies',
-                static function (Blueprint $table) {
-                    $table->dropColumn('decimal_places');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (Schema::hasColumn('transaction_currencies', 'decimal_places')) {
+            try {
+                Schema::table(
+                    'transaction_currencies',
+                    static function (Blueprint $table) {
+                        $table->dropColumn('decimal_places');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 
@@ -108,66 +117,76 @@ class ChangesForV431 extends Migration
     public function up(): void
     {
         // add decimal places to "transaction currencies".
-        try {
-            Schema::table(
-                'transaction_currencies',
-                static function (Blueprint $table) {
-                    $table->smallInteger('decimal_places', false, true)->default(2);
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (!Schema::hasColumn('transaction_currencies', 'decimal_places')) {
+            try {
+                Schema::table(
+                    'transaction_currencies',
+                    static function (Blueprint $table) {
+                        $table->smallInteger('decimal_places', false, true)->default(2);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
 
         // change field "startdate" to "start_date"
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->renameColumn('startdate', 'start_date');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (Schema::hasColumn('budget_limits', 'startdate') && !Schema::hasColumn('budget_limits', 'start_date')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->renameColumn('startdate', 'start_date');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
 
         // add date field "end_date" after "start_date"
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->date('end_date')->nullable()->after('start_date');
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (!Schema::hasColumn('budget_limits', 'end_date')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->date('end_date')->nullable()->after('start_date');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
 
         // drop "repeats" and "repeat_freq".
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->dropColumn('repeats');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (Schema::hasColumn('budget_limits', 'repeats')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->dropColumn('repeats');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
-        try {
-            Schema::table(
-                'budget_limits',
-                static function (Blueprint $table) {
-                    $table->dropColumn('repeat_freq');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (Schema::hasColumn('budget_limits', 'repeat_freq')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
+                        $table->dropColumn('repeat_freq');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }

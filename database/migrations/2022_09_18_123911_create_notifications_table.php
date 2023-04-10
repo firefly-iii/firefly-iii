@@ -36,18 +36,20 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        try {
-            Schema::create('notifications', function (Blueprint $table) {
-                $table->uuid('id')->primary();
-                $table->string('type');
-                $table->morphs('notifiable');
-                $table->text('data');
-                $table->timestamp('read_at')->nullable();
-                $table->timestamps();
-            });
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "notifications": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        if (!Schema::hasTable('notifications')) {
+            try {
+                Schema::create('notifications', function (Blueprint $table) {
+                    $table->uuid('id')->primary();
+                    $table->string('type');
+                    $table->morphs('notifiable');
+                    $table->text('data');
+                    $table->timestamp('read_at')->nullable();
+                    $table->timestamps();
+                });
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "notifications": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 
