@@ -57,6 +57,7 @@ class ForceMigration extends Command
 
     private function forceMigration(): void
     {
+        DB::commit();
         $this->line('Dropping "migrations" table...');
         sleep(2);
         Schema::dropIfExists('migrations');
