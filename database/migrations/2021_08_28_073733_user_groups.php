@@ -60,12 +60,31 @@ class UserGroups extends Migration
         // remove columns from tables
         /** @var string $tableName */
         foreach ($this->tables as $tableName) {
+            if (Schema::hasColumn($tableName, 'user_group_id')) {
+                try {
+                    Schema::table(
+                        $tableName,
+                        function (Blueprint $table) use ($tableName) {
+                            $table->dropForeign(sprintf('%s_to_ugi', $tableName));
+                            if (Schema::hasColumn($tableName, 'user_group_id')) {
+                                $table->dropColumn('user_group_id');
+                            }
+                        }
+                    );
+                } catch (QueryException|ColumnDoesNotExist $e) {
+                    Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                    Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                }
+            }
+        }
+
+        if (Schema::hasColumn('users', 'user_group_id')) {
             try {
                 Schema::table(
-                    $tableName,
-                    function (Blueprint $table) use ($tableName) {
-                        $table->dropForeign(sprintf('%s_to_ugi', $tableName));
-                        if (Schema::hasColumn($tableName, 'user_group_id')) {
+                    'users',
+                    function (Blueprint $table) {
+                        $table->dropForeign('type_user_group_id');
+                        if (Schema::hasColumn('users', 'user_group_id')) {
                             $table->dropColumn('user_group_id');
                         }
                     }
@@ -74,21 +93,6 @@ class UserGroups extends Migration
                 Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
                 Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
-        }
-
-        try {
-            Schema::table(
-                'users',
-                function (Blueprint $table) {
-                    $table->dropForeign('type_user_group_id');
-                    if (Schema::hasColumn('users', 'user_group_id')) {
-                        $table->dropColumn('user_group_id');
-                    }
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
 
         Schema::dropIfExists('group_memberships');
@@ -107,59 +111,64 @@ class UserGroups extends Migration
          * user is a member of a user_group through a user_group_role
          * may have multiple roles in a group
          */
-        try {
-            Schema::create(
-                'user_groups',
-                static function (Blueprint $table) {
-                    $table->bigIncrements('id');
-                    $table->timestamps();
-                    $table->softDeletes();
+        if (!Schema::hasTable('user_groups')) {
+            try {
+                Schema::create(
+                    'user_groups',
+                    static function (Blueprint $table) {
+                        $table->bigIncrements('id');
+                        $table->timestamps();
+                        $table->softDeletes();
 
-                    $table->string('title', 255);
-                    $table->unique('title');
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "user_groups": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                        $table->string('title', 255);
+                        $table->unique('title');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "user_groups": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
-        try {
-            Schema::create(
-                'user_roles',
-                static function (Blueprint $table) {
-                    $table->bigIncrements('id');
-                    $table->timestamps();
-                    $table->softDeletes();
+        if (!Schema::hasTable('user_roles')) {
+            try {
+                Schema::create(
+                    'user_roles',
+                    static function (Blueprint $table) {
+                        $table->bigIncrements('id');
+                        $table->timestamps();
+                        $table->softDeletes();
 
-                    $table->string('title', 255);
-                    $table->unique('title');
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "user_roles": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                        $table->string('title', 255);
+                        $table->unique('title');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "user_roles": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
+        if (!Schema::hasTable('group_memberships')) {
+            try {
+                Schema::create(
+                    'group_memberships',
+                    static function (Blueprint $table) {
+                        $table->bigIncrements('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->integer('user_id', false, true);
+                        $table->bigInteger('user_group_id', false, true);
+                        $table->bigInteger('user_role_id', false, true);
 
-        try {
-            Schema::create(
-                'group_memberships',
-                static function (Blueprint $table) {
-                    $table->bigIncrements('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('user_id', false, true);
-                    $table->bigInteger('user_group_id', false, true);
-                    $table->bigInteger('user_role_id', false, true);
-
-                    $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-                    $table->foreign('user_group_id')->references('id')->on('user_groups')->onUpdate('cascade')->onDelete('cascade');
-                    $table->foreign('user_role_id')->references('id')->on('user_roles')->onUpdate('cascade')->onDelete('cascade');
-                    $table->unique(['user_id', 'user_group_id', 'user_role_id']);
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "group_memberships": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                        $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+                        $table->foreign('user_group_id')->references('id')->on('user_groups')->onUpdate('cascade')->onDelete('cascade');
+                        $table->foreign('user_role_id')->references('id')->on('user_roles')->onUpdate('cascade')->onDelete('cascade');
+                        $table->unique(['user_id', 'user_group_id', 'user_role_id']);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "group_memberships": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
         try {
             Schema::table(
@@ -167,7 +176,9 @@ class UserGroups extends Migration
                 function (Blueprint $table) {
                     if (!Schema::hasColumn('users', 'user_group_id')) {
                         $table->bigInteger('user_group_id', false, true)->nullable();
-                        $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                        $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate(
+                            'cascade'
+                        );
                     }
                 }
             );
@@ -175,7 +186,6 @@ class UserGroups extends Migration
             Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
             Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
-
         // ADD columns from tables
         /** @var string $tableName */
         foreach ($this->tables as $tableName) {

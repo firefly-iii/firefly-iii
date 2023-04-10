@@ -89,20 +89,21 @@ class ChangesForV440 extends Migration
                 Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
-
-        try {
-            Schema::table(
-                'transactions',
-                static function (Blueprint $table) {
-                    if (!Schema::hasColumn('transactions', 'transaction_currency_id')) {
-                        $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
-                        $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+        if(!Schema::hasColumn('transactions', 'transaction_currency_id')) {
+            try {
+                Schema::table(
+                    'transactions',
+                    static function (Blueprint $table) {
+                        if (!Schema::hasColumn('transactions', 'transaction_currency_id')) {
+                            $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
+                            $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
+                        }
                     }
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }

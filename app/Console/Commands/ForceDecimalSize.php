@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Exceptions\FireflyException;
@@ -9,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class ForceDecimalSize extends Command
 {
-use VerifiesAccessToken;
+    use VerifiesAccessToken;
     /**
      * The name and signature of the console command.
      *

@@ -41,28 +41,32 @@ class ChangesForV472 extends Migration
      */
     public function down(): void
     {
-        try {
-            Schema::table(
-                'attachments',
-                static function (Blueprint $table) {
-                    $table->text('notes')->nullable();
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(!Schema::hasColumn('attachments', 'notes')) {
+            try {
+                Schema::table(
+                    'attachments',
+                    static function (Blueprint $table) {
+                        $table->text('notes')->nullable();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
 
-        try {
-            Schema::table(
-                'budgets',
-                static function (Blueprint $table) {
-                    $table->dropColumn('order');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(Schema::hasColumn('transactions', 'order')) {
+            try {
+                Schema::table(
+                    'budgets',
+                    static function (Blueprint $table) {
+                        $table->dropColumn('order');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 
@@ -73,28 +77,32 @@ class ChangesForV472 extends Migration
      */
     public function up(): void
     {
-        try {
-            Schema::table(
-                'attachments',
-                static function (Blueprint $table) {
-                    $table->dropColumn('notes');
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(Schema::hasColumn('attachments', 'notes')) {
+            try {
+                Schema::table(
+                    'attachments',
+                    static function (Blueprint $table) {
+                        $table->dropColumn('notes');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
 
-        try {
-            Schema::table(
-                'budgets',
-                static function (Blueprint $table) {
-                    $table->mediumInteger('order', false, true)->default(0);
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(!Schema::hasColumn('budgets', 'order')) {
+            try {
+                Schema::table(
+                    'budgets',
+                    static function (Blueprint $table) {
+                        $table->mediumInteger('order', false, true)->default(0);
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }
