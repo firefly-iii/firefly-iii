@@ -72,6 +72,13 @@ export default defineComponent(
         }).catch((err) => {
           console.error('Could not load preferences.');
           console.log(err);
+
+          // redirect user if 401
+          if (err.response) {
+            if(401 === err.response.status) {
+              window.location.href = '/login';
+            }
+          }
         });
       };
 
