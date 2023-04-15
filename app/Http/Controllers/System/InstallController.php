@@ -127,6 +127,7 @@ class InstallController extends Controller
      */
     public function index()
     {
+        app('view')->share('FF_VERSION', config('firefly.version'));
         // index will set FF3 version.
         app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
 
@@ -147,27 +148,19 @@ class InstallController extends Controller
         $response     = [
             'hasNextCommand' => false,
             'done'           => true,
-            'next'           => 0,
             'previous'       => null,
             'error'          => false,
             'errorMessage'   => null,
         ];
 
         Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
-        $index = 0;
-        /**
-         * @var string $command
-         * @var array $args
-         */
-        foreach ($this->upgradeCommands as $command => $args) {
-            Log::debug(sprintf('Current command is "%s", index is %d', $command, $index));
-            if ($index < $requestIndex) {
-                Log::debug('Will not execute.');
-                $index++;
-                continue;
-            }
+        $indexes = array_values(array_keys($this->upgradeCommands));
+        if(array_key_exists($requestIndex, $indexes)) {
+            $command = $indexes[$requestIndex];
+            $parameters = $this->upgradeCommands[$command];
+            Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
             try {
-                $result = $this->executeCommand($command, $args);
+                $result = $this->executeCommand($command, $parameters);
             } catch (FireflyException $e) {
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
@@ -180,15 +173,11 @@ class InstallController extends Controller
             if (false === $result) {
                 $response['errorMessage'] = $this->lastError;
                 $response['error']        = true;
-
                 return response()->json($response);
             }
-            $index++;
-            $response['hasNextCommand'] = true;
+            $response['hasNextCommand'] = array_key_exists($requestIndex + 1, $indexes);
             $response['previous']       = $command;
         }
-        $response['next'] = $index;
-
         return response()->json($response);
     }
 
