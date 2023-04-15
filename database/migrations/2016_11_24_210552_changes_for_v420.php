@@ -37,16 +37,18 @@ class ChangesForV420 extends Migration
      */
     public function down(): void
     {
-        try {
-            Schema::table(
-                'journal_meta',
-                static function (Blueprint $table) {
-                    $table->dropSoftDeletes();
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (Schema::hasColumn('journal_meta', 'deleted_at')) {
+            try {
+                Schema::table(
+                    'journal_meta',
+                    static function (Blueprint $table) {
+                        $table->dropSoftDeletes();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 
@@ -56,16 +58,18 @@ class ChangesForV420 extends Migration
      */
     public function up(): void
     {
-        try {
-            Schema::table(
-                'journal_meta',
-                static function (Blueprint $table) {
-                    $table->softDeletes();
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if (!Schema::hasColumn('journal_meta', 'deleted_at')) {
+            try {
+                Schema::table(
+                    'journal_meta',
+                    static function (Blueprint $table) {
+                        $table->softDeletes();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }

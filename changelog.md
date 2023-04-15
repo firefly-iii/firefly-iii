@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.8 - 2023-04-16
+
+### Added
+- [Issue 7351](https://github.com/firefly-iii/firefly-iii/issues/7351) Optional command to force the decimal size.
+- [Issue 7352](https://github.com/firefly-iii/firefly-iii/issues/7352) Optional command to force the migrations.
+- [Issue 7354](https://github.com/firefly-iii/firefly-iii/issues/7354) The new v3 layout will redirect to the index when unauthenticated, thanks @corcom!
+
+### Fixed
+- [Issue 7349](https://github.com/firefly-iii/firefly-iii/issues/7349) Missing tables in PostgreSQL script.
+- [Issue 7358](https://github.com/firefly-iii/firefly-iii/issues/7358) Could not create liabilities with a pre-set amount.
+- Fix date field in bill warning mail.
+- Fix installer script.
+- Remove attachment paperclip from transactions with deleted attachments.
+
+### API
+- [Issue 7347](https://github.com/firefly-iii/firefly-iii/issues/7347) API made rules would be inactive by default.
+
 ## v6.0.7 - 2023-04-09
 
 ### Added

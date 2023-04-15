@@ -70,7 +70,7 @@ export default {
         "new_budget": "Nowy bud\u017cet",
         "new_asset_account": "Nowe konto aktyw\u00f3w",
         "newTransfer": "Nowy transfer",
-        "submission_options": "Submission options",
+        "submission_options": "Opcje zapisu",
         "apply_rules_checkbox": "Zastosuj regu\u0142y",
         "fire_webhooks_checkbox": "Uruchom webhooki",
         "newDeposit": "Nowa wp\u0142ata",

@@ -1302,12 +1302,12 @@ return [
 
 
     // preferences
-    'dark_mode_option_browser'                  => 'Let your browser decide',
-    'dark_mode_option_light'                    => 'Always light',
-    'dark_mode_option_dark'                     => 'Always dark',
+    'dark_mode_option_browser'                  => '브라우저에 맡기세요',
+    'dark_mode_option_light'                    => '항상 라이트',
+    'dark_mode_option_dark'                     => '항상 다크',
     'equal_to_language'                         => '(언어와 동일)',
-    'dark_mode_preference'                      => 'Dark mode',
-    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
+    'dark_mode_preference'                      => '다크 모드',
+    'dark_mode_preference_help'                 => 'Firefly III가 언제 다크 모드를 사용할지 알려주세요.',
     'pref_home_screen_accounts'                 => '홈 화면 계정',
     'pref_home_screen_accounts_help'            => '홈 페이지에 어떤 계정을 표시해야 하나요?',
     'pref_view_range'                           => '보기 범위',

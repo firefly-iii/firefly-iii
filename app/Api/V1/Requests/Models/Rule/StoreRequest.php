@@ -79,7 +79,7 @@ class StoreRequest extends FormRequest
                 $return[] = [
                     'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'true')),
                     'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
                 ];
             }
@@ -100,7 +100,7 @@ class StoreRequest extends FormRequest
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'true')),
                     'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
                 ];
             }

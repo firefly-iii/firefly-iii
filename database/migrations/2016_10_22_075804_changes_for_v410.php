@@ -46,22 +46,24 @@ class ChangesForV410 extends Migration
      */
     public function up(): void
     {
-        try {
-            Schema::create(
-                'notes',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('noteable_id', false, true);
-                    $table->string('noteable_type');
-                    $table->string('title')->nullable();
-                    $table->text('text')->nullable();
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create table "notes": %s', $e->getMessage()));
-            Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+        if(!Schema::hasTable('notes')) {
+            try {
+                Schema::create(
+                    'notes',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->integer('noteable_id', false, true);
+                        $table->string('noteable_type');
+                        $table->string('title')->nullable();
+                        $table->text('text')->nullable();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not create table "notes": %s', $e->getMessage()));
+                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+            }
         }
     }
 }

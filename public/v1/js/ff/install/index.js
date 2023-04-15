@@ -23,10 +23,12 @@ $(function () {
     "use strict";
     //var status = $('#status-box');
     // set HTML to "migrating...":
-    startRunningCommands();
+    console.log('Starting...');
+    startRunningCommands(0);
 });
 
-function startRunningCommands() {
+function startRunningCommands(index) {
+    console.log('Now in startRunningCommands with index' + index);
     if (0 === index) {
         $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Running first command...');
     }
@@ -34,7 +36,8 @@ function startRunningCommands() {
 }
 
 function runCommand(index) {
-    $.post(runCommandUrl, {_token: token, index: index}).done(function (data) {
+    console.log('Now in runCommand(' + index + '): ' + runCommandUrl);
+    $.post(runCommandUrl, {_token: token, index: parseInt(index)}).done(function (data) {
         if (data.error === false) {
             // increase index
             index++;
@@ -59,7 +62,7 @@ function runCommand(index) {
 }
 
 function startMigration() {
-
+    console.log('Now in startMigration');
     $.post(migrateUrl, {_token: token}).done(function (data) {
         if (data.error === false) {
             // move to decrypt routine.
@@ -74,6 +77,7 @@ function startMigration() {
 }
 
 function startDecryption() {
+    console.log('Now in startDecryption');
     $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Setting up DB #2...');
     $.post(decryptUrl, {_token: token}).done(function (data) {
         if (data.error === false) {

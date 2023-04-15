@@ -30,8 +30,8 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Trait TransactionValidation
@@ -74,17 +74,19 @@ trait TransactionValidation
      */
     protected function getTransactionsArray(Validator $validator): array
     {
+        Log::debug('Now in getTransactionsArray');
         $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
+        $transactions = [];
+        if (is_array($data) && array_key_exists('transactions', $data) && is_array($data['transactions'])) {
+            Log::debug('Transactions key exists and is array.');
+            $transactions = $data['transactions'];
+        }
+        if (is_array($data) && array_key_exists('transactions', $data) && !is_array($data['transactions'])) {
+            Log::debug(sprintf('Transactions key exists but is NOT array,  its a %s', gettype($data['transactions'])));
+        }
+        // should be impossible to hit this:
         if (!is_countable($transactions)) {
             Log::error(sprintf('Transactions array is not countable, because its a %s', gettype($transactions)));
-
-            return [];
-        }
-        // a superfluous check but you never know.
-        if (!is_array($transactions)) {
-            Log::error(sprintf('Transactions array is not an array, because its a %s', gettype($transactions)));
-
             return [];
         }
 
@@ -489,10 +491,11 @@ trait TransactionValidation
      */
     public function validateOneTransaction(Validator $validator): void
     {
+        Log::debug('Now in validateOneTransaction');
         if ($validator->errors()->count() > 0) {
+            Log::debug('Validator already has errors, so return.');
             return;
         }
-        Log::debug('Now in validateOneTransaction()');
         $transactions = $this->getTransactionsArray($validator);
         // need at least one transaction
         if (0 === count($transactions)) {

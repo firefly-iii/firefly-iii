@@ -35,16 +35,18 @@ class AddLdapColumnsToUsersTable extends Migration
      */
     public function down(): void
     {
-        try {
-            Schema::table(
-                'users',
-                function (Blueprint $table) {
-                    $table->dropColumn(['domain']);
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(Schema::hasColumn('users', 'domain')) {
+            try {
+                Schema::table(
+                    'users',
+                    function (Blueprint $table) {
+                        $table->dropColumn(['domain']);
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 
@@ -53,16 +55,18 @@ class AddLdapColumnsToUsersTable extends Migration
      */
     public function up(): void
     {
-        try {
-            Schema::table(
-                'users',
-                function (Blueprint $table) {
-                    $table->string('domain')->nullable();
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(!Schema::hasColumn('users', 'domain')) {
+            try {
+                Schema::table(
+                    'users',
+                    function (Blueprint $table) {
+                        $table->string('domain')->nullable();
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }

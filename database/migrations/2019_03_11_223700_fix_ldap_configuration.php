@@ -41,16 +41,18 @@ class FixLdapConfiguration extends Migration
      */
     public function down(): void
     {
-        try {
-            Schema::table(
-                'users',
-                static function (Blueprint $table) {
-                    $table->dropColumn(['objectguid']);
-                }
-            );
-        } catch (QueryException|ColumnDoesNotExist $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(Schema::hasColumn('users', 'objectguid')) {
+            try {
+                Schema::table(
+                    'users',
+                    static function (Blueprint $table) {
+                        $table->dropColumn(['objectguid']);
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 
@@ -65,16 +67,18 @@ class FixLdapConfiguration extends Migration
          * ADLdap2 appears to require the ability to store an objectguid for LDAP users
          * now. To support this, we add the column.
          */
-        try {
-            Schema::table(
-                'users',
-                static function (Blueprint $table) {
-                    $table->uuid('objectguid')->nullable()->after('id');
-                }
-            );
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        if(!Schema::hasColumn('users', 'objectguid')) {
+            try {
+                Schema::table(
+                    'users',
+                    static function (Blueprint $table) {
+                        $table->uuid('objectguid')->nullable()->after('id');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
         }
     }
 }
