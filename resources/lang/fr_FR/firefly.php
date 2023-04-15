@@ -1302,12 +1302,12 @@ return [
 
 
     // preferences
-    'dark_mode_option_browser'                  => 'Let your browser decide',
-    'dark_mode_option_light'                    => 'Always light',
-    'dark_mode_option_dark'                     => 'Always dark',
+    'dark_mode_option_browser'                  => 'Laisser le navigateur décider',
+    'dark_mode_option_light'                    => 'Toujours clair',
+    'dark_mode_option_dark'                     => 'Toujours sombre',
     'equal_to_language'                         => '(égal à la langue)',
-    'dark_mode_preference'                      => 'Dark mode',
-    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
+    'dark_mode_preference'                      => 'Mode sombre',
+    'dark_mode_preference_help'                 => 'Dire à Firefly III quand utiliser le mode sombre.',
     'pref_home_screen_accounts'                 => 'Comptes de l’écran d’accueil',
     'pref_home_screen_accounts_help'            => 'Quels sont les comptes à afficher sur la page d’accueil ?',
     'pref_view_range'                           => 'Intervalle d\'affichage',

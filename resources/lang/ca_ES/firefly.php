@@ -1302,12 +1302,12 @@ return [
 
 
     // preferences
-    'dark_mode_option_browser'                  => 'Let your browser decide',
-    'dark_mode_option_light'                    => 'Always light',
-    'dark_mode_option_dark'                     => 'Always dark',
+    'dark_mode_option_browser'                  => 'Deixa que el navegador decideixi',
+    'dark_mode_option_light'                    => 'Sempre Clar',
+    'dark_mode_option_dark'                     => 'Sempre fosc',
     'equal_to_language'                         => '(igual a l\'idioma)',
-    'dark_mode_preference'                      => 'Dark mode',
-    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
+    'dark_mode_preference'                      => 'Mode fosc',
+    'dark_mode_preference_help'                 => 'Digues quan vols que Firefly III faci servir el tema fosc.',
     'pref_home_screen_accounts'                 => 'Comptes a la pantalla d\'inici',
     'pref_home_screen_accounts_help'            => 'Quins comptes s\'han de mostrar a la pàgina d\'inici?',
     'pref_view_range'                           => 'Interval de visió',
@@ -2369,8 +2369,8 @@ return [
 
 
     // administration
-    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
-    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
+    'invite_is_already_redeemed'               => 'La invitació a ":address" ja ha sigut gastada.',
+    'invite_is_deleted'                        => 'La invitació a ":address" ha sigut eliminada.',
     'invite_new_user_title'                    => 'Invitar nou usuari',
     'invite_new_user_text'                     => 'Com a administrador, pots convidar usuaris a l\'administració de Firefly III. Amb aquest enllaç podran crear un compte. L\'usuari convidat, i el seu compte d\'invitació apareixeran a la taula inferior. Pots compartir l\'enllaç.',
     'invited_user_mail'                        => 'Correu electrònic',

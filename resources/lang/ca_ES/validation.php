@@ -66,7 +66,7 @@ return [
     'require_currency_info'          => 'El contingut d\'aquest camp no és vàlid sense informació de la moneda.',
     'not_transfer_account'           => 'Aquest compte no és un compte que puguis fer servir per transferències.',
     'require_currency_amount'        => 'El contingut d\'aquest camp no és vàlid sense informació de la quantitat estrangera.',
-    'require_foreign_currency'       => 'This field requires a number',
+    'require_foreign_currency'       => 'Cal introduir un número a aquest camp',
     'require_foreign_dest'           => 'El valor d\'aquest camp ha de quadrar amb la moneda del compte destí.',
     'require_foreign_src'            => 'El valor d\'aquest camp ha de quadrar amb la moneda del compte font.',
     'equal_description'              => 'La descripció de la transacció no hauria de ser igual a la descripció global.',
