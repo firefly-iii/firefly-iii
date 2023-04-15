@@ -84,10 +84,10 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
         if ($disk->exists($file)) {
             $encryptedContent = (string)$disk->get($file);
-
             try {
                 $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
+                Log::debug(sprintf('Could not decrypt attachment #%d but this is fine: %s', $attachment->id, $e->getMessage()));
                 $unencryptedContent = $encryptedContent;
             }
         }
