@@ -1302,12 +1302,12 @@ return [
 
 
     // preferences
-    'dark_mode_option_browser'                  => 'Let your browser decide',
-    'dark_mode_option_light'                    => 'Always light',
-    'dark_mode_option_dark'                     => 'Always dark',
+    'dark_mode_option_browser'                  => 'Låt din webbläsare bestämma',
+    'dark_mode_option_light'                    => 'Alltid ljust',
+    'dark_mode_option_dark'                     => 'Alltid mörkt',
     'equal_to_language'                         => '(lika med språk)',
-    'dark_mode_preference'                      => 'Dark mode',
-    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
+    'dark_mode_preference'                      => 'Mörkt läge',
+    'dark_mode_preference_help'                 => 'Berätta för Firefly III när mörkt läge ska användas.',
     'pref_home_screen_accounts'                 => 'Startskäm konton',
     'pref_home_screen_accounts_help'            => 'Vilka konton ska visas på startskärmen?',
     'pref_view_range'                           => 'Visa intervall',
