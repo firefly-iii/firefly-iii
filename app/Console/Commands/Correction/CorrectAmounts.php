@@ -90,7 +90,7 @@ class CorrectAmounts extends Command
         $set   = AutoBudget::where('amount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('All auto budget amounts are positive.');
+            $this->info('Correct: All auto budget amounts are positive.');
             return;
         }
         /** @var AutoBudget $item */
@@ -109,7 +109,7 @@ class CorrectAmounts extends Command
         $set   = AvailableBudget::where('amount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('All available budget amounts are positive.');
+            $this->info('Correct: All available budget amounts are positive.');
             return;
         }
         /** @var AvailableBudget $item */
@@ -128,7 +128,7 @@ class CorrectAmounts extends Command
         $set   = Bill::where('amount_min', '<', 0)->orWhere('amount_max', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('All bill amounts are positive.');
+            $this->info('Correct: All bill amounts are positive.');
             return;
         }
         /** @var Bill $item */
@@ -147,7 +147,7 @@ class CorrectAmounts extends Command
         $set   = BudgetLimit::where('amount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('All budget limit amounts are positive.');
+            $this->info('Correct: All budget limit amounts are positive.');
             return;
         }
         /** @var BudgetLimit $item */
@@ -166,7 +166,7 @@ class CorrectAmounts extends Command
         $set   = CurrencyExchangeRate::where('rate', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('All currency exchange rates are positive.');
+            $this->info('Correct: All currency exchange rates are positive.');
             return;
         }
         /** @var BudgetLimit $item */
@@ -185,7 +185,7 @@ class CorrectAmounts extends Command
         $set   = PiggyBankRepetition::where('currentamount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('All piggy bank repetition amounts are positive.');
+            $this->info('Correct: All piggy bank repetition amounts are positive.');
             return;
         }
         /** @var PiggyBankRepetition $item */
@@ -204,7 +204,7 @@ class CorrectAmounts extends Command
         $set   = PiggyBank::where('targetamount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('All piggy bank amounts are positive.');
+            $this->info('Correct: All piggy bank amounts are positive.');
             return;
         }
         /** @var PiggyBankRepetition $item */
@@ -225,7 +225,7 @@ class CorrectAmounts extends Command
                                       ->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('All recurring transaction amounts are positive.');
+            $this->info('Correct: All recurring transaction amounts are positive.');
             return;
         }
         /** @var PiggyBankRepetition $item */
@@ -254,7 +254,7 @@ class CorrectAmounts extends Command
             }
         }
         if (0 === $fixed) {
-            $this->info('All rule trigger amounts are positive.');
+            $this->info('Correct: All rule trigger amounts are positive.');
             return;
         }
         $this->line(sprintf('Corrected %d rule trigger amount(s).', $fixed));
