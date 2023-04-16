@@ -2,7 +2,7 @@
 
 /*
  * VerifySecurityAlerts.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,12 +22,12 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Console\Commands;
+namespace FireflyIII\Console\Commands\System;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
-use League\Flysystem\FilesystemException;
 use Illuminate\Support\Facades\Log;
+use League\Flysystem\FilesystemException;
 use Storage;
 
 /**

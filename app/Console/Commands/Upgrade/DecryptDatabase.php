@@ -1,8 +1,8 @@
 <?php
 
-/**
+/*
  * DecryptDatabase.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Console\Commands;
+namespace FireflyIII\Console\Commands\Upgrade;
 
 use Crypt;
 use DB;
@@ -30,8 +30,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use stdClass;

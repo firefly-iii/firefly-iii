@@ -33,9 +33,9 @@ use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
-use Illuminate\Support\Facades\Log;
 use phpseclib3\Crypt\RSA;
 
 /**
@@ -60,61 +60,15 @@ class InstallController extends Controller
     {
         // empty on purpose.
         $this->upgradeCommands = [
-            // there are 3 initial commands
-            'migrate'                                  => ['--seed' => true, '--force' => true],
-            'firefly-iii:fix-pgsql-sequences'          => [],
-            'firefly-iii:decrypt-all'                  => [],
-            'firefly-iii:restore-oauth-keys'           => [],
-            'generate-keys'                            => [], // an exception :(
-
-            // upgrade commands
-            'firefly-iii:transaction-identifiers'      => [],
-            'firefly-iii:migrate-to-groups'            => [],
-            'firefly-iii:account-currencies'           => [],
-            'firefly-iii:transfer-currencies'          => [],
-            'firefly-iii:other-currencies'             => [],
-            'firefly-iii:migrate-notes'                => [],
-            'firefly-iii:migrate-attachments'          => [],
-            'firefly-iii:bills-to-rules'               => [],
-            'firefly-iii:bl-currency'                  => [],
-            'firefly-iii:cc-liabilities'               => [],
-            'firefly-iii:back-to-journals'             => [],
-            'firefly-iii:rename-account-meta'          => [],
-            'firefly-iii:migrate-recurrence-meta'      => [],
-            'firefly-iii:migrate-tag-locations'        => [],
-            'firefly-iii:migrate-recurrence-type'      => [],
-            'firefly-iii:upgrade-liabilities'          => [],
-            'firefly-iii:liabilities-600'              => [],
-
-            // verify commands
-            'firefly-iii:fix-piggies'                  => [],
-            'firefly-iii:create-link-types'            => [],
-            'firefly-iii:create-access-tokens'         => [],
-            'firefly-iii:remove-bills'                 => [],
-            'firefly-iii:fix-negative-limits'          => [],
-            'firefly-iii:enable-currencies'            => [],
-            'firefly-iii:fix-transfer-budgets'         => [],
-            'firefly-iii:fix-uneven-amount'            => [],
-            'firefly-iii:delete-zero-amount'           => [],
-            'firefly-iii:delete-orphaned-transactions' => [],
-            'firefly-iii:delete-empty-journals'        => [],
-            'firefly-iii:delete-empty-groups'          => [],
-            'firefly-iii:fix-account-types'            => [],
-            'firefly-iii:fix-account-order'            => [],
-            'firefly-iii:rename-meta-fields'           => [],
-            'firefly-iii:fix-ob-currencies'            => [],
-            'firefly-iii:fix-long-descriptions'        => [],
-            'firefly-iii:fix-recurring-transactions'   => [],
-            'firefly-iii:unify-group-accounts'         => [],
-            'firefly-iii:fix-transaction-types'        => [],
-            'firefly-iii:fix-frontpage-accounts'       => [],
-            'firefly-iii:fix-ibans'                    => [],
-            'firefly-iii:create-group-memberships'     => [],
-            'firefly-iii:upgrade-group-information'    => [],
-
-            // final command to set the latest version in DB
-            'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
-            'firefly-iii:verify-security-alerts'       => [],
+            // there are 5 initial commands
+            // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
+            'migrate'                            => ['--seed' => true, '--force' => true],
+            'generate-keys'                      => [], // an exception :(
+            'firefly-iii:upgrade-database'       => [],
+            'firefly-iii:correct-database'       => [],
+            'firefly-iii:report-integrity'       => [],
+            'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
+            'firefly-iii:verify-security-alerts' => [],
         ];
 
         $this->lastError = '';
@@ -155,8 +109,8 @@ class InstallController extends Controller
 
         Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
         $indexes = array_values(array_keys($this->upgradeCommands));
-        if(array_key_exists($requestIndex, $indexes)) {
-            $command = $indexes[$requestIndex];
+        if (array_key_exists($requestIndex, $indexes)) {
+            $command    = $indexes[$requestIndex];
             $parameters = $this->upgradeCommands[$command];
             Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
             try {
