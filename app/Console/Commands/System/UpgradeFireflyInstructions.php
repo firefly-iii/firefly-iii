@@ -77,14 +77,15 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (str_starts_with($version, $compare)) {
+            if (\str_starts_with($version, $compare)) {
                 $text = $config[$compare];
             }
+
         }
 
         $this->showLine();
         $this->boxed('');
-        if (null === $text) {
+        if (null === $text || '' === $text) {
             $this->boxed(sprintf('Thank you for updating to Firefly III, v%s', $version));
             $this->boxedInfo('There are no extra upgrade instructions.');
             $this->boxed('Firefly III should be ready for use.');
@@ -148,13 +149,13 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (str_starts_with($version, $compare)) {
+            if (\str_starts_with($version, $compare)) {
                 $text = $config[$compare];
             }
         }
         $this->showLine();
         $this->boxed('');
-        if (null === $text) {
+        if (null === $text || '' === $text) {
             $this->boxed(sprintf('Thank you for installing Firefly III, v%s!', $version));
             $this->boxedInfo('There are no extra installation instructions.');
             $this->boxed('Firefly III should be ready for use.');
