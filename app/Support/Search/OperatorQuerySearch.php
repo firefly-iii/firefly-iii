@@ -861,7 +861,7 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->setTags(new Collection([$result]));
                 }
                 // no tags found means search must result in nothing.
-                if (0 === $result->count()) {
+                if (null === $result) {
                     Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
                     $this->collector->findNothing();
                 }
