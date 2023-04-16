@@ -57,7 +57,8 @@ class UpgradeDatabase extends Command
     {
         $this->callInitialCommands();
         $commands = [
-            // there are 14 upgrade commands.
+            'firefly-iii:fix-pgsql-sequences',
+            'firefly-iii:decrypt-all',
             'firefly-iii:transaction-identifiers',
             'firefly-iii:migrate-to-groups',
             'firefly-iii:account-currencies',
@@ -75,41 +76,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:migrate-recurrence-type',
             'firefly-iii:upgrade-liabilities',
             'firefly-iii:liabilities-600',
-
-            // there are 16 verify commands.
-            'firefly-iii:fix-piggies',
-            'firefly-iii:create-link-types',
-            'firefly-iii:create-access-tokens',
-            'firefly-iii:remove-bills',
-            'firefly-iii:fix-negative-limits',
-            'firefly-iii:enable-currencies',
-            'firefly-iii:fix-transfer-budgets',
-            'firefly-iii:fix-uneven-amount',
-            'firefly-iii:delete-zero-amount',
-            'firefly-iii:delete-orphaned-transactions',
-            'firefly-iii:delete-empty-journals',
-            'firefly-iii:delete-empty-groups',
-            'firefly-iii:fix-account-types',
-            'firefly-iii:fix-account-order',
-            'firefly-iii:rename-meta-fields',
-            'firefly-iii:fix-ob-currencies',
-            'firefly-iii:fix-long-descriptions',
-            'firefly-iii:fix-recurring-transactions',
-            'firefly-iii:unify-group-accounts',
-            'firefly-iii:fix-transaction-types',
-            'firefly-iii:fix-frontpage-accounts',
-            'firefly-iii:fix-ibans',
-            'firefly-iii:create-group-memberships',
-            'firefly-iii:upgrade-group-information',
-
-            // two report commands
-            'firefly-iii:report-empty-objects',
-            'firefly-iii:report-sum',
-            'firefly-iii:restore-oauth-keys',
-
-            // instructions
-            'firefly:instructions update',
-            'firefly-iii:verify-security-alerts',
+            'firefly-iii:budget-limit-periods',
         ];
         $args     = [];
         if ($this->option('force')) {
@@ -117,9 +84,7 @@ class UpgradeDatabase extends Command
         }
         foreach ($commands as $command) {
             $this->line(sprintf('Now executing %s', $command));
-            Artisan::call($command, $args);
-            $result = Artisan::output();
-            echo $result;
+            $this->call($command, $args);
         }
         // set new DB version.
         app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
@@ -129,22 +94,19 @@ class UpgradeDatabase extends Command
         return 0;
     }
 
+    /**
+     * @return void
+     */
     private function callInitialCommands(): void
     {
         $this->line('Now seeding the database...');
-        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
-        $result = Artisan::output();
-        echo $result;
+        $this->call('migrate', ['--seed' => true, '--force' => true]);
 
         $this->line('Fix PostgreSQL sequences.');
-        Artisan::call('firefly-iii:fix-pgsql-sequences');
-        $result = Artisan::output();
-        echo $result;
+        $this->call('firefly-iii:fix-pgsql-sequences');
 
         $this->line('Now decrypting the database (if necessary)...');
-        Artisan::call('firefly-iii:decrypt-all');
-        $result = Artisan::output();
-        echo $result;
+        $this->call('firefly-iii:decrypt-all');
 
         $this->line('Done!');
     }
