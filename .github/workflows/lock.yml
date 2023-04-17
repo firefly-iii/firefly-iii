@@ -16,6 +16,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           issue-inactive-days: 90
+          pr-inactive-days: 90
           issue-comment: >
             Hi there! This is an automatic reply. `Share and enjoy`
 
