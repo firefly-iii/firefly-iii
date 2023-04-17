@@ -5,20 +5,17 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
-permissions:
-  contents: read
-
 jobs:
   lock:
     permissions:
-      issues: write  # for dessant/lock-threads to lock issues
-      pull-requests: write  # for dessant/lock-threads to lock PRs
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - uses: dessant/lock-threads@v4
         with:
           github-token: ${{ github.token }}
-          issue-lock-inactive-days: '90'
+          issue-inactive-days: 90
           issue-comment: >
             Hi there! This is an automatic reply. `Share and enjoy`
 
