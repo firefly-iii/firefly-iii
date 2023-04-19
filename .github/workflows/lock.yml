@@ -17,13 +17,3 @@ jobs:
           github-token: ${{ github.token }}
           issue-inactive-days: 90
           pr-inactive-days: 90
-          issue-comment: >
-            Hi there! This is an automatic reply. `Share and enjoy`
-
-            This issue is now `locked` :lock:. 
-
-            - If you feel there is more to be said about this specific issue, please feel free to open a new issue. Please refer to this issue for clarity.
-
-            - Follow-up questions and comments can also be posted in a new [discussion](https://github.com/firefly-iii/firefly-iii/discussions/)
-
-            Thank you for your consideration.
