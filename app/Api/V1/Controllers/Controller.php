@@ -85,12 +85,14 @@ abstract class Controller extends BaseController
     {
         $bag  = new ParameterBag();
         $page = (int)request()->get('page');
-
+        Log::debug(sprintf('Page is %d', $page));
         if ($page < 1) {
             $page = 1;
+            Log::debug(sprintf('Page is less than zero, is now %d', $page));
         }
-        if ($page > (2 ^ 16)) {
-            $page = (2 ^ 16);
+        if ($page > pow(2,16)) {
+            $page = pow(2,16);
+            Log::debug(sprintf('Page is more than %d, is now %d', pow(2,16), $page));
         }
         $bag->set('page', $page);
 
