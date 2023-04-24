@@ -82,7 +82,7 @@
     "ext-xml": "*",
     "ext-xmlwriter": "*",
     "bacon/bacon-qr-code": "2.*",
-    "diglactic/laravel-breadcrumbs": "^8.0",
+    "diglactic/laravel-breadcrumbs": "^8.1",
     "doctrine/dbal": "3.*",
     "gdbots/query-parser": "^3.0",
     "guzzlehttp/guzzle": "^7.5",
