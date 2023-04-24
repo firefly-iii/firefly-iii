@@ -114,7 +114,7 @@
     "fakerphp/faker": "1.*",
     "filp/whoops": "2.*",
     "mockery/mockery": "1.*",
-    "nunomaduro/larastan": "^2.5",
+    "nunomaduro/larastan": "^2.6",
     "phpstan/phpstan": "^1.10",
     "phpstan/phpstan-deprecation-rules": "^1.1",
     "phpstan/phpstan-strict-rules": "^1.4",
