@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac90c0382ca1d0cb597ee1418a066866",
+    "content-hash": "6d2644c1db454b29d4e143d5f919472a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -308,16 +308,16 @@
         },
         {
             "name": "diglactic/laravel-breadcrumbs",
-            "version": "v8.1.0",
+            "version": "v8.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/diglactic/laravel-breadcrumbs.git",
-                "reference": "ce3dfb760743c63a287dab4b8090d7bf68b321ee"
+                "reference": "f72a78eb3e26aea507d7888a65f15e5790864e21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/diglactic/laravel-breadcrumbs/zipball/ce3dfb760743c63a287dab4b8090d7bf68b321ee",
-                "reference": "ce3dfb760743c63a287dab4b8090d7bf68b321ee",
+                "url": "https://api.github.com/repos/diglactic/laravel-breadcrumbs/zipball/f72a78eb3e26aea507d7888a65f15e5790864e21",
+                "reference": "f72a78eb3e26aea507d7888a65f15e5790864e21",
                 "shasum": ""
             },
             "require": {
@@ -373,9 +373,9 @@
             ],
             "support": {
                 "issues": "https://github.com/diglactic/laravel-breadcrumbs/issues",
-                "source": "https://github.com/diglactic/laravel-breadcrumbs/tree/v8.1.0"
+                "source": "https://github.com/diglactic/laravel-breadcrumbs/tree/v8.1.1"
             },
-            "time": "2023-02-06T22:46:35+00:00"
+            "time": "2023-04-17T23:24:15+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -1940,16 +1940,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.7.1",
+            "version": "v10.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "ddbbb2b50388721fe63312bb4469cae13163fd36"
+                "reference": "317d7ccaeb1bbf4ac3035efe225ef2746c45f3a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/ddbbb2b50388721fe63312bb4469cae13163fd36",
-                "reference": "ddbbb2b50388721fe63312bb4469cae13163fd36",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/317d7ccaeb1bbf4ac3035efe225ef2746c45f3a8",
+                "reference": "317d7ccaeb1bbf4ac3035efe225ef2746c45f3a8",
                 "shasum": ""
             },
             "require": {
@@ -2136,7 +2136,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2023-04-11T14:11:49+00:00"
+            "time": "2023-04-18T13:45:33+00:00"
         },
         {
             "name": "laravel/passport",
