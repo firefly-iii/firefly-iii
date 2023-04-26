@@ -29,6 +29,9 @@ use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\ChangedPiggyBankAmount;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
+use FireflyIII\Events\Model\BudgetLimit\Created;
+use FireflyIII\Events\Model\BudgetLimit\Deleted;
+use FireflyIII\Events\Model\BudgetLimit\Updated;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
@@ -42,6 +45,7 @@ use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Events\WarnUserAboutBill;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -160,6 +164,17 @@ class EventServiceProvider extends ServiceProvider
             ChangedPiggyBankAmount::class       => [
                 'FireflyIII\Handlers\Events\PiggyBankEventHandler@changePiggyAmount',
             ],
+            // budget related events: CRUD budget limit
+            Created::class          => [
+                'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@created',
+            ],
+            Updated::class          => [
+                'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@updated',
+            ],
+            Deleted::class          => [
+                'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@deleted',
+            ],
+
         ];
 
     /**
@@ -169,7 +184,6 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
         $this->registerCreateEvents();
-        $this->registerBudgetEvents();
     }
 
     /**
@@ -187,58 +201,5 @@ class EventServiceProvider extends ServiceProvider
                 $repetition->save();
             }
         );
-    }
-
-    /**
-     * TODO needs a dedicated method.
-     */
-    protected function registerBudgetEvents(): void
-    {
-        $func = static function (BudgetLimit $limit) {
-            Log::debug('Trigger budget limit event.');
-            // find available budget with same period and same currency or create it.
-            // then set it or add money:
-            $user            = $limit->budget->user;
-            $availableBudget = $user
-                ->availableBudgets()
-                ->where('start_date', $limit->start_date->format('Y-m-d'))
-                ->where('end_date', $limit->end_date->format('Y-m-d'))
-                ->where('transaction_currency_id', $limit->transaction_currency_id)
-                ->first();
-            // update!
-            if (null !== $availableBudget) {
-                $repository = app(BudgetLimitRepositoryInterface::class);
-                $repository->setUser($user);
-                $set = $repository->getAllBudgetLimitsByCurrency($limit->transactionCurrency, $limit->start_date, $limit->end_date);
-                $sum = (string)$set->sum('amount');
-
-
-                Log::debug(
-                    sprintf(
-                        'Because budget limit #%d had its amount changed to %s, available budget limit #%d will be updated.',
-                        $limit->id,
-                        $limit->amount,
-                        $availableBudget->id
-                    )
-                );
-                $availableBudget->amount = $sum;
-                $availableBudget->save();
-                return;
-            }
-            Log::debug('Does not exist, create it.');
-            // create it.
-            $data       = [
-                'amount'      => $limit->amount,
-                'start'       => $limit->start_date,
-                'end'         => $limit->end_date,
-                'currency_id' => $limit->transaction_currency_id,
-            ];
-            $repository = app(AvailableBudgetRepositoryInterface::class);
-            $repository->setUser($user);
-            $repository->store($data);
-        };
-
-        BudgetLimit::created($func);
-        BudgetLimit::updated($func);
     }
 }
