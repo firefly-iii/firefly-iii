@@ -73,7 +73,7 @@ class ExportRequest extends FormRequest
     {
         return [
             'type'     => 'in:csv',
-            'accounts' => 'min:1',
+            'accounts' => 'min:1|max:65536',
             'start'    => 'date|before:end',
             'end'      => 'date|after:start',
         ];

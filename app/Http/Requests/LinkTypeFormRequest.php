@@ -43,7 +43,7 @@ class LinkTypeFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        $nameRule = 'required|min:1|unique:link_types,name';
+        $nameRule = 'required|max:255|min:1|unique:link_types,name';
         $idRule   = '';
 
         // get parameter link:
@@ -51,14 +51,14 @@ class LinkTypeFormRequest extends FormRequest
 
         if (null !== $link) {
             $idRule   = 'exists:link_types,id';
-            $nameRule = 'required|min:1';
+            $nameRule = 'required|max:255|min:1';
         }
 
         return [
             'id'      => $idRule,
             'name'    => $nameRule,
-            'inward'  => 'required|min:1|different:outward',
-            'outward' => 'required|min:1|different:inward',
+            'inward'  => 'required|max:255|min:1|different:outward',
+            'outward' => 'required|max:255|min:1|different:inward',
         ];
     }
 }

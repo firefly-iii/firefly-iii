@@ -103,8 +103,8 @@ class StoreRequest extends FormRequest
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $type           = $this->convertString('type');
         $rules          = [
-            'name'                 => 'required|min:1|uniqueAccountForUser',
-            'type'                 => 'required|min:1|'.sprintf('in:%s', $types),
+            'name'                 => 'required|max:1024|min:1|uniqueAccountForUser',
+            'type'                 => 'required|max:1024|min:1|'.sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
             'bic'                  => 'bic|nullable',
             'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber(null, $type)],
@@ -120,7 +120,7 @@ class StoreRequest extends FormRequest
             'credit_card_type'     => sprintf('nullable|in:%s|required_if:account_role,ccAsset', $ccPaymentTypes),
             'monthly_payment_date' => 'nullable|date|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'nullable|required_if:type,liability|required_if:type,liabilities|in:loan,debt,mortgage',
-            'liability_amount'     => 'required_with:liability_start_date|min:0|numeric',
+            'liability_amount'     => 'required_with:liability_start_date|min:0|numeric|max:1000000000',
             'liability_start_date' => 'required_with:liability_amount|date',
             'liability_direction'  => 'nullable|required_if:type,liability|required_if:type,liabilities|in:credit,debit',
             'interest'             => 'between:0,100|numeric',

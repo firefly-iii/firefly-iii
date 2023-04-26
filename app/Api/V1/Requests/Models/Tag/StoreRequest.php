@@ -65,8 +65,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'tag'         => 'required|min:1|uniqueObjectForUser:tags,tag',
-            'description' => 'min:1|nullable',
+            'tag'         => 'required|min:1|uniqueObjectForUser:tags,tag|max:1024',
+            'description' => 'min:1|nullable|max:65536',
             'date'        => 'date|nullable',
         ];
 

@@ -74,7 +74,7 @@ class UpdateRequest extends FormRequest
             'name'           => sprintf('between:1,255|unique:transaction_currencies,name,%d', $currency->id),
             'code'           => sprintf('between:3,51|unique:transaction_currencies,code,%d', $currency->id),
             'symbol'         => sprintf('between:1,51|unique:transaction_currencies,symbol,%d', $currency->id),
-            'decimal_places' => 'between:0,20|numeric|min:0|max:20',
+            'decimal_places' => 'between:0,20|numeric|min:0|max:12',
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],
         ];
