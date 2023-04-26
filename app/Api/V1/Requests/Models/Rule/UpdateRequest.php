@@ -147,7 +147,7 @@ class UpdateRequest extends FormRequest
             'rule_group_title'           => 'nullable|between:1,255|belongsToUser:rule_groups,title',
             'trigger'                    => 'in:store-journal,update-journal',
             'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
-            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue',
+            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue|max:1024',
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
             'actions.*.type'             => 'required|in:'.implode(',', $validActions),

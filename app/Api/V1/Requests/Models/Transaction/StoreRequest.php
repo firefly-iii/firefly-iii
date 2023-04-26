@@ -188,9 +188,9 @@ class StoreRequest extends FormRequest
 
             // currency info
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|nullable',
-            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code|nullable',
+            'transactions.*.currency_code'         => 'min:3|max:51|exists:transaction_currencies,code|nullable',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id|nullable',
-            'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code|nullable',
+            'transactions.*.foreign_currency_code' => 'min:3|max:51|exists:transaction_currencies,code|nullable',
 
             // amount
             'transactions.*.amount'                => 'required|numeric|gt:0',

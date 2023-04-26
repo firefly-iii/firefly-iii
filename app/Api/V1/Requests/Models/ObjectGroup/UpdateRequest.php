@@ -63,7 +63,7 @@ class UpdateRequest extends FormRequest
         $objectGroup = $this->route()->parameter('objectGroup');
 
         return [
-            'title' => sprintf('min:1|uniqueObjectGroup:%d', $objectGroup->id),
+            'title' => sprintf('max:1024|min:1|uniqueObjectGroup:%d', $objectGroup->id),
             'order' => 'numeric',
         ];
     }

@@ -110,7 +110,7 @@ class AccountFormRequest extends FormRequest
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'administration_id'                  => 'min:1|max:16777216|numeric',
-            'name'                               => 'required|min:1|uniqueAccountForUser',
+            'name'                               => 'required|max:1024|min:1|uniqueAccountForUser',
             'opening_balance'                    => 'numeric|nullable|max:1000000000',
             'opening_balance_date'               => 'date|required_with:opening_balance|nullable',
             'iban'                               => ['iban', 'nullable', new UniqueIban(null, $this->convertString('objectType'))],
@@ -133,7 +133,7 @@ class AccountFormRequest extends FormRequest
         if (null !== $account) {
             // add rules:
             $rules['id']   = 'belongsToUser:accounts';
-            $rules['name'] = 'required|min:1|uniqueAccountForUser:'.$account->id;
+            $rules['name'] = 'required|max:1024|min:1|uniqueAccountForUser:'.$account->id;
             $rules['iban'] = ['iban', 'nullable', new UniqueIban($account, $account->accountType->type)];
         }
 
