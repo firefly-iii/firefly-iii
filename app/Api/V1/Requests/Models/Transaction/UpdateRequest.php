@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Transaction;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
@@ -61,6 +62,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
+
         Log::debug(sprintf('Now in %s', __METHOD__));
         $this->integerFields = [
             'order',
@@ -163,6 +165,9 @@ class UpdateRequest extends FormRequest
 
         /** @var array $transaction */
         foreach ($this->get('transactions') as $transaction) {
+            if(!is_array($transaction)) {
+                throw new FireflyException('Invalid data submitted: transaction is not array.');
+            }
             // default response is to update nothing in the transaction:
             $current  = [];
             $current  = $this->getIntegerData($current, $transaction);
@@ -359,25 +364,25 @@ class UpdateRequest extends FormRequest
 
             // other interesting fields
             'transactions.*.reconciled'             => [new IsBoolean()],
-            'transactions.*.notes'                  => 'min:1,max:50000|nullable',
+            'transactions.*.notes'                  => 'min:1|max:50000|nullable',
             'transactions.*.tags'                   => 'between:0,255',
 
             // meta info fields
-            'transactions.*.internal_reference'     => 'min:1,max:255|nullable',
-            'transactions.*.external_id'            => 'min:1,max:255|nullable',
-            'transactions.*.recurrence_id'          => 'min:1,max:255|nullable',
-            'transactions.*.bunq_payment_id'        => 'min:1,max:255|nullable',
-            'transactions.*.external_url'           => 'min:1,max:255|nullable|url',
+            'transactions.*.internal_reference'     => 'min:1|max:255|nullable',
+            'transactions.*.external_id'            => 'min:1|max:255|nullable',
+            'transactions.*.recurrence_id'          => 'min:1|max:255|nullable',
+            'transactions.*.bunq_payment_id'        => 'min:1|max:255|nullable',
+            'transactions.*.external_url'           => 'min:1|max:255|nullable|url',
 
             // SEPA fields:
-            'transactions.*.sepa_cc'                => 'min:1,max:255|nullable',
-            'transactions.*.sepa_ct_op'             => 'min:1,max:255|nullable',
-            'transactions.*.sepa_ct_id'             => 'min:1,max:255|nullable',
-            'transactions.*.sepa_db'                => 'min:1,max:255|nullable',
-            'transactions.*.sepa_country'           => 'min:1,max:255|nullable',
-            'transactions.*.sepa_ep'                => 'min:1,max:255|nullable',
-            'transactions.*.sepa_ci'                => 'min:1,max:255|nullable',
-            'transactions.*.sepa_batch_id'          => 'min:1,max:255|nullable',
+            'transactions.*.sepa_cc'                => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ct_op'             => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ct_id'             => 'min:1|max:255|nullable',
+            'transactions.*.sepa_db'                => 'min:1|max:255|nullable',
+            'transactions.*.sepa_country'           => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ep'                => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ci'                => 'min:1|max:255|nullable',
+            'transactions.*.sepa_batch_id'          => 'min:1|max:255|nullable',
 
             // dates
             'transactions.*.interest_date'          => 'date|nullable',
@@ -398,6 +403,7 @@ class UpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
+        Log::debug('Now in withValidator');
         /** @var TransactionGroup $transactionGroup */
         $transactionGroup = $this->route()->parameter('transactionGroup');
         $validator->after(
