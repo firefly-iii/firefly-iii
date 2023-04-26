@@ -89,6 +89,7 @@ class BudgetLimitHandler
         );
         // have to recalc everything just in case.
         $set = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
+        Log::debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
         /** @var BudgetLimit $budgetLimit */
         foreach ($set as $budgetLimit) {
             Log::debug(
@@ -108,22 +109,17 @@ class BudgetLimitHandler
             );
             // if both equal eachother, amount from this BL must be added to the AB
             if ($limitPeriod->equals($abPeriod)) {
-                Log::debug('Limit period is the same as AB period.');
                 $newAmount = bcadd($newAmount, $budgetLimit->amount);
             }
             // if budget limit period inside AB period, can be added in full.
-
             if (!$limitPeriod->equals($abPeriod) && $abPeriod->contains($limitPeriod)) {
-                Log::debug('Limit period falls inside of AB period.');
                 $newAmount = bcadd($newAmount, $budgetLimit->amount);
             }
             if (!$limitPeriod->equals($abPeriod) && $abPeriod->overlapsWith($limitPeriod)) {
-                Log::debug('Limit period overlaps AB period.');
                 $overlap = $abPeriod->overlap($limitPeriod);
                 if (null !== $overlap) {
-                    $length = $overlap->length();
-                    $daily  = bcmul($this->getDailyAmount($budgetLimit), (string)$length);
-                    Log::debug(sprintf('Length of overlap is %d days, so daily amount is %s', $length, $daily));
+                    $length    = $overlap->length();
+                    $daily     = bcmul($this->getDailyAmount($budgetLimit), (string)$length);
                     $newAmount = bcadd($newAmount, $daily);
                 }
             }
@@ -188,30 +184,31 @@ class BudgetLimitHandler
                 $currentEnd->format('Y-m-d')
             )->where('transaction_currency_id', $budgetLimit->transaction_currency_id)->first();
             if (null !== $availableBudget) {
-                Log::debug('Found AB, will update.');
+                Log::debug('Found 1 AB, will update.');
                 $this->calculateAmount($availableBudget);
-                continue;
             }
-            // if not exists:
-            $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
-            $daily         = $this->getDailyAmount($budgetLimit);
-            $amount        = bcmul($daily, (string)$currentPeriod->length(), 12);
+            if (null === $availableBudget) {
+                // if not exists:
+                $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+                $daily         = $this->getDailyAmount($budgetLimit);
+                $amount        = bcmul($daily, (string)$currentPeriod->length(), 12);
 
-            // no need to calculate if period is equal.
-            if ($currentPeriod->equals($limitPeriod)) {
-                $amount = $budgetLimit->amount;
+                // no need to calculate if period is equal.
+                if ($currentPeriod->equals($limitPeriod)) {
+                    $amount = $budgetLimit->amount;
+                }
+                Log::debug(sprintf('Will create AB for period %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
+                $availableBudget = new AvailableBudget(
+                    [
+                        'user_id'                 => $budgetLimit->budget->user->id,
+                        'transaction_currency_id' => $budgetLimit->transaction_currency_id,
+                        'start_date'              => $current,
+                        'end_date'                => $currentEnd,
+                        'amount'                  => $amount,
+                    ]
+                );
+                $availableBudget->save();
             }
-            Log::debug(sprintf('Will create AB for period %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
-            $availableBudget = new AvailableBudget(
-                [
-                    'user_id'                 => $budgetLimit->budget->user->id,
-                    'transaction_currency_id' => $budgetLimit->transaction_currency_id,
-                    'start_date'              => $current,
-                    'end_date'                => $currentEnd,
-                    'amount'                  => $amount,
-                ]
-            );
-            $availableBudget->save();
 
             // prep for next loop
             $current = app('navigation')->addPeriod($current, $viewRange, 0);
