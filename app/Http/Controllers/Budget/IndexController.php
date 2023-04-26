@@ -40,9 +40,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -101,12 +101,23 @@ class IndexController extends Controller
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {
-        Log::debug('Start of IndexController::index()');
+        Log::debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
 
         // collect some basic vars:
-        $range           = app('navigation')->getViewRange(true);
-        $start           = $start ?? session('start', today(config('app.timezone'))->startOfMonth());
-        $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
+        $range         = app('navigation')->getViewRange(true);
+        $isCustomRange = session('is_custom_range', false);
+        if (false === $isCustomRange) {
+            $start = $start ?? session('start', today(config('app.timezone'))->startOfMonth());
+            $end   = $end ?? app('navigation')->endOfPeriod($start, $range);
+        }
+
+        // overrule start and end if necessary:
+        if (true === $isCustomRange) {
+            $start = $start ?? session('start', today(config('app.timezone'))->startOfMonth());
+            $end   = $end ?? session('end', today(config('app.timezone'))->endOfMonth());
+        }
+
+
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $currencies      = $this->currencyRepository->get();
         $budgeted        = '0';

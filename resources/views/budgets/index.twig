@@ -261,6 +261,7 @@
                                                 {% if not budgetLimit.in_range %}
                                                     <small class="text-muted">
                                                         {{ trans('firefly.budget_limit_not_in_range', {start: budgetLimit.start_date, end: budgetLimit.end_date}) }}
+
                                                     </small><br>
                                                 {% endif %}
                                                 <div class="input-group bl_entry" data-budget-limit-id="{{ budgetLimit.id }}">
