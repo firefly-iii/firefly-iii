@@ -1,6 +1,6 @@
 {% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.error_intro', { version: version, errorMessage: errorMessage })|raw }}
+    {{ trans('email.error_intro', { version: version, errorMessage: errorMessage|escape })|raw }}
 </p>
 
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
