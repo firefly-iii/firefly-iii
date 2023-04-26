@@ -75,8 +75,9 @@ class TagFormRequest extends FormRequest
         $rules = [
             'tag'         => $tagRule,
             'id'          => $idRule,
-            'description' => 'min:1|nullable',
+            'description' => 'max:65536|min:1|nullable',
             'date'        => 'date|nullable',
+
         ];
 
         return Location::requestRules($rules);
