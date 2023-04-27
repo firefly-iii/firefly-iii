@@ -130,11 +130,12 @@ There are many ways to run Firefly III
 1. There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
 2. You can [install it on your server](https://docs.firefly-iii.org/firefly-iii/installation/self-hosted/).
 3. You can [run it using Docker](https://docs.firefly-iii.org/firefly-iii/installation/docker/).
-4. You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
+4. You can [deploy via Kubernetes](https://firefly-iii.github.io/kubernetes/).
+5. You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
 6. You can [install it using AMPPS](https://www.ampps.com/).
 7. You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
 8. You can [install it on Lando](https://gist.github.com/ArtisKrumins/ccb24f31d6d4872b57e7c9343a9d1bf0).
-9. You can [install it on Yunohost](https://github.com/YunoHost-Apps/firefly-iii)
+9. You can [install it on Yunohost](https://github.com/YunoHost-Apps/firefly-iii).
 
 ## Contributing
 
