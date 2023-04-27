@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Eloquent;
+use FireflyIII\Events\Model\BudgetLimit\Created;
+use FireflyIII\Events\Model\BudgetLimit\Deleted;
+use FireflyIII\Events\Model\BudgetLimit\Updated;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -80,6 +83,12 @@ class BudgetLimit extends Model
 
     /** @var array Fields that can be filled */
     protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount', 'transaction_currency_id'];
+
+    protected $dispatchesEvents = [
+        'created' => Created::class,
+        'updated' => Updated::class,
+        'deleted' => Deleted::class,
+    ];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

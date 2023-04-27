@@ -188,9 +188,9 @@ class StoreRequest extends FormRequest
 
             // currency info
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|nullable',
-            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code|nullable',
+            'transactions.*.currency_code'         => 'min:3|max:51|exists:transaction_currencies,code|nullable',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id|nullable',
-            'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code|nullable',
+            'transactions.*.foreign_currency_code' => 'min:3|max:51|exists:transaction_currencies,code|nullable',
 
             // amount
             'transactions.*.amount'                => 'required|numeric|gt:0',
@@ -225,25 +225,25 @@ class StoreRequest extends FormRequest
 
             // other interesting fields
             'transactions.*.reconciled'            => [new IsBoolean()],
-            'transactions.*.notes'                 => 'min:1,max:50000|nullable',
+            'transactions.*.notes'                 => 'min:1|max:50000|nullable',
             'transactions.*.tags'                  => 'between:0,255',
 
             // meta info fields
-            'transactions.*.internal_reference'    => 'min:1,max:255|nullable',
-            'transactions.*.external_id'           => 'min:1,max:255|nullable',
-            'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
-            'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
-            'transactions.*.external_url'          => 'min:1,max:255|nullable|url',
+            'transactions.*.internal_reference'    => 'min:1|max:255|nullable',
+            'transactions.*.external_id'           => 'min:1|max:255|nullable',
+            'transactions.*.recurrence_id'         => 'min:1|max:255|nullable',
+            'transactions.*.bunq_payment_id'       => 'min:1|max:255|nullable',
+            'transactions.*.external_url'          => 'min:1|max:255|nullable|url',
 
             // SEPA fields:
-            'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',
-            'transactions.*.sepa_ct_op'            => 'min:1,max:255|nullable',
-            'transactions.*.sepa_ct_id'            => 'min:1,max:255|nullable',
-            'transactions.*.sepa_db'               => 'min:1,max:255|nullable',
-            'transactions.*.sepa_country'          => 'min:1,max:255|nullable',
-            'transactions.*.sepa_ep'               => 'min:1,max:255|nullable',
-            'transactions.*.sepa_ci'               => 'min:1,max:255|nullable',
-            'transactions.*.sepa_batch_id'         => 'min:1,max:255|nullable',
+            'transactions.*.sepa_cc'               => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ct_op'            => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ct_id'            => 'min:1|max:255|nullable',
+            'transactions.*.sepa_db'               => 'min:1|max:255|nullable',
+            'transactions.*.sepa_country'          => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ep'               => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ci'               => 'min:1|max:255|nullable',
+            'transactions.*.sepa_batch_id'         => 'min:1|max:255|nullable',
 
             // dates
             'transactions.*.interest_date'         => 'date|nullable',

@@ -94,7 +94,7 @@ class UpdateRequest extends FormRequest
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
 
         $rules = [
-            'name'                 => sprintf('min:1|uniqueAccountForUser:%d', $account->id),
+            'name'                 => sprintf('min:1|max:1024|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->convertString('type'))],
             'bic'                  => 'bic|nullable',
@@ -104,7 +104,7 @@ class UpdateRequest extends FormRequest
             'virtual_balance'      => 'numeric|nullable',
             'order'                => 'numeric|nullable',
             'currency_id'          => 'numeric|exists:transaction_currencies,id',
-            'currency_code'        => 'min:3|max:3|exists:transaction_currencies,code',
+            'currency_code'        => 'min:3|max:51|exists:transaction_currencies,code',
             'active'               => [new IsBoolean()],
             'include_net_worth'    => [new IsBoolean()],
             'account_role'         => sprintf('in:%s|nullable|required_if:type,asset', $accountRoles),

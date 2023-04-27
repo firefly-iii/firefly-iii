@@ -1,7 +1,7 @@
 <?php
-/**
+/*
  * ScanAttachments.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Console\Commands;
+namespace FireflyIII\Console\Commands\System;
 
 use Crypt;
 use FireflyIII\Models\Attachment;
@@ -42,7 +42,7 @@ class ScanAttachments extends Command
      *
      * @var string
      */
-    protected $description = 'Rescan all attachments and re-set the MD5 hash and mime.';
+    protected $description = 'Rescan all attachments and re-set the correct MD5 hash and mime.';
 
     /**
      * The name and signature of the console command.

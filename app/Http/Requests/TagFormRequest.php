@@ -66,17 +66,18 @@ class TagFormRequest extends FormRequest
 
         /** @var Tag $tag */
         $tag     = $this->route()->parameter('tag');
-        $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag';
+        $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag';
         if (null !== $tag) {
             $idRule  = 'belongsToUser:tags';
-            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,'.$tag->id;
+            $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag,'.$tag->id;
         }
 
         $rules = [
             'tag'         => $tagRule,
             'id'          => $idRule,
-            'description' => 'min:1|nullable',
+            'description' => 'max:65536|min:1|nullable',
             'date'        => 'date|nullable',
+
         ];
 
         return Location::requestRules($rules);

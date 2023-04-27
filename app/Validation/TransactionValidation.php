@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -89,6 +90,7 @@ trait TransactionValidation
             Log::error(sprintf('Transactions array is not countable, because its a %s', gettype($transactions)));
             return [];
         }
+        Log::debug('Returning transactions.', $transactions);
 
         return $transactions;
     }
@@ -357,6 +359,9 @@ trait TransactionValidation
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
+            if(!is_int($index)) {
+                throw new FireflyException('Invalid data submitted: transaction is not array.');
+            }
             $this->validateSingleUpdate($validator, $index, $transaction, $transactionGroup);
         }
     }

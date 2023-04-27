@@ -57,14 +57,15 @@ class ReportIntegrity extends Command
             return 1;
         }
         $commands = [
+            'firefly-iii:create-group-memberships',
             'firefly-iii:report-empty-objects',
             'firefly-iii:report-sum',
+            'firefly-iii:restore-oauth-keys',
+            'firefly-iii:upgrade-group-information'
         ];
         foreach ($commands as $command) {
             $this->line(sprintf('Now executing %s', $command));
-            Artisan::call($command);
-            $result = Artisan::output();
-            echo $result;
+            $this->call($command);
         }
 
         return 0;
