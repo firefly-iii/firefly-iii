@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 /**
  * Class FixIbans
@@ -53,6 +55,52 @@ class FixIbans extends Command
     public function handle(): int
     {
         $accounts = Account::whereNotNull('iban')->get();
+        $this->filterIbans($accounts);
+        $this->countAndCorrectIbans($accounts);
+
+        return 0;
+    }
+
+    /**
+     * @param  Collection  $accounts
+     * @return void
+     */
+    private function countAndCorrectIbans(Collection $accounts): void
+    {
+        $set = [];
+        /** @var Account $account */
+        foreach($accounts as $account) {
+            $userId = (int)$account->user_id;
+            $set[$userId] = $set[$userId] ?? [];
+            $iban = (string)$account->iban;
+            $type = $account->accountType->type;
+            if(in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])) {
+                $type = 'liabilities';
+            }
+            if(array_key_exists($iban, $set[$userId])) {
+                // iban already in use! two exceptions exist:
+                if(
+                    !(AccountType::EXPENSE === $set[$userId][$iban] && AccountType::REVENUE === $type) && // allowed combination
+                    !(AccountType::REVENUE === $set[$userId][$iban] && AccountType::EXPENSE === $type) // also allowed combination.
+                ){
+                    $this->line(sprintf('IBAN "%s" is used more than once and will be removed from %s #%d ("%s")', $iban, $account->accountType->type, $account->id, $account->name));
+                    $account->iban = null;
+                    $account->save();
+                }
+            }
+
+            if(!array_key_exists($iban, $set[$userId])) {
+                $set[$userId][$iban] = $type;
+            }
+        }
+    }
+
+    /**
+     * @param  Collection  $accounts
+     * @return void
+     */
+    private function filterIbans(Collection $accounts): void
+    {
         /** @var Account $account */
         foreach ($accounts as $account) {
             $iban = $account->iban;
@@ -65,7 +113,5 @@ class FixIbans extends Command
                 }
             }
         }
-
-        return 0;
     }
 }
