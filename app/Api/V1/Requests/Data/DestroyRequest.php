@@ -57,7 +57,7 @@ class DestroyRequest extends FormRequest
                  ',not_assets_liabilities';
 
         return [
-            'objects' => sprintf('required|min:1|string|in:%s', $valid),
+            'objects' => sprintf('required|max:255|min:1|string|in:%s', $valid),
             'unused'  => 'in:true,false',
         ];
     }

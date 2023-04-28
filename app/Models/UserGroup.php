@@ -53,6 +53,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $accounts_count
  * @property-read Collection<int, \FireflyIII\Models\Account> $accounts
  * @property-read Collection<int, \FireflyIII\Models\Account> $accounts
+ * @property-read Collection<int, \FireflyIII\Models\Account> $accounts
  * @mixin Eloquent
  */
 class UserGroup extends Model

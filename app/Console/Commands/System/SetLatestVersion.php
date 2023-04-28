@@ -1,8 +1,8 @@
 <?php
 
 /*
- * FixBudgetLimits.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * SetLatestVersion.php
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,29 +22,27 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Console\Commands\Correction;
+namespace FireflyIII\Console\Commands\System;
 
-use DB;
-use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
 
 /**
- * Class CorrectionSkeleton
+ * Class SetLatestVersion
  */
-class FixBudgetLimits extends Command
+class SetLatestVersion extends Command
 {
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Fixes negative budget limits';
+    protected $description = 'Set latest version in DB.';
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:fix-negative-limits';
+    protected $signature = 'firefly-iii:set-latest-version {--james-is-cool}';
 
     /**
      * Execute the console command.
@@ -53,14 +51,14 @@ class FixBudgetLimits extends Command
      */
     public function handle(): int
     {
-        $set = BudgetLimit::where('amount', '<', '0')->get();
-        if (0 === $set->count()) {
-            $this->info('All budget limits are OK.');
+        if (!$this->option('james-is-cool')) {
+            $this->error('Am too!');
+
             return 0;
         }
-        $count = BudgetLimit::where('amount', '<', '0')->update(['amount' => DB::raw('amount * -1')]);
-
-        $this->info(sprintf('Fixed %d budget limit(s)', $count));
+        app('fireflyconfig')->set('db_version', config('firefly.db_version'));
+        app('fireflyconfig')->set('ff3_version', config('firefly.version'));
+        $this->line('Updated version.');
 
         return 0;
     }

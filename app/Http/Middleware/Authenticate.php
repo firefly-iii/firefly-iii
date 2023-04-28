@@ -87,13 +87,10 @@ class Authenticate
      */
     protected function authenticate($request, array $guards)
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
         if (0 === count($guards)) {
-            Log::debug('No guards present.');
             // go for default guard:
             /** @noinspection PhpUndefinedMethodInspection */
             if ($this->auth->check()) {
-                Log::debug('Default guard says user is authenticated.');
                 // do an extra check on user object.
                 /** @noinspection PhpUndefinedMethodInspection */
                 /** @var User $user */
@@ -104,18 +101,13 @@ class Authenticate
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->auth->authenticate();
         }
-        Log::debug('Guard array is not empty.');
 
         foreach ($guards as $guard) {
-            Log::debug(sprintf('Now in guard loop, guard is "%s"', $guard));
             if ('api' !== $guard) {
-                Log::debug('Guard is "api", call authenticate()');
                 $this->auth->guard($guard)->authenticate();
             }
             $result = $this->auth->guard($guard)->check();
-            Log::debug(sprintf('Result is %s', var_export($result, true)));
             if ($result) {
-                Log::debug('Guard says user is authenticated.');
                 $user = $this->auth->guard($guard)->user();
                 $this->validateBlockedUser($user, $guards);
                 // According to PHPstan the method returns void, but we'll see.
@@ -134,7 +126,6 @@ class Authenticate
      */
     private function validateBlockedUser(?User $user, array $guards): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
         if (null === $user) {
             Log::warning('User is null, throw exception?');
         }

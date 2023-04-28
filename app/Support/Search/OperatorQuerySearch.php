@@ -856,12 +856,12 @@ class OperatorQuerySearch implements SearchInterface
                 break;
             case '-tag_is_not':
             case 'tag_is':
-                $result = $this->tagRepository->searchTag($value);
-                if ($result->count() > 0) {
-                    $this->collector->setTags($result);
+                $result = $this->tagRepository->findByTag($value);
+                if (null !== $result) {
+                    $this->collector->setTags(new Collection([$result]));
                 }
                 // no tags found means search must result in nothing.
-                if (0 === $result->count()) {
+                if (null === $result) {
                     Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
                     $this->collector->findNothing();
                 }

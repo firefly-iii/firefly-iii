@@ -90,20 +90,20 @@ Firefly III is pretty feature packed. Some important stuff first:
 
 The most exciting features are:
 
-* Create [recurring transactions to manage your money](https://docs.firefly-iii.org/advanced-concepts/recurring).
-* [Rule based transaction handling](https://docs.firefly-iii.org/advanced-concepts/rules) with the ability to create your own rules.
+* Create [recurring transactions to manage your money](https://docs.firefly-iii.org/firefly-iii/financial-concepts/recurring/).
+* [Rule based transaction handling](https://docs.firefly-iii.org/firefly-iii/features/rules/) with the ability to create your own rules.
 
 Then the things that make you go "yeah OK, makes sense".
 
 * A [double-entry](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system) bookkeeping system.
-* Save towards a goal using [piggy banks](https://docs.firefly-iii.org/advanced-concepts/piggies).
-* View [income and expense reports](https://docs.firefly-iii.org/advanced-concepts/reports).
+* Save towards a goal using [piggy banks](https://docs.firefly-iii.org/firefly-iii/financial-concepts/piggies/).
+* View [income and expense reports](https://docs.firefly-iii.org/firefly-iii/features/reports/).
 
 And the things you would hope for but not expect:
 
 * 2 factor authentication for extra security 🔒.
-* Supports [any currency you want](https://docs.firefly-iii.org/concepts/currencies), including crypto currencies such as ₿itcoin and Ξthereum.
-* There is a [Docker image](https://docs.firefly-iii.org/installation/docker) and an [Heroku script](https://docs.firefly-iii.org/installation/third_parties).
+* Supports [any currency you want](https://docs.firefly-iii.org/firefly-iii/financial-concepts/currencies/), including crypto currencies such as ₿itcoin and Ξthereum.
+* There is a [Docker image](https://docs.firefly-iii.org/firefly-iii/installation/docker/) and an [Heroku script](https://docs.firefly-iii.org/firefly-iii/installation/third-parties/).
 
 And to organise everything:
 
@@ -111,7 +111,7 @@ And to organise everything:
 * Easy navigation through your records.
 * Lots of charts because we all love them.
 
-Many more features are listed in the [documentation](https://docs.firefly-iii.org/about-firefly-iii/introduction).
+Many more features are listed in the [documentation](https://docs.firefly-iii.org/firefly-iii/about-firefly-iii/introduction/).
 
 ## Who's it for?
 <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/iphone-complete.png" alt="Firefly III on iPhone" align="left" width="250">
@@ -122,27 +122,28 @@ Many more features are listed in the [documentation](https://docs.firefly-iii.or
 
 ## The Firefly III eco-system
 
-Several users have built pretty awesome stuff around the Firefly III API. [Check out these tools in the documentation](https://docs.firefly-iii.org/other-pages/3rdparty).
+Several users have built pretty awesome stuff around the Firefly III API. [Check out these tools in the documentation](https://docs.firefly-iii.org/firefly-iii/more-information/3rdparty/).
 
 ## Getting Started
 
 There are many ways to run Firefly III
 1. There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
-2. You can [install it on your server](https://docs.firefly-iii.org/installation/self_hosted).
-3. You can [run it using Docker](https://docs.firefly-iii.org/installation/docker).
-4. You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
-5. You can [install it using AMPPS](https://www.ampps.com/).
-6. You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
-7. You can [install it on Lando](https://gist.github.com/ArtisKrumins/ccb24f31d6d4872b57e7c9343a9d1bf0).
-8. You can [install it on Yunohost](https://github.com/YunoHost-Apps/firefly-iii)
+2. You can [install it on your server](https://docs.firefly-iii.org/firefly-iii/installation/self-hosted/).
+3. You can [run it using Docker](https://docs.firefly-iii.org/firefly-iii/installation/docker/).
+4. You can [deploy via Kubernetes](https://firefly-iii.github.io/kubernetes/).
+5. You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
+6. You can [install it using AMPPS](https://www.ampps.com/).
+7. You can [install it on Cloudron](https://cloudron.io/store/org.fireflyiii.cloudronapp.html).
+8. You can [install it on Lando](https://gist.github.com/ArtisKrumins/ccb24f31d6d4872b57e7c9343a9d1bf0).
+9. You can [install it on Yunohost](https://github.com/YunoHost-Apps/firefly-iii).
 
 ## Contributing
 
 You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you may open an issue in the [main repository](https://github.com/firefly-iii/firefly-iii) or contact me through [gitter](https://gitter.im/firefly-iii/firefly-iii) and [Mastodon](https://fosstodon.org/@ff3).
 
-Of course, there are some [contributing guidelines](https://docs.firefly-iii.org/firefly-iii/other-pages/contributing) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out.
+Of course, there are some [contributing guidelines](https://docs.firefly-iii.org/firefly-iii/support/#contributing-code) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out.
 
-I can always use your help [squashing bugs](https://docs.firefly-iii.org/support/contribute#bugs), thinking about [new features](https://docs.firefly-iii.org/support/contribute#feature-requests) or [translating Firefly III](https://docs.firefly-iii.org/support/contribute#translations) into other languages.
+I can always use your help [squashing bugs](https://docs.firefly-iii.org/data-importer/support/issues/), thinking about [new features](https://docs.firefly-iii.org/data-importer/support/issues/) or [translating Firefly III](https://docs.firefly-iii.org/firefly-iii/faq/translate/) into other languages.
 
 [Sonarcloud][sc-project-url] scans the code of Firefly III. If you want to help improve Firefly III, check out the latest reports and take your pick!
 

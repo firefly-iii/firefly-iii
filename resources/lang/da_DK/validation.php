@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Du kan ikke bruge denne konto som kildekonto.',
     'generic_invalid_destination' => 'Du kan ikke bruge denne konto som destinationskonto.',
 
-    'generic_no_source'      => 'Angivelse af kilde konto er krævet.',
-    'generic_no_destination' => 'Angivelse af destinations konto er krævet.',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => 'Attributten :attribute skal være større end eller lig med :value.',
     'gt.numeric'  => 'Attributten :attribute skal være større end :value.',

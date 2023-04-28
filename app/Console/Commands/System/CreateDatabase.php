@@ -1,8 +1,8 @@
 <?php
 
-/**
+/*
  * CreateDatabase.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Console\Commands;
+namespace FireflyIII\Console\Commands\System;
 
 use Illuminate\Console\Command;
 use PDO;

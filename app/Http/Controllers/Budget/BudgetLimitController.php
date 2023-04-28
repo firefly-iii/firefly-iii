@@ -89,12 +89,13 @@ class BudgetLimitController extends Controller
         $collection   = $this->currencyRepos->get();
         $budgetLimits = $this->blRepository->getBudgetLimits($budget, $start, $end);
 
-        // remove already budgeted currencies:
+        // remove already budgeted currencies with the same date range
         $currencies = $collection->filter(
-            static function (TransactionCurrency $currency) use ($budgetLimits) {
-                /** @var AvailableBudget $budget */
-                foreach ($budgetLimits as $budget) {
-                    if ($budget->transaction_currency_id === $currency->id) {
+            static function (TransactionCurrency $currency) use ($budgetLimits, $start, $end) {
+                /** @var BudgetLimit $limit */
+                foreach ($budgetLimits as $limit) {
+                    if ($limit->transaction_currency_id === $currency->id && $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
+                    ) {
                         return false;
                     }
                 }

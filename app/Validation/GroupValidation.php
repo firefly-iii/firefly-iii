@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\Log;
@@ -53,6 +54,9 @@ trait GroupValidation
         ];
         /** @var array $transaction */
         foreach ($transactions as $index => $transaction) {
+            if(!is_array($transaction)) {
+                throw new FireflyException('Invalid data submitted: transaction is not array.');
+            }
             $hasAccountInfo = false;
             $hasJournalId   = array_key_exists('transaction_journal_id', $transaction);
             foreach ($keys as $key) {

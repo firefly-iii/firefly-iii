@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Вы не можете использовать этот счёт в качестве счёта-источника.',
     'generic_invalid_destination' => 'Вы не можете использовать этот счёт в качестве счёта назначения.',
 
-    'generic_no_source'      => 'Вы должны предоставить информацию об учетной записи источника.',
-    'generic_no_destination' => 'Вы должны предоставить данные учетной записи назначения.',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => 'Значение :attribute должно быть больше или равно :value.',
     'gt.numeric'  => 'Значение :attribute должно быть больше :value.',

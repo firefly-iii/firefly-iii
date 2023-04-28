@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'この口座を引き出し元口座として使用することはできません。',
     'generic_invalid_destination' => 'この口座を預け入れ先口座として使用することはできません。',
 
-    'generic_no_source'      => '出金元口座情報の登録が必要です。',
-    'generic_no_destination' => '送金先口座情報の登録が必要です。',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => ':attribute は :value 以上でなければなりません。',
     'gt.numeric'  => ':attribute は :value より大きな値でなければいけません。',

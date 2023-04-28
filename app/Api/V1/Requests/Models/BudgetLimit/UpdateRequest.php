@@ -69,7 +69,7 @@ class UpdateRequest extends FormRequest
             'end'           => 'date',
             'amount'        => 'gt:0',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
+            'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
         ];
     }
 

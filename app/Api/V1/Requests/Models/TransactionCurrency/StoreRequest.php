@@ -75,7 +75,7 @@ class StoreRequest extends FormRequest
             'name'           => 'required|between:1,255|unique:transaction_currencies,name',
             'code'           => 'required|between:3,51|unique:transaction_currencies,code',
             'symbol'         => 'required|between:1,51|unique:transaction_currencies,symbol',
-            'decimal_places' => 'between:0,20|numeric|min:0|max:20',
+            'decimal_places' => 'between:0,20|numeric|min:0|max:12',
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],
 

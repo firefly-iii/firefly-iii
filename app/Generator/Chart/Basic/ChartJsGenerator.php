@@ -122,7 +122,7 @@ class ChartJsGenerator implements GeneratorInterface
 
         foreach ($data as $set) {
             $currentSet = [
-                'label' => $set['label'],
+                'label' => $set['label'] ?? '(no label)',
                 'type'  => $set['type'] ?? 'line',
                 'data'  => array_values($set['entries']),
             ];

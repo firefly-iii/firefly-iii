@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Nem használhatod ezt a fiókot forrásfiókként.',
     'generic_invalid_destination' => 'Nem használhatod ezt a fiókot célfiókként.',
 
-    'generic_no_source'      => 'You must submit source account information.',
-    'generic_no_destination' => 'You must submit destination account information.',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => ':attribute attribútumnak :value értéknél nagyobbnak vagy vele egyenlőnek kell lennie.',
     'gt.numeric'  => 'A(z) :attribute nagyobb kell, hogy legyen, mint :value.',

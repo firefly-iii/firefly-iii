@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Det går inte att använda detta konto som källkonto.',
     'generic_invalid_destination' => 'Det går inte att använda detta konto som mottagarkonto.',
 
-    'generic_no_source'      => 'Du måste ange källkontoinformation.',
-    'generic_no_destination' => 'Du måste ange destinationskontos information.',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => ':attribute måste vara större än eller lika med :value.',
     'gt.numeric'  => ':attribute måste vara större än :value.',

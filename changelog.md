@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.9 - 2023-04-29
+
+### Added
+- Better length validation for text fields.
+
+### Changed
+- Better calculation of available budget
+
+### Fixed
+- [Issue 7377](https://github.com/firefly-iii/firefly-iii/issues/7377) Tag search was broken
+- [Issue 7389](https://github.com/firefly-iii/firefly-iii/issues/7389) Bug in charts
+- [Issue 7394](https://github.com/firefly-iii/firefly-iii/issues/7394) unique iban check was broken
+- [Issue 7427](https://github.com/firefly-iii/firefly-iii/issues/7427) API would not accept page 18 and up.
+- [Issue 7410](https://github.com/firefly-iii/firefly-iii/issues/7410) Various dark mode color fixes
+- Old documentation links fixed by @mindlessroman and @noxonad!
+
 ## 6.0.8 - 2023-04-16
 
 ### Added
