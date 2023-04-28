@@ -74,7 +74,7 @@ class FixIbans extends Command
             $set[$userId] = $set[$userId] ?? [];
             $iban = (string)$account->iban;
             $type = $account->accountType->type;
-            if(in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])) {
+            if(in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
                 $type = 'liabilities';
             }
             if(array_key_exists($iban, $set[$userId])) {
@@ -82,7 +82,7 @@ class FixIbans extends Command
                 if(
                     !(AccountType::EXPENSE === $set[$userId][$iban] && AccountType::REVENUE === $type) && // allowed combination
                     !(AccountType::REVENUE === $set[$userId][$iban] && AccountType::EXPENSE === $type) // also allowed combination.
-                ){
+                ) {
                     $this->line(sprintf('IBAN "%s" is used more than once and will be removed from %s #%d ("%s")', $iban, $account->accountType->type, $account->id, $account->name));
                     $account->iban = null;
                     $account->save();

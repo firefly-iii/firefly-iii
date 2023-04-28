@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 class UniqueIban implements ValidationRule
 {
     private ?Account $account;
-    private array  $expectedTypes;
+    private array    $expectedTypes;
 
     /**
      * Create a new rule instance.
@@ -47,8 +47,9 @@ class UniqueIban implements ValidationRule
      */
     public function __construct(?Account $account, ?string $expectedType)
     {
-        $this->account      = $account;
-        if(null === $expectedType){
+        $this->account       = $account;
+        $this->expectedTypes = [];
+        if (null === $expectedType) {
             return;
         }
         $this->expectedTypes = [$expectedType];
@@ -128,10 +129,10 @@ class UniqueIban implements ValidationRule
             AccountType::ASSET   => 0,
             AccountType::EXPENSE => 0,
             AccountType::REVENUE => 0,
-            'liabilities' => 0,
+            'liabilities'        => 0,
         ];
 
-        if (in_array('expense',$this->expectedTypes,true) ||in_array(AccountType::EXPENSE, $this->expectedTypes, true)) {
+        if (in_array('expense', $this->expectedTypes, true) || in_array(AccountType::EXPENSE, $this->expectedTypes, true)) {
             // IBAN should be unique amongst expense and asset accounts.
             // may appear once in revenue accounts
             $maxCounts[AccountType::REVENUE] = 1;
@@ -154,7 +155,7 @@ class UniqueIban implements ValidationRule
     private function countHits(string $type, string $iban): int
     {
         $typesArray = [$type];
-        if('liabilities' === $type) {
+        if ('liabilities' === $type) {
             $typesArray = [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         }
         $query
@@ -176,7 +177,7 @@ class UniqueIban implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if(!$this->passes($attribute, $value)) {
+        if (!$this->passes($attribute, $value)) {
             $fail((string)trans('validation.unique_iban_for_user'));
         }
     }

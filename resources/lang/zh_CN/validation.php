@@ -66,9 +66,9 @@ return [
     'require_currency_info'          => '此字段需要货币信息',
     'not_transfer_account'           => '此账户无法用于转账',
     'require_currency_amount'        => '此字段需要外币信息',
-    'require_foreign_currency'       => 'This field requires a number',
-    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
-    'require_foreign_src'            => 'This field value must match the currency of the source account.',
+    'require_foreign_currency'       => '此字段要求为数字',
+    'require_foreign_dest'           => '此字段值必须与目标账户的货币相匹配',
+    'require_foreign_src'            => '此字段值必须与来源账户的货币相匹配',
     'equal_description'              => '交易描述和全局描述不应相同',
     'file_invalid_mime'              => '文件“:name”的类型为“:mime”，系统禁止上传此类型的文件',
     'file_too_large'                 => '文件“:name”过大',
@@ -234,7 +234,7 @@ return [
     'withdrawal_dest_need_data'   => '需要一个有效的目标账户 ID 和/或目标账户名称才能继续',
     'withdrawal_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
 
-    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+    'reconciliation_source_bad_data' => '在搜索ID“:id”或名称“:name”时，没有找到有效的对账帐户',
 
     'generic_source_bad_data' => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',
 
@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => '您不能使用此账户作为来源账户',
     'generic_invalid_destination' => '您不能使用此账户作为目标账户',
 
-    'generic_no_source'      => '您必须提交源账户信息。',
-    'generic_no_destination' => '您必须提交目标账户信息。',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => ':attribute 必须大于或等于 :value',
     'gt.numeric'  => ':attribute 必须大于 :value',
@@ -285,7 +285,7 @@ return [
     'auto_budget_period_mandatory'    => '自动预算周期是必填项',
 
     // no access to administration:
-    'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'no_access_user_group'            => '您没有管理员访问权限',
 ];
 
 /*

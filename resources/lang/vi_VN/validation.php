@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Bạn không thể sử dụng tài khoản này làm tài khoản nguồn.',
     'generic_invalid_destination' => 'Bạn không thể sử dụng tài khoản này làm tài khoản đích.',
 
-    'generic_no_source'      => 'Bạn phải gửi thông tin tài khoản nguồn.',
-    'generic_no_destination' => 'Bạn phải gửi thông tin tài khoản đích.',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => ':attribute phải lớn hơn hoặc bằng :value.',
     'gt.numeric'  => ':attribute phải lớn hơn :value.',

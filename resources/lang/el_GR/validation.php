@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Δεν μπορείτε να χρησιμοποιήσετε αυτό το λογαριασμό ως λογαριασμό προέλευσης.',
     'generic_invalid_destination' => 'Δεν μπορείτε να χρησιμοποιήσετε αυτό το λογαριασμό ως λογαριασμό προορισμού.',
 
-    'generic_no_source'      => 'Πρέπει να εισάγετε στοιχεία για τον λογαριασμό προέλευσης.',
-    'generic_no_destination' => 'Πρέπει να εισάγετε στοιχεία για τον λογαριασμό προορισμού.',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => 'Το :attribute πρέπει να είναι μεγαλύτερο ή ίσο με :value.',
     'gt.numeric'  => 'Το :attribute πρέπει να είναι μεγαλύτερο από :value.',

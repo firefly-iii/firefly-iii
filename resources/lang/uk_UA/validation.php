@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Ви не можете використовувати цей рахунок як вихідний.',
     'generic_invalid_destination' => 'Ви не можете використовувати цей рахунок як призначення.',
 
-    'generic_no_source'      => 'You must submit source account information.',
-    'generic_no_destination' => 'You must submit destination account information.',
+    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
+    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
 
     'gte.numeric' => 'Поле :attribute має дорівнювати чи бути більше ніж :value.',
     'gt.numeric'  => 'Значення :attribute має бути більше за :value.',

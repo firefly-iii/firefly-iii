@@ -316,7 +316,7 @@ return [
     'update_new_version_alert'             => 'Доступна нова версія Firefly III. Ви працюєте з :your_version, остання версія :new_version яка була випущена на :date.',
     'update_version_beta'                  => 'Це бета-версія. Ви можете зіткнутися з проблемами.',
     'update_version_alpha'                 => 'Це альфа-версія. Може містити баги та недоліки.',
-    'update_current_version_alert'         => 'Ви працюєте в найоновішій версії :version',
+    'update_current_version_alert'         => 'Ви працюєте в найновішій версії :version.',
     'update_newer_version_alert'           => 'Ви працюєте з :your_version версією, яка є новішою за останній реліз, :new_version.',
     'update_check_error'                   => 'Сталася помилка під час перевірки наявності оновлень: :error',
     'unknown_error'                        => 'Невідома помилка. Вибачте.',
