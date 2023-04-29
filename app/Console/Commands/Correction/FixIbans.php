@@ -73,6 +73,9 @@ class FixIbans extends Command
             $userId = (int)$account->user_id;
             $set[$userId] = $set[$userId] ?? [];
             $iban = (string)$account->iban;
+            if('' === $iban) {
+                continue;
+            }
             $type = $account->accountType->type;
             if(in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
                 $type = 'liabilities';
