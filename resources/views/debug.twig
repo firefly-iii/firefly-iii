@@ -22,8 +22,8 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Base Build | {{ baseBuildNr }}, {{ baseBuildDate }} |
 {% endif %}
 | DB version | {{ foundDBversion }} (exp. {{ expectedDBversion}}) |
-{% if not isDocker %}| Docker | No |{% endif %}
-
+{% if not isDocker %}| Docker | No |
+{% endif %}
 | PHP | `{{ phpVersion }}` |
 | Host | `{{ phpOs }}` |
 
