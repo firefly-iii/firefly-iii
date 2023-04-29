@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
+use FireflyIII\User;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 
@@ -38,6 +39,7 @@ class HealthcheckController extends Controller
      */
     public function check(): Response
     {
+        User::count(); // sanity check for database health. Will crash if not OK.
         return response('OK', 200);
     }
 }
