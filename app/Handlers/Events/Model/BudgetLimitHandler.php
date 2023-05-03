@@ -180,7 +180,14 @@ class BudgetLimitHandler
         $start = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
         $end   = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
         $end   = app('navigation')->endOfPeriod($end, $viewRange);
-        $user  = $budgetLimit->budget->user;
+        $user  = $budgetLimit?->budget?->user;
+
+        // sanity check. It's rare but this happens.
+        if(null === $user) {
+            Log::warning('User is null, cannot continue.');
+            $budgetLimit->forceDelete();
+            return;
+        }
 
         // limit period in total is:
         $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
