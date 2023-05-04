@@ -24,7 +24,7 @@
                 <form action="{{ route('two-factor.submit') }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="input-group mb-3">
-                        <input type="text" name="one_time_password" inputmode="numeric" autocomplete="one-time-code" class="form-control" placeholder="{{ 'two_factor_code_here'|_ }}" />
+                        <input type="text" name="one_time_password" inputmode="numeric" autocomplete="one-time-code" class="form-control" placeholder="{{ 'two_factor_code_here'|_ }}" autofocus />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-calculator"></span>
