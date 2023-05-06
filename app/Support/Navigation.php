@@ -280,6 +280,23 @@ class Navigation
 
             return $currentEnd;
         }
+
+        $result = match ($repeatFreq) {
+            'last7' => $currentEnd->addDays(7)->startOfDay(),
+            'last30' => $currentEnd->addDays(30)->startOfDay(),
+            'last90' => $currentEnd->addDays(90)->startOfDay(),
+            'last365' => $currentEnd->addDays(365)->startOfDay(),
+            'MTD' => $currentEnd->startOfMonth()->startOfDay(),
+            'QTD' => $currentEnd->firstOfQuarter()->startOfDay(),
+            'YTD' => $currentEnd->startOfYear()->startOfDay(),
+            default => null,
+        };
+        if (null !== $result) {
+            return $result;
+        }
+        unset($result);
+
+
         if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
