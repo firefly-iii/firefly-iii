@@ -273,6 +273,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (10 === strlen($string)) {
             return Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
         }
-        return Carbon::createFromFormat('Y-m-d H:i:s', $string, config('app.timezone'));
+        // 2022-01-01 01:01:01
+        return Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
     }
 }

@@ -70,6 +70,8 @@ class AutoBudget extends Model
     public const AUTO_BUDGET_RESET    = 1;
     public const AUTO_BUDGET_ROLLOVER = 2;
 
+    protected $fillable = ['budget_id','amount','period'];
+
     /**
      * @return BelongsTo
      */

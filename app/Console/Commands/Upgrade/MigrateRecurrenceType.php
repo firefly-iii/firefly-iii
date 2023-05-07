@@ -79,6 +79,14 @@ class MigrateRecurrenceType extends Command
     }
 
     /**
+     *
+     */
+    private function getInvalidType(): TransactionType
+    {
+        return TransactionType::whereType(TransactionType::INVALID)->firstOrCreate(['type' => TransactionType::INVALID]);
+    }
+
+    /**
      * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -96,15 +104,9 @@ class MigrateRecurrenceType extends Command
     /**
      *
      */
-    private function migrateTypes(): void
+    private function markAsExecuted(): void
     {
-        $set = Recurrence::get();
-        /** @var Recurrence $recurrence */
-        foreach ($set as $recurrence) {
-            if ($recurrence->transactionType->type !== TransactionType::INVALID) {
-                $this->migrateRecurrence($recurrence);
-            }
-        }
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 
     private function migrateRecurrence(Recurrence $recurrence): void
@@ -124,16 +126,14 @@ class MigrateRecurrenceType extends Command
     /**
      *
      */
-    private function getInvalidType(): TransactionType
+    private function migrateTypes(): void
     {
-        return TransactionType::whereType(TransactionType::INVALID)->firstOrCreate(['type' => TransactionType::INVALID]);
-    }
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        $set = Recurrence::get();
+        /** @var Recurrence $recurrence */
+        foreach ($set as $recurrence) {
+            if ($recurrence->transactionType->type !== TransactionType::INVALID) {
+                $this->migrateRecurrence($recurrence);
+            }
+        }
     }
 }

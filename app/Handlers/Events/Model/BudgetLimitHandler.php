@@ -146,7 +146,7 @@ class BudgetLimitHandler
     {
         if(0 === (int)$budgetLimit->id) {
             return '0';
-    }
+        }
         $limitPeriod = Period::make(
             $budgetLimit->start_date,
             $budgetLimit->end_date,
@@ -217,10 +217,10 @@ class BudgetLimitHandler
                 if ($currentPeriod->equals($limitPeriod)) {
                     $amount = 0 === (int)$budgetLimit->id ? '0' : $budgetLimit->amount;
                 }
-                if(0 === bccomp($amount,'0')) {
+                if(0 === bccomp($amount, '0')) {
                     Log::debug('Amount is zero, will not create AB.');
                 }
-                if(0 !== bccomp($amount,'0')) {
+                if(0 !== bccomp($amount, '0')) {
                     Log::debug(sprintf('Will create AB for period %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
                     $availableBudget = new AvailableBudget(
                         [

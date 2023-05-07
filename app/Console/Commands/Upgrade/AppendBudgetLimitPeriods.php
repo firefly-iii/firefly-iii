@@ -74,30 +74,6 @@ class AppendBudgetLimitPeriods extends Command
     }
 
     /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-
-        return (bool)$configVar->data;
-    }
-
-    /**
-     *
-     */
-    private function theresNoLimit(): void
-    {
-        $limits = BudgetLimit::whereNull('period')->get();
-        /** @var BudgetLimit $limit */
-        foreach ($limits as $limit) {
-            $this->fixLimit($limit);
-        }
-    }
-
-    /**
      * @param  BudgetLimit  $limit
      */
     private function fixLimit(BudgetLimit $limit)
@@ -183,10 +159,34 @@ class AppendBudgetLimitPeriods extends Command
     }
 
     /**
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function isExecuted(): bool
+    {
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+
+        return (bool)$configVar->data;
+    }
+
+    /**
      *
      */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
+    }
+
+    /**
+     *
+     */
+    private function theresNoLimit(): void
+    {
+        $limits = BudgetLimit::whereNull('period')->get();
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $this->fixLimit($limit);
+        }
     }
 }

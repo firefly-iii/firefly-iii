@@ -83,7 +83,7 @@ class CorrectDatabase extends Command
             'firefly-iii:fix-frontpage-accounts',
             // new!
             'firefly-iii:unify-group-accounts',
-            'firefly-iii:trigger-credit-recalculation'
+            'firefly-iii:trigger-credit-recalculation',
         ];
         foreach ($commands as $command) {
             $this->line(sprintf('Now executing command "%s"', $command));

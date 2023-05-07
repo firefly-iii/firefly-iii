@@ -79,6 +79,19 @@ class FixTransactionTypes extends Command
     }
 
     /**
+     * @param  TransactionJournal  $journal
+     * @param  string  $expectedType
+     */
+    private function changeJournal(TransactionJournal $journal, string $expectedType): void
+    {
+        $type = TransactionType::whereType($expectedType)->first();
+        if (null !== $type) {
+            $journal->transaction_type_id = $type->id;
+            $journal->save();
+        }
+    }
+
+    /**
      * Collect all transaction journals.
      *
      * @return Collection
@@ -131,36 +144,6 @@ class FixTransactionTypes extends Command
      * @return Account
      * @throws FireflyException
      */
-    private function getSourceAccount(TransactionJournal $journal): Account
-    {
-        $collection = $journal->transactions->filter(
-            static function (Transaction $transaction) {
-                return $transaction->amount < 0;
-            }
-        );
-        if (0 === $collection->count()) {
-            throw new FireflyException(sprintf('300001: Journal #%d has no source transaction.', $journal->id));
-        }
-        if (1 !== $collection->count()) {
-            throw new FireflyException(sprintf('300002: Journal #%d has multiple source transactions.', $journal->id));
-        }
-        /** @var Transaction $transaction */
-        $transaction = $collection->first();
-        /** @var Account|null $account */
-        $account = $transaction->account;
-        if (null === $account) {
-            throw new FireflyException(sprintf('300003: Journal #%d, transaction #%d has no source account.', $journal->id, $transaction->id));
-        }
-
-        return $account;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Account
-     * @throws FireflyException
-     */
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
         $collection = $journal->transactions->filter(
@@ -187,14 +170,31 @@ class FixTransactionTypes extends Command
 
     /**
      * @param  TransactionJournal  $journal
-     * @param  string  $expectedType
+     *
+     * @return Account
+     * @throws FireflyException
      */
-    private function changeJournal(TransactionJournal $journal, string $expectedType): void
+    private function getSourceAccount(TransactionJournal $journal): Account
     {
-        $type = TransactionType::whereType($expectedType)->first();
-        if (null !== $type) {
-            $journal->transaction_type_id = $type->id;
-            $journal->save();
+        $collection = $journal->transactions->filter(
+            static function (Transaction $transaction) {
+                return $transaction->amount < 0;
+            }
+        );
+        if (0 === $collection->count()) {
+            throw new FireflyException(sprintf('300001: Journal #%d has no source transaction.', $journal->id));
         }
+        if (1 !== $collection->count()) {
+            throw new FireflyException(sprintf('300002: Journal #%d has multiple source transactions.', $journal->id));
+        }
+        /** @var Transaction $transaction */
+        $transaction = $collection->first();
+        /** @var Account|null $account */
+        $account = $transaction->account;
+        if (null === $account) {
+            throw new FireflyException(sprintf('300003: Journal #%d, transaction #%d has no source account.', $journal->id, $transaction->id));
+        }
+
+        return $account;
     }
 }

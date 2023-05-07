@@ -108,63 +108,6 @@ class TransactionIdentifier extends Command
     }
 
     /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
-     */
-    private function stupidLaravel(): void
-    {
-        $this->cliRepository = app(JournalCLIRepositoryInterface::class);
-        $this->count         = 0;
-    }
-
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
-
-        return false;
-    }
-
-    /**
-     * Grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing one
-     * which has 0 as an identifier and give it the same identifier.
-     *
-     * @param  TransactionJournal  $transactionJournal
-     */
-    private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
-    {
-        $identifier   = 0;
-        $exclude      = []; // transactions already processed.
-        $transactions = $transactionJournal->transactions()->where('amount', '>', 0)->get();
-
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $opposing = $this->findOpposing($transaction, $exclude);
-            if (null !== $opposing) {
-                // give both a new identifier:
-                $transaction->identifier = $identifier;
-                $opposing->identifier    = $identifier;
-                $transaction->save();
-                $opposing->save();
-                $exclude[] = $transaction->id;
-                $exclude[] = $opposing->id;
-                $this->count++;
-            }
-            ++$identifier;
-        }
-    }
-
-    /**
      * @param  Transaction  $transaction
      * @param  array  $exclude
      *
@@ -195,10 +138,67 @@ class TransactionIdentifier extends Command
     }
 
     /**
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function isExecuted(): bool
+    {
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        if (null !== $configVar) {
+            return (bool)$configVar->data;
+        }
+
+        return false;
+    }
+
+    /**
      *
      */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+
+     */
+    private function stupidLaravel(): void
+    {
+        $this->cliRepository = app(JournalCLIRepositoryInterface::class);
+        $this->count         = 0;
+    }
+
+    /**
+     * Grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing one
+     * which has 0 as an identifier and give it the same identifier.
+     *
+     * @param  TransactionJournal  $transactionJournal
+     */
+    private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
+    {
+        $identifier   = 0;
+        $exclude      = []; // transactions already processed.
+        $transactions = $transactionJournal->transactions()->where('amount', '>', 0)->get();
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $opposing = $this->findOpposing($transaction, $exclude);
+            if (null !== $opposing) {
+                // give both a new identifier:
+                $transaction->identifier = $identifier;
+                $opposing->identifier    = $identifier;
+                $transaction->save();
+                $opposing->save();
+                $exclude[] = $transaction->id;
+                $exclude[] = $opposing->id;
+                $this->count++;
+            }
+            ++$identifier;
+        }
     }
 }

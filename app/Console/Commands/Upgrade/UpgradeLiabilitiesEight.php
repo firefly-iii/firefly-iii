@@ -84,115 +84,6 @@ class UpgradeLiabilitiesEight extends Command
     }
 
     /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
-
-        return false;
-    }
-
-    /**
-     *
-     */
-    private function upgradeLiabilities(): void
-    {
-        Log::debug('Upgrading liabilities.');
-        $users = User::get();
-        /** @var User $user */
-        foreach ($users as $user) {
-            $this->upgradeForUser($user);
-        }
-    }
-
-    /**
-     * @param  User  $user
-     */
-    private function upgradeForUser(User $user): void
-    {
-        Log::debug(sprintf('Upgrading liabilities for user #%d', $user->id));
-        $accounts = $user->accounts()
-                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                         ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-                         ->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $this->upgradeLiability($account);
-            $service = app(CreditRecalculateService::class);
-            $service->setAccount($account);
-            $service->recalculate();
-        }
-    }
-
-    /**
-     * @param  Account  $account
-     */
-    private function upgradeLiability(Account $account): void
-    {
-        Log::debug(sprintf('Upgrade liability #%d ("%s")', $account->id, $account->name));
-
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser($account->user);
-
-        $direction = $repository->getMetaValue($account, 'liability_direction');
-        if ('debit' === $direction) {
-            Log::debug('Direction is debit ("I owe this amount"), so no need to upgrade.');
-        }
-        if ('credit' === $direction && $this->hasBadOpening($account)) {
-            $this->deleteCreditTransaction($account);
-            $this->reverseOpeningBalance($account);
-            $this->line(sprintf('Corrected opening balance for liability #%d ("%s")', $account->id, $account->name));
-        }
-        if ('credit' === $direction) {
-            $count = $this->deleteTransactions($account);
-            if ($count > 0) {
-                $this->line(sprintf('Removed %d old format transaction(s) for liability #%d ("%s")', $count, $account->id, $account->name));
-            }
-        }
-        Log::debug(sprintf('Done upgrading liability #%d ("%s")', $account->id, $account->name));
-    }
-
-    /**
-     * @param  Account  $account
-     * @return bool
-     */
-    private function hasBadOpening(Account $account): bool
-    {
-        $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
-        $liabilityType      = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
-        $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                                ->where('transactions.account_id', $account->id)
-                                                ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
-                                                ->first(['transaction_journals.*']);
-        if (null === $openingJournal) {
-            Log::debug('Account has no opening balance and can be skipped.');
-            return false;
-        }
-        $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                              ->where('transactions.account_id', $account->id)
-                                              ->where('transaction_journals.transaction_type_id', $liabilityType->id)
-                                              ->first(['transaction_journals.*']);
-        if (null === $liabilityJournal) {
-            Log::debug('Account has no liability credit and can be skipped.');
-            return false;
-        }
-        if (!$openingJournal->date->isSameDay($liabilityJournal->date)) {
-            Log::debug('Account has opening/credit not on the same day.');
-            return false;
-        }
-        Log::debug('Account has bad opening balance data.');
-
-        return true;
-    }
-
-    /**
      * @param  Account  $account
      * @return void
      */
@@ -212,35 +103,6 @@ class UpgradeLiabilitiesEight extends Command
             return;
         }
         Log::debug('No liability credit journal found.');
-    }
-
-    /**
-     * @param  Account  $account
-     * @return void
-     */
-    private function reverseOpeningBalance(Account $account): void
-    {
-        $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
-        /** @var TransactionJournal $openingJournal */
-        $openingJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                            ->where('transactions.account_id', $account->id)
-                                            ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
-                                            ->first(['transaction_journals.*']);
-        /** @var Transaction|null $source */
-        $source = $openingJournal->transactions()->where('amount', '<', 0)->first();
-        /** @var Transaction|null $dest */
-        $dest = $openingJournal->transactions()->where('amount', '>', 0)->first();
-        if ($source && $dest) {
-            $sourceId           = $source->account_id;
-            $destId             = $dest->account_id;
-            $dest->account_id   = $sourceId;
-            $source->account_id = $destId;
-            $source->save();
-            $dest->save();
-            Log::debug(sprintf('Opening balance transaction journal #%d reversed.', $openingJournal->id));
-            return;
-        }
-        Log::warning('Did not find opening balance.');
     }
 
     /**
@@ -294,10 +156,148 @@ class UpgradeLiabilitiesEight extends Command
     }
 
     /**
+     * @param  Account  $account
+     * @return bool
+     */
+    private function hasBadOpening(Account $account): bool
+    {
+        $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
+        $liabilityType      = TransactionType::whereType(TransactionType::LIABILITY_CREDIT)->first();
+        $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                                ->where('transactions.account_id', $account->id)
+                                                ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
+                                                ->first(['transaction_journals.*']);
+        if (null === $openingJournal) {
+            Log::debug('Account has no opening balance and can be skipped.');
+            return false;
+        }
+        $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                              ->where('transactions.account_id', $account->id)
+                                              ->where('transaction_journals.transaction_type_id', $liabilityType->id)
+                                              ->first(['transaction_journals.*']);
+        if (null === $liabilityJournal) {
+            Log::debug('Account has no liability credit and can be skipped.');
+            return false;
+        }
+        if (!$openingJournal->date->isSameDay($liabilityJournal->date)) {
+            Log::debug('Account has opening/credit not on the same day.');
+            return false;
+        }
+        Log::debug('Account has bad opening balance data.');
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function isExecuted(): bool
+    {
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        if (null !== $configVar) {
+            return (bool)$configVar->data;
+        }
+
+        return false;
+    }
+
+    /**
      *
      */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
+    }
+
+    /**
+     * @param  Account  $account
+     * @return void
+     */
+    private function reverseOpeningBalance(Account $account): void
+    {
+        $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
+        /** @var TransactionJournal $openingJournal */
+        $openingJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                            ->where('transactions.account_id', $account->id)
+                                            ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
+                                            ->first(['transaction_journals.*']);
+        /** @var Transaction|null $source */
+        $source = $openingJournal->transactions()->where('amount', '<', 0)->first();
+        /** @var Transaction|null $dest */
+        $dest = $openingJournal->transactions()->where('amount', '>', 0)->first();
+        if ($source && $dest) {
+            $sourceId           = $source->account_id;
+            $destId             = $dest->account_id;
+            $dest->account_id   = $sourceId;
+            $source->account_id = $destId;
+            $source->save();
+            $dest->save();
+            Log::debug(sprintf('Opening balance transaction journal #%d reversed.', $openingJournal->id));
+            return;
+        }
+        Log::warning('Did not find opening balance.');
+    }
+
+    /**
+     * @param  User  $user
+     */
+    private function upgradeForUser(User $user): void
+    {
+        Log::debug(sprintf('Upgrading liabilities for user #%d', $user->id));
+        $accounts = $user->accounts()
+                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                         ->whereIn('account_types.type', config('firefly.valid_liabilities'))
+                         ->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $this->upgradeLiability($account);
+            $service = app(CreditRecalculateService::class);
+            $service->setAccount($account);
+            $service->recalculate();
+        }
+    }
+
+    /**
+     *
+     */
+    private function upgradeLiabilities(): void
+    {
+        Log::debug('Upgrading liabilities.');
+        $users = User::get();
+        /** @var User $user */
+        foreach ($users as $user) {
+            $this->upgradeForUser($user);
+        }
+    }
+
+    /**
+     * @param  Account  $account
+     */
+    private function upgradeLiability(Account $account): void
+    {
+        Log::debug(sprintf('Upgrade liability #%d ("%s")', $account->id, $account->name));
+
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($account->user);
+
+        $direction = $repository->getMetaValue($account, 'liability_direction');
+        if ('debit' === $direction) {
+            Log::debug('Direction is debit ("I owe this amount"), so no need to upgrade.');
+        }
+        if ('credit' === $direction && $this->hasBadOpening($account)) {
+            $this->deleteCreditTransaction($account);
+            $this->reverseOpeningBalance($account);
+            $this->line(sprintf('Corrected opening balance for liability #%d ("%s")', $account->id, $account->name));
+        }
+        if ('credit' === $direction) {
+            $count = $this->deleteTransactions($account);
+            if ($count > 0) {
+                $this->line(sprintf('Removed %d old format transaction(s) for liability #%d ("%s")', $count, $account->id, $account->name));
+            }
+        }
+        Log::debug(sprintf('Done upgrading liability #%d ("%s")', $account->id, $account->name));
     }
 }

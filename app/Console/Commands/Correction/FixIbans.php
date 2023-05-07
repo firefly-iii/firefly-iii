@@ -69,30 +69,38 @@ class FixIbans extends Command
     {
         $set = [];
         /** @var Account $account */
-        foreach($accounts as $account) {
+        foreach ($accounts as $account) {
             $userId = (int)$account->user_id;
             $set[$userId] = $set[$userId] ?? [];
             $iban = (string)$account->iban;
-            if('' === $iban) {
+            if ('' === $iban) {
                 continue;
             }
             $type = $account->accountType->type;
-            if(in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
+            if (in_array($type, [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
                 $type = 'liabilities';
             }
-            if(array_key_exists($iban, $set[$userId])) {
+            if (array_key_exists($iban, $set[$userId])) {
                 // iban already in use! two exceptions exist:
-                if(
+                if (
                     !(AccountType::EXPENSE === $set[$userId][$iban] && AccountType::REVENUE === $type) && // allowed combination
                     !(AccountType::REVENUE === $set[$userId][$iban] && AccountType::EXPENSE === $type) // also allowed combination.
                 ) {
-                    $this->line(sprintf('IBAN "%s" is used more than once and will be removed from %s #%d ("%s")', $iban, $account->accountType->type, $account->id, $account->name));
+                    $this->line(
+                        sprintf(
+                            'IBAN "%s" is used more than once and will be removed from %s #%d ("%s")',
+                            $iban,
+                            $account->accountType->type,
+                            $account->id,
+                            $account->name
+                        )
+                    );
                     $account->iban = null;
                     $account->save();
                 }
             }
 
-            if(!array_key_exists($iban, $set[$userId])) {
+            if (!array_key_exists($iban, $set[$userId])) {
                 $set[$userId][$iban] = $type;
             }
         }

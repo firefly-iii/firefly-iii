@@ -83,79 +83,6 @@ class UpgradeLiabilities extends Command
     }
 
     /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
-
-        return false;
-    }
-
-    /**
-     *
-     */
-    private function upgradeLiabilities(): void
-    {
-        Log::debug('Upgrading liabilities.');
-        $users = User::get();
-        /** @var User $user */
-        foreach ($users as $user) {
-            $this->upgradeForUser($user);
-        }
-    }
-
-    /**
-     * @param  User  $user
-     */
-    private function upgradeForUser(User $user): void
-    {
-        Log::debug(sprintf('Upgrading liabilities for user #%d', $user->id));
-        $accounts = $user->accounts()
-                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                         ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-                         ->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $this->upgradeLiability($account);
-            $service = app(CreditRecalculateService::class);
-            $service->setAccount($account);
-            $service->recalculate();
-        }
-    }
-
-    /**
-     * @param  Account  $account
-     */
-    private function upgradeLiability(Account $account): void
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser($account->user);
-        Log::debug(sprintf('Upgrade liability #%d', $account->id));
-
-        // get opening balance, and correct if necessary.
-        $openingBalance = $repository->getOpeningBalance($account);
-        if (null !== $openingBalance) {
-            // correct if necessary
-            $this->correctOpeningBalance($account, $openingBalance);
-        }
-
-        // add liability direction property (if it does not yet exist!)
-        $value = $repository->getMetaValue($account, 'liability_direction');
-        if (null === $value) {
-            /** @var AccountMetaFactory $factory */
-            $factory = app(AccountMetaFactory::class);
-            $factory->crud($account, 'liability_direction', 'debit');
-        }
-    }
-
-    /**
      * @param  Account  $account
      * @param  TransactionJournal  $openingBalance
      */
@@ -185,9 +112,9 @@ class UpgradeLiabilities extends Command
      *
      * @return Transaction|null
      */
-    private function getSourceTransaction(TransactionJournal $journal): ?Transaction
+    private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
     {
-        return $journal->transactions()->where('amount', '<', 0)->first();
+        return $journal->transactions()->where('amount', '>', 0)->first();
     }
 
     /**
@@ -195,9 +122,24 @@ class UpgradeLiabilities extends Command
      *
      * @return Transaction|null
      */
-    private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
+    private function getSourceTransaction(TransactionJournal $journal): ?Transaction
     {
-        return $journal->transactions()->where('amount', '>', 0)->first();
+        return $journal->transactions()->where('amount', '<', 0)->first();
+    }
+
+    /**
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function isExecuted(): bool
+    {
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        if (null !== $configVar) {
+            return (bool)$configVar->data;
+        }
+
+        return false;
     }
 
     /**
@@ -206,5 +148,63 @@ class UpgradeLiabilities extends Command
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
+    }
+
+    /**
+     * @param  User  $user
+     */
+    private function upgradeForUser(User $user): void
+    {
+        Log::debug(sprintf('Upgrading liabilities for user #%d', $user->id));
+        $accounts = $user->accounts()
+                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                         ->whereIn('account_types.type', config('firefly.valid_liabilities'))
+                         ->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $this->upgradeLiability($account);
+            $service = app(CreditRecalculateService::class);
+            $service->setAccount($account);
+            $service->recalculate();
+        }
+    }
+
+    /**
+     *
+     */
+    private function upgradeLiabilities(): void
+    {
+        Log::debug('Upgrading liabilities.');
+        $users = User::get();
+        /** @var User $user */
+        foreach ($users as $user) {
+            $this->upgradeForUser($user);
+        }
+    }
+
+    /**
+     * @param  Account  $account
+     */
+    private function upgradeLiability(Account $account): void
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($account->user);
+        Log::debug(sprintf('Upgrade liability #%d', $account->id));
+
+        // get opening balance, and correct if necessary.
+        $openingBalance = $repository->getOpeningBalance($account);
+        if (null !== $openingBalance) {
+            // correct if necessary
+            $this->correctOpeningBalance($account, $openingBalance);
+        }
+
+        // add liability direction property (if it does not yet exist!)
+        $value = $repository->getMetaValue($account, 'liability_direction');
+        if (null === $value) {
+            /** @var AccountMetaFactory $factory */
+            $factory = app(AccountMetaFactory::class);
+            $factory->crud($account, 'liability_direction', 'debit');
+        }
     }
 }
