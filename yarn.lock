@@ -5044,9 +5044,9 @@ type-is@~1.6.18:
     mime-types "~2.1.24"
 
 uiv@^1.4:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.4.2.tgz#707def020e786f4187fa2bab663535f5fc4ff1c8"
-  integrity sha512-+3Q7n58Yau6w8/eZjp3Pukc4VCbTZmopQb1V9VE2ki5GLwL8jlTdBwtWgT90xhapBcbja4twS2lmaf9tpjVbuA==
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.4.3.tgz#41483db1af195d01e64f95b6bf6d60628c8950c3"
+  integrity sha512-xLYwuvL9h67vSh4NHg4UyW2fzmYFqg+2/5S++83dWH2gDnxBytwsSx+65uOUlWfG8OWPTVhJs2b9T5blm4ubnQ==
   dependencies:
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.0.0"
