@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "319ed720b57cb0a3abb9a2d463b8ac73",
+    "content-hash": "87b9480ca539487cfbc7def5beed7913",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -9080,39 +9080,38 @@
         },
         {
             "name": "ergebnis/phpstan-rules",
-            "version": "1.0.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/phpstan-rules.git",
-                "reference": "ebeced30d7e50324a94a83c19a59d75816e8fbb4"
+                "reference": "99360283faf07a6d553f384183f3551a054c5aeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/ebeced30d7e50324a94a83c19a59d75816e8fbb4",
-                "reference": "ebeced30d7e50324a94a83c19a59d75816e8fbb4",
+                "url": "https://api.github.com/repos/ergebnis/phpstan-rules/zipball/99360283faf07a6d553f384183f3551a054c5aeb",
+                "reference": "99360283faf07a6d553f384183f3551a054c5aeb",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "nikic/php-parser": "^4.2.3",
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.0.0"
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
+                "phpstan/phpstan": "^1.7.15"
             },
             "require-dev": {
-                "doctrine/orm": "^2.10.2",
-                "ergebnis/composer-normalize": "^2.15.0",
-                "ergebnis/license": "^1.1.0",
-                "ergebnis/php-cs-fixer-config": "^2.14.0",
-                "ergebnis/test-util": "^1.5.0",
-                "infection/infection": "~0.15.3",
-                "nette/di": "^3.0.11",
+                "doctrine/orm": "^2.14.3",
+                "ergebnis/composer-normalize": "^2.30.2",
+                "ergebnis/license": "^2.1.0",
+                "ergebnis/php-cs-fixer-config": "^5.5.2",
+                "infection/infection": "~0.26.19",
+                "nette/di": "^3.1.2",
                 "phpstan/phpstan-deprecation-rules": "^1.0.0",
-                "phpstan/phpstan-strict-rules": "^1.0.0",
-                "phpunit/phpunit": "^8.5.21",
-                "psalm/plugin-phpunit": "~0.16.1",
-                "psr/container": "^1.0.0",
-                "vimeo/psalm": "^4.12.0",
-                "zendframework/zend-servicemanager": "^2.0.0"
+                "phpstan/phpstan-strict-rules": "^1.1.0",
+                "phpunit/phpunit": "^9.6.7",
+                "psalm/plugin-phpunit": "~0.18.4",
+                "psr/container": "^1.1.2",
+                "rector/rector": "~0.15.25",
+                "vimeo/psalm": "^5.9.0"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -9148,13 +9147,7 @@
                 "issues": "https://github.com/ergebnis/phpstan-rules/issues",
                 "source": "https://github.com/ergebnis/phpstan-rules"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/localheinz",
-                    "type": "github"
-                }
-            ],
-            "time": "2021-11-08T15:37:09+00:00"
+            "time": "2023-05-01T17:59:46+00:00"
         },
         {
             "name": "fakerphp/faker",
