@@ -66,9 +66,9 @@ return [
     'require_currency_info'          => 'Το περιεχόμενο αυτού του πεδίου δεν είναι έγκυρη χωρίς νομισματικές πληροφορίες.',
     'not_transfer_account'           => 'Αυτός ο λογαριασμός δεν είναι λογαριασμός που μπορεί να χρησιμοποιηθεί για συναλλαγές.',
     'require_currency_amount'        => 'Το περιεχόμενο αυτού του πεδίου δεν είναι έγκυρο χωρίς πληροφορίες ετερόχθονος ποσού.',
-    'require_foreign_currency'       => 'This field requires a number',
-    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
-    'require_foreign_src'            => 'This field value must match the currency of the source account.',
+    'require_foreign_currency'       => 'Αυτό το πεδίο απαιτεί έναν αριθμό',
+    'require_foreign_dest'           => 'Αυτή η τιμή πεδίου πρέπει να ταιριάζει με το νόμισμα του λογαριασμού προορισμού.',
+    'require_foreign_src'            => 'Αυτή η τιμή πεδίου πρέπει να ταιριάζει με το νόμισμα του λογαριασμού προέλευσης.',
     'equal_description'              => 'Η περιγραφή της συναλλαγής δεν πρέπει να ισούται με καθολική περιγραφή.',
     'file_invalid_mime'              => 'Το αρχείο ":name" είναι τύπου ":mime" που δεν είναι αποδεκτός ως νέας μεταφόρτωσης.',
     'file_too_large'                 => 'Το αρχείο ":name" είναι πολύ μεγάλο.',
@@ -169,8 +169,8 @@ return [
     'unique_piggy_bank_for_user' => 'Το όνομα του κουμπαρά πρέπει να είναι μοναδικό.',
     'unique_object_group'        => 'Το όνομα της ομάδας πρέπει να είναι μοναδικό',
     'starts_with'                => 'Η τιμή πρέπει να ξεκινά με :values.',
-    'unique_webhook'             => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'    => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
+    'unique_webhook'             => 'Έχετε ήδη ένα webhook με αυτόν τον συνδυασμό URL, ενεργοποίησης, απόκρισης και παράδοσης.',
+    'unique_existing_webhook'    => 'Έχετε ήδη ένα άλλο webhook με αυτόν τον συνδυασμό URL, ενεργοποίησης, απόκρισης και παράδοσης.',
     'same_account_type'          => 'Και οι δύο λογαριασμοί πρέπει να έχουν τον ίδιο τύπο λογαριασμού',
     'same_account_currency'      => 'Και οι δύο λογαριασμοί πρέπει να έχουν την ίδια ρύθμιση νομίσματος',
 
@@ -285,7 +285,7 @@ return [
     'auto_budget_period_mandatory'    => 'Η περίοδος αυτόματου προϋπολογισμού είναι υποχρεωτικό πεδίο.',
 
     // no access to administration:
-    'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'no_access_user_group'            => 'Δεν έχετε τα σωστά δικαιώματα πρόσβασης για αυτή τη διαχείριση.',
 ];
 
 /*

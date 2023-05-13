@@ -51,7 +51,6 @@ use Illuminate\Support\Facades\Log;
  */
 class ForceDecimalSize extends Command
 {
-
     protected $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
     protected $signature   = 'firefly-iii:force-decimal-size';
     private string $cast;
@@ -169,7 +168,7 @@ class ForceDecimalSize extends Command
             });
         }
 
-        if (!in_array((string)config('database.default'), ['mysql', 'pgsql', 'sqlite'])) {
+        if (!in_array((string)config('database.default'), ['mysql', 'pgsql', 'sqlite'], true)) {
             $this->line(sprintf('Skip correcting amounts, does not support "%s"...', (string)config('database.default')));
             return;
         }

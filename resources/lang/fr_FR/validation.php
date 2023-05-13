@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Vous ne pouvez pas utiliser ce compte comme compte source.',
     'generic_invalid_destination' => 'Vous ne pouvez pas utiliser ce compte comme compte de destination.',
 
-    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'      => 'Vous devez saisir les informations du compte source ou saisir un ID de journal d\'opération.',
+    'generic_no_destination' => 'Vous devez saisir les informations du compte destination ou saisir un ID de journal d\'opération.',
 
     'gte.numeric' => 'La valeur de :attribute doit être supérieure ou égale à :value.',
     'gt.numeric'  => 'Le champ :attribute doit être plus grand que :value.',
