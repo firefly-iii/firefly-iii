@@ -32,7 +32,7 @@
             :autocomplete-items="autocompleteItems"
             :tags="tags"
             :title="$t('firefly.tags')"
-            classes="form-input"
+            class="force-background-tags-input"
             v-bind:placeholder="$t('firefly.tags')"
             @tags-changed="update"
         />

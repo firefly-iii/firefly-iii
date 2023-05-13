@@ -61,6 +61,38 @@ class RestoreOAuthKeys extends Command
     /**
      *
      */
+    private function generateKeys(): void
+    {
+        OAuthKeys::generateKeys();
+    }
+
+    /**
+     * @return bool
+     */
+    private function keysInDatabase(): bool
+    {
+        return OAuthKeys::keysInDatabase();
+    }
+
+    /**
+     * @return bool
+     */
+    private function keysOnDrive(): bool
+    {
+        return OAuthKeys::hasKeyFiles();
+    }
+
+    /**
+     *
+     */
+    private function restoreKeysFromDB(): bool
+    {
+        return OAuthKeys::restoreKeysFromDB();
+    }
+
+    /**
+     *
+     */
     private function restoreOAuthKeys(): void
     {
         Log::debug('Going to restoreOAuthKeys()');
@@ -98,42 +130,10 @@ class RestoreOAuthKeys extends Command
     }
 
     /**
-     * @return bool
-     */
-    private function keysInDatabase(): bool
-    {
-        return OAuthKeys::keysInDatabase();
-    }
-
-    /**
-     * @return bool
-     */
-    private function keysOnDrive(): bool
-    {
-        return OAuthKeys::hasKeyFiles();
-    }
-
-    /**
-     *
-     */
-    private function generateKeys(): void
-    {
-        OAuthKeys::generateKeys();
-    }
-
-    /**
      *
      */
     private function storeKeysInDB(): void
     {
         OAuthKeys::storeKeysInDB();
-    }
-
-    /**
-     *
-     */
-    private function restoreKeysFromDB(): bool
-    {
-        return OAuthKeys::restoreKeysFromDB();
     }
 }

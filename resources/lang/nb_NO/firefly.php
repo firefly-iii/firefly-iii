@@ -1122,7 +1122,7 @@ return [
     'rule_trigger_not_budget_is'                          => 'Budsjett er ikke ":trigger_value"',
     'rule_trigger_not_budget_contains'                    => 'Budsjett inneholder ikke ":trigger_value"',
     'rule_trigger_not_budget_ends'                        => 'Budsjett slutter ikke på ":trigger_value"',
-    'rule_trigger_not_budget_starts'                      => 'Budget does not start with ":trigger_value"',
+    'rule_trigger_not_budget_starts'                      => 'Budsjettet starter ikke med ":trigger_value"',
     'rule_trigger_not_bill_is'                            => 'Regningen er ikke ":trigger_value"',
     'rule_trigger_not_bill_contains'                      => 'Regningen inneholder ikke ":trigger_value"',
     'rule_trigger_not_bill_ends'                          => 'Regningen slutter ikke på ":trigger_value"',
@@ -1302,11 +1302,11 @@ return [
 
 
     // preferences
-    'dark_mode_option_browser'                  => 'Let your browser decide',
-    'dark_mode_option_light'                    => 'Always light',
-    'dark_mode_option_dark'                     => 'Always dark',
+    'dark_mode_option_browser'                  => 'La nettleseren din avgjøre',
+    'dark_mode_option_light'                    => 'Alltid lys',
+    'dark_mode_option_dark'                     => 'Alltid mørk',
     'equal_to_language'                         => '(likt språk)',
-    'dark_mode_preference'                      => 'Dark mode',
+    'dark_mode_preference'                      => 'Mørk modus',
     'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
     'pref_home_screen_accounts'                 => 'Startskjermkontoer',
     'pref_home_screen_accounts_help'            => 'Hvilke kontoer skal vises på startsiden?',

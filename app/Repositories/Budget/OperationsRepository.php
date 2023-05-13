@@ -298,7 +298,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection $budgets = null,
         ?TransactionCurrency $currency = null
     ): array {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        //Log::debug(sprintf('Now in %s', __METHOD__));
         $start->startOfDay();
         $end->endOfDay();
 
@@ -340,7 +340,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // same but for foreign currencies:
         if (null !== $currency) {
-            Log::debug(sprintf('Currency is "%s".', $currency->name));
+            //Log::debug(sprintf('Currency is "%s".', $currency->name));
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
             $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])
@@ -350,7 +350,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $collector->setAccounts($accounts);
             }
             $result = $collector->getExtractedJournals();
-            Log::debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
+            //Log::debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
             // do not use array_merge because you want keys to overwrite (otherwise you get double results):
             $journals = $result + $journals;
         }

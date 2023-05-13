@@ -36,6 +36,12 @@ class ForceMigration extends Command
     use VerifiesAccessToken;
 
     /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'This command will force-run all database migrations.';
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -43,13 +49,6 @@ class ForceMigration extends Command
     protected $signature = 'firefly-iii:force-migrations
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'This command will force-run all database migrations.';
 
     /**
      * Execute the console command.

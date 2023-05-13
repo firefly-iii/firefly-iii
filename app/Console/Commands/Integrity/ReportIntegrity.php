@@ -61,7 +61,7 @@ class ReportIntegrity extends Command
             'firefly-iii:report-empty-objects',
             'firefly-iii:report-sum',
             'firefly-iii:restore-oauth-keys',
-            'firefly-iii:upgrade-group-information'
+            'firefly-iii:upgrade-group-information',
         ];
         foreach ($commands as $command) {
             $this->line(sprintf('Now executing %s', $command));

@@ -61,6 +61,33 @@ class DeleteEmptyJournals extends Command
         return 0;
     }
 
+    private function deleteEmptyJournals(): void
+    {
+        $start = microtime(true);
+        $count = 0;
+        $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->groupBy('transaction_journals.id')
+                                   ->whereNull('transactions.transaction_journal_id')
+                                   ->get(['transaction_journals.id']);
+
+        foreach ($set as $entry) {
+            try {
+                TransactionJournal::find($entry->id)->delete();
+            } catch (QueryException $e) {
+                Log::info(sprintf('Could not delete entry: %s', $e->getMessage()));
+            }
+
+
+            $this->info(sprintf('Deleted empty transaction journal #%d', $entry->id));
+            ++$count;
+        }
+        if (0 === $count) {
+            $this->info('No empty transaction journals.');
+        }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified empty journals in %s seconds', $end));
+    }
+
     /**
      * Delete transactions and their journals if they have an uneven number of transactions.
      */
@@ -90,32 +117,5 @@ class DeleteEmptyJournals extends Command
         if (0 === $total) {
             $this->info('No uneven transaction journals.');
         }
-    }
-
-    private function deleteEmptyJournals(): void
-    {
-        $start = microtime(true);
-        $count = 0;
-        $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                   ->groupBy('transaction_journals.id')
-                                   ->whereNull('transactions.transaction_journal_id')
-                                   ->get(['transaction_journals.id']);
-
-        foreach ($set as $entry) {
-            try {
-                TransactionJournal::find($entry->id)->delete();
-            } catch (QueryException $e) {
-                Log::info(sprintf('Could not delete entry: %s', $e->getMessage()));
-            }
-
-
-            $this->info(sprintf('Deleted empty transaction journal #%d', $entry->id));
-            ++$count;
-        }
-        if (0 === $count) {
-            $this->info('No empty transaction journals.');
-        }
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified empty journals in %s seconds', $end));
     }
 }

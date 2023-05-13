@@ -60,7 +60,7 @@ export default {
         "liabilities_accounts": "\u03a5\u03c0\u03bf\u03c7\u03c1\u03b5\u03ce\u03c3\u03b5\u03b9\u03c2"
     },
     "firefly": {
-        "administration_index": "Financial administration",
+        "administration_index": "\u039f\u03b9\u03ba\u03bf\u03bd\u03bf\u03bc\u03b9\u03ba\u03ae \u03b4\u03b9\u03b1\u03c7\u03b5\u03af\u03c1\u03b9\u03c3\u03b7",
         "actions": "\u0395\u03bd\u03ad\u03c1\u03b3\u03b5\u03b9\u03b5\u03c2",
         "edit": "\u0395\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1",
         "delete": "\u0394\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03ae",
@@ -72,7 +72,7 @@ export default {
         "newTransfer": "\u039d\u03ad\u03b1 \u03bc\u03b5\u03c4\u03b1\u03c6\u03bf\u03c1\u03ac",
         "submission_options": "Submission options",
         "apply_rules_checkbox": "Apply rules",
-        "fire_webhooks_checkbox": "Fire webhooks",
+        "fire_webhooks_checkbox": "\u0395\u03bd\u03b5\u03c1\u03b3\u03bf\u03c0\u03bf\u03af\u03b7\u03c3\u03b7 \u03c4\u03c9\u03bd webhook",
         "newDeposit": "\u039d\u03ad\u03b1 \u03ba\u03b1\u03c4\u03ac\u03b8\u03b5\u03c3\u03b7",
         "newWithdrawal": "\u039d\u03ad\u03b1 \u03b4\u03b1\u03c0\u03ac\u03bd\u03b7",
         "bills_paid": "\u03a0\u03bb\u03b7\u03c1\u03c9\u03bc\u03ad\u03bd\u03b1 \u03c0\u03ac\u03b3\u03b9\u03b1 \u03ad\u03be\u03bf\u03b4\u03b1",

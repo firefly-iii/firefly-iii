@@ -180,25 +180,6 @@ class CorrectAmounts extends Command
     /**
      * @return void
      */
-    private function fixRepetitions(): void
-    {
-        $set   = PiggyBankRepetition::where('currentamount', '<', 0)->get();
-        $count = $set->count();
-        if (0 === $count) {
-            $this->info('Correct: All piggy bank repetition amounts are positive.');
-            return;
-        }
-        /** @var PiggyBankRepetition $item */
-        foreach ($set as $item) {
-            $item->currentamount = app('steam')->positive((string)$item->currentamount);
-            $item->save();
-        }
-        $this->line(sprintf('Corrected %d piggy bank repetition amount(s).', $count));
-    }
-
-    /**
-     * @return void
-     */
     private function fixPiggyBanks(): void
     {
         $set   = PiggyBank::where('targetamount', '<', 0)->get();
@@ -235,6 +216,25 @@ class CorrectAmounts extends Command
             $item->save();
         }
         $this->line(sprintf('Corrected %d recurring transaction amount(s).', $count));
+    }
+
+    /**
+     * @return void
+     */
+    private function fixRepetitions(): void
+    {
+        $set   = PiggyBankRepetition::where('currentamount', '<', 0)->get();
+        $count = $set->count();
+        if (0 === $count) {
+            $this->info('Correct: All piggy bank repetition amounts are positive.');
+            return;
+        }
+        /** @var PiggyBankRepetition $item */
+        foreach ($set as $item) {
+            $item->currentamount = app('steam')->positive((string)$item->currentamount);
+            $item->save();
+        }
+        $this->line(sprintf('Corrected %d piggy bank repetition amount(s).', $count));
     }
 
     /**

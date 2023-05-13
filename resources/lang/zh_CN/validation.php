@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => '您不能使用此账户作为来源账户',
     'generic_invalid_destination' => '您不能使用此账户作为目标账户',
 
-    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'      => '必须提供来源账户或者交易ID',
+    'generic_no_destination' => '必须提供目标账户或者交易ID',
 
     'gte.numeric' => ':attribute 必须大于或等于 :value',
     'gt.numeric'  => ':attribute 必须大于 :value',

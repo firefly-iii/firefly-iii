@@ -52,39 +52,6 @@ class CreateGroupMemberships extends Command
     protected $signature = 'firefly-iii:create-group-memberships';
 
     /**
-     * Execute the console command.
-     *
-     * @return int
-     * @throws FireflyException
-     */
-    public function handle(): int
-    {
-        $start = microtime(true);
-
-        $this->createGroupMemberships();
-
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Validated group memberships in %s seconds.', $end));
-
-        return 0;
-    }
-
-    /**
-     *
-     * @throws FireflyException
-     */
-    private function createGroupMemberships(): void
-    {
-        $users = User::get();
-        /** @var User $user */
-        foreach ($users as $user) {
-            Log::debug(sprintf('Manage group memberships for user #%d', $user->id));
-            self::createGroupMembership($user);
-            Log::debug(sprintf('Done with user #%d', $user->id));
-        }
-    }
-
-    /**
      * TODO move to helper.
      * @param  User  $user
      *
@@ -124,5 +91,38 @@ class CreateGroupMemberships extends Command
         }
 
         Log::debug(sprintf('User #%d now has main group.', $user->id));
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     * @throws FireflyException
+     */
+    public function handle(): int
+    {
+        $start = microtime(true);
+
+        $this->createGroupMemberships();
+
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Validated group memberships in %s seconds.', $end));
+
+        return 0;
+    }
+
+    /**
+     *
+     * @throws FireflyException
+     */
+    private function createGroupMemberships(): void
+    {
+        $users = User::get();
+        /** @var User $user */
+        foreach ($users as $user) {
+            Log::debug(sprintf('Manage group memberships for user #%d', $user->id));
+            self::createGroupMembership($user);
+            Log::debug(sprintf('Done with user #%d', $user->id));
+        }
     }
 }

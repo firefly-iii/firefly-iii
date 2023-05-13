@@ -66,9 +66,9 @@ return [
     'require_currency_info'          => 'Innholdet i dette feltet er ugyldig uten valutainformasjon.',
     'not_transfer_account'           => 'Denne kontoen er ikke en konto som kan benyttes for overføringer.',
     'require_currency_amount'        => 'Innholdet i dette feltet er ugyldig uten utenlandsk beløpsinformasjon.',
-    'require_foreign_currency'       => 'This field requires a number',
-    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
-    'require_foreign_src'            => 'This field value must match the currency of the source account.',
+    'require_foreign_currency'       => 'Dette feltet krever et tall',
+    'require_foreign_dest'           => 'Denne feltverdien må samsvare med valutaen til målkontoen.',
+    'require_foreign_src'            => 'Denne feltverdien må samsvare med valutaen til kildekontoen.',
     'equal_description'              => 'Transaksjonsbeskrivelsen bør ikke være lik global beskrivelse.',
     'file_invalid_mime'              => 'Kan ikke akseptere fil ":name" av typen ":mime" for opplasting.',
     'file_too_large'                 => '":name"-filen er for stor.',
@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Du kan ikke bruke denne kontoen som kildekonto.',
     'generic_invalid_destination' => 'Du kan ikke bruke denne kontoen som destinasjonskonto.',
 
-    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'      => 'Du må sende inn kontoinformasjon eller sende inn transaksjons-journal-ID.',
+    'generic_no_destination' => 'Du må sende inn kontoinformasjon om mottakerkontoen, eller sende inn en transaksjons-journal-ID.',
 
     'gte.numeric' => ':attribute må være større enn eller lik :value.',
     'gt.numeric'  => ':attribute må være større enn :value.',

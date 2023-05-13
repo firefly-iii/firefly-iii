@@ -9,7 +9,7 @@
         "prod": "mix --production"
     },
     "dependencies": {
-        "date-fns": "^2.29.3",
+        "date-fns": "^2.30.0",
         "stream-browserify": "^3.0.0"
     },
     "devDependencies": {

@@ -87,15 +87,39 @@ class BackToJournals extends Command
     }
 
     /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @return array
      */
-    private function isMigrated(): bool
+    private function getIdsForBudgets(): array
     {
-        $configVar = app('fireflyconfig')->get(MigrateToGroups::CONFIG_NAME, false);
+        $transactions = DB::table('budget_transaction')->distinct()->pluck('transaction_id')->toArray();
+        $array        = [];
+        $chunks       = array_chunk($transactions, 500);
 
-        return (bool)$configVar->data;
+        foreach ($chunks as $chunk) {
+            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->pluck('transaction_journal_id')->toArray();
+            $array = array_merge($array, $set);
+        }
+
+        return $array;
+    }
+
+    /**
+     * @return array
+     */
+    private function getIdsForCategories(): array
+    {
+        $transactions = DB::table('category_transaction')->distinct()->pluck('transaction_id')->toArray();
+        $array        = [];
+        $chunks       = array_chunk($transactions, 500);
+
+        foreach ($chunks as $chunk) {
+            $set   = DB::table('transactions')
+                       ->whereIn('transactions.id', $chunk)
+                       ->pluck('transaction_journal_id')->toArray();
+            $array = array_merge($array, $set);
+        }
+
+        return $array;
     }
 
     /**
@@ -108,6 +132,26 @@ class BackToJournals extends Command
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
         return (bool)$configVar->data;
+    }
+
+    /**
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function isMigrated(): bool
+    {
+        $configVar = app('fireflyconfig')->get(MigrateToGroups::CONFIG_NAME, false);
+
+        return (bool)$configVar->data;
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 
     /**
@@ -141,23 +185,6 @@ class BackToJournals extends Command
         foreach ($journals as $journal) {
             $this->migrateBudgetsForJournal($journal);
         }
-    }
-
-    /**
-     * @return array
-     */
-    private function getIdsForBudgets(): array
-    {
-        $transactions = DB::table('budget_transaction')->distinct()->pluck('transaction_id')->toArray();
-        $array        = [];
-        $chunks       = array_chunk($transactions, 500);
-
-        foreach ($chunks as $chunk) {
-            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->pluck('transaction_journal_id')->toArray();
-            $array = array_merge($array, $set);
-        }
-
-        return $array;
     }
 
     /**
@@ -218,25 +245,6 @@ class BackToJournals extends Command
     }
 
     /**
-     * @return array
-     */
-    private function getIdsForCategories(): array
-    {
-        $transactions = DB::table('category_transaction')->distinct()->pluck('transaction_id')->toArray();
-        $array        = [];
-        $chunks       = array_chunk($transactions, 500);
-
-        foreach ($chunks as $chunk) {
-            $set   = DB::table('transactions')
-                       ->whereIn('transactions.id', $chunk)
-                       ->pluck('transaction_journal_id')->toArray();
-            $array = array_merge($array, $set);
-        }
-
-        return $array;
-    }
-
-    /**
      * @param  TransactionJournal  $journal
      */
     private function migrateCategoriesForJournal(TransactionJournal $journal): void
@@ -264,13 +272,5 @@ class BackToJournals extends Command
         if (null !== $category && null === $journalCategory) {
             $journal->categories()->sync([(int)$category->id]);
         }
-    }
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

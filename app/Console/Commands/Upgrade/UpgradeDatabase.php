@@ -98,7 +98,7 @@ class UpgradeDatabase extends Command
     private function callInitialCommands(): void
     {
         $this->line('Now seeding the database...');
-        $this->call('migrate', ['--seed' => true, '--force' => true,'--no-interaction' => true]);
+        $this->call('migrate', ['--seed' => true, '--force' => true, '--no-interaction' => true]);
 
         $this->line('Fix PostgreSQL sequences.');
         $this->call('firefly-iii:fix-pgsql-sequences');

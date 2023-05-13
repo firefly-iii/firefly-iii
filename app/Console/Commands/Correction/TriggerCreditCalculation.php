@@ -39,17 +39,6 @@ class TriggerCreditCalculation extends Command
         return 0;
     }
 
-    private function processAccounts(): void
-    {
-        $accounts = Account::leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-                           ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-                           ->get(['accounts.*']);
-        foreach ($accounts as $account) {
-            Log::debug(sprintf('Processing account #%d ("%s")', $account->id, $account->name));
-            $this->processAccount($account);
-        }
-    }
-
     /**
      * @param  Account  $account
      * @return void
@@ -60,5 +49,16 @@ class TriggerCreditCalculation extends Command
         $object = app(CreditRecalculateService::class);
         $object->setAccount($account);
         $object->recalculate();
+    }
+
+    private function processAccounts(): void
+    {
+        $accounts = Account::leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+                           ->whereIn('account_types.type', config('firefly.valid_liabilities'))
+                           ->get(['accounts.*']);
+        foreach ($accounts as $account) {
+            Log::debug(sprintf('Processing account #%d ("%s")', $account->id, $account->name));
+            $this->processAccount($account);
+        }
     }
 }

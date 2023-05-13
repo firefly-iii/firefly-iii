@@ -71,19 +71,6 @@ class FixRecurringTransactions extends Command
     }
 
     /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
-     */
-    private function stupidLaravel(): void
-    {
-        $this->recurringRepos = app(RecurringRepositoryInterface::class);
-        $this->userRepos      = app(UserRepositoryInterface::class);
-    }
-
-    /**
      *
      */
     private function correctTransactions(): void
@@ -92,19 +79,6 @@ class FixRecurringTransactions extends Command
         /** @var User $user */
         foreach ($users as $user) {
             $this->processUser($user);
-        }
-    }
-
-    /**
-     * @param  User  $user
-     */
-    private function processUser(User $user): void
-    {
-        $this->recurringRepos->setUser($user);
-        $recurrences = $this->recurringRepos->get();
-        /** @var Recurrence $recurrence */
-        foreach ($recurrences as $recurrence) {
-            $this->processRecurrence($recurrence);
         }
     }
 
@@ -139,5 +113,31 @@ class FixRecurringTransactions extends Command
                 $recurrence->save();
             }
         }
+    }
+
+    /**
+     * @param  User  $user
+     */
+    private function processUser(User $user): void
+    {
+        $this->recurringRepos->setUser($user);
+        $recurrences = $this->recurringRepos->get();
+        /** @var Recurrence $recurrence */
+        foreach ($recurrences as $recurrence) {
+            $this->processRecurrence($recurrence);
+        }
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+
+     */
+    private function stupidLaravel(): void
+    {
+        $this->recurringRepos = app(RecurringRepositoryInterface::class);
+        $this->userRepos      = app(UserRepositoryInterface::class);
     }
 }

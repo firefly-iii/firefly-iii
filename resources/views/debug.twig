@@ -18,10 +18,15 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | --- | --- |
 | Firefly III | {{ FF_VERSION }} |
 | Firefly III API | {{ config('firefly.api_version') }} |
-| Build | {{ buildNr }}, {{ buildDate }} |
+{% if isDocker %}| Build | {{ buildNr }}, {{ buildDate }} |
+| Base Build | {{ baseBuildNr }}, {{ baseBuildDate }} |
+{% endif %}
 | DB version | {{ foundDBversion }} (exp. {{ expectedDBversion}}) |
+{% if not isDocker %}| Docker | No |
+{% endif %}
 | PHP | `{{ phpVersion }}` |
 | Host | `{{ phpOs }}` |
+
 
 | System info | Value |
 | --- | --- |

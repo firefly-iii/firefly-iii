@@ -65,7 +65,9 @@ class UserGroups extends Migration
                     Schema::table(
                         $tableName,
                         function (Blueprint $table) use ($tableName) {
-                            $table->dropForeign(sprintf('%s_to_ugi', $tableName));
+                            if ('sqlite' !== config('database.default')) {
+                                $table->dropForeign(sprintf('%s_to_ugi', $tableName));
+                            }
                             if (Schema::hasColumn($tableName, 'user_group_id')) {
                                 $table->dropColumn('user_group_id');
                             }
@@ -83,7 +85,9 @@ class UserGroups extends Migration
                 Schema::table(
                     'users',
                     function (Blueprint $table) {
-                        $table->dropForeign('type_user_group_id');
+                        if ('sqlite' !== config('database.default')) {
+                            $table->dropForeign('type_user_group_id');
+                        }
                         if (Schema::hasColumn('users', 'user_group_id')) {
                             $table->dropColumn('user_group_id');
                         }
