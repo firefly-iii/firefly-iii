@@ -4,6 +4,13 @@
  * https://raw.githubusercontent.com/anvyst/adminlte-skin-midnight/master/build/less/skins/skin-midnight.less
  * ------------
  */
+.force-background-tags-input {
+  background-color: #353c42 !important;
+}
+.ti-autocomplete {
+  background-color: #626f7b !important;
+  border: 1px #353c42 solid !important;
+}
 .skin-firefly-iii {
   color: #bec5cb;
   /* PAGINATION */
@@ -13,6 +20,9 @@
   border-color: #454e56;
 }
 .skin-firefly-iii .alert-success > a {
+  color: #fff;
+}
+.skin-firefly-iii .alert-success a {
   color: #fff;
 }
 .skin-firefly-iii .text-muted {
