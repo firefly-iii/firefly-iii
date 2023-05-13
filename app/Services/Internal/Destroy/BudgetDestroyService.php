@@ -52,6 +52,8 @@ class BudgetDestroyService
         DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
 
         // also delete all budget limits
-        $budget->budgetlimits()->delete();
+        foreach($budget->budgetlimits()->get() as $limit) {
+            $limit->delete();
+        }
     }
 }
