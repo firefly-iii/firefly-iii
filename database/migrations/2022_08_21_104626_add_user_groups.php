@@ -67,7 +67,9 @@ return new class () extends Migration {
             Schema::table(
                 'currency_exchange_rates',
                 function (Blueprint $table) {
-                    $table->dropForeign('cer_to_ugi');
+                    if ('sqlite' !== config('database.default')) {
+                        $table->dropForeign('cer_to_ugi');
+                    }
                     if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
                         $table->dropColumn('user_group_id');
                     }

@@ -72,7 +72,9 @@ class ChangesForV550 extends Migration
                 Schema::table(
                     'budget_transaction_journal',
                     function (Blueprint $table) {
-                        $table->dropForeign('budget_id_foreign');
+                        if ('sqlite' !== config('database.default')) {
+                            $table->dropForeign('budget_id_foreign');
+                        }
                         $table->dropColumn('budget_limit_id');
                     }
                 );
@@ -86,12 +88,25 @@ class ChangesForV550 extends Migration
         Schema::dropIfExists('failed_jobs');
 
         // drop fields from budget limits
-        if(Schema::hasColumn('budget_limits', 'period') && Schema::hasColumn('budget_limits', 'generated')) {
+        // in two steps for sqlite
+        if(Schema::hasColumn('budget_limits', 'period')) {
             try {
                 Schema::table(
                     'budget_limits',
                     static function (Blueprint $table) {
                         $table->dropColumn('period');
+                    }
+                );
+            } catch (QueryException|ColumnDoesNotExist $e) {
+                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
+                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            }
+        }
+        if(Schema::hasColumn('budget_limits', 'generated')) {
+            try {
+                Schema::table(
+                    'budget_limits',
+                    static function (Blueprint $table) {
                         $table->dropColumn('generated');
                     }
                 );

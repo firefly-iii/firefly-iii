@@ -45,7 +45,9 @@ class ChangesForV550b2 extends Migration
                 Schema::table(
                     'recurrences_transactions',
                     function (Blueprint $table) {
-                        $table->dropForeign('type_foreign');
+                        if ('sqlite' !== config('database.default')) {
+                            $table->dropForeign('type_foreign');
+                        }
                         if (Schema::hasColumn('recurrences_transactions', 'transaction_type_id')) {
                             $table->dropColumn('transaction_type_id');
                         }
