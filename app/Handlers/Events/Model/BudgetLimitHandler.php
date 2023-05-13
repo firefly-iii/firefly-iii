@@ -27,6 +27,7 @@ use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
 use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use Illuminate\Support\Facades\Log;
@@ -144,7 +145,7 @@ class BudgetLimitHandler
      */
     private function getDailyAmount(BudgetLimit $budgetLimit): string
     {
-        if(0 === (int)$budgetLimit->id) {
+        if (0 === (int)$budgetLimit->id) {
             return '0';
         }
         $limitPeriod = Period::make(
@@ -177,13 +178,14 @@ class BudgetLimitHandler
         } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
             $viewRange = '1M';
         }
-        $start = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
-        $end   = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
-        $end   = app('navigation')->endOfPeriod($end, $viewRange);
-        $user  = $budgetLimit?->budget?->user;
+        $start  = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
+        $end    = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
+        $end    = app('navigation')->endOfPeriod($end, $viewRange);
+        $budget = Budget::withTrashed()->find($budgetLimit->budget_id);
+        $user   = $budget->user;
 
-        // sanity check. It's rare but this happens.
-        if(null === $user) {
+        // sanity check. It happens when the budget has been deleted so the original user is unknown.
+        if (null === $user) {
             Log::warning('User is null, cannot continue.');
             $budgetLimit->forceDelete();
             return;
@@ -217,10 +219,10 @@ class BudgetLimitHandler
                 if ($currentPeriod->equals($limitPeriod)) {
                     $amount = 0 === (int)$budgetLimit->id ? '0' : $budgetLimit->amount;
                 }
-                if(0 === bccomp($amount, '0')) {
+                if (0 === bccomp($amount, '0')) {
                     Log::debug('Amount is zero, will not create AB.');
                 }
-                if(0 !== bccomp($amount, '0')) {
+                if (0 !== bccomp($amount, '0')) {
                     Log::debug(sprintf('Will create AB for period %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
                     $availableBudget = new AvailableBudget(
                         [
