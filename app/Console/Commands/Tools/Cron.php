@@ -77,7 +77,7 @@ class Cron extends Command
          */
         if (true === config('cer.enabled')) {
             try {
-                $this->exchangeRatesCronJob($force, $date);
+                //$this->exchangeRatesCronJob($force, $date);
             } catch (FireflyException $e) {
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
@@ -89,7 +89,7 @@ class Cron extends Command
          * Fire recurring transaction cron job.
          */
         try {
-            $this->recurringCronJob($force, $date);
+            //$this->recurringCronJob($force, $date);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -111,7 +111,7 @@ class Cron extends Command
          * Fire bill warning cron job
          */
         try {
-            $this->billWarningCronJob($force, $date);
+            //$this->billWarningCronJob($force, $date);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

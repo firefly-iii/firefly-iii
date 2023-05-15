@@ -829,6 +829,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ('rollover' === $type) {
             $type = AutoBudget::AUTO_BUDGET_ROLLOVER;
         }
+        if('adjusted' === $type) {
+            $type = AutoBudget::AUTO_BUDGET_ADJUSTED;
+        }
 
         $repos    = app(CurrencyRepositoryInterface::class);
         $currency = null;

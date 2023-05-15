@@ -239,6 +239,9 @@
                                         {% if 2 == budget.auto_budget.auto_budget_type %}
                                             <span class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></span>
                                         {% endif %}
+                                        {% if 3 == budget.auto_budget.auto_budget_type %}
+                                            <span class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_adjusted_icon'|_ }}"></span>
+                                        {% endif %}
                                         {% endif %}
                                         {% if budget.attachments.count() > 0 %}
                                             <span class="fa fa-paperclip"></span>

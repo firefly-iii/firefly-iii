@@ -71,6 +71,8 @@ class TransactionController extends Controller
         $resource = new Collection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($groups));
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+        $array = $manager->createData($resource)->toArray();
+
+        return response()->json($array)->header('Content-Type', self::CONTENT_TYPE);
     }
 }
