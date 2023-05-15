@@ -78,6 +78,7 @@ class BudgetTransformer extends AbstractTransformer
         $types = [
             AutoBudget::AUTO_BUDGET_RESET    => 'reset',
             AutoBudget::AUTO_BUDGET_ROLLOVER => 'rollover',
+            AutoBudget::AUTO_BUDGET_ADJUSTED => 'adjusted',
         ];
 
         if (null !== $autoBudget) {
