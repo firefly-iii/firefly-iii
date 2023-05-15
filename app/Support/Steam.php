@@ -351,7 +351,7 @@ class Steam
         }
         // if the number contains "E", it's in scientific notation, so we need to convert it to a normal number first.
         if (false !== stripos($number, 'e')) {
-            $number = sprintf('%.24f', $number);
+            $number = sprintf('%.12f', $number);
         }
 
         // Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));

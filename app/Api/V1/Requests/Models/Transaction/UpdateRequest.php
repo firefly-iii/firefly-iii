@@ -300,7 +300,7 @@ class UpdateRequest extends FormRequest
             if (array_key_exists($fieldName, $transaction)) {
                 $value = $transaction[$fieldName];
                 if (is_float($value)) {
-                    $current[$fieldName] = sprintf('%.24f', $value);
+                    $current[$fieldName] = sprintf('%.12f', $value);
                 }
                 if (!is_float($value)) {
                     $current[$fieldName] = (string)$value;
