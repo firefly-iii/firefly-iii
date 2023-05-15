@@ -85,7 +85,7 @@
     "diglactic/laravel-breadcrumbs": "^8.1",
     "doctrine/dbal": "3.*",
     "gdbots/query-parser": "^3.0",
-    "guzzlehttp/guzzle": "^7.5",
+    "guzzlehttp/guzzle": "^7.6",
     "jc5/google2fa-laravel": "^2.0",
     "jc5/recovery": "^2",
     "laravel/framework": "^10",
