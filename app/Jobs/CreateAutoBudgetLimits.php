@@ -128,19 +128,24 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // what you spent in previous period PLUS the amount for the current period,
         // if that is more than zero, that's the amount that will be set.
 
-        $budgetAvailable  = bcadd(bcadd($budgetLimit->amount, $autoBudget->amount), $spentAmount);
-        $totalAmount = $autoBudget->amount;
+        $budgetAvailable = bcadd(bcadd($budgetLimit->amount, $autoBudget->amount), $spentAmount);
+        $totalAmount     = $autoBudget->amount;
         Log::debug(sprintf('Total amount available for current budget period is %s', $budgetAvailable));
 
-        if (-1 !== bccomp( $budgetAvailable, $totalAmount)) {
+        if (-1 !== bccomp($budgetAvailable, $totalAmount)) {
             Log::info(sprintf('There is no overspending, no need to adjust. Budget limit amount will be %s.', $totalAmount));
             // create budget limit:
             $this->createBudgetLimit($autoBudget, $start, $end, $totalAmount);
         }
-        if (1 !== bccomp($budgetAvailable, $totalAmount)) {
+        if (1 !== bccomp($budgetAvailable, $totalAmount) && 1 === bccomp($budgetAvailable, '0')) {
             Log::info(sprintf('There was overspending, so the new amount will be %s.', $budgetAvailable));
             // create budget limit:
             $this->createBudgetLimit($autoBudget, $start, $end, $budgetAvailable);
+        }
+        if (1 !== bccomp($budgetAvailable, $totalAmount) && -1 === bccomp($budgetAvailable, '0')) {
+            Log::info('There was overspending, but so much even this period cant fix that. Reset it to 1.');
+            // create budget limit:
+            $this->createBudgetLimit($autoBudget, $start, $end, '1');
         }
         Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
     }
