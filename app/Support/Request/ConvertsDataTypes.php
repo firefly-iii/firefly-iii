@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Request;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Support\Facades\Log;
 
@@ -252,6 +253,44 @@ trait ConvertsDataTypes
         }
         Log::debug(sprintf('Date object: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()));
 
+        return $carbon;
+    }
+
+    protected function convertDateTime(?string $string): ?Carbon
+    {
+        $value = $this->get($string);
+        if (null === $value) {
+            return null;
+        }
+        if ('' === $value) {
+            return null;
+        }
+        if (10 === strlen($value)) {
+            // probably a date format.
+            try {
+                $carbon = Carbon::createFromFormat('Y-m-d', $value);
+            } catch (InvalidDateException $e) {
+                Log::error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
+                return null;
+            } catch (InvalidFormatException $e) {
+                Log::error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
+
+                return null;
+            }
+            return $carbon;
+        }
+        // is an atom string, I hope?
+        try {
+            $carbon = Carbon::parse($value);
+        } catch (InvalidDateException $e) {
+            Log::error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
+
+            return null;
+        } catch (InvalidFormatException $e) {
+            Log::error(sprintf('[4] "%s" is of an invalid format: %s', $value, $e->getMessage()));
+
+            return null;
+        }
         return $carbon;
     }
 

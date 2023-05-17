@@ -103,9 +103,8 @@ class PiggyBankTransformer extends AbstractTransformer
             $leftToSave   = app('steam')->bcround($leftToSave, $currency->decimal_places);
             $savePerMonth = app('steam')->bcround($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places);
         }
-        $startDate  = $piggyBank->startdate?->toAtomString();
-        $targetDate = $piggyBank->targetdate?->toAtomString();
-
+        $startDate  = $piggyBank->startdate?->format('Y-m-d');
+        $targetDate = $piggyBank->targetdate?->format('Y-m-d');
 
         return [
             'id'                      => (string)$piggyBank->id,
