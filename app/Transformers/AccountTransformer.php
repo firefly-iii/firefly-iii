@@ -209,7 +209,13 @@ class AccountTransformer extends AbstractTransformer
             $monthlyPaymentDate = $this->repository->getMetaValue($account, 'cc_monthly_payment_date');
         }
         if (null !== $monthlyPaymentDate) {
-            $monthlyPaymentDate = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'))->toAtomString();
+            // try classic date:
+            if(10 === strlen($monthlyPaymentDate)) {
+                $monthlyPaymentDate = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'))->toAtomString();
+            }
+            if(10 !== strlen($monthlyPaymentDate)) {
+                $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
+            }
         }
 
         return [$creditCardType, $monthlyPaymentDate];
@@ -233,7 +239,7 @@ class AccountTransformer extends AbstractTransformer
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
         }
         if (null !== $openingBalanceDate) {
-            $openingBalanceDate = Carbon::createFromFormat('!Y-m-d', $openingBalanceDate, config('app.timezone'))->toAtomString();
+            $openingBalanceDate = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'))->toAtomString();
         }
 
         return [$openingBalance, $openingBalanceDate];

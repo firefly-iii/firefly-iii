@@ -394,7 +394,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
 
-        return $journal->date->format('Y-m-d');
+        return $journal->date->format('Y-m-d H:i:s');
     }
 
     /**
