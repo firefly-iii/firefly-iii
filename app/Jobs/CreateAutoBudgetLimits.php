@@ -111,7 +111,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
         if (null === $budgetLimit) {
             Log::debug('No budget limit exists in previous period, so create one.');
-            // if not, create standard amount and we're done.
+            // if not, create standard amount, and we're done.
             $this->createBudgetLimit($autoBudget, $start, $end);
             return;
         }
@@ -132,10 +132,11 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $totalAmount     = $autoBudget->amount;
         Log::debug(sprintf('Total amount available for current budget period is %s', $budgetAvailable));
 
+
         if (-1 !== bccomp($budgetAvailable, $totalAmount)) {
-            Log::info(sprintf('There is no overspending, no need to adjust. Budget limit amount will be %s.', $totalAmount));
+            Log::info(sprintf('There is no overspending, no need to adjust. Budget limit amount will be %s.', $budgetAvailable));
             // create budget limit:
-            $this->createBudgetLimit($autoBudget, $start, $end, $totalAmount);
+            $this->createBudgetLimit($autoBudget, $start, $end, $budgetAvailable);
         }
         if (1 !== bccomp($budgetAvailable, $totalAmount) && 1 === bccomp($budgetAvailable, '0')) {
             Log::info(sprintf('There was overspending, so the new amount will be %s.', $budgetAvailable));
