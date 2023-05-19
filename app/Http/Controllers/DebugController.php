@@ -118,7 +118,7 @@ class DebugController extends Controller
     public function index(Request $request)
     {
         // basic scope information:
-        $now               = today(config('app.timezone'))->format('Y-m-d H:i:s e');
+        $now               = now(config('app.timezone'))->format('Y-m-d H:i:s e');
         $buildNr           = '(unknown)';
         $buildDate         = '(unknown)';
         $baseBuildNr       = '(unknown)';
