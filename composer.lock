@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "853888cc8d46411fc1e0df7da4bbb250",
+    "content-hash": "cc2447110d1ddec300550e2e41634217",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2402,16 +2402,16 @@
         },
         {
             "name": "laravel/ui",
-            "version": "v4.2.1",
+            "version": "v4.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "05ff7ac1eb55e2dfd10edcfb18c953684d693907"
+                "reference": "a58ec468db4a340b33f3426c778784717a2c144b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/05ff7ac1eb55e2dfd10edcfb18c953684d693907",
-                "reference": "05ff7ac1eb55e2dfd10edcfb18c953684d693907",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/a58ec468db4a340b33f3426c778784717a2c144b",
+                "reference": "a58ec468db4a340b33f3426c778784717a2c144b",
                 "shasum": ""
             },
             "require": {
@@ -2458,9 +2458,9 @@
                 "ui"
             ],
             "support": {
-                "source": "https://github.com/laravel/ui/tree/v4.2.1"
+                "source": "https://github.com/laravel/ui/tree/v4.2.2"
             },
-            "time": "2023-02-17T09:17:24+00:00"
+            "time": "2023-05-09T19:47:28+00:00"
         },
         {
             "name": "laravelcollective/html",
