@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => 'Je kan deze rekening niet gebruiken als bronrekening.',
     'generic_invalid_destination' => 'Je kan deze rekening niet gebruiken als doelrekening.',
 
-    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'      => 'Je moet bronrekeninggegevens submitten of een transactie journal ID meegeven.',
+    'generic_no_destination' => 'Je moet doelrekeninggegevens submitten of een transactie journal ID meegeven.',
 
     'gte.numeric' => ':attribute moet groter of gelijk zijn aan :value.',
     'gt.numeric'  => ':attribute moet groter zijn dan :value.',

@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => '无自动预算',
     'auto_budget_reset'                         => '设置每个周期的固定金额',
     'auto_budget_rollover'                      => '每个周期添加金额',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => '每日',
     'auto_budget_period_weekly'                 => '每周',
     'auto_budget_period_monthly'                => '每月',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => '您可以在帮助页面了解此功能的更多信息，点击右上角的问号 (?) 图标即可。',
     'auto_budget_reset_icon'                    => '此预算将周期性设置',
     'auto_budget_rollover_icon'                 => '此预算的金额将周期性增加',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => '移除预算上限 (:currency)',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => '预算上限',
     'period'                                    => '区间',
     'balance'                                   => '余额',
+    'in_out_period' => 'In + out this period',
     'sum'                                       => '总计',
     'summary'                                   => '概要',
     'average'                                   => '平均',

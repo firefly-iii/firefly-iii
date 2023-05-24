@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Cap auto-pressupost',
     'auto_budget_reset'                         => 'Estableix una quantitat fixa cada període',
     'auto_budget_rollover'                      => 'Afegeix una quantitat cada periode',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Diàriament',
     'auto_budget_period_weekly'                 => 'Setmanalment',
     'auto_budget_period_monthly'                => 'Mensualment',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Pots llegir més sobre aquesta funció en l\'ajuda. Fes clic a la icona superior dreta (?).',
     'auto_budget_reset_icon'                    => 'El pressupost s\'establirà periòdicament',
     'auto_budget_rollover_icon'                 => 'La quantitat pressupostada s\'incrementarà periòdicament',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'S\'ha eliminat la quantitat pressupostada en :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Pressupostat',
     'period'                                    => 'Període',
     'balance'                                   => 'Saldo',
+    'in_out_period' => 'In + out this period',
     'sum'                                       => 'Suma',
     'summary'                                   => 'Resum',
     'average'                                   => 'Mitjana',

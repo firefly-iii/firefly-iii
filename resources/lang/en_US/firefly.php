@@ -2214,6 +2214,7 @@ return [
     'budgeted'                                  => 'Budgeted',
     'period'                                    => 'Period',
     'balance'                                   => 'Balance',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Sum',
     'summary'                                   => 'Summary',
     'average'                                   => 'Average',

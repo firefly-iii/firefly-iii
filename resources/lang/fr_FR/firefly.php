@@ -1324,7 +1324,7 @@ return [
     'pref_last7'                                => 'Les 7 derniers jours',
     'pref_YTD'                                  => 'Année en cours',
     'pref_QTD'                                  => 'Ce trimestre',
-    'pref_MTD'                                  => 'Ce mois-ci',
+    'pref_MTD'                                  => 'Depuis le début du mois',
     'pref_languages'                            => 'Langues',
     'pref_locale'                               => 'Paramètres régionaux',
     'pref_languages_help'                       => 'Firefly III prend en charge plusieurs langues. Laquelle préférez-vous ?',
@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Pas de budget automatique',
     'auto_budget_reset'                         => 'Définir un montant fixe à chaque période',
     'auto_budget_rollover'                      => 'Ajouter un montant à chaque période',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Quotidien',
     'auto_budget_period_weekly'                 => 'Hebdomadaire',
     'auto_budget_period_monthly'                => 'Mensuel',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Vous pouvez en savoir plus sur cette fonctionnalité dans l\'aide. Cliquez sur l\'icône (?) en haut à droite.',
     'auto_budget_reset_icon'                    => 'Ce budget sera défini périodiquement',
     'auto_budget_rollover_icon'                 => 'Le montant du budget augmentera périodiquement',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Supprimer le montant budgétisé en :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Budgétisé',
     'period'                                    => 'Période',
     'balance'                                   => 'Solde',
+    'in_out_period' => 'In + out this period',
     'sum'                                       => 'Somme',
     'summary'                                   => 'Résumé',
     'average'                                   => 'Moyenne',

@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => '自動予算なし',
     'auto_budget_reset'                         => '期間ごとに固定金額を設定する',
     'auto_budget_rollover'                      => '期間ごとに金額を追加',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => '毎日',
     'auto_budget_period_weekly'                 => '毎週',
     'auto_budget_period_monthly'                => '毎月',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'この機能の詳細については、ヘルプを参照してください。右上の (？) アイコンをクリックします。',
     'auto_budget_reset_icon'                    => 'この予算は定期的に設定されます',
     'auto_budget_rollover_icon'                 => '予算額は定期的に増加します',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => ':currency で予算を削除する',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => '計上予算',
     'period'                                    => '期間',
     'balance'                                   => '収支',
+    'in_out_period' => 'In + out this period',
     'sum'                                       => '合計',
     'summary'                                   => '要約',
     'average'                                   => '平均',

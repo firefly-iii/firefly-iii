@@ -271,8 +271,8 @@ return [
     'generic_invalid_source'      => '이 계정을 소스 계정으로 사용할 수 없습니다.',
     'generic_invalid_destination' => '이 계정을 대상 계정으로 사용할 수 없습니다.',
 
-    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'      => '소스 계정 정보를 제출하거나 거래 저널 ID를 제출해야 합니다.',
+    'generic_no_destination' => '대상 계정 정보를 제출하거나 거래 저널 ID를 제출해야 합니다.',
 
     'gte.numeric' => ':attribute의 값은 :value 이상이어야 합니다.',
     'gt.numeric'  => ':attribute의 값은 :value보다 커야 합니다.',
