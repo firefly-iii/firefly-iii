@@ -25,11 +25,10 @@ namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 
 /**
- * Report (and fix) piggy banks. Make sure there are only transfers linked to piggy bank events.
+ * Report (and fix) piggy banks.
  *
  * Class FixPiggies
  */
@@ -57,7 +56,7 @@ class FixPiggies extends Command
     {
         $count = 0;
         $start = microtime(true);
-        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
+        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal'])->get();
 
         /** @var PiggyBankEvent $event */
         foreach ($set as $event) {
@@ -72,15 +71,6 @@ class FixPiggies extends Command
                 $event->save();
                 $count++;
                 continue;
-            }
-
-
-            $type = $journal->transactionType->type;
-            if (TransactionType::TRANSFER !== $type) {
-                $event->transaction_journal_id = null;
-                $event->save();
-                $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
-                $count++;
             }
         }
         if (0 === $count) {

@@ -569,11 +569,6 @@ class TransactionJournalFactory
     private function storePiggyEvent(TransactionJournal $journal, NullArrayObject $data): void
     {
         Log::debug('Will now store piggy event.');
-        if (!$journal->isTransfer()) {
-            Log::debug('Journal is not a transfer, do nothing.');
-
-            return;
-        }
 
         $piggyBank = $this->piggyRepository->findPiggyBank((int)$data['piggy_bank_id'], $data['piggy_bank_name']);
 
