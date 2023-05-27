@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Žiadny automatický rozpočet',
     'auto_budget_reset'                         => 'Nastaviť pevnú sumu pre každé obdobie',
     'auto_budget_rollover'                      => 'Pridať sumu každé obdobie',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Denne',
     'auto_budget_period_weekly'                 => 'Týždenne',
     'auto_budget_period_monthly'                => 'Mesačne',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Viac o tejto funkcii sa dozviete v pomocníkovi. Kliknite na ikonu (?) vpravo hore.',
     'auto_budget_reset_icon'                    => 'Tento rozpočet bude stanovovaný pravidelne',
     'auto_budget_rollover_icon'                 => 'Táto suma rozpočtu sa bude pravidelne navyšovať',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Odstrániť rozpočtovú sumu v :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Rozpočtované',
     'period'                                    => 'Obdobie',
     'balance'                                   => 'Zostatok',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Suma',
     'summary'                                   => 'Sumár',
     'average'                                   => 'Priemer',

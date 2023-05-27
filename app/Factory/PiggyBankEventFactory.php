@@ -49,12 +49,6 @@ class PiggyBankEventFactory
             return;
         }
 
-        if (TransactionType::TRANSFER !== $journal->transactionType->type) {
-            Log::info(sprintf('Will not connect %s #%d to a piggy bank.', $journal->transactionType->type, $journal->id));
-
-            return;
-        }
-
         /** @var PiggyBankRepositoryInterface $piggyRepos */
         $piggyRepos = app(PiggyBankRepositoryInterface::class);
         $piggyRepos->setUser($journal->user);

@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Kein Auto-Budget',
     'auto_budget_reset'                         => 'Festbetrag für jeden Zeitraum festlegen',
     'auto_budget_rollover'                      => 'Betrag pro Zeitraum hinzufügen',
+    'auto_budget_adjusted'                      => 'Fügen Sie für jeden Zeitraum einen Betrag hinzu und korrigieren Sie die Mehrausgaben',
     'auto_budget_period_daily'                  => 'Täglich',
     'auto_budget_period_weekly'                 => 'Wöchentlich',
     'auto_budget_period_monthly'                => 'Monatlich',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Mehr über diese Funktion können Sie in der Hilfe nachlesen. Klicken Sie oben rechts auf das ❓-Symbol.',
     'auto_budget_reset_icon'                    => 'Dieses Budget wird regelmäßig festgelegt',
     'auto_budget_rollover_icon'                 => 'Der Budgetbetrag wird regelmäßig erhöht',
+    'auto_budget_adjusted_icon'                 => 'Der Budget-Betrag wird regelmäßig erhöht und wird bei Mehrausgaben korrigiert',
     'remove_budgeted_amount'                    => 'Budgetbetrag in :currency entfernen',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Vorgesehen',
     'period'                                    => 'Zeitraum',
     'balance'                                   => 'Kontostand',
+    'in_out_period'                             => 'Ein- + Ausgaben im Zeitraum',
     'sum'                                       => 'Summe',
     'summary'                                   => 'Zusammenfasssung',
     'average'                                   => 'Durchschnitt',

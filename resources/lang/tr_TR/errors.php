@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Lütfen günlük dosyalarını bulacağınız <code>storage/logs</code> dizininde daha fazla bilgi toplayın. Eğer Docker kullanıyorsanız, <code>docker logs -f [container]</code> komutunu kullanın.',
-    'collect_info_more'       => 'Hata bilgilerini toplama hakkında daha fazla bilgi için <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode ">the FAQ</a>.',
-    'github_help'             => 'Github\'dan yardım alın',
-    'github_instructions'     => 'Yeni bir sayı açmaktan memnuniyet duyarız<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">on GitHub</a></strong>.',
-    'use_search'              => 'Aramayı kullan!',
-    'include_info'            => 'Bilgileri ekleyin<a href=":link">bu hata ayıklama sayfasından</a>.',
-    'tell_more'               => 'Bize daha fazlasını anlat "diyor Whoops!"',
-    'include_logs'            => '(Bakınız) hata günlükleri vardır.',
-    'what_did_you_do'         => 'Bize ne yaptığınızI anlatın.',
-    'offline_header'          => 'Muhtemelen çevrimdışısınız',
-    'offline_unreachable'     => 'Firefly III\'e ulaşılamıyor. Cihazınız şu anda çevrimdışı veya sunucu çalışmıyor.',
-    'offline_github'          => 'Hem cihazınızın hem de sunucunuzun çevrimiçi olduğundan eminseniz, lütfen bir bilet açın<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Lütfen günlük dosyalarını bulacağınız <code>storage/logs</code> dizininde daha fazla bilgi toplayın. Eğer Docker kullanıyorsanız, <code>docker logs -f [container]</code> komutunu kullanın.',
+    'collect_info_more'   => 'Hata bilgilerini toplama hakkında daha fazla bilgi için <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode ">the FAQ</a>.',
+    'github_help'         => 'Github\'dan yardım alın',
+    'github_instructions' => 'Yeni bir sayı açmaktan memnuniyet duyarız<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">on GitHub</a></strong>.',
+    'use_search'          => 'Aramayı kullan!',
+    'include_info'        => 'Bilgileri ekleyin<a href=":link">bu hata ayıklama sayfasından</a>.',
+    'tell_more'           => 'Bize daha fazlasını anlat "diyor Whoops!"',
+    'include_logs'        => '(Bakınız) hata günlükleri vardır.',
+    'what_did_you_do'     => 'Bize ne yaptığınızI anlatın.',
+    'offline_header'      => 'Muhtemelen çevrimdışısınız',
+    'offline_unreachable' => 'Firefly III\'e ulaşılamıyor. Cihazınız şu anda çevrimdışı veya sunucu çalışmıyor.',
+    'offline_github'      => 'Hem cihazınızın hem de sunucunuzun çevrimiçi olduğundan eminseniz, lütfen bir bilet açın<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

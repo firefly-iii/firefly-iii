@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Brez samodejnega proračuna',
     'auto_budget_reset'                         => 'Nastavi fiksni znesek za vsako obdobje',
     'auto_budget_rollover'                      => 'Dodaj znesek za vsako obdobje',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Dnevno',
     'auto_budget_period_weekly'                 => 'Tedensko',
     'auto_budget_period_monthly'                => 'Mesečno',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'You can read more about this feature in the help. Click the top-right (?) icon.',
     'auto_budget_reset_icon'                    => 'This budget will be set periodically',
     'auto_budget_rollover_icon'                 => 'The budget amount will increase periodically',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Proračun',
     'period'                                    => 'Obdobje',
     'balance'                                   => 'Stanje',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Vsota',
     'summary'                                   => 'Povzetek',
     'average'                                   => 'Povprečno',

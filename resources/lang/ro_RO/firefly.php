@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Fără auto-buget',
     'auto_budget_reset'                         => 'Stabiliți o sumă fixă pentru fiecare perioadă',
     'auto_budget_rollover'                      => 'Adaugă o sumă în fiecare perioadă',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Zilnic',
     'auto_budget_period_weekly'                 => 'Săptămânal',
     'auto_budget_period_monthly'                => 'Lunar',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Poți citi mai multe despre această caracteristică din ajutor. Apasă pe icoana din dreapta sus (?).',
     'auto_budget_reset_icon'                    => 'Acest buget va fi stabilit periodic',
     'auto_budget_rollover_icon'                 => 'Suma bugetului va crește periodic',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Șterge suma înscrisă în :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Bugetat',
     'period'                                    => 'Perioada',
     'balance'                                   => 'Balantă',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Sumă',
     'summary'                                   => 'Rezumat',
     'average'                                   => 'In medie',

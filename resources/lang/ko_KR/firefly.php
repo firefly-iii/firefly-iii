@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => '자동 예산 없음',
     'auto_budget_reset'                         => '매 기간마다 고정 금액 설정',
     'auto_budget_rollover'                      => '기간마다 금액 추가',
+    'auto_budget_adjusted'                      => '초과 지출을 수정하기 위해 매 기간마다 금액을 추가합니다.',
     'auto_budget_period_daily'                  => '매일',
     'auto_budget_period_weekly'                 => '매주',
     'auto_budget_period_monthly'                => '월간',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => '이 기능에 대한 자세한 내용은 도움말에서 확인할 수 있습니다. 오른쪽 상단의 (?) 아이콘을 클릭합니다.',
     'auto_budget_reset_icon'                    => '이 예산은 주기적으로 설정됩니다.',
     'auto_budget_rollover_icon'                 => '예산 금액은 주기적으로 증가합니다.',
+    'auto_budget_adjusted_icon'                 => '예산 금액은 주기적으로 증가하고, 초과지출을 수정합니다.',
     'remove_budgeted_amount'                    => ':currency에서 예산 금액 제거',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => '예산',
     'period'                                    => '기간',
     'balance'                                   => '잔고',
+    'in_out_period'                             => '이 기간의 수입 지출',
     'sum'                                       => '합계',
     'summary'                                   => '요약',
     'average'                                   => '평균',

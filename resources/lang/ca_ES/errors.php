@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Si us plau, recopili més informació al directori <code>emmagatzematge/registre</code> on hi ha els fitxers de registre. Si utilitzes Docker, utilitza <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Pots llegir més sobre recol·lectar informació d\'errors a les <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Preguntes Freqüents</a>.',
-    'github_help'             => 'Obtenir ajuda a GitHub',
-    'github_instructions'     => 'Ets més que benvingut a obrir un nou issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">a GitHub</a></strong>.',
-    'use_search'              => 'Utilitza la cerca!',
-    'include_info'            => 'Inclou la informació <a href=":link">d\'aquesta pàgina de depuració</a>.',
-    'tell_more'               => 'Explica\'ns més que "diu Ups"',
-    'include_logs'            => 'Inclou els registres d\'errors (mirar a sobre).',
-    'what_did_you_do'         => 'Explica\'ns el que estaves fent.',
-    'offline_header'          => 'Probablement estàs desconnectat',
-    'offline_unreachable'     => 'Firefly III no es troba accessible. El teu dispositiu està desconnectat o el servidor no funciona.',
-    'offline_github'          => 'Si n\'estàs segur que el teu dispositiu i el servidor estan connectats, si us plau, obre un tiquet a <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Si us plau, recopili més informació al directori <code>emmagatzematge/registre</code> on hi ha els fitxers de registre. Si utilitzes Docker, utilitza <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Pots llegir més sobre recol·lectar informació d\'errors a les <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Preguntes Freqüents</a>.',
+    'github_help'         => 'Obtenir ajuda a GitHub',
+    'github_instructions' => 'Ets més que benvingut a obrir un nou issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">a GitHub</a></strong>.',
+    'use_search'          => 'Utilitza la cerca!',
+    'include_info'        => 'Inclou la informació <a href=":link">d\'aquesta pàgina de depuració</a>.',
+    'tell_more'           => 'Explica\'ns més que "diu Ups"',
+    'include_logs'        => 'Inclou els registres d\'errors (mirar a sobre).',
+    'what_did_you_do'     => 'Explica\'ns el que estaves fent.',
+    'offline_header'      => 'Probablement estàs desconnectat',
+    'offline_unreachable' => 'Firefly III no es troba accessible. El teu dispositiu està desconnectat o el servidor no funciona.',
+    'offline_github'      => 'Si n\'estàs segur que el teu dispositiu i el servidor estan connectats, si us plau, obre un tiquet a <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

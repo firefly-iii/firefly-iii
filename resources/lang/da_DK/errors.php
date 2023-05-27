@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Der findes mere information i mappen <code>storage/logs</code> hvor du vil finde logfilerne. Hvis du kører Docker, brug <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Du kan læse mere om indhentning af fejloplysninger i <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
-    'github_help'             => 'Få hjælp på GitHub',
-    'github_instructions'     => 'Du er mere end velkommen til at oprette en ny fejlmelding <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">på GitHub</a></strong>.',
-    'use_search'              => 'Brug søgefeltet!',
-    'include_info'            => 'Inkludér informationen <a href=":link">fra denne fejlfindingsside</a>.',
-    'tell_more'               => 'Uddyb gerne mere end bare "det siger Hovsa!"',
-    'include_logs'            => 'Inkludér fejllogfiler (se ovenfor).',
-    'what_did_you_do'         => 'Fortæl os, hvad du lavede.',
-    'offline_header'          => 'Du er sandsynligvis offline',
-    'offline_unreachable'     => 'Firefly III er ikke tilgængelig. Din enhed er i øjeblikket offline, eller serveren fungerer ikke.',
-    'offline_github'          => 'Hvis du er sikker på, at både din enhed og serveren er online, skal du åbne en ticket på <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Der findes mere information i mappen <code>storage/logs</code> hvor du vil finde logfilerne. Hvis du kører Docker, brug <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Du kan læse mere om indhentning af fejloplysninger i <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
+    'github_help'         => 'Få hjælp på GitHub',
+    'github_instructions' => 'Du er mere end velkommen til at oprette en ny fejlmelding <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">på GitHub</a></strong>.',
+    'use_search'          => 'Brug søgefeltet!',
+    'include_info'        => 'Inkludér informationen <a href=":link">fra denne fejlfindingsside</a>.',
+    'tell_more'           => 'Uddyb gerne mere end bare "det siger Hovsa!"',
+    'include_logs'        => 'Inkludér fejllogfiler (se ovenfor).',
+    'what_did_you_do'     => 'Fortæl os, hvad du lavede.',
+    'offline_header'      => 'Du er sandsynligvis offline',
+    'offline_unreachable' => 'Firefly III er ikke tilgængelig. Din enhed er i øjeblikket offline, eller serveren fungerer ikke.',
+    'offline_github'      => 'Hvis du er sikker på, at både din enhed og serveren er online, skal du åbne en ticket på <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

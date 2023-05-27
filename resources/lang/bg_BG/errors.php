@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Моля, съберете повече информация в директорията <code> storage/logs </code>, където ще намерите файловете на дневника. Ако използвате Docker, използвайте <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Можете да прочетете повече за събирането на информация за грешки на <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">the FAQ</a>.',
-    'github_help'             => 'Получете помощ на GitHub',
-    'github_instructions'     => 'Добре дошли сте да отворите нов проблем <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">на GitHub</a></strong>.',
-    'use_search'              => 'Използвайте търсенето!',
-    'include_info'            => 'Включете информацията <a href=":link">от тази debug страница</a>.',
-    'tell_more'               => 'Разкажете ни повече от „казва Опаааа!“',
-    'include_logs'            => 'Включете регистрационни файлове за грешки (вижте по-горе).',
-    'what_did_you_do'         => 'Кажете ни какво правихте.',
-    'offline_header'          => 'Вие вероятно не сте на линия',
-    'offline_unreachable'     => 'Firefly III е недостижим. Устройството Ви в момента не е на линия или сървърът не работи.',
-    'offline_github'          => 'Ако сте сигурни, че Вашето устройство и сървъра са на линия, моля отворете билет на <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Моля, съберете повече информация в директорията <code> storage/logs </code>, където ще намерите файловете на дневника. Ако използвате Docker, използвайте <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Можете да прочетете повече за събирането на информация за грешки на <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">the FAQ</a>.',
+    'github_help'         => 'Получете помощ на GitHub',
+    'github_instructions' => 'Добре дошли сте да отворите нов проблем <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">на GitHub</a></strong>.',
+    'use_search'          => 'Използвайте търсенето!',
+    'include_info'        => 'Включете информацията <a href=":link">от тази debug страница</a>.',
+    'tell_more'           => 'Разкажете ни повече от „казва Опаааа!“',
+    'include_logs'        => 'Включете регистрационни файлове за грешки (вижте по-горе).',
+    'what_did_you_do'     => 'Кажете ни какво правихте.',
+    'offline_header'      => 'Вие вероятно не сте на линия',
+    'offline_unreachable' => 'Firefly III е недостижим. Устройството Ви в момента не е на линия или сървърът не работи.',
+    'offline_github'      => 'Ако сте сигурни, че Вашето устройство и сървъра са на линия, моля отворете билет на <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

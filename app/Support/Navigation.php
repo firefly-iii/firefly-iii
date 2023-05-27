@@ -65,6 +65,14 @@ class Navigation
             'yearly'    => 'addYears',
             '1Y'        => 'addYears',
             'custom'    => 'addMonths', // custom? just add one month.
+            // last X periods? Jump the relevant month / quarter / year
+            'last7'     => 'addDays',
+            'last30'    => 'addMonths',
+            'last90'    => 'addMonths',
+            'last365'   => 'addYears',
+            'MTD'       => 'addMonths',
+            'QTD'       => 'addMonths',
+            'YTD'       => 'addYears',
         ];
         $modifierMap = [
             'quarter'   => 3,
@@ -72,6 +80,9 @@ class Navigation
             'quarterly' => 3,
             '6M'        => 6,
             'half-year' => 6,
+            'last7'     => 7,
+            'last90'    => 3,
+            'QTD'       => 3,
         ];
 
         if (!array_key_exists($repeatFreq, $functionMap)) {

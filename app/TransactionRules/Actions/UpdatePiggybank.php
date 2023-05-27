@@ -65,12 +65,6 @@ class UpdatePiggybank implements ActionInterface
         $type                             = TransactionType::find((int)$journalObj->transaction_type_id);
         $journal['transaction_type_type'] = $type->type;
 
-        if (TransactionType::TRANSFER !== $journal['transaction_type_type']) {
-            Log::info(sprintf('Journal #%d is a "%s" so skip this action.', $journal['transaction_journal_id'], $journal['transaction_type_type']));
-
-            return false;
-        }
-
         $piggyBank = $this->findPiggyBank($user);
         if (null === $piggyBank) {
             Log::info(

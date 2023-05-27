@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Brak automatycznego budżetu',
     'auto_budget_reset'                         => 'Ustaw stałą kwotę w każdym okresie',
     'auto_budget_rollover'                      => 'Dodaj kwotę w każdym okresie',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Dziennie',
     'auto_budget_period_weekly'                 => 'Tygodniowo',
     'auto_budget_period_monthly'                => 'Miesięcznie',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Możesz przeczytać więcej o tej funkcji w pomocy. Kliknij ikonę (?) u góry prawej strony.',
     'auto_budget_reset_icon'                    => 'Ten budżet będzie okresowo ustalany',
     'auto_budget_rollover_icon'                 => 'Kwota budżetu będzie okresowo rosła',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Usuń zabudżetowaną kwotę w :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Zabudżetowano',
     'period'                                    => 'Okres',
     'balance'                                   => 'Saldo',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Suma',
     'summary'                                   => 'Podsumowanie',
     'average'                                   => 'Średno',

@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Vänligen samla in mer information i katalogen <code>lagring/loggar</code> där du hittar loggfiler. Om du kör Docker, använd <code>dockerloggar -f [container]</code>.',
-    'collect_info_more'       => 'Du kan läsa mer om att samla in felinformation i <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
-    'github_help'             => 'Få hjälp på GitHub',
-    'github_instructions'     => 'Du är mer än välkommen att öppna ett ärende <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">på GitHub</a></strong>.',
-    'use_search'              => 'Använd sökningen!',
-    'include_info'            => 'Inkludera informationen <a href=":link">från denna debug-sida</a>.',
-    'tell_more'               => 'Berätta mer än "det står Hoppsan!"',
-    'include_logs'            => 'Inkludera felloggar (se ovan).',
-    'what_did_you_do'         => 'Berätta vad du gjorde.',
-    'offline_header'          => 'Du är förmodligen offline',
-    'offline_unreachable'     => 'Firefly III kan inte nås. Din enhet är för närvarande offline eller servern fungerar inte.',
-    'offline_github'          => 'Om du är säker på att både din enhet och servern är online, vänligen öppna ett ärende på <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Vänligen samla in mer information i katalogen <code>lagring/loggar</code> där du hittar loggfiler. Om du kör Docker, använd <code>dockerloggar -f [container]</code>.',
+    'collect_info_more'   => 'Du kan läsa mer om att samla in felinformation i <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
+    'github_help'         => 'Få hjälp på GitHub',
+    'github_instructions' => 'Du är mer än välkommen att öppna ett ärende <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">på GitHub</a></strong>.',
+    'use_search'          => 'Använd sökningen!',
+    'include_info'        => 'Inkludera informationen <a href=":link">från denna debug-sida</a>.',
+    'tell_more'           => 'Berätta mer än "det står Hoppsan!"',
+    'include_logs'        => 'Inkludera felloggar (se ovan).',
+    'what_did_you_do'     => 'Berätta vad du gjorde.',
+    'offline_header'      => 'Du är förmodligen offline',
+    'offline_unreachable' => 'Firefly III kan inte nås. Din enhet är för närvarande offline eller servern fungerar inte.',
+    'offline_github'      => 'Om du är säker på att både din enhet och servern är online, vänligen öppna ett ärende på <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

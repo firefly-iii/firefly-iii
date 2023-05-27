@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'ログファイルがある <code>storage/logs</code> ディレクトリにて、より詳細な情報を集めてください。Docker を使っている場合は <code>docker logs -f [container]</code> を使用してください。',
-    'collect_info_more'       => 'エラー情報の収集については、 <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a> をご覧ください。',
-    'github_help'             => 'GitHubでヘルプを見る',
-    'github_instructions'     => '<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong> にて新しい issue を作ることは大歓迎です。',
-    'use_search'              => '検索してください！',
-    'include_info'            => '<a href=":link">このデバッグページ</a>からの情報を含めます。',
-    'tell_more'               => '「おっと！」以上のことを教えてください。',
-    'include_logs'            => 'エラーログを含めます (上記参照)。',
-    'what_did_you_do'         => '何をしていたか教えてください。',
-    'offline_header'          => 'おそらくオフラインです',
-    'offline_unreachable'     => 'Firefly III に到達できません。現在デバイスがオフラインかサーバーが動作していません。',
-    'offline_github'          => 'あなたのデバイス、サーバーが共にオンラインであることを確認している場合は、 <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong> でチケットを開いてください。',
+    'collect_info'        => 'ログファイルがある <code>storage/logs</code> ディレクトリにて、より詳細な情報を集めてください。Docker を使っている場合は <code>docker logs -f [container]</code> を使用してください。',
+    'collect_info_more'   => 'エラー情報の収集については、 <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a> をご覧ください。',
+    'github_help'         => 'GitHubでヘルプを見る',
+    'github_instructions' => '<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong> にて新しい issue を作ることは大歓迎です。',
+    'use_search'          => '検索してください！',
+    'include_info'        => '<a href=":link">このデバッグページ</a>からの情報を含めます。',
+    'tell_more'           => '「おっと！」以上のことを教えてください。',
+    'include_logs'        => 'エラーログを含めます (上記参照)。',
+    'what_did_you_do'     => '何をしていたか教えてください。',
+    'offline_header'      => 'おそらくオフラインです',
+    'offline_unreachable' => 'Firefly III に到達できません。現在デバイスがオフラインかサーバーが動作していません。',
+    'offline_github'      => 'あなたのデバイス、サーバーが共にオンラインであることを確認している場合は、 <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong> でチケットを開いてください。',
 
 ];

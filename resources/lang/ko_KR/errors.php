@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => '<code>storage/logs</code> 디렉토리의 로그 파일에서 추가정보를 수집하세요. 도커를 실행중이라면 <code>docker logs -f [container]</code>를 사용하세요.',
-    'collect_info_more'       => '<a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>에서 오류 정보 수집에 대한 더 자세한 정보를 읽을 수 있습니다.',
-    'github_help'             => 'GitHub에서 도움 얻기',
-    'github_instructions'     => '<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub에서</a></strong> 새로운 이슈를 여는 것을 환영합니다.',
-    'use_search'              => '검색을 이용하세요!',
-    'include_info'            => '<a href=":link">이 디버그 페이지</a>의 정보를 포함합니다.',
-    'tell_more'               => '우리에게 "이런! 이라고 쓰여있네요" 보다 더 자세히 알려주세요.',
-    'include_logs'            => '에러 로그를 포함합니다 (상단 참조).',
-    'what_did_you_do'         => '무엇을 하고 있었는지 알려주세요.',
-    'offline_header'          => '오프라인 상태일 수 있습니다.',
-    'offline_unreachable'     => 'Firefly III에 접근할 수 없습니다. 장치가 현재 오프라인이거나 서버가 동작하지 않습니다.',
-    'offline_github'          => '장치와 서버가 온라인인 것이 확실하다면 <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>에서 티켓을 만들어주세요.',
+    'collect_info'        => '<code>storage/logs</code> 디렉토리의 로그 파일에서 추가정보를 수집하세요. 도커를 실행중이라면 <code>docker logs -f [container]</code>를 사용하세요.',
+    'collect_info_more'   => '<a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>에서 오류 정보 수집에 대한 더 자세한 정보를 읽을 수 있습니다.',
+    'github_help'         => 'GitHub에서 도움 얻기',
+    'github_instructions' => '<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub에서</a></strong> 새로운 이슈를 여는 것을 환영합니다.',
+    'use_search'          => '검색을 이용하세요!',
+    'include_info'        => '<a href=":link">이 디버그 페이지</a>의 정보를 포함합니다.',
+    'tell_more'           => '우리에게 "이런! 이라고 쓰여있네요" 보다 더 자세히 알려주세요.',
+    'include_logs'        => '에러 로그를 포함합니다 (상단 참조).',
+    'what_did_you_do'     => '무엇을 하고 있었는지 알려주세요.',
+    'offline_header'      => '오프라인 상태일 수 있습니다.',
+    'offline_unreachable' => 'Firefly III에 접근할 수 없습니다. 장치가 현재 오프라인이거나 서버가 동작하지 않습니다.',
+    'offline_github'      => '장치와 서버가 온라인인 것이 확실하다면 <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>에서 티켓을 만들어주세요.',
 
 ];

@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Няма автоматичен бюджет',
     'auto_budget_reset'                         => 'Задайте фиксирана сума за всеки период',
     'auto_budget_rollover'                      => 'Добавете сума за всеки период',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'На ден',
     'auto_budget_period_weekly'                 => 'На седмица',
     'auto_budget_period_monthly'                => 'Месечно',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Можете да прочетете повече за тази функция в помощта. Кликнете върху иконата (?) горе вдясно.',
     'auto_budget_reset_icon'                    => 'Този бюджет ще бъде зададен периодично',
     'auto_budget_rollover_icon'                 => 'Размерът на бюджета ще се увеличава периодично',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Премахнете сумата на бюджета в :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Бюджетирани',
     'period'                                    => 'Период',
     'balance'                                   => 'Салдо',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Сума',
     'summary'                                   => 'Обобщение',
     'average'                                   => 'Средно',

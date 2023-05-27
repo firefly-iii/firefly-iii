@@ -107,8 +107,8 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '6.0.10',
-    'api_version'                  => '2.0.1',
+    'version'                      => '6.0.11',
+    'api_version'                  => '2.0.3',
     'db_version'                   => 19,
 
     // generic settings
@@ -172,7 +172,9 @@ return [
         //        'is_IS' => ['name_locale' => 'Icelandic', 'name_english' => 'Icelandic'],
         'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
         'ja_JP' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],
+        'ko_KR' => ['name_locale' => 'Korean', 'name_english' => 'Korean'],
         //        'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
+
         'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish'],
@@ -879,7 +881,13 @@ return [
     ],
     'can_have_virtual_amounts'  => [AccountType::ASSET],
     'can_have_opening_balance'  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-    'dynamic_creation_allowed'  => [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION, AccountType::LIABILITY_CREDIT],
+    'dynamic_creation_allowed'  => [
+        AccountType::EXPENSE,
+        AccountType::REVENUE,
+        AccountType::INITIAL_BALANCE,
+        AccountType::RECONCILIATION,
+        AccountType::LIABILITY_CREDIT,
+    ],
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],

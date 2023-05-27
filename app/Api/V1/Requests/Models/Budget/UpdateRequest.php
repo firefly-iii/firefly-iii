@@ -67,6 +67,7 @@ class UpdateRequest extends FormRequest
                 'none'     => 0,
                 'reset'    => 1,
                 'rollover' => 2,
+                'adjusted' => 3,
             ];
             $allData['auto_budget_type'] = $types[$allData['auto_budget_type']] ?? 0;
         }
@@ -88,7 +89,7 @@ class UpdateRequest extends FormRequest
             'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active'                    => [new IsBoolean()],
             'notes'                     => 'nullable|between:1,65536',
-            'auto_budget_type'          => 'in:reset,rollover,none',
+            'auto_budget_type'          => 'in:reset,rollover,adjusted,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',
             'auto_budget_amount'        => 'min:0|max:1000000000',

@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Χωρίς αυτόματο προϋπολογισμό',
     'auto_budget_reset'                         => 'Ορίστε ένα σταθερό ποσό κάθε περίοδο',
     'auto_budget_rollover'                      => 'Προσθέστε ένα ποσό σε κάθε περίοδο',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Ημερησίως',
     'auto_budget_period_weekly'                 => 'Εβδομαδιαίως',
     'auto_budget_period_monthly'                => 'Μηνιαίως',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Μπορείτε να διαβάσετε περισσότερα σχετικά με αυτή τη λειτουργία στη βοήθεια. Κάντε κλικ στο εικονίδιο (?) επάνω δεξιά.',
     'auto_budget_reset_icon'                    => 'Αυτός ο προϋπολογισμός θα οριστεί περιοδικά',
     'auto_budget_rollover_icon'                 => 'Το ποσό του προϋπολογισμού θα αυξηθεί περιοδικά',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Κατάργηση ποσού προϋπολογισμού σε :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Προϋπολογισμένο',
     'period'                                    => 'Περίοδος',
     'balance'                                   => 'Ισοζύγιο',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Σύνολο',
     'summary'                                   => 'Σύνοψη',
     'average'                                   => 'Μέσος όρος',

@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Geen auto-budget',
     'auto_budget_reset'                         => 'Vast bedrag elke periode',
     'auto_budget_rollover'                      => 'Voeg elke periode een bedrag toe',
+    'auto_budget_adjusted'                      => 'Voeg elke periode een bedrag toe en corrigeer voor overbesteding',
     'auto_budget_period_daily'                  => 'Dagelijks',
     'auto_budget_period_weekly'                 => 'Wekelijks',
     'auto_budget_period_monthly'                => 'Maandelijks',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Je kan meer lezen over deze functie in de hulppagina\'s. Klik op het (?) icoontje rechtsboven.',
     'auto_budget_reset_icon'                    => 'Het budget wordt periodiek ingesteld',
     'auto_budget_rollover_icon'                 => 'Het budget wordt periodiek aangevuld',
+    'auto_budget_adjusted_icon'                 => 'Het bedrag zal periodiek stijgen en corrigeren bij overmatige uitgaven',
     'remove_budgeted_amount'                    => 'Verwijder gebudgetteerd bedrag in :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Gebudgetteerd',
     'period'                                    => 'Periode',
     'balance'                                   => 'Saldo',
+    'in_out_period'                             => 'In + uit deze periode',
     'sum'                                       => 'Som',
     'summary'                                   => 'Samenvatting',
     'average'                                   => 'Gemiddeld',

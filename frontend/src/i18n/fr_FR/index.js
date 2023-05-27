@@ -223,6 +223,6 @@ export default {
         "pref_last7": "Les 7 derniers jours",
         "pref_YTD": "Ann\u00e9e en cours",
         "pref_QTD": "Ce trimestre",
-        "pref_MTD": "Ce mois-ci"
+        "pref_MTD": "Depuis le d\u00e9but du mois"
     }
 }

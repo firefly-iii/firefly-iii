@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Будь ласка, знайдіть більше інформації в директорії <code>storage/logs</code> де знаходяться файли журналу. Якщо ви використовуєте Docker, скористайтесь <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Дізнатись більше зібраної інформації щодо помилок у розділі<a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">запитань, які часто задають</a>.',
-    'github_help'             => 'Отримати допомогу на GitHub',
-    'github_instructions'     => 'Запрошуємо відкрити нове звернення через проблему <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">на GitHub</a></strong>.',
-    'use_search'              => 'Скористайтеся пошуком!',
-    'include_info'            => 'Додайте інформацію <a href=":link">з цієї сторінки налагодження</a>.',
-    'tell_more'               => 'Дайте нам більше інформації, ніж "Сервіс не працює!"',
-    'include_logs'            => 'Додайте журнал помилок (див. вище).',
-    'what_did_you_do'         => 'Розкажіть нам, що ви робили.',
-    'offline_header'          => 'Ви, ймовірно, не в мережі',
-    'offline_unreachable'     => 'Firefly III недоступний. Ваш пристрій наразі в не в мережі або сервер не працює.',
-    'offline_github'          => 'Якщо ви впевнені, що ваш пристрій та сервер в мережі, створіть звернення на <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Будь ласка, знайдіть більше інформації в директорії <code>storage/logs</code> де знаходяться файли журналу. Якщо ви використовуєте Docker, скористайтесь <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Дізнатись більше зібраної інформації щодо помилок у розділі<a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">запитань, які часто задають</a>.',
+    'github_help'         => 'Отримати допомогу на GitHub',
+    'github_instructions' => 'Запрошуємо відкрити нове звернення через проблему <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">на GitHub</a></strong>.',
+    'use_search'          => 'Скористайтеся пошуком!',
+    'include_info'        => 'Додайте інформацію <a href=":link">з цієї сторінки налагодження</a>.',
+    'tell_more'           => 'Дайте нам більше інформації, ніж "Сервіс не працює!"',
+    'include_logs'        => 'Додайте журнал помилок (див. вище).',
+    'what_did_you_do'     => 'Розкажіть нам, що ви робили.',
+    'offline_header'      => 'Ви, ймовірно, не в мережі',
+    'offline_unreachable' => 'Firefly III недоступний. Ваш пристрій наразі в не в мережі або сервер не працює.',
+    'offline_github'      => 'Якщо ви впевнені, що ваш пристрій та сервер в мережі, створіть звернення на <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

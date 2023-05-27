@@ -296,6 +296,7 @@ class AccountUpdateService
         $type = $account->accountType;
         if (in_array($type->type, $this->canHaveOpeningBalance, true)) {
             // check if is submitted as empty, that makes it valid:
+
             if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
@@ -306,7 +307,6 @@ class AccountUpdateService
                         $openingBalance
                     );
                 }
-
                 $this->updateOBGroupV2($account, $openingBalance, $openingBalanceDate);
             }
 

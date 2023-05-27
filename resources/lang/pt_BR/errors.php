@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Por favor recupere mais informações no diretório <code>storage/logs</code> onde você encontrará os arquivos de log. Se você estiver executando o Docker, use <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Você pode ler mais sobre a coleta de informações de erro em <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Perguntas Frequentes</a>.',
-    'github_help'             => 'Obtenha ajuda no GitHub',
-    'github_instructions'     => 'Você é mais do que bem-vindo para abrir uma nova issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">no GitHub</a>.</strong>.',
-    'use_search'              => 'Use a busca!',
-    'include_info'            => 'Incluir a informação <a href=":link">desta página de debug</a>.',
-    'tell_more'               => 'Nos diga mais do que "ele retorna Ops!"',
-    'include_logs'            => 'Inclua os logs de erro (veja acima).',
-    'what_did_you_do'         => 'Nos diga o que você estava fazendo.',
-    'offline_header'          => 'Você provavelmente está offline',
-    'offline_unreachable'     => 'O Firefly III está inacessível. Seu dispositivo está offline ou o servidor não está funcionando.',
-    'offline_github'          => 'Caso você tenha certeza de que seu dispositivo e o servidor estão online, por favor, abra um ticket no <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Por favor recupere mais informações no diretório <code>storage/logs</code> onde você encontrará os arquivos de log. Se você estiver executando o Docker, use <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Você pode ler mais sobre a coleta de informações de erro em <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Perguntas Frequentes</a>.',
+    'github_help'         => 'Obtenha ajuda no GitHub',
+    'github_instructions' => 'Você é mais do que bem-vindo para abrir uma nova issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">no GitHub</a>.</strong>.',
+    'use_search'          => 'Use a busca!',
+    'include_info'        => 'Incluir a informação <a href=":link">desta página de debug</a>.',
+    'tell_more'           => 'Nos diga mais do que "ele retorna Ops!"',
+    'include_logs'        => 'Inclua os logs de erro (veja acima).',
+    'what_did_you_do'     => 'Nos diga o que você estava fazendo.',
+    'offline_header'      => 'Você provavelmente está offline',
+    'offline_unreachable' => 'O Firefly III está inacessível. Seu dispositivo está offline ou o servidor não está funcionando.',
+    'offline_github'      => 'Caso você tenha certeza de que seu dispositivo e o servidor estão online, por favor, abra um ticket no <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => ' Không có ngân sách tự động',
     'auto_budget_reset'                         => 'Đặt số tiền cố định mỗi kỳ',
     'auto_budget_rollover'                      => 'Thêm một số tiền mỗi kỳ',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Hàng ngày',
     'auto_budget_period_weekly'                 => 'Hàng tuần',
     'auto_budget_period_monthly'                => 'Hàng tháng',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Bạn có thể đọc thêm về tính năng này trong trợ giúp. Nhấp vào biểu tượng trên cùng bên phải (?).',
     'auto_budget_reset_icon'                    => 'Ngân sách này sẽ được đặt định kỳ',
     'auto_budget_rollover_icon'                 => 'Số tiền ngân sách sẽ tăng theo định kỳ',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Xóa số tiền ngân sách trong :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Ngân sách',
     'period'                                    => 'Chu kỳ',
     'balance'                                   => 'Tiền còn lại',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Tổng',
     'summary'                                   => 'Tóm lược',
     'average'                                   => 'Trung bình',

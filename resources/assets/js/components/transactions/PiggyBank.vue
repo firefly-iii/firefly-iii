@@ -18,7 +18,7 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <template>
-  <div v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Transfer'"
+  <div v-if="typeof this.transactionType !== 'undefined'"
        class="form-group"
        v-bind:class="{ 'has-error': hasError()}">
     <div class="col-sm-12 text-sm">

@@ -1706,6 +1706,7 @@ return [
     'auto_budget_none'                          => 'Ei automaattibudjettia',
     'auto_budget_reset'                         => 'Aseta sama kiinteä summa kaikille jaksoille',
     'auto_budget_rollover'                      => 'Kasvata summaa joka jaksossa',
+    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
     'auto_budget_period_daily'                  => 'Päivittäin',
     'auto_budget_period_weekly'                 => 'Viikoittain',
     'auto_budget_period_monthly'                => 'Kuukausittain',
@@ -1715,6 +1716,7 @@ return [
     'auto_budget_help'                          => 'Voit lukea lisää tästä ominaisuudesta ohjeesta. Napsauta oikean yläkulman (?)-kuvaketta.',
     'auto_budget_reset_icon'                    => 'Tämä budjetti asetetaan määräajoin',
     'auto_budget_rollover_icon'                 => 'Budjetin summa kasvaa säännöllisesti',
+    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
     'remove_budgeted_amount'                    => 'Poista budjetoitu summa :currency',
 
     // bills:
@@ -2292,6 +2294,7 @@ return [
     'budgeted'                                  => 'Budjetoitu',
     'period'                                    => 'Jakso',
     'balance'                                   => 'Saldo',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Yhteensä',
     'summary'                                   => 'Yhteenveto',
     'average'                                   => 'Keskiarvo',

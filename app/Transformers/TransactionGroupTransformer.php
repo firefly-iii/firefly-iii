@@ -382,17 +382,17 @@ class TransactionGroupTransformer extends AbstractTransformer
         $source          = $this->getSourceTransaction($journal);
         $destination     = $this->getDestinationTransaction($journal);
         $type            = $journal->transactionType->type;
-        $amount          = $this->getAmount($type, (string)$source->amount);
+        $currency        = $source->transactionCurrency;
+        $amount          = app('steam')->bcround($this->getAmount($type, (string)$source->amount), $currency->decimal_places ?? 0);
         $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : (string)$source->foreign_amount);
         $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
         $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
-        $currency        = $source->transactionCurrency;
         $foreignCurrency = $this->getForeignCurrency($source->foreignCurrency);
         $budget          = $this->getBudget($journal->budgets->first());
         $category        = $this->getCategory($journal->categories->first());
         $bill            = $this->getBill($journal->bill);
 
-        if (null !== $foreignAmount && null !== $foreignCurrency) {
+        if (null !== $foreignAmount && null !== $source->foreignCurrency) {
             $foreignAmount = app('steam')->bcround($foreignAmount, $foreignCurrency['decimal_places'] ?? 0);
         }
 
@@ -529,12 +529,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function getAmount(string $type, string $amount): string
     {
-        $amount = app('steam')->positive($amount);
-        if (TransactionType::WITHDRAWAL !== $type) {
-            $amount = app('steam')->negative($amount);
-        }
-
-        return $amount;
+        return app('steam')->positive($amount);
     }
 
     /**
@@ -547,7 +542,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         $result = null;
         if (null !== $foreignAmount && '' !== $foreignAmount && bccomp('0', $foreignAmount) !== 0) {
-            $result = TransactionType::WITHDRAWAL !== $type ? app('steam')->negative($foreignAmount) : app('steam')->positive($foreignAmount);
+            $result = app('steam')->positive($foreignAmount);
         }
 
         return $result;

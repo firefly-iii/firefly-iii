@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Samle inn mer informasjon i <code>lagring/logger</code> mappen hvor du finner loggfiler. Hvis du kjører Docker, bruk <code>docker logger -f [container]</code>.',
-    'collect_info_more'       => 'Du kan lese mer om innsamling av feilinformasjon i <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
-    'github_help'             => 'Få hjelp på GitHub',
-    'github_instructions'     => 'Du er mer enn velkommen til å åpne et nytt problem <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">på GitHub</a></strong>.',
-    'use_search'              => 'Bruk søket!',
-    'include_info'            => 'Inkluder informasjonen <a href=":link">fra denne feilsøkingssiden</a>.',
-    'tell_more'               => 'Si oss mere enn det som sier Whoops!"',
-    'include_logs'            => 'Inkluder feillogger (se ovenfor).',
-    'what_did_you_do'         => 'Fortell oss hva du gjorde.',
-    'offline_header'          => 'Du er sannsynligvis frakoblet',
-    'offline_unreachable'     => 'Firefly III er ikke tilgjengelig. Enheten er frakoblet eller serveren fungerer ikke.',
-    'offline_github'          => 'Hvis du er sikker på at både enheten og serveren er online, åpne en sak på <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Samle inn mer informasjon i <code>lagring/logger</code> mappen hvor du finner loggfiler. Hvis du kjører Docker, bruk <code>docker logger -f [container]</code>.',
+    'collect_info_more'   => 'Du kan lese mer om innsamling av feilinformasjon i <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
+    'github_help'         => 'Få hjelp på GitHub',
+    'github_instructions' => 'Du er mer enn velkommen til å åpne et nytt problem <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">på GitHub</a></strong>.',
+    'use_search'          => 'Bruk søket!',
+    'include_info'        => 'Inkluder informasjonen <a href=":link">fra denne feilsøkingssiden</a>.',
+    'tell_more'           => 'Si oss mere enn det som sier Whoops!"',
+    'include_logs'        => 'Inkluder feillogger (se ovenfor).',
+    'what_did_you_do'     => 'Fortell oss hva du gjorde.',
+    'offline_header'      => 'Du er sannsynligvis frakoblet',
+    'offline_unreachable' => 'Firefly III er ikke tilgjengelig. Enheten er frakoblet eller serveren fungerer ikke.',
+    'offline_github'      => 'Hvis du er sikker på at både enheten og serveren er online, åpne en sak på <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

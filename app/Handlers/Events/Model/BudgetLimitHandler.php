@@ -182,6 +182,11 @@ class BudgetLimitHandler
         $end    = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
         $end    = app('navigation')->endOfPeriod($end, $viewRange);
         $budget = Budget::withTrashed()->find($budgetLimit->budget_id);
+        if(null === $budget) {
+            Log::warning('Budget is null, cannot continue.');
+            $budgetLimit->forceDelete();
+            return;
+        }
         $user   = $budget->user;
 
         // sanity check. It happens when the budget has been deleted so the original user is unknown.
