@@ -114,6 +114,7 @@ class AccountFactory
      */
     public function create(array $data): Account
     {
+        Log::debug('Now in AccountFactory::create()');
         $type         = $this->getAccountType($data);
         $data['iban'] = $this->filterIban($data['iban'] ?? null);
 
@@ -174,6 +175,7 @@ class AccountFactory
      */
     public function find(string $accountName, string $accountType): ?Account
     {
+        Log::debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
         $type = AccountType::whereType($accountType)->first();
 
         return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
