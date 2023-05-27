@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => '预算上限',
     'period'                                    => '区间',
     'balance'                                   => '余额',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => '总计',
     'summary'                                   => '概要',
     'average'                                   => '平均',

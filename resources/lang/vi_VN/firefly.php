@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Ngân sách',
     'period'                                    => 'Chu kỳ',
     'balance'                                   => 'Tiền còn lại',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Tổng',
     'summary'                                   => 'Tóm lược',
     'average'                                   => 'Trung bình',

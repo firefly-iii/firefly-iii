@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => '已列入預算',
     'period'                                    => '區間',
     'balance'                                   => '餘額',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => '總計',
     'summary'                                   => '概要',
     'average'                                   => '平均',

@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Preventivato',
     'period'                                    => 'Periodo',
     'balance'                                   => 'Saldo',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Somma',
     'summary'                                   => 'Riepilogo',
     'average'                                   => 'Media',

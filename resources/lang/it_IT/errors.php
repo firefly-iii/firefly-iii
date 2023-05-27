@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Raccogli ulteriori informazioni nella cartella <code>storage/log</code> dove troverai i file di log. Se stai eseguendo Docker, usa <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Puoi leggere maggiori informazioni sulla raccolta delle informazioni di errore in <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
-    'github_help'             => 'Ottieni aiuto su GitHub',
-    'github_instructions'     => 'Sei più che benvenuto ad aprire una nuova issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">su GitHub</a></strong>.',
-    'use_search'              => 'Usa la ricerca!',
-    'include_info'            => 'Includi le informazioni <a href=":link">da questa pagina di debug</a>.',
-    'tell_more'               => 'Dicci di più di "dice Oops!"',
-    'include_logs'            => 'Includi i log degli errori (vedi sopra).',
-    'what_did_you_do'         => 'Dicci cosa stavi facendo.',
-    'offline_header'          => 'Probabilmente sei offline',
-    'offline_unreachable'     => 'Firefly III non è raggiungibile. Il tuo dispositivo non è attualmente in rete o il server non funziona.',
-    'offline_github'          => 'Se sei sicuro che sia il tuo dispositivo che il server sono online, apri un ticket su <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Raccogli ulteriori informazioni nella cartella <code>storage/log</code> dove troverai i file di log. Se stai eseguendo Docker, usa <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Puoi leggere maggiori informazioni sulla raccolta delle informazioni di errore in <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
+    'github_help'         => 'Ottieni aiuto su GitHub',
+    'github_instructions' => 'Sei più che benvenuto ad aprire una nuova issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">su GitHub</a></strong>.',
+    'use_search'          => 'Usa la ricerca!',
+    'include_info'        => 'Includi le informazioni <a href=":link">da questa pagina di debug</a>.',
+    'tell_more'           => 'Dicci di più di "dice Oops!"',
+    'include_logs'        => 'Includi i log degli errori (vedi sopra).',
+    'what_did_you_do'     => 'Dicci cosa stavi facendo.',
+    'offline_header'      => 'Probabilmente sei offline',
+    'offline_unreachable' => 'Firefly III non è raggiungibile. Il tuo dispositivo non è attualmente in rete o il server non funziona.',
+    'offline_github'      => 'Se sei sicuro che sia il tuo dispositivo che il server sono online, apri un ticket su <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

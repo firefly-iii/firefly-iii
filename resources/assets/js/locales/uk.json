@@ -144,11 +144,11 @@
     },
     "list": {
         "active": "\u0427\u0438 \u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439?",
-        "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
-        "url": "URL",
-        "secret": "Secret"
+        "trigger": "\u0422\u0440\u0438\u0433\u0435\u0440",
+        "response": "\u0412\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u044c",
+        "delivery": "\u0414\u043e\u0441\u0442\u0430\u0432\u043a\u0430",
+        "url": "URL-\u0430\u0434\u0440\u0435\u0441\u0430",
+        "secret": "\u0421\u0435\u043a\u0440\u0435\u0442"
     },
     "config": {
         "html_language": "uk",

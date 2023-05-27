@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Запланировано в бюджете',
     'period'                                    => 'Период',
     'balance'                                   => 'Бaлaнc',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Сумма',
     'summary'                                   => 'Сводка',
     'average'                                   => 'Среднее значение',

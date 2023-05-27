@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Betervezett',
     'period'                                    => 'Időszak',
     'balance'                                   => 'Egyenleg',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Összesen',
     'summary'                                   => 'Összefoglaló',
     'average'                                   => 'Átlag',

@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Rozpočet',
     'period'                                    => 'Období',
     'balance'                                   => 'Zůstatek',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Součet',
     'summary'                                   => 'Souhrn',
     'average'                                   => 'Průměr',

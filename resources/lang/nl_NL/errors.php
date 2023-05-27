@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Verzamel meer informatie in de <code>storage/logs</code>-directory waar je de logbestanden kan vinden. Als Docker gebruikt, gebruik dan <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Je kan meer lezen over het verzamelen van foutinformatie in <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">de FAQ</a>.',
-    'github_help'             => 'Check voor hulp op GitHub',
-    'github_instructions'     => 'Je bent meer dan welkom om een nieuw issue te openen <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">op GitHub</a></strong>.',
-    'use_search'              => 'Gebruik de search!',
-    'include_info'            => 'Voeg de informatie toe van <a href=":link">deze debug pagina</a>.',
-    'tell_more'               => 'Meer info dan "hij is stuk" gaarne',
-    'include_logs'            => 'Inclusief foutlogs (zie hierboven).',
-    'what_did_you_do'         => 'Zet er bij wat je deed.',
-    'offline_header'          => 'Je bent waarschijnlijk offline',
-    'offline_unreachable'     => 'Firefly III is onbereikbaar. Je apparaat is momenteel offline of de server werkt niet.',
-    'offline_github'          => 'Als je zeker weet dat zowel je apparaat als de server online zijn, open dan een ticket op <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Verzamel meer informatie in de <code>storage/logs</code>-directory waar je de logbestanden kan vinden. Als Docker gebruikt, gebruik dan <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Je kan meer lezen over het verzamelen van foutinformatie in <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">de FAQ</a>.',
+    'github_help'         => 'Check voor hulp op GitHub',
+    'github_instructions' => 'Je bent meer dan welkom om een nieuw issue te openen <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">op GitHub</a></strong>.',
+    'use_search'          => 'Gebruik de search!',
+    'include_info'        => 'Voeg de informatie toe van <a href=":link">deze debug pagina</a>.',
+    'tell_more'           => 'Meer info dan "hij is stuk" gaarne',
+    'include_logs'        => 'Inclusief foutlogs (zie hierboven).',
+    'what_did_you_do'     => 'Zet er bij wat je deed.',
+    'offline_header'      => 'Je bent waarschijnlijk offline',
+    'offline_unreachable' => 'Firefly III is onbereikbaar. Je apparaat is momenteel offline of de server werkt niet.',
+    'offline_github'      => 'Als je zeker weet dat zowel je apparaat als de server online zijn, open dan een ticket op <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

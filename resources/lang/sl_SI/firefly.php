@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Proračun',
     'period'                                    => 'Obdobje',
     'balance'                                   => 'Stanje',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Vsota',
     'summary'                                   => 'Povzetek',
     'average'                                   => 'Povprečno',

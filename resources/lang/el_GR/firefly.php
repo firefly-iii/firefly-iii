@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Προϋπολογισμένο',
     'period'                                    => 'Περίοδος',
     'balance'                                   => 'Ισοζύγιο',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Σύνολο',
     'summary'                                   => 'Σύνοψη',
     'average'                                   => 'Μέσος όρος',

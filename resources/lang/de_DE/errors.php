@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Bitte sammeln Sie weitere Informationen im Verzeichnis <code>storage/logs</code> wo Sie Logdateien finden können. Wenn Sie Docker verwenden, verwenden Sie <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Lesen Sie mehr über das Sammeln von Fehlerinformationen in <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">der FAQ</a>.',
-    'github_help'             => 'Hilfe auf GitHub erhalten',
-    'github_instructions'     => 'Sie sind herzlich eingeladen, ein neues Ticket <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">auf GitHub</a></strong> zu öffnen.',
-    'use_search'              => 'Benutzen Sie die Suche!',
-    'include_info'            => 'Fügen Sie die Informationen <a href=":link">von dieser Debug-Seite</a> ein.',
-    'tell_more'               => 'Sagen Sie uns mehr als "Da steht Hoppla!"',
-    'include_logs'            => 'Fehlerprotokolle einschließen (siehe oben).',
-    'what_did_you_do'         => 'Teilen Sie uns mit, was Sie getan haben.',
-    'offline_header'          => 'Sie sind wahrscheinlich offline',
-    'offline_unreachable'     => 'Firefly III ist nicht erreichbar. Ihr Gerät ist offline oder der Server antwortet nicht.',
-    'offline_github'          => 'Falls Sie sicher sind, dass sowohl Ihr Gerät als auch der Server online sind, öffnen Sie bitte ein Ticket auf <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Bitte sammeln Sie weitere Informationen im Verzeichnis <code>storage/logs</code> wo Sie Logdateien finden können. Wenn Sie Docker verwenden, verwenden Sie <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Lesen Sie mehr über das Sammeln von Fehlerinformationen in <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">der FAQ</a>.',
+    'github_help'         => 'Hilfe auf GitHub erhalten',
+    'github_instructions' => 'Sie sind herzlich eingeladen, ein neues Ticket <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">auf GitHub</a></strong> zu öffnen.',
+    'use_search'          => 'Benutzen Sie die Suche!',
+    'include_info'        => 'Fügen Sie die Informationen <a href=":link">von dieser Debug-Seite</a> ein.',
+    'tell_more'           => 'Sagen Sie uns mehr als "Da steht Hoppla!"',
+    'include_logs'        => 'Fehlerprotokolle einschließen (siehe oben).',
+    'what_did_you_do'     => 'Teilen Sie uns mit, was Sie getan haben.',
+    'offline_header'      => 'Sie sind wahrscheinlich offline',
+    'offline_unreachable' => 'Firefly III ist nicht erreichbar. Ihr Gerät ist offline oder der Server antwortet nicht.',
+    'offline_github'      => 'Falls Sie sicher sind, dass sowohl Ihr Gerät als auch der Server online sind, öffnen Sie bitte ein Ticket auf <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

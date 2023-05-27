@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Silakan ambil informasi lebih lanjut di direktori<code>storage/logs</code> di mana Anda dapat menemukan file log. Jika Anda menggunakan Docker, gunakan <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Anda dapat membaca lebih lanjut dalam mengumpulkan informasi kesalahan di <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Pertanyaan yang sering diajukan</a>.',
-    'github_help'             => 'Dapatkan bantuan di GitHub',
-    'github_instructions'     => 'Anda sangat diperbolehkan untuk membuka isu baru <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">di GitHub</a></strong>.',
-    'use_search'              => 'Gunakan pencarian!',
-    'include_info'            => 'Sertakan informasi <a href=":link"> dari halaman debug ini</a>.',
-    'tell_more'               => 'Beri tahu kami selain "kata Whoops!"',
-    'include_logs'            => 'Sertakan log kesalahan (lihat di atas).',
-    'what_did_you_do'         => 'Beritahu kami apa yang anda lakukan.',
-    'offline_header'          => 'Anda sedang luring',
-    'offline_unreachable'     => 'Firefly III tidak dapat dijangkau. Perangkat anda kemungkinan luring atau server sedang tidak bekerja.',
-    'offline_github'          => 'Jika anda yakin perangkat anda dan server dalam keadaan daring, mohon buat tiket isu di <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Silakan ambil informasi lebih lanjut di direktori<code>storage/logs</code> di mana Anda dapat menemukan file log. Jika Anda menggunakan Docker, gunakan <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Anda dapat membaca lebih lanjut dalam mengumpulkan informasi kesalahan di <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Pertanyaan yang sering diajukan</a>.',
+    'github_help'         => 'Dapatkan bantuan di GitHub',
+    'github_instructions' => 'Anda sangat diperbolehkan untuk membuka isu baru <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">di GitHub</a></strong>.',
+    'use_search'          => 'Gunakan pencarian!',
+    'include_info'        => 'Sertakan informasi <a href=":link"> dari halaman debug ini</a>.',
+    'tell_more'           => 'Beri tahu kami selain "kata Whoops!"',
+    'include_logs'        => 'Sertakan log kesalahan (lihat di atas).',
+    'what_did_you_do'     => 'Beritahu kami apa yang anda lakukan.',
+    'offline_header'      => 'Anda sedang luring',
+    'offline_unreachable' => 'Firefly III tidak dapat dijangkau. Perangkat anda kemungkinan luring atau server sedang tidak bekerja.',
+    'offline_github'      => 'Jika anda yakin perangkat anda dan server dalam keadaan daring, mohon buat tiket isu di <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

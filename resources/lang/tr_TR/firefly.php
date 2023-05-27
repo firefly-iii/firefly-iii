@@ -2295,7 +2295,7 @@ return [
     'budgeted'                                  => 'Bütçelenen',
     'period'                                    => 'Dönem',
     'balance'                                   => 'Denge',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Toplam',
     'summary'                                   => 'Summary',
     'average'                                   => 'Ortalama',

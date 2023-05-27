@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'További információk gyűjthetők a <code>storage/logs</code> könyvtárban lévő napló fájlokból. Vagy ha Dockert használ, akkor a <code>docker logs -f [container]</code> paranccsal.',
-    'collect_info_more'       => 'Hiba információk gyűjtéséről tovább olvashatsz az <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>-ban.',
-    'github_help'             => 'Segítség kérése GitHub-on',
-    'github_instructions'     => 'Örömmel fogadjuk ha <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>-on hibajegyet nyitsz.',
-    'use_search'              => 'Használd a keresőt!',
-    'include_info'            => 'Add hozzá a <a href=":link">debug</a> oldalon található információkat.',
-    'tell_more'               => 'Részletesebben írd le, mint hogy "azt írja hoppá, hiba történt!"',
-    'include_logs'            => 'Hiba naplók hozzáadása (lásd fentebb).',
-    'what_did_you_do'         => 'Meséld el mit csináltál.',
-    'offline_header'          => 'You are probably offline',
-    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
-    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'További információk gyűjthetők a <code>storage/logs</code> könyvtárban lévő napló fájlokból. Vagy ha Dockert használ, akkor a <code>docker logs -f [container]</code> paranccsal.',
+    'collect_info_more'   => 'Hiba információk gyűjtéséről tovább olvashatsz az <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>-ban.',
+    'github_help'         => 'Segítség kérése GitHub-on',
+    'github_instructions' => 'Örömmel fogadjuk ha <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>-on hibajegyet nyitsz.',
+    'use_search'          => 'Használd a keresőt!',
+    'include_info'        => 'Add hozzá a <a href=":link">debug</a> oldalon található információkat.',
+    'tell_more'           => 'Részletesebben írd le, mint hogy "azt írja hoppá, hiba történt!"',
+    'include_logs'        => 'Hiba naplók hozzáadása (lásd fentebb).',
+    'what_did_you_do'     => 'Meséld el mit csináltál.',
+    'offline_header'      => 'You are probably offline',
+    'offline_unreachable' => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
+    'offline_github'      => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

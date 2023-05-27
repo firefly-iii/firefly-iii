@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Rozpočtované',
     'period'                                    => 'Obdobie',
     'balance'                                   => 'Zostatok',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Suma',
     'summary'                                   => 'Sumár',
     'average'                                   => 'Priemer',

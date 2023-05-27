@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Budjetoitu',
     'period'                                    => 'Jakso',
     'balance'                                   => 'Saldo',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Yhteensä',
     'summary'                                   => 'Yhteenveto',
     'average'                                   => 'Keskiarvo',

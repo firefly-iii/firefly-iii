@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Shromažďujte prosím další informace do adresáře <code>storage/logs</code>, kde najdete chybové záznamy. Pokud používáte Docker, použijte <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Více informací o shromažďování chyb si můžete přečíst v <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
-    'github_help'             => 'Získejte nápovědu na GitHub',
-    'github_instructions'     => 'Jste více než vítáni při otevření nových hlášení <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub</a></strong>.',
-    'use_search'              => 'Použijte vyhledávání!',
-    'include_info'            => 'Zahrnout informace <a href=":link">z této ladící stránky</a>.',
-    'tell_more'               => 'Řekněte nám více než "se objevilo Hups!"',
-    'include_logs'            => 'Zahrnout protokoly chyb (viz výše).',
-    'what_did_you_do'         => 'Řekněte nám, co jste dělali.',
-    'offline_header'          => 'Jste pravděpodobně offline',
-    'offline_unreachable'     => 'Firefly III je nedostupný. Vaše zařízení je momentálně offline nebo server nefunguje.',
-    'offline_github'          => 'Pokud jste si jisti, že jak vaše zařízení tak i server jsou dostupne online, vytvořte prosím ticket na <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'        => 'Shromažďujte prosím další informace do adresáře <code>storage/logs</code>, kde najdete chybové záznamy. Pokud používáte Docker, použijte <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Více informací o shromažďování chyb si můžete přečíst v <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
+    'github_help'         => 'Získejte nápovědu na GitHub',
+    'github_instructions' => 'Jste více než vítáni při otevření nových hlášení <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub</a></strong>.',
+    'use_search'          => 'Použijte vyhledávání!',
+    'include_info'        => 'Zahrnout informace <a href=":link">z této ladící stránky</a>.',
+    'tell_more'           => 'Řekněte nám více než "se objevilo Hups!"',
+    'include_logs'        => 'Zahrnout protokoly chyb (viz výše).',
+    'what_did_you_do'     => 'Řekněte nám, co jste dělali.',
+    'offline_header'      => 'Jste pravděpodobně offline',
+    'offline_unreachable' => 'Firefly III je nedostupný. Vaše zařízení je momentálně offline nebo server nefunguje.',
+    'offline_github'      => 'Pokud jste si jisti, že jak vaše zařízení tak i server jsou dostupne online, vytvořte prosím ticket na <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

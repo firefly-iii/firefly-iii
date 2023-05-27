@@ -2295,7 +2295,7 @@ return [
     'budgeted'                                  => 'Budgeterat',
     'period'                                    => 'Period',
     'balance'                                   => 'Saldo',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Summa',
     'summary'                                   => 'Översikt',
     'average'                                   => 'Medel',

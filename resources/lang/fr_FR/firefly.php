@@ -1706,7 +1706,7 @@ return [
     'auto_budget_none'                          => 'Pas de budget automatique',
     'auto_budget_reset'                         => 'Définir un montant fixe à chaque période',
     'auto_budget_rollover'                      => 'Ajouter un montant à chaque période',
-    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
+    'auto_budget_adjusted'                      => 'Ajouter un montant à chaque période et rectifier en fonction des dépenses excessives',
     'auto_budget_period_daily'                  => 'Quotidien',
     'auto_budget_period_weekly'                 => 'Hebdomadaire',
     'auto_budget_period_monthly'                => 'Mensuel',
@@ -1716,7 +1716,7 @@ return [
     'auto_budget_help'                          => 'Vous pouvez en savoir plus sur cette fonctionnalité dans l\'aide. Cliquez sur l\'icône (?) en haut à droite.',
     'auto_budget_reset_icon'                    => 'Ce budget sera défini périodiquement',
     'auto_budget_rollover_icon'                 => 'Le montant du budget augmentera périodiquement',
-    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
+    'auto_budget_adjusted_icon'                 => 'Le montant du budget augmentera périodiquement et corrigera les dépassements de budget',
     'remove_budgeted_amount'                    => 'Supprimer le montant budgétisé en :currency',
 
     // bills:
@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Budgétisé',
     'period'                                    => 'Période',
     'balance'                                   => 'Solde',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'Entrée + sortie de la période',
     'sum'                                       => 'Somme',
     'summary'                                   => 'Résumé',
     'average'                                   => 'Moyenne',

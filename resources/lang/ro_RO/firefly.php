@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Bugetat',
     'period'                                    => 'Perioada',
     'balance'                                   => 'Balantă',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Sumă',
     'summary'                                   => 'Rezumat',
     'average'                                   => 'In medie',

@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => '計上予算',
     'period'                                    => '期間',
     'balance'                                   => '収支',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => '合計',
     'summary'                                   => '要約',
     'average'                                   => '平均',

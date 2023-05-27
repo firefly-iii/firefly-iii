@@ -64,17 +64,17 @@ return [
  */
 
 
-    'collect_info'            => 'Kerää lisätietoja <code>storage/logs</code> hakemistosta, josta löydät lokitiedostoja. Jos käytät Dockeria, käytä komentoa <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'Voit lukea lisää virhetietojen keräämisestä <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>:sta.',
-    'github_help'             => 'Hanki apua GitHubista',
-    'github_instructions'     => 'Olet enemmän kuin tervetullut avaamaan uuden tiketin <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHubissa</a></strong>.',
-    'use_search'              => 'Käytä hakua!',
-    'include_info'            => 'Sisällytä tiedot <a href=":link">tältä vianjäljityssivulta</a>.',
-    'tell_more'               => 'Kerro meille enemmän kuin "se sanoo Whoops!"',
-    'include_logs'            => 'Sisällytä virhelokit (katso yllä).',
-    'what_did_you_do'         => 'Kerro meille mitä olit tekemässä.',
-    'offline_header'          => 'Olet luultavasti offline-tilassa',
-    'offline_unreachable'     => 'Firefly III ei ole tavoitettavissa. Laitteesi ei ole tällä hetkellä verkossa tai palvelin ei toimi.',
-    'offline_github'          => 'Jos olet varma, että sekä laitteesi että palvelin ovat verkossa, avaa tiketti <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>:issa.',
+    'collect_info'        => 'Kerää lisätietoja <code>storage/logs</code> hakemistosta, josta löydät lokitiedostoja. Jos käytät Dockeria, käytä komentoa <code>docker logs -f [container]</code>.',
+    'collect_info_more'   => 'Voit lukea lisää virhetietojen keräämisestä <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>:sta.',
+    'github_help'         => 'Hanki apua GitHubista',
+    'github_instructions' => 'Olet enemmän kuin tervetullut avaamaan uuden tiketin <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHubissa</a></strong>.',
+    'use_search'          => 'Käytä hakua!',
+    'include_info'        => 'Sisällytä tiedot <a href=":link">tältä vianjäljityssivulta</a>.',
+    'tell_more'           => 'Kerro meille enemmän kuin "se sanoo Whoops!"',
+    'include_logs'        => 'Sisällytä virhelokit (katso yllä).',
+    'what_did_you_do'     => 'Kerro meille mitä olit tekemässä.',
+    'offline_header'      => 'Olet luultavasti offline-tilassa',
+    'offline_unreachable' => 'Firefly III ei ole tavoitettavissa. Laitteesi ei ole tällä hetkellä verkossa tai palvelin ei toimi.',
+    'offline_github'      => 'Jos olet varma, että sekä laitteesi että palvelin ovat verkossa, avaa tiketti <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>:issa.',
 
 ];

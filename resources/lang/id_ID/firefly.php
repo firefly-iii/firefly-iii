@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Dianggarkan',
     'period'                                    => 'Periode',
     'balance'                                   => 'Keseimbangan',
-    'in_out_period' => 'In + out this period',
+    'in_out_period'                             => 'In + out this period',
     'sum'                                       => 'Jumlah',
     'summary'                                   => 'Summary',
     'average'                                   => 'Rata-rata',
