@@ -57,6 +57,7 @@ jobs:
             const workflows = [
               'cleanup.yml',
               'depsreview.yaml',
+              'closed-issues.yml',
               'laravel.yml',
               'lock.yml',
               'stale.yml'
