@@ -32,6 +32,6 @@ jobs:
           php artisan ide-helper:generate;
 
       - name: 'Qodana Scan'
-        uses: JetBrains/qodana-action@main
+        uses: JetBrains/qodana-action@v2023.1.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
