@@ -65,6 +65,54 @@ class Controller extends BaseController
     }
 
     /**
+     * @param  string  $key
+     * @param  LengthAwarePaginator  $paginator
+     * @param  AbstractTransformer  $transformer
+     *
+     * @return array
+     */
+    final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
+    {
+        $manager = new Manager();
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v2';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $objects = $paginator->getCollection();
+
+        // the transformer, at this point, needs to collect information that ALL items in the collection
+        // require, like meta data and stuff like that, and save it for later.
+        $transformer->collectMetaData($objects);
+
+        $resource = new FractalCollection($objects, $transformer, $key);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return $manager->createData($resource)->toArray();
+    }
+
+    /**
+     * Returns a JSON API object and returns it.
+     *
+     * @param  string  $key
+     * @param  Model  $object
+     * @param  AbstractTransformer  $transformer
+     *
+     * @return array
+     */
+    final protected function jsonApiObject(string $key, Model $object, AbstractTransformer $transformer): array
+    {
+        // create some objects:
+        $manager = new Manager();
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v2';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $transformer->collectMetaData(new Collection([$object]));
+
+        $resource = new Item($object, $transformer, $key);
+
+        return $manager->createData($resource)->toArray();
+    }
+
+    /**
      * TODO duplicate from V1 controller
      * Method to grab all parameters from the URL.
      *
@@ -130,50 +178,5 @@ class Controller extends BaseController
         //   return $this->getSortParameters($bag);
 
         return $bag;
-    }
-
-    /**
-     * @param  string  $key
-     * @param  LengthAwarePaginator  $paginator
-     * @param  AbstractTransformer  $transformer
-     * @return array
-     */
-    final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
-    {
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v2';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $objects = $paginator->getCollection();
-
-        // the transformer, at this point, needs to collect information that ALL items in the collection
-        // require, like meta data and stuff like that, and save it for later.
-        $transformer->collectMetaData($objects);
-
-        $resource = new FractalCollection($objects, $transformer, $key);
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return $manager->createData($resource)->toArray();
-    }
-
-    /**
-     * Returns a JSON API object and returns it.
-     *
-     * @param  string  $key
-     * @param  Model  $object
-     * @param  AbstractTransformer  $transformer
-     * @return array
-     */
-    final protected function jsonApiObject(string $key, Model $object, AbstractTransformer $transformer): array
-    {
-        // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v2';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $transformer->collectMetaData(new Collection([$object]));
-
-        $resource = new Item($object, $transformer, $key);
-        return $manager->createData($resource)->toArray();
     }
 }

@@ -40,11 +40,11 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
-                              ->where('active', true)
-                              ->orderBy('accounts.order', 'ASC')
-                              ->orderBy('accounts.account_type_id', 'ASC')
-                              ->orderBy('accounts.name', 'ASC')
-                              ->with(['accountType']);
+                                   ->where('active', true)
+                                   ->orderBy('accounts.order', 'ASC')
+                                   ->orderBy('accounts.account_type_id', 'ASC')
+                                   ->orderBy('accounts.name', 'ASC')
+                                   ->with(['accountType']);
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);

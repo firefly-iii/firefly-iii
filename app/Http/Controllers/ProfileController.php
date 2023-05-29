@@ -49,9 +49,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Laravel\Passport\ClientRepository;
-use Illuminate\Support\Facades\Log;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
@@ -96,6 +96,51 @@ class ProfileController extends Controller
         Log::debug(sprintf('ProfileController::__construct(). Login provider is "%s", authentication guard is "%s"', $loginProvider, $authGuard));
 
         $this->middleware(IsDemoUser::class)->except(['index']);
+    }
+
+    /**
+     * Change your email address.
+     *
+     * @param  Request  $request
+     *
+     * @return Factory|RedirectResponse|View
+     */
+    public function changeEmail(Request $request): Factory|RedirectResponse|View
+    {
+        if (!$this->internalAuth || !$this->internalIdentity) {
+            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
+
+            return redirect(route('profile.index'));
+        }
+
+        $title        = auth()->user()->email;
+        $email        = auth()->user()->email;
+        $subTitle     = (string)trans('firefly.change_your_email');
+        $subTitleIcon = 'fa-envelope';
+
+        return view('profile.change-email', compact('title', 'subTitle', 'subTitleIcon', 'email'));
+    }
+
+    /**
+     * Change your password.
+     *
+     * @param  Request  $request
+     *
+     * @return Factory|RedirectResponse|Redirector|View
+     */
+    public function changePassword(Request $request)
+    {
+        if (!$this->internalAuth || !$this->internalIdentity) {
+            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
+
+            return redirect(route('profile.index'));
+        }
+
+        $title        = auth()->user()->email;
+        $subTitle     = (string)trans('firefly.change_your_password');
+        $subTitleIcon = 'fa-key';
+
+        return view('profile.change-password', compact('title', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -402,29 +447,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * Change your email address.
-     *
-     * @param  Request  $request
-     *
-     * @return Factory|RedirectResponse|View
-     */
-    public function changeEmail(Request $request): Factory|RedirectResponse|View
-    {
-        if (!$this->internalAuth || !$this->internalIdentity) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        $title        = auth()->user()->email;
-        $email        = auth()->user()->email;
-        $subTitle     = (string)trans('firefly.change_your_email');
-        $subTitleIcon = 'fa-envelope';
-
-        return view('profile.change-email', compact('title', 'subTitle', 'subTitleIcon', 'email'));
-    }
-
-    /**
      * Submit change password form.
      *
      * @param  ProfileFormRequest  $request
@@ -457,28 +479,6 @@ class ProfileController extends Controller
         session()->flash('success', (string)trans('firefly.password_changed'));
 
         return redirect(route('profile.index'));
-    }
-
-    /**
-     * Change your password.
-     *
-     * @param  Request  $request
-     *
-     * @return Factory|RedirectResponse|Redirector|View
-     */
-    public function changePassword(Request $request)
-    {
-        if (!$this->internalAuth || !$this->internalIdentity) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        $title        = auth()->user()->email;
-        $subTitle     = (string)trans('firefly.change_your_password');
-        $subTitleIcon = 'fa-key';
-
-        return view('profile.change-password', compact('title', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -529,51 +529,6 @@ class ProfileController extends Controller
         session()->forget(['temp-mfa-secret', 'two-factor-secret', 'temp-mfa-codes', 'two-factor-codes']);
 
         return redirect(route('profile.index'));
-    }
-
-    /**
-     * TODO duplicate code.
-     *
-     * @param  string  $mfaCode
-     *
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function addToMFAHistory(string $mfaCode): void
-    {
-        /** @var array $mfaHistory */
-        $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
-        $entry        = [
-            'time' => time(),
-            'code' => $mfaCode,
-        ];
-        $mfaHistory[] = $entry;
-
-        app('preferences')->set('mfa_history', $mfaHistory);
-        $this->filterMFAHistory();
-    }
-
-    /**
-     * Remove old entries from the preferences array.
-     */
-    private function filterMFAHistory(): void
-    {
-        /** @var array $mfaHistory */
-        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
-        $newHistory = [];
-        $now        = time();
-        foreach ($mfaHistory as $entry) {
-            $time = $entry['time'];
-            $code = $entry['code'];
-            if ($now - $time <= 300) {
-                $newHistory[] = [
-                    'time' => $time,
-                    'code' => $code,
-                ];
-            }
-        }
-        app('preferences')->set('mfa_history', $newHistory);
     }
 
     /**
@@ -714,5 +669,50 @@ class ProfileController extends Controller
         session()->flash('success', (string)trans('firefly.login_with_old_email'));
 
         return redirect(route('login'));
+    }
+
+    /**
+     * TODO duplicate code.
+     *
+     * @param  string  $mfaCode
+     *
+     * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function addToMFAHistory(string $mfaCode): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
+        $entry        = [
+            'time' => time(),
+            'code' => $mfaCode,
+        ];
+        $mfaHistory[] = $entry;
+
+        app('preferences')->set('mfa_history', $mfaHistory);
+        $this->filterMFAHistory();
+    }
+
+    /**
+     * Remove old entries from the preferences array.
+     */
+    private function filterMFAHistory(): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
+        $newHistory = [];
+        $now        = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($now - $time <= 300) {
+                $newHistory[] = [
+                    'time' => $time,
+                    'code' => $code,
+                ];
+            }
+        }
+        app('preferences')->set('mfa_history', $newHistory);
     }
 }

@@ -26,8 +26,8 @@ namespace FireflyIII\Validation;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
-use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Trait GroupValidation.
@@ -36,6 +36,13 @@ use Illuminate\Support\Facades\Log;
  */
 trait GroupValidation
 {
+    /**
+     * @param  Validator  $validator
+     *
+     * @return array
+     */
+    abstract protected function getTransactionsArray(Validator $validator): array;
+
     /**
      * @param  Validator  $validator
      */
@@ -54,7 +61,7 @@ trait GroupValidation
         ];
         /** @var array $transaction */
         foreach ($transactions as $index => $transaction) {
-            if(!is_array($transaction)) {
+            if (!is_array($transaction)) {
                 throw new FireflyException('Invalid data submitted: transaction is not array.');
             }
             $hasAccountInfo = false;
@@ -78,13 +85,6 @@ trait GroupValidation
         }
         // only an issue if there is no transaction_journal_id
     }
-
-    /**
-     * @param  Validator  $validator
-     *
-     * @return array
-     */
-    abstract protected function getTransactionsArray(Validator $validator): array;
 
     /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no

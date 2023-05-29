@@ -41,7 +41,7 @@ class AuditProcessor
     public function __invoke(LogRecord $record): LogRecord
     {
         if (auth()->check()) {
-            $message =  sprintf(
+            $message = sprintf(
                 'AUDIT: %s (%s (%s) -> %s:%s)',
                 $record['message'],
                 app('request')->ip(),

@@ -54,35 +54,37 @@ class ForceDecimalSize extends Command
     protected $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
     protected $signature   = 'firefly-iii:force-decimal-size';
     private string $cast;
-    private array  $classes     = [
-        'accounts'                 => Account::class,
-        'auto_budgets'             => AutoBudget::class,
-        'available_budgets'        => AvailableBudget::class,
-        'bills'                    => Bill::class,
-        'budget_limits'            => BudgetLimit::class,
-        'piggy_bank_events'        => PiggyBankEvent::class,
-        'piggy_bank_repetitions'   => PiggyBankRepetition::class,
-        'piggy_banks'              => PiggyBank::class,
-        'recurrences_transactions' => RecurrenceTransaction::class,
-        'transactions'             => Transaction::class,
-    ];
+    private array  $classes
+                                = [
+            'accounts'                 => Account::class,
+            'auto_budgets'             => AutoBudget::class,
+            'available_budgets'        => AvailableBudget::class,
+            'bills'                    => Bill::class,
+            'budget_limits'            => BudgetLimit::class,
+            'piggy_bank_events'        => PiggyBankEvent::class,
+            'piggy_bank_repetitions'   => PiggyBankRepetition::class,
+            'piggy_banks'              => PiggyBank::class,
+            'recurrences_transactions' => RecurrenceTransaction::class,
+            'transactions'             => Transaction::class,
+        ];
 
     private string $operator;
     private string $regularExpression;
-    private array  $tables = [
-        'accounts'                 => ['virtual_balance'],
-        'auto_budgets'             => ['amount'],
-        'available_budgets'        => ['amount'],
-        'bills'                    => ['amount_min', 'amount_max'],
-        'budget_limits'            => ['amount'],
-        'currency_exchange_rates'  => ['rate', 'user_rate'],
-        'limit_repetitions'        => ['amount'],
-        'piggy_bank_events'        => ['amount'],
-        'piggy_bank_repetitions'   => ['currentamount'],
-        'piggy_banks'              => ['targetamount'],
-        'recurrences_transactions' => ['amount', 'foreign_amount'],
-        'transactions'             => ['amount', 'foreign_amount'],
-    ];
+    private array  $tables
+        = [
+            'accounts'                 => ['virtual_balance'],
+            'auto_budgets'             => ['amount'],
+            'available_budgets'        => ['amount'],
+            'bills'                    => ['amount_min', 'amount_max'],
+            'budget_limits'            => ['amount'],
+            'currency_exchange_rates'  => ['rate', 'user_rate'],
+            'limit_repetitions'        => ['amount'],
+            'piggy_bank_events'        => ['amount'],
+            'piggy_bank_repetitions'   => ['currentamount'],
+            'piggy_banks'              => ['targetamount'],
+            'recurrences_transactions' => ['amount', 'foreign_amount'],
+            'transactions'             => ['amount', 'foreign_amount'],
+        ];
 
     /**
      * Execute the console command.
@@ -102,6 +104,7 @@ class ForceDecimalSize extends Command
             $this->updateDecimals();
         }
         $this->line('Done!');
+
         return 0;
     }
 
@@ -110,6 +113,7 @@ class ForceDecimalSize extends Command
      *
      * @param  TransactionCurrency  $currency
      * @param  array  $fields
+     *
      * @return void
      */
     private function correctAccountAmounts(TransactionCurrency $currency, array $fields): void
@@ -134,6 +138,7 @@ class ForceDecimalSize extends Command
         $result = $query->get(['accounts.*']);
         if (0 === $result->count()) {
             $this->line(sprintf('Correct: All accounts in %s', $currency->code));
+
             return;
         }
         /** @var Account $account */
@@ -164,12 +169,14 @@ class ForceDecimalSize extends Command
             DB::connection()->getPdo()->sqliteCreateFunction('REGEXP', function ($pattern, $value) {
                 mb_regex_encoding('UTF-8');
                 $pattern = trim($pattern, '"');
-                return (false !== mb_ereg($pattern, (string) $value)) ? 1 : 0;
+
+                return (false !== mb_ereg($pattern, (string)$value)) ? 1 : 0;
             });
         }
 
         if (!in_array((string)config('database.default'), ['mysql', 'pgsql', 'sqlite'], true)) {
             $this->line(sprintf('Skip correcting amounts, does not support "%s"...', (string)config('database.default')));
+
             return;
         }
         $this->correctAmountsByCurrency();
@@ -195,6 +202,7 @@ class ForceDecimalSize extends Command
      * This method loops the available tables that may need fixing, and calls for the right method that can fix them.
      *
      * @param  TransactionCurrency  $currency
+     *
      * @return void
      * @throws FireflyException
      */
@@ -243,8 +251,10 @@ class ForceDecimalSize extends Command
 
     /**
      * This method fixes all auto budgets in currency $currency.
+     *
      * @param  TransactionCurrency  $currency
      * @param  string  $table
+     *
      * @return void
      */
     private function correctGeneric(TransactionCurrency $currency, string $table): void
@@ -271,6 +281,7 @@ class ForceDecimalSize extends Command
         $result = $query->get(['*']);
         if (0 === $result->count()) {
             $this->line(sprintf('Correct: All %s in %s', $table, $currency->code));
+
             return;
         }
         /** @var Model $item */
@@ -294,6 +305,7 @@ class ForceDecimalSize extends Command
      *
      * @param  TransactionCurrency  $currency
      * @param  array  $fields
+     *
      * @return void
      */
     private function correctPiggyAmounts(TransactionCurrency $currency, array $fields): void
@@ -320,6 +332,7 @@ class ForceDecimalSize extends Command
         $result = $query->get(['piggy_banks.*']);
         if (0 === $result->count()) {
             $this->line(sprintf('Correct: All piggy banks in %s', $currency->code));
+
             return;
         }
         /** @var PiggyBank $item */
@@ -340,8 +353,10 @@ class ForceDecimalSize extends Command
 
     /**
      * This method fixes all piggy bank events in currency $currency.
+     *
      * @param  TransactionCurrency  $currency
      * @param  array  $fields
+     *
      * @return void
      */
     private function correctPiggyEventAmounts(TransactionCurrency $currency, array $fields): void
@@ -369,6 +384,7 @@ class ForceDecimalSize extends Command
         $result = $query->get(['piggy_bank_events.*']);
         if (0 === $result->count()) {
             $this->line(sprintf('Correct: All piggy bank events in %s', $currency->code));
+
             return;
         }
         /** @var PiggyBankEvent $item */
@@ -392,6 +408,7 @@ class ForceDecimalSize extends Command
      *
      * @param  TransactionCurrency  $currency
      * @param  array  $fields
+     *
      * @return void
      */
     private function correctPiggyRepetitionAmounts(TransactionCurrency $currency, array $fields)
@@ -419,6 +436,7 @@ class ForceDecimalSize extends Command
         $result = $query->get(['piggy_bank_repetitions.*']);
         if (0 === $result->count()) {
             $this->line(sprintf('Correct: All piggy bank repetitions in %s', $currency->code));
+
             return;
         }
         /** @var PiggyBankRepetition $item */
@@ -441,6 +459,7 @@ class ForceDecimalSize extends Command
      * This method fixes all transactions in currency $currency.
      *
      * @param  TransactionCurrency  $currency
+     *
      * @return void
      */
     private function correctTransactionAmounts(TransactionCurrency $currency): void
@@ -482,6 +501,7 @@ class ForceDecimalSize extends Command
         $result = $query->get(['*']);
         if (0 === $result->count()) {
             $this->line(sprintf('Correct: All transactions in foreign currency %s', $currency->code));
+
             return;
         }
         /** @var Transaction $item */
@@ -534,6 +554,7 @@ class ForceDecimalSize extends Command
                 switch ($type) {
                     default:
                         $this->error(sprintf('Cannot handle database type "%s".', $type));
+
                         return;
                     case 'pgsql':
                         $query = sprintf('ALTER TABLE %s ALTER COLUMN %s TYPE DECIMAL(32,12);', $name, $field);

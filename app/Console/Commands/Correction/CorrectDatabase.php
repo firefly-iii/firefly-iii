@@ -56,6 +56,7 @@ class CorrectDatabase extends Command
         // if table does not exist, return false
         if (!Schema::hasTable('users')) {
             $this->error('No "users"-table, will not continue.');
+
             return 1;
         }
         $commands = [

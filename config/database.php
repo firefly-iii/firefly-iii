@@ -75,12 +75,12 @@ if (false !== $useSSL && null !== $useSSL) {
 return [
     'default'     => envNonEmpty('DB_CONNECTION', 'mysql'),
     'connections' => [
-        'sqlite'      => [
+        'sqlite' => [
             'driver'   => 'sqlite',
             'database' => envNonEmpty('DB_DATABASE', storage_path('database/database.sqlite')),
             'prefix'   => '',
         ],
-        'mysql'       => [
+        'mysql'  => [
             'driver'      => 'mysql',
             'host'        => envNonEmpty('DB_HOST', $host),
             'port'        => envNonEmpty('DB_PORT', $port),
@@ -95,7 +95,7 @@ return [
             'engine'      => 'InnoDB',
             'options'     => $mySqlSSLOptions,
         ],
-        'pgsql'       => [
+        'pgsql'  => [
             'driver'      => 'pgsql',
             'host'        => envNonEmpty('DB_HOST', $host),
             'port'        => envNonEmpty('DB_PORT', $port),
@@ -110,7 +110,7 @@ return [
             'sslkey'      => envNonEmpty('PGSQL_SSL_KEY'),
             'sslrootcert' => envNonEmpty('PGSQL_SSL_ROOT_CERT'),
         ],
-        'sqlsrv'      => [
+        'sqlsrv' => [
             'driver'   => 'sqlsrv',
             'host'     => env('DB_HOST', 'localhost'),
             'port'     => env('DB_PORT', '1433'),

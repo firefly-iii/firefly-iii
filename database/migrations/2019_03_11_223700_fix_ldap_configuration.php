@@ -41,7 +41,7 @@ class FixLdapConfiguration extends Migration
      */
     public function down(): void
     {
-        if(Schema::hasColumn('users', 'objectguid')) {
+        if (Schema::hasColumn('users', 'objectguid')) {
             try {
                 Schema::table(
                     'users',
@@ -67,7 +67,7 @@ class FixLdapConfiguration extends Migration
          * ADLdap2 appears to require the ability to store an objectguid for LDAP users
          * now. To support this, we add the column.
          */
-        if(!Schema::hasColumn('users', 'objectguid')) {
+        if (!Schema::hasColumn('users', 'objectguid')) {
             try {
                 Schema::table(
                     'users',

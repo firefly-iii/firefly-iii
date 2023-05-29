@@ -63,6 +63,7 @@ class FixIbans extends Command
 
     /**
      * @param  Collection  $accounts
+     *
      * @return void
      */
     private function countAndCorrectIbans(Collection $accounts): void
@@ -70,9 +71,9 @@ class FixIbans extends Command
         $set = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $userId = (int)$account->user_id;
+            $userId       = (int)$account->user_id;
             $set[$userId] = $set[$userId] ?? [];
-            $iban = (string)$account->iban;
+            $iban         = (string)$account->iban;
             if ('' === $iban) {
                 continue;
             }
@@ -83,7 +84,8 @@ class FixIbans extends Command
             if (array_key_exists($iban, $set[$userId])) {
                 // iban already in use! two exceptions exist:
                 if (
-                    !(AccountType::EXPENSE === $set[$userId][$iban] && AccountType::REVENUE === $type) && // allowed combination
+                    !(AccountType::EXPENSE === $set[$userId][$iban] && AccountType::REVENUE === $type)
+                    && // allowed combination
                     !(AccountType::REVENUE === $set[$userId][$iban] && AccountType::EXPENSE === $type) // also allowed combination.
                 ) {
                     $this->line(
@@ -108,6 +110,7 @@ class FixIbans extends Command
 
     /**
      * @param  Collection  $accounts
+     *
      * @return void
      */
     private function filterIbans(Collection $accounts): void

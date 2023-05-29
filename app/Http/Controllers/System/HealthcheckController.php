@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
-use FireflyIII\User;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\User;
 use Illuminate\Http\Response;
 
 /**

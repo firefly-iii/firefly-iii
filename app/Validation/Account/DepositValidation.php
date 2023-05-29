@@ -33,6 +33,21 @@ use Illuminate\Support\Facades\Log;
 trait DepositValidation
 {
     /**
+     * @param  array  $accountTypes
+     *
+     * @return bool
+     */
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    /**
+     * @param  array  $validTypes
+     * @param  array  $data
+     *
+     * @return Account|null
+     */
+    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
+
+    /**
      * @param  array  $array
      *
      * @return bool
@@ -71,28 +86,13 @@ trait DepositValidation
             if (null !== $search) {
                 Log::debug(sprintf('findExistingAccount() returned #%d ("%s"), so the result is true.', $search->id, $search->name));
                 $this->setDestination($search);
-                $result            = true;
+                $result = true;
             }
         }
         Log::debug(sprintf('validateDepositDestination will return %s', var_export($result, true)));
 
         return $result;
     }
-
-    /**
-     * @param  array  $accountTypes
-     *
-     * @return bool
-     */
-    abstract protected function canCreateTypes(array $accountTypes): bool;
-
-    /**
-     * @param  array  $validTypes
-     * @param  array  $data
-     *
-     * @return Account|null
-     */
-    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     /**
      * @param  array  $array
@@ -132,7 +132,7 @@ trait DepositValidation
             if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug('ID result is not null and seems valid, save as source account.');
                 $this->setSource($search);
-                $result       = true;
+                $result = true;
             }
         }
 
@@ -146,7 +146,7 @@ trait DepositValidation
             if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug('IBAN result is not null and seems valid, save as source account.');
                 $this->setSource($search);
-                $result       = true;
+                $result = true;
             }
         }
 
@@ -162,7 +162,7 @@ trait DepositValidation
             if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug('Number result is not null and seems valid, save as source account.');
                 $this->setSource($search);
-                $result       = true;
+                $result = true;
             }
         }
 

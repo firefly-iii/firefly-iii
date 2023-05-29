@@ -41,7 +41,7 @@ class ChangesForV477 extends Migration
      */
     public function down(): void
     {
-        if(Schema::hasColumn('budget_limits', 'transaction_currency_id')) {
+        if (Schema::hasColumn('budget_limits', 'transaction_currency_id')) {
             try {
                 Schema::table(
                     'budget_limits',
@@ -68,7 +68,7 @@ class ChangesForV477 extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasColumn('budget_limits', 'transaction_currency_id')) {
+        if (!Schema::hasColumn('budget_limits', 'transaction_currency_id')) {
             try {
                 Schema::table(
                     'budget_limits',

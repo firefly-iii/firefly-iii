@@ -41,7 +41,7 @@ class ChangesForV479 extends Migration
      */
     public function down(): void
     {
-        if(Schema::hasColumn('transaction_currencies', 'enabled')) {
+        if (Schema::hasColumn('transaction_currencies', 'enabled')) {
             try {
                 Schema::table(
                     'transaction_currencies',
@@ -63,7 +63,7 @@ class ChangesForV479 extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasColumn('transaction_currencies', 'enabled')) {
+        if (!Schema::hasColumn('transaction_currencies', 'enabled')) {
             try {
                 Schema::table(
                     'transaction_currencies',

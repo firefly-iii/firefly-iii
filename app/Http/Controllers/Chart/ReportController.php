@@ -37,8 +37,8 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class ReportController.

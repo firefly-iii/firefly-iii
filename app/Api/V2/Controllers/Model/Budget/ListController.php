@@ -41,6 +41,7 @@ class ListController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(BudgetRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -51,6 +52,7 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/listBudgets
      *
      * @param  Request  $request
+     *
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -61,6 +63,7 @@ class ListController extends Controller
 
         $paginator   = new LengthAwarePaginator($collection, $total, $this->pageSize, $this->parameters->get('page'));
         $transformer = new BudgetTransformer();
+
         return response()
             ->api($this->jsonApiList('budgets', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);

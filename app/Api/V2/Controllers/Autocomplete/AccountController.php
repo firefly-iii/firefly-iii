@@ -29,8 +29,8 @@ use FireflyIII\Api\V2\Request\Autocomplete\AutocompleteRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -43,9 +43,9 @@ class AccountController extends Controller
 {
     use AccountFilter;
 
-    private array                      $balanceTypes;
     private AdminAccountRepositoryInterface $adminRepository;
-    private AccountRepositoryInterface $repository;
+    private array                           $balanceTypes;
+    private AccountRepositoryInterface      $repository;
 
     /**
      * AccountController constructor.
@@ -56,8 +56,8 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(AccountRepositoryInterface::class);
+                $user                  = auth()->user();
+                $this->repository      = app(AccountRepositoryInterface::class);
                 $this->adminRepository = app(AdminAccountRepositoryInterface::class);
 
                 return $next($request);

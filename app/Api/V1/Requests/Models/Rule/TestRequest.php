@@ -52,11 +52,24 @@ class TestRequest extends FormRequest
     }
 
     /**
-     * @return int
+     * @return array
      */
-    private function getPage(): int
+    public function rules(): array
     {
-        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
+        return [
+            'start'      => 'date',
+            'end'        => 'date|after_or_equal:start',
+            'accounts'   => '',
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getAccounts(): array
+    {
+        return $this->get('accounts');
     }
 
     /**
@@ -70,23 +83,10 @@ class TestRequest extends FormRequest
     }
 
     /**
-     * @return array
+     * @return int
      */
-    private function getAccounts(): array
+    private function getPage(): int
     {
-        return $this->get('accounts');
-    }
-
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'start'      => 'date',
-            'end'        => 'date|after_or_equal:start',
-            'accounts'   => '',
-            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
-        ];
+        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
     }
 }

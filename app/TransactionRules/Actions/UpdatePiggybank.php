@@ -135,6 +135,49 @@ class UpdatePiggybank implements ActionInterface
     }
 
     /**
+     * @param  PiggyBank  $piggyBank
+     * @param  TransactionJournal  $journal
+     * @param  string  $amount
+     * @return void
+     */
+    private function addAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
+    {
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser($journal->user);
+
+        // how much can we add to the piggy bank?
+        if (0 !== bccomp($piggyBank->targetamount, '0')) {
+            $toAdd = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
+            Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
+
+            // update amount to fit:
+            $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
+            Log::debug(sprintf('Amount is now %s', $amount));
+        }
+        if (0 === bccomp($piggyBank->targetamount, '0')) {
+            Log::debug('Target amount is zero, can add anything.');
+        }
+
+
+        // if amount is zero, stop.
+        if (0 === bccomp('0', $amount)) {
+            app('log')->warning('Amount left is zero, stop.');
+
+            return;
+        }
+
+        // make sure we can add amount:
+        if (false === $repository->canAddAmount($piggyBank, $amount)) {
+            app('log')->warning(sprintf('Cannot add %s to piggy bank.', $amount));
+
+            return;
+        }
+        Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
+
+        $repository->addAmount($piggyBank, $amount, $journal);
+    }
+
+    /**
      * @param  User  $user
      *
      * @return PiggyBank|null
@@ -179,48 +222,5 @@ class UpdatePiggybank implements ActionInterface
         Log::debug(sprintf('Will now remove %s from piggy bank.', $amount));
 
         $repository->removeAmount($piggyBank, $amount, $journal);
-    }
-
-    /**
-     * @param  PiggyBank  $piggyBank
-     * @param  TransactionJournal  $journal
-     * @param  string  $amount
-     * @return void
-     */
-    private function addAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
-    {
-        $repository = app(PiggyBankRepositoryInterface::class);
-        $repository->setUser($journal->user);
-
-        // how much can we add to the piggy bank?
-        if (0 !== bccomp($piggyBank->targetamount, '0')) {
-            $toAdd = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
-            Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
-
-            // update amount to fit:
-            $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
-            Log::debug(sprintf('Amount is now %s', $amount));
-        }
-        if (0 === bccomp($piggyBank->targetamount, '0')) {
-            Log::debug('Target amount is zero, can add anything.');
-        }
-
-
-        // if amount is zero, stop.
-        if (0 === bccomp('0', $amount)) {
-            app('log')->warning('Amount left is zero, stop.');
-
-            return;
-        }
-
-        // make sure we can add amount:
-        if (false === $repository->canAddAmount($piggyBank, $amount)) {
-            app('log')->warning(sprintf('Cannot add %s to piggy bank.', $amount));
-
-            return;
-        }
-        Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
-
-        $repository->addAmount($piggyBank, $amount, $journal);
     }
 }

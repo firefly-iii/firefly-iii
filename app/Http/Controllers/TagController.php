@@ -34,8 +34,8 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -115,6 +115,24 @@ class TagController extends Controller
         $this->rememberPreviousUrl('tags.delete.url');
 
         return view('tags.delete', compact('tag', 'subTitle'));
+    }
+
+    /**
+     * Destroy a tag.
+     *
+     * @param  Tag  $tag
+     *
+     * @return RedirectResponse
+     */
+    public function destroy(Tag $tag): RedirectResponse
+    {
+        $tagName = $tag->tag;
+        $this->repository->destroy($tag);
+
+        session()->flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
+        app('preferences')->mark();
+
+        return redirect($this->getPreviousUrl('tags.delete.url'));
     }
 
     /**
@@ -203,24 +221,6 @@ class TagController extends Controller
         session()->flash('success', (string)trans_choice('firefly.deleted_x_tags', $count));
 
         return redirect(route('tags.index'));
-    }
-
-    /**
-     * Destroy a tag.
-     *
-     * @param  Tag  $tag
-     *
-     * @return RedirectResponse
-     */
-    public function destroy(Tag $tag): RedirectResponse
-    {
-        $tagName = $tag->tag;
-        $this->repository->destroy($tag);
-
-        session()->flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
-        app('preferences')->mark();
-
-        return redirect($this->getPreviousUrl('tags.delete.url'));
     }
 
     /**

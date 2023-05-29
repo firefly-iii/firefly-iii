@@ -49,25 +49,16 @@ use Illuminate\Support\Carbon;
  * @method static Builder|UserGroup whereId($value)
  * @method static Builder|UserGroup whereTitle($value)
  * @method static Builder|UserGroup whereUpdatedAt($value)
- * @property-read Collection<int, \FireflyIII\Models\Account> $accounts
+ * @property-read Collection<int, Account> $accounts
  * @property-read int|null $accounts_count
- * @property-read Collection<int, \FireflyIII\Models\Account> $accounts
- * @property-read Collection<int, \FireflyIII\Models\Account> $accounts
- * @property-read Collection<int, \FireflyIII\Models\Account> $accounts
+ * @property-read Collection<int, Account> $accounts
+ * @property-read Collection<int, Account> $accounts
+ * @property-read Collection<int, Account> $accounts
  * @mixin Eloquent
  */
 class UserGroup extends Model
 {
     protected $fillable = ['title'];
-
-    /**
-     *
-     * @return HasMany
-     */
-    public function groupMemberships(): HasMany
-    {
-        return $this->hasMany(GroupMembership::class);
-    }
 
     /**
      * Link to accounts.
@@ -77,5 +68,14 @@ class UserGroup extends Model
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
+    }
+
+    /**
+     *
+     * @return HasMany
+     */
+    public function groupMemberships(): HasMany
+    {
+        return $this->hasMany(GroupMembership::class);
     }
 }

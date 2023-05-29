@@ -116,18 +116,18 @@ class TransactionGroup extends Model
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * @return HasMany
      */
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

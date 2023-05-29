@@ -141,6 +141,126 @@ class ExportDataGenerator
     }
 
     /**
+     * @inheritDoc
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has(mixed $key): mixed
+    {
+        return null;
+    }
+
+    /**
+     * @param  Collection  $accounts
+     */
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    /**
+     * @param  Carbon  $end
+     */
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    /**
+     * @param  bool  $exportAccounts
+     */
+    public function setExportAccounts(bool $exportAccounts): void
+    {
+        $this->exportAccounts = $exportAccounts;
+    }
+
+    /**
+     * @param  bool  $exportBills
+     */
+    public function setExportBills(bool $exportBills): void
+    {
+        $this->exportBills = $exportBills;
+    }
+
+    /**
+     * @param  bool  $exportBudgets
+     */
+    public function setExportBudgets(bool $exportBudgets): void
+    {
+        $this->exportBudgets = $exportBudgets;
+    }
+
+    /**
+     * @param  bool  $exportCategories
+     */
+    public function setExportCategories(bool $exportCategories): void
+    {
+        $this->exportCategories = $exportCategories;
+    }
+
+    /**
+     * @param  bool  $exportPiggies
+     */
+    public function setExportPiggies(bool $exportPiggies): void
+    {
+        $this->exportPiggies = $exportPiggies;
+    }
+
+    /**
+     * @param  bool  $exportRecurring
+     */
+    public function setExportRecurring(bool $exportRecurring): void
+    {
+        $this->exportRecurring = $exportRecurring;
+    }
+
+    /**
+     * @param  bool  $exportRules
+     */
+    public function setExportRules(bool $exportRules): void
+    {
+        $this->exportRules = $exportRules;
+    }
+
+    /**
+     * @param  bool  $exportTags
+     */
+    public function setExportTags(bool $exportTags): void
+    {
+        $this->exportTags = $exportTags;
+    }
+
+    /**
+     * @param  bool  $exportTransactions
+     */
+    public function setExportTransactions(bool $exportTransactions): void
+    {
+        $this->exportTransactions = $exportTransactions;
+    }
+
+    /**
+     * @param  Carbon  $start
+     */
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @return string
      * @throws FireflyException
      */
@@ -215,14 +335,6 @@ class ExportDataGenerator
         }
 
         return $string;
-    }
-
-    /**
-     * @param  User  $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
     }
 
     /**
@@ -829,14 +941,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @inheritDoc
-     */
-    public function get(string $key, mixed $default = null): mixed
-    {
-        return null;
-    }
-
-    /**
      * @return string
      * @throws FireflyException
      */
@@ -980,14 +1084,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @param  Collection  $accounts
-     */
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
-    /**
      * @param  array  $tags
      *
      * @return string
@@ -1003,101 +1099,5 @@ class ExportDataGenerator
         }
 
         return implode(',', $smol);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function has(mixed $key): mixed
-    {
-        return null;
-    }
-
-    /**
-     * @param  Carbon  $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @param  bool  $exportAccounts
-     */
-    public function setExportAccounts(bool $exportAccounts): void
-    {
-        $this->exportAccounts = $exportAccounts;
-    }
-
-    /**
-     * @param  bool  $exportBills
-     */
-    public function setExportBills(bool $exportBills): void
-    {
-        $this->exportBills = $exportBills;
-    }
-
-    /**
-     * @param  bool  $exportBudgets
-     */
-    public function setExportBudgets(bool $exportBudgets): void
-    {
-        $this->exportBudgets = $exportBudgets;
-    }
-
-    /**
-     * @param  bool  $exportCategories
-     */
-    public function setExportCategories(bool $exportCategories): void
-    {
-        $this->exportCategories = $exportCategories;
-    }
-
-    /**
-     * @param  bool  $exportPiggies
-     */
-    public function setExportPiggies(bool $exportPiggies): void
-    {
-        $this->exportPiggies = $exportPiggies;
-    }
-
-    /**
-     * @param  bool  $exportRecurring
-     */
-    public function setExportRecurring(bool $exportRecurring): void
-    {
-        $this->exportRecurring = $exportRecurring;
-    }
-
-    /**
-     * @param  bool  $exportRules
-     */
-    public function setExportRules(bool $exportRules): void
-    {
-        $this->exportRules = $exportRules;
-    }
-
-    /**
-     * @param  bool  $exportTags
-     */
-    public function setExportTags(bool $exportTags): void
-    {
-        $this->exportTags = $exportTags;
-    }
-
-    /**
-     * @param  bool  $exportTransactions
-     */
-    public function setExportTransactions(bool $exportTransactions): void
-    {
-        $this->exportTransactions = $exportTransactions;
-    }
-
-    /**
-     * @param  Carbon  $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
     }
 }

@@ -145,6 +145,29 @@ class IndexController extends Controller
     }
 
     /**
+     * Set the order of a piggy bank.
+     *
+     * @param  Request  $request
+     * @param  PiggyBank  $piggyBank
+     *
+     * @return JsonResponse
+     */
+    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
+    {
+        $objectGroupTitle = (string)$request->get('objectGroupTitle');
+        $newOrder         = (int)$request->get('order');
+        $this->piggyRepos->setOrder($piggyBank, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->piggyRepos->removeObjectGroup($piggyBank);
+        }
+
+        return response()->json(['data' => 'OK']);
+    }
+
+    /**
      * @param  array  $piggyBanks
      *
      * @return array
@@ -182,28 +205,5 @@ class IndexController extends Controller
         }
 
         return $piggyBanks;
-    }
-
-    /**
-     * Set the order of a piggy bank.
-     *
-     * @param  Request  $request
-     * @param  PiggyBank  $piggyBank
-     *
-     * @return JsonResponse
-     */
-    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
-    {
-        $objectGroupTitle = (string)$request->get('objectGroupTitle');
-        $newOrder         = (int)$request->get('order');
-        $this->piggyRepos->setOrder($piggyBank, $newOrder);
-        if ('' !== $objectGroupTitle) {
-            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
-        }
-        if ('' === $objectGroupTitle) {
-            $this->piggyRepos->removeObjectGroup($piggyBank);
-        }
-
-        return response()->json(['data' => 'OK']);
     }
 }

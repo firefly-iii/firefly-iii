@@ -60,6 +60,7 @@ class AutocompleteRequest extends FormRequest
         $array = array_diff($array, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION]);
         /** @var User $user */
         $user = auth()->user();
+
         return [
             'types'             => $array,
             'query'             => $this->convertString('query'),

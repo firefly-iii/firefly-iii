@@ -91,16 +91,6 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
@@ -150,6 +140,16 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         }
 
         return $array;
+    }
+
+    /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
     }
 
     /**

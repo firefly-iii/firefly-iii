@@ -93,50 +93,6 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param  string  $attribute
-     *
-     * @return string
-     */
-    private function parseAttribute(string $attribute): string
-    {
-        $parts = explode('.', $attribute);
-        if (1 === count($parts)) {
-            return $attribute;
-        }
-        if (3 === count($parts)) {
-            return $parts[2];
-        }
-
-        return $attribute;
-    }
-
-    /**
-     * @param  int  $value
-     *
-     * @return bool
-     */
-    private function validatePiggyBankId(int $value): bool
-    {
-        $count = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                          ->where('piggy_banks.id', '=', $value)
-                          ->where('accounts.user_id', '=', auth()->user()->id)->count();
-
-        return 1 === $count;
-    }
-
-    /**
-     * @param  string  $value
-     *
-     * @return bool
-     */
-    private function validatePiggyBankName(string $value): bool
-    {
-        $count = $this->countField(PiggyBank::class, 'name', $value);
-
-        return 1 === $count;
-    }
-
-    /**
      * @param  string  $class
      * @param  string  $field
      * @param  string  $value
@@ -170,6 +126,40 @@ class BelongsUser implements Rule
     }
 
     /**
+     * @param  string  $attribute
+     *
+     * @return string
+     */
+    private function parseAttribute(string $attribute): string
+    {
+        $parts = explode('.', $attribute);
+        if (1 === count($parts)) {
+            return $attribute;
+        }
+        if (3 === count($parts)) {
+            return $parts[2];
+        }
+
+        return $attribute;
+    }
+
+    /**
+     * @param  int  $value
+     *
+     * @return bool
+     */
+    private function validateAccountId(int $value): bool
+    {
+        if (0 === $value) {
+            // its ok to submit 0. other checks will fail.
+            return true;
+        }
+        $count = Account::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
+
+        return 1 === $count;
+    }
+
+    /**
      * @param  int  $value
      *
      * @return bool
@@ -180,21 +170,6 @@ class BelongsUser implements Rule
             return true;
         }
         $count = Bill::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
-
-        return 1 === $count;
-    }
-
-    /**
-     * @param  int  $value
-     *
-     * @return bool
-     */
-    private function validateJournalId(int $value): bool
-    {
-        if (0 === $value) {
-            return true;
-        }
-        $count = TransactionJournal::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
 
         return 1 === $count;
     }
@@ -228,18 +203,6 @@ class BelongsUser implements Rule
     }
 
     /**
-     * @param  int  $value
-     *
-     * @return bool
-     */
-    private function validateCategoryId(int $value): bool
-    {
-        $count = Category::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
-
-        return 1 === $count;
-    }
-
-    /**
      * @param  string  $value
      *
      * @return bool
@@ -256,13 +219,50 @@ class BelongsUser implements Rule
      *
      * @return bool
      */
-    private function validateAccountId(int $value): bool
+    private function validateCategoryId(int $value): bool
+    {
+        $count = Category::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
+
+        return 1 === $count;
+    }
+
+    /**
+     * @param  int  $value
+     *
+     * @return bool
+     */
+    private function validateJournalId(int $value): bool
     {
         if (0 === $value) {
-            // its ok to submit 0. other checks will fail.
             return true;
         }
-        $count = Account::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
+        $count = TransactionJournal::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
+
+        return 1 === $count;
+    }
+
+    /**
+     * @param  int  $value
+     *
+     * @return bool
+     */
+    private function validatePiggyBankId(int $value): bool
+    {
+        $count = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                          ->where('piggy_banks.id', '=', $value)
+                          ->where('accounts.user_id', '=', auth()->user()->id)->count();
+
+        return 1 === $count;
+    }
+
+    /**
+     * @param  string  $value
+     *
+     * @return bool
+     */
+    private function validatePiggyBankName(string $value): bool
+    {
+        $count = $this->countField(PiggyBank::class, 'name', $value);
 
         return 1 === $count;
     }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Update;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;

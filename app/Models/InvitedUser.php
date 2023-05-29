@@ -67,14 +67,6 @@ class InvitedUser extends Model
     protected $fillable = ['user_id', 'email', 'invite_code', 'expires', 'redeemed'];
 
     /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @param  string  $value
@@ -93,5 +85,13 @@ class InvitedUser extends Model
             }
         }
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

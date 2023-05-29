@@ -40,8 +40,8 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Trait RecurringTransactionTrait
@@ -180,6 +180,32 @@ trait RecurringTransactionTrait
     }
 
     /**
+     * @param  Recurrence  $recurrence
+     *
+
+     */
+    protected function deleteRepetitions(Recurrence $recurrence): void
+    {
+        $recurrence->recurrenceRepetitions()->delete();
+    }
+
+    /**
+     * @param  Recurrence  $recurrence
+     *
+
+     */
+    protected function deleteTransactions(Recurrence $recurrence): void
+    {
+        Log::debug('deleteTransactions()');
+        /** @var RecurrenceTransaction $transaction */
+        foreach ($recurrence->recurrenceTransactions as $transaction) {
+            $transaction->recurrenceTransactionMeta()->delete();
+
+            $transaction->delete();
+        }
+    }
+
+    /**
      * @param  array  $expectedTypes
      * @param  int|null  $accountId
      * @param  string|null  $accountName
@@ -232,81 +258,6 @@ trait RecurringTransactionTrait
 
     /**
      * @param  RecurrenceTransaction  $transaction
-     * @param  int  $budgetId
-     */
-    private function setBudget(RecurrenceTransaction $transaction, int $budgetId): void
-    {
-        $budgetFactory = app(BudgetFactory::class);
-        $budgetFactory->setUser($transaction->recurrence->user);
-        $budget = $budgetFactory->find($budgetId, null);
-        if (null === $budget) {
-            return;
-        }
-
-        $meta = $transaction->recurrenceTransactionMeta()->where('name', 'budget_id')->first();
-        if (null === $meta) {
-            $meta        = new RecurrenceTransactionMeta();
-            $meta->rt_id = $transaction->id;
-            $meta->name  = 'budget_id';
-        }
-        $meta->value = $budget->id;
-        $meta->save();
-    }
-
-    /**
-     * @param  RecurrenceTransaction  $transaction
-     * @param  int  $billId
-     */
-    private function setBill(RecurrenceTransaction $transaction, int $billId): void
-    {
-        $billFactory = app(BillFactory::class);
-        $billFactory->setUser($transaction->recurrence->user);
-        $bill = $billFactory->find($billId, null);
-        if (null === $bill) {
-            return;
-        }
-
-        $meta = $transaction->recurrenceTransactionMeta()->where('name', 'bill_id')->first();
-        if (null === $meta) {
-            $meta        = new RecurrenceTransactionMeta();
-            $meta->rt_id = $transaction->id;
-            $meta->name  = 'bill_id';
-        }
-        $meta->value = $bill->id;
-        $meta->save();
-    }
-
-    /**
-     * @param  RecurrenceTransaction  $transaction
-     * @param  int  $categoryId
-     *
-     * @throws FireflyException
-     */
-    private function setCategory(RecurrenceTransaction $transaction, int $categoryId): void
-    {
-        $categoryFactory = app(CategoryFactory::class);
-        $categoryFactory->setUser($transaction->recurrence->user);
-        $category = $categoryFactory->findOrCreate($categoryId, null);
-        if (null === $category) {
-            // remove category:
-            $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->delete();
-            $transaction->recurrenceTransactionMeta()->where('name', 'category_name')->delete();
-
-            return;
-        }
-        $transaction->recurrenceTransactionMeta()->where('name', 'category_name')->delete();
-        $meta = $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->first();
-        if (null === $meta) {
-            $meta        = new RecurrenceTransactionMeta();
-            $meta->rt_id = $transaction->id;
-            $meta->name  = 'category_id';
-        }
-        $meta->value = $category->id;
-        $meta->save();
-    }
-
-    /**
-     * @param  RecurrenceTransaction  $transaction
      * @param  int  $piggyId
      */
     protected function updatePiggyBank(RecurrenceTransaction $transaction, int $piggyId): void
@@ -352,28 +303,77 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param  Recurrence  $recurrence
-     *
-
+     * @param  RecurrenceTransaction  $transaction
+     * @param  int  $billId
      */
-    protected function deleteRepetitions(Recurrence $recurrence): void
+    private function setBill(RecurrenceTransaction $transaction, int $billId): void
     {
-        $recurrence->recurrenceRepetitions()->delete();
+        $billFactory = app(BillFactory::class);
+        $billFactory->setUser($transaction->recurrence->user);
+        $bill = $billFactory->find($billId, null);
+        if (null === $bill) {
+            return;
+        }
+
+        $meta = $transaction->recurrenceTransactionMeta()->where('name', 'bill_id')->first();
+        if (null === $meta) {
+            $meta        = new RecurrenceTransactionMeta();
+            $meta->rt_id = $transaction->id;
+            $meta->name  = 'bill_id';
+        }
+        $meta->value = $bill->id;
+        $meta->save();
     }
 
     /**
-     * @param  Recurrence  $recurrence
-     *
-
+     * @param  RecurrenceTransaction  $transaction
+     * @param  int  $budgetId
      */
-    protected function deleteTransactions(Recurrence $recurrence): void
+    private function setBudget(RecurrenceTransaction $transaction, int $budgetId): void
     {
-        Log::debug('deleteTransactions()');
-        /** @var RecurrenceTransaction $transaction */
-        foreach ($recurrence->recurrenceTransactions as $transaction) {
-            $transaction->recurrenceTransactionMeta()->delete();
-
-            $transaction->delete();
+        $budgetFactory = app(BudgetFactory::class);
+        $budgetFactory->setUser($transaction->recurrence->user);
+        $budget = $budgetFactory->find($budgetId, null);
+        if (null === $budget) {
+            return;
         }
+
+        $meta = $transaction->recurrenceTransactionMeta()->where('name', 'budget_id')->first();
+        if (null === $meta) {
+            $meta        = new RecurrenceTransactionMeta();
+            $meta->rt_id = $transaction->id;
+            $meta->name  = 'budget_id';
+        }
+        $meta->value = $budget->id;
+        $meta->save();
+    }
+
+    /**
+     * @param  RecurrenceTransaction  $transaction
+     * @param  int  $categoryId
+     *
+     * @throws FireflyException
+     */
+    private function setCategory(RecurrenceTransaction $transaction, int $categoryId): void
+    {
+        $categoryFactory = app(CategoryFactory::class);
+        $categoryFactory->setUser($transaction->recurrence->user);
+        $category = $categoryFactory->findOrCreate($categoryId, null);
+        if (null === $category) {
+            // remove category:
+            $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->delete();
+            $transaction->recurrenceTransactionMeta()->where('name', 'category_name')->delete();
+
+            return;
+        }
+        $transaction->recurrenceTransactionMeta()->where('name', 'category_name')->delete();
+        $meta = $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->first();
+        if (null === $meta) {
+            $meta        = new RecurrenceTransactionMeta();
+            $meta->rt_id = $transaction->id;
+            $meta->name  = 'category_id';
+        }
+        $meta->value = $category->id;
+        $meta->save();
     }
 }

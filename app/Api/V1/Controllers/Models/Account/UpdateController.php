@@ -29,8 +29,8 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
-use League\Fractal\Resource\Item;
 use Illuminate\Support\Facades\Log;
+use League\Fractal\Resource\Item;
 use Preferences;
 
 /**

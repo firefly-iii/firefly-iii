@@ -71,6 +71,18 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Find a specific journal.
+     *
+     * @param  int  $journalId
+     *
+     * @return TransactionJournal|null
+     */
+    public function find(int $journalId): ?TransactionJournal
+    {
+        return $this->user->transactionJournals()->find($journalId);
+    }
+
+    /**
      * @inheritDoc
      */
     public function findByType(array $types): Collection
@@ -219,18 +231,6 @@ class JournalRepository implements JournalRepositoryInterface
         /** @var TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
         $journal?->transactions()->update(['reconciled' => true]);
-    }
-
-    /**
-     * Find a specific journal.
-     *
-     * @param  int  $journalId
-     *
-     * @return TransactionJournal|null
-     */
-    public function find(int $journalId): ?TransactionJournal
-    {
-        return $this->user->transactionJournals()->find($journalId);
     }
 
     /**

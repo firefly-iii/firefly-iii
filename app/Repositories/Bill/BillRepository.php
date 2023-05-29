@@ -43,8 +43,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 use Storage;
 
 /**
@@ -109,107 +109,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * @return Collection
-     */
-    public function getActiveBills(): Collection
-    {
-        return $this->user->bills()
-                          ->where('active', true)
-                          ->orderBy('bills.name', 'ASC')
-                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
-    }
-
-    /**
-     * Between start and end, tells you on which date(s) the bill is expected to hit.
-     *
-     * @param  Bill  $bill
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return Collection
-     */
-    public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
-    {
-        $set          = new Collection();
-        $currentStart = clone $start;
-        //Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
-        //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
-
-        while ($currentStart <= $end) {
-            //Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
-            $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
-            //Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
-            if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
-                break;
-            }
-            $set->push(clone $nextExpectedMatch);
-            //Log::debug(sprintf('Now %d dates in set.', $set->count()));
-            $nextExpectedMatch->addDay();
-
-            //Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
-
-            $currentStart = clone $nextExpectedMatch;
-        }
-
-        return $set;
-    }
-
-    /**
-     * Given a bill and a date, this method will tell you at which moment this bill expects its next
-     * transaction. Whether or not it is there already, is not relevant.
-     *
-     * @param  Bill  $bill
-     * @param  Carbon  $date
-     *
-     * @return Carbon
-     */
-    public function nextDateMatch(Bill $bill, Carbon $date): Carbon
-    {
-        $cache = new CacheProperties();
-        $cache->addProperty($bill->id);
-        $cache->addProperty('nextDateMatch');
-        $cache->addProperty($date);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-        // find the most recent date for this bill NOT in the future. Cache this date:
-        $start = clone $bill->date;
-
-        while ($start < $date) {
-            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-        }
-        $cache->store($start);
-
-        return $start;
-    }
-
-    /**
-     * @param  array  $data
-     *
-     * @return Bill
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    public function store(array $data): Bill
-    {
-        /** @var BillFactory $factory */
-        $factory = app(BillFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->create($data);
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
      * Correct order of piggies in case of issues.
      */
     public function correctOrder(): void
@@ -250,6 +149,18 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Find a bill by ID.
+     *
+     * @param  int  $billId
+     *
+     * @return Bill|null
+     */
+    public function find(int $billId): ?Bill
+    {
+        return $this->user->bills()->find($billId);
+    }
+
+    /**
      * Find bill by parameters.
      *
      * @param  int|null  $billId
@@ -281,18 +192,6 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
-     * Find a bill by ID.
-     *
-     * @param  int  $billId
-     *
-     * @return Bill|null
-     */
-    public function find(int $billId): ?Bill
-    {
-        return $this->user->bills()->find($billId);
-    }
-
-    /**
      * Find a bill by name.
      *
      * @param  string  $name
@@ -302,6 +201,17 @@ class BillRepository implements BillRepositoryInterface
     public function findByName(string $name): ?Bill
     {
         return $this->user->bills()->where('name', $name)->first(['bills.*']);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getActiveBills(): Collection
+    {
+        return $this->user->bills()
+                          ->where('active', true)
+                          ->orderBy('bills.name', 'ASC')
+                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
     }
 
     /**
@@ -623,11 +533,46 @@ class BillRepository implements BillRepositoryInterface
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
                         [
-                            'transaction_journals.id',
-                            'transaction_journals.date',
-                            'transaction_journals.transaction_group_id',
-                        ]
+                    'transaction_journals.id',
+                    'transaction_journals.date',
+                    'transaction_journals.transaction_group_id',
+                ]
                     );
+    }
+
+    /**
+     * Between start and end, tells you on which date(s) the bill is expected to hit.
+     *
+     * @param  Bill  $bill
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
+    {
+        $set          = new Collection();
+        $currentStart = clone $start;
+        //Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+        //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+
+        while ($currentStart <= $end) {
+            //Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
+            $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
+            //Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
+                break;
+            }
+            $set->push(clone $nextExpectedMatch);
+            //Log::debug(sprintf('Now %d dates in set.', $set->count()));
+            $nextExpectedMatch->addDay();
+
+            //Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+
+            $currentStart = clone $nextExpectedMatch;
+        }
+
+        return $set;
     }
 
     /**
@@ -748,6 +693,35 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Given a bill and a date, this method will tell you at which moment this bill expects its next
+     * transaction. Whether or not it is there already, is not relevant.
+     *
+     * @param  Bill  $bill
+     * @param  Carbon  $date
+     *
+     * @return Carbon
+     */
+    public function nextDateMatch(Bill $bill, Carbon $date): Carbon
+    {
+        $cache = new CacheProperties();
+        $cache->addProperty($bill->id);
+        $cache->addProperty('nextDateMatch');
+        $cache->addProperty($date);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        // find the most recent date for this bill NOT in the future. Cache this date:
+        $start = clone $bill->date;
+
+        while ($start < $date) {
+            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+        }
+        $cache->store($start);
+
+        return $start;
+    }
+
+    /**
      * Given the date in $date, this method will return a moment in the future where the bill is expected to be paid.
      *
      * @param  Bill  $bill
@@ -837,6 +811,32 @@ class BillRepository implements BillRepositoryInterface
     {
         $bill->order = $order;
         $bill->save();
+    }
+
+    /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
+     * @param  array  $data
+     *
+     * @return Bill
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    public function store(array $data): Bill
+    {
+        /** @var BillFactory $factory */
+        $factory = app(BillFactory::class);
+        $factory->setUser($this->user);
+
+        return $factory->create($data);
     }
 
     /**

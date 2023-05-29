@@ -165,6 +165,7 @@ class DecryptDatabase extends Command
     /**
      * @param  string  $table
      * @param  array  $fields
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

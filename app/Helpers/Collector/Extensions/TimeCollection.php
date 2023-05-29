@@ -103,18 +103,6 @@ trait TimeCollection
     }
 
     /**
-     * @inheritDoc
-     */
-    public function withMetaDate(string $field): GroupCollectorInterface
-    {
-        $this->joinMetaDataTables();
-        $this->query->where('journal_meta.name', '=', $field);
-        $this->query->whereNotNull('journal_meta.data');
-
-        return $this;
-    }
-
-    /**
      * @param  Carbon  $start
      * @param  Carbon  $end
      * @param  string  $field
@@ -794,6 +782,18 @@ trait TimeCollection
         $before = $date->format('Y-m-d 23:59:59');
         $this->query->where('transaction_journals.updated_at', '>=', $after);
         $this->query->where('transaction_journals.updated_at', '<=', $before);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withMetaDate(string $field): GroupCollectorInterface
+    {
+        $this->joinMetaDataTables();
+        $this->query->where('journal_meta.name', '=', $field);
+        $this->query->whereNotNull('journal_meta.data');
 
         return $this;
     }

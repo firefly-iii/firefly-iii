@@ -226,23 +226,6 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * @param  Throwable  $e
-     *
-     * @return bool
-     */
-    private function shouldntReportLocal(Throwable $e): bool
-    {
-        return !is_null(
-            Arr::first(
-                $this->dontReport,
-                function ($type) use ($e) {
-                    return $e instanceof $type;
-                }
-            )
-        );
-    }
-
-    /**
      * Convert a validation exception into a response.
      *
      * @param  Request  $request
@@ -279,5 +262,22 @@ class Handler extends ExceptionHandler
         $safeHost     = parse_url($safe, PHP_URL_HOST);
 
         return null !== $previousHost && $previousHost === $safeHost ? $previous : $safe;
+    }
+
+    /**
+     * @param  Throwable  $e
+     *
+     * @return bool
+     */
+    private function shouldntReportLocal(Throwable $e): bool
+    {
+        return !is_null(
+            Arr::first(
+                $this->dontReport,
+                function ($type) use ($e) {
+                    return $e instanceof $type;
+                }
+            )
+        );
     }
 }

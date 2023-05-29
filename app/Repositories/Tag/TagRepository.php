@@ -84,14 +84,6 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return $this->user->tags()->orderBy('tag', 'ASC')->get();
-    }
-
-    /**
      * @param  Tag  $tag
      * @param  Carbon  $start
      * @param  Carbon  $end
@@ -107,16 +99,6 @@ class TagRepository implements TagRepositoryInterface
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setTag($tag);
 
         return $collector->getExtractedJournals();
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
     }
 
     /**
@@ -152,6 +134,14 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->tags()->orderBy('tag', 'ASC')->get();
+    }
+
+    /**
      * @inheritDoc
      */
     public function getAttachments(Tag $tag): Collection
@@ -169,6 +159,15 @@ class TagRepository implements TagRepositoryInterface
                 $attachment->notes_text  = null === $note ? '' : $note->text;
             }
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocation(Tag $tag): ?Location
+    {
+        /** @var Location|null */
+        return $tag->locations()->first();
     }
 
     /**
@@ -289,6 +288,16 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return $tags->take($limit)->get('tags.*');
+    }
+
+    /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
     }
 
     /**
@@ -445,14 +454,5 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return $tag;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getLocation(Tag $tag): ?Location
-    {
-        /** @var Location|null */
-        return $tag->locations()->first();
     }
 }

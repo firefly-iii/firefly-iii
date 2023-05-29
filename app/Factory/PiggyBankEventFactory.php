@@ -25,7 +25,6 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 

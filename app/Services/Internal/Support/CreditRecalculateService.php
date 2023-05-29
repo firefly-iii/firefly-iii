@@ -80,20 +80,19 @@ class CreditRecalculateService
     }
 
     /**
-     *
+     * @param  Account|null  $account
      */
-    private function processGroup(): void
+    public function setAccount(?Account $account): void
     {
-        /** @var TransactionJournal $journal */
-        foreach ($this->group->transactionJournals as $journal) {
-            try {
-                $this->findByJournal($journal);
-            } catch (FireflyException $e) {
-                Log::error($e->getTraceAsString());
-                Log::error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
-            }
-        }
-        Log::debug(sprintf('Done with %s', __METHOD__));
+        $this->account = $account;
+    }
+
+    /**
+     * @param  TransactionGroup  $group
+     */
+    public function setGroup(TransactionGroup $group): void
+    {
+        $this->group = $group;
     }
 
     /**
@@ -116,17 +115,6 @@ class CreditRecalculateService
             Log::debug(sprintf('Src account type is "%s", include it.', $source->accountType->type));
             $this->work[] = $source;
         }
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Account
-     * @throws FireflyException
-     */
-    private function getSourceAccount(TransactionJournal $journal): Account
-    {
-        return $this->getAccountByDirection($journal, '<');
     }
 
     /**
@@ -163,6 +151,17 @@ class CreditRecalculateService
     }
 
     /**
+     * @param  TransactionJournal  $journal
+     *
+     * @return Account
+     * @throws FireflyException
+     */
+    private function getSourceAccount(TransactionJournal $journal): Account
+    {
+        return $this->getAccountByDirection($journal, '<');
+    }
+
+    /**
      *
      */
     private function processAccount(): void
@@ -177,47 +176,18 @@ class CreditRecalculateService
     /**
      *
      */
-    private function processWork(): void
+    private function processGroup(): void
     {
-        $this->repository = app(AccountRepositoryInterface::class);
-        foreach ($this->work as $account) {
-            $this->processWorkAccount($account);
+        /** @var TransactionJournal $journal */
+        foreach ($this->group->transactionJournals as $journal) {
+            try {
+                $this->findByJournal($journal);
+            } catch (FireflyException $e) {
+                Log::error($e->getTraceAsString());
+                Log::error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
+            }
         }
         Log::debug(sprintf('Done with %s', __METHOD__));
-    }
-
-    /**
-     * @param  Account  $account
-     */
-    private function processWorkAccount(Account $account): void
-    {
-        Log::debug(sprintf('Now in %s(#%d)', __METHOD__, $account->id));
-
-        // get opening balance (if present)
-        $this->repository->setUser($account->user);
-        $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
-        $leftOfDebt  = app('steam')->positive($startOfDebt);
-
-        /** @var AccountMetaFactory $factory */
-        $factory = app(AccountMetaFactory::class);
-
-        // amount is positive or negative, doesn't matter.
-        $factory->crud($account, 'start_of_debt', $startOfDebt);
-
-        // get direction of liability:
-        $direction = (string)$this->repository->getMetaValue($account, 'liability_direction');
-
-        // now loop all transactions (except opening balance and credit thing)
-        $transactions = $account->transactions()->get();
-        Log::debug(sprintf('Going to process %d transaction(s)', $transactions->count()));
-        Log::debug(sprintf('Account currency is #%d (%s)', $account->id, $this->repository->getAccountCurrency($account)?->code));
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $leftOfDebt = $this->processTransaction($account, $direction, $transaction, $leftOfDebt);
-        }
-        $factory->crud($account, 'current_debt', $leftOfDebt);
-
-        Log::debug(sprintf('Done with %s(#%d)', __METHOD__, $account->id));
     }
 
     /**
@@ -341,18 +311,48 @@ class CreditRecalculateService
     }
 
     /**
-     * @param  Account|null  $account
+     *
      */
-    public function setAccount(?Account $account): void
+    private function processWork(): void
     {
-        $this->account = $account;
+        $this->repository = app(AccountRepositoryInterface::class);
+        foreach ($this->work as $account) {
+            $this->processWorkAccount($account);
+        }
+        Log::debug(sprintf('Done with %s', __METHOD__));
     }
 
     /**
-     * @param  TransactionGroup  $group
+     * @param  Account  $account
      */
-    public function setGroup(TransactionGroup $group): void
+    private function processWorkAccount(Account $account): void
     {
-        $this->group = $group;
+        Log::debug(sprintf('Now in %s(#%d)', __METHOD__, $account->id));
+
+        // get opening balance (if present)
+        $this->repository->setUser($account->user);
+        $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
+        $leftOfDebt  = app('steam')->positive($startOfDebt);
+
+        /** @var AccountMetaFactory $factory */
+        $factory = app(AccountMetaFactory::class);
+
+        // amount is positive or negative, doesn't matter.
+        $factory->crud($account, 'start_of_debt', $startOfDebt);
+
+        // get direction of liability:
+        $direction = (string)$this->repository->getMetaValue($account, 'liability_direction');
+
+        // now loop all transactions (except opening balance and credit thing)
+        $transactions = $account->transactions()->get();
+        Log::debug(sprintf('Going to process %d transaction(s)', $transactions->count()));
+        Log::debug(sprintf('Account currency is #%d (%s)', $account->id, $this->repository->getAccountCurrency($account)?->code));
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $leftOfDebt = $this->processTransaction($account, $direction, $transaction, $leftOfDebt);
+        }
+        $factory->crud($account, 'current_debt', $leftOfDebt);
+
+        Log::debug(sprintf('Done with %s(#%d)', __METHOD__, $account->id));
     }
 }

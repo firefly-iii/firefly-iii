@@ -262,7 +262,7 @@ class PreferencesController extends Controller
 
         // dark mode
         $darkMode = $request->get('darkMode') ?? 'browser';
-        if(in_array($darkMode, config('firefly.available_dark_modes'), true)) {
+        if (in_array($darkMode, config('firefly.available_dark_modes'), true)) {
             app('preferences')->set('darkMode', $darkMode);
         }
 

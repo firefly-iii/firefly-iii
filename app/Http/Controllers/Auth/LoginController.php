@@ -38,8 +38,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -129,37 +129,6 @@ class LoginController extends Controller
     }
 
     /**
-     * Get the login username to be used by the controller.
-     *
-     * @return string
-     */
-    public function username()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Get the failed login response instance.
-     *
-     * @param  Request  $request
-     *
-     * @return void
-     *
-     * @throws ValidationException
-     */
-    protected function sendFailedLoginResponse(Request $request)
-    {
-        $exception             = ValidationException::withMessages(
-            [
-                $this->username() => [trans('auth.failed')],
-            ]
-        );
-        $exception->redirectTo = route('login');
-
-        throw $exception;
-    }
-
-    /**
      * Log the user out of the application.
      *
      * @param  Request  $request
@@ -243,5 +212,36 @@ class LoginController extends Controller
         $usernameField = $this->username();
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title', 'usernameField'));
+    }
+
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param  Request  $request
+     *
+     * @return void
+     *
+     * @throws ValidationException
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $exception             = ValidationException::withMessages(
+            [
+                $this->username() => [trans('auth.failed')],
+            ]
+        );
+        $exception->redirectTo = route('login');
+
+        throw $exception;
     }
 }

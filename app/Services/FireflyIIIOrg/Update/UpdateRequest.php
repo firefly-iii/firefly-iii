@@ -28,8 +28,8 @@ use Carbon\Carbon;
 use FireflyIII\Events\NewVersionAvailable;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class UpdateRequest

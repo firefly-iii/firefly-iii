@@ -52,6 +52,55 @@ class Preferences
     }
 
     /**
+     * @param  User  $user
+     * @param  string  $search
+     *
+     * @return Collection
+     */
+    public function beginsWith(User $user, string $search): Collection
+    {
+        return Preference::where('user_id', $user->id)->where('name', 'LIKE', $search.'%')->get();
+    }
+
+    /**
+     * @param  string  $name
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    public function delete(string $name): bool
+    {
+        $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
+        if (Cache::has($fullName)) {
+            Cache::forget($fullName);
+        }
+        Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
+
+        return true;
+    }
+
+    /**
+     * @param  string  $name
+     *
+     * @return Collection
+     */
+    public function findByName(string $name): Collection
+    {
+        return Preference::where('name', $name)->get();
+    }
+
+    /**
+     * @param  User  $user
+     * @param  string  $name
+     */
+    public function forget(User $user, string $name): void
+    {
+        $key = sprintf('preference%s%s', $user->id, $name);
+        Cache::forget($key);
+        Cache::put($key, '', 5);
+    }
+
+    /**
      * @param  string  $name
      * @param  mixed  $default
      *
@@ -70,6 +119,29 @@ class Preferences
         }
 
         return $this->getForUser($user, $name, $default);
+    }
+
+    /**
+     * @param  User  $user
+     * @param  array  $list
+     *
+     * @return array
+     */
+    public function getArrayForUser(User $user, array $list): array
+    {
+        $result      = [];
+        $preferences = Preference::where('user_id', $user->id)->whereIn('name', $list)->get(['id', 'name', 'data']);
+        /** @var Preference $preference */
+        foreach ($preferences as $preference) {
+            $result[$preference->name] = $preference->data;
+        }
+        foreach ($list as $name) {
+            if (!array_key_exists($name, $result)) {
+                $result[$name] = null;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -98,117 +170,6 @@ class Preferences
         }
 
         return $this->setForUser($user, $name, $default);
-    }
-
-    /**
-     * @param  string  $name
-     *
-     * @return bool
-     * @throws FireflyException
-     */
-    public function delete(string $name): bool
-    {
-        $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
-        if (Cache::has($fullName)) {
-            Cache::forget($fullName);
-        }
-        Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
-
-        return true;
-    }
-
-    /**
-     * @param  User  $user
-     * @param  string  $name
-     */
-    public function forget(User $user, string $name): void
-    {
-        $key = sprintf('preference%s%s', $user->id, $name);
-        Cache::forget($key);
-        Cache::put($key, '', 5);
-    }
-
-    /**
-     * @param  User  $user
-     * @param  string  $name
-     * @param  mixed  $value
-     *
-     * @return Preference
-     * @throws FireflyException
-     */
-    public function setForUser(User $user, string $name, $value): Preference
-    {
-        $fullName = sprintf('preference%s%s', $user->id, $name);
-        Cache::forget($fullName);
-        /** @var Preference|null $pref */
-        $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
-
-        if (null !== $pref && null === $value) {
-            $pref->delete();
-
-            return new Preference();
-        }
-        if (null === $value) {
-            return new Preference();
-        }
-        if (null === $pref) {
-            $pref          = new Preference();
-            $pref->user_id = $user->id;
-            $pref->name    = $name;
-        }
-        $pref->data = $value;
-        try {
-            $pref->save();
-        } catch (PDOException $e) {
-            throw new FireflyException(sprintf('Could not save preference: %s', $e->getMessage()), 0, $e);
-        }
-        Cache::forever($fullName, $pref);
-
-        return $pref;
-    }
-
-    /**
-     * @param  User  $user
-     * @param  string  $search
-     *
-     * @return Collection
-     */
-    public function beginsWith(User $user, string $search): Collection
-    {
-        return Preference::where('user_id', $user->id)->where('name', 'LIKE', $search.'%')->get();
-    }
-
-    /**
-     * @param  string  $name
-     *
-     * @return Collection
-     */
-    public function findByName(string $name): Collection
-    {
-        return Preference::where('name', $name)->get();
-    }
-
-    /**
-     * @param  User  $user
-     * @param  array  $list
-     *
-     * @return array
-     */
-    public function getArrayForUser(User $user, array $list): array
-    {
-        $result      = [];
-        $preferences = Preference::where('user_id', $user->id)->whereIn('name', $list)->get(['id', 'name', 'data']);
-        /** @var Preference $preference */
-        foreach ($preferences as $preference) {
-            $result[$preference->name] = $preference->data;
-        }
-        foreach ($list as $name) {
-            if (!array_key_exists($name, $result)) {
-                $result[$name] = null;
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -294,5 +255,44 @@ class Preferences
         }
 
         return $this->setForUser(auth()->user(), $name, $value);
+    }
+
+    /**
+     * @param  User  $user
+     * @param  string  $name
+     * @param  mixed  $value
+     *
+     * @return Preference
+     * @throws FireflyException
+     */
+    public function setForUser(User $user, string $name, $value): Preference
+    {
+        $fullName = sprintf('preference%s%s', $user->id, $name);
+        Cache::forget($fullName);
+        /** @var Preference|null $pref */
+        $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+
+        if (null !== $pref && null === $value) {
+            $pref->delete();
+
+            return new Preference();
+        }
+        if (null === $value) {
+            return new Preference();
+        }
+        if (null === $pref) {
+            $pref          = new Preference();
+            $pref->user_id = $user->id;
+            $pref->name    = $name;
+        }
+        $pref->data = $value;
+        try {
+            $pref->save();
+        } catch (PDOException $e) {
+            throw new FireflyException(sprintf('Could not save preference: %s', $e->getMessage()), 0, $e);
+        }
+        Cache::forever($fullName, $pref);
+
+        return $pref;
     }
 }

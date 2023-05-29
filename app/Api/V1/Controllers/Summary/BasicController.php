@@ -122,6 +122,30 @@ class BasicController extends Controller
     }
 
     /**
+     * Check if date is outside session range.
+     *
+     * @param  Carbon  $date
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return bool
+     */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    {
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param  Carbon  $start
      * @param  Carbon  $end
      *
@@ -398,29 +422,5 @@ class BasicController extends Controller
         }
 
         return $return;
-    }
-
-    /**
-     * Check if date is outside session range.
-     *
-     * @param  Carbon  $date
-     *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return bool
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
-    {
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
-
-        return $result;
     }
 }

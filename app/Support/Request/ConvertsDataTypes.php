@@ -34,44 +34,6 @@ use Illuminate\Support\Facades\Log;
 trait ConvertsDataTypes
 {
     /**
-     * Return integer value.
-     *
-     * @param  string  $field
-     *
-     * @return int
-     */
-    public function convertInteger(string $field): int
-    {
-        return (int)$this->get($field);
-    }
-
-    /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param  string  $key
-     * @param  mixed|null  $default
-     * @return mixed
-     */
-    abstract public function get(string $key, mixed $default = null): mixed;
-
-    /**
-     * Return string value.
-     *
-     * @param  string  $field
-     *
-     * @return string
-     */
-    public function convertString(string $field): string
-    {
-        $entry = $this->get($field);
-        if (!is_scalar($entry)) {
-            return '';
-        }
-        return $this->clearString((string)$entry, false);
-    }
-
-    /**
      * @param  string|null  $string
      * @param  bool  $keepNewlines
      *
@@ -153,6 +115,53 @@ trait ConvertsDataTypes
     }
 
     /**
+     * Return integer value.
+     *
+     * @param  string  $field
+     *
+     * @return int
+     */
+    public function convertInteger(string $field): int
+    {
+        return (int)$this->get($field);
+    }
+
+    /**
+     * Return string value.
+     *
+     * @param  string  $field
+     *
+     * @return string
+     */
+    public function convertString(string $field): string
+    {
+        $entry = $this->get($field);
+        if (!is_scalar($entry)) {
+            return '';
+        }
+        return $this->clearString((string)$entry, false);
+    }
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param  string  $key
+     * @param  mixed|null  $default
+     * @return mixed
+     */
+    abstract public function get(string $key, mixed $default = null): mixed;
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param  mixed  $key
+     * @return mixed
+     */
+    abstract public function has($key);
+
+    /**
      * Return string value with newlines.
      *
      * @param  string  $field
@@ -210,6 +219,44 @@ trait ConvertsDataTypes
         return false;
     }
 
+    protected function convertDateTime(?string $string): ?Carbon
+    {
+        $value = $this->get($string);
+        if (null === $value) {
+            return null;
+        }
+        if ('' === $value) {
+            return null;
+        }
+        if (10 === strlen($value)) {
+            // probably a date format.
+            try {
+                $carbon = Carbon::createFromFormat('Y-m-d', $value);
+            } catch (InvalidDateException $e) {
+                Log::error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
+                return null;
+            } catch (InvalidFormatException $e) {
+                Log::error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
+
+                return null;
+            }
+            return $carbon;
+        }
+        // is an atom string, I hope?
+        try {
+            $carbon = Carbon::parse($value);
+        } catch (InvalidDateException $e) {
+            Log::error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
+
+            return null;
+        } catch (InvalidFormatException $e) {
+            Log::error(sprintf('[4] "%s" is of an invalid format: %s', $value, $e->getMessage()));
+
+            return null;
+        }
+        return $carbon;
+    }
+
     /**
      * Return floating value.
      *
@@ -256,44 +303,6 @@ trait ConvertsDataTypes
         return $carbon;
     }
 
-    protected function convertDateTime(?string $string): ?Carbon
-    {
-        $value = $this->get($string);
-        if (null === $value) {
-            return null;
-        }
-        if ('' === $value) {
-            return null;
-        }
-        if (10 === strlen($value)) {
-            // probably a date format.
-            try {
-                $carbon = Carbon::createFromFormat('Y-m-d', $value);
-            } catch (InvalidDateException $e) {
-                Log::error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
-                return null;
-            } catch (InvalidFormatException $e) {
-                Log::error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
-
-                return null;
-            }
-            return $carbon;
-        }
-        // is an atom string, I hope?
-        try {
-            $carbon = Carbon::parse($value);
-        } catch (InvalidDateException $e) {
-            Log::error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
-
-            return null;
-        } catch (InvalidFormatException $e) {
-            Log::error(sprintf('[4] "%s" is of an invalid format: %s', $value, $e->getMessage()));
-
-            return null;
-        }
-        return $carbon;
-    }
-
     /**
      * Returns all data in the request, or omits the field if not set,
      * according to the config from the request. This is the way.
@@ -314,15 +323,6 @@ trait ConvertsDataTypes
 
         return $return;
     }
-
-    /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param  mixed  $key
-     * @return mixed
-     */
-    abstract public function has($key);
 
     /**
      * Return date or NULL.

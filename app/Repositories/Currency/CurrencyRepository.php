@@ -41,8 +41,8 @@ use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class CurrencyRepository.
@@ -50,6 +50,19 @@ use Illuminate\Support\Facades\Log;
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
     private User $user;
+
+    /**
+     * @param  TransactionCurrency  $currency
+     *
+     * @return int
+     */
+    public function countJournals(TransactionCurrency $currency): int
+    {
+        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
+
+        // also count foreign:
+        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
+    }
 
     /**
      * @param  TransactionCurrency  $currency
@@ -155,35 +168,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * @param  TransactionCurrency  $currency
      *
-     * @return int
-     */
-    public function countJournals(TransactionCurrency $currency): int
-    {
-        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
-
-        // also count foreign:
-        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getAll(): Collection
-    {
-        return TransactionCurrency::orderBy('code', 'ASC')->get();
-    }
-
-    /**
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
-    }
-
-    /**
-     * @param  TransactionCurrency  $currency
-     *
      * @return bool
      */
     public function destroy(TransactionCurrency $currency): bool
@@ -211,6 +195,16 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @param  TransactionCurrency  $currency
+     * Enables a currency
+     */
+    public function enable(TransactionCurrency $currency): void
+    {
+        $currency->enabled = true;
+        $currency->save();
+    }
+
+    /**
      * @inheritDoc
      */
     public function ensureMinimalEnabledCurrencies(): void
@@ -230,13 +224,27 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param  TransactionCurrency  $currency
-     * Enables a currency
+     * Find by ID, return NULL if not found.
+     *
+     * @param  int  $currencyId
+     *
+     * @return TransactionCurrency|null
      */
-    public function enable(TransactionCurrency $currency): void
+    public function find(int $currencyId): ?TransactionCurrency
     {
-        $currency->enabled = true;
-        $currency->save();
+        return TransactionCurrency::find($currencyId);
+    }
+
+    /**
+     * Find by currency code, return NULL if unfound.
+     *
+     * @param  string  $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findByCode(string $currencyCode): ?TransactionCurrency
+    {
+        return TransactionCurrency::where('code', $currencyCode)->first();
     }
 
     /**
@@ -362,27 +370,19 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Find by ID, return NULL if not found.
-     *
-     * @param  int  $currencyId
-     *
-     * @return TransactionCurrency|null
+     * @return Collection
      */
-    public function find(int $currencyId): ?TransactionCurrency
+    public function get(): Collection
     {
-        return TransactionCurrency::find($currencyId);
+        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
     }
 
     /**
-     * Find by currency code, return NULL if unfound.
-     *
-     * @param  string  $currencyCode
-     *
-     * @return TransactionCurrency|null
+     * @return Collection
      */
-    public function findByCode(string $currencyCode): ?TransactionCurrency
+    public function getAll(): Collection
     {
-        return TransactionCurrency::where('code', $currencyCode)->first();
+        return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
     /**

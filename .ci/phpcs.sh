@@ -32,7 +32,10 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 cd $SCRIPT_DIR/php-cs-fixer
 composer update
 rm -f .php-cs-fixer.cache
+echo 'Removed cache...'
+echo 'Running...'
 PHP_CS_FIXER_IGNORE_ENV=true ./vendor/bin/php-cs-fixer fix --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php --allow-risky=yes
+echo 'Done!'
 cd $SCRIPT_DIR/..
 
 exit 0

@@ -143,14 +143,6 @@ class Recurrence extends Model
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -204,5 +196,13 @@ class Recurrence extends Model
     public function transactionType(): BelongsTo
     {
         return $this->belongsTo(TransactionType::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

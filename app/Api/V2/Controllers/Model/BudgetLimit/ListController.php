@@ -42,6 +42,7 @@ class ListController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(BudgetLimitRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -60,6 +61,7 @@ class ListController extends Controller
 
         $paginator   = new LengthAwarePaginator($collection, $total, $this->pageSize, $this->parameters->get('page'));
         $transformer = new BudgetLimitTransformer();
+
         return response()
             ->api($this->jsonApiList('budget_limits', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);

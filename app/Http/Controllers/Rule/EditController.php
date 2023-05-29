@@ -36,8 +36,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Throwable;
 
 /**
@@ -140,6 +140,32 @@ class EditController extends Controller
     }
 
     /**
+     * Update the rule.
+     *
+     * @param  RuleFormRequest  $request
+     * @param  Rule  $rule
+     *
+     * @return RedirectResponse|Redirector
+     */
+    public function update(RuleFormRequest $request, Rule $rule)
+    {
+        $data = $request->getRuleData();
+
+        $this->ruleRepos->update($rule, $data);
+
+        session()->flash('success', (string)trans('firefly.updated_rule', ['title' => $rule->title]));
+        app('preferences')->mark();
+        $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
+        if (1 === (int)$request->get('return_to_edit')) {
+            session()->put('rules.edit.fromUpdate', true);
+
+            $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        return $redirect;
+    }
+
+    /**
      * @param  array  $submittedOperators
      *
      * @return array
@@ -181,31 +207,5 @@ class EditController extends Controller
         }
 
         return $renderedEntries;
-    }
-
-    /**
-     * Update the rule.
-     *
-     * @param  RuleFormRequest  $request
-     * @param  Rule  $rule
-     *
-     * @return RedirectResponse|Redirector
-     */
-    public function update(RuleFormRequest $request, Rule $rule)
-    {
-        $data = $request->getRuleData();
-
-        $this->ruleRepos->update($rule, $data);
-
-        session()->flash('success', (string)trans('firefly.updated_rule', ['title' => $rule->title]));
-        app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
-        if (1 === (int)$request->get('return_to_edit')) {
-            session()->put('rules.edit.fromUpdate', true);
-
-            $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
-        }
-
-        return $redirect;
     }
 }

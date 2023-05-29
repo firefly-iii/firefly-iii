@@ -25,8 +25,8 @@ namespace FireflyIII\Helpers\Webhook;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\WebhookMessage;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class Sha3SignatureGenerator

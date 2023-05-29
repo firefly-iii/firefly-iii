@@ -104,17 +104,52 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  array  $transactions
-     * @return array
+     * @param  string|null  $string
+     * @return Carbon|null
      */
-    private function transformTransactions(array $transactions): array
+    private function date(?string $string): ?Carbon
     {
-        $return = [];
-        /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $return[] = $this->transformTransaction($transaction);
+        if (null === $string) {
+            return null;
         }
-        return $return;
+        Log::debug(sprintf('Now in date("%s")', $string));
+        if (10 === strlen($string)) {
+            return Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
+        }
+        // 2022-01-01 01:01:01
+        return Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
+    }
+
+    /**
+     * TODO also in the old transformer.
+     *
+     * @param  NullArrayObject  $array
+     * @param  string  $key
+     * @param  string|null  $default
+     *
+     * @return string|null
+     */
+    private function stringFromArray(NullArrayObject $array, string $key, ?string $default): ?string
+    {
+        //Log::debug(sprintf('%s: %s', $key, var_export($array[$key], true)));
+        if (null === $array[$key] && null === $default) {
+            return null;
+        }
+        if (0 === $array[$key]) {
+            return $default;
+        }
+        if ('0' === $array[$key]) {
+            return $default;
+        }
+        if (null !== $array[$key]) {
+            return (string)$array[$key];
+        }
+
+        if (null !== $default) {
+            return $default;
+        }
+
+        return null;
     }
 
     private function transformTransaction(array $transaction): array
@@ -229,51 +264,16 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * TODO also in the old transformer.
-     *
-     * @param  NullArrayObject  $array
-     * @param  string  $key
-     * @param  string|null  $default
-     *
-     * @return string|null
+     * @param  array  $transactions
+     * @return array
      */
-    private function stringFromArray(NullArrayObject $array, string $key, ?string $default): ?string
+    private function transformTransactions(array $transactions): array
     {
-        //Log::debug(sprintf('%s: %s', $key, var_export($array[$key], true)));
-        if (null === $array[$key] && null === $default) {
-            return null;
+        $return = [];
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $return[] = $this->transformTransaction($transaction);
         }
-        if (0 === $array[$key]) {
-            return $default;
-        }
-        if ('0' === $array[$key]) {
-            return $default;
-        }
-        if (null !== $array[$key]) {
-            return (string)$array[$key];
-        }
-
-        if (null !== $default) {
-            return $default;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param  string|null  $string
-     * @return Carbon|null
-     */
-    private function date(?string $string): ?Carbon
-    {
-        if (null === $string) {
-            return null;
-        }
-        Log::debug(sprintf('Now in date("%s")', $string));
-        if (10 === strlen($string)) {
-            return Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
-        }
-        // 2022-01-01 01:01:01
-        return Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
+        return $return;
     }
 }

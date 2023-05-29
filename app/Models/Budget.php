@@ -127,14 +127,6 @@ class Budget extends Model
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -180,5 +172,13 @@ class Budget extends Model
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

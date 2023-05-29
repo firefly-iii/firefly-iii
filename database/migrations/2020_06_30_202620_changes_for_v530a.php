@@ -42,7 +42,7 @@ class ChangesForV530a extends Migration
      */
     public function down(): void
     {
-        if(Schema::hasColumn('bills', 'order')) {
+        if (Schema::hasColumn('bills', 'order')) {
             try {
                 Schema::table(
                     'bills',
@@ -64,7 +64,7 @@ class ChangesForV530a extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasColumn('bills', 'order')) {
+        if (!Schema::hasColumn('bills', 'order')) {
             try {
                 Schema::table(
                     'bills',

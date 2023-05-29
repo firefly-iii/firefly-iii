@@ -32,8 +32,8 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class RecurrenceUpdateService
@@ -116,6 +116,75 @@ class RecurrenceUpdateService
 
     /**
      * @param  Recurrence  $recurrence
+     * @param  array  $data
+     *
+     * @return RecurrenceRepetition|null
+     */
+    private function matchRepetition(Recurrence $recurrence, array $data): ?RecurrenceRepetition
+    {
+        $originalCount = $recurrence->recurrenceRepetitions()->count();
+        if (1 === $originalCount) {
+            Log::debug('Return the first one');
+            /** @var RecurrenceRepetition $result */
+            $result = $recurrence->recurrenceRepetitions()->first();
+            return $result;
+        }
+        // find it:
+        $fields = [
+            'id'      => 'id',
+            'type'    => 'repetition_type',
+            'moment'  => 'repetition_moment',
+            'skip'    => 'repetition_skip',
+            'weekend' => 'weekend',
+        ];
+        $query  = $recurrence->recurrenceRepetitions();
+        foreach ($fields as $field => $column) {
+            if (array_key_exists($field, $data)) {
+                $query->where($column, $data[$field]);
+            }
+        }
+        /** @var RecurrenceRepetition|null */
+        return $query->first();
+    }
+
+    /**
+     * @param  Recurrence  $recurrence
+     * @param  array  $data
+     *
+     * @return RecurrenceTransaction|null
+     */
+    private function matchTransaction(Recurrence $recurrence, array $data): ?RecurrenceTransaction
+    {
+        Log::debug('Now in matchTransaction()');
+        $originalCount = $recurrence->recurrenceTransactions()->count();
+        if (1 === $originalCount) {
+            Log::debug('Return the first one.');
+            /** @var RecurrenceTransaction|null */
+            return $recurrence->recurrenceTransactions()->first();
+        }
+        // find it based on data
+        $fields = [
+            'id'                  => 'id',
+            'currency_id'         => 'transaction_currency_id',
+            'foreign_currency_id' => 'foreign_currency_id',
+            'source_id'           => 'source_id',
+            'destination_id'      => 'destination_id',
+            'amount'              => 'amount',
+            'foreign_amount'      => 'foreign_amount',
+            'description'         => 'description',
+        ];
+        $query  = $recurrence->recurrenceTransactions();
+        foreach ($fields as $field => $column) {
+            if (array_key_exists($field, $data)) {
+                $query->where($column, $data[$field]);
+            }
+        }
+        /** @var RecurrenceTransaction|null */
+        return $query->first();
+    }
+
+    /**
+     * @param  Recurrence  $recurrence
      * @param  string  $text
      */
     private function setNoteText(Recurrence $recurrence, string $text): void
@@ -176,39 +245,6 @@ class RecurrenceUpdateService
                 }
             }
         }
-    }
-
-    /**
-     * @param  Recurrence  $recurrence
-     * @param  array  $data
-     *
-     * @return RecurrenceRepetition|null
-     */
-    private function matchRepetition(Recurrence $recurrence, array $data): ?RecurrenceRepetition
-    {
-        $originalCount = $recurrence->recurrenceRepetitions()->count();
-        if (1 === $originalCount) {
-            Log::debug('Return the first one');
-            /** @var RecurrenceRepetition $result */
-            $result = $recurrence->recurrenceRepetitions()->first();
-            return $result;
-        }
-        // find it:
-        $fields = [
-            'id'      => 'id',
-            'type'    => 'repetition_type',
-            'moment'  => 'repetition_moment',
-            'skip'    => 'repetition_skip',
-            'weekend' => 'weekend',
-        ];
-        $query  = $recurrence->recurrenceRepetitions();
-        foreach ($fields as $field => $column) {
-            if (array_key_exists($field, $data)) {
-                $query->where($column, $data[$field]);
-            }
-        }
-        /** @var RecurrenceRepetition|null */
-        return $query->first();
     }
 
     /**
@@ -309,41 +345,5 @@ class RecurrenceUpdateService
                 $this->updatePiggyBank($match, (int)$current['piggy_bank_id']);
             }
         }
-    }
-
-    /**
-     * @param  Recurrence  $recurrence
-     * @param  array  $data
-     *
-     * @return RecurrenceTransaction|null
-     */
-    private function matchTransaction(Recurrence $recurrence, array $data): ?RecurrenceTransaction
-    {
-        Log::debug('Now in matchTransaction()');
-        $originalCount = $recurrence->recurrenceTransactions()->count();
-        if (1 === $originalCount) {
-            Log::debug('Return the first one.');
-            /** @var RecurrenceTransaction|null */
-            return $recurrence->recurrenceTransactions()->first();
-        }
-        // find it based on data
-        $fields = [
-            'id'                  => 'id',
-            'currency_id'         => 'transaction_currency_id',
-            'foreign_currency_id' => 'foreign_currency_id',
-            'source_id'           => 'source_id',
-            'destination_id'      => 'destination_id',
-            'amount'              => 'amount',
-            'foreign_amount'      => 'foreign_amount',
-            'description'         => 'description',
-        ];
-        $query  = $recurrence->recurrenceTransactions();
-        foreach ($fields as $field => $column) {
-            if (array_key_exists($field, $data)) {
-                $query->where($column, $data[$field]);
-            }
-        }
-        /** @var RecurrenceTransaction|null */
-        return $query->first();
     }
 }

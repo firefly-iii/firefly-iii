@@ -74,19 +74,6 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @return Carbon
-     */
-    private function getDate(): Carbon
-    {
-        $date = today(config('app.timezone'));
-        if (null !== $this->parameters->get('date')) {
-            $date = $this->parameters->get('date');
-        }
-
-        return $date;
-    }
-
-    /**
      * Transform the account.
      *
      * @param  Account  $account
@@ -145,5 +132,18 @@ class AccountTransformer extends AbstractTransformer
                 ],
             ],
         ];
+    }
+
+    /**
+     * @return Carbon
+     */
+    private function getDate(): Carbon
+    {
+        $date = today(config('app.timezone'));
+        if (null !== $this->parameters->get('date')) {
+            $date = $this->parameters->get('date');
+        }
+
+        return $date;
     }
 }

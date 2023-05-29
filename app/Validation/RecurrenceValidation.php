@@ -26,9 +26,9 @@ namespace FireflyIII\Validation;
 use Carbon\Carbon;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait RecurrenceValidation

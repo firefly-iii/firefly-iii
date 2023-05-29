@@ -67,7 +67,7 @@ class ChangesForV550 extends Migration
         }
 
         // expand budget / transaction journal table.
-        if(Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+        if (Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
             try {
                 Schema::table(
                     'budget_transaction_journal',
@@ -89,7 +89,7 @@ class ChangesForV550 extends Migration
 
         // drop fields from budget limits
         // in two steps for sqlite
-        if(Schema::hasColumn('budget_limits', 'period')) {
+        if (Schema::hasColumn('budget_limits', 'period')) {
             try {
                 Schema::table(
                     'budget_limits',
@@ -102,7 +102,7 @@ class ChangesForV550 extends Migration
                 Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
-        if(Schema::hasColumn('budget_limits', 'generated')) {
+        if (Schema::hasColumn('budget_limits', 'generated')) {
             try {
                 Schema::table(
                     'budget_limits',
@@ -176,7 +176,7 @@ class ChangesForV550 extends Migration
         }
 
         // update budget / transaction journal table.
-        if(!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+        if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
             try {
                 Schema::table(
                     'budget_transaction_journal',

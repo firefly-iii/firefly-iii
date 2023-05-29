@@ -47,7 +47,7 @@ class CreateOauthAccessTokensTable extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasTable('oauth_access_tokens')) {
+        if (!Schema::hasTable('oauth_access_tokens')) {
             try {
                 Schema::create(
                     'oauth_access_tokens',

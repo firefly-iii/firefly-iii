@@ -30,9 +30,9 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\Api\Data\Bulk\ValidatesBulkTransactionQuery;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use JsonException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionRequest

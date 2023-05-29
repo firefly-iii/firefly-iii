@@ -48,6 +48,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(BudgetRepositoryInterface::class);
+
                 return $next($request);
             }
         );

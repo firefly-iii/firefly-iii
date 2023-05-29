@@ -72,6 +72,28 @@ class ExchangeRateSeeder extends Seeder
     }
 
     /**
+     * @param  User  $user
+     * @param  TransactionCurrency  $from
+     * @param  TransactionCurrency  $to
+     * @param  string  $date
+     * @param  float  $rate
+     * @return void
+     */
+    private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void
+    {
+        /** @var User $user */
+        CurrencyExchangeRate::create(
+            [
+                'user_id'          => $user->id,
+                'from_currency_id' => $from->id,
+                'to_currency_id'   => $to->id,
+                'date'             => $date,
+                'rate'             => $rate,
+            ]
+        );
+    }
+
+    /**
      * @param  string  $code
      * @return TransactionCurrency|null
      */
@@ -94,27 +116,5 @@ class ExchangeRateSeeder extends Seeder
                     ->where('to_currency_id', $to->id)
                     ->where('date', $date)
                     ->count() > 0;
-    }
-
-    /**
-     * @param  User  $user
-     * @param  TransactionCurrency  $from
-     * @param  TransactionCurrency  $to
-     * @param  string  $date
-     * @param  float  $rate
-     * @return void
-     */
-    private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void
-    {
-        /** @var User $user */
-        CurrencyExchangeRate::create(
-            [
-                'user_id'          => $user->id,
-                'from_currency_id' => $from->id,
-                'to_currency_id'   => $to->id,
-                'date'             => $date,
-                'rate'             => $rate,
-            ]
-        );
     }
 }

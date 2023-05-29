@@ -127,14 +127,6 @@ class Tag extends Model
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -156,5 +148,13 @@ class Tag extends Model
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
