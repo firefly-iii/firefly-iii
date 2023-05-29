@@ -181,7 +181,7 @@ class BudgetLimitHandler
         $start  = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
         $end    = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
         $end    = app('navigation')->endOfPeriod($end, $viewRange);
-        $budget = Budget::withTrashed()->find($budgetLimit->budget_id);
+        $budget = Budget::find($budgetLimit->budget_id);
         if(null === $budget) {
             Log::warning('Budget is null, cannot continue.');
             $budgetLimit->forceDelete();
@@ -210,6 +210,7 @@ class BudgetLimitHandler
                 'end_date',
                 $currentEnd->format('Y-m-d')
             )->where('transaction_currency_id', $budgetLimit->transaction_currency_id)->first();
+
             if (null !== $availableBudget) {
                 Log::debug('Found 1 AB, will update.');
                 $this->calculateAmount($availableBudget);

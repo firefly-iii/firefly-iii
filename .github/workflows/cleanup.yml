@@ -56,11 +56,12 @@ jobs:
             
             const workflows = [
               'cleanup.yml',
-              'depsreview.yaml',
-              'qodana.yml',
               'closed-issues.yml',
+              'depsreview.yaml',
               'laravel.yml',
               'lock.yml',
+              'qodana.yml',
+              'sonarcloud.yml',
               'stale.yml'
             ]
             
