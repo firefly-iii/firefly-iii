@@ -52,14 +52,14 @@ if (!function_exists('envNonEmpty')) {
     }
 }
 
-if (!function_exists('str_is_equal')) {
+if (!function_exists('stringIsEqual')) {
     /**
      * @param  string  $left
      * @param  string  $right
      *
      * @return bool
      */
-    function str_is_equal(string $left, string $right): bool
+    function stringIsEqual(string $left, string $right): bool
     {
         return $left === $right;
     }

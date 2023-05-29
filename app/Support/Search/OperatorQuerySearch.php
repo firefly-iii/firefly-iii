@@ -437,7 +437,7 @@ class OperatorQuerySearch implements SearchInterface
             $stringMethod = 'str_contains';
         }
         if (4 === $stringPosition) {
-            $stringMethod = 'str_is_equal';
+            $stringMethod = 'stringIsEqual';
         }
 
         // get accounts:
@@ -515,7 +515,7 @@ class OperatorQuerySearch implements SearchInterface
             $stringMethod = 'str_contains';
         }
         if (4 === $stringPosition) {
-            $stringMethod = 'str_is_equal';
+            $stringMethod = 'stringIsEqual';
         }
 
         // search for accounts:

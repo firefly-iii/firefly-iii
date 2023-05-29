@@ -125,9 +125,8 @@ class RecurrenceUpdateService
         $originalCount = $recurrence->recurrenceRepetitions()->count();
         if (1 === $originalCount) {
             Log::debug('Return the first one');
-            /** @var RecurrenceRepetition $result */
-            $result = $recurrence->recurrenceRepetitions()->first();
-            return $result;
+            /** @var RecurrenceRepetition|null */
+            return $recurrence->recurrenceRepetitions()->first();
         }
         // find it:
         $fields = [
