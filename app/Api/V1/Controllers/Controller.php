@@ -75,6 +75,42 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Method to help build URL's.
+     *
+     * @return string
+     */
+    final protected function buildParams(): string
+    {
+        $return = '?';
+        $params = [];
+        foreach ($this->parameters as $key => $value) {
+            if ('page' === $key) {
+                continue;
+            }
+            if ($value instanceof Carbon) {
+                $params[$key] = $value->format('Y-m-d');
+                continue;
+            }
+            $params[$key] = $value;
+        }
+
+        return $return.http_build_query($params);
+    }
+
+    /**
+     * @return Manager
+     */
+    final protected function getManager(): Manager
+    {
+        // create some objects:
+        $manager = new Manager();
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        return $manager;
+    }
+
+    /**
      * Method to grab all parameters from the URL.
      *
      * @return ParameterBag
@@ -110,7 +146,13 @@ abstract class Controller extends BaseController
                     $obj = Carbon::parse($date);
                 } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
-                    app('log')->warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', substr($date, 0, 20), $e->getMessage()));
+                    app('log')->warning(
+                        sprintf(
+                            'Ignored invalid date "%s" in API controller parameter check: %s',
+                            substr($date, 0, 20),
+                            $e->getMessage()
+                        )
+                    );
                 }
             }
             $bag->set($field, $obj);
@@ -168,42 +210,5 @@ abstract class Controller extends BaseController
         $bag->set('sort', $sortParameters);
 
         return $bag;
-    }
-
-
-    /**
-     * Method to help build URL's.
-     *
-     * @return string
-     */
-    final protected function buildParams(): string
-    {
-        $return = '?';
-        $params = [];
-        foreach ($this->parameters as $key => $value) {
-            if ('page' === $key) {
-                continue;
-            }
-            if ($value instanceof Carbon) {
-                $params[$key] = $value->format('Y-m-d');
-                continue;
-            }
-            $params[$key] = $value;
-        }
-
-        return $return.http_build_query($params);
-    }
-
-    /**
-     * @return Manager
-     */
-    final protected function getManager(): Manager
-    {
-        // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        return $manager;
     }
 }

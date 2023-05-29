@@ -53,6 +53,7 @@ class CreateGroupMemberships extends Command
 
     /**
      * TODO move to helper.
+     *
      * @param  User  $user
      *
      * @throws FireflyException

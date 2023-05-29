@@ -211,17 +211,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @return Collection
-     */
-    private function getBudgets(): Collection
-    {
-        /** @var BudgetRepositoryInterface $repos */
-        $repos = app(BudgetRepositoryInterface::class);
-
-        return $repos->getActiveBudgets();
-    }
-
-    /**
      * @param  Collection  $budgets
      * @param  Collection  $accounts
      * @param  Carbon  $start
@@ -402,5 +391,16 @@ class OperationsRepository implements OperationsRepositoryInterface
         $blRepository = app(BudgetLimitRepositoryInterface::class);
 
         return $blRepository->getBudgetLimits($budget, $start, $end);
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getBudgets(): Collection
+    {
+        /** @var BudgetRepositoryInterface $repos */
+        $repos = app(BudgetRepositoryInterface::class);
+
+        return $repos->getActiveBudgets();
     }
 }

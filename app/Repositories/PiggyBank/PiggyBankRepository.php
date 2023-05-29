@@ -36,8 +36,8 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 use Storage;
 
 /**
@@ -56,6 +56,29 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function destroyAll(): void
     {
         $this->user->piggyBanks()->delete();
+    }
+
+    /**
+     * @param  int  $piggyBankId
+     *
+     * @return PiggyBank|null
+     */
+    public function find(int $piggyBankId): ?PiggyBank
+    {
+        // phpstan doesn't get the Model.
+        return $this->user->piggyBanks()->find($piggyBankId); // @phpstan-ignore-line
+    }
+
+    /**
+     * Find by name or return NULL.
+     *
+     * @param  string  $name
+     *
+     * @return PiggyBank|null
+     */
+    public function findByName(string $name): ?PiggyBank
+    {
+        return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first(['piggy_banks.*']);
     }
 
     /**
@@ -87,29 +110,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         Log::debug('Found nothing');
 
         return null;
-    }
-
-    /**
-     * @param  int  $piggyBankId
-     *
-     * @return PiggyBank|null
-     */
-    public function find(int $piggyBankId): ?PiggyBank
-    {
-        // phpstan doesn't get the Model.
-        return $this->user->piggyBanks()->find($piggyBankId); // @phpstan-ignore-line
-    }
-
-    /**
-     * Find by name or return NULL.
-     *
-     * @param  string  $name
-     *
-     * @return PiggyBank|null
-     */
-    public function findByName(string $name): ?PiggyBank
-    {
-        return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first(['piggy_banks.*']);
     }
 
     /**
@@ -148,16 +148,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         return (string)$rep->currentamount;
-    }
-
-    /**
-     * @param  PiggyBank  $piggyBank
-     *
-     * @return PiggyBankRepetition|null
-     */
-    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
-    {
-        return $piggyBank->piggyBankRepetitions()->first();
     }
 
     /**
@@ -275,16 +265,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
      * @return int
      */
     public function getMaxOrder(): int
@@ -311,6 +291,22 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function getPiggyBanks(): Collection
+    {
+        return $this->user  // @phpstan-ignore-line (phpstan does not recognize objectGroups)
+        ->piggyBanks()
+        ->with(
+            [
+                'account',
+                'objectGroups',
+            ]
+        )
+        ->orderBy('order', 'ASC')->get();
+    }
+
+    /**
      * Also add amount in name.
      *
      * @return Collection
@@ -331,19 +327,13 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @return Collection
+     * @param  PiggyBank  $piggyBank
+     *
+     * @return PiggyBankRepetition|null
      */
-    public function getPiggyBanks(): Collection
+    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
     {
-        return $this->user  // @phpstan-ignore-line (phpstan does not recognize objectGroups)
-        ->piggyBanks()
-        ->with(
-            [
-                'account',
-                'objectGroups',
-            ]
-        )
-        ->orderBy('order', 'ASC')->get();
+        return $piggyBank->piggyBankRepetitions()->first();
     }
 
     /**
@@ -421,5 +411,15 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                ->orderBy('piggy_banks.name', 'ASC');
 
         return $search->take($limit)->get();
+    }
+
+    /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
     }
 }

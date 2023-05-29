@@ -47,7 +47,7 @@ class CreateOauthAuthCodesTable extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasTable('oauth_auth_codes')) {
+        if (!Schema::hasTable('oauth_auth_codes')) {
             try {
                 Schema::create(
                     'oauth_auth_codes',

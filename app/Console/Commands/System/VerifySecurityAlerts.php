@@ -124,6 +124,7 @@ class VerifySecurityAlerts extends Command
 
     /**
      * @param  array  $array
+     *
      * @return void
      */
     private function saveSecurityAdvisory(array $array): void

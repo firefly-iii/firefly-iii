@@ -83,6 +83,7 @@ class MoveTransactionsRequest extends FormRequest
 
     /**
      * @param  Validator  $validator
+     *
      * @return void
      */
     private function validateMove(Validator $validator): void

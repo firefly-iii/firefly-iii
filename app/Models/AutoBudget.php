@@ -67,11 +67,10 @@ class AutoBudget extends Model
 {
     use SoftDeletes;
 
+    public const AUTO_BUDGET_ADJUSTED = 3;
     public const AUTO_BUDGET_RESET    = 1;
     public const AUTO_BUDGET_ROLLOVER = 2;
-    public const AUTO_BUDGET_ADJUSTED = 3;
-
-    protected $fillable = ['budget_id','amount','period'];
+    protected $fillable = ['budget_id', 'amount', 'period'];
 
     /**
      * @return BelongsTo

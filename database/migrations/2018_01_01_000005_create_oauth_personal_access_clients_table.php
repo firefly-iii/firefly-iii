@@ -47,7 +47,7 @@ class CreateOauthPersonalAccessClientsTable extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasTable('oauth_personal_access_clients')) {
+        if (!Schema::hasTable('oauth_personal_access_clients')) {
             try {
                 Schema::create(
                     'oauth_personal_access_clients',

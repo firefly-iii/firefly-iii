@@ -37,6 +37,16 @@ class CategoryFactory
     private User $user;
 
     /**
+     * @param  string  $name
+     *
+     * @return Category|null
+     */
+    public function findByName(string $name): ?Category
+    {
+        return $this->user->categories()->where('name', $name)->first();
+    }
+
+    /**
      * @param  int|null  $categoryId
      * @param  null|string  $categoryName
      *
@@ -81,16 +91,6 @@ class CategoryFactory
         }
 
         return null;
-    }
-
-    /**
-     * @param  string  $name
-     *
-     * @return Category|null
-     */
-    public function findByName(string $name): ?Category
-    {
-        return $this->user->categories()->where('name', $name)->first();
     }
 
     /**

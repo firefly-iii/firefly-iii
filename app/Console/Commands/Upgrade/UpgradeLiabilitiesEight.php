@@ -85,6 +85,7 @@ class UpgradeLiabilitiesEight extends Command
 
     /**
      * @param  Account  $account
+     *
      * @return void
      */
     private function deleteCreditTransaction(Account $account): void
@@ -100,6 +101,7 @@ class UpgradeLiabilitiesEight extends Command
             $service = new TransactionGroupDestroyService();
             $service->destroy($group);
             Log::debug(sprintf('Deleted liability credit group #%d', $group->id));
+
             return;
         }
         Log::debug('No liability credit journal found.');
@@ -107,6 +109,7 @@ class UpgradeLiabilitiesEight extends Command
 
     /**
      * @param $account
+     *
      * @return int
      */
     private function deleteTransactions($account): int
@@ -152,11 +155,13 @@ class UpgradeLiabilitiesEight extends Command
                 $count++;
             }
         }
+
         return $count;
     }
 
     /**
      * @param  Account  $account
+     *
      * @return bool
      */
     private function hasBadOpening(Account $account): bool
@@ -169,6 +174,7 @@ class UpgradeLiabilitiesEight extends Command
                                                 ->first(['transaction_journals.*']);
         if (null === $openingJournal) {
             Log::debug('Account has no opening balance and can be skipped.');
+
             return false;
         }
         $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -177,10 +183,12 @@ class UpgradeLiabilitiesEight extends Command
                                               ->first(['transaction_journals.*']);
         if (null === $liabilityJournal) {
             Log::debug('Account has no liability credit and can be skipped.');
+
             return false;
         }
         if (!$openingJournal->date->isSameDay($liabilityJournal->date)) {
             Log::debug('Account has opening/credit not on the same day.');
+
             return false;
         }
         Log::debug('Account has bad opening balance data.');
@@ -213,6 +221,7 @@ class UpgradeLiabilitiesEight extends Command
 
     /**
      * @param  Account  $account
+     *
      * @return void
      */
     private function reverseOpeningBalance(Account $account): void
@@ -235,6 +244,7 @@ class UpgradeLiabilitiesEight extends Command
             $source->save();
             $dest->save();
             Log::debug(sprintf('Opening balance transaction journal #%d reversed.', $openingJournal->id));
+
             return;
         }
         Log::warning('Did not find opening balance.');

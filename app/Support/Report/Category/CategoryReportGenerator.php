@@ -86,45 +86,36 @@ class CategoryReportGenerator
     }
 
     /**
-     * Process one of the spent arrays from the operations method.
-     *
-     * @param  array  $data
+     * @param  Collection  $accounts
      */
-    private function processOpsArray(array $data): void
+    public function setAccounts(Collection $accounts): void
     {
-        /**
-         * @var int $currencyId
-         * @var array $currencyRow
-         */
-        foreach ($data as $currencyId => $currencyRow) {
-            $this->processCurrencyArray($currencyId, $currencyRow);
-        }
+        $this->accounts = $accounts;
     }
 
     /**
-     * @param  int  $currencyId
-     * @param  array  $currencyRow
+     * @param  Carbon  $end
      */
-    private function processCurrencyArray(int $currencyId, array $currencyRow): void
+    public function setEnd(Carbon $end): void
     {
-        $this->report['sums'][$currencyId] = $this->report['sums'][$currencyId] ?? [
-            'spent'                   => '0',
-            'earned'                  => '0',
-            'sum'                     => '0',
-            'currency_id'             => $currencyRow['currency_id'],
-            'currency_symbol'         => $currencyRow['currency_symbol'],
-            'currency_name'           => $currencyRow['currency_name'],
-            'currency_code'           => $currencyRow['currency_code'],
-            'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-        ];
+        $this->end = $end;
+    }
 
-        /**
-         * @var int $categoryId
-         * @var array $categoryRow
-         */
-        foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
-            $this->processCategoryRow($currencyId, $currencyRow, $categoryId, $categoryRow);
-        }
+    /**
+     * @param  Carbon  $start
+     */
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->noCatRepository->setUser($user);
+        $this->opsRepository->setUser($user);
     }
 
     /**
@@ -179,35 +170,44 @@ class CategoryReportGenerator
     }
 
     /**
-     * @param  Collection  $accounts
+     * @param  int  $currencyId
+     * @param  array  $currencyRow
      */
-    public function setAccounts(Collection $accounts): void
+    private function processCurrencyArray(int $currencyId, array $currencyRow): void
     {
-        $this->accounts = $accounts;
+        $this->report['sums'][$currencyId] = $this->report['sums'][$currencyId] ?? [
+            'spent'                   => '0',
+            'earned'                  => '0',
+            'sum'                     => '0',
+            'currency_id'             => $currencyRow['currency_id'],
+            'currency_symbol'         => $currencyRow['currency_symbol'],
+            'currency_name'           => $currencyRow['currency_name'],
+            'currency_code'           => $currencyRow['currency_code'],
+            'currency_decimal_places' => $currencyRow['currency_decimal_places'],
+        ];
+
+        /**
+         * @var int $categoryId
+         * @var array $categoryRow
+         */
+        foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
+            $this->processCategoryRow($currencyId, $currencyRow, $categoryId, $categoryRow);
+        }
     }
 
     /**
-     * @param  Carbon  $end
+     * Process one of the spent arrays from the operations method.
+     *
+     * @param  array  $data
      */
-    public function setEnd(Carbon $end): void
+    private function processOpsArray(array $data): void
     {
-        $this->end = $end;
-    }
-
-    /**
-     * @param  Carbon  $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @param  User  $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->noCatRepository->setUser($user);
-        $this->opsRepository->setUser($user);
+        /**
+         * @var int $currencyId
+         * @var array $currencyRow
+         */
+        foreach ($data as $currencyId => $currencyRow) {
+            $this->processCurrencyArray($currencyId, $currencyRow);
+        }
     }
 }

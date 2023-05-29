@@ -53,6 +53,7 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -63,6 +64,7 @@ class AccountController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/charts/getChartAccountOverview
      *
      * @param  DateRequest  $request
+     *
      * @return JsonResponse
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

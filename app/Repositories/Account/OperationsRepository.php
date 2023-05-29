@@ -58,80 +58,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * Collect transactions with some parameters
-     *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection  $accounts
-     * @param  string  $type
-     *
-     * @return array
-     */
-    private function getTransactions(Carbon $start, Carbon $end, Collection $accounts, string $type): array
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([$type]);
-        $collector->setBothAccounts($accounts);
-        $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
-
-        return $collector->getExtractedJournals();
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
-     * @param  array  $journals
-     * @param  string  $direction
-     *
-     * @return array
-     */
-    private function sortByCurrency(array $journals, string $direction): array
-    {
-        $array = [];
-        foreach ($journals as $journal) {
-            $currencyId         = (int)$journal['currency_id'];
-            $journalId          = (int)$journal['transaction_journal_id'];
-            $array[$currencyId] = $array[$currencyId] ?? [
-
-                'currency_id'             => $journal['currency_id'],
-                'currency_name'           => $journal['currency_name'],
-                'currency_symbol'         => $journal['currency_symbol'],
-                'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
-                'transaction_journals'    => [],
-            ];
-
-            $array[$currencyId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->$direction((string)$journal['amount']),
-                'date'                     => $journal['date'],
-                'transaction_journal_id'   => $journalId,
-                'budget_name'              => $journal['budget_name'],
-                'category_name'            => $journal['category_name'],
-                'source_account_id'        => $journal['source_account_id'],
-                'source_account_name'      => $journal['source_account_name'],
-                'source_account_iban'      => $journal['source_account_iban'],
-                'destination_account_id'   => $journal['destination_account_id'],
-                'destination_account_name' => $journal['destination_account_name'],
-                'destination_account_iban' => $journal['destination_account_iban'],
-                'tags'                     => $journal['tags'],
-                'description'              => $journal['description'],
-                'transaction_group_id'     => $journal['transaction_group_id'],
-            ];
-        }
-
-        return $array;
-    }
-
-    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified accounts. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
@@ -150,6 +76,16 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     public function sumExpenses(
@@ -162,6 +98,112 @@ class OperationsRepository implements OperationsRepositoryInterface
         $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
 
         return $this->groupByCurrency($journals, 'negative');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumExpensesByDestination(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
+
+        return $this->groupByDirection($journals, 'destination', 'negative');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumExpensesBySource(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
+
+        return $this->groupByDirection($journals, 'source', 'negative');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumIncome(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
+
+        return $this->groupByCurrency($journals, 'positive');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumIncomeByDestination(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
+
+        return $this->groupByDirection($journals, 'destination', 'positive');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumIncomeBySource(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
+
+        return $this->groupByDirection($journals, 'source', 'positive');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
+    {
+        $journals = $this->getTransactionsForSum(TransactionType::TRANSFER, $start, $end, $accounts, null, $currency);
+
+        return $this->groupByEither($journals);
+    }
+
+    /**
+     * Collect transactions with some parameters
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
+     * @param  string  $type
+     *
+     * @return array
+     */
+    private function getTransactions(Carbon $start, Carbon $end, Collection $accounts, string $type): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([$type]);
+        $collector->setBothAccounts($accounts);
+        $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
+
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -289,21 +331,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function sumExpensesByDestination(
-        Carbon $start,
-        Carbon $end,
-        ?Collection $accounts = null,
-        ?Collection $expense = null,
-        ?TransactionCurrency $currency = null
-    ): array {
-        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
-
-        return $this->groupByDirection($journals, 'destination', 'negative');
-    }
-
-    /**
      * @param  array  $journals
      * @param  string  $direction
      * @param  string  $method
@@ -348,76 +375,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $array;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sumExpensesBySource(
-        Carbon $start,
-        Carbon $end,
-        ?Collection $accounts = null,
-        ?Collection $expense = null,
-        ?TransactionCurrency $currency = null
-    ): array {
-        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
-
-        return $this->groupByDirection($journals, 'source', 'negative');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sumIncome(
-        Carbon $start,
-        Carbon $end,
-        ?Collection $accounts = null,
-        ?Collection $revenue = null,
-        ?TransactionCurrency $currency = null
-    ): array {
-        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
-
-        return $this->groupByCurrency($journals, 'positive');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sumIncomeByDestination(
-        Carbon $start,
-        Carbon $end,
-        ?Collection $accounts = null,
-        ?Collection $revenue = null,
-        ?TransactionCurrency $currency = null
-    ): array {
-        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
-
-        return $this->groupByDirection($journals, 'destination', 'positive');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sumIncomeBySource(
-        Carbon $start,
-        Carbon $end,
-        ?Collection $accounts = null,
-        ?Collection $revenue = null,
-        ?TransactionCurrency $currency = null
-    ): array {
-        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
-
-        return $this->groupByDirection($journals, 'source', 'positive');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
-    {
-        $journals = $this->getTransactionsForSum(TransactionType::TRANSFER, $start, $end, $accounts, null, $currency);
-
-        return $this->groupByEither($journals);
     }
 
     /**
@@ -539,5 +496,48 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $return;
+    }
+
+    /**
+     * @param  array  $journals
+     * @param  string  $direction
+     *
+     * @return array
+     */
+    private function sortByCurrency(array $journals, string $direction): array
+    {
+        $array = [];
+        foreach ($journals as $journal) {
+            $currencyId         = (int)$journal['currency_id'];
+            $journalId          = (int)$journal['transaction_journal_id'];
+            $array[$currencyId] = $array[$currencyId] ?? [
+
+                'currency_id'             => $journal['currency_id'],
+                'currency_name'           => $journal['currency_name'],
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'transaction_journals'    => [],
+            ];
+
+            $array[$currencyId]['transaction_journals'][$journalId] = [
+                'amount'                   => app('steam')->$direction((string)$journal['amount']),
+                'date'                     => $journal['date'],
+                'transaction_journal_id'   => $journalId,
+                'budget_name'              => $journal['budget_name'],
+                'category_name'            => $journal['category_name'],
+                'source_account_id'        => $journal['source_account_id'],
+                'source_account_name'      => $journal['source_account_name'],
+                'source_account_iban'      => $journal['source_account_iban'],
+                'destination_account_id'   => $journal['destination_account_id'],
+                'destination_account_name' => $journal['destination_account_name'],
+                'destination_account_iban' => $journal['destination_account_iban'],
+                'tags'                     => $journal['tags'],
+                'description'              => $journal['description'],
+                'transaction_group_id'     => $journal['transaction_group_id'],
+            ];
+        }
+
+        return $array;
     }
 }

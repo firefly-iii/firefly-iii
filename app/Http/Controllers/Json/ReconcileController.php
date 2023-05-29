@@ -34,8 +34,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 use Throwable;
 
 /**
@@ -170,46 +170,6 @@ class ReconcileController extends Controller
     }
 
     /**
-     * @param  Account  $account
-     * @param  TransactionCurrency  $currency
-     * @param  array  $journal
-     * @param  string  $amount
-     *
-     * @return string
-     */
-    private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
-    {
-        $toAdd = '0';
-        Log::debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
-
-        // not much magic below we need to cover using tests.
-
-        if ($account->id === $journal['source_account_id']) {
-            if ($currency->id === $journal['currency_id']) {
-                $toAdd = $journal['amount'];
-            }
-            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
-                $toAdd = $journal['foreign_amount'];
-            }
-        }
-        if ($account->id === $journal['destination_account_id']) {
-            if ($currency->id === $journal['currency_id']) {
-                $toAdd = bcmul($journal['amount'], '-1');
-            }
-            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
-                $toAdd = bcmul($journal['foreign_amount'], '-1');
-            }
-        }
-
-
-        Log::debug(sprintf('Going to add %s to %s', $toAdd, $amount));
-        $amount = bcadd($amount, $toAdd);
-        Log::debug(sprintf('Result is %s', $amount));
-
-        return $amount;
-    }
-
-    /**
      * Returns a list of transactions in a modal.
      *
      * @param  Account  $account
@@ -263,6 +223,46 @@ class ReconcileController extends Controller
         }
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
+    }
+
+    /**
+     * @param  Account  $account
+     * @param  TransactionCurrency  $currency
+     * @param  array  $journal
+     * @param  string  $amount
+     *
+     * @return string
+     */
+    private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
+    {
+        $toAdd = '0';
+        Log::debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
+
+        // not much magic below we need to cover using tests.
+
+        if ($account->id === $journal['source_account_id']) {
+            if ($currency->id === $journal['currency_id']) {
+                $toAdd = $journal['amount'];
+            }
+            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
+                $toAdd = $journal['foreign_amount'];
+            }
+        }
+        if ($account->id === $journal['destination_account_id']) {
+            if ($currency->id === $journal['currency_id']) {
+                $toAdd = bcmul($journal['amount'], '-1');
+            }
+            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
+                $toAdd = bcmul($journal['foreign_amount'], '-1');
+            }
+        }
+
+
+        Log::debug(sprintf('Going to add %s to %s', $toAdd, $amount));
+        $amount = bcadd($amount, $toAdd);
+        Log::debug(sprintf('Result is %s', $amount));
+
+        return $amount;
     }
 
     /**

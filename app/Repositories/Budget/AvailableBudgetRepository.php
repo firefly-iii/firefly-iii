@@ -56,14 +56,6 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function findById(int $id): ?AvailableBudget
-    {
-        return $this->user->availableBudgets->find($id);
-    }
-
-    /**
      * Find existing AB.
      *
      * @param  TransactionCurrency  $currency
@@ -79,6 +71,37 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                           ->where('start_date', $start->format('Y-m-d'))
                           ->where('end_date', $end->format('Y-m-d'))
                           ->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findById(int $id): ?AvailableBudget
+    {
+        return $this->user->availableBudgets->find($id);
+    }
+
+    /**
+     * Return a list of all available budgets (in all currencies) (for the selected period).
+     *
+     * @param  Carbon|null  $start
+     * @param  Carbon|null  $end
+     *
+     * @return Collection
+     */
+    public function get(?Carbon $start = null, ?Carbon $end = null): Collection
+    {
+        $query = $this->user->availableBudgets()->with(['transactionCurrency']);
+        if (null !== $start && null !== $end) {
+            $query->where(
+                static function (Builder $q1) use ($start, $end) {
+                    $q1->where('start_date', '=', $start->format('Y-m-d'));
+                    $q1->where('end_date', '=', $end->format('Y-m-d'));
+                }
+            );
+        }
+
+        return $query->get(['available_budgets.*']);
     }
 
     /**
@@ -120,29 +143,6 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         }
 
         return $return;
-    }
-
-    /**
-     * Return a list of all available budgets (in all currencies) (for the selected period).
-     *
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
-     *
-     * @return Collection
-     */
-    public function get(?Carbon $start = null, ?Carbon $end = null): Collection
-    {
-        $query = $this->user->availableBudgets()->with(['transactionCurrency']);
-        if (null !== $start && null !== $end) {
-            $query->where(
-                static function (Builder $q1) use ($start, $end) {
-                    $q1->where('start_date', '=', $start->format('Y-m-d'));
-                    $q1->where('end_date', '=', $end->format('Y-m-d'));
-                }
-            );
-        }
-
-        return $query->get(['available_budgets.*']);
     }
 
     /**

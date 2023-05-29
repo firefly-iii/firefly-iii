@@ -39,52 +39,6 @@ class RuleFormRequest extends FormRequest
     use ChecksLogin;
 
     /**
-     * Get all data for controller.
-     *
-     * @return array
-     *
-     */
-    public function getRuleData(): array
-    {
-        return [
-            'title'           => $this->convertString('title'),
-            'rule_group_id'   => $this->convertInteger('rule_group_id'),
-            'active'          => $this->boolean('active'),
-            'trigger'         => $this->convertString('trigger'),
-            'description'     => $this->stringWithNewlines('description'),
-            'stop_processing' => $this->boolean('stop_processing'),
-            'strict'          => $this->boolean('strict'),
-            'triggers'        => $this->getRuleTriggerData(),
-            'actions'         => $this->getRuleActionData(),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getRuleTriggerData(): array
-    {
-        $return      = [];
-        $triggerData = $this->get('triggers');
-        if (is_array($triggerData)) {
-            foreach ($triggerData as $trigger) {
-                $stopProcessing = $trigger['stop_processing'] ?? '0';
-                $prohibited     = $trigger['prohibited'] ?? '0';
-                $set            = [
-                    'type'            => $trigger['type'] ?? 'invalid',
-                    'value'           => $trigger['value'] ?? '',
-                    'stop_processing' => 1 === (int)$stopProcessing,
-                    'prohibited'      => 1 === (int)$prohibited,
-                ];
-                $set            = self::replaceAmountTrigger($set);
-                $return[]       = $set;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
      * @param  array  $array
      * @return array
      */
@@ -113,24 +67,24 @@ class RuleFormRequest extends FormRequest
     }
 
     /**
+     * Get all data for controller.
+     *
      * @return array
+     *
      */
-    private function getRuleActionData(): array
+    public function getRuleData(): array
     {
-        $return     = [];
-        $actionData = $this->get('actions');
-        if (is_array($actionData)) {
-            foreach ($actionData as $action) {
-                $stopProcessing = $action['stop_processing'] ?? '0';
-                $return[]       = [
-                    'type'            => $action['type'] ?? 'invalid',
-                    'value'           => $action['value'] ?? '',
-                    'stop_processing' => 1 === (int)$stopProcessing,
-                ];
-            }
-        }
-
-        return $return;
+        return [
+            'title'           => $this->convertString('title'),
+            'rule_group_id'   => $this->convertInteger('rule_group_id'),
+            'active'          => $this->boolean('active'),
+            'trigger'         => $this->convertString('trigger'),
+            'description'     => $this->stringWithNewlines('description'),
+            'stop_processing' => $this->boolean('stop_processing'),
+            'strict'          => $this->boolean('strict'),
+            'triggers'        => $this->getRuleTriggerData(),
+            'actions'         => $this->getRuleActionData(),
+        ];
     }
 
     /**
@@ -171,5 +125,51 @@ class RuleFormRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    /**
+     * @return array
+     */
+    private function getRuleActionData(): array
+    {
+        $return     = [];
+        $actionData = $this->get('actions');
+        if (is_array($actionData)) {
+            foreach ($actionData as $action) {
+                $stopProcessing = $action['stop_processing'] ?? '0';
+                $return[]       = [
+                    'type'            => $action['type'] ?? 'invalid',
+                    'value'           => $action['value'] ?? '',
+                    'stop_processing' => 1 === (int)$stopProcessing,
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return array
+     */
+    private function getRuleTriggerData(): array
+    {
+        $return      = [];
+        $triggerData = $this->get('triggers');
+        if (is_array($triggerData)) {
+            foreach ($triggerData as $trigger) {
+                $stopProcessing = $trigger['stop_processing'] ?? '0';
+                $prohibited     = $trigger['prohibited'] ?? '0';
+                $set            = [
+                    'type'            => $trigger['type'] ?? 'invalid',
+                    'value'           => $trigger['value'] ?? '',
+                    'stop_processing' => 1 === (int)$stopProcessing,
+                    'prohibited'      => 1 === (int)$prohibited,
+                ];
+                $set            = self::replaceAmountTrigger($set);
+                $return[]       = $set;
+            }
+        }
+
+        return $return;
     }
 }

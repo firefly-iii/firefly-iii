@@ -102,14 +102,6 @@ class ObjectGroup extends Model
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * @return MorphToMany
      */
     public function accounts()
@@ -131,5 +123,13 @@ class ObjectGroup extends Model
     public function piggyBanks()
     {
         return $this->morphedByMany(PiggyBank::class, 'object_groupable');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

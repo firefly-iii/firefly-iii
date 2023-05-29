@@ -99,26 +99,20 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
-     * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
-     *
      * @param  string  $mfaCode
-     * @param  array  $mfaHistory
-     *
-     * @return bool
      */
-    private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
+    private function addToMFAHistory(string $mfaCode): void
     {
-        $now = time();
-        foreach ($mfaHistory as $entry) {
-            $time = $entry['time'];
-            $code = $entry['code'];
-            if ($code === $mfaCode && $now - $time <= 300) {
-                return true;
-            }
-        }
+        /** @var array $mfaHistory */
+        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $entry        = [
+            'time' => time(),
+            'code' => $mfaCode,
+        ];
+        $mfaHistory[] = $entry;
 
-        return false;
+        Preferences::set('mfa_history', $mfaHistory);
+        $this->filterMFAHistory();
     }
 
     /**
@@ -144,20 +138,26 @@ class TwoFactorController extends Controller
     }
 
     /**
+     * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
+     * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
+     *
      * @param  string  $mfaCode
+     * @param  array  $mfaHistory
+     *
+     * @return bool
      */
-    private function addToMFAHistory(string $mfaCode): void
+    private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
     {
-        /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
-        $entry        = [
-            'time' => time(),
-            'code' => $mfaCode,
-        ];
-        $mfaHistory[] = $entry;
+        $now = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($code === $mfaCode && $now - $time <= 300) {
+                return true;
+            }
+        }
 
-        Preferences::set('mfa_history', $mfaHistory);
-        $this->filterMFAHistory();
+        return false;
     }
 
     /**

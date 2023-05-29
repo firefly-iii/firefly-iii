@@ -52,6 +52,7 @@ class ForceMigration extends Command
 
     /**
      * Execute the console command.
+     *
      * @throws FireflyException
      */
     public function handle(): int
@@ -69,8 +70,10 @@ class ForceMigration extends Command
             $user = $this->getUser();
             Log::channel('audit')->info(sprintf('User #%d ("%s") forced migrations.', $user->id, $user->email));
             $this->forceMigration();
+
             return 0;
         }
+
         return 0;
     }
 

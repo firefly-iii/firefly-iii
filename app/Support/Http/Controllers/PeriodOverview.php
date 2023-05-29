@@ -151,116 +151,6 @@ trait PeriodOverview
     }
 
     /**
-     * Filter a list of journals by a set of dates, and then group them by currency.
-     *
-     * @param  array  $array
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return array
-     */
-    private function filterJournalsByDate(array $array, Carbon $start, Carbon $end): array
-    {
-        $result = [];
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            if ($journal['date'] <= $end && $journal['date'] >= $start) {
-                $result[] = $journal;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return only transactions where $account is the source.
-     *
-     * @param  Account  $account
-     * @param  array  $journals
-     *
-     * @return array
-     */
-    private function filterTransferredAway(Account $account, array $journals): array
-    {
-        $return = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['source_account_id']) {
-                $return[] = $journal;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Return only transactions where $account is the source.
-     *
-     * @param  Account  $account
-     * @param  array  $journals
-     *
-     * @return array
-     */
-    private function filterTransferredIn(Account $account, array $journals): array
-    {
-        $return = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['destination_account_id']) {
-                $return[] = $journal;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param  array  $journals
-     *
-     * @return array
-     */
-    private function groupByCurrency(array $journals): array
-    {
-        $return = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
-            $foreignCurrencyId = $journal['foreign_currency_id'];
-            if (!array_key_exists($currencyId, $return)) {
-                $return[$currencyId] = [
-                    'amount'                  => '0',
-                    'count'                   => 0,
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
-            }
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
-            $return[$currencyId]['count']++;
-
-            if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
-                if (!array_key_exists($foreignCurrencyId, $return)) {
-                    $return[$foreignCurrencyId] = [
-                        'amount'                  => '0',
-                        'count'                   => 0,
-                        'currency_id'             => (int)$foreignCurrencyId,
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                    ];
-                }
-                $return[$foreignCurrencyId]['count']++;
-                $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
-            }
-        }
-
-        return $return;
-    }
-
-    /**
      * Overview for single category. Has been refactored recently.
      *
      * @param  Category  $category
@@ -607,5 +497,115 @@ trait PeriodOverview
         }
 
         return $entries;
+    }
+
+    /**
+     * Filter a list of journals by a set of dates, and then group them by currency.
+     *
+     * @param  array  $array
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return array
+     */
+    private function filterJournalsByDate(array $array, Carbon $start, Carbon $end): array
+    {
+        $result = [];
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            if ($journal['date'] <= $end && $journal['date'] >= $start) {
+                $result[] = $journal;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return only transactions where $account is the source.
+     *
+     * @param  Account  $account
+     * @param  array  $journals
+     *
+     * @return array
+     */
+    private function filterTransferredAway(Account $account, array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if ($account->id === (int)$journal['source_account_id']) {
+                $return[] = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Return only transactions where $account is the source.
+     *
+     * @param  Account  $account
+     * @param  array  $journals
+     *
+     * @return array
+     */
+    private function filterTransferredIn(Account $account, array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if ($account->id === (int)$journal['destination_account_id']) {
+                $return[] = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param  array  $journals
+     *
+     * @return array
+     */
+    private function groupByCurrency(array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyId        = (int)$journal['currency_id'];
+            $foreignCurrencyId = $journal['foreign_currency_id'];
+            if (!array_key_exists($currencyId, $return)) {
+                $return[$currencyId] = [
+                    'amount'                  => '0',
+                    'count'                   => 0,
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            }
+            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
+            $return[$currencyId]['count']++;
+
+            if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
+                if (!array_key_exists($foreignCurrencyId, $return)) {
+                    $return[$foreignCurrencyId] = [
+                        'amount'                  => '0',
+                        'count'                   => 0,
+                        'currency_id'             => (int)$foreignCurrencyId,
+                        'currency_name'           => $journal['foreign_currency_name'],
+                        'currency_code'           => $journal['foreign_currency_code'],
+                        'currency_symbol'         => $journal['foreign_currency_symbol'],
+                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
+                    ];
+                }
+                $return[$foreignCurrencyId]['count']++;
+                $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
+            }
+        }
+
+        return $return;
     }
 }

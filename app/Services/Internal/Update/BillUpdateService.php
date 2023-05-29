@@ -33,8 +33,8 @@ use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class BillUpdateService
@@ -141,6 +141,17 @@ class BillUpdateService
     }
 
     /**
+     * @param  Rule  $rule
+     * @param  string  $key
+     *
+     * @return RuleTrigger|null
+     */
+    private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
+    {
+        return $rule->ruleTriggers()->where('trigger_type', $key)->first();
+    }
+
+    /**
      * @param  Bill  $bill
      * @param  array  $data
      *
@@ -186,29 +197,6 @@ class BillUpdateService
 
     /**
      * @param  Bill  $bill
-     * @param  int  $oldOrder
-     * @param  int  $newOrder
-     */
-    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
-    {
-        if ($newOrder > $oldOrder) {
-            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
-                       ->where('bills.id', '!=', $bill->id)
-                       ->decrement('bills.order');
-            $bill->order = $newOrder;
-            $bill->save();
-        }
-        if ($newOrder < $oldOrder) {
-            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
-                       ->where('bills.id', '!=', $bill->id)
-                       ->increment('bills.order');
-            $bill->order = $newOrder;
-            $bill->save();
-        }
-    }
-
-    /**
-     * @param  Bill  $bill
      * @param  array  $oldData
      * @param  array  $newData
      */
@@ -244,6 +232,29 @@ class BillUpdateService
     }
 
     /**
+     * @param  Bill  $bill
+     * @param  int  $oldOrder
+     * @param  int  $newOrder
+     */
+    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
+    {
+        if ($newOrder > $oldOrder) {
+            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+                       ->where('bills.id', '!=', $bill->id)
+                       ->decrement('bills.order');
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+        if ($newOrder < $oldOrder) {
+            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+                       ->where('bills.id', '!=', $bill->id)
+                       ->increment('bills.order');
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+    }
+
+    /**
      * @param  Collection  $rules
      * @param  string  $key
      * @param  string  $oldValue
@@ -267,16 +278,5 @@ class BillUpdateService
                 $trigger->save();
             }
         }
-    }
-
-    /**
-     * @param  Rule  $rule
-     * @param  string  $key
-     *
-     * @return RuleTrigger|null
-     */
-    private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
-    {
-        return $rule->ruleTriggers()->where('trigger_type', $key)->first();
     }
 }

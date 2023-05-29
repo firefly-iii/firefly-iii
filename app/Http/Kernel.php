@@ -74,7 +74,22 @@ class Kernel extends HttpKernel
             TrustProxies::class,
             InstallationId::class,
         ];
-
+    /**
+     * The application's route middleware.
+     *
+     * These middleware may be assigned to groups or used individually.
+     *
+     * @var array
+     */
+    protected $middlewareAliases
+        = [
+            'auth'       => Authenticate::class,
+            'auth.basic' => AuthenticateWithBasicAuth::class,
+            'bindings'   => Binder::class,
+            'can'        => Authorize::class,
+            'guest'      => RedirectIfAuthenticated::class,
+            'throttle'   => ThrottleRequests::class,
+        ];
     /**
      * The application's route middleware groups.
      *
@@ -205,21 +220,5 @@ class Kernel extends HttpKernel
             Authenticate::class,
             Binder::class,
             Authorize::class,
-        ];
-    /**
-     * The application's route middleware.
-     *
-     * These middleware may be assigned to groups or used individually.
-     *
-     * @var array
-     */
-    protected $middlewareAliases
-        = [
-            'auth'       => Authenticate::class,
-            'auth.basic' => AuthenticateWithBasicAuth::class,
-            'bindings'   => Binder::class,
-            'can'        => Authorize::class,
-            'guest'      => RedirectIfAuthenticated::class,
-            'throttle'   => ThrottleRequests::class,
         ];
 }

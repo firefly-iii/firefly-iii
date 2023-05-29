@@ -144,6 +144,36 @@ class ShowController extends Controller
      *
      * @return array
      */
+    private function getAccounts(array $group): array
+    {
+        $accounts = [];
+
+        foreach ($group['transactions'] as $transaction) {
+            $accounts['source'][]      = [
+                'type' => $transaction['source_type'],
+                'id'   => $transaction['source_id'],
+                'name' => $transaction['source_name'],
+                'iban' => $transaction['source_iban'],
+            ];
+            $accounts['destination'][] = [
+                'type' => $transaction['destination_type'],
+                'id'   => $transaction['destination_id'],
+                'name' => $transaction['destination_name'],
+                'iban' => $transaction['destination_iban'],
+            ];
+        }
+
+        $accounts['source']      = array_unique($accounts['source'], SORT_REGULAR);
+        $accounts['destination'] = array_unique($accounts['destination'], SORT_REGULAR);
+
+        return $accounts;
+    }
+
+    /**
+     * @param  array  $group
+     *
+     * @return array
+     */
     private function getAmounts(array $group): array
     {
         $amounts = [];
@@ -172,35 +202,5 @@ class ShowController extends Controller
         }
 
         return $amounts;
-    }
-
-    /**
-     * @param  array  $group
-     *
-     * @return array
-     */
-    private function getAccounts(array $group): array
-    {
-        $accounts = [];
-
-        foreach ($group['transactions'] as $transaction) {
-            $accounts['source'][]      = [
-                'type' => $transaction['source_type'],
-                'id'   => $transaction['source_id'],
-                'name' => $transaction['source_name'],
-                'iban' => $transaction['source_iban'],
-            ];
-            $accounts['destination'][] = [
-                'type' => $transaction['destination_type'],
-                'id'   => $transaction['destination_id'],
-                'name' => $transaction['destination_name'],
-                'iban' => $transaction['destination_iban'],
-            ];
-        }
-
-        $accounts['source']      = array_unique($accounts['source'], SORT_REGULAR);
-        $accounts['destination'] = array_unique($accounts['destination'], SORT_REGULAR);
-
-        return $accounts;
     }
 }

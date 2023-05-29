@@ -46,6 +46,7 @@ class AccountController extends Controller
      *
      * @param  ListRequest  $request
      * @param  Account  $account
+     *
      * @return JsonResponse
      */
     public function listTransactions(ListRequest $request, Account $account): JsonResponse

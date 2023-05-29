@@ -26,8 +26,8 @@ namespace FireflyIII\Support\Form;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\MessageBag;
 use Throwable;
 
 /**
@@ -63,23 +63,6 @@ trait FormSupport
 
     /**
      * @param  string  $name
-     * @param  array|null  $options
-     *
-     * @return string
-     */
-    protected function label(string $name, array $options = null): string
-    {
-        $options = $options ?? [];
-        if (array_key_exists('label', $options)) {
-            return $options['label'];
-        }
-        $name = str_replace('[]', '', $name);
-
-        return (string)trans('form.'.$name);
-    }
-
-    /**
-     * @param  string  $name
      * @param  mixed  $label
      * @param  array|null  $options
      *
@@ -95,25 +78,6 @@ trait FormSupport
         $options['placeholder']  = ucfirst($label);
 
         return $options;
-    }
-
-    /**
-     * @param  string  $name
-     *
-     * @return string
-     */
-    protected function getHolderClasses(string $name): string
-    {
-        // Get errors from session:
-        /** @var MessageBag $errors */
-        $errors  = session('errors');
-        $classes = 'form-group';
-
-        if (null !== $errors && $errors->has($name)) {
-            $classes = 'form-group has-error has-feedback';
-        }
-
-        return $classes;
     }
 
     /**
@@ -162,5 +126,41 @@ trait FormSupport
         }
 
         return $date;
+    }
+
+    /**
+     * @param  string  $name
+     *
+     * @return string
+     */
+    protected function getHolderClasses(string $name): string
+    {
+        // Get errors from session:
+        /** @var MessageBag $errors */
+        $errors  = session('errors');
+        $classes = 'form-group';
+
+        if (null !== $errors && $errors->has($name)) {
+            $classes = 'form-group has-error has-feedback';
+        }
+
+        return $classes;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  array|null  $options
+     *
+     * @return string
+     */
+    protected function label(string $name, array $options = null): string
+    {
+        $options = $options ?? [];
+        if (array_key_exists('label', $options)) {
+            return $options['label'];
+        }
+        $name = str_replace('[]', '', $name);
+
+        return (string)trans('form.'.$name);
     }
 }

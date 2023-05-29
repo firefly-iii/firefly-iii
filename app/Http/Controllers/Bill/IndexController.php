@@ -135,49 +135,26 @@ class IndexController extends Controller
     }
 
     /**
-     * @param  array  $bills
+     * Set the order of a bill.
      *
-     * @return array
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @param  Request  $request
+     * @param  Bill  $bill
+     *
+     * @return JsonResponse
      */
-    private function getSums(array $bills): array
+    public function setOrder(Request $request, Bill $bill): JsonResponse
     {
-        $sums  = [];
-        $range = app('navigation')->getViewRange(false);
-
-        /** @var array $group */
-        foreach ($bills as $groupOrder => $group) {
-            /** @var array $bill */
-            foreach ($group['bills'] as $bill) {
-                if (false === $bill['active']) {
-                    continue;
-                }
-
-                $currencyId                     = $bill['currency_id'];
-                $sums[$groupOrder][$currencyId] = $sums[$groupOrder][$currencyId] ?? [
-                    'currency_id'             => $currencyId,
-                    'currency_code'           => $bill['currency_code'],
-                    'currency_name'           => $bill['currency_name'],
-                    'currency_symbol'         => $bill['currency_symbol'],
-                    'currency_decimal_places' => $bill['currency_decimal_places'],
-                    'avg'                     => '0',
-                    'period'                  => $range,
-                    'per_period'              => '0',
-                ];
-                // only fill in avg when bill is active.
-                if (count($bill['pay_dates']) > 0) {
-                    $avg                                   = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
-                    $avg                                   = bcmul($avg, (string)count($bill['pay_dates']));
-                    $sums[$groupOrder][$currencyId]['avg'] = bcadd($sums[$groupOrder][$currencyId]['avg'], $avg);
-                }
-                // fill in per period regardless:
-                $sums[$groupOrder][$currencyId]['per_period'] = bcadd($sums[$groupOrder][$currencyId]['per_period'], $this->amountPerPeriod($bill, $range));
-            }
+        $objectGroupTitle = (string)$request->get('objectGroupTitle');
+        $newOrder         = (int)$request->get('order');
+        $this->repository->setOrder($bill, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->repository->setObjectGroup($bill, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->repository->removeObjectGroup($bill);
         }
 
-        return $sums;
+        return response()->json(['data' => 'OK']);
     }
 
     /**
@@ -228,6 +205,52 @@ class IndexController extends Controller
     }
 
     /**
+     * @param  array  $bills
+     *
+     * @return array
+     * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function getSums(array $bills): array
+    {
+        $sums  = [];
+        $range = app('navigation')->getViewRange(false);
+
+        /** @var array $group */
+        foreach ($bills as $groupOrder => $group) {
+            /** @var array $bill */
+            foreach ($group['bills'] as $bill) {
+                if (false === $bill['active']) {
+                    continue;
+                }
+
+                $currencyId                     = $bill['currency_id'];
+                $sums[$groupOrder][$currencyId] = $sums[$groupOrder][$currencyId] ?? [
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $bill['currency_code'],
+                    'currency_name'           => $bill['currency_name'],
+                    'currency_symbol'         => $bill['currency_symbol'],
+                    'currency_decimal_places' => $bill['currency_decimal_places'],
+                    'avg'                     => '0',
+                    'period'                  => $range,
+                    'per_period'              => '0',
+                ];
+                // only fill in avg when bill is active.
+                if (count($bill['pay_dates']) > 0) {
+                    $avg                                   = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
+                    $avg                                   = bcmul($avg, (string)count($bill['pay_dates']));
+                    $sums[$groupOrder][$currencyId]['avg'] = bcadd($sums[$groupOrder][$currencyId]['avg'], $avg);
+                }
+                // fill in per period regardless:
+                $sums[$groupOrder][$currencyId]['per_period'] = bcadd($sums[$groupOrder][$currencyId]['per_period'], $this->amountPerPeriod($bill, $range));
+            }
+        }
+
+        return $sums;
+    }
+
+    /**
      * @param  array  $sums
      *
      * @return array
@@ -263,28 +286,5 @@ class IndexController extends Controller
         }
 
         return $totals;
-    }
-
-    /**
-     * Set the order of a bill.
-     *
-     * @param  Request  $request
-     * @param  Bill  $bill
-     *
-     * @return JsonResponse
-     */
-    public function setOrder(Request $request, Bill $bill): JsonResponse
-    {
-        $objectGroupTitle = (string)$request->get('objectGroupTitle');
-        $newOrder         = (int)$request->get('order');
-        $this->repository->setOrder($bill, $newOrder);
-        if ('' !== $objectGroupTitle) {
-            $this->repository->setObjectGroup($bill, $objectGroupTitle);
-        }
-        if ('' === $objectGroupTitle) {
-            $this->repository->removeObjectGroup($bill);
-        }
-
-        return response()->json(['data' => 'OK']);
     }
 }

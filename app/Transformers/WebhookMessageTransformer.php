@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\WebhookMessage;
-use Jsonexception;
 use Illuminate\Support\Facades\Log;
+use Jsonexception;
 
 /**
  * Class WebhookMessageTransformer

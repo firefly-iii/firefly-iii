@@ -104,16 +104,427 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  NullArrayObject  $data
+     * @param  TransactionGroup  $group
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function transformObject(TransactionGroup $group): array
+    {
+        try {
+            $result = [
+                'id'           => (int)$group->id,
+                'created_at'   => $group->created_at->toAtomString(),
+                'updated_at'   => $group->updated_at->toAtomString(),
+                'user'         => (int)$group->user_id,
+                'group_title'  => $group->title,
+                'transactions' => $this->transformJournals($group->transactionJournals),
+                'links'        => [
+                    [
+                        'rel' => 'self',
+                        'uri' => '/transactions/'.$group->id,
+                    ],
+                ],
+            ];
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException(sprintf('Transaction group #%d is broken. Please check out your log files.', $group->id), 0, $e);
+        }
+
+        // do something else.
+
+        return $result;
+    }
+
+    /**
+     * @param  NullArrayObject  $object
+     * @param  string  $key
+     *
+     * @return string|null
+     */
+    private function dateFromArray(NullArrayObject $object, string $key): ?string
+    {
+        if (null === $object[$key]) {
+            return null;
+        }
+
+        return $object[$key]->toAtomString();
+    }
+
+    /**
+     * @param  string  $type
+     * @param  string  $amount
+     *
+     * @return string
+     */
+    private function getAmount(string $type, string $amount): string
+    {
+        return app('steam')->positive($amount);
+    }
+
+    /**
+     * @param  Bill|null  $bill
      *
      * @return array
      */
-    private function transformTransactions(NullArrayObject $data): array
+    private function getBill(?Bill $bill): array
     {
-        $result       = [];
-        $transactions = $data['transactions'] ?? [];
-        foreach ($transactions as $transaction) {
-            $result[] = $this->transformTransaction($transaction);
+        $array = [
+            'id'   => null,
+            'name' => null,
+        ];
+        if (null === $bill) {
+            return $array;
+        }
+        $array['id']   = (string)$bill->id;
+        $array['name'] = $bill->name;
+
+        return $array;
+    }
+
+    /**
+     * @param  Budget|null  $budget
+     *
+     * @return array
+     */
+    private function getBudget(?Budget $budget): array
+    {
+        $array = [
+            'id'   => null,
+            'name' => null,
+        ];
+        if (null === $budget) {
+            return $array;
+        }
+        $array['id']   = (int)$budget->id;
+        $array['name'] = $budget->name;
+
+        return $array;
+    }
+
+    /**
+     * @param  Category|null  $category
+     *
+     * @return array
+     */
+    private function getCategory(?Category $category): array
+    {
+        $array = [
+            'id'   => null,
+            'name' => null,
+        ];
+        if (null === $category) {
+            return $array;
+        }
+        $array['id']   = (int)$category->id;
+        $array['name'] = $category->name;
+
+        return $array;
+    }
+
+    /**
+     * @param  NullArrayObject  $dates
+     *
+     * @return array
+     */
+    private function getDates(NullArrayObject $dates): array
+    {
+        $fields = [
+            'interest_date',
+            'book_date',
+            'process_date',
+            'due_date',
+            'payment_date',
+            'invoice_date',
+        ];
+        $return = [];
+        foreach ($fields as $field) {
+            $return[$field] = null;
+            if (null !== $dates[$field]) {
+                $return[$field] = $dates[$field]->toAtomString();
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param  TransactionJournal  $journal
+     *
+     * @return Transaction
+     * @throws FireflyException
+     */
+    private function getDestinationTransaction(TransactionJournal $journal): Transaction
+    {
+        $result = $journal->transactions->first(
+            static function (Transaction $transaction) {
+                return (float)$transaction->amount > 0; // lame but it works
+            }
+        );
+        if (null === $result) {
+            throw new FireflyException(sprintf('Journal #%d unexpectedly has no destination transaction.', $journal->id));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  string  $type
+     * @param  string|null  $foreignAmount
+     *
+     * @return string|null
+     */
+    private function getForeignAmount(string $type, ?string $foreignAmount): ?string
+    {
+        $result = null;
+        if (null !== $foreignAmount && '' !== $foreignAmount && bccomp('0', $foreignAmount) !== 0) {
+            $result = app('steam')->positive($foreignAmount);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  TransactionCurrency|null  $currency
+     *
+     * @return array
+     */
+    private function getForeignCurrency(?TransactionCurrency $currency): array
+    {
+        $array = [
+            'id'             => null,
+            'code'           => null,
+            'symbol'         => null,
+            'decimal_places' => null,
+        ];
+        if (null === $currency) {
+            return $array;
+        }
+        $array['id']             = (int)$currency->id;
+        $array['code']           = $currency->code;
+        $array['symbol']         = $currency->symbol;
+        $array['decimal_places'] = (int)$currency->decimal_places;
+
+        return $array;
+    }
+
+    /**
+     * @param  TransactionJournal  $journal
+     *
+     * @return Location|null
+     */
+    private function getLocation(TransactionJournal $journal): ?Location
+    {
+        return $journal->locations()->first();
+    }
+
+    /**
+     * @param  int  $journalId
+     *
+     * @return Location|null
+     */
+    private function getLocationById(int $journalId): ?Location
+    {
+        return $this->groupRepos->getLocation($journalId);
+    }
+
+    /**
+     * @param  TransactionJournal  $journal
+     *
+     * @return Transaction
+     * @throws FireflyException
+     */
+    private function getSourceTransaction(TransactionJournal $journal): Transaction
+    {
+        $result = $journal->transactions->first(
+            static function (Transaction $transaction) {
+                return (float)$transaction->amount < 0; // lame but it works.
+            }
+        );
+        if (null === $result) {
+            throw new FireflyException(sprintf('Journal #%d unexpectedly has no source transaction.', $journal->id));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param  int  $journalId
+     *
+     * @return bool
+     */
+    private function hasAttachments(int $journalId): bool
+    {
+        return $this->groupRepos->countAttachments($journalId) > 0;
+    }
+
+    /**
+     * @param  array  $array
+     * @param  string  $key
+     *
+     * @return int|null
+     */
+    private function integerFromArray(array $array, string $key): ?int
+    {
+        if (array_key_exists($key, $array)) {
+            return (int)$array[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  array  $array
+     * @param  string  $key
+     * @param  string|null  $default
+     *
+     * @return string|null
+     */
+    private function stringFromArray(array $array, string $key, ?string $default): ?string
+    {
+        if (array_key_exists($key, $array) && null === $array[$key]) {
+            return null;
+        }
+        if (array_key_exists($key, $array) && null !== $array[$key]) {
+            if (0 === $array[$key]) {
+                return $default;
+            }
+            if ('0' === $array[$key]) {
+                return $default;
+            }
+            return (string)$array[$key];
+        }
+
+        if (null !== $default) {
+            return (string)$default;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  TransactionJournal  $journal
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function transformJournal(TransactionJournal $journal): array
+    {
+        $source          = $this->getSourceTransaction($journal);
+        $destination     = $this->getDestinationTransaction($journal);
+        $type            = $journal->transactionType->type;
+        $currency        = $source->transactionCurrency;
+        $amount          = app('steam')->bcround($this->getAmount($type, (string)$source->amount), $currency->decimal_places ?? 0);
+        $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : (string)$source->foreign_amount);
+        $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
+        $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
+        $foreignCurrency = $this->getForeignCurrency($source->foreignCurrency);
+        $budget          = $this->getBudget($journal->budgets->first());
+        $category        = $this->getCategory($journal->categories->first());
+        $bill            = $this->getBill($journal->bill);
+
+        if (null !== $foreignAmount && null !== $source->foreignCurrency) {
+            $foreignAmount = app('steam')->bcround($foreignAmount, $foreignCurrency['decimal_places'] ?? 0);
+        }
+
+        $longitude = null;
+        $latitude  = null;
+        $zoomLevel = null;
+        $location  = $this->getLocation($journal);
+        if (null !== $location) {
+            $longitude = $location->longitude;
+            $latitude  = $location->latitude;
+            $zoomLevel = $location->zoom_level;
+        }
+
+        return [
+            'user'                   => (int)$journal->user_id,
+            'transaction_journal_id' => (int)$journal->id,
+            'type'                   => strtolower($type),
+            'date'                   => $journal->date->toAtomString(),
+            'order'                  => $journal->order,
+
+            'currency_id'             => (int)$currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => (int)$currency->decimal_places,
+
+            'foreign_currency_id'             => $foreignCurrency['id'],
+            'foreign_currency_code'           => $foreignCurrency['code'],
+            'foreign_currency_symbol'         => $foreignCurrency['symbol'],
+            'foreign_currency_decimal_places' => $foreignCurrency['decimal_places'],
+
+            'amount'         => app('steam')->bcround($amount, $currency->decimal_places),
+            'foreign_amount' => $foreignAmount,
+
+            'description' => $journal->description,
+
+            'source_id'   => (int)$source->account_id,
+            'source_name' => $source->account->name,
+            'source_iban' => $source->account->iban,
+            'source_type' => $source->account->accountType->type,
+
+            'destination_id'   => (int)$destination->account_id,
+            'destination_name' => $destination->account->name,
+            'destination_iban' => $destination->account->iban,
+            'destination_type' => $destination->account->accountType->type,
+
+            'budget_id'   => $budget['id'],
+            'budget_name' => $budget['name'],
+
+            'category_id'   => $category['id'],
+            'category_name' => $category['name'],
+
+            'bill_id'   => $bill['id'],
+            'bill_name' => $bill['name'],
+
+            'reconciled' => $source->reconciled,
+            'notes'      => $this->groupRepos->getNoteText($journal->id),
+            'tags'       => $this->groupRepos->getTags($journal->id),
+
+            'internal_reference' => $metaFieldData['internal_reference'],
+            'external_id'        => $metaFieldData['external_id'],
+            'original_source'    => $metaFieldData['original_source'],
+            'recurrence_id'      => $metaFieldData['recurrence_id'],
+            'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
+            'import_hash_v2'     => $metaFieldData['import_hash_v2'],
+
+            'sepa_cc'       => $metaFieldData['sepa_cc'],
+            'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
+            'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
+            'sepa_db'       => $metaFieldData['sepa_db'],
+            'sepa_country'  => $metaFieldData['sepa_country'],
+            'sepa_ep'       => $metaFieldData['sepa_ep'],
+            'sepa_ci'       => $metaFieldData['sepa_ci'],
+            'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
+
+            'interest_date' => $metaDates['interest_date'],
+            'book_date'     => $metaDates['book_date'],
+            'process_date'  => $metaDates['process_date'],
+            'due_date'      => $metaDates['due_date'],
+            'payment_date'  => $metaDates['payment_date'],
+            'invoice_date'  => $metaDates['invoice_date'],
+
+            // location data
+            'longitude'     => $longitude,
+            'latitude'      => $latitude,
+            'zoom_level'    => $zoomLevel,
+        ];
+    }
+
+    /**
+     * @param  Collection  $transactionJournals
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function transformJournals(Collection $transactionJournals): array
+    {
+        $result = [];
+        /** @var TransactionJournal $journal */
+        foreach ($transactionJournals as $journal) {
+            $result[] = $this->transformJournal($journal);
         }
 
         return $result;
@@ -232,429 +643,18 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  array  $array
-     * @param  string  $key
-     * @param  string|null  $default
-     *
-     * @return string|null
-     */
-    private function stringFromArray(array $array, string $key, ?string $default): ?string
-    {
-        if (array_key_exists($key, $array) && null === $array[$key]) {
-            return null;
-        }
-        if (array_key_exists($key, $array) && null !== $array[$key]) {
-            if (0 === $array[$key]) {
-                return $default;
-            }
-            if ('0' === $array[$key]) {
-                return $default;
-            }
-            return (string)$array[$key];
-        }
-
-        if (null !== $default) {
-            return (string)$default;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param  int  $journalId
-     *
-     * @return Location|null
-     */
-    private function getLocationById(int $journalId): ?Location
-    {
-        return $this->groupRepos->getLocation($journalId);
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Location|null
-     */
-    private function getLocation(TransactionJournal $journal): ?Location
-    {
-        return $journal->locations()->first();
-    }
-
-    /**
-     * @param  array  $array
-     * @param  string  $key
-     *
-     * @return int|null
-     */
-    private function integerFromArray(array $array, string $key): ?int
-    {
-        if (array_key_exists($key, $array)) {
-            return (int)$array[$key];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param  NullArrayObject  $object
-     * @param  string  $key
-     *
-     * @return string|null
-     */
-    private function dateFromArray(NullArrayObject $object, string $key): ?string
-    {
-        if (null === $object[$key]) {
-            return null;
-        }
-
-        return $object[$key]->toAtomString();
-    }
-
-    /**
-     * @param  int  $journalId
-     *
-     * @return bool
-     */
-    private function hasAttachments(int $journalId): bool
-    {
-        return $this->groupRepos->countAttachments($journalId) > 0;
-    }
-
-    /**
-     * @param  TransactionGroup  $group
+     * @param  NullArrayObject  $data
      *
      * @return array
-     * @throws FireflyException
      */
-    public function transformObject(TransactionGroup $group): array
+    private function transformTransactions(NullArrayObject $data): array
     {
-        try {
-            $result = [
-                'id'           => (int)$group->id,
-                'created_at'   => $group->created_at->toAtomString(),
-                'updated_at'   => $group->updated_at->toAtomString(),
-                'user'         => (int)$group->user_id,
-                'group_title'  => $group->title,
-                'transactions' => $this->transformJournals($group->transactionJournals),
-                'links'        => [
-                    [
-                        'rel' => 'self',
-                        'uri' => '/transactions/'.$group->id,
-                    ],
-                ],
-            ];
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            throw new FireflyException(sprintf('Transaction group #%d is broken. Please check out your log files.', $group->id), 0, $e);
-        }
-
-        // do something else.
-
-        return $result;
-    }
-
-    /**
-     * @param  Collection  $transactionJournals
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    private function transformJournals(Collection $transactionJournals): array
-    {
-        $result = [];
-        /** @var TransactionJournal $journal */
-        foreach ($transactionJournals as $journal) {
-            $result[] = $this->transformJournal($journal);
+        $result       = [];
+        $transactions = $data['transactions'] ?? [];
+        foreach ($transactions as $transaction) {
+            $result[] = $this->transformTransaction($transaction);
         }
 
         return $result;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    private function transformJournal(TransactionJournal $journal): array
-    {
-        $source          = $this->getSourceTransaction($journal);
-        $destination     = $this->getDestinationTransaction($journal);
-        $type            = $journal->transactionType->type;
-        $currency        = $source->transactionCurrency;
-        $amount          = app('steam')->bcround($this->getAmount($type, (string)$source->amount), $currency->decimal_places ?? 0);
-        $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : (string)$source->foreign_amount);
-        $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
-        $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
-        $foreignCurrency = $this->getForeignCurrency($source->foreignCurrency);
-        $budget          = $this->getBudget($journal->budgets->first());
-        $category        = $this->getCategory($journal->categories->first());
-        $bill            = $this->getBill($journal->bill);
-
-        if (null !== $foreignAmount && null !== $source->foreignCurrency) {
-            $foreignAmount = app('steam')->bcround($foreignAmount, $foreignCurrency['decimal_places'] ?? 0);
-        }
-
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
-        $location  = $this->getLocation($journal);
-        if (null !== $location) {
-            $longitude = $location->longitude;
-            $latitude  = $location->latitude;
-            $zoomLevel = $location->zoom_level;
-        }
-
-        return [
-            'user'                   => (int)$journal->user_id,
-            'transaction_journal_id' => (int)$journal->id,
-            'type'                   => strtolower($type),
-            'date'                   => $journal->date->toAtomString(),
-            'order'                  => $journal->order,
-
-            'currency_id'             => (int)$currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
-
-            'foreign_currency_id'             => $foreignCurrency['id'],
-            'foreign_currency_code'           => $foreignCurrency['code'],
-            'foreign_currency_symbol'         => $foreignCurrency['symbol'],
-            'foreign_currency_decimal_places' => $foreignCurrency['decimal_places'],
-
-            'amount'         => app('steam')->bcround($amount, $currency->decimal_places),
-            'foreign_amount' => $foreignAmount,
-
-            'description' => $journal->description,
-
-            'source_id'   => (int)$source->account_id,
-            'source_name' => $source->account->name,
-            'source_iban' => $source->account->iban,
-            'source_type' => $source->account->accountType->type,
-
-            'destination_id'   => (int)$destination->account_id,
-            'destination_name' => $destination->account->name,
-            'destination_iban' => $destination->account->iban,
-            'destination_type' => $destination->account->accountType->type,
-
-            'budget_id'   => $budget['id'],
-            'budget_name' => $budget['name'],
-
-            'category_id'   => $category['id'],
-            'category_name' => $category['name'],
-
-            'bill_id'   => $bill['id'],
-            'bill_name' => $bill['name'],
-
-            'reconciled' => $source->reconciled,
-            'notes'      => $this->groupRepos->getNoteText($journal->id),
-            'tags'       => $this->groupRepos->getTags($journal->id),
-
-            'internal_reference' => $metaFieldData['internal_reference'],
-            'external_id'        => $metaFieldData['external_id'],
-            'original_source'    => $metaFieldData['original_source'],
-            'recurrence_id'      => $metaFieldData['recurrence_id'],
-            'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
-            'import_hash_v2'     => $metaFieldData['import_hash_v2'],
-
-            'sepa_cc'       => $metaFieldData['sepa_cc'],
-            'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
-            'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
-            'sepa_db'       => $metaFieldData['sepa_db'],
-            'sepa_country'  => $metaFieldData['sepa_country'],
-            'sepa_ep'       => $metaFieldData['sepa_ep'],
-            'sepa_ci'       => $metaFieldData['sepa_ci'],
-            'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
-
-            'interest_date' => $metaDates['interest_date'],
-            'book_date'     => $metaDates['book_date'],
-            'process_date'  => $metaDates['process_date'],
-            'due_date'      => $metaDates['due_date'],
-            'payment_date'  => $metaDates['payment_date'],
-            'invoice_date'  => $metaDates['invoice_date'],
-
-            // location data
-            'longitude'     => $longitude,
-            'latitude'      => $latitude,
-            'zoom_level'    => $zoomLevel,
-        ];
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    private function getSourceTransaction(TransactionJournal $journal): Transaction
-    {
-        $result = $journal->transactions->first(
-            static function (Transaction $transaction) {
-                return (float)$transaction->amount < 0; // lame but it works.
-            }
-        );
-        if (null === $result) {
-            throw new FireflyException(sprintf('Journal #%d unexpectedly has no source transaction.', $journal->id));
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    private function getDestinationTransaction(TransactionJournal $journal): Transaction
-    {
-        $result = $journal->transactions->first(
-            static function (Transaction $transaction) {
-                return (float)$transaction->amount > 0; // lame but it works
-            }
-        );
-        if (null === $result) {
-            throw new FireflyException(sprintf('Journal #%d unexpectedly has no destination transaction.', $journal->id));
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param  string  $type
-     * @param  string  $amount
-     *
-     * @return string
-     */
-    private function getAmount(string $type, string $amount): string
-    {
-        return app('steam')->positive($amount);
-    }
-
-    /**
-     * @param  string  $type
-     * @param  string|null  $foreignAmount
-     *
-     * @return string|null
-     */
-    private function getForeignAmount(string $type, ?string $foreignAmount): ?string
-    {
-        $result = null;
-        if (null !== $foreignAmount && '' !== $foreignAmount && bccomp('0', $foreignAmount) !== 0) {
-            $result = app('steam')->positive($foreignAmount);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param  NullArrayObject  $dates
-     *
-     * @return array
-     */
-    private function getDates(NullArrayObject $dates): array
-    {
-        $fields = [
-            'interest_date',
-            'book_date',
-            'process_date',
-            'due_date',
-            'payment_date',
-            'invoice_date',
-        ];
-        $return = [];
-        foreach ($fields as $field) {
-            $return[$field] = null;
-            if (null !== $dates[$field]) {
-                $return[$field] = $dates[$field]->toAtomString();
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param  TransactionCurrency|null  $currency
-     *
-     * @return array
-     */
-    private function getForeignCurrency(?TransactionCurrency $currency): array
-    {
-        $array = [
-            'id'             => null,
-            'code'           => null,
-            'symbol'         => null,
-            'decimal_places' => null,
-        ];
-        if (null === $currency) {
-            return $array;
-        }
-        $array['id']             = (int)$currency->id;
-        $array['code']           = $currency->code;
-        $array['symbol']         = $currency->symbol;
-        $array['decimal_places'] = (int)$currency->decimal_places;
-
-        return $array;
-    }
-
-    /**
-     * @param  Budget|null  $budget
-     *
-     * @return array
-     */
-    private function getBudget(?Budget $budget): array
-    {
-        $array = [
-            'id'   => null,
-            'name' => null,
-        ];
-        if (null === $budget) {
-            return $array;
-        }
-        $array['id']   = (int)$budget->id;
-        $array['name'] = $budget->name;
-
-        return $array;
-    }
-
-    /**
-     * @param  Category|null  $category
-     *
-     * @return array
-     */
-    private function getCategory(?Category $category): array
-    {
-        $array = [
-            'id'   => null,
-            'name' => null,
-        ];
-        if (null === $category) {
-            return $array;
-        }
-        $array['id']   = (int)$category->id;
-        $array['name'] = $category->name;
-
-        return $array;
-    }
-
-    /**
-     * @param  Bill|null  $bill
-     *
-     * @return array
-     */
-    private function getBill(?Bill $bill): array
-    {
-        $array = [
-            'id'   => null,
-            'name' => null,
-        ];
-        if (null === $bill) {
-            return $array;
-        }
-        $array['id']   = (string)$bill->id;
-        $array['name'] = $bill->name;
-
-        return $array;
     }
 }

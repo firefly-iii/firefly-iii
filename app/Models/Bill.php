@@ -167,14 +167,6 @@ class Bill extends Model
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * @return MorphMany
      */
     public function attachments(): MorphMany
@@ -231,6 +223,14 @@ class Bill extends Model
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

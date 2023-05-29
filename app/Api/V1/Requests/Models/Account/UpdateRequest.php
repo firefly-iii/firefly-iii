@@ -33,7 +33,6 @@ use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class UpdateRequest
@@ -77,6 +76,7 @@ class UpdateRequest extends FormRequest
             'liability_start_date'    => ['liability_start_date', 'date'],
         ];
         $data   = $this->getAllData($fields);
+
         return $this->appendLocationData($data, null);
     }
 

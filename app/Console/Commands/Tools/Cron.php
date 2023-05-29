@@ -153,6 +153,7 @@ class Cron extends Command
     /**
      * @param  bool  $force
      * @param  Carbon|null  $date
+     *
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

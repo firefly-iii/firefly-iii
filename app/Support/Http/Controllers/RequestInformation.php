@@ -60,6 +60,24 @@ trait RequestInformation
     }
 
     /**
+     * @return string
+     */
+    final protected function getPageName(): string // get request info
+    {
+        return str_replace('.', '_', RouteFacade::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     *
+     * @return string
+     */
+    final protected function getSpecificPageName(): string // get request info
+    {
+        return null === RouteFacade::current()->parameter('objectType') ? '' : '_'.RouteFacade::current()->parameter('objectType');
+    }
+
+    /**
      * Get a list of triggers.
      *
      * @param  TestRuleFormRequest  $request
@@ -113,24 +131,6 @@ trait RequestInformation
         }
 
         return $shownDemo;
-    }
-
-    /**
-     * @return string
-     */
-    final protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', RouteFacade::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     *
-     * @return string
-     */
-    final protected function getSpecificPageName(): string // get request info
-    {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_'.RouteFacade::current()->parameter('objectType');
     }
 
     /**

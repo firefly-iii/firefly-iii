@@ -92,7 +92,11 @@ class AccountController extends Controller
 
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
                 $balance         = app('steam')->balance($account, $date);
-                $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
+                $nameWithBalance = sprintf(
+                    '%s (%s)',
+                    $account->name,
+                    app('amount')->formatAnything($currency, $balance, false)
+                );
             }
 
             $return[] = [
@@ -113,10 +117,10 @@ class AccountController extends Controller
         usort(
             $return,
             function ($a, $b) use ($order) {
-                $pos_a = array_search($a['type'], $order, true);
-                $pos_b = array_search($b['type'], $order, true);
+                $posA = array_search($a['type'], $order, true);
+                $posB = array_search($b['type'], $order, true);
 
-                return $pos_a - $pos_b;
+                return $posA - $posB;
             }
         );
 

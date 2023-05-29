@@ -161,6 +161,30 @@ class TransactionJournal extends Model
     protected $hidden = ['encrypted'];
 
     /**
+     * Checks if tables are joined.
+     *
+     *
+     * @param  Builder  $query
+     * @param  string  $table
+     *
+     * @return bool
+     */
+    public static function isJoined(Builder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+        if (null === $joins) {
+            return false;
+        }
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @param  string  $value
@@ -182,14 +206,6 @@ class TransactionJournal extends Model
         }
 
         throw new NotFoundHttpException();
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**
@@ -308,30 +324,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * Checks if tables are joined.
-     *
-     *
-     * @param  Builder  $query
-     * @param  string  $table
-     *
-     * @return bool
-     */
-    public static function isJoined(Builder $query, string $table): bool
-    {
-        $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
-        foreach ($joins as $join) {
-            if ($join->table === $table) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @return HasMany
      */
     public function sourceJournalLinks(): HasMany
@@ -385,5 +377,13 @@ class TransactionJournal extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

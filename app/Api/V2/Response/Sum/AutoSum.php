@@ -31,6 +31,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Class AutoSum
+ *
  * @deprecated
  */
 class AutoSum
@@ -39,6 +40,7 @@ class AutoSum
      * @param  Collection  $objects
      * @param  Closure  $getCurrency
      * @param  Closure  $getSum
+     *
      * @return array
      */
     public function autoSum(Collection $objects, Closure $getCurrency, Closure $getSum): array

@@ -174,6 +174,29 @@ class IndexController extends Controller
     }
 
     /**
+     * @param  Request  $request
+     * @param  BudgetRepositoryInterface  $repository
+     *
+     * @return JsonResponse
+     */
+    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
+    {
+        $budgetIds = $request->get('budgetIds');
+
+        foreach ($budgetIds as $index => $budgetId) {
+            $budgetId = (int)$budgetId;
+            $budget   = $repository->find($budgetId);
+            if (null !== $budget) {
+                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
+                $repository->setBudgetOrder($budget, $index + 1);
+            }
+        }
+        app('preferences')->mark();
+
+        return response()->json(['OK']);
+    }
+
+    /**
      * @param  Carbon  $start
      * @param  Carbon  $end
      *
@@ -327,28 +350,5 @@ class IndexController extends Controller
         }
 
         return $sums;
-    }
-
-    /**
-     * @param  Request  $request
-     * @param  BudgetRepositoryInterface  $repository
-     *
-     * @return JsonResponse
-     */
-    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
-    {
-        $budgetIds = $request->get('budgetIds');
-
-        foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int)$budgetId;
-            $budget   = $repository->find($budgetId);
-            if (null !== $budget) {
-                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
-                $repository->setBudgetOrder($budget, $index + 1);
-            }
-        }
-        app('preferences')->mark();
-
-        return response()->json(['OK']);
     }
 }

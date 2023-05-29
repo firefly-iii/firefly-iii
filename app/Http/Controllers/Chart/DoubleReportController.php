@@ -248,56 +248,6 @@ class DoubleReportController extends Controller
     }
 
     /**
-     * TODO duplicate function
-     *
-     * @param  Collection  $accounts
-     * @param  int  $id
-     * @param  string  $name
-     * @param  null|string  $iban
-     *
-     * @return string
-     */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
-    {
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name && $account->id !== $id) {
-                return $account->name;
-            }
-            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
-                return $account->iban;
-            }
-        }
-
-        return $name;
-    }
-
-    /**
-     * TODO duplicate function
-     *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return array
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->isoFormat($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
-    }
-
-    /**
      * @param  Collection  $accounts
      * @param  Collection  $others
      * @param  Carbon  $start
@@ -415,5 +365,55 @@ class DoubleReportController extends Controller
         $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
+    }
+
+    /**
+     * TODO duplicate function
+     *
+     * @param  Collection  $accounts
+     * @param  int  $id
+     * @param  string  $name
+     * @param  null|string  $iban
+     *
+     * @return string
+     */
+    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
+    {
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name && $account->id !== $id) {
+                return $account->name;
+            }
+            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
+                return $account->iban;
+            }
+        }
+
+        return $name;
+    }
+
+    /**
+     * TODO duplicate function
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return array
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
     }
 }

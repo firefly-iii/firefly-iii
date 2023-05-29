@@ -35,9 +35,9 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
-use Illuminate\Support\Facades\Log;
 use Validator;
 
 /**

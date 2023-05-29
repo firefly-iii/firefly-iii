@@ -122,6 +122,7 @@ class ShowController extends Controller
      *
      * @param  Webhook  $webhook
      * @param  TransactionGroup  $group
+     *
      * @return JsonResponse
      */
     public function triggerTransaction(Webhook $webhook, TransactionGroup $group): JsonResponse
@@ -141,6 +142,7 @@ class ShowController extends Controller
 
         // trigger event to send them:
         event(new RequestedSendWebhookMessages());
+
         return response()->json([], 204);
     }
 }

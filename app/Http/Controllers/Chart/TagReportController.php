@@ -325,31 +325,6 @@ class TagReportController extends Controller
     }
 
     /**
-     * TODO duplicate function
-     *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return array
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->isoFormat($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
-    }
-
-    /**
      * @param  Collection  $accounts
      * @param  Collection  $tags
      * @param  Carbon  $start
@@ -487,5 +462,30 @@ class TagReportController extends Controller
         $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
+    }
+
+    /**
+     * TODO duplicate function
+     *
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     *
+     * @return array
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
     }
 }

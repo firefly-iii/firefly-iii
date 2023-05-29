@@ -153,11 +153,11 @@ class Account extends Model
     }
 
     /**
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function user(): BelongsTo
+    public function accountMeta(): HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(AccountMeta::class);
     }
 
     /**
@@ -189,14 +189,6 @@ class Account extends Model
                           ->first();
 
         return $metaValue ? $metaValue->data : '';
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function accountMeta(): HasMany
-    {
-        return $this->hasMany(AccountMeta::class);
     }
 
     /**
@@ -280,6 +272,14 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

@@ -36,11 +36,13 @@ class TriggerCreditCalculation extends Command
     public function handle(): int
     {
         $this->processAccounts();
+
         return 0;
     }
 
     /**
      * @param  Account  $account
+     *
      * @return void
      */
     private function processAccount(Account $account): void

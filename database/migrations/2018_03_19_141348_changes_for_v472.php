@@ -41,7 +41,7 @@ class ChangesForV472 extends Migration
      */
     public function down(): void
     {
-        if(!Schema::hasColumn('attachments', 'notes')) {
+        if (!Schema::hasColumn('attachments', 'notes')) {
             try {
                 Schema::table(
                     'attachments',
@@ -55,7 +55,7 @@ class ChangesForV472 extends Migration
             }
         }
 
-        if(Schema::hasColumn('transactions', 'order')) {
+        if (Schema::hasColumn('transactions', 'order')) {
             try {
                 Schema::table(
                     'budgets',
@@ -77,7 +77,7 @@ class ChangesForV472 extends Migration
      */
     public function up(): void
     {
-        if(Schema::hasColumn('attachments', 'notes')) {
+        if (Schema::hasColumn('attachments', 'notes')) {
             try {
                 Schema::table(
                     'attachments',
@@ -91,7 +91,7 @@ class ChangesForV472 extends Migration
             }
         }
 
-        if(!Schema::hasColumn('budgets', 'order')) {
+        if (!Schema::hasColumn('budgets', 'order')) {
             try {
                 Schema::table(
                     'budgets',

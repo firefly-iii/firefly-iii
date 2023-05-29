@@ -130,6 +130,7 @@ class CorrectOpeningBalanceCurrencies extends Command
                 return $account;
             }
         }
+
         return null;
     }
 

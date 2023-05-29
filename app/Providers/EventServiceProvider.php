@@ -45,16 +45,11 @@ use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Events\WarnUserAboutBill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Events\AccessTokenCreated;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class EventServiceProvider.
@@ -165,13 +160,13 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\PiggyBankEventHandler@changePiggyAmount',
             ],
             // budget related events: CRUD budget limit
-            Created::class          => [
+            Created::class                      => [
                 'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@created',
             ],
-            Updated::class          => [
+            Updated::class                      => [
                 'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@updated',
             ],
-            Deleted::class          => [
+            Deleted::class                      => [
                 'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@deleted',
             ],
 
