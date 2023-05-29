@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class ShowController extends Controller
 {
-    private ALERepositoryInterface              $ALERepository;
+    private ALERepositoryInterface              $aleRepository;
     private TransactionGroupRepositoryInterface $repository;
 
     /**
@@ -55,7 +55,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository    = app(TransactionGroupRepositoryInterface::class);
-                $this->ALERepository = app(ALERepositoryInterface::class);
+                $this->aleRepository = app(ALERepositoryInterface::class);
 
                 app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
@@ -112,7 +112,7 @@ class ShowController extends Controller
         // get audit log entries:
         $logEntries = [];
         foreach ($transactionGroup->transactionJournals as $journal) {
-            $logEntries[$journal->id] = $this->ALERepository->getForObject($journal);
+            $logEntries[$journal->id] = $this->aleRepository->getForObject($journal);
         }
 
         $events      = $this->repository->getPiggyEvents($transactionGroup);

@@ -212,7 +212,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
 
         return $merged->filter(
             function (TransactionJournalLink $link) {
-                return (null !== $link->source && null !== $link->destination);
+                return null !== $link->source && null !== $link->destination;
             }
         );
     }
