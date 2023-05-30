@@ -32,6 +32,9 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class FixNullables extends Migration
 {
+    private const COLUMN_ALREADY_EXISTS = 'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.';
+    private const TABLE_UPDATE_ERROR    = 'Could not update table "%s": %s';
+
     /**
      * Reverse the migrations.
      */
@@ -54,8 +57,8 @@ class FixNullables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not update table: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                Log::error(sprintf(self::TABLE_UPDATE_ERROR, 'rule_groups', $e->getMessage()));
+                Log::error(self::COLUMN_ALREADY_EXISTS);
             }
         }
 
@@ -68,8 +71,8 @@ class FixNullables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                Log::error(sprintf(self::TABLE_UPDATE_ERROR, 'rules', $e->getMessage()));
+                Log::error(self::COLUMN_ALREADY_EXISTS);
             }
         }
     }

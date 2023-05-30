@@ -32,6 +32,9 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class CreateUsersTable extends Migration
 {
+    private const TABLE_ALREADY_EXISTS = 'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.';
+    private const TABLE_ERROR          = 'Could not create table "%s": %s';
+
     /**
      * Reverse the migrations.
      */
@@ -62,8 +65,8 @@ class CreateUsersTable extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "users": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'users', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }

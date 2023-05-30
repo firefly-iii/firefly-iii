@@ -179,10 +179,11 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
+     * @throws FireflyException
      */
     public function hasModifiers(): bool
     {
-        die(__METHOD__);
+        throw new FireflyException('Not implemented');
     }
 
     /**

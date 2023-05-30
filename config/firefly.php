@@ -175,7 +175,8 @@ return [
         'ko_KR' => ['name_locale' => 'Korean', 'name_english' => 'Korean'],
         //        'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
 
-        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
+        'nb_NO' => ['name_locale' => 'Norsk Bokmål', 'name_english' => 'Norwegian Bokmål'],
+        'nn_NO' => ['name_locale' => 'Norsk Nynorsk', 'name_english' => 'Norwegian Nynorsk'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish'],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],

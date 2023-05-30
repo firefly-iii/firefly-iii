@@ -32,6 +32,9 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class CreateMainTables extends Migration
 {
+    private const TABLE_ALREADY_EXISTS = 'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.';
+    private const TABLE_ERROR          = 'Could not create table "%s": %s';
+
     /**
      * Reverse the migrations.
      */
@@ -108,8 +111,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "accounts": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'accounts', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -127,8 +130,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "account_meta": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'account_meta', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -160,8 +163,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "attachments": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'attachments', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -194,8 +197,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "bills": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'bills', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -220,8 +223,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "budgets": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'budgets', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('budget_limits')) {
@@ -240,8 +243,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "budget_limits": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'budget_limits', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('limit_repetitions')) {
@@ -259,8 +262,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "limit_repetitions": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'limit_repetitions', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -287,8 +290,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "categories": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'categories', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -316,8 +319,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "piggy_banks": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'piggy_banks', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -336,8 +339,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "piggy_bank_repetitions": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'piggy_bank_repetitions', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -359,8 +362,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "preferences": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'preferences', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -385,8 +388,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "role_user": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'role_user', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -412,32 +415,37 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "rule_groups": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'rule_groups', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('rules')) {
-            Schema::create(
-                'rules',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('user_id', false, true);
-                    $table->integer('rule_group_id', false, true);
-                    $table->string('title', 255);
-                    $table->text('description')->nullable();
-                    $table->integer('order', false, true)->default(0);
-                    $table->boolean('active')->default(1);
-                    $table->boolean('stop_processing')->default(0);
+            try {
+                Schema::create(
+                    'rules',
+                    static function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                        $table->softDeletes();
+                        $table->integer('user_id', false, true);
+                        $table->integer('rule_group_id', false, true);
+                        $table->string('title', 255);
+                        $table->text('description')->nullable();
+                        $table->integer('order', false, true)->default(0);
+                        $table->boolean('active')->default(1);
+                        $table->boolean('stop_processing')->default(0);
 
-                    // link user id to users table
-                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                        // link user id to users table
+                        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-                    // link rule group id to rule group table
-                    $table->foreign('rule_group_id')->references('id')->on('rule_groups')->onDelete('cascade');
-                }
-            );
+                        // link rule group id to rule group table
+                        $table->foreign('rule_group_id')->references('id')->on('rule_groups')->onDelete('cascade');
+                    }
+                );
+            } catch (QueryException $e) {
+                Log::error(sprintf(self::TABLE_ERROR, 'rules', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
+            }
         }
         if (!Schema::hasTable('rule_actions')) {
             try {
@@ -460,8 +468,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "rule_actions": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'rule_actions', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('rule_triggers')) {
@@ -485,8 +493,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "rule_triggers": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'rule_triggers', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -519,8 +527,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "tags": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'tags', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -558,8 +566,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "transaction_journals": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'transaction_journals', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -578,8 +586,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "journal_meta": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'journal_meta', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -599,8 +607,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "tag_transaction_journal": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'tag_transaction_journal', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -617,8 +625,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "budget_transaction_journal": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'budget_transaction_journal', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -635,8 +643,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "category_transaction_journal": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'category_transaction_journal', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -657,8 +665,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "piggy_bank_events": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'piggy_bank_events', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -680,8 +688,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "transactions": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'transactions', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -699,8 +707,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "budget_transaction": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'budget_transaction', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -718,8 +726,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "category_transaction": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'category_transaction', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
