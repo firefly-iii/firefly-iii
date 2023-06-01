@@ -851,17 +851,25 @@ class BillRepository implements BillRepositoryInterface
             /** @var Collection $set */
             $set      = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
             $currency = $bill->transactionCurrency;
-            if ($set->count() > 0) {
-                $journalIds                   = $set->pluck('id')->toArray();
-                $amount                       = (string)Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
-                $return[$currency->id]        = $return[$currency->id] ?? [
-                    'id'             => (string)$currency->id,
-                    'name'           => $currency->name,
-                    'symbol'         => $currency->symbol,
-                    'code'           => $currency->code,
-                    'decimal_places' => $currency->decimal_places,
-                    'sum'            => '0',
-                ];
+
+            $return[$currency->id] = $return[$currency->id] ?? [
+                'id'             => (string)$currency->id,
+                'name'           => $currency->name,
+                'symbol'         => $currency->symbol,
+                'code'           => $currency->code,
+                'decimal_places' => $currency->decimal_places,
+                'sum'            => '0',
+            ];
+
+            /** @var TransactionJournal $transactionJournal */
+            foreach ($set as $transactionJournal) {
+                /** @var Transaction $sourceTransaction */
+                $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
+                $amount            = (string)$sourceTransaction->amount;
+                if ((int)$sourceTransaction->foreign_currency_id === (int)$currency->id) {
+                    // use foreign amount instead!
+                    $amount = (string)$sourceTransaction->foreign_amount;
+                }
                 $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
             }
         }
