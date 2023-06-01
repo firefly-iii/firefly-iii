@@ -264,11 +264,16 @@ class BasicController extends Controller
          * Since both this method and the chart use the exact same data, we can suffice
          * with calling the one method in the bill repository that will get this amount.
          */
-        $paidAmount   = $this->billRepository->getBillsPaidInRangePerCurrency($start, $end);
-        $unpaidAmount = $this->billRepository->getBillsUnpaidInRangePerCurrency($start, $end);
-        $return       = [];
-        foreach ($paidAmount as $currencyId => $amount) {
-            $amount   = bcmul($amount, '-1');
+        $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
+        $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
+
+        $return = [];
+        /**
+         * @var int $currencyId
+         * @var array $info
+         */
+        foreach ($paidAmount as $currencyId => $info) {
+            $amount   = bcmul($info['sum'], '-1');
             $currency = $this->currencyRepos->find((int)$currencyId);
             if (null === $currency) {
                 continue;
@@ -287,8 +292,12 @@ class BasicController extends Controller
             ];
         }
 
-        foreach ($unpaidAmount as $currencyId => $amount) {
-            $amount   = bcmul($amount, '-1');
+        /**
+         * @var int $currencyId
+         * @var array $info
+         */
+        foreach ($unpaidAmount as $currencyId => $info) {
+            $amount   = bcmul($info['sum'], '-1');
             $currency = $this->currencyRepos->find((int)$currencyId);
             if (null === $currency) {
                 continue;
