@@ -103,7 +103,6 @@ class ForceDecimalSize extends Command
             $this->correctAmounts();
             $this->updateDecimals();
         }
-        $this->line('Done!');
 
         return 0;
     }

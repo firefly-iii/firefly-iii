@@ -32,18 +32,8 @@ use Illuminate\Console\Command;
  */
 class ReportSum extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Report on the total sum of transactions. Must be 0.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:report-sum';
+    protected $signature   = 'firefly-iii:report-sum';
 
     /**
      * Execute the console command.
@@ -62,7 +52,6 @@ class ReportSum extends Command
      */
     private function reportSum(): void
     {
-        $start = microtime(true);
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = app(UserRepositoryInterface::class);
 
@@ -74,10 +63,8 @@ class ReportSum extends Command
                 $this->error($message);
             }
             if (0 === bccomp($sum, '0')) {
-                $this->info(sprintf('Amount integrity OK for user #%d', $user->id));
+                $this->info(sprintf('Correct: Amount integrity OK for user #%d', $user->id));
             }
         }
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Report on total sum finished in %s seconds', $end));
     }
 }

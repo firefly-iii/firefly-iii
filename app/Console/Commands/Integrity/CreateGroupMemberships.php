@@ -38,18 +38,8 @@ use Illuminate\Support\Facades\Log;
 class CreateGroupMemberships extends Command
 {
     public const CONFIG_NAME = '560_create_group_memberships';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Update group memberships';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:create-group-memberships';
+    protected $signature   = 'firefly-iii:create-group-memberships';
 
     /**
      * TODO move to helper.
@@ -64,7 +54,6 @@ class CreateGroupMemberships extends Command
         $userGroup = UserGroup::where('title', $user->email)->first();
         if (null === $userGroup) {
             $userGroup = UserGroup::create(['title' => $user->email]);
-            Log::debug(sprintf('Created new user group #%d ("%s")', $userGroup->id, $userGroup->title));
         }
 
         $userRole = UserRole::where('title', UserRole::OWNER)->first();
@@ -83,15 +72,11 @@ class CreateGroupMemberships extends Command
                     'user_group_id' => $userGroup->id,
                 ]
             );
-            Log::debug('Created new membership.');
         }
         if (null === $user->user_group_id) {
             $user->user_group_id = $userGroup->id;
             $user->save();
-            Log::debug('Put user in default group.');
         }
-
-        Log::debug(sprintf('User #%d now has main group.', $user->id));
     }
 
     /**
@@ -102,12 +87,8 @@ class CreateGroupMemberships extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
-
         $this->createGroupMemberships();
-
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Validated group memberships in %s seconds.', $end));
+        $this->info('Correct: validated group memberships');
 
         return 0;
     }
@@ -121,9 +102,7 @@ class CreateGroupMemberships extends Command
         $users = User::get();
         /** @var User $user */
         foreach ($users as $user) {
-            Log::debug(sprintf('Manage group memberships for user #%d', $user->id));
             self::createGroupMembership($user);
-            Log::debug(sprintf('Done with user #%d', $user->id));
         }
     }
 }

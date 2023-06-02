@@ -40,22 +40,10 @@ use Schema;
 class TransactionIdentifier extends Command
 {
     public const CONFIG_NAME = '480_transaction_identifier';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Fixes transaction identifiers.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
-    /** @var JournalCLIRepositoryInterface */
-    private $cliRepository;
-    /** @var int */
-    private $count;
+    protected $signature   = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
+    private JournalCLIRepositoryInterface $cliRepository;
+    private int                           $count;
 
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
@@ -74,10 +62,9 @@ class TransactionIdentifier extends Command
     public function handle(): int
     {
         $this->stupidLaravel();
-        $start = microtime(true);
 
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->warn('Correct: this command has already been executed.');
 
             return 0;
         }
@@ -94,14 +81,12 @@ class TransactionIdentifier extends Command
         }
 
         if (0 === $this->count) {
-            $this->line('All split journal transaction identifiers are correct.');
+            $this->line('Correct: all split journal transaction identifiers are OK.');
         }
         if (0 !== $this->count) {
-            $this->line(sprintf('Fixed %d split journal transaction identifier(s).', $this->count));
+            $this->line(sprintf('Correct: fixed %d split journal transaction identifier(s).', $this->count));
         }
 
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified and fixed transaction identifiers in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;

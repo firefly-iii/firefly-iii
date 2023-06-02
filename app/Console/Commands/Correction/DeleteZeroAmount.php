@@ -52,7 +52,6 @@ class DeleteZeroAmount extends Command
      */
     public function handle(): int
     {
-        $start    = microtime(true);
         $set      = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
         $set      = array_unique($set);
         $journals = TransactionJournal::whereIn('id', $set)->get();
@@ -64,11 +63,8 @@ class DeleteZeroAmount extends Command
             Transaction::where('transaction_journal_id', $journal->id)->delete();
         }
         if (0 === $journals->count()) {
-            $this->info('No zero-amount transaction journals.');
+            $this->info('Correct: no zero-amount transaction journals.');
         }
-
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified zero-amount integrity in %s seconds', $end));
 
         return 0;
     }

@@ -79,7 +79,7 @@ class MigrateToRules extends Command
 
 
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->warn('Correct: this command has already been executed.');
 
             return 0;
         }
@@ -92,7 +92,7 @@ class MigrateToRules extends Command
         }
 
         if (0 === $this->count) {
-            $this->line('All bills are OK.');
+            $this->info('Correct: all bills are OK.');
         }
         if (0 !== $this->count) {
             $this->line(sprintf('Verified and fixed %d bill(s).', $this->count));

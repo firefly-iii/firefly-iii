@@ -55,14 +55,11 @@ class ReportEmptyObjects extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
         $this->reportEmptyBudgets();
         $this->reportEmptyCategories();
         $this->reportEmptyTags();
         $this->reportAccounts();
         $this->reportBudgetLimits();
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Report on empty objects finished in %s seconds', $end));
 
         return 0;
     }

@@ -64,12 +64,11 @@ class BackToJournals extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
         if (!$this->isMigrated()) {
             $this->error('Please run firefly-iii:migrate-to-groups first.');
         }
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->warn('Correct: this command has already been executed.');
 
             return 0;
         }
@@ -79,8 +78,7 @@ class BackToJournals extends Command
 
 
         $this->migrateAll();
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Updated category and budget info for all transaction journals in %s seconds.', $end));
+        $this->info('Correct: updated category and budget info for all transaction journals');
         $this->markAsExecuted();
 
         return 0;
@@ -159,7 +157,6 @@ class BackToJournals extends Command
      */
     private function migrateAll(): void
     {
-        Log::debug('Now in migrateAll()');
         $this->migrateBudgets();
         $this->migrateCategories();
 
@@ -225,19 +222,15 @@ class BackToJournals extends Command
      */
     private function migrateCategories(): void
     {
-        Log::debug('Now in migrateCategories()');
         $journals = new Collection();
         $allIds   = $this->getIdsForCategories();
 
-        Log::debug(sprintf('Total: %d', count($allIds)));
 
         $chunks = array_chunk($allIds, 500);
         foreach ($chunks as $chunk) {
-            Log::debug('Now doing a chunk.');
             $collected = TransactionJournal::whereIn('id', $chunk)->with(['transactions', 'categories', 'transactions.categories'])->get();
             $journals  = $journals->merge($collected);
         }
-        $this->line(sprintf('Check %d transaction journal(s) for category info.', count($journals)));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->migrateCategoriesForJournal($journal);

@@ -667,7 +667,6 @@ class AccountRepository implements AccountRepositoryInterface
             //[AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
         ];
         foreach ($sets as $set) {
-            Log::debug('Now in resetAccountOrder', $set);
             $list  = $this->getAccountsByType($set);
             $index = 1;
             foreach ($list as $account) {

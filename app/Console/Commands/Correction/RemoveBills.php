@@ -32,18 +32,8 @@ use Illuminate\Console\Command;
  */
 class RemoveBills extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Remove bills from transactions that shouldn\'t have one.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:remove-bills';
+    protected $signature   = 'firefly-iii:remove-bills';
 
     /**
      * Execute the console command.
@@ -52,7 +42,6 @@ class RemoveBills extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
         /** @var TransactionType|null $withdrawal */
         $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         if (null === $withdrawal) {
@@ -65,14 +54,10 @@ class RemoveBills extends Command
             $journal->bill_id = null;
             $journal->save();
         }
-        if (0 === $journals->count()) {
-            $this->info('All transaction journals have correct bill information.');
-        }
         if ($journals->count() > 0) {
             $this->info('Fixed all transaction journals so they have correct bill information.');
         }
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified bills / journals in %s seconds', $end));
+        $this->info('Correct: verified bills / journals in %s seconds');
 
         return 0;
     }

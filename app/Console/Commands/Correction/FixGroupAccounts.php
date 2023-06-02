@@ -36,18 +36,8 @@ use Illuminate\Console\Command;
  */
 class FixGroupAccounts extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Unify the source / destination accounts of split groups.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:unify-group-accounts';
+    protected $signature   = 'firefly-iii:unify-group-accounts';
 
     /**
      * Execute the console command.
@@ -72,7 +62,7 @@ class FixGroupAccounts extends Command
             $handler->unifyAccounts($event);
         }
 
-        $this->line('Updated inconsistent transaction groups.');
+        $this->info('Correct: updated possible inconsistent transaction groups.');
 
         return 0;
     }

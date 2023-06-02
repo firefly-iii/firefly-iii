@@ -58,10 +58,8 @@ class BudgetLimitCurrency extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
-
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->warn('Correct: this command has already been executed.');
 
             return 0;
         }
@@ -88,11 +86,8 @@ class BudgetLimitCurrency extends Command
             }
         }
         if (0 === $count) {
-            $this->info('All budget limits are correct.');
+            $this->info('Correct: all budget limits are OK.');
         }
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified budget limits in %s seconds.', $end));
-
         $this->markAsExecuted();
 
         return 0;

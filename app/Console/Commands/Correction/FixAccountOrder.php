@@ -32,18 +32,8 @@ use Illuminate\Console\Command;
  */
 class FixAccountOrder extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Make sure account order is correct.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:fix-account-order';
+    protected $signature   = 'firefly-iii:fix-account-order';
 
     private AccountRepositoryInterface $repository;
 
@@ -55,7 +45,6 @@ class FixAccountOrder extends Command
     public function handle(): int
     {
         $this->stupidLaravel();
-        $start = microtime(true);
 
         $users = User::get();
         foreach ($users as $user) {
@@ -63,8 +52,7 @@ class FixAccountOrder extends Command
             $this->repository->resetAccountOrder();
         }
 
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verifying account order took %s seconds', $end));
+        $this->info('Correct: All accounts are ordered correctly');
 
         return 0;
     }

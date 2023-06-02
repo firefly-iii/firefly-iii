@@ -48,18 +48,8 @@ use Illuminate\Database\QueryException;
  */
 class UpdateGroupInformation extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Makes sure that every object is linked to a group';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:upgrade-group-information';
+    protected $signature   = 'firefly-iii:upgrade-group-information';
 
     /**
      * Execute the console command.
@@ -126,7 +116,7 @@ class UpdateGroupInformation extends Command
             return;
         }
         if (0 !== $result) {
-            $this->line(sprintf('Moved %d %s objects to the correct group.', $result, str_replace('FireflyIII\\Models\\', '', $className)));
+            $this->info(sprintf('Correct: Moved %d %s objects to the correct group.', $result, str_replace('FireflyIII\\Models\\', '', $className)));
         }
     }
 }

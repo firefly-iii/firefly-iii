@@ -58,10 +58,8 @@ class RenameAccountMeta extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
-
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->warn('Correct: this command has already been executed.');
 
             return 0;
         }
@@ -88,14 +86,11 @@ class RenameAccountMeta extends Command
         $this->markAsExecuted();
 
         if (0 === $count) {
-            $this->line('All account meta is OK.');
+            $this->info('Correct: all account meta is OK.');
         }
         if (0 !== $count) {
             $this->line(sprintf('Renamed %d account meta entries (entry).', $count));
         }
-
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Fixed account meta data in %s seconds.', $end));
 
         return 0;
     }

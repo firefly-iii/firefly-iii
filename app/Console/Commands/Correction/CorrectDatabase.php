@@ -34,25 +34,14 @@ use Schema;
  */
 class CorrectDatabase extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Will correct the integrity of your database, if necessary.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:correct-database';
+    protected $signature   = 'firefly-iii:correct-database';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $this->line('Handle Firefly III database correction commands.');
         // if table does not exist, return false
         if (!Schema::hasTable('users')) {
             $this->error('No "users"-table, will not continue.');
