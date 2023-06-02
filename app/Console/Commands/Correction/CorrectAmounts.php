@@ -39,22 +39,10 @@ use Illuminate\Console\Command;
  */
 class CorrectAmounts extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:fix-amount-pos-neg';
+    protected $signature   = 'firefly-iii:fix-amount-pos-neg';
 
     /**
-     * Execute the console command.
-     *
      * @return int
      */
     public function handle(): int

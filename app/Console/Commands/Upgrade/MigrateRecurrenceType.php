@@ -61,7 +61,6 @@ class MigrateRecurrenceType extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
@@ -69,11 +68,8 @@ class MigrateRecurrenceType extends Command
         }
 
         $this->migrateTypes();
-
         $this->markAsExecuted();
 
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Update recurring transaction types in %s seconds.', $end));
 
         return 0;
     }

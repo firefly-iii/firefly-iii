@@ -35,18 +35,8 @@ use Illuminate\Console\Command;
  */
 class UpgradeDatabase extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Upgrades the database to the latest version.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
+    protected $signature   = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
     /**
      * Execute the console command.
@@ -97,15 +87,8 @@ class UpgradeDatabase extends Command
      */
     private function callInitialCommands(): void
     {
-        $this->line('Now seeding the database...');
         $this->call('migrate', ['--seed' => true, '--force' => true, '--no-interaction' => true]);
-
-        $this->line('Fix PostgreSQL sequences.');
         $this->call('firefly-iii:fix-pgsql-sequences');
-
-        $this->line('Now decrypting the database (if necessary)...');
         $this->call('firefly-iii:decrypt-all');
-
-        $this->line('Done!');
     }
 }

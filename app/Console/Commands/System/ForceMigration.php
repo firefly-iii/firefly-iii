@@ -83,12 +83,10 @@ class ForceMigration extends Command
         $this->line('Dropping "migrations" table...');
         sleep(2);
         Schema::dropIfExists('migrations');
-        $this->line('Done!');
         $this->line('Re-run all migrations...');
         Artisan::call('migrate', ['--seed' => true]);
         sleep(2);
         $this->line('');
-        $this->info('Done!');
         $this->line('There is a good chance you just saw a lot of error messages.');
         $this->line('No need to panic yet. First try to access Firefly III (again).');
         $this->line('The issue, whatever it was, may have been solved now.');

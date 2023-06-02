@@ -37,18 +37,8 @@ use Illuminate\Support\Facades\Log;
  */
 class EnableCurrencies extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Enables all currencies in use.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:enable-currencies';
+    protected $signature   = 'firefly-iii:enable-currencies';
 
     /**
      * Execute the console command.
@@ -57,7 +47,6 @@ class EnableCurrencies extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
         $found = [];
         // get all meta entries
         /** @var Collection $meta */
@@ -85,8 +74,8 @@ class EnableCurrencies extends Command
             $found[] = (int)$entry->transaction_currency_id;
         }
 
-        $found   = array_values(array_unique($found));
-        $found   = array_values(
+        $found    = array_values(array_unique($found));
+        $found    = array_values(
             array_filter(
                 $found,
                 function (int $currencyId) {
@@ -94,21 +83,14 @@ class EnableCurrencies extends Command
                 }
             )
         );
-        $message = sprintf('%d different currencies are currently in use.', count($found));
-        $this->info($message);
-        Log::debug($message, $found);
-
         $disabled = TransactionCurrency::whereIn('id', $found)->where('enabled', false)->count();
         if ($disabled > 0) {
             $this->info(sprintf('%d were (was) still disabled. This has been corrected.', $disabled));
         }
         if (0 === $disabled) {
-            $this->info('All currencies are correctly enabled or disabled.');
+            $this->info('Correct: All currencies are correctly enabled or disabled.');
         }
         TransactionCurrency::whereIn('id', $found)->update(['enabled' => true]);
-
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified currencies in %s seconds.', $end));
 
         return 0;
     }

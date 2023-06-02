@@ -63,25 +63,21 @@ class MigrateRecurrenceMeta extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->warn('Correct: this command has already been executed.');
 
             return 0;
         }
         $count = $this->migrateMetaData();
 
         if (0 === $count) {
-            $this->line('No recurrence meta data migrated.');
+            $this->info('Correct: no recurrence meta data migrated.');
         }
         if ($count > 0) {
             $this->line(sprintf('Migrated %d meta data entries', $count));
         }
 
         $this->markAsExecuted();
-
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Migrated recurrence meta data in %s seconds.', $end));
 
         return 0;
     }

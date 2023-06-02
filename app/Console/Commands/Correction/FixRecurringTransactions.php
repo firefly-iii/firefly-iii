@@ -37,22 +37,11 @@ use Illuminate\Console\Command;
  */
 class FixRecurringTransactions extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Fixes recurring transactions with the wrong transaction type.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:fix-recurring-transactions';
-    /** @var RecurringRepositoryInterface */
-    private $recurringRepos;
-    /** @var UserRepositoryInterface */
-    private $userRepos;
+    protected                            $description = 'Fixes recurring transactions with the wrong transaction type.';
+    protected                            $signature   = 'firefly-iii:fix-recurring-transactions';
+    private int                          $count       = 0;
+    private RecurringRepositoryInterface $recurringRepos;
+    private UserRepositoryInterface      $userRepos;
 
     /**
      * Execute the console command.
@@ -61,11 +50,11 @@ class FixRecurringTransactions extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
         $this->stupidLaravel();
         $this->correctTransactions();
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Corrected recurring transactions in %s seconds.', $end));
+        if (0 === $this->count) {
+            $this->info('Correct: all recurring transactions are OK.');
+        }
 
         return 0;
     }
@@ -111,6 +100,7 @@ class FixRecurringTransactions extends Command
             if (null !== $transactionType) {
                 $recurrence->transaction_type_id = $transactionType->id;
                 $recurrence->save();
+                $this->count++;
             }
         }
     }

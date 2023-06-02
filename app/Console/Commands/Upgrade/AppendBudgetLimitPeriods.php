@@ -56,19 +56,14 @@ class AppendBudgetLimitPeriods extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->warn('Correct: this command has already been executed.');
 
             return 0;
         }
 
         $this->theresNoLimit();
-
         $this->markAsExecuted();
-
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Fixed budget limits in %s seconds.', $end));
 
         return 0;
     }

@@ -34,18 +34,8 @@ use Illuminate\Console\Command;
 class FixLongDescriptions extends Command
 {
     private const MAX_LENGTH = 1000;
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Fixes long descriptions in journals and groups.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:fix-long-descriptions';
+    protected $signature   = 'firefly-iii:fix-long-descriptions';
 
     /**
      * Execute the console command.
@@ -54,14 +44,15 @@ class FixLongDescriptions extends Command
      */
     public function handle(): int
     {
-        $start    = microtime(true);
         $journals = TransactionJournal::get(['id', 'description']);
+        $count    = 0;
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             if (strlen($journal->description) > self::MAX_LENGTH) {
                 $journal->description = substr($journal->description, 0, self::MAX_LENGTH);
                 $journal->save();
                 $this->line(sprintf('Truncated description of transaction journal #%d', $journal->id));
+                $count++;
             }
         }
 
@@ -72,11 +63,12 @@ class FixLongDescriptions extends Command
                 $group->title = substr($group->title, 0, self::MAX_LENGTH);
                 $group->save();
                 $this->line(sprintf('Truncated description of transaction group #%d', $group->id));
+                $count++;
             }
         }
-        $end = round(microtime(true) - $start, 2);
-        $this->info('Verified all transaction group and journal title lengths.');
-        $this->info(sprintf('Took %s seconds.', $end));
+        if (0 === $count) {
+            $this->info('Correct: all transaction group and journal title lengths are within bounds.');
+        }
 
         return 0;
     }

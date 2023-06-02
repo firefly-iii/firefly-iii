@@ -37,18 +37,8 @@ use Illuminate\Support\Collection;
  */
 class FixTransactionTypes extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Make sure all transactions are of the correct type, based on source + dest.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:fix-transaction-types';
+    protected $signature   = 'firefly-iii:fix-transaction-types';
 
     /**
      * Execute the console command.
@@ -57,7 +47,6 @@ class FixTransactionTypes extends Command
      */
     public function handle(): int
     {
-        $start    = microtime(true);
         $count    = 0;
         $journals = $this->collectJournals();
         /** @var TransactionJournal $journal */
@@ -67,13 +56,12 @@ class FixTransactionTypes extends Command
                 $count++;
             }
         }
-        $end = round(microtime(true) - $start, 2);
         if ($count > 0) {
-            $this->info(sprintf('Corrected transaction type of %d transaction journals in %s seconds.', $count, $end));
+            $this->info('Corrected transaction type of %d transaction journals.', $count);
 
             return 0;
         }
-        $this->line(sprintf('All transaction journals are of the correct transaction type (in %s seconds).', $end));
+        $this->info('Correct: all transaction journals are of the correct transaction type');
 
         return 0;
     }

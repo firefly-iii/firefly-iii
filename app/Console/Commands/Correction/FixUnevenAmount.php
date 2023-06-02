@@ -27,7 +27,6 @@ use DB;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use stdClass;
 
 /**
@@ -35,18 +34,8 @@ use stdClass;
  */
 class FixUnevenAmount extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Fix journals with uneven amounts.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:fix-uneven-amount';
+    protected $signature   = 'firefly-iii:fix-uneven-amount';
 
     /**
      * Execute the console command.
@@ -55,10 +44,7 @@ class FixUnevenAmount extends Command
      */
     public function handle(): int
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        $start = microtime(true);
-        $count = 0;
-        // get invalid journals
+        $count    = 0;
         $journals = DB::table('transactions')
                       ->groupBy('transaction_journal_id')
                       ->whereNull('deleted_at')
@@ -74,11 +60,8 @@ class FixUnevenAmount extends Command
             }
         }
         if (0 === $count) {
-            $this->info('Amount integrity OK!');
+            $this->info('Correct: Database amount integrity is OK');
         }
-
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified amount integrity in %s seconds', $end));
 
         return 0;
     }

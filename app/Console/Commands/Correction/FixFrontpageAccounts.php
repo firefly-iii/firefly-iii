@@ -36,18 +36,8 @@ use Illuminate\Console\Command;
  */
 class FixFrontpageAccounts extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Fixes a preference that may include deleted accounts or accounts of another type.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:fix-frontpage-accounts';
+    protected $signature   = 'firefly-iii:fix-frontpage-accounts';
 
     /**
      * Execute the console command.
@@ -56,8 +46,6 @@ class FixFrontpageAccounts extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
-
         $users = User::get();
         /** @var User $user */
         foreach ($users as $user) {
@@ -66,8 +54,7 @@ class FixFrontpageAccounts extends Command
                 $this->fixPreference($preference);
             }
         }
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verifying account preferences took %s seconds', $end));
+        $this->info('Correct: account preferences are OK');
 
         return 0;
     }

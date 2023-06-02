@@ -265,7 +265,6 @@ trait JournalServiceTrait
         Log::debug('End of loop.');
         Log::debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
         $journal->tags()->sync($set);
-        Log::debug('Done!');
     }
 
     /**
