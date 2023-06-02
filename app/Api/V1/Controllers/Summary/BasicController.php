@@ -269,48 +269,38 @@ class BasicController extends Controller
 
         $return = [];
         /**
-         * @var int $currencyId
          * @var array $info
          */
-        foreach ($paidAmount as $currencyId => $info) {
+        foreach ($paidAmount as $info) {
             $amount   = bcmul($info['sum'], '-1');
-            $currency = $this->currencyRepos->find((int)$currencyId);
-            if (null === $currency) {
-                continue;
-            }
             $return[] = [
-                'key'                     => sprintf('bills-paid-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $currency->symbol]),
+                'key'                     => sprintf('bills-paid-in-%s', $info['code']),
+                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $info['symbol']]),
                 'monetary_value'          => $amount,
-                'currency_id'             => $currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $amount, false),
+                'currency_id'             => $info['id'],
+                'currency_code'           => $info['code'],
+                'currency_symbol'         => $info['symbol'],
+                'currency_decimal_places' => $info['decimal_places'],
+                'value_parsed'            => app('amount')->formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
                 'local_icon'              => 'check',
                 'sub_title'               => '',
             ];
         }
 
         /**
-         * @var int $currencyId
          * @var array $info
          */
-        foreach ($unpaidAmount as $currencyId => $info) {
+        foreach ($unpaidAmount as $info) {
             $amount   = bcmul($info['sum'], '-1');
-            $currency = $this->currencyRepos->find((int)$currencyId);
-            if (null === $currency) {
-                continue;
-            }
             $return[] = [
-                'key'                     => sprintf('bills-unpaid-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $currency->symbol]),
+                'key'                     => sprintf('bills-unpaid-in-%s', $info['code']),
+                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $info['symbol']]),
                 'monetary_value'          => $amount,
-                'currency_id'             => $currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $amount, false),
+                'currency_id'             => $info['id'],
+                'currency_code'           => $info['code'],
+                'currency_symbol'         => $info['symbol'],
+                'currency_decimal_places' => $info['decimal_places'],
+                'value_parsed'            => app('amount')->formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
                 'local_icon'              => 'calendar-o',
                 'sub_title'               => '',
             ];
