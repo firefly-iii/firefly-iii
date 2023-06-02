@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
 
@@ -38,8 +37,7 @@ use Illuminate\Http\JsonResponse;
  */
 class BillController extends Controller
 {
-    /** @var GeneratorInterface Chart generation methods. */
-    protected $generator;
+    protected GeneratorInterface $generator;
 
     /**
      * BillController constructor.
@@ -70,30 +68,33 @@ class BillController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        /** @var CurrencyRepositoryInterface $currencyRepository */
-        $currencyRepository = app(CurrencyRepositoryInterface::class);
 
-        $chartData  = [];
-        $currencies = [];
-        $paid       = $repository->getBillsPaidInRangePerCurrency($start, $end);   // will be a negative amount.
-        $unpaid     = $repository->getBillsUnpaidInRangePerCurrency($start, $end); // will be a positive amount.
+        $chartData = [];
+        $paid      = $repository->sumPaidInRange($start, $end);
+        $unpaid    = $repository->sumUnpaidInRange($start, $end);
 
-        foreach ($paid as $currencyId => $amount) {
-            $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->find($currencyId);
-            $label                   = (string)trans('firefly.paid_in_currency', ['currency' => $currencies[$currencyId]->name]);
-            $chartData[$label]       = [
+        /**
+         * @var array $info
+         */
+        foreach ($paid as $info) {
+            $amount            = $info['sum'];
+            $label             = (string)trans('firefly.paid_in_currency', ['currency' => $info['name']]);
+            $chartData[$label] = [
                 'amount'          => $amount,
-                'currency_symbol' => $currencies[$currencyId]->symbol,
-                'currency_code'   => $currencies[$currencyId]->code,
+                'currency_symbol' => $info['symbol'],
+                'currency_code'   => $info['code'],
             ];
         }
-        foreach ($unpaid as $currencyId => $amount) {
-            $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->find($currencyId);
-            $label                   = (string)trans('firefly.unpaid_in_currency', ['currency' => $currencies[$currencyId]->name]);
-            $chartData[$label]       = [
+        /**
+         * @var array $info
+         */
+        foreach ($unpaid as $info) {
+            $amount            = $info['sum'];
+            $label             = (string)trans('firefly.unpaid_in_currency', ['currency' => $info['name']]);
+            $chartData[$label] = [
                 'amount'          => $amount,
-                'currency_symbol' => $currencies[$currencyId]->symbol,
-                'currency_code'   => $currencies[$currencyId]->code,
+                'currency_symbol' => $info['symbol'],
+                'currency_code'   => $info['code'],
             ];
         }
 
