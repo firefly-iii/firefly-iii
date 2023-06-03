@@ -59,7 +59,7 @@ class UpgradeLiabilitiesEight extends Command
     public function handle(): int
     {
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->info('Correct: this command has already been executed.');
 
             return 0;
         }
