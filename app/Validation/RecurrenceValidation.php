@@ -203,12 +203,13 @@ trait RecurrenceValidation
          */
         foreach ($repetitions as $index => $repetition) {
             if (!array_key_exists('moment', $repetition)) {
-                continue;
+                $repetition['moment'] = '';
             }
             if (null === $repetition['moment']) {
                 $repetition['moment'] = '';
             }
             $repetition['moment'] = $repetition['moment'] ?? 'invalid';
+
             switch ($repetition['type'] ?? 'empty') {
                 default:
                     $validator->errors()->add(sprintf('repetitions.%d.type', $index), (string)trans('validation.valid_recurrence_rep_type'));

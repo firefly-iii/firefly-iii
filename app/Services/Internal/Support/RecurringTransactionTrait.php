@@ -281,6 +281,7 @@ trait RecurringTransactionTrait
         }
     }
 
+
     /**
      * @param  RecurrenceTransaction  $transaction
      * @param  array  $tags
