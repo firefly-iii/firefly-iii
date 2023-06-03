@@ -66,7 +66,7 @@ class OtherCurrenciesCorrections extends Command
         $this->stupidLaravel();
 
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('Correct: this command has already been executed.');
+            $this->info('Correct: this command has already been executed.');
 
             return 0;
         }
