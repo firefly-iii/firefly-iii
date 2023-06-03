@@ -73,6 +73,9 @@ trait GetRecurrenceData
         if (array_key_exists('piggy_bank_id', $transaction)) {
             $return['piggy_bank_id'] = (int)$transaction['piggy_bank_id'];
         }
+        if (array_key_exists('bill_id', $transaction)) {
+            $return['bill_id'] = (int)$transaction['bill_id'];
+        }
 
         if (array_key_exists('tags', $transaction)) {
             $return['tags'] = $transaction['tags'];
