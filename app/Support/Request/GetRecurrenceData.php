@@ -37,6 +37,10 @@ trait GetRecurrenceData
     {
         $return = [];
 
+        if (array_key_exists('id', $transaction)) {
+            $return['id'] = (string)$transaction['id'];
+        }
+
         // amount + currency
         if (array_key_exists('amount', $transaction)) {
             $return['amount'] = $transaction['amount'];

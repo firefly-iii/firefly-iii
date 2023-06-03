@@ -291,6 +291,105 @@ trait RecurrenceValidation
     }
 
     /**
+     * @param  Validator  $validator
+     * @return void
+     */
+    protected function validateTransactionId(Recurrence $recurrence, Validator $validator): void
+    {
+        Log::debug('Now in validateTransactionId');
+        $transactions     = $this->getTransactionData();
+        $submittedTrCount = count($transactions);
+
+        //$recurrence = $validator->get
+        if (null === $transactions) {
+            Log::warning('[a] User submitted no transactions.');
+            $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
+            return;
+        }
+        if (0 === $submittedTrCount) {
+            Log::warning('[b] User submitted no transactions.');
+            $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
+            return;
+        }
+        $originalTrCount = $recurrence->recurrenceTransactions()->count();
+        if (1 === $submittedTrCount && 1 === $originalTrCount) {
+            $first = $transactions[0]; // can safely assume index 0.
+            if (!array_key_exists('id', $first)) {
+                Log::debug('Single count and no ID, done.');
+                return; // home safe!
+            }
+            $id = $first['id'];
+            if ('' === (string)$id) {
+                Log::debug('Single count and empty ID, done.');
+                return; // home safe!
+            }
+            $integer     = (int)$id;
+            $secondCount = $recurrence->recurrenceTransactions()->where('recurrences_transactions.id', $integer)->count();
+            Log::debug(sprintf('Result of ID count: %d', $secondCount));
+            if (0 === $secondCount) {
+                $validator->errors()->add('transactions.0.id', (string)trans('validation.id_does_not_match', ['id' => $integer]));
+            }
+            Log::debug('Single ID validation done.');
+            return;
+        }
+
+        Log::debug('Multi ID validation.');
+        $idsMandatory = false;
+        if ($submittedTrCount < $originalTrCount) {
+            Log::debug(sprintf('User submits %d transaction, recurrence has %d transactions. All entries must have ID.', $submittedTrCount, $originalTrCount));
+            $idsMandatory = true;
+        }
+        /**
+         * Loop all transactions submitted by the user.
+         * If the user has submitted fewer transactions than the original recurrence has, all submitted entries must have an ID.
+         * Any ID's missing will be deleted later on.
+         *
+         * If the user submits more or the same number of transactions (n), the following rules apply:
+         *
+         * 1. Any 1 transaction does not need to have an ID. Since the other n-1 can be matched, the last one can be assumed.
+         * 2. If the user submits more transactions than already present, count the number of existing transactions. At least those must be matched. After that, submit as many as you like.
+         * 3. If the user submits the same number of transactions as already present, all but one must have an ID.
+         */
+        $unmatchedIds = 0;
+
+        foreach ($transactions as $index => $transaction) {
+            Log::debug(sprintf('Now at %d/%d', $index + 1, $submittedTrCount));
+            if (!is_array($transaction)) {
+                Log::warning('Not an array. Give error.');
+                $validator->errors()->add(sprintf('transactions.%d.id', $index), (string)trans('validation.at_least_one_transaction'));
+                return;
+            }
+            if (!array_key_exists('id', $transaction) && $idsMandatory) {
+                Log::warning('ID is mandatory but array has no ID.');
+                $validator->errors()->add(sprintf('transactions.%d.id', $index), (string)trans('validation.need_id_to_match'));
+                return;
+            }
+            if (array_key_exists('id', $transaction)) { // don't matter if $idsMandatory
+                Log::debug('Array has ID.');
+                $idCount = $recurrence->recurrenceTransactions()->where('recurrences_transactions.id', (int)$transaction['id'])->count();
+                if (0 === $idCount) {
+                    Log::debug('ID does not exist or no match. Count another unmatched ID.');
+                    $unmatchedIds++;
+                }
+            }
+            if (!array_key_exists('id', $transaction) && !$idsMandatory) {
+                Log::debug('Array has no ID but was not mandatory at this point.');
+                $unmatchedIds++;
+            }
+        }
+        // if too many don't match, but you haven't submitted more than already present:
+        $maxUnmatched = max(1, $submittedTrCount - $originalTrCount);
+        Log::debug(sprintf('Submitted: %d. Original: %d. User can submit %d unmatched transactions.', $submittedTrCount, $originalTrCount, $maxUnmatched));
+        if ($unmatchedIds > $maxUnmatched) {
+            Log::warning(sprintf('Too many unmatched transactions (%d).', $unmatchedIds));
+            $validator->errors()->add('transactions.0.id', (string)trans('validation.too_many_unmatched'));
+            return;
+        }
+        Log::debug('Done with ID validation.');
+    }
+
+
+    /**
      * If the repetition type is weekly, the moment should be a day between 1-7 (inclusive).
      *
      * @param  Validator  $validator
