@@ -271,6 +271,7 @@ class RecurrenceTransformer extends AbstractTransformer
                 $foreignAmount = app('steam')->bcround($transaction->foreign_amount, $foreignCurrencyDp);
             }
             $transactionArray = [
+                'id'                              => (string)$transaction->id,
                 'currency_id'                     => (string)$transaction->transaction_currency_id,
                 'currency_code'                   => $transaction->transactionCurrency->code,
                 'currency_symbol'                 => $transaction->transactionCurrency->symbol,
