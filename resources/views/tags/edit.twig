@@ -38,7 +38,6 @@
                     <div class="box-body">
                         {{ ExpandedForm.date('date', tag.date.format('Y-m-d')) }}
                         {{ ExpandedForm.textarea('description', tag.description) }}
-                        {{ ExpandedForm.location('location', null, {locations: locations}) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>

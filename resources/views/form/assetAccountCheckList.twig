@@ -3,14 +3,14 @@
 
     <div class="col-sm-8">
         {% for groupName, accounts in grouped %}
-            <strong>{{ groupName }}</strong><br />
+            <strong>{{ groupName }}</strong><br/>
             {% for id, account in accounts %}
                 <div class="checkbox" style="margin-left:2em;">
                     <label>
                         {% if account in selected or (selected|length == 0 and options.select_all == true) %}
-                            {{ Form.checkbox(name~'[]', id, true, options) }}
+                            {{ Html.checkbox(name~'[]',true).id(id) }}
                         {% else %}
-                            {{ Form.checkbox(name~'[]', id, false, options) }}
+                            {{ Form.checkbox(name~'[]',false).id(id) }}
                         {% endif %}
                         {{ account|escape }}
                     </label>

@@ -6,7 +6,8 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('rule-groups.execute', ruleGroup.id) }}" accept-charset="UTF-8" class="form-horizontal" id="execute-rule-group">
+    <form method="POST" action="{{ route('rule-groups.execute', ruleGroup.id) }}" accept-charset="UTF-8"
+          class="form-horizontal" id="execute-rule-group">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
         <div class="row">
@@ -31,7 +32,8 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <input type="submit" name="submit" value="{{ 'execute'|_ }}" id="do-execute-button" class="btn btn-success pull-right"/>
+                        <input type="submit" name="submit" value="{{ 'execute'|_ }}" id="do-execute-button"
+                               class="btn btn-success pull-right"/>
                     </div>
                 </div>
             </div>
@@ -39,12 +41,16 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/rules/select-transactions.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/rules/select-transactions.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 
 {% block styles %}
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
 {% endblock %}
