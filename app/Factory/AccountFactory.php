@@ -107,6 +107,7 @@ class AccountFactory
         Log::debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
         $type = AccountType::whereType($accountType)->first();
 
+        /** @var Account|null */
         return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
     }
 
@@ -294,7 +295,7 @@ class AccountFactory
      *
      * @throws FireflyException
      */
-    private function storeCreditLiability(Account $account, array $data)
+    private function storeCreditLiability(Account $account, array $data): void
     {
         Log::debug('storeCreditLiability');
         $account->refresh();
@@ -366,7 +367,7 @@ class AccountFactory
      *
      * @throws FireflyException
      */
-    private function storeOpeningBalance(Account $account, array $data)
+    private function storeOpeningBalance(Account $account, array $data): void
     {
         $accountType = $account->accountType->type;
 

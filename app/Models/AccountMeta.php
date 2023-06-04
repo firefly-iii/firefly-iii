@@ -80,11 +80,10 @@ class AccountMeta extends Model
      * @param  mixed  $value
      *
      * @return mixed
-     * @throws JsonException
      */
-    public function getDataAttribute($value)
+    public function getDataAttribute($value): string
     {
-        return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+        return (string)json_decode($value, true);
     }
 
     /**

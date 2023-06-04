@@ -65,9 +65,8 @@ class AccountController extends Controller
      * @param  Request  $request
      *
      * @return JsonResponse|Response
-     * @throws JsonException
      */
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse|Response
     {
         Log::debug('Now in account search()');
         $manager = $this->getManager();

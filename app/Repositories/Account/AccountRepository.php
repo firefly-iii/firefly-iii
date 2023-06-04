@@ -358,11 +358,7 @@ class AccountRepository implements AccountRepositoryInterface
                                      ->where('transactions.account_id', $account->id)
                                      ->transactionTypes([TransactionType::LIABILITY_CREDIT])
                                      ->first(['transaction_journals.*']);
-        if (null === $journal) {
-            return null;
-        }
-
-        return $journal->transactionGroup;
+        return $journal?->transactionGroup;
     }
 
     /**
@@ -433,13 +429,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getNoteText(Account $account): ?string
     {
-        $note = $account->notes()->first();
-
-        if (null === $note) {
-            return null;
-        }
-
-        return $note->text;
+        return $account->notes()->first()?->text;
     }
 
     /**
@@ -488,15 +478,10 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getOpeningBalanceDate(Account $account): ?string
     {
-        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $account->id)
-                                     ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
-                                     ->first(['transaction_journals.*']);
-        if (null === $journal) {
-            return null;
-        }
-
-        return $journal->date->format('Y-m-d H:i:s');
+        return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->where('transactions.account_id', $account->id)
+                                 ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
+                                 ->first(['transaction_journals.*'])?->date->format('Y-m-d H:i:s');
     }
 
     /**

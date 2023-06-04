@@ -151,7 +151,7 @@ trait AccountServiceTrait
                 if (is_bool($data[$field]) && false === $data[$field]) {
                     $data[$field] = 0;
                 }
-                if (is_bool($data[$field]) && true === $data[$field]) {
+                if (true === $data[$field]) {
                     $data[$field] = 1;
                 }
                 if ($data[$field] instanceof Carbon) {
@@ -171,15 +171,14 @@ trait AccountServiceTrait
      */
     public function updateNote(Account $account, string $note): bool
     {
+        $dbNote = $account->notes()->first();
         if ('' === $note) {
-            $dbNote = $account->notes()->first();
             if (null !== $dbNote) {
                 $dbNote->delete();
             }
 
             return true;
         }
-        $dbNote = $account->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($account);

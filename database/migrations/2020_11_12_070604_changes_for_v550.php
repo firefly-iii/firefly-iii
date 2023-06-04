@@ -226,9 +226,9 @@ class ChangesForV550 extends Migration
                         $table->string('title', 255)->index();
                         $table->string('secret', 32)->index();
                         $table->boolean('active')->default(true);
-                        $table->unsignedSmallInteger('trigger', false);
-                        $table->unsignedSmallInteger('response', false);
-                        $table->unsignedSmallInteger('delivery', false);
+                        $table->unsignedSmallInteger('trigger');
+                        $table->unsignedSmallInteger('response');
+                        $table->unsignedSmallInteger('delivery');
                         $table->string('url', 1024);
                         $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
                         $table->unique(['user_id', 'title']);
