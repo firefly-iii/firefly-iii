@@ -90,8 +90,6 @@ class AccountTasker implements AccountTaskerInterface
                 'currency_symbol'         => $currency->symbol,
                 'currency_name'           => $currency->name,
                 'currency_decimal_places' => $currency->decimal_places,
-                'start_balance'           => '0',
-                'end_balance'             => '0',
             ];
 
             // get first journal date:

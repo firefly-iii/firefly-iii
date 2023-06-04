@@ -79,17 +79,11 @@ class AccountCurrencies extends Command
 
     /**
      * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
-
-        return false;
+        return (bool)$configVar?->data;
     }
 
     /**
@@ -122,10 +116,7 @@ class AccountCurrencies extends Command
         $this->accountRepos->setUser($account->user);
         $accountCurrency = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $openingBalance  = $this->accountRepos->getOpeningBalance($account);
-        $obCurrency      = 0;
-        if (null !== $openingBalance) {
-            $obCurrency = (int)$openingBalance->transaction_currency_id;
-        }
+        $obCurrency      = (int)$openingBalance?->transaction_currency_id;
 
         // both 0? set to default currency:
         if (0 === $accountCurrency && 0 === $obCurrency) {
@@ -158,8 +149,6 @@ class AccountCurrencies extends Command
             );
             $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
             $this->count++;
-
-            return;
         }
     }
 

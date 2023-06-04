@@ -51,7 +51,7 @@ class AccountForm
      *
      * @return string
      */
-    public function activeDepositDestinations(string $name, $value = null, array $options = null): string
+    public function activeDepositDestinations(string $name, mixed $value = null, array $options = null): string
     {
         $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE,];
         $repository               = $this->getAccountRepository();
@@ -72,7 +72,7 @@ class AccountForm
      *
      * @return string
      */
-    public function activeWithdrawalDestinations(string $name, $value = null, array $options = null): string
+    public function activeWithdrawalDestinations(string $name, mixed $value = null, array $options = null): string
     {
         $types      = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::EXPENSE,];
         $repository = $this->getAccountRepository();

@@ -55,8 +55,6 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user                  = auth()->user();
                 $this->repository      = app(AccountRepositoryInterface::class);
                 $this->adminRepository = app(AdminAccountRepositoryInterface::class);
 
@@ -113,10 +111,10 @@ class AccountController extends Controller
         }
 
         // custom order.
-        $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
         usort(
             $return,
-            function ($a, $b) use ($order) {
+            function ($a, $b) {
+                $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
                 $pos_a = array_search($a['type'], $order, true);
                 $pos_b = array_search($b['type'], $order, true);
 

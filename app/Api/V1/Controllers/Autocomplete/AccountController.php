@@ -81,8 +81,9 @@ class AccountController extends Controller
         $query = $data['query'];
         $date  = $data['date'] ?? today(config('app.timezone'));
 
-        $return          = [];
-        $result          = $this->repository->searchAccount((string)$query, $types, $data['limit']);
+        $return = [];
+        $result = $this->repository->searchAccount((string)$query, $types, $data['limit']);
+        // TODO this code is duplicated in the V2 Autocomplete controller, which means this code is due to be deprecated.
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         /** @var Account $account */
@@ -113,12 +114,12 @@ class AccountController extends Controller
         }
 
         // custom order.
-        $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
         usort(
             $return,
-            function ($a, $b) use ($order) {
-                $posA = array_search($a['type'], $order, true);
-                $posB = array_search($b['type'], $order, true);
+            function ($a, $b) {
+                $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
+                $posA  = array_search($a['type'], $order, true);
+                $posB  = array_search($b['type'], $order, true);
 
                 return $posA - $posB;
             }
