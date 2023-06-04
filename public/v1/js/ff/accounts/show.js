@@ -67,30 +67,6 @@ $(function () {
         );
     }
 
-    if (doPlaceMarker === true) {
-        /*
-         Create new map:
-         */
-
-        // make map:
-        var mymap = L.map('location_map', {
-            zoomControl: false,
-            touchZoom: false,
-            doubleClickZoom: false,
-            scrollWheelZoom: false,
-            boxZoom: false,
-            dragging: false
-        }).setView([latitude, longitude], zoomLevel);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?access_token={accessToken}', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-            id: 'mapbox/streets-v11',
-            accessToken: mapboxToken
-        }).addTo(mymap);
-        L.marker([latitude, longitude]).addTo(mymap);
-    }
-
 });
 
 function sortStop(event, ui) {

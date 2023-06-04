@@ -6,7 +6,8 @@
 
 {% block content %}
 
-    <form method="POST" action="{{ route('accounts.destroy',account.id) }}" accept-charset="UTF-8" class="form-horizontal" id="destroy">
+    <form method="POST" action="{{ route('accounts.destroy',account.id) }}" accept-charset="UTF-8"
+          class="form-horizontal" id="destroy">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
@@ -39,7 +40,7 @@
                             </p>
 
                             <p>
-                                {{ Form.select('move_account_before_delete', accountList, null, {class: 'form-control'}) }}
+                                {{ Html.select('move_account_before_delete', accountList, null).class('form-control') }}
                             </p>
                         {% else %}
                             <input type="hidden" name="move_account_before_delete" value="0"/>
@@ -47,7 +48,8 @@
 
                     </div>
                     <div class="box-footer">
-                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn pull-right btn-danger"/>
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}"
+                               class="btn pull-right btn-danger"/>
                         <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
                     </div>
                 </div>

@@ -118,7 +118,6 @@ return [
 
     // tokens and keys
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
-    'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
     'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
     'static_cron_token'            => envNonEmpty('STATIC_CRON_TOKEN'),
 

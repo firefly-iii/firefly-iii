@@ -4,7 +4,8 @@
 {% endblock %}
 {% block content %}
 
-    <form action="{{ route('recurring.store') }}" method="post" id="store" class="form-horizontal" enctype="multipart/form-data">
+    <form action="{{ route('recurring.store') }}" method="post" id="store" class="form-horizontal"
+          enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         {# row with recurrence information #}
         <div class="row">
@@ -20,15 +21,16 @@
                         {{ preFilled.first_date.format('Y-m-d') }}
                         {{ ExpandedForm.date('first_date',null, {helpText: trans('firefly.help_first_date'), min: preFilled.first_date}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
-                        {{ ExpandedForm.number('skip', 0) }}
+                        {{ ExpandedForm.integer('skip',0) }}
                         {{ ExpandedForm.select('weekend', weekendResponses, null, {helpText: trans('firefly.help_weekend')}) }}
                         {{ ExpandedForm.select('repetition_end', repetitionEnds) }}
                         {{ ExpandedForm.date('repeat_until',null) }}
-                        {{ ExpandedForm.number('repetitions',null) }}
+                        {{ ExpandedForm.integer('repetitions',null) }}
 
                         {# calendar in popup #}
                         <div class="form-group" id="calendar_holder">
-                            <label for="ffInput_calendar" class="col-sm-4 control-label">{{ trans('form.calendar') }}</label>
+                            <label for="ffInput_calendar"
+                                   class="col-sm-4 control-label">{{ trans('form.calendar') }}</label>
 
                             <div class="col-sm-8">
                                 <p class="form-control-static" id="ffInput_calendar">
@@ -67,7 +69,7 @@
                     </div>
                     <div class="box-body">
                         <p><em>{{ 'mandatory_fields_for_tranaction'|_ }}</em></p>
-                        {# three buttons to distinguish type of transaction#}
+                        {# three buttons to distinguish type of transaction #}
                         <div class="form-group" id="name_holder">
                             <label for="ffInput_type" class="col-sm-4 control-label">
                                 {{ trans('form.transaction_type') }}
@@ -75,14 +77,17 @@
 
                             <div class="col-sm-8">
                                 <div class="btn-group btn-group-sm">
-                                    <a href="#" class="btn btn-default switch-button" data-value="withdrawal">{{ 'withdrawal'|_ }}</a>
-                                    <a href="#" class="btn btn-default switch-button" data-value="deposit">{{ 'deposit'|_ }}</a>
-                                    <a href="#" class="btn btn-default switch-button" data-value="transfer">{{ 'transfer'|_ }}</a>
+                                    <a href="#" class="btn btn-default switch-button"
+                                       data-value="withdrawal">{{ 'withdrawal'|_ }}</a>
+                                    <a href="#" class="btn btn-default switch-button"
+                                       data-value="deposit">{{ 'deposit'|_ }}</a>
+                                    <a href="#" class="btn btn-default switch-button"
+                                       data-value="transfer">{{ 'transfer'|_ }}</a>
                                 </div>
                             </div>
                         </div>
                         <input type="hidden" name="transaction_type" value="">
-                        {# end of three buttons#}
+                        {# end of three buttons #}
 
                         {{ ExpandedForm.text('transaction_description') }}
                         {# transaction information (mandatory) #}
@@ -99,7 +104,7 @@
                         {{ AccountForm.longAccountList('destination_id', null, {label: trans('form.asset_destination_account')} ) }}
 
                         {# destination account name for withdrawals #}
-                        {#{{ ExpandedForm.text('destination_name', null, {label: trans('form.expense_account')}) }} #}
+                        {# {{ ExpandedForm.text('destination_name', null, {label: trans('form.expense_account')}) }} #}
 
                         {# NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). #}
                         {{ AccountForm.activeWithdrawalDestinations('withdrawal_destination_id', null, {label: trans('form.withdrawal_destination_id')}) }}
@@ -164,60 +169,70 @@
             </div>
         </div>
         {#
-            <div class="row">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'expected_repetitions'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        Here.
-                    </div>
+        <div class="row">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'expected_repetitions'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    Here.
                 </div>
             </div>
         </div>
-        </div>
+    </div>
+    </div>
         #}
     </form>
 
     {# calendar modal #}
     <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">{{ 'recurring_calendar_view'|_ }}</h4>
-            </div>
-            <div class="modal-body">
-                <div id="recurring_calendar" style="max-width: 400px;margin: 0 auto;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'recurring_calendar_view'|_ }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="recurring_calendar" style="max-width: 400px;margin: 0 auto;">
+
+                    </div>
 
                 </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-    </div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var transactionType = "{{ preFilled.transaction_type }}";
         var suggestUrl = "{{ route('recurring.suggest') }}";
         var eventsUrl = "{{ route('recurring.events') }}";
-        var oldRepetitionType= "{{ oldRepetitionType }}";
+        var oldRepetitionType = "{{ oldRepetitionType }}";
     </script>
-    <script type="text/javascript" src="v1/js/ff/recurring/create.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/recurring/create.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 
 {% block styles %}
-    <link href="v1/css/bootstrap-tagsinput.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/lib/fc/fullcalendar.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/bootstrap-tagsinput.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all"
+          nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/fc/fullcalendar.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all"
+          nonce="{{ JS_NONCE }}">
 {% endblock %}

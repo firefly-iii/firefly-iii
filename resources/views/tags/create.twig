@@ -10,7 +10,8 @@
         var locations = {{ locations|json_encode|raw }};
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
-    <form method="POST" action="{{ route('tags.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('tags.store') }}" accept-charset="UTF-8" class="form-horizontal" id="store"
+          enctype="multipart/form-data">
         <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="row">
             <div class="col-lg-5 col-md-5 col-sm-12">
@@ -33,7 +34,6 @@
                     <div class="box-body">
                         {{ ExpandedForm.date('date') }}
                         {{ ExpandedForm.textarea('description') }}
-                        {{ ExpandedForm.location('location', null, {locations: locations}) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
@@ -61,13 +61,14 @@
     </form>
 {% endblock %}
 {% block scripts %}
-    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script src="v1/js/ff/tags/create-edit.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
 {% endblock %}
