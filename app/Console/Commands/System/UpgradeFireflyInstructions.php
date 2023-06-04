@@ -166,14 +166,14 @@ class UpgradeFireflyInstructions extends Command
             $colors = ['bright-blue', 'bright-red', 'white', 'white', 'bright-red', 'bright-blue', 'default', 'default'];
         }
 
-        $this->line(sprintf('<fg=%s>  ______ _           __ _         _____ _____ _____  </>', $colors[0]));
-        $this->line(sprintf('<fg=%s> |  ____(_)         / _| |       |_   _|_   _|_   _| </>', $colors[1]));
-        $this->line(sprintf('<fg=%s> | |__   _ _ __ ___| |_| |_   _    | |   | |   | |   </>', $colors[2]));
-        $this->line(sprintf('<fg=%s> |  __| | | \'__/ _ \  _| | | | |   | |   | |   | |   </>', $colors[3]));
-        $this->line(sprintf('<fg=%s> | |    | | | |  __/ | | | |_| |  _| |_ _| |_ _| |_  </>', $colors[4]));
-        $this->line(sprintf('<fg=%s> |_|    |_|_|  \___|_| |_|\__, | |_____|_____|_____| </>', $colors[5]));
-        $this->line(sprintf('<fg=%s>                           __/ |                     </>', $colors[6]));
-        $this->line(sprintf('<fg=%s>                          |___/                      </>', $colors[7]));
+        $this->line(sprintf('<fg=%s>               ______ _          __ _           _____ _____ _____  </>', $colors[0]));
+        $this->line(sprintf('<fg=%s>              |  ____(_)        / _| |         |_   _|_   _|_   _| </>', $colors[1]));
+        $this->line(sprintf('<fg=%s>              | |______ ___ ___| |_| |_   _      | |   | |   | |   </>', $colors[2]));
+        $this->line(sprintf('<fg=%s>              |  __|| | \'__/ _ \  _| | | | |     | |   | |   | |   </>', $colors[3]));
+        $this->line(sprintf('<fg=%s>              | |   | | | |  __/ | | | |_| |    _| |_ _| |_ _| |_  </>', $colors[4]));
+        $this->line(sprintf('<fg=%s>              |_|   |_|_|  \___|_| |_|\__, |   |_____|_____|_____| </>', $colors[5]));
+        $this->line(sprintf('<fg=%s>                                       __/ |                     </>', $colors[6]));
+        $this->line(sprintf('<fg=%s>                                      |___/                      </>', $colors[7]));
     }
 
     /**
