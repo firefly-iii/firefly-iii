@@ -361,4 +361,3 @@ class RecurrenceUpdateService
         $this->createTransactions($recurrence, $transactions);
     }
 }
-}
