@@ -10,7 +10,7 @@
                         {% if account in selected or (selected|length == 0 and options.select_all == true) %}
                             {{ Html.checkbox(name~'[]',true).id(id) }}
                         {% else %}
-                            {{ Form.checkbox(name~'[]',false).id(id) }}
+                            {{ Html.checkbox(name~'[]',false).id(id) }}
                         {% endif %}
                         {{ account|escape }}
                     </label>

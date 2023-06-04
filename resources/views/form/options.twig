@@ -7,7 +7,7 @@
         <div class="col-sm-8">
             <div class="checkbox">
                 <label>
-                    {{ Form.checkbox('create_another', '1', false, {'id': name ~ '_return_to_form'}) }}
+                    {{ Html.checkbox('create_another', false).id(name ~ '_return_to_form') }}
                     {{ trans('form.returnHereExplanation') }}
 
                 </label>
@@ -24,7 +24,7 @@
 
         <div class="col-sm-8">
             <div class="checkbox"><label>
-                    {{ Form.checkbox('return_to_edit', '1', null, {'id': name ~ '_return_to_edit'}) }}
+                    {{ Html.checkbox('return_to_edit', null).id(name ~ '_return_to_edit') }}
                     {{ trans('form.returnHereUpdateExplanation') }}
                 </label>
             </div>

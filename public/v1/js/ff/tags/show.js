@@ -18,35 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** global: zoomLevel, latitude, longitude, L, mapboxToken, doPlaceMarker */
-
 /*
  Some vars as prep for the map:
  */
 $(function () {
     "use strict";
-    if (doPlaceMarker === true) {
-        /*
-         Create new map:
-         */
-
-        // make map:
-        var mymap = L.map('location_map', {
-            zoomControl: false,
-            touchZoom: false,
-            doubleClickZoom: false,
-            scrollWheelZoom: false,
-            boxZoom: false,
-            dragging: false
-        }).setView([latitude, longitude], zoomLevel);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?access_token={accessToken}', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-            id: 'mapbox/streets-v11',
-            accessToken: mapboxToken
-        }).addTo(mymap);
-        L.marker([latitude, longitude]).addTo(mymap);
-    }
 
 });

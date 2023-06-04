@@ -297,9 +297,6 @@
         var latitude = {{ location.latitude|default("52.3167") }};
         var longitude = {{ location.longitude|default("5.5500") }};
         var zoomLevel = {{ location.zoom_level|default("6") }};
-        var doPlaceMarker = true;
-        // token for Mapbox:
-        var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
         {% endif %}
     </script>
     <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

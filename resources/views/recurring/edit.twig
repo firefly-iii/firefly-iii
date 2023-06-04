@@ -23,11 +23,11 @@
                         {{ ExpandedForm.text('title') }}
                         {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
-                        {{ ExpandedForm.number('skip', array.repetitions[0].skip) }}
+                        {{ ExpandedForm.integer('skip', array.repetitions[0].skip) }}
                         {{ ExpandedForm.select('weekend', weekendResponses, array.repetitions[0].weekend, {helpText: trans('firefly.help_weekend')}) }}
                         {{ ExpandedForm.select('repetition_end', repetitionEnds, repetitionEnd) }}
                         {{ ExpandedForm.date('repeat_until',array.repeat_until) }}
-                        {{ ExpandedForm.number('repetitions', array.nr_of_repetitions) }}
+                        {{ ExpandedForm.integer('repetitions', array.nr_of_repetitions) }}
 
                         {# calendar in popup #}
                         <div class="form-group" id="calendar_holder">

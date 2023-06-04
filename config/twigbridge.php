@@ -171,7 +171,7 @@ return [
             'Steam',
             'Config',
             'Request',
-            'Form'          => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file']],
+            'Html',
             'ExpandedForm'  => [
                 'is_safe' => [
                     'date',
