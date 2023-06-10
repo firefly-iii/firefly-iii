@@ -1624,7 +1624,7 @@ return [
     'new_default_currency'                      => '„:name” wird nun als Standardwährung verwendet.',
     'cannot_delete_currency'                    => '„:name” konnte nicht gelöscht werden, da diese noch verwendet wird.',
     'cannot_delete_fallback_currency'           => ':name ist die Standardwährung des Systems und kann daher nicht gelöscht werden.',
-    'cannot_disable_currency_journals'          => '„:name” konnte nicht deaktiviert werden, da dieser noch von Buchungen noch verwendet wird.',
+    'cannot_disable_currency_journals'          => '„:name” konnte nicht deaktiviert werden, da dieser noch von Buchungen verwendet wird.',
     'cannot_disable_currency_last_left'         => '„:name” kann nicht deaktiviert werden, da es sich um die einzige aktivierte Währung handelt.',
     'cannot_disable_currency_account_meta'      => ':name konnte nicht deaktiviert werden, da dieser noch in Bestandskonten verwendet wird.',
     'cannot_disable_currency_bills'             => '„:name” konnte nicht deaktiviert werden, da dieser noch in Rechnungen verwendet wird.',
