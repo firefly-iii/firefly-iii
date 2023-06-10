@@ -137,7 +137,6 @@ return [
     'tracker_url'                  => env('TRACKER_URL', ''),
 
     // authentication settings
-    'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_url'            => envNonEmpty('CUSTOM_LOGOUT_URL', ''),
 
