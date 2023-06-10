@@ -70,7 +70,6 @@ class ProfileController extends Controller
     use CreateStuff;
 
     protected bool $internalAuth;
-    protected bool $internalIdentity;
 
     /**
      * ProfileController constructor.
@@ -89,10 +88,8 @@ class ProfileController extends Controller
                 return $next($request);
             }
         );
-        $loginProvider          = config('firefly.login_provider');
-        $authGuard              = config('firefly.authentication_guard');
-        $this->internalAuth     = 'web' === $authGuard;
-        $this->internalIdentity = 'eloquent' === $loginProvider;
+        $authGuard          = config('firefly.authentication_guard');
+        $this->internalAuth = 'web' === $authGuard;
         Log::debug(sprintf('ProfileController::__construct(). Login provider is "%s", authentication guard is "%s"', $loginProvider, $authGuard));
 
         $this->middleware(IsDemoUser::class)->except(['index']);
@@ -107,7 +104,7 @@ class ProfileController extends Controller
      */
     public function changeEmail(Request $request): Factory|RedirectResponse|View
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -130,7 +127,7 @@ class ProfileController extends Controller
      */
     public function changePassword(Request $request)
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -157,7 +154,7 @@ class ProfileController extends Controller
      */
     public function code(Request $request): Factory|View|RedirectResponse
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -213,7 +210,7 @@ class ProfileController extends Controller
      */
     public function confirmEmailChange(UserRepositoryInterface $repository, string $token): RedirectResponse|Redirector
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             throw new FireflyException(trans('firefly.external_user_mgt_disabled'));
         }
         // find preference with this token value.
@@ -247,7 +244,7 @@ class ProfileController extends Controller
      */
     public function deleteAccount(Request $request): View|RedirectResponse
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -265,7 +262,7 @@ class ProfileController extends Controller
      */
     public function deleteCode(Request $request): RedirectResponse|Redirector
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -293,7 +290,7 @@ class ProfileController extends Controller
      */
     public function enable2FA(Request $request): RedirectResponse|Redirector
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -326,14 +323,13 @@ class ProfileController extends Controller
     public function index(): Factory|View
     {
         /** @var User $user */
-        $user               = auth()->user();
-        $isInternalAuth     = $this->internalAuth;
-        $isInternalIdentity = $this->internalIdentity;
-        $count              = DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
-        $subTitle           = $user->email;
-        $userId             = $user->id;
-        $enabled2FA         = null !== $user->mfa_secret;
-        $mfaBackupCount     = count(app('preferences')->get('mfa_recovery', [])->data);
+        $user           = auth()->user();
+        $isInternalAuth = $this->internalAuth;
+        $count          = DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
+        $subTitle       = $user->email;
+        $userId         = $user->id;
+        $enabled2FA     = null !== $user->mfa_secret;
+        $mfaBackupCount = count(app('preferences')->get('mfa_recovery', [])->data);
         $this->createOAuthKeys();
 
         if (0 === $count) {
@@ -350,7 +346,7 @@ class ProfileController extends Controller
 
         return view(
             'profile.index',
-            compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'isInternalAuth', 'isInternalIdentity')
+            compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'isInternalAuth')
         );
     }
 
@@ -376,7 +372,7 @@ class ProfileController extends Controller
      */
     public function newBackupCodes(Request $request): Factory|View|RedirectResponse
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -407,7 +403,7 @@ class ProfileController extends Controller
      */
     public function postChangeEmail(EmailFormRequest $request, UserRepositoryInterface $repository): Factory|RedirectResponse|Redirector
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -456,7 +452,7 @@ class ProfileController extends Controller
      */
     public function postChangePassword(ProfileFormRequest $request, UserRepositoryInterface $repository)
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -493,7 +489,7 @@ class ProfileController extends Controller
      */
     public function postCode(TokenFormRequest $request)
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -541,7 +537,7 @@ class ProfileController extends Controller
      */
     public function postDeleteAccount(UserRepositoryInterface $repository, DeleteAccountFormRequest $request)
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -601,7 +597,7 @@ class ProfileController extends Controller
      */
     public function regenerate(Request $request)
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
@@ -629,7 +625,7 @@ class ProfileController extends Controller
      */
     public function undoEmailChange(UserRepositoryInterface $repository, string $token, string $hash)
     {
-        if (!$this->internalAuth || !$this->internalIdentity) {
+        if (!$this->internalAuth) {
             throw new FireflyException(trans('firefly.external_user_mgt_disabled'));
         }
 
