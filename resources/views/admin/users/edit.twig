@@ -20,7 +20,7 @@
                     </div>
                     <div class="box-body">
                         {% if canEditDetails %}
-                            {{ ExpandedForm.text('email',null,{'helpText': trans('firefly.admin_update_email')}) }}
+                            {{ ExpandedForm.text('email',user.email,{'helpText': trans('firefly.admin_update_email')}) }}
                             {{ ExpandedForm.password('password') }}
                             {{ ExpandedForm.password('password_confirmation') }}
                         {% else %}

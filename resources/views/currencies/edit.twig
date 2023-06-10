@@ -18,11 +18,11 @@
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('name',null,{'maxlength' : 48}) }}
-                        {{ ExpandedForm.text('symbol',null,{'maxlength' : 51}) }}
-                        {{ ExpandedForm.text('code',null,{'maxlength' : 51}) }}
-                        {{ ExpandedForm.integer('decimal_places',null,{'maxlength' : 2,'min': 0,'max': 12}) }}
-                        {{ ExpandedForm.checkbox('enabled',null) }}
+                        {{ ExpandedForm.text('name', currency.name,{'maxlength' : 48}) }}
+                        {{ ExpandedForm.text('symbol', currency.symbol,{'maxlength' : 51}) }}
+                        {{ ExpandedForm.text('code', currency.code,{'maxlength' : 51}) }}
+                        {{ ExpandedForm.integer('decimal_places', currency.decimal_places,{'maxlength' : 2,'min': 0,'max': 12}) }}
+                        {{ ExpandedForm.checkbox('enabled', currency.enabled) }}
                     </div>
                 </div>
             </div>

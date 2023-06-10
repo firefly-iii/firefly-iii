@@ -20,7 +20,7 @@
                     </div>
                     <div class="box-body">
                         <input type="hidden" name="id" value="{{ array.id }}"/>
-                        {{ ExpandedForm.text('title') }}
+                        {{ ExpandedForm.text('title', array.title) }}
                         {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
                         {{ ExpandedForm.integer('skip', array.repetitions[0].skip) }}
