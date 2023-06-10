@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ route('attachments.update', attachment.id) }}" accept-charset="UTF-8" class="form-horizontal" id="update">
+    <form method="POST" action="{{ route('attachments.update', attachment.id) }}" accept-charset="UTF-8"
+          class="form-horizontal" id="update">
 
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="id" value="{{ attachment.id }}"/>
@@ -37,6 +38,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 {# panel for options #}

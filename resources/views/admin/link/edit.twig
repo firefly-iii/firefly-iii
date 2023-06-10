@@ -18,9 +18,9 @@
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('name', null, {helpText: trans('firefly.link_type_help_name')}) }}
-                        {{ ExpandedForm.text('inward', null, {helpText: trans('firefly.link_type_help_inward')}) }}
-                        {{ ExpandedForm.text('outward', null, {helpText: trans('firefly.link_type_help_outward')}) }}
+                        {{ ExpandedForm.text('name', linkType.name, {helpText: trans('firefly.link_type_help_name')}) }}
+                        {{ ExpandedForm.text('inward', linkType.inward, {helpText: trans('firefly.link_type_help_inward')}) }}
+                        {{ ExpandedForm.text('outward', linkType.outward, {helpText: trans('firefly.link_type_help_outward')}) }}
                     </div>
                 </div>
             </div>

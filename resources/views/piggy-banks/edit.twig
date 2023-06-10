@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" action="{{ route('piggy-banks.update',piggyBank.id) }}" class="form-horizontal"
+    <form method="post" action="{{ route('piggy-banks.update', piggyBank.id) }}" class="form-horizontal"
           accept-charset="UTF-8"
           enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -19,8 +19,8 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
-                    <div class="box-body">
 
+                    <div class="box-body">
                         {{ ExpandedForm.text('name') }}
                         {{ AccountForm.assetAccountList('account_id', null, {label: 'saveOnAccount'|_   }) }}
                         {{ ExpandedForm.amountNoCurrency('targetamount') }}

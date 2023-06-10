@@ -26,7 +26,7 @@
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('name') }}
+                        {{ ExpandedForm.text('name', account.name) }}
                         {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities' %}
                             {{ CurrencyForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
 
@@ -36,7 +36,7 @@
                             {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
                             {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_}) }}
                             {{ ExpandedForm.select('liability_direction', liabilityDirections) }}
-                            {{ ExpandedForm.date('opening_balance_date', null, {label:'debt_start_date'|_}) }}
+                            {{ ExpandedForm.date('opening_balance_date', preFilled.opening_balance_date, {label:'debt_start_date'|_}) }}
                             {{ ExpandedForm.percentage('interest') }}
                             {{ ExpandedForm.select('interest_period', interestPeriods) }}
                         {% endif %}
@@ -50,7 +50,7 @@
                         <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.text('iban') }}
+                        {{ ExpandedForm.text('iban', account.iban) }}
                         {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
                         {% if preFilled.account_role == 'ccAsset' %}
                             {{ ExpandedForm.text('account_number', null , {label:trans('form.creditCardNumber')}) }}
@@ -62,7 +62,7 @@
 
                             {# get opening balance entry for this thing! #}
                             {{ ExpandedForm.amountNoCurrency('opening_balance',null) }}
-                            {{ ExpandedForm.date('opening_balance_date') }}
+                            {{ ExpandedForm.date('opening_balance_date', preFilled.opening_balance_date) }}
                             {{ ExpandedForm.select('account_role', roles) }}
                             {{ ExpandedForm.amountNoCurrency('virtual_balance',null) }}
 

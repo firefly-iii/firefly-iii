@@ -19,16 +19,16 @@
                     </div>
                     <div class="box-body">
                         {% if rules.count() > 0 %}
-                            {{ ExpandedForm.text('name',null, {helpText: trans_choice('firefly.bill_edit_rules', rules.count())}) }}
+                            {{ ExpandedForm.text('name', bill.name, {helpText: trans_choice('firefly.bill_edit_rules', rules.count())}) }}
                         {% else %}
-                            {{ ExpandedForm.text('name') }}
+                            {{ ExpandedForm.text('name', bill.name) }}
                         {% endif %}
                         {{ CurrencyForm.currencyList('transaction_currency_id') }}
-                        {{ ExpandedForm.amountNoCurrency('amount_min') }}
-                        {{ ExpandedForm.amountNoCurrency('amount_max') }}
+                        {{ ExpandedForm.amountNoCurrency('amount_min', bill.amount_min) }}
+                        {{ ExpandedForm.amountNoCurrency('amount_max',  bill.amount_max) }}
                         {{ ExpandedForm.date('date',bill.date.format('Y-m-d')) }}
                         {{ ExpandedForm.select('repeat_freq',periods) }}
-                        {{ ExpandedForm.integer('skip') }}
+                        {{ ExpandedForm.integer('skip', bill.skip) }}
 
                     </div>
                 </div>
