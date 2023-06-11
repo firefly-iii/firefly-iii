@@ -229,7 +229,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if ($model instanceof PiggyBank) {
             $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
-        if ($model instanceof PiggyBank) {
+        if (!($model instanceof PiggyBank)) {
             $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(
             ); // @phpstan-ignore-line
         }
