@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Exception;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\NewVersionAvailable;
@@ -31,6 +32,7 @@ use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -54,7 +56,21 @@ class AdminEventHandler
         $all        = $repository->all();
         foreach ($all as $user) {
             if ($repository->hasRole($user, 'owner')) {
-                Notification::send($user, new UserInvitation($event->invitee));
+                try {
+                    Notification::send($user, new UserInvitation($event->invitee));
+                } catch (Exception $e) {
+                    $message = $e->getMessage();
+                    if (str_contains($message, 'Bcc')) {
+                        Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                        return;
+                    }
+                    if (str_contains($message, 'RFC 2822')) {
+                        Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                        return;
+                    }
+                    Log::error($e->getMessage());
+                    Log::error($e->getTraceAsString());
+                }
             }
         }
     }
@@ -77,7 +93,21 @@ class AdminEventHandler
         $all        = $repository->all();
         foreach ($all as $user) {
             if ($repository->hasRole($user, 'owner')) {
-                Notification::send($user, new VersionCheckResult($event->message));
+                try {
+                    Notification::send($user, new VersionCheckResult($event->message));
+                } catch (Exception $e) {
+                    $message = $e->getMessage();
+                    if (str_contains($message, 'Bcc')) {
+                        Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                        return;
+                    }
+                    if (str_contains($message, 'RFC 2822')) {
+                        Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                        return;
+                    }
+                    Log::error($e->getMessage());
+                    Log::error($e->getTraceAsString());
+                }
             }
         }
     }
@@ -97,7 +127,20 @@ class AdminEventHandler
         if (!$repository->hasRole($event->user, 'owner')) {
             return;
         }
-
-        Notification::send($event->user, new TestNotification($event->user->email));
+        try {
+            Notification::send($event->user, new TestNotification($event->user->email));
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                return;
+            }
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
     }
 }
