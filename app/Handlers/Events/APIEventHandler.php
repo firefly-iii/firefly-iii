@@ -23,12 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Events\AccessTokenCreated;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class APIEventHandler
@@ -50,7 +51,21 @@ class APIEventHandler
         $user       = $repository->find((int)$event->userId);
 
         if (null !== $user) {
-            Notification::send($user, new NewAccessToken());
+            try {
+                Notification::send($user, new NewAccessToken());
+            } catch (Exception $e) {
+                $message = $e->getMessage();
+                if (str_contains($message, 'Bcc')) {
+                    Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                    return;
+                }
+                if (str_contains($message, 'RFC 2822')) {
+                    Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                    return;
+                }
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+            }
         }
     }
 }

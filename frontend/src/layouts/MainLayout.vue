@@ -35,7 +35,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header reveal class="bg-primary text-white">
+    <q-header class="bg-primary text-white" reveal>
       <q-toolbar>
         <q-btn flat icon="fas fa-bars" round @click="toggleLeftDrawer"/>
 
@@ -153,7 +153,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
         </q-btn>
       </q-toolbar>
     </q-header>
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
+    <q-drawer v-model="leftDrawerOpen" bordered show-if-above side="left">
       <q-scroll-area class="fit">
         <div class="q-pt-md">
           <q-list>
@@ -196,7 +196,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
               icon="fas fa-exchange-alt"
               label="Transactions"
             >
-              <q-item  v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
+              <q-item v-ripple :inset-level="1" :to="{ name: 'transactions.index', params: {type: 'withdrawal'} }"
                       clickable>
                 <q-item-section>
                   Withdrawals
@@ -252,7 +252,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
               icon="fas fa-credit-card"
               label="Accounts"
             >
-              <q-item  v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
+              <q-item v-ripple :inset-level="1" :to="{ name: 'accounts.index', params: {type: 'asset'} }" clickable>
                 <q-item-section>
                   Asset accounts
                 </q-item-section>
@@ -332,13 +332,13 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
         </div>
       </div>
 
-      <router-view />
+      <router-view/>
     </q-page-container>
 
-    <q-footer class="bg-grey-8 text-white" bordered>
+    <q-footer bordered class="bg-grey-8 text-white">
       <q-toolbar>
         <div>
-          <small>Firefly III v v6.0.11 &copy; James Cole, AGPL-3.0-or-later.</small>
+          <small>Firefly III v v6.0.12 &copy; James Cole, AGPL-3.0-or-later.</small>
         </div>
       </q-toolbar>
     </q-footer>

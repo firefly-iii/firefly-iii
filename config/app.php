@@ -21,6 +21,17 @@
 
 declare(strict_types=1);
 
+use FireflyIII\Support\Facades\AccountForm;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\CurrencyForm;
+use FireflyIII\Support\Facades\ExpandedForm;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\PiggyBankForm;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\RuleForm;
+use FireflyIII\Support\Facades\Steam;
+
 return [
     'name'            => envNonEmpty('APP_NAME', 'Firefly III'),
     'env'             => envNonEmpty('APP_ENV', 'local'),
@@ -129,18 +140,17 @@ return [
         'URL'           => Illuminate\Support\Facades\URL::class,
         'Validator'     => Illuminate\Support\Facades\Validator::class,
         'View'          => Illuminate\Support\Facades\View::class,
-        'Form'          => Collective\Html\FormFacade::class,
-        'Html'          => Collective\Html\HtmlFacade::class,
-        'Preferences'   => \FireflyIII\Support\Facades\Preferences::class,
-        'FireflyConfig' => \FireflyIII\Support\Facades\FireflyConfig::class,
-        'Navigation'    => \FireflyIII\Support\Facades\Navigation::class,
-        'Amount'        => \FireflyIII\Support\Facades\Amount::class,
-        'Steam'         => \FireflyIII\Support\Facades\Steam::class,
-        'ExpandedForm'  => \FireflyIII\Support\Facades\ExpandedForm::class,
-        'CurrencyForm'  => \FireflyIII\Support\Facades\CurrencyForm::class,
-        'AccountForm'   => \FireflyIII\Support\Facades\AccountForm::class,
-        'PiggyBankForm' => \FireflyIII\Support\Facades\PiggyBankForm::class,
-        'RuleForm'      => \FireflyIII\Support\Facades\RuleForm::class,
+        'Html'          => Spatie\Html\Facades\Html::class,
+        'Preferences'   => Preferences::class,
+        'FireflyConfig' => FireflyConfig::class,
+        'Navigation'    => Navigation::class,
+        'Amount'        => Amount::class,
+        'Steam'         => Steam::class,
+        'ExpandedForm'  => ExpandedForm::class,
+        'CurrencyForm'  => CurrencyForm::class,
+        'AccountForm'   => AccountForm::class,
+        'PiggyBankForm' => PiggyBankForm::class,
+        'RuleForm'      => RuleForm::class,
         'Google2FA'     => PragmaRX\Google2FALaravel\Facade::class,
         'Twig'          => TwigBridge\Facade\Twig::class,
 

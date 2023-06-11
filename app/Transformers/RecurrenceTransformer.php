@@ -150,93 +150,6 @@ class RecurrenceTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  Recurrence  $recurrence
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    private function getTransactions(Recurrence $recurrence): array
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        $return = [];
-        // get all transactions:
-        /** @var RecurrenceTransaction $transaction */
-        foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
-            $sourceAccount         = $transaction->sourceAccount;
-            $destinationAccount    = $transaction->destinationAccount;
-            $foreignCurrencyCode   = null;
-            $foreignCurrencySymbol = null;
-            $foreignCurrencyDp     = null;
-            $foreignCurrencyId     = null;
-            if (null !== $transaction->foreign_currency_id) {
-                $foreignCurrencyId     = (int)$transaction->foreign_currency_id;
-                $foreignCurrencyCode   = $transaction->foreignCurrency->code;
-                $foreignCurrencySymbol = $transaction->foreignCurrency->symbol;
-                $foreignCurrencyDp     = (int)$transaction->foreignCurrency->decimal_places;
-            }
-
-            // source info:
-            $sourceName = '';
-            $sourceId   = null;
-            $sourceType = null;
-            $sourceIban = null;
-            if (null !== $sourceAccount) {
-                $sourceName = $sourceAccount->name;
-                $sourceId   = (int)$sourceAccount->id;
-                $sourceType = $sourceAccount->accountType->type;
-                $sourceIban = $sourceAccount->iban;
-            }
-            $destinationName = '';
-            $destinationId   = null;
-            $destinationType = null;
-            $destinationIban = null;
-            if (null !== $destinationAccount) {
-                $destinationName = $destinationAccount->name;
-                $destinationId   = (int)$destinationAccount->id;
-                $destinationType = $destinationAccount->accountType->type;
-                $destinationIban = $destinationAccount->iban;
-            }
-            $amount        = app('steam')->bcround($transaction->amount, $transaction->transactionCurrency->decimal_places);
-            $foreignAmount = null;
-            if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
-                $foreignAmount = app('steam')->bcround($transaction->foreign_amount, $foreignCurrencyDp);
-            }
-            $transactionArray = [
-                'currency_id'                     => (string)$transaction->transaction_currency_id,
-                'currency_code'                   => $transaction->transactionCurrency->code,
-                'currency_symbol'                 => $transaction->transactionCurrency->symbol,
-                'currency_decimal_places'         => (int)$transaction->transactionCurrency->decimal_places,
-                'foreign_currency_id'             => null === $foreignCurrencyId ? null : (string)$foreignCurrencyId,
-                'foreign_currency_code'           => $foreignCurrencyCode,
-                'foreign_currency_symbol'         => $foreignCurrencySymbol,
-                'foreign_currency_decimal_places' => $foreignCurrencyDp,
-                'source_id'                       => (string)$sourceId,
-                'source_name'                     => $sourceName,
-                'source_iban'                     => $sourceIban,
-                'source_type'                     => $sourceType,
-                'destination_id'                  => (string)$destinationId,
-                'destination_name'                => $destinationName,
-                'destination_iban'                => $destinationIban,
-                'destination_type'                => $destinationType,
-                'amount'                          => $amount,
-                'foreign_amount'                  => $foreignAmount,
-                'description'                     => $transaction->description,
-            ];
-            $transactionArray = $this->getTransactionMeta($transaction, $transactionArray);
-            if (null !== $transaction->foreign_currency_id) {
-                $transactionArray['foreign_currency_code']           = $transaction->foreignCurrency->code;
-                $transactionArray['foreign_currency_symbol']         = $transaction->foreignCurrency->symbol;
-                $transactionArray['foreign_currency_decimal_places'] = $transaction->foreignCurrency->decimal_places;
-            }
-
-            // store transaction in recurrence array.
-            $return[] = $transactionArray;
-        }
-
-        return $return;
-    }
-
-    /**
      * @param  RecurrenceTransaction  $transaction
      * @param  array  $array
      *
@@ -303,5 +216,93 @@ class RecurrenceTransformer extends AbstractTransformer
         }
 
         return $array;
+    }
+
+    /**
+     * @param  Recurrence  $recurrence
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getTransactions(Recurrence $recurrence): array
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        $return = [];
+        // get all transactions:
+        /** @var RecurrenceTransaction $transaction */
+        foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
+            $sourceAccount         = $transaction->sourceAccount;
+            $destinationAccount    = $transaction->destinationAccount;
+            $foreignCurrencyCode   = null;
+            $foreignCurrencySymbol = null;
+            $foreignCurrencyDp     = null;
+            $foreignCurrencyId     = null;
+            if (null !== $transaction->foreign_currency_id) {
+                $foreignCurrencyId     = (int)$transaction->foreign_currency_id;
+                $foreignCurrencyCode   = $transaction->foreignCurrency->code;
+                $foreignCurrencySymbol = $transaction->foreignCurrency->symbol;
+                $foreignCurrencyDp     = (int)$transaction->foreignCurrency->decimal_places;
+            }
+
+            // source info:
+            $sourceName = '';
+            $sourceId   = null;
+            $sourceType = null;
+            $sourceIban = null;
+            if (null !== $sourceAccount) {
+                $sourceName = $sourceAccount->name;
+                $sourceId   = (int)$sourceAccount->id;
+                $sourceType = $sourceAccount->accountType->type;
+                $sourceIban = $sourceAccount->iban;
+            }
+            $destinationName = '';
+            $destinationId   = null;
+            $destinationType = null;
+            $destinationIban = null;
+            if (null !== $destinationAccount) {
+                $destinationName = $destinationAccount->name;
+                $destinationId   = (int)$destinationAccount->id;
+                $destinationType = $destinationAccount->accountType->type;
+                $destinationIban = $destinationAccount->iban;
+            }
+            $amount        = app('steam')->bcround($transaction->amount, $transaction->transactionCurrency->decimal_places);
+            $foreignAmount = null;
+            if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
+                $foreignAmount = app('steam')->bcround($transaction->foreign_amount, $foreignCurrencyDp);
+            }
+            $transactionArray = [
+                'id'                              => (string)$transaction->id,
+                'currency_id'                     => (string)$transaction->transaction_currency_id,
+                'currency_code'                   => $transaction->transactionCurrency->code,
+                'currency_symbol'                 => $transaction->transactionCurrency->symbol,
+                'currency_decimal_places'         => (int)$transaction->transactionCurrency->decimal_places,
+                'foreign_currency_id'             => null === $foreignCurrencyId ? null : (string)$foreignCurrencyId,
+                'foreign_currency_code'           => $foreignCurrencyCode,
+                'foreign_currency_symbol'         => $foreignCurrencySymbol,
+                'foreign_currency_decimal_places' => $foreignCurrencyDp,
+                'source_id'                       => (string)$sourceId,
+                'source_name'                     => $sourceName,
+                'source_iban'                     => $sourceIban,
+                'source_type'                     => $sourceType,
+                'destination_id'                  => (string)$destinationId,
+                'destination_name'                => $destinationName,
+                'destination_iban'                => $destinationIban,
+                'destination_type'                => $destinationType,
+                'amount'                          => $amount,
+                'foreign_amount'                  => $foreignAmount,
+                'description'                     => $transaction->description,
+            ];
+            $transactionArray = $this->getTransactionMeta($transaction, $transactionArray);
+            if (null !== $transaction->foreign_currency_id) {
+                $transactionArray['foreign_currency_code']           = $transaction->foreignCurrency->code;
+                $transactionArray['foreign_currency_symbol']         = $transaction->foreignCurrency->symbol;
+                $transactionArray['foreign_currency_decimal_places'] = $transaction->foreignCurrency->decimal_places;
+            }
+
+            // store transaction in recurrence array.
+            $return[] = $transactionArray;
+        }
+
+        return $return;
     }
 }

@@ -47,7 +47,7 @@ class CreateOauthClientsTable extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasTable('oauth_clients')) {
+        if (!Schema::hasTable('oauth_clients')) {
             try {
                 Schema::create(
                     'oauth_clients',

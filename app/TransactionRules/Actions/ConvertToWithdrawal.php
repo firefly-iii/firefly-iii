@@ -34,7 +34,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 
@@ -113,7 +112,7 @@ class ConvertToWithdrawal implements ActionInterface
     }
 
     /**
-     * @param  TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      * @return bool
      * @throws FireflyException
      * @throws JsonException
@@ -170,7 +169,7 @@ class ConvertToWithdrawal implements ActionInterface
      * Input is a transfer from A to B.
      * Output is a withdrawal from A to C.
      *
-     * @param  TransactionJournal $journal
+     * @param  TransactionJournal  $journal
      *
      * @return bool
      * @throws FireflyException
@@ -187,7 +186,7 @@ class ConvertToWithdrawal implements ActionInterface
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($user);
 
-        $destAccount   = $this->getDestinationAccount($journal);
+        $destAccount = $this->getDestinationAccount($journal);
 
         // get the action value, or use the original source name in case the action value is empty:
         // this becomes a new or existing (expense) account, which is the destination of the new withdrawal.
@@ -223,21 +222,6 @@ class ConvertToWithdrawal implements ActionInterface
      * @return Account
      * @throws FireflyException
      */
-    private function getSourceAccount(TransactionJournal $journal): Account
-    {
-        /** @var Transaction|null $sourceTransaction */
-        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-        if (null === $sourceTransaction) {
-            throw new FireflyException(sprintf('Cannot find source transaction for journal #%d', $journal->id));
-        }
-        return $sourceTransaction->account;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     * @return Account
-     * @throws FireflyException
-     */
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
         /** @var Transaction|null $destAccount */
@@ -246,5 +230,20 @@ class ConvertToWithdrawal implements ActionInterface
             throw new FireflyException(sprintf('Cannot find destination transaction for journal #%d', $journal->id));
         }
         return $destAccount->account;
+    }
+
+    /**
+     * @param  TransactionJournal  $journal
+     * @return Account
+     * @throws FireflyException
+     */
+    private function getSourceAccount(TransactionJournal $journal): Account
+    {
+        /** @var Transaction|null $sourceTransaction */
+        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        if (null === $sourceTransaction) {
+            throw new FireflyException(sprintf('Cannot find source transaction for journal #%d', $journal->id));
+        }
+        return $sourceTransaction->account;
     }
 }

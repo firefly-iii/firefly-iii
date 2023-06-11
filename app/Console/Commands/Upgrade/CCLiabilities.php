@@ -37,18 +37,8 @@ use Psr\Container\NotFoundExceptionInterface;
 class CCLiabilities extends Command
 {
     public const CONFIG_NAME = '480_cc_liabilities';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Convert old credit card liabilities.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:cc-liabilities {--F|force : Force the execution of this command.}';
+    protected $signature   = 'firefly-iii:cc-liabilities {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -62,9 +52,8 @@ class CCLiabilities extends Command
     {
         $start = microtime(true);
 
-
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->info('Correct: this command has already been executed.');
 
             return 0;
         }
@@ -73,7 +62,8 @@ class CCLiabilities extends Command
         $ccType   = AccountType::where('type', AccountType::CREDITCARD)->first();
         $debtType = AccountType::where('type', AccountType::DEBT)->first();
         if (null === $ccType || null === $debtType) {
-            $this->info('No incorrectly stored credit card liabilities.');
+            $this->info('Correct: no incorrectly stored credit card liabilities.');
+            $this->markAsExecuted();
 
             return 0;
         }
@@ -88,7 +78,7 @@ class CCLiabilities extends Command
             $this->info('Credit card liability types are no longer supported and have been converted to generic debts. See: https://bit.ly/FF3-credit-cards');
         }
         if (0 === $accounts->count()) {
-            $this->info('No incorrectly stored credit card liabilities.');
+            $this->info('Correct: no incorrectly stored credit card liabilities.');
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified credit card liabilities in %s seconds', $end));

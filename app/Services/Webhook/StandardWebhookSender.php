@@ -30,8 +30,8 @@ use FireflyIII\Models\WebhookMessage;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class StandardWebhookSender

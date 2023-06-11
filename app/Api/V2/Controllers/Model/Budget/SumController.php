@@ -48,6 +48,7 @@ class SumController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(BudgetRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -58,6 +59,7 @@ class SumController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/getBudgetedForBudget
      *
      * @param  DateRequest  $request
+     *
      * @return JsonResponse
      */
     public function budgeted(DateRequest $request): JsonResponse
@@ -72,7 +74,9 @@ class SumController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/getSpentForBudget
+     *
      * @param  DateRequest  $request
+     *
      * @return JsonResponse
      */
     public function spent(DateRequest $request): JsonResponse

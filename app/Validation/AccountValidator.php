@@ -83,6 +83,34 @@ class AccountValidator
     }
 
     /**
+     * @param  Account|null  $account
+     */
+    public function setSource(?Account $account): void
+    {
+        if (null === $account) {
+            Log::debug('AccountValidator source is set to NULL');
+        }
+        if (null !== $account) {
+            Log::debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType->type));
+        }
+        $this->source = $account;
+    }
+
+    /**
+     * @param  Account|null  $account
+     */
+    public function setDestination(?Account $account): void
+    {
+        if (null === $account) {
+            Log::debug('AccountValidator destination is set to NULL');
+        }
+        if (null !== $account) {
+            Log::debug(sprintf('AccountValidator destination is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType->type));
+        }
+        $this->destination = $account;
+    }
+
+    /**
      * @param  string  $transactionType
      */
     public function setTransactionType(string $transactionType): void
@@ -184,6 +212,21 @@ class AccountValidator
     }
 
     /**
+     * @param  string  $accountType
+     *
+     * @return bool
+     */
+    protected function canCreateType(string $accountType): bool
+    {
+        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
+        if (in_array($accountType, $canCreate, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param  array  $accountTypes
      *
      * @return bool
@@ -200,21 +243,6 @@ class AccountValidator
             }
         }
         Log::debug('NO, we cant create any of those.');
-
-        return false;
-    }
-
-    /**
-     * @param  string  $accountType
-     *
-     * @return bool
-     */
-    protected function canCreateType(string $accountType): bool
-    {
-        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
-        if (in_array($accountType, $canCreate, true)) {
-            return true;
-        }
 
         return false;
     }
@@ -263,33 +291,5 @@ class AccountValidator
         }
 
         return null;
-    }
-
-    /**
-     * @param  Account|null  $account
-     */
-    public function setDestination(?Account $account): void
-    {
-        if (null === $account) {
-            Log::debug('AccountValidator destination is set to NULL');
-        }
-        if (null !== $account) {
-            Log::debug(sprintf('AccountValidator destination is set to #%d: "%s" (%s)', $account->id, $account->name, $account?->accountType->type));
-        }
-        $this->destination = $account;
-    }
-
-    /**
-     * @param  Account|null  $account
-     */
-    public function setSource(?Account $account): void
-    {
-        if (null === $account) {
-            Log::debug('AccountValidator source is set to NULL');
-        }
-        if (null !== $account) {
-            Log::debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account?->accountType->type));
-        }
-        $this->source = $account;
     }
 }

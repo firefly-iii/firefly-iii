@@ -51,7 +51,7 @@ class AccountForm
      *
      * @return string
      */
-    public function activeDepositDestinations(string $name, $value = null, array $options = null): string
+    public function activeDepositDestinations(string $name, mixed $value = null, array $options = null): string
     {
         $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE,];
         $repository               = $this->getAccountRepository();
@@ -63,36 +63,6 @@ class AccountForm
         return $this->select($name, $grouped, $value, $options);
     }
 
-    private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
-    {
-        if (null === $repository) {
-            $repository = $this->getAccountRepository();
-        }
-        $accountList    = $repository->getActiveAccountsByType($types);
-        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
-        $grouped        = [];
-
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $role = (string)$repository->getMetaValue($account, 'account_role');
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = sprintf('l_%s', $account->accountType->type);
-            } elseif ('' === $role) {
-                if (AccountType::EXPENSE === $account->accountType->type) {
-                    $role = 'expense_account';
-                } elseif (AccountType::REVENUE === $account->accountType->type) {
-                    $role = 'revenue_account';
-                } else {
-                    $role = 'no_account_type';
-                }
-            }
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
-            $grouped[$key][$account->id] = $account->name;
-        }
-
-        return $grouped;
-    }
-
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      *
@@ -102,7 +72,7 @@ class AccountForm
      *
      * @return string
      */
-    public function activeWithdrawalDestinations(string $name, $value = null, array $options = null): string
+    public function activeWithdrawalDestinations(string $name, mixed $value = null, array $options = null): string
     {
         $types      = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::EXPENSE,];
         $repository = $this->getAccountRepository();
@@ -180,5 +150,35 @@ class AccountForm
         $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);
+    }
+
+    private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
+    {
+        if (null === $repository) {
+            $repository = $this->getAccountRepository();
+        }
+        $accountList    = $repository->getActiveAccountsByType($types);
+        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
+        $grouped        = [];
+
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role = (string)$repository->getMetaValue($account, 'account_role');
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = sprintf('l_%s', $account->accountType->type);
+            } elseif ('' === $role) {
+                if (AccountType::EXPENSE === $account->accountType->type) {
+                    $role = 'expense_account';
+                } elseif (AccountType::REVENUE === $account->accountType->type) {
+                    $role = 'revenue_account';
+                } else {
+                    $role = 'no_account_type';
+                }
+            }
+            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
+            $grouped[$key][$account->id] = $account->name;
+        }
+
+        return $grouped;
     }
 }

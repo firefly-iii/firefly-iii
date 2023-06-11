@@ -54,6 +54,95 @@ class General extends AbstractExtension
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFunctions(): array
+    {
+        return [
+            $this->phpdate(),
+            $this->activeRouteStrict(),
+            $this->activeRoutePartial(),
+            $this->activeRoutePartialObjectType(),
+            $this->menuOpenRoutePartial(),
+            $this->formatDate(),
+            $this->getMetaField(),
+            $this->hasRole(),
+            $this->getRootSearchOperator(),
+            $this->carbonize(),
+        ];
+    }
+
+    /**
+     * Will return "active" when a part of the route matches the argument.
+     * ie. "accounts" will match "accounts.index".
+     *
+     * @return TwigFunction
+     */
+    protected function activeRoutePartial(): TwigFunction
+    {
+        return new TwigFunction(
+            'activeRoutePartial',
+            static function (): string {
+                $args  = func_get_args();
+                $route = $args[0]; // name of the route.
+                $name  = Route::getCurrentRoute()->getName() ?? '';
+                if (str_contains($name, $route)) {
+                    return 'active';
+                }
+
+                return '';
+            }
+        );
+    }
+
+    /**
+     * This function will return "active" when the current route matches the first argument (even partly)
+     * but, the variable $objectType has been set and matches the second argument.
+     *
+     * @return TwigFunction
+     */
+    protected function activeRoutePartialObjectType(): TwigFunction
+    {
+        return new TwigFunction(
+            'activeRoutePartialObjectType',
+            static function ($context): string {
+                [, $route, $objectType] = func_get_args();
+                $activeObjectType = $context['objectType'] ?? false;
+
+                if ($objectType === $activeObjectType && false !== stripos(Route::getCurrentRoute()->getName(), $route)) {
+                    return 'active';
+                }
+
+                return '';
+            },
+            ['needs_context' => true]
+        );
+    }
+
+    /**
+     * Will return "active" when the current route matches the given argument
+     * exactly.
+     *
+     * @return TwigFunction
+     */
+    protected function activeRouteStrict(): TwigFunction
+    {
+        return new TwigFunction(
+            'activeRouteStrict',
+            static function (): string {
+                $args  = func_get_args();
+                $route = $args[0]; // name of the route.
+
+                if (Route::getCurrentRoute()->getName() === $route) {
+                    return 'active';
+                }
+
+                return '';
+            }
+        );
+    }
+
+    /**
      * Show account balance. Only used on the front page of Firefly III.
      *
      * @return TwigFilter
@@ -70,6 +159,36 @@ class General extends AbstractExtension
                 $date = session('end', today(config('app.timezone'))->endOfMonth());
 
                 return app('steam')->balance($account, $date);
+            }
+        );
+    }
+
+    /**
+     * @return TwigFunction
+     */
+    protected function carbonize(): TwigFunction
+    {
+        return new TwigFunction(
+            'carbonize',
+            static function (string $date): Carbon {
+                return new Carbon($date);
+            }
+        );
+    }
+
+    /**
+     * Formats a string as a thing by converting it to a Carbon first.
+     *
+     * @return TwigFunction
+     */
+    protected function formatDate(): TwigFunction
+    {
+        return new TwigFunction(
+            'formatDate',
+            function (string $date, string $format): string {
+                $carbon = new Carbon($date);
+
+                return $carbon->isoFormat($format);
             }
         );
     }
@@ -95,6 +214,103 @@ class General extends AbstractExtension
                 }
 
                 return $size.' bytes';
+            }
+        );
+    }
+
+    /**
+     * @return TwigFunction
+     * TODO remove me when layout v1 is deprecated.
+     */
+    protected function getMetaField(): TwigFunction
+    {
+        return new TwigFunction(
+            'accountGetMetaField',
+            static function (Account $account, string $field): string {
+                /** @var AccountRepositoryInterface $repository */
+                $repository = app(AccountRepositoryInterface::class);
+                $result     = $repository->getMetaValue($account, $field);
+                if (null === $result) {
+                    return '';
+                }
+
+                return $result;
+            }
+        );
+    }
+
+    protected function getRootSearchOperator(): TwigFunction
+    {
+        return new TwigFunction(
+            'getRootSearchOperator',
+            static function (string $operator): string {
+                $result = OperatorQuerySearch::getRootOperator($operator);
+                return str_replace('-', 'not_', $result);
+            }
+        );
+    }
+
+    /**
+     * Will return true if the user is of role X.
+     *
+     * @return TwigFunction
+     */
+    protected function hasRole(): TwigFunction
+    {
+        return new TwigFunction(
+            'hasRole',
+            static function (string $role): bool {
+                $repository = app(UserRepositoryInterface::class);
+                if ($repository->hasRole(auth()->user(), $role)) {
+                    return true;
+                }
+
+                return false;
+            }
+        );
+    }
+
+    /**
+     * @return TwigFilter
+     */
+    protected function markdown(): TwigFilter
+    {
+        return new TwigFilter(
+            'markdown',
+            static function (string $text): string {
+                $converter = new GithubFlavoredMarkdownConverter(
+                    [
+                        'allow_unsafe_links' => false,
+                        'max_nesting_level'  => 3,
+                        'html_input'         => 'escape',
+                    ]
+                );
+
+                return (string)$converter->convert($text);
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * Will return "menu-open" when a part of the route matches the argument.
+     * ie. "accounts" will match "accounts.index".
+     *
+     * @return TwigFunction
+     */
+    protected function menuOpenRoutePartial(): TwigFunction
+    {
+        return new TwigFunction(
+            'menuOpenRoutePartial',
+            static function (): string {
+                $args  = func_get_args();
+                $route = $args[0]; // name of the route.
+                $name  = Route::getCurrentRoute()->getName() ?? '';
+                if (str_contains($name, $route)) {
+                    return 'menu-open';
+                }
+
+                return '';
             }
         );
     }
@@ -178,28 +394,6 @@ class General extends AbstractExtension
     }
 
     /**
-     * @return TwigFilter
-     */
-    protected function markdown(): TwigFilter
-    {
-        return new TwigFilter(
-            'markdown',
-            static function (string $text): string {
-                $converter = new GithubFlavoredMarkdownConverter(
-                    [
-                        'allow_unsafe_links' => false,
-                        'max_nesting_level'  => 3,
-                        'html_input'         => 'escape',
-                    ]
-                );
-
-                return (string)$converter->convert($text);
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
      * Show URL host name
      *
      * @return TwigFilter
@@ -218,25 +412,6 @@ class General extends AbstractExtension
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFunctions(): array
-    {
-        return [
-            $this->phpdate(),
-            $this->activeRouteStrict(),
-            $this->activeRoutePartial(),
-            $this->activeRoutePartialObjectType(),
-            $this->menuOpenRoutePartial(),
-            $this->formatDate(),
-            $this->getMetaField(),
-            $this->hasRole(),
-            $this->getRootSearchOperator(),
-            $this->carbonize(),
-        ];
-    }
-
-    /**
      * Basic example thing for some views.
      *
      * @return TwigFunction
@@ -247,181 +422,6 @@ class General extends AbstractExtension
             'phpdate',
             static function (string $str): string {
                 return date($str);
-            }
-        );
-    }
-
-    /**
-     * Will return "active" when the current route matches the given argument
-     * exactly.
-     *
-     * @return TwigFunction
-     */
-    protected function activeRouteStrict(): TwigFunction
-    {
-        return new TwigFunction(
-            'activeRouteStrict',
-            static function (): string {
-                $args  = func_get_args();
-                $route = $args[0]; // name of the route.
-
-                if (Route::getCurrentRoute()->getName() === $route) {
-                    return 'active';
-                }
-
-                return '';
-            }
-        );
-    }
-
-    /**
-     * Will return "active" when a part of the route matches the argument.
-     * ie. "accounts" will match "accounts.index".
-     *
-     * @return TwigFunction
-     */
-    protected function activeRoutePartial(): TwigFunction
-    {
-        return new TwigFunction(
-            'activeRoutePartial',
-            static function (): string {
-                $args  = func_get_args();
-                $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (str_contains($name, $route)) {
-                    return 'active';
-                }
-
-                return '';
-            }
-        );
-    }
-
-    /**
-     * This function will return "active" when the current route matches the first argument (even partly)
-     * but, the variable $objectType has been set and matches the second argument.
-     *
-     * @return TwigFunction
-     */
-    protected function activeRoutePartialObjectType(): TwigFunction
-    {
-        return new TwigFunction(
-            'activeRoutePartialObjectType',
-            static function ($context): string {
-                [, $route, $objectType] = func_get_args();
-                $activeObjectType = $context['objectType'] ?? false;
-
-                if ($objectType === $activeObjectType && false !== stripos(Route::getCurrentRoute()->getName(), $route)) {
-                    return 'active';
-                }
-
-                return '';
-            },
-            ['needs_context' => true]
-        );
-    }
-
-    /**
-     * Will return "menu-open" when a part of the route matches the argument.
-     * ie. "accounts" will match "accounts.index".
-     *
-     * @return TwigFunction
-     */
-    protected function menuOpenRoutePartial(): TwigFunction
-    {
-        return new TwigFunction(
-            'menuOpenRoutePartial',
-            static function (): string {
-                $args  = func_get_args();
-                $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (str_contains($name, $route)) {
-                    return 'menu-open';
-                }
-
-                return '';
-            }
-        );
-    }
-
-    /**
-     * Formats a string as a thing by converting it to a Carbon first.
-     *
-     * @return TwigFunction
-     */
-    protected function formatDate(): TwigFunction
-    {
-        return new TwigFunction(
-            'formatDate',
-            function (string $date, string $format): string {
-                $carbon = new Carbon($date);
-
-                return $carbon->isoFormat($format);
-            }
-        );
-    }
-
-    /**
-     * @return TwigFunction
-     * TODO remove me when layout v1 is deprecated.
-     */
-    protected function getMetaField(): TwigFunction
-    {
-        return new TwigFunction(
-            'accountGetMetaField',
-            static function (Account $account, string $field): string {
-                /** @var AccountRepositoryInterface $repository */
-                $repository = app(AccountRepositoryInterface::class);
-                $result     = $repository->getMetaValue($account, $field);
-                if (null === $result) {
-                    return '';
-                }
-
-                return $result;
-            }
-        );
-    }
-
-    /**
-     * Will return true if the user is of role X.
-     *
-     * @return TwigFunction
-     */
-    protected function hasRole(): TwigFunction
-    {
-        return new TwigFunction(
-            'hasRole',
-            static function (string $role): bool {
-                $repository = app(UserRepositoryInterface::class);
-                if ($repository->hasRole(auth()->user(), $role)) {
-                    return true;
-                }
-
-                return false;
-            }
-        );
-    }
-
-    protected function getRootSearchOperator(): TwigFunction
-    {
-        return new TwigFunction(
-            'getRootSearchOperator',
-            static function (string $operator): string {
-                $result = OperatorQuerySearch::getRootOperator($operator);
-                return str_replace('-', 'not_', $result);
-            }
-        );
-    }
-
-    /**
-     * @return TwigFunction
-     */
-    protected function carbonize(): TwigFunction
-    {
-        return new TwigFunction(
-            'carbonize',
-            static function (string $date): Carbon {
-                return new Carbon($date);
             }
         );
     }

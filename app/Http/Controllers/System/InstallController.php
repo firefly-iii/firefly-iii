@@ -92,6 +92,30 @@ class InstallController extends Controller
     }
 
     /**
+     * Create specific RSA keys.
+     */
+    public function keys(): void
+    {
+        // switch on PHP version.
+        $keys = [];
+        // switch on class existence.
+        Log::info('Will run PHP8 code.');
+        $keys = RSA::createKey(4096);
+
+        [$publicKey, $privateKey] = [
+            Passport::keyPath('oauth-public.key'),
+            Passport::keyPath('oauth-private.key'),
+        ];
+
+        if (file_exists($publicKey) || file_exists($privateKey)) {
+            return;
+        }
+
+        file_put_contents($publicKey, $keys['publickey']);
+        file_put_contents($privateKey, $keys['privatekey']);
+    }
+
+    /**
      * @param  Request  $request
      *
      * @return JsonResponse
@@ -160,29 +184,5 @@ class InstallController extends Controller
         Preferences::mark();
 
         return true;
-    }
-
-    /**
-     * Create specific RSA keys.
-     */
-    public function keys(): void
-    {
-        // switch on PHP version.
-        $keys = [];
-        // switch on class existence.
-        Log::info('Will run PHP8 code.');
-        $keys = RSA::createKey(4096);
-
-        [$publicKey, $privateKey] = [
-            Passport::keyPath('oauth-public.key'),
-            Passport::keyPath('oauth-private.key'),
-        ];
-
-        if (file_exists($publicKey) || file_exists($privateKey)) {
-            return;
-        }
-
-        file_put_contents($publicKey, $keys['publickey']);
-        file_put_contents($privateKey, $keys['privatekey']);
     }
 }

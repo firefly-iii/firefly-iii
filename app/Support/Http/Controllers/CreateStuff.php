@@ -28,8 +28,8 @@ use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
-use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\Log;
+use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
 
 /**

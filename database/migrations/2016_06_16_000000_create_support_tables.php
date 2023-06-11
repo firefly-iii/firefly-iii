@@ -32,6 +32,9 @@ use Illuminate\Database\Schema\Blueprint;
  */
 class CreateSupportTables extends Migration
 {
+    private const TABLE_ALREADY_EXISTS = 'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.';
+    private const TABLE_ERROR          = 'Could not create table "%s": %s';
+
     /**
      * Reverse the migrations.
      */
@@ -86,8 +89,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "account_types": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'account_types', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -110,8 +113,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "configuration": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'configuration', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -138,8 +141,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "transaction_currencies": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'transaction_currencies', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -167,8 +170,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'jobs', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -190,8 +193,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "password_resets": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'password_resets', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -216,8 +219,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "permission_role": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'permission_role', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -240,8 +243,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "permissions": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'permissions', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -264,8 +267,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "roles": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'roles', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -289,8 +292,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "sessions": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'sessions', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -315,8 +318,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "transaction_types": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                Log::error(sprintf(self::TABLE_ERROR, 'transaction_types', $e->getMessage()));
+                Log::error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }

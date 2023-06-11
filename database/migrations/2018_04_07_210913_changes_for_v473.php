@@ -42,7 +42,7 @@ class ChangesForV473 extends Migration
      */
     public function down(): void
     {
-        if(!Schema::hasColumn('bills', 'transaction_currency_id')) {
+        if (!Schema::hasColumn('bills', 'transaction_currency_id')) {
             try {
                 Schema::table(
                     'bills',
@@ -60,7 +60,7 @@ class ChangesForV473 extends Migration
             }
         }
 
-        if(!Schema::hasColumn('rules', 'strict')) {
+        if (!Schema::hasColumn('rules', 'strict')) {
             try {
                 Schema::table(
                     'rules',
@@ -82,7 +82,7 @@ class ChangesForV473 extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasColumn('bills', 'transaction_currency_id')) {
+        if (!Schema::hasColumn('bills', 'transaction_currency_id')) {
             try {
                 Schema::table(
                     'bills',
@@ -96,7 +96,7 @@ class ChangesForV473 extends Migration
                 Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
-        if(!Schema::hasColumn('rules', 'strict')) {
+        if (!Schema::hasColumn('rules', 'strict')) {
             try {
                 Schema::table(
                     'rules',

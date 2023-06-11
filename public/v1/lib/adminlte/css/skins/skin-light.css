@@ -3,6 +3,13 @@
  * Slight changes for FF3
  * ----------
  */
+.skin-firefly-iii ::-moz-selection {
+  /* Code for Firefox */
+  background: #acd0e5;
+}
+.skin-firefly-iii ::selection {
+  background: #acd0e5;
+}
 .skin-firefly-iii .money-neutral {
   color: #999;
 }

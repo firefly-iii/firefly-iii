@@ -69,16 +69,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
-     * Return the preferred period.
-     *
-     * @return string
-     */
-    protected function preferredPeriod(): string
-    {
-        return 'day';
-    }
-
-    /**
      * Set accounts.
      *
      * @param  Collection  $accounts
@@ -168,5 +158,15 @@ class MonthReportGenerator implements ReportGeneratorInterface
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;
+    }
+
+    /**
+     * Return the preferred period.
+     *
+     * @return string
+     */
+    protected function preferredPeriod(): string
+    {
+        return 'day';
     }
 }

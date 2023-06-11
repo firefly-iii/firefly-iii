@@ -107,8 +107,8 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '6.0.11',
-    'api_version'                  => '2.0.3',
+    'version'                      => '6.0.12',
+    'api_version'                  => '2.0.4',
     'db_version'                   => 19,
 
     // generic settings
@@ -118,7 +118,6 @@ return [
 
     // tokens and keys
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
-    'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
     'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
     'static_cron_token'            => envNonEmpty('STATIC_CRON_TOKEN'),
 
@@ -138,7 +137,6 @@ return [
     'tracker_url'                  => env('TRACKER_URL', ''),
 
     // authentication settings
-    'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_url'            => envNonEmpty('CUSTOM_LOGOUT_URL', ''),
 
@@ -175,7 +173,8 @@ return [
         'ko_KR' => ['name_locale' => 'Korean', 'name_english' => 'Korean'],
         //        'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
 
-        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
+        'nb_NO' => ['name_locale' => 'Norsk Bokmål', 'name_english' => 'Norwegian Bokmål'],
+        'nn_NO' => ['name_locale' => 'Norsk Nynorsk', 'name_english' => 'Norwegian Nynorsk'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish'],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],

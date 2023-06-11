@@ -115,15 +115,6 @@ class RemoteUserGuard implements Guard
     /**
      * @inheritDoc
      */
-    public function guest(): bool
-    {
-        Log::debug(sprintf('Now at %s', __METHOD__));
-        return !$this->check();
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function check(): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
@@ -133,16 +124,10 @@ class RemoteUserGuard implements Guard
     /**
      * @inheritDoc
      */
-    public function user(): ?User
+    public function guest(): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        $user = $this->user;
-        if (null === $user) {
-            Log::debug('User is NULL');
-            return null;
-        }
-
-        return $user;
+        return !$this->check();
     }
 
     /**
@@ -170,6 +155,21 @@ class RemoteUserGuard implements Guard
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         $this->user = $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function user(): ?User
+    {
+        Log::debug(sprintf('Now at %s', __METHOD__));
+        $user = $this->user;
+        if (null === $user) {
+            Log::debug('User is NULL');
+            return null;
+        }
+
+        return $user;
     }
 
     /**

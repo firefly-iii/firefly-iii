@@ -35,7 +35,7 @@ class AddLdapColumnsToUsersTable extends Migration
      */
     public function down(): void
     {
-        if(Schema::hasColumn('users', 'domain')) {
+        if (Schema::hasColumn('users', 'domain')) {
             try {
                 Schema::table(
                     'users',
@@ -55,7 +55,7 @@ class AddLdapColumnsToUsersTable extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasColumn('users', 'domain')) {
+        if (!Schema::hasColumn('users', 'domain')) {
             try {
                 Schema::table(
                     'users',

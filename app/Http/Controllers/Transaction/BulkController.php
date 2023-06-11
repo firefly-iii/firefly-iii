@@ -34,8 +34,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 
 /**
  * Class BulkController
@@ -154,6 +154,24 @@ class BulkController extends Controller
 
     /**
      * @param  TransactionJournal  $journal
+     * @param  bool  $ignoreUpdate
+     * @param  string  $category
+     *
+     * @return bool
+     */
+    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
+    {
+        if (true === $ignoreUpdate) {
+            return false;
+        }
+        Log::debug(sprintf('Set budget to %s', $category));
+        $this->repository->updateCategory($journal, $category);
+
+        return true;
+    }
+
+    /**
+     * @param  TransactionJournal  $journal
      * @param  string  $action
      * @param  array  $tags
      *
@@ -170,24 +188,6 @@ class BulkController extends Controller
             $new      = array_unique(array_merge($tags, $existing));
             $this->repository->updateTags($journal, $new);
         }
-
-        return true;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     * @param  bool  $ignoreUpdate
-     * @param  string  $category
-     *
-     * @return bool
-     */
-    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
-    {
-        if (true === $ignoreUpdate) {
-            return false;
-        }
-        Log::debug(sprintf('Set budget to %s', $category));
-        $this->repository->updateCategory($journal, $category);
 
         return true;
     }

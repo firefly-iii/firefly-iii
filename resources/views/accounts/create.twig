@@ -9,7 +9,8 @@
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
     </script>
 
-    <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal" enctype="multipart/form-data">
+    <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal"
+          enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="objectType" value="{{ objectType }}"/>
         <input type="hidden" name="active" value="1"/>
@@ -58,7 +59,6 @@
                         {# only correct way to do active checkbox #}
                         {{ ExpandedForm.checkbox('include_net_worth', 1) }}
                         {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
-                        {{ ExpandedForm.location('location', null, {locations: locations}) }}
                         {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
@@ -88,14 +88,15 @@
         var iAmOwed = '{{ 'i_am_owed_amount'|_|escape('js') }}';
         var iOwe = '{{ 'i_owe_amount'|_|escape('js') }}';
     </script>
-    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/accounts/create.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
 
 {% block styles %}
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all" nonce="{{ JS_NONCE }}">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all" nonce="{{ JS_NONCE }}">
-    <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"
+          media="all" nonce="{{ JS_NONCE }}">
 {% endblock %}

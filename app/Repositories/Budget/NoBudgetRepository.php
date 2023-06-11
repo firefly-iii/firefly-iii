@@ -87,6 +87,16 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
     }
 
     /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
      * @param  Collection  $accounts
      * @param  Carbon  $start
      * @param  Carbon  $end
@@ -136,16 +146,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         }
 
         return $return;
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
     }
 
     /**

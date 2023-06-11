@@ -32,8 +32,8 @@ use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Throwable;
 
 /**
@@ -296,31 +296,6 @@ class DoubleController extends Controller
     }
 
     /**
-     * TODO this method is duplicated.
-     *
-     * @param  Collection  $accounts
-     * @param  int  $id
-     * @param  string  $name
-     * @param  string|null  $iban
-     *
-     * @return string
-     */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
-    {
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name && $account->id !== $id) {
-                return $account->name;
-            }
-            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
-                return $account->iban;
-            }
-        }
-
-        return $name;
-    }
-
-    /**
      * @param  Collection  $accounts
      * @param  Collection  $double
      * @param  Carbon  $start
@@ -520,5 +495,30 @@ class DoubleController extends Controller
         }
 
         return $result;
+    }
+
+    /**
+     * TODO this method is duplicated.
+     *
+     * @param  Collection  $accounts
+     * @param  int  $id
+     * @param  string  $name
+     * @param  string|null  $iban
+     *
+     * @return string
+     */
+    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
+    {
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name && $account->id !== $id) {
+                return $account->name;
+            }
+            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
+                return $account->iban;
+            }
+        }
+
+        return $name;
     }
 }

@@ -5,56 +5,61 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.model(ruleGroup, {'class' : 'form-horizontal','id' : 'update','url' : route('rule-groups.update',ruleGroup.id) } ) }}
-    <input type="hidden" name="id" value="{{ ruleGroup.id }}"/>
-    <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-6">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {# only correct way to do active checkbox #}
-                    {{ ExpandedForm.checkbox('active', 1) }}
+    <form method="post" action="{{ route('rule-groups.update',ruleGroup.id) }}" class="form-horizontal"
+          accept-charset="UTF-8"
+          enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-                    {{ ExpandedForm.text('title') }}
+        <input type="hidden" name="id" value="{{ ruleGroup.id }}"/>
+        <div class="row">
+            <div class="col-lg-6 col-md-12 col-sm-6">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {# only correct way to do active checkbox #}
+                        {{ ExpandedForm.checkbox('active', 1) }}
+
+                        {{ ExpandedForm.text('title', ruleGroup.title) }}
+                    </div>
                 </div>
+
             </div>
+            <div class="col-lg-6 col-md-12 col-sm-6">
 
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-6">
-
-            {# optional fields #}
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {{ ExpandedForm.textarea('description', ruleGroup.description) }}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            {# panel for options #}
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'options'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {{ ExpandedForm.optionsList('update','rule-group') }}
-                </div>
-                <div class="box-footer">
-                    <button type="submit" class="btn pull-right btn-success">{{ 'update_rule_group'|_ }}</button>
+                {# optional fields #}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.textarea('description', ruleGroup.description) }}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                {# panel for options #}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.optionsList('update','rule-group') }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn pull-right btn-success">{{ 'update_rule_group'|_ }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </form>
 
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript" src="v1/js/ff/rule-groups/edit.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/rule-groups/edit.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

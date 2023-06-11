@@ -46,7 +46,7 @@ class ChangesForV410 extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasTable('notes')) {
+        if (!Schema::hasTable('notes')) {
             try {
                 Schema::create(
                     'notes',

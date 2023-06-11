@@ -5,53 +5,55 @@
 {% endblock %}
 {% block content %}
 
+    <form method="post" action="{{ route('admin.users.update',user.id) }}" class="form-horizontal"
+          accept-charset="UTF-8"
+          enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-    {{ Form.model(user, {'class' : 'form-horizontal','id' : 'update','url' : route('admin.users.update',user.id) } ) }}
+        <input type="hidden" name="id" value="{{ user.id }}"/>
 
-    <input type="hidden" name="id" value="{{ user.id }}"/>
-
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {% if canEditDetails %}
-                        {{ ExpandedForm.text('email',null,{'helpText': trans('firefly.admin_update_email')}) }}
-                        {{ ExpandedForm.password('password') }}
-                        {{ ExpandedForm.password('password_confirmation') }}
-                    {% else %}
-                        <input type="hidden" name="email" value="{{ user.email }}"/>
-                        <input type="hidden" name="password" value=""/>
-                        <input type="hidden" name="password_confirmation" value=""/>
-                    {% endif %}
-                    {{ ExpandedForm.checkbox('blocked') }}
-                    {{ ExpandedForm.select('blocked_code', codes, user.blocked_code) }}
-                    {% if user.id != currentUser.id %}
-                        {{ ExpandedForm.checkbox('is_owner',1,isAdmin) }}
-                    {% endif %}
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {% if canEditDetails %}
+                            {{ ExpandedForm.text('email',user.email,{'helpText': trans('firefly.admin_update_email')}) }}
+                            {{ ExpandedForm.password('password') }}
+                            {{ ExpandedForm.password('password_confirmation') }}
+                        {% else %}
+                            <input type="hidden" name="email" value="{{ user.email }}"/>
+                            <input type="hidden" name="password" value=""/>
+                            <input type="hidden" name="password_confirmation" value=""/>
+                        {% endif %}
+                        {{ ExpandedForm.checkbox('blocked') }}
+                        {{ ExpandedForm.select('blocked_code', codes, user.blocked_code) }}
+                        {% if user.id != currentUser.id %}
+                            {{ ExpandedForm.checkbox('is_owner',1,isAdmin) }}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            {# panel for options #}
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'options'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {{ ExpandedForm.optionsList('update','account') }}
-                </div>
-                <div class="box-footer">
-                    <button type="submit" class="btn pull-right btn-success">
-                        {{ ('update_user')|_ }}
-                    </button>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                {# panel for options #}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.optionsList('update','account') }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn pull-right btn-success">
+                            {{ ('update_user')|_ }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </form>
 {% endblock %}

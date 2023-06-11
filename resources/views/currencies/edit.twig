@@ -5,44 +5,47 @@
 {% endblock %}
 
 {% block content %}
-    {{ Form.model(currency, {'class' : 'form-horizontal','id' : 'update','url' : route('currencies.update',currency.id)}) }}
+    <form method="post" action="{{ route('currencies.update',currency.id) }}" class="form-horizontal"
+          accept-charset="UTF-8"
+          enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
-    <input type="hidden" name="id" value="{{ currency.id }}"/>
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {{ ExpandedForm.text('name',null,{'maxlength' : 48}) }}
-                    {{ ExpandedForm.text('symbol',null,{'maxlength' : 51}) }}
-                    {{ ExpandedForm.text('code',null,{'maxlength' : 51}) }}
-                    {{ ExpandedForm.integer('decimal_places',null,{'maxlength' : 2,'min': 0,'max': 12}) }}
-                    {{ ExpandedForm.checkbox('enabled',null) }}
+        <input type="hidden" name="id" value="{{ currency.id }}"/>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.text('name', currency.name,{'maxlength' : 48}) }}
+                        {{ ExpandedForm.text('symbol', currency.symbol,{'maxlength' : 51}) }}
+                        {{ ExpandedForm.text('code', currency.code,{'maxlength' : 51}) }}
+                        {{ ExpandedForm.integer('decimal_places', currency.decimal_places,{'maxlength' : 2,'min': 0,'max': 12}) }}
+                        {{ ExpandedForm.checkbox('enabled', currency.enabled) }}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
-            {# panel for options #}
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                {# panel for options #}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'options'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.optionsList('update','currency') }}
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-success pull-right">
+                            {{ 'update_currency'|_ }}
+                        </button>
+                    </div>
                 </div>
-                <div class="box-body">
-                    {{ ExpandedForm.optionsList('update','currency') }}
-                </div>
-                <div class="box-footer">
-                    <button type="submit" class="btn btn-success pull-right">
-                        {{ 'update_currency'|_ }}
-                    </button>
-                </div>
+
             </div>
-
         </div>
-    </div>
     </form>
 {% endblock %}

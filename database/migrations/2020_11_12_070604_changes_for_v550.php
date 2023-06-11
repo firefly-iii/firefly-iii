@@ -67,7 +67,7 @@ class ChangesForV550 extends Migration
         }
 
         // expand budget / transaction journal table.
-        if(Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+        if (Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
             try {
                 Schema::table(
                     'budget_transaction_journal',
@@ -89,7 +89,7 @@ class ChangesForV550 extends Migration
 
         // drop fields from budget limits
         // in two steps for sqlite
-        if(Schema::hasColumn('budget_limits', 'period')) {
+        if (Schema::hasColumn('budget_limits', 'period')) {
             try {
                 Schema::table(
                     'budget_limits',
@@ -102,7 +102,7 @@ class ChangesForV550 extends Migration
                 Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
-        if(Schema::hasColumn('budget_limits', 'generated')) {
+        if (Schema::hasColumn('budget_limits', 'generated')) {
             try {
                 Schema::table(
                     'budget_limits',
@@ -176,7 +176,7 @@ class ChangesForV550 extends Migration
         }
 
         // update budget / transaction journal table.
-        if(!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
+        if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
             try {
                 Schema::table(
                     'budget_transaction_journal',
@@ -226,9 +226,9 @@ class ChangesForV550 extends Migration
                         $table->string('title', 255)->index();
                         $table->string('secret', 32)->index();
                         $table->boolean('active')->default(true);
-                        $table->unsignedSmallInteger('trigger', false);
-                        $table->unsignedSmallInteger('response', false);
-                        $table->unsignedSmallInteger('delivery', false);
+                        $table->unsignedSmallInteger('trigger');
+                        $table->unsignedSmallInteger('response');
+                        $table->unsignedSmallInteger('delivery');
                         $table->string('url', 1024);
                         $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
                         $table->unique(['user_id', 'title']);

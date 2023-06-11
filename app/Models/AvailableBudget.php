@@ -113,17 +113,17 @@ class AvailableBudget extends Model
     /**
      * @return BelongsTo
      */
-    public function user(): BelongsTo
+    public function transactionCurrency(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(TransactionCurrency::class);
     }
 
     /**
      * @return BelongsTo
      */
-    public function transactionCurrency(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(TransactionCurrency::class);
+        return $this->belongsTo(User::class);
     }
 
     protected function amount(): Attribute

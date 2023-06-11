@@ -102,7 +102,6 @@ class DebugController extends Controller
 
         Log::debug('Call view:clear...');
         Artisan::call('view:clear');
-        Log::debug('Done! Redirecting...');
 
         return redirect(route('index'));
     }

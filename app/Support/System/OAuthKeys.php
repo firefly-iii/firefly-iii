@@ -28,8 +28,8 @@ use Artisan;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Laravel\Passport\Console\KeysCommand;
 use Illuminate\Support\Facades\Log;
+use Laravel\Passport\Console\KeysCommand;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -44,22 +44,21 @@ class OAuthKeys
     /**
      *
      */
-    public static function verifyKeysRoutine(): void
+    public static function generateKeys(): void
     {
-        if (!self::keysInDatabase() && !self::hasKeyFiles()) {
-            self::generateKeys();
-            self::storeKeysInDB();
+        Artisan::registerCommand(new KeysCommand());
+        Artisan::call('passport:keys');
+    }
 
-            return;
-        }
-        if (self::keysInDatabase() && !self::hasKeyFiles()) {
-            self::restoreKeysFromDB();
+    /**
+     * @return bool
+     */
+    public static function hasKeyFiles(): bool
+    {
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
 
-            return;
-        }
-        if (!self::keysInDatabase() && self::hasKeyFiles()) {
-            self::storeKeysInDB();
-        }
+        return file_exists($private) && file_exists($public);
     }
 
     /**
@@ -84,37 +83,6 @@ class OAuthKeys
         }
 
         return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function hasKeyFiles(): bool
-    {
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
-
-        return file_exists($private) && file_exists($public);
-    }
-
-    /**
-     *
-     */
-    public static function generateKeys(): void
-    {
-        Artisan::registerCommand(new KeysCommand());
-        Artisan::call('passport:keys');
-    }
-
-    /**
-     *
-     */
-    public static function storeKeysInDB(): void
-    {
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
-        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
-        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
     }
 
     /**
@@ -145,5 +113,37 @@ class OAuthKeys
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
         return true;
+    }
+
+    /**
+     *
+     */
+    public static function storeKeysInDB(): void
+    {
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
+        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
+        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
+    }
+
+    /**
+     *
+     */
+    public static function verifyKeysRoutine(): void
+    {
+        if (!self::keysInDatabase() && !self::hasKeyFiles()) {
+            self::generateKeys();
+            self::storeKeysInDB();
+
+            return;
+        }
+        if (self::keysInDatabase() && !self::hasKeyFiles()) {
+            self::restoreKeysFromDB();
+
+            return;
+        }
+        if (!self::keysInDatabase() && self::hasKeyFiles()) {
+            self::storeKeysInDB();
+        }
     }
 }

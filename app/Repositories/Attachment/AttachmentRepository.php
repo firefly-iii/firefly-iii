@@ -34,9 +34,9 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
-use Illuminate\Support\Facades\Log;
 use LogicException;
 
 /**
@@ -73,6 +73,27 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     /**
      * @param  Attachment  $attachment
      *
+     * @return bool
+     */
+    public function exists(Attachment $attachment): bool
+    {
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $disk->exists($attachment->fileName());
+    }
+
+    /**
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->attachments()->get();
+    }
+
+    /**
+     * @param  Attachment  $attachment
+     *
      * @return string
      */
     public function getContent(Attachment $attachment): string
@@ -96,27 +117,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param  Attachment  $attachment
-     *
-     * @return bool
-     */
-    public function exists(Attachment $attachment): bool
-    {
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $disk->exists($attachment->fileName());
-    }
-
-    /**
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return $this->user->attachments()->get();
-    }
-
-    /**
      * Get attachment note text or empty string.
      *
      * @param  Attachment  $attachment
@@ -131,6 +131,16 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
     }
 
     /**
@@ -150,16 +160,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         }
 
         return $result;
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
     }
 
     /**

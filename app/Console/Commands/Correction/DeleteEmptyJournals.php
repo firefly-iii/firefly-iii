@@ -63,7 +63,6 @@ class DeleteEmptyJournals extends Command
 
     private function deleteEmptyJournals(): void
     {
-        $start = microtime(true);
         $count = 0;
         $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                    ->groupBy('transaction_journals.id')
@@ -82,10 +81,8 @@ class DeleteEmptyJournals extends Command
             ++$count;
         }
         if (0 === $count) {
-            $this->info('No empty transaction journals.');
+            $this->info('Correct: no empty transaction journals.');
         }
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified empty journals in %s seconds', $end));
     }
 
     /**
@@ -115,7 +112,7 @@ class DeleteEmptyJournals extends Command
             }
         }
         if (0 === $total) {
-            $this->info('No uneven transaction journals.');
+            $this->info('Correct: no uneven transaction journals.');
         }
     }
 }

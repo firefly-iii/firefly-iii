@@ -63,20 +63,6 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  string  $model
-     *
-     * @return string
-     */
-    private function normalizeModel(string $model): string
-    {
-        $search  = ['FireflyIII\Models\\'];
-        $replace = '';
-        $model   = str_replace($search, $replace, $model);
-
-        return sprintf('FireflyIII\Models\%s', $model);
-    }
-
-    /**
      * Get the validation error message.
      *
      * @return string
@@ -117,6 +103,20 @@ class IsValidAttachmentModel implements Rule
         $method = $methods[$this->model];
 
         return $this->$method((int)$value);
+    }
+
+    /**
+     * @param  string  $model
+     *
+     * @return string
+     */
+    private function normalizeModel(string $model): string
+    {
+        $search  = ['FireflyIII\Models\\'];
+        $replace = '';
+        $model   = str_replace($search, $replace, $model);
+
+        return sprintf('FireflyIII\Models\%s', $model);
     }
 
     /**

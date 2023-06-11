@@ -58,7 +58,6 @@ class CreateAccessTokens extends Command
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
 
-        $start = microtime(true);
         $count = 0;
         $users = $repository->all();
         /** @var User $user */
@@ -72,10 +71,8 @@ class CreateAccessTokens extends Command
             }
         }
         if (0 === $count) {
-            $this->info('All access tokens OK!');
+            $this->info('Correct: Verified access tokens.');
         }
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verify access tokens in %s seconds.', $end));
 
         return 0;
     }

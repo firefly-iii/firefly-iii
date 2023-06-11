@@ -79,26 +79,53 @@ class FrontpageChartGenerator
     }
 
     /**
-     * For each budget, gets all budget limits for the current time range.
-     * When no limits are present, the time range is used to collect information on money spent.
-     * If limits are present, each limit is processed individually.
+     * @param  Carbon  $end
+     */
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    /**
+     * @param  Carbon  $start
+     */
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * A basic setter for the user. Also updates the repositories with the right user.
+     *
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->budgetRepository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+
+        $locale                  = app('steam')->getLocale();
+        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
+    }
+
+    /**
+     * If a budget has budget limit, each limit is processed individually.
      *
      * @param  array  $data
      * @param  Budget  $budget
+     * @param  Collection  $limits
      *
      * @return array
      */
-    private function processBudget(array $data, Budget $budget): array
+    private function budgetLimits(array $data, Budget $budget, Collection $limits): array
     {
-        // get all limits:
-        $limits = $this->blRepository->getBudgetLimits($budget, $this->start, $this->end);
-
-        // if no limits
-        if (0 === $limits->count()) {
-            return $this->noBudgetLimits($data, $budget);
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $data = $this->processLimit($data, $budget, $limit);
         }
 
-        return $this->budgetLimits($data, $budget, $limits);
+        return $data;
     }
 
     /**
@@ -125,22 +152,26 @@ class FrontpageChartGenerator
     }
 
     /**
-     * If a budget has budget limit, each limit is processed individually.
+     * For each budget, gets all budget limits for the current time range.
+     * When no limits are present, the time range is used to collect information on money spent.
+     * If limits are present, each limit is processed individually.
      *
      * @param  array  $data
      * @param  Budget  $budget
-     * @param  Collection  $limits
      *
      * @return array
      */
-    private function budgetLimits(array $data, Budget $budget, Collection $limits): array
+    private function processBudget(array $data, Budget $budget): array
     {
-        /** @var BudgetLimit $limit */
-        foreach ($limits as $limit) {
-            $data = $this->processLimit($data, $budget, $limit);
+        // get all limits:
+        $limits = $this->blRepository->getBudgetLimits($budget, $this->start, $this->end);
+
+        // if no limits
+        if (0 === $limits->count()) {
+            return $this->noBudgetLimits($data, $budget);
         }
 
-        return $data;
+        return $this->budgetLimits($data, $budget, $limits);
     }
 
     /**
@@ -198,36 +229,5 @@ class FrontpageChartGenerator
         $data[2]['entries'][$title] = 1 === bccomp($limit->amount, $sumSpent) ? '0' : bcmul(bcadd($entry['sum'], $limit->amount), '-1'); // overspent
 
         return $data;
-    }
-
-    /**
-     * @param  Carbon  $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @param  Carbon  $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * A basic setter for the user. Also updates the repositories with the right user.
-     *
-     * @param  User  $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->budgetRepository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-
-        $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
     }
 }

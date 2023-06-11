@@ -40,7 +40,7 @@ class ChangesForV550b2 extends Migration
      */
     public function down(): void
     {
-        if(Schema::hasColumn('recurrences_transactions', 'transaction_type_id')) {
+        if (Schema::hasColumn('recurrences_transactions', 'transaction_type_id')) {
             try {
                 Schema::table(
                     'recurrences_transactions',
@@ -68,7 +68,7 @@ class ChangesForV550b2 extends Migration
     public function up(): void
     {
         // expand recurrence transaction table
-        if(!Schema::hasColumn('recurrences_transactions', 'transaction_type_id')) {
+        if (!Schema::hasColumn('recurrences_transactions', 'transaction_type_id')) {
             try {
                 Schema::table(
                     'recurrences_transactions',

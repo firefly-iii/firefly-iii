@@ -23,14 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Exception;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * Class AutomationHandler
@@ -66,7 +67,20 @@ class AutomationHandler
         foreach ($event->groups as $group) {
             $groups[] = $transformer->transformObject($group);
         }
-
-        Notification::send($user, new TransactionCreation($groups));
+        try {
+            Notification::send($user, new TransactionCreation($groups));
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                return;
+            }
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
     }
 }

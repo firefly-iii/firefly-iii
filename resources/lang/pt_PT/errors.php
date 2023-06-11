@@ -36,20 +36,20 @@ declare(strict_types=1);
 
 return [
     '404_header'              => 'Firefly III não encontrou esta página.',
-    '404_page_does_not_exist' => 'A página solicitada não existe. Por favor, verifique se não inseriu a URL errada. Pode se ter enganado?',
-    '404_send_error'          => 'Se você foi redirecionado para esta página automaticamente, por favor aceite as minhas desculpas. Há uma referência a este erro nos seus ficheiros de registo e ficaria muito agradecido se me pudesse enviar.',
-    '404_github_link'         => 'Se você tem certeza de que esta página existe, abra um ticket no <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    '404_page_does_not_exist' => 'A página solicitada não existe. Por favor, verifique se não inseriu o URL errado. Talvez se tenha enganado a digitar?',
+    '404_send_error'          => 'Se foi redirecionado para esta página automaticamente, por favor, aceite as minhas desculpas. Há uma referência a este erro nos seus ficheiros de registo e ficaria muito agradecido se ma pudesse enviar.',
+    '404_github_link'         => 'Se tem a certeza de que esta página existe, abra um ticket no <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'whoops'                  => 'Oops',
-    'fatal_error'             => 'Aconteceu um erro fatal. Por favor verifique os ficheiros de log em "storage/logs" ou use "docker logs -f [container]" para verificar o que se passa.',
+    'fatal_error'             => 'Aconteceu um erro fatal. Por favor, verifique os ficheiros de log em "storage/logs" ou use "docker logs -f [container]" para verificar o que se passa.',
     'maintenance_mode'        => 'O Firefly III está em modo de manutenção.',
     'be_right_back'           => 'Volto já!',
-    'check_back'              => 'Firefly III está desligado para manutenção. Volte já a seguir.',
+    'check_back'              => 'Firefly III está desligado para manutenção. Por favor, passe por cá depois.',
     'error_occurred'          => 'Oops! Ocorreu um erro.',
     'db_error_occurred'       => 'Oops! Ocorreu um erro na base de dados.',
     'error_not_recoverable'   => 'Infelizmente, este erro não era recuperável :(. Firefly III avariou. O erro é:',
     'error'                   => 'Erro',
     'error_location'          => 'O erro ocorreu no ficheiro "<span style="font-family: monospace;">:file</span>" na linha :line com o código :code.',
-    'stacktrace'              => 'Rasteamento da pilha',
+    'stacktrace'              => 'Rastreamento da pilha',
     'more_info'               => 'Mais informação',
 
 /*
@@ -64,16 +64,16 @@ return [
  */
 
 
-    'collect_info'        => 'Por favor recolha mais informação na diretoria <code>storage/logs</code> que é onde encontra os ficheiros de log. Se estiver a utilizar Docker, utilize <code>docker logs -f [container]</code>.',
+    'collect_info'        => 'Por favor, recolha mais informação na pasta <code>storage/logs</code> que é onde encontra os ficheiros de log. Se estiver a utilizar Docker, utilize <code>docker logs -f [container]</code>.',
     'collect_info_more'   => 'Pode ler mais sobre a recolha de informação de erros em <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">nas FAQ</a>.',
     'github_help'         => 'Obter ajuda no GitHub',
-    'github_instructions' => 'É mais que bem vindo a abrir uma nova issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">no GitHub</a></strong>.',
+    'github_instructions' => 'Esteja completamente à vontade em abrir uma nova questão <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">no GitHub</a></strong>.',
     'use_search'          => 'Use a pesquisa!',
     'include_info'        => 'Inclua a informação <a href=":link">da página de depuração</a>.',
-    'tell_more'           => 'Diga-nos mais que "diz Whoops! no ecrã"',
+    'tell_more'           => 'Diga-nos mais do que "diz Oops! no ecrã"',
     'include_logs'        => 'Incluir relatório de erros (ver acima).',
     'what_did_you_do'     => 'Diga-nos o que estava a fazer.',
-    'offline_header'      => 'Você provavelmente está offline',
+    'offline_header'      => 'Provavelmente está offline',
     'offline_unreachable' => 'O Firefly III está inacessível. O seu dispositivo está offline ou o servidor não está a funcionar.',
     'offline_github'      => 'Se tem a certeza que o seu dispositivo e o servidor estão online, por favor, abra um ticket no <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 

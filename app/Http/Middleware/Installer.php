@@ -79,6 +79,30 @@ class Installer
     }
 
     /**
+     * Is access denied error.
+     *
+     * @param  string  $message
+     *
+     * @return bool
+     */
+    protected function isAccessDenied(string $message): bool
+    {
+        return false !== stripos($message, 'Access denied');
+    }
+
+    /**
+     * Is no tables exist error.
+     *
+     * @param  string  $message
+     *
+     * @return bool
+     */
+    protected function noTablesExist(string $message): bool
+    {
+        return false !== stripos($message, 'Base table or view not found');
+    }
+
+    /**
      * Check if the tables are created and accounted for.
      *
      * @return bool
@@ -112,30 +136,6 @@ class Installer
         //Log::debug('Everything seems OK with the tables.');
 
         return false;
-    }
-
-    /**
-     * Is access denied error.
-     *
-     * @param  string  $message
-     *
-     * @return bool
-     */
-    protected function isAccessDenied(string $message): bool
-    {
-        return false !== stripos($message, 'Access denied');
-    }
-
-    /**
-     * Is no tables exist error.
-     *
-     * @param  string  $message
-     *
-     * @return bool
-     */
-    protected function noTablesExist(string $message): bool
-    {
-        return false !== stripos($message, 'Base table or view not found');
     }
 
     /**

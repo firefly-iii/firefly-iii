@@ -29,9 +29,9 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use JsonException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class RecurrenceFactory

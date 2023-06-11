@@ -39,7 +39,7 @@ class ChangesForV450 extends Migration
     public function down(): void
     {
         // split up for sqlite compatibility
-        if(Schema::hasColumn('transactions', 'foreign_amount')) {
+        if (Schema::hasColumn('transactions', 'foreign_amount')) {
             try {
                 Schema::table(
                     'transactions',
@@ -67,7 +67,7 @@ class ChangesForV450 extends Migration
             Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
             Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
-        if(Schema::hasColumn('transactions', 'foreign_currency_id')) {
+        if (Schema::hasColumn('transactions', 'foreign_currency_id')) {
             try {
                 Schema::table(
                     'transactions',
@@ -89,7 +89,7 @@ class ChangesForV450 extends Migration
     public function up(): void
     {
         // add "foreign_amount" to transactions
-        if(!Schema::hasColumn('transactions', 'foreign_amount')) {
+        if (!Schema::hasColumn('transactions', 'foreign_amount')) {
             try {
                 Schema::table(
                     'transactions',
@@ -104,7 +104,7 @@ class ChangesForV450 extends Migration
         }
 
         // add foreign transaction currency id to transactions (is nullable):
-        if(!Schema::hasColumn('transactions', 'foreign_currency_id')) {
+        if (!Schema::hasColumn('transactions', 'foreign_currency_id')) {
             try {
                 Schema::table(
                     'transactions',

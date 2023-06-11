@@ -25,8 +25,8 @@ namespace FireflyIII\Rules;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 /**
  * Class ValidRecurrenceRepetitionValue

@@ -57,7 +57,7 @@ class CronController extends Controller
         if (true === config('cer.enabled')) {
             $return['exchange_rates'] = $this->exchangeRatesCronJob($config['force'], $config['date']);
         }
-        $return['bill_warnings']          = $this->billWarningCronJob($config['force'], $config['date']);
+        $return['bill_warnings'] = $this->billWarningCronJob($config['force'], $config['date']);
 
         return response()->json($return);
     }

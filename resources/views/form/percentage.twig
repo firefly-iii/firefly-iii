@@ -3,7 +3,7 @@
 
     <div class="col-sm-8">
         <div class="input-group">
-            {{ Form.input('number', name, value, options) }}
+            {{ Html.input('number', name, value).id(options.id).attribute('step',options.step).attribute('autocomplete','off').attribute('spellcheck', 'false').class('form-control').attribute('placeholder',options.placeholder) }}
             <div class="input-group-addon">%</div>
         </div>
         {% include 'form.help' %}

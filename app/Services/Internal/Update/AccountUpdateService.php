@@ -31,8 +31,8 @@ use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class AccountUpdateService
@@ -61,6 +61,14 @@ class AccountUpdateService
         $this->validCCFields         = config('firefly.valid_cc_fields');
         $this->validFields           = config('firefly.valid_account_fields');
         $this->accountRepository     = app(AccountRepositoryInterface::class);
+    }
+
+    /**
+     * @param  User  $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -111,81 +119,6 @@ class AccountUpdateService
         event(new UpdatedAccount($account));
 
         return $account;
-    }
-
-    /**
-     * @param  User  $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @param  Account  $account
-     * @param  array  $data
-     *
-     * @return Account
-     */
-    private function updateAccount(Account $account, array $data): Account
-    {
-        // update the account itself:
-        if (array_key_exists('name', $data)) {
-            $account->name = $data['name'];
-        }
-        if (array_key_exists('active', $data)) {
-            $account->active = $data['active'];
-        }
-        if (array_key_exists('iban', $data)) {
-            $account->iban = app('steam')->filterSpaces((string)$data['iban']);
-        }
-
-        // set liability, but account must already be a liability.
-        //$liabilityType = $data['liability_type'] ?? '';
-        if ($this->isLiability($account) && array_key_exists('liability_type', $data)) {
-            $type                     = $this->getAccountType($data['liability_type']);
-            $account->account_type_id = $type->id;
-        }
-        // set liability, alternative method used in v1 layout:
-
-        if ($this->isLiability($account) && array_key_exists('account_type_id', $data)) {
-            $type = AccountType::find((int)$data['account_type_id']);
-
-            if (null !== $type && in_array($type->type, config('firefly.valid_liabilities'), true)) {
-                $account->account_type_id = $type->id;
-            }
-        }
-
-        // update virtual balance (could be set to zero if empty string).
-        if (array_key_exists('virtual_balance', $data) && null !== $data['virtual_balance']) {
-            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
-        }
-
-        $account->save();
-
-        return $account;
-    }
-
-    /**
-     * @param  Account  $account
-     *
-     * @return bool
-     */
-    private function isLiability(Account $account): bool
-    {
-        $type = $account->accountType->type;
-
-        return in_array($type, [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true);
-    }
-
-    /**
-     * @param  string  $type
-     *
-     * @return AccountType
-     */
-    private function getAccountType(string $type): AccountType
-    {
-        return AccountType::whereType(ucfirst($type))->first();
     }
 
     /**
@@ -241,6 +174,16 @@ class AccountUpdateService
         return $account;
     }
 
+    /**
+     * @param  string  $type
+     *
+     * @return AccountType
+     */
+    private function getAccountType(string $type): AccountType
+    {
+        return AccountType::whereType(ucfirst($type))->first();
+    }
+
     private function getTypeIds(array $array): array
     {
         $return = [];
@@ -252,6 +195,63 @@ class AccountUpdateService
         }
 
         return $return;
+    }
+
+    /**
+     * @param  Account  $account
+     *
+     * @return bool
+     */
+    private function isLiability(Account $account): bool
+    {
+        $type = $account->accountType->type;
+
+        return in_array($type, [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true);
+    }
+
+    /**
+     * @param  Account  $account
+     * @param  array  $data
+     *
+     * @return Account
+     */
+    private function updateAccount(Account $account, array $data): Account
+    {
+        // update the account itself:
+        if (array_key_exists('name', $data)) {
+            $account->name = $data['name'];
+        }
+        if (array_key_exists('active', $data)) {
+            $account->active = $data['active'];
+        }
+        if (array_key_exists('iban', $data)) {
+            $account->iban = app('steam')->filterSpaces((string)$data['iban']);
+        }
+
+        // set liability, but account must already be a liability.
+        //$liabilityType = $data['liability_type'] ?? '';
+        if ($this->isLiability($account) && array_key_exists('liability_type', $data)) {
+            $type                     = $this->getAccountType($data['liability_type']);
+            $account->account_type_id = $type->id;
+        }
+        // set liability, alternative method used in v1 layout:
+
+        if ($this->isLiability($account) && array_key_exists('account_type_id', $data)) {
+            $type = AccountType::find((int)$data['account_type_id']);
+
+            if (null !== $type && in_array($type->type, config('firefly.valid_liabilities'), true)) {
+                $account->account_type_id = $type->id;
+            }
+        }
+
+        // update virtual balance (could be set to zero if empty string).
+        if (array_key_exists('virtual_balance', $data) && null !== $data['virtual_balance']) {
+            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
+        }
+
+        $account->save();
+
+        return $account;
     }
 
     /**
@@ -348,36 +348,5 @@ class AccountUpdateService
         }
         Log::debug('Final new array is', $new);
         app('preferences')->setForUser($account->user, 'frontpageAccounts', $new);
-    }
-
-    /**
-     * @param  Account  $account
-     * @param  array  $data
-     *
-     * @throws FireflyException
-     * @deprecated In Firefly III v5.8.0 and onwards, credit transactions for liabilities are no longer created.
-     */
-    private function updateCreditLiability(Account $account, array $data): void
-    {
-        $type  = $account->accountType;
-        $valid = config('firefly.valid_liabilities');
-        if (in_array($type->type, $valid, true)) {
-            $direction = array_key_exists('liability_direction', $data) ? $data['liability_direction'] : 'empty';
-            // check if is submitted as empty, that makes it valid:
-            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
-                $openingBalance     = $data['opening_balance'];
-                $openingBalanceDate = $data['opening_balance_date'];
-                if ('credit' === $direction) {
-                    $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
-                }
-            }
-
-            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
-                $this->deleteCreditTransaction($account);
-            }
-            if ($this->validOBData($data) && !$this->isEmptyOBData($data) && 'credit' !== $direction) {
-                $this->deleteCreditTransaction($account);
-            }
-        }
     }
 }

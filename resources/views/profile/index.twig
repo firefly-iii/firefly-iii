@@ -22,7 +22,7 @@
                 <li role="presentation">
                     <a href="#oauth" aria-controls="messages" role="tab" data-toggle="tab">{{ 'oauth'|_ }}</a>
                 </li>
-                {% if true == isInternalAuth and true == isInternalIdentity %}
+                {% if true == isInternalAuth %}
                     <li role="presentation">
                         <a href="#mfa" aria-controls="settings" role="tab"
                            data-toggle="tab">{{ 'pref_two_factor_auth'|_ }}</a>
@@ -45,7 +45,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <ul>
-                                        {% if true == isInternalAuth and true == isInternalIdentity %}
+                                        {% if true == isInternalAuth %}
                                             <li>
                                                 <a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a>
                                             </li>
@@ -57,7 +57,7 @@
                                         <li><a href="{{ route('logout') }}" class="logout-link">{{ 'logout'|_ }}</a>
                                         </li>
 
-                                        {% if true == isInternalAuth and true == isInternalIdentity %}
+                                        {% if true == isInternalAuth %}
                                             <li>
                                                 <a href="{{ route('profile.logout-others') }}">{{ 'logout_other_sessions'|_ }}</a>
                                             </li>
@@ -103,7 +103,7 @@
                     <div id="passport_clients"></div>
                 </div>
 
-                {% if true == isInternalAuth and true == isInternalIdentity %}
+                {% if true == isInternalAuth %}
                     <!-- MFA -->
                     <div role="tabpanel" class="tab-pane" id="mfa">
                         <div class="box box-default">

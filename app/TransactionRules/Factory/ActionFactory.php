@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 class ActionFactory
 {
     /** @var array array of action types */
-    protected static $actionTypes = [];
+    protected static array $actionTypes = [];
 
     /**
      * This method returns the actual implementation (TransactionRules/Actions/[object]) for a given

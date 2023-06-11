@@ -53,16 +53,6 @@ class BudgetLimitHandler
     }
 
     /**
-     * @param  Updated  $event
-     * @return void
-     */
-    public function updated(Updated $event): void
-    {
-        Log::debug(sprintf('BudgetLimitHandler::updated(#%s)', $event->budgetLimit->id));
-        $this->updateAvailableBudget($event->budgetLimit);
-    }
-
-    /**
      * @param  Deleted  $event
      * @return void
      */
@@ -71,6 +61,16 @@ class BudgetLimitHandler
         Log::debug(sprintf('BudgetLimitHandler::deleted(#%s)', $event->budgetLimit->id));
         $budgetLimit     = $event->budgetLimit;
         $budgetLimit->id = null;
+        $this->updateAvailableBudget($event->budgetLimit);
+    }
+
+    /**
+     * @param  Updated  $event
+     * @return void
+     */
+    public function updated(Updated $event): void
+    {
+        Log::debug(sprintf('BudgetLimitHandler::updated(#%s)', $event->budgetLimit->id));
         $this->updateAvailableBudget($event->budgetLimit);
     }
 
@@ -182,12 +182,12 @@ class BudgetLimitHandler
         $end    = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
         $end    = app('navigation')->endOfPeriod($end, $viewRange);
         $budget = Budget::find($budgetLimit->budget_id);
-        if(null === $budget) {
+        if (null === $budget) {
             Log::warning('Budget is null, cannot continue.');
             $budgetLimit->forceDelete();
             return;
         }
-        $user   = $budget->user;
+        $user = $budget->user;
 
         // sanity check. It happens when the budget has been deleted so the original user is unknown.
         if (null === $user) {

@@ -7,3 +7,9 @@ exclude:
     paths:
       - .ci
       - _ide_helper.php
+      - public/v1/css/jquery-ui
+      - public/v1/fonts
+      - public/v1/lib
+      - public/v1/js/lib
+      - public/v3
+      - public/v3-local

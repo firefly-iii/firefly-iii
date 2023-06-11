@@ -33,6 +33,21 @@ use Illuminate\Support\Facades\Log;
 trait WithdrawalValidation
 {
     /**
+     * @param  array  $accountTypes
+     *
+     * @return bool
+     */
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    /**
+     * @param  array  $validTypes
+     * @param  array  $data
+     *
+     * @return Account|null
+     */
+    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
+
+    /**
      * @param  array  $array
      *
      * @return bool
@@ -66,21 +81,6 @@ trait WithdrawalValidation
 
         return true;
     }
-
-    /**
-     * @param  array  $accountTypes
-     *
-     * @return bool
-     */
-    abstract protected function canCreateTypes(array $accountTypes): bool;
-
-    /**
-     * @param  array  $validTypes
-     * @param  array  $data
-     *
-     * @return Account|null
-     */
-    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     /**
      * @param  array  $array
@@ -128,10 +128,10 @@ trait WithdrawalValidation
      */
     protected function validateWithdrawalSource(array $array): bool
     {
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
-        $accountNumber =array_key_exists('number', $array) ? $array['number'] : null;
+        $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
+        $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
+        $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
 
         Log::debug('Now in validateWithdrawalSource', $array);
         // source can be any of the following types.

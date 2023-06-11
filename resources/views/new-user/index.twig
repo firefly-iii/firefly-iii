@@ -34,19 +34,21 @@
                             {{ 'savings_balance_text'|_ }}
                         </p>
 
-                        {{ ExpandedForm.number('savings_balance',0) }}
+                        {{ ExpandedForm.integer('savings_balance',0, {"step": "any"}) }}
 
                         <p>
                             {{ 'set_preferred_language'|_ }}
                         </p>
                         <div id="language_holder" class="form-group">
-                            <label for="language_holder_select" class="col-sm-4 control-label">{{ 'language'|_ }}</label>
+                            <label for="language_holder_select"
+                                   class="col-sm-4 control-label">{{ 'language'|_ }}</label>
                             <div class="col-sm-8">
                                 <select class="form-control" id="lang_holder" name="language">
                                     {% for key, lang in Config.get('firefly.languages') %}
                                         <option {% if language == key %}
                                             selected
-                                        {% endif %} value="{{ key }}">{{ lang.name_locale }} ({{ lang.name_english }})</option>
+                                        {% endif %} value="{{ key }}">{{ lang.name_locale }} ({{ lang.name_english }})
+                                        </option>
 
                                     {% endfor %}
                                 </select>

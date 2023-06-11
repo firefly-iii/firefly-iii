@@ -117,26 +117,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
-     * Returns a list of all the categories belonging to a user.
-     *
-     * @return Collection
-     */
-    private function getCategories(): Collection
-    {
-        return $this->user->categories()->get();
-    }
-
-    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
@@ -342,6 +322,16 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
      * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
      *
      * @param  Carbon  $start
@@ -469,5 +459,15 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $array;
+    }
+
+    /**
+     * Returns a list of all the categories belonging to a user.
+     *
+     * @return Collection
+     */
+    private function getCategories(): Collection
+    {
+        return $this->user->categories()->get();
     }
 }

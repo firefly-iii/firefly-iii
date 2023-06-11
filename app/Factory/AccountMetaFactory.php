@@ -34,6 +34,16 @@ use Illuminate\Support\Facades\Log;
 class AccountMetaFactory
 {
     /**
+     * @param  array  $data
+     *
+     * @return AccountMeta|null
+     */
+    public function create(array $data): ?AccountMeta
+    {
+        return AccountMeta::create($data);
+    }
+
+    /**
      * Create update or delete meta data.
      *
      * @param  Account  $account
@@ -50,15 +60,12 @@ class AccountMetaFactory
         if ('' !== $value) {
             // if $data has field and $entry is null, create new one:
             if (null === $entry) {
-                Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $value, $account->id, $account->name));
-
                 return $this->create(['account_id' => $account->id, 'name' => $field, 'data' => $value]);
             }
 
             // if $data has field and $entry is not null, update $entry:
             $entry->data = $value;
             $entry->save();
-            Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $value, $account->id, $account->name));
         }
         if ('' === $value && null !== $entry) {
             $entry->delete();
@@ -67,15 +74,5 @@ class AccountMetaFactory
         }
 
         return $entry;
-    }
-
-    /**
-     * @param  array  $data
-     *
-     * @return AccountMeta|null
-     */
-    public function create(array $data): ?AccountMeta
-    {
-        return AccountMeta::create($data);
     }
 }

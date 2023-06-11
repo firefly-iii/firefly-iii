@@ -17,10 +17,13 @@
                     </h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
+                                        class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('accounts.edit', account.id) }}"><span class="fa fa-pencil fa-fw"></span> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('accounts.delete', account.id) }}"><span class="fa fa-trash fa-fw"></span> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('accounts.edit', account.id) }}"><span
+                                                class="fa fa-pencil fa-fw"></span> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('accounts.delete', account.id) }}"><span
+                                                class="fa fa-trash fa-fw"></span> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -104,16 +107,16 @@
 
     <div class="row">
         {% if(location) %}
-        <div class="col-lg-6">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'location'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <div id="location_map" style="width:100%;height:300px;"></div>
+            <div class="col-lg-6">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'location'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div id="location_map" style="width:100%;height:300px;"></div>
+                    </div>
                 </div>
             </div>
-        </div>
         {% endif %}
         {% if account.notes.count() == 1 %}
             <div class="col-lg-6">
@@ -133,7 +136,8 @@
         <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transactions'|_ }} ({{ formatAmountBySymbol(balance, currency.symbol, currency.decimal_places, true)|raw }})</h3>
+                    <h3 class="box-title">{{ 'transactions'|_ }}
+                        ({{ formatAmountBySymbol(balance, currency.symbol, currency.decimal_places, true)|raw }})</h3>
                 </div>
                 <div class="box-body">
                     {% if account.accountType.type == 'Asset account' %}
@@ -168,15 +172,11 @@
 
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
-        var doPlaceMarker = false;
         // location stuff
         {% if location %}
-            var latitude = {{ location.latitude|default("52.3167") }};
-            var longitude = {{ location.longitude|default("5.5500") }};
-            var zoomLevel = {{ location.zoom_level|default("6") }};
-            doPlaceMarker = true;
-            // token for Mapbox:
-            var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
+        var latitude = {{ location.latitude|default("52.3167") }};
+        var longitude = {{ location.longitude|default("5.5500") }};
+        var zoomLevel = {{ location.zoom_level|default("6") }};
         {% endif %}
 
         var showAll = true;
@@ -207,13 +207,16 @@
     {% if location %}
         <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     {% endif %}
-    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ FF_VERSION }}"
+            nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 
     <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-    <script src="v1/js/lib/jquery.color-2.1.2.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/lib/jquery.color-2.1.2.min.js?v={{ FF_VERSION }}" type="text/javascript"
+            nonce="{{ JS_NONCE }}"></script>
     <script src="v1/js/ff/accounts/show.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
     {# required for groups.twig #}
     <script type="text/javascript" src="v1/js/ff/list/groups.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
@@ -221,6 +224,6 @@
 
 {% block styles %}
     {% if location %}
-        <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"  nonce="{{ JS_NONCE }}">
+        <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}">
     {% endif %}
 {% endblock %}

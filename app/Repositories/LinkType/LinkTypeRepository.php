@@ -69,28 +69,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
-     * @param  LinkType  $linkType
-     * @param  array  $data
-     *
-     * @return LinkType
-     */
-    public function update(LinkType $linkType, array $data): LinkType
-    {
-        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
-            $linkType->name = $data['name'];
-        }
-        if (array_key_exists('inward', $data) && '' !== (string)$data['inward']) {
-            $linkType->inward = $data['inward'];
-        }
-        if (array_key_exists('outward', $data) && '' !== (string)$data['outward']) {
-            $linkType->outward = $data['outward'];
-        }
-        $linkType->save();
-
-        return $linkType;
-    }
-
-    /**
      * @param  TransactionJournalLink  $link
      *
      * @return bool
@@ -102,6 +80,30 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $link->delete();
 
         return true;
+    }
+
+    /**
+     * @param  int  $linkTypeId
+     *
+     * @return LinkType|null
+     */
+    public function find(int $linkTypeId): ?LinkType
+    {
+        return LinkType::find($linkTypeId);
+    }
+
+    /**
+     * @param  string|null  $name
+     *
+     * @return LinkType|null
+     */
+    public function findByName(string $name = null): ?LinkType
+    {
+        if (null === $name) {
+            return null;
+        }
+
+        return LinkType::where('name', $name)->first();
     }
 
     /**
@@ -122,6 +124,30 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
+     * See if such a link already exists (and get it).
+     *
+     * @param  LinkType  $linkType
+     * @param  TransactionJournal  $inward
+     * @param  TransactionJournal  $outward
+     *
+     * @return TransactionJournalLink|null
+     */
+    public function findSpecificLink(LinkType $linkType, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
+    {
+        return TransactionJournalLink::where('link_type_id', $linkType->id)
+                                     ->where('source_id', $inward->id)
+                                     ->where('destination_id', $outward->id)->first();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return LinkType::orderBy('name', 'ASC')->get();
+    }
+
+    /**
      * Return array of all journal ID's for this type of link.
      *
      * @param  LinkType  $linkType
@@ -135,14 +161,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $destinations = $links->pluck('destination_id')->toArray();
 
         return array_unique(array_merge($sources, $destinations));
-    }
-
-    /**
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return LinkType::orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -194,7 +212,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
 
         return $merged->filter(
             function (TransactionJournalLink $link) {
-                return (null !== $link->source && null !== $link->destination);
+                return null !== $link->source && null !== $link->destination;
             }
         );
     }
@@ -276,65 +294,18 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
-     * @param  int  $linkTypeId
-     *
-     * @return LinkType|null
-     */
-    public function find(int $linkTypeId): ?LinkType
-    {
-        return LinkType::find($linkTypeId);
-    }
-
-    /**
-     * @param  string|null  $name
-     *
-     * @return LinkType|null
-     */
-    public function findByName(string $name = null): ?LinkType
-    {
-        if (null === $name) {
-            return null;
-        }
-
-        return LinkType::where('name', $name)->first();
-    }
-
-    /**
-     * See if such a link already exists (and get it).
-     *
-     * @param  LinkType  $linkType
-     * @param  TransactionJournal  $inward
-     * @param  TransactionJournal  $outward
-     *
-     * @return TransactionJournalLink|null
-     */
-    public function findSpecificLink(LinkType $linkType, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
-    {
-        return TransactionJournalLink::where('link_type_id', $linkType->id)
-                                     ->where('source_id', $inward->id)
-                                     ->where('destination_id', $outward->id)->first();
-    }
-
-    /**
      * @param  TransactionJournalLink  $link
-     * @param  string  $text
      *
-     * @throws Exception
+     * @return bool
      */
-    private function setNoteText(TransactionJournalLink $link, string $text): void
+    public function switchLink(TransactionJournalLink $link): bool
     {
-        $dbNote = $link->notes()->first();
-        if ('' !== $text) {
-            if (null === $dbNote) {
-                $dbNote = new Note();
-                $dbNote->noteable()->associate($link);
-            }
-            $dbNote->text = trim($text);
-            $dbNote->save();
+        $source               = $link->source_id;
+        $link->source_id      = $link->destination_id;
+        $link->destination_id = $source;
+        $link->save();
 
-            return;
-        }
-        $dbNote?->delete();
+        return true;
     }
 
     /**
@@ -352,18 +323,25 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
-     * @param  TransactionJournalLink  $link
+     * @param  LinkType  $linkType
+     * @param  array  $data
      *
-     * @return bool
+     * @return LinkType
      */
-    public function switchLink(TransactionJournalLink $link): bool
+    public function update(LinkType $linkType, array $data): LinkType
     {
-        $source               = $link->source_id;
-        $link->source_id      = $link->destination_id;
-        $link->destination_id = $source;
-        $link->save();
+        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
+            $linkType->name = $data['name'];
+        }
+        if (array_key_exists('inward', $data) && '' !== (string)$data['inward']) {
+            $linkType->inward = $data['inward'];
+        }
+        if (array_key_exists('outward', $data) && '' !== (string)$data['outward']) {
+            $linkType->outward = $data['outward'];
+        }
+        $linkType->save();
 
-        return true;
+        return $linkType;
     }
 
     /**
@@ -396,5 +374,27 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         }
 
         return $journalLink;
+    }
+
+    /**
+     * @param  TransactionJournalLink  $link
+     * @param  string  $text
+     *
+     * @throws Exception
+     */
+    private function setNoteText(TransactionJournalLink $link, string $text): void
+    {
+        $dbNote = $link->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note();
+                $dbNote->noteable()->associate($link);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        $dbNote?->delete();
     }
 }

@@ -44,10 +44,10 @@ class AccountController extends Controller
      * @param  Carbon  $start
      * @param  Carbon  $end
      *
-     * @return mixed|string
+     * @return string
      * @throws FireflyException
      */
-    public function general(Collection $accounts, Carbon $start, Carbon $end)
+    public function general(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
         $cache = new CacheProperties();

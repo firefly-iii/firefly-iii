@@ -59,37 +59,39 @@
                                             {{ trans('firefly.repeat_until_in_past', {date: array.repeat_until.isoFormat(monthAndDayFormat) }) }}
                                         </span>
                 {% endif %}
-                    {% for rep in array.repetitions %}
-                        <p>
-                            <strong>{{ rep.description }}
-                                {% if rep.repetition_skip == 1 %}
-                                    ({{ trans('firefly.recurring_skips_one')|lower }})
-                                {% endif %}
-                                {% if rep.repetition_skip > 1 %}
-                                    ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }})
-                                {% endif %}
-                            </strong>
-                        </p>
-                        <table class="table" aria-label="Table">
-                            <tbody>
-                            {% for occ in rep.occurrences %}
-                                <tr>
-                                    <th scope="row">{{ occ.date.isoFormat(trans('config.month_and_date_day_js')) }}</th>
-                                    <td>
-                                        {% if not occ.fired %}
-                                        <form action="{{ route('recurring.trigger', [recurrence.id]) }}" method="post" style="display: inline;">
+                {% for rep in array.repetitions %}
+                    <p>
+                        <strong>{{ rep.description }}
+                            {% if rep.repetition_skip == 1 %}
+                                ({{ trans('firefly.recurring_skips_one')|lower }})
+                            {% endif %}
+                            {% if rep.repetition_skip > 1 %}
+                                ({{ trans('firefly.recurring_skips_more', {count: rep.repetition_skip})|lower }})
+                            {% endif %}
+                        </strong>
+                    </p>
+                    <table class="table" aria-label="Table">
+                        <tbody>
+                        {% for occ in rep.occurrences %}
+                            <tr>
+                                <th scope="row">{{ occ.date.isoFormat(trans('config.month_and_date_day_js')) }}</th>
+                                <td>
+                                    {% if not occ.fired %}
+                                        <form action="{{ route('recurring.trigger', [recurrence.id]) }}" method="post"
+                                              style="display: inline;">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input type="hidden" name="date" value="{{ occ.date.isoFormat('YYYY-MM-DD') }}">
-                                        <input type="submit" name="submit" value="{{ 'create_right_now'|_ }}"
-                                               class="btn btn-sm btn-default">
+                                            <input type="hidden" name="date"
+                                                   value="{{ occ.date.isoFormat('YYYY-MM-DD') }}">
+                                            <input type="submit" name="submit" value="{{ 'create_right_now'|_ }}"
+                                                   class="btn btn-sm btn-default">
                                         </form>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endfor %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
             </div>
             <div class="box-footer">
                 <small>
@@ -161,8 +163,15 @@
                                         {% endfor %}
                                     </p>
                                 {% endif %}
-                                {% if 0 != transaction.piggy_bank_id and array.type == 'Transfer' %}
-                                    <a href="{{ route('piggy-banks.show', [transaction.piggy_bank_id]) }}">{{ transaction.piggy_bank_name }}</a>
+                                {% if 0 != transaction.piggy_bank_id %}
+                                    <p>
+                                        <a href="{{ route('piggy-banks.show', [transaction.piggy_bank_id]) }}">{{ transaction.piggy_bank_name }}</a>
+                                    </p>
+                                {% endif %}
+                                {% if 0 != transaction.bill_id %}
+                                    <p>
+                                        <a href="{{ route('bills.show', [transaction.bill_id]) }}">{{ transaction.bill_name }}</a>
+                                    </p>
                                 {% endif %}
                             </td>
                         </tr>

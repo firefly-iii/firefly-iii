@@ -125,14 +125,6 @@ class Attachment extends Model
     }
 
     /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
      * Get all of the owning attachable models.
      *
      *
@@ -159,5 +151,13 @@ class Attachment extends Model
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

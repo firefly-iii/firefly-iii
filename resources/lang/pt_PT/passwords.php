@@ -35,10 +35,10 @@
 declare(strict_types=1);
 
 return [
-    'password' => 'A password necessita conter, pelo menos, 6 caracteres e corresponder com a sua confirmacao.',
-    'user'     => 'Nao conseguimos encontrar um utilizador com esse endereco email.',
-    'token'    => 'O token de reposicao de password e invalido.',
-    'sent'     => 'Enviamos-te um email com o link para reposicao da password!',
-    'reset'    => 'A tua password foi reposta!',
+    'password' => 'A palavra-passe necessita conter, pelo menos, 6 carateres e ser igual à confirmação.',
+    'user'     => 'Não conseguimos encontrar um utilizador com esse email.',
+    'token'    => 'O token de reposição de palavra-passe e inválido.',
+    'sent'     => 'Enviámos-lhe um email com o link para reposição da palavra-passe!',
+    'reset'    => 'A sua palavra-passe foi reposta!',
     'blocked'  => 'Boa tentativa ;)',
 ];

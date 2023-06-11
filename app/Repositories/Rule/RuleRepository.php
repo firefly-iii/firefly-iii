@@ -46,6 +46,14 @@ class RuleRepository implements RuleRepositoryInterface
     private $user;
 
     /**
+     * @return int
+     */
+    public function count(): int
+    {
+        return $this->user->rules()->count();
+    }
+
+    /**
      * @param  Rule  $rule
      *
      * @return bool
@@ -93,6 +101,16 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * @param  int  $ruleId
+     *
+     * @return Rule|null
+     */
+    public function find(int $ruleId): ?Rule
+    {
+        return $this->user->rules()->find($ruleId);
+    }
+
+    /**
      * Get all the users rules.
      *
      * @return Collection
@@ -137,14 +155,6 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
-    }
-
-    /**
-     * @return int
-     */
-    public function count(): int
-    {
-        return $this->user->rules()->count();
     }
 
     /**
@@ -247,6 +257,43 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function maxOrder(RuleGroup $ruleGroup): int
+    {
+        return (int)$ruleGroup->rules()->max('order');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule
+    {
+        if ($rule->rule_group_id !== $ruleGroup->id) {
+            $rule->rule_group_id = $ruleGroup->id;
+        }
+        $rule->save();
+        $rule->refresh();
+        $this->setOrder($rule, $order);
+
+        return $rule;
+    }
+
+    /**
+     * @param  RuleGroup  $ruleGroup
+     *
+     * @return bool
+     */
+    public function resetRuleOrder(RuleGroup $ruleGroup): bool
+    {
+        $groupRepository = app(RuleGroupRepositoryInterface::class);
+        $groupRepository->setUser($ruleGroup->user);
+        $groupRepository->resetRuleOrder($ruleGroup);
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function searchRule(string $query, int $limit): Collection
     {
         $search = $this->user->rules();
@@ -257,6 +304,52 @@ class RuleRepository implements RuleRepositoryInterface
                ->orderBy('rules.title', 'ASC');
 
         return $search->take($limit)->get(['id', 'title', 'description']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrder(Rule $rule, int $newOrder): void
+    {
+        $oldOrder = (int)$rule->order;
+        $groupId  = (int)$rule->rule_group_id;
+        $maxOrder = $this->maxOrder($rule->ruleGroup);
+        $newOrder = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
+        Log::debug(sprintf('New order will be %d', $newOrder));
+
+        if ($newOrder > $oldOrder) {
+            $this->user->rules()
+                       ->where('rules.rule_group_id', $groupId)
+                       ->where('rules.order', '<=', $newOrder)
+                       ->where('rules.order', '>', $oldOrder)
+                       ->where('rules.id', '!=', $rule->id)
+                       ->decrement('rules.order');
+            $rule->order = $newOrder;
+            Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
+            $rule->save();
+
+            return;
+        }
+
+        $this->user->rules()
+                   ->where('rules.rule_group_id', $groupId)
+                   ->where('rules.order', '>=', $newOrder)
+                   ->where('rules.order', '<', $oldOrder)
+                   ->where('rules.id', '!=', $rule->id)
+                   ->increment('rules.order');
+        $rule->order = $newOrder;
+        Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
+        $rule->save();
+    }
+
+    /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
     }
 
     /**
@@ -314,135 +407,23 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param  int  $ruleId
-     *
-     * @return Rule|null
-     */
-    public function find(int $ruleId): ?Rule
-    {
-        return $this->user->rules()->find($ruleId);
-    }
-
-    /**
-     * @param  string  $moment
      * @param  Rule  $rule
-     */
-    private function setRuleTrigger(string $moment, Rule $rule): void
-    {
-        /** @var RuleTrigger|null $trigger */
-        $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
-        if (null !== $trigger) {
-            $trigger->trigger_value = $moment;
-            $trigger->save();
-
-            return;
-        }
-        $trigger                  = new RuleTrigger();
-        $trigger->order           = 0;
-        $trigger->trigger_type    = 'user_action';
-        $trigger->trigger_value   = $moment;
-        $trigger->rule_id         = $rule->id;
-        $trigger->active          = true;
-        $trigger->stop_processing = false;
-        $trigger->save();
-    }
-
-    /**
-     * @param  RuleGroup  $ruleGroup
+     * @param  array  $values
      *
-     * @return bool
+     * @return RuleAction
      */
-    public function resetRuleOrder(RuleGroup $ruleGroup): bool
+    public function storeAction(Rule $rule, array $values): RuleAction
     {
-        $groupRepository = app(RuleGroupRepositoryInterface::class);
-        $groupRepository->setUser($ruleGroup->user);
-        $groupRepository->resetRuleOrder($ruleGroup);
+        $ruleAction = new RuleAction();
+        $ruleAction->rule()->associate($rule);
+        $ruleAction->order           = $values['order'];
+        $ruleAction->active          = $values['active'];
+        $ruleAction->stop_processing = $values['stop_processing'];
+        $ruleAction->action_type     = $values['action'];
+        $ruleAction->action_value    = $values['value'] ?? '';
+        $ruleAction->save();
 
-        return true;
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setOrder(Rule $rule, int $newOrder): void
-    {
-        $oldOrder = (int)$rule->order;
-        $groupId  = (int)$rule->rule_group_id;
-        $maxOrder = $this->maxOrder($rule->ruleGroup);
-        $newOrder = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
-        Log::debug(sprintf('New order will be %d', $newOrder));
-
-        if ($newOrder > $oldOrder) {
-            $this->user->rules()
-                       ->where('rules.rule_group_id', $groupId)
-                       ->where('rules.order', '<=', $newOrder)
-                       ->where('rules.order', '>', $oldOrder)
-                       ->where('rules.id', '!=', $rule->id)
-                       ->decrement('rules.order');
-            $rule->order = $newOrder;
-            Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
-            $rule->save();
-
-            return;
-        }
-
-        $this->user->rules()
-                   ->where('rules.rule_group_id', $groupId)
-                   ->where('rules.order', '>=', $newOrder)
-                   ->where('rules.order', '<', $oldOrder)
-                   ->where('rules.id', '!=', $rule->id)
-                   ->increment('rules.order');
-        $rule->order = $newOrder;
-        Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
-        $rule->save();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function maxOrder(RuleGroup $ruleGroup): int
-    {
-        return (int)$ruleGroup->rules()->max('order');
-    }
-
-    /**
-     * @param  Rule  $rule
-     * @param  array  $data
-     *
-     * @return void
-     */
-    private function storeTriggers(Rule $rule, array $data): void
-    {
-        $order = 1;
-        foreach ($data['triggers'] as $trigger) {
-            $value          = $trigger['value'] ?? '';
-            $stopProcessing = $trigger['stop_processing'] ?? false;
-            $active         = $trigger['active'] ?? true;
-            $type           = $trigger['type'];
-            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with($type, '-')) {
-                $type = sprintf('-%s', $type);
-            }
-
-            $triggerValues = [
-                'action'          => $type,
-                'value'           => $value,
-                'stop_processing' => $stopProcessing,
-                'order'           => $order,
-                'active'          => $active,
-            ];
-            $this->storeTrigger($rule, $triggerValues);
-            ++$order;
-        }
+        return $ruleAction;
     }
 
     /**
@@ -463,51 +444,6 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleTrigger->save();
 
         return $ruleTrigger;
-    }
-
-    /**
-     * @param  Rule  $rule
-     * @param  array  $data
-     *
-     * @return void
-     */
-    private function storeActions(Rule $rule, array $data): void
-    {
-        $order = 1;
-        foreach ($data['actions'] as $action) {
-            $value          = $action['value'] ?? '';
-            $stopProcessing = $action['stop_processing'] ?? false;
-            $active         = $action['active'] ?? true;
-            $actionValues   = [
-                'action'          => $action['type'],
-                'value'           => $value,
-                'stop_processing' => $stopProcessing,
-                'order'           => $order,
-                'active'          => $active,
-            ];
-            $this->storeAction($rule, $actionValues);
-            ++$order;
-        }
-    }
-
-    /**
-     * @param  Rule  $rule
-     * @param  array  $values
-     *
-     * @return RuleAction
-     */
-    public function storeAction(Rule $rule, array $values): RuleAction
-    {
-        $ruleAction = new RuleAction();
-        $ruleAction->rule()->associate($rule);
-        $ruleAction->order           = $values['order'];
-        $ruleAction->active          = $values['active'];
-        $ruleAction->stop_processing = $values['stop_processing'];
-        $ruleAction->action_type     = $values['action'];
-        $ruleAction->action_value    = $values['value'] ?? '';
-        $ruleAction->save();
-
-        return $ruleAction;
     }
 
     /**
@@ -569,17 +505,81 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @inheritDoc
+     * @param  string  $moment
+     * @param  Rule  $rule
      */
-    public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule
+    private function setRuleTrigger(string $moment, Rule $rule): void
     {
-        if ($rule->rule_group_id !== $ruleGroup->id) {
-            $rule->rule_group_id = $ruleGroup->id;
-        }
-        $rule->save();
-        $rule->refresh();
-        $this->setOrder($rule, $order);
+        /** @var RuleTrigger|null $trigger */
+        $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
+        if (null !== $trigger) {
+            $trigger->trigger_value = $moment;
+            $trigger->save();
 
-        return $rule;
+            return;
+        }
+        $trigger                  = new RuleTrigger();
+        $trigger->order           = 0;
+        $trigger->trigger_type    = 'user_action';
+        $trigger->trigger_value   = $moment;
+        $trigger->rule_id         = $rule->id;
+        $trigger->active          = true;
+        $trigger->stop_processing = false;
+        $trigger->save();
+    }
+
+    /**
+     * @param  Rule  $rule
+     * @param  array  $data
+     *
+     * @return void
+     */
+    private function storeActions(Rule $rule, array $data): void
+    {
+        $order = 1;
+        foreach ($data['actions'] as $action) {
+            $value          = $action['value'] ?? '';
+            $stopProcessing = $action['stop_processing'] ?? false;
+            $active         = $action['active'] ?? true;
+            $actionValues   = [
+                'action'          => $action['type'],
+                'value'           => $value,
+                'stop_processing' => $stopProcessing,
+                'order'           => $order,
+                'active'          => $active,
+            ];
+            $this->storeAction($rule, $actionValues);
+            ++$order;
+        }
+    }
+
+    /**
+     * @param  Rule  $rule
+     * @param  array  $data
+     *
+     * @return void
+     */
+    private function storeTriggers(Rule $rule, array $data): void
+    {
+        $order = 1;
+        foreach ($data['triggers'] as $trigger) {
+            $value          = $trigger['value'] ?? '';
+            $stopProcessing = $trigger['stop_processing'] ?? false;
+            $active         = $trigger['active'] ?? true;
+            $type           = $trigger['type'];
+            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with($type, '-')) {
+                $type = sprintf('-%s', $type);
+            }
+
+            $triggerValues = [
+                'action'          => $type,
+                'value'           => $value,
+                'stop_processing' => $stopProcessing,
+                'order'           => $order,
+                'active'          => $active,
+            ];
+            $this->storeTrigger($rule, $triggerValues);
+            ++$order;
+        }
     }
 }

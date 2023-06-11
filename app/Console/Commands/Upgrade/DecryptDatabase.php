@@ -41,18 +41,8 @@ use stdClass;
  */
 class DecryptDatabase extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Decrypts the database.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:decrypt-all';
+    protected $signature   = 'firefly-iii:decrypt-all';
 
     /**
      * Execute the console command.
@@ -61,7 +51,6 @@ class DecryptDatabase extends Command
      */
     public function handle(): int
     {
-        $this->line('Going to decrypt the database.');
         $tables = [
             'accounts'             => ['name', 'iban'],
             'attachments'          => ['filename', 'mime', 'title', 'description'],
@@ -82,8 +71,6 @@ class DecryptDatabase extends Command
         foreach ($tables as $table => $fields) {
             $this->decryptTable($table, $fields);
         }
-        $this->info('Done!');
-
         return 0;
     }
 
@@ -165,20 +152,21 @@ class DecryptDatabase extends Command
     /**
      * @param  string  $table
      * @param  array  $fields
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     private function decryptTable(string $table, array $fields): void
     {
         if ($this->isDecrypted($table)) {
-            $this->info(sprintf('No decryption required for table "%s".', $table));
+            $this->info(sprintf('Correct: no decryption required for table "%s".', $table));
 
             return;
         }
         foreach ($fields as $field) {
             $this->decryptField($table, $field);
         }
-        $this->line(sprintf('Decrypted the data in table "%s".', $table));
+        $this->line(sprintf('Correct: decrypted the data in table "%s".', $table));
         // mark as decrypted:
         $configName = sprintf('is_decrypted_%s', $table);
         app('fireflyconfig')->set($configName, true);

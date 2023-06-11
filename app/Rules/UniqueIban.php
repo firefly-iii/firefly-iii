@@ -26,7 +26,6 @@ namespace FireflyIII\Rules;
 use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 
@@ -120,30 +119,13 @@ class UniqueIban implements ValidationRule
     }
 
     /**
-     * @return array
-     *
+     * @inheritDoc
      */
-    private function getMaxOccurrences(): array
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $maxCounts = [
-            AccountType::ASSET   => 0,
-            AccountType::EXPENSE => 0,
-            AccountType::REVENUE => 0,
-            'liabilities'        => 0,
-        ];
-
-        if (in_array('expense', $this->expectedTypes, true) || in_array(AccountType::EXPENSE, $this->expectedTypes, true)) {
-            // IBAN should be unique amongst expense and asset accounts.
-            // may appear once in revenue accounts
-            $maxCounts[AccountType::REVENUE] = 1;
+        if (!$this->passes($attribute, $value)) {
+            $fail((string)trans('validation.unique_iban_for_user'));
         }
-        if (in_array('revenue', $this->expectedTypes, true) || in_array(AccountType::REVENUE, $this->expectedTypes, true)) {
-            // IBAN should be unique amongst revenue and asset accounts.
-            // may appear once in expense accounts
-            $maxCounts[AccountType::EXPENSE] = 1;
-        }
-
-        return $maxCounts;
     }
 
     /**
@@ -173,12 +155,29 @@ class UniqueIban implements ValidationRule
     }
 
     /**
-     * @inheritDoc
+     * @return array
+     *
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    private function getMaxOccurrences(): array
     {
-        if (!$this->passes($attribute, $value)) {
-            $fail((string)trans('validation.unique_iban_for_user'));
+        $maxCounts = [
+            AccountType::ASSET   => 0,
+            AccountType::EXPENSE => 0,
+            AccountType::REVENUE => 0,
+            'liabilities'        => 0,
+        ];
+
+        if (in_array('expense', $this->expectedTypes, true) || in_array(AccountType::EXPENSE, $this->expectedTypes, true)) {
+            // IBAN should be unique amongst expense and asset accounts.
+            // may appear once in revenue accounts
+            $maxCounts[AccountType::REVENUE] = 1;
         }
+        if (in_array('revenue', $this->expectedTypes, true) || in_array(AccountType::REVENUE, $this->expectedTypes, true)) {
+            // IBAN should be unique amongst revenue and asset accounts.
+            // may appear once in expense accounts
+            $maxCounts[AccountType::EXPENSE] = 1;
+        }
+
+        return $maxCounts;
     }
 }

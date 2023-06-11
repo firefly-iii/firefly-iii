@@ -63,7 +63,7 @@ class MigrateJournalNotes extends Command
         $start = microtime(true);
 
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->warn('This command has already been executed.');
+            $this->info('Correct: this command has already been executed.');
 
             return 0;
         }
@@ -88,7 +88,7 @@ class MigrateJournalNotes extends Command
         }
 
         if (0 === $count) {
-            $this->line('No notes to migrate.');
+            $this->info('Correct: No notes to migrate.');
         }
         if (0 !== $count) {
             $this->line(sprintf('Migrated %d note(s).', $count));

@@ -99,6 +99,22 @@ class FrontpageChartGenerator
     }
 
     /**
+     * @param  array  $currency
+     */
+    private function addCurrency(array $currency): void
+    {
+        $currencyId = (int)$currency['currency_id'];
+
+        $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
+            'currency_id'             => $currencyId,
+            'currency_name'           => $currency['currency_name'],
+            'currency_symbol'         => $currency['currency_symbol'],
+            'currency_code'           => $currency['currency_code'],
+            'currency_decimal_places' => $currency['currency_decimal_places'],
+        ];
+    }
+
+    /**
      * @param  Category  $category
      * @param  Collection  $accounts
      *
@@ -119,22 +135,6 @@ class FrontpageChartGenerator
         }
 
         return $tempData;
-    }
-
-    /**
-     * @param  array  $currency
-     */
-    private function addCurrency(array $currency): void
-    {
-        $currencyId = (int)$currency['currency_id'];
-
-        $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
-            'currency_id'             => $currencyId,
-            'currency_name'           => $currency['currency_name'],
-            'currency_symbol'         => $currency['currency_symbol'],
-            'currency_code'           => $currency['currency_code'],
-            'currency_decimal_places' => $currency['currency_decimal_places'],
-        ];
     }
 
     /**

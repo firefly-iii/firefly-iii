@@ -47,7 +47,7 @@ class CreateOauthRefreshTokensTable extends Migration
      */
     public function up(): void
     {
-        if(!Schema::hasTable('oauth_refresh_tokens')) {
+        if (!Schema::hasTable('oauth_refresh_tokens')) {
             try {
                 Schema::create(
                     'oauth_refresh_tokens',

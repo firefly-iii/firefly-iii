@@ -29,8 +29,8 @@ use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class GroupUpdateService
@@ -108,6 +108,45 @@ class GroupUpdateService
         $transactionGroup->refresh();
 
         return $transactionGroup;
+    }
+
+    /**
+     * @param  TransactionGroup  $transactionGroup
+     * @param  array  $data
+     *
+     * @return TransactionJournal|null
+     *
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
+    {
+        $submission = [
+            'transactions' => [
+                $data,
+            ],
+        ];
+        /** @var TransactionJournalFactory $factory */
+        $factory = app(TransactionJournalFactory::class);
+        $factory->setUser($transactionGroup->user);
+        try {
+            $collection = $factory->create($submission);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException(sprintf('Could not create new transaction journal: %s', $e->getMessage()), 0, $e);
+        }
+        $collection->each(
+            function (TransactionJournal $journal) use ($transactionGroup) {
+                $transactionGroup->transactionJournals()->save($journal);
+            }
+        );
+        if (0 === $collection->count()) {
+            return null;
+        }
+
+        return $collection->first();
     }
 
     /**
@@ -189,44 +228,5 @@ class GroupUpdateService
         }
 
         return $updated;
-    }
-
-    /**
-     * @param  TransactionGroup  $transactionGroup
-     * @param  array  $data
-     *
-     * @return TransactionJournal|null
-     *
-     * @throws DuplicateTransactionException
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
-    {
-        $submission = [
-            'transactions' => [
-                $data,
-            ],
-        ];
-        /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
-        $factory->setUser($transactionGroup->user);
-        try {
-            $collection = $factory->create($submission);
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            throw new FireflyException(sprintf('Could not create new transaction journal: %s', $e->getMessage()), 0, $e);
-        }
-        $collection->each(
-            function (TransactionJournal $journal) use ($transactionGroup) {
-                $transactionGroup->transactionJournals()->save($journal);
-            }
-        );
-        if (0 === $collection->count()) {
-            return null;
-        }
-
-        return $collection->first();
     }
 }

@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Trait CurrencyValidation
@@ -35,6 +35,13 @@ use Illuminate\Support\Facades\Log;
 trait CurrencyValidation
 {
     public const TEST = 'Test';
+
+    /**
+     * @param  Validator  $validator
+     *
+     * @return array
+     */
+    abstract protected function getTransactionsArray(Validator $validator): array;
 
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
@@ -80,11 +87,4 @@ trait CurrencyValidation
             }
         }
     }
-
-    /**
-     * @param  Validator  $validator
-     *
-     * @return array
-     */
-    abstract protected function getTransactionsArray(Validator $validator): array;
 }

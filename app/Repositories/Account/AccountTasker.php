@@ -32,8 +32,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class AccountTasker.
@@ -90,8 +90,6 @@ class AccountTasker implements AccountTaskerInterface
                 'currency_symbol'         => $currency->symbol,
                 'currency_name'           => $currency->name,
                 'currency_decimal_places' => $currency->decimal_places,
-                'start_balance'           => '0',
-                'end_balance'             => '0',
             ];
 
             // get first journal date:
@@ -152,6 +150,50 @@ class AccountTasker implements AccountTaskerInterface
         array_multisort($sum, SORT_ASC, $report['accounts']);
 
         return $report;
+    }
+
+    /**
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Collection  $accounts
+     *
+     * @return array
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        // get all incomes for the given accounts in the given period!
+        // also transfers!
+        // get all transactions:
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setDestinationAccounts($accounts)->setRange($start, $end);
+        $collector->excludeSourceAccounts($accounts);
+        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])->withAccountInformation();
+        $report = $this->groupIncomeBySource($collector->getExtractedJournals());
+
+        // sort the result
+        // Obtain a list of columns
+        $sum = [];
+        foreach ($report['accounts'] as $accountId => $row) {
+            $sum[$accountId] = (float)$row['sum']; // intentional float
+        }
+
+        array_multisort($sum, SORT_DESC, $report['accounts']);
+
+        return $report;
+    }
+
+    /**
+     * @param  User|Authenticatable|null  $user
+     */
+    public function setUser(User|Authenticatable|null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
     }
 
     /**
@@ -218,40 +260,6 @@ class AccountTasker implements AccountTaskerInterface
     }
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection  $accounts
-     *
-     * @return array
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
-    {
-        // get all incomes for the given accounts in the given period!
-        // also transfers!
-        // get all transactions:
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setDestinationAccounts($accounts)->setRange($start, $end);
-        $collector->excludeSourceAccounts($accounts);
-        $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])->withAccountInformation();
-        $report = $this->groupIncomeBySource($collector->getExtractedJournals());
-
-        // sort the result
-        // Obtain a list of columns
-        $sum = [];
-        foreach ($report['accounts'] as $accountId => $row) {
-            $sum[$accountId] = (float)$row['sum']; // intentional float
-        }
-
-        array_multisort($sum, SORT_DESC, $report['accounts']);
-
-        return $report;
-    }
-
-    /**
      * @param  array  $array
      *
      * @return array
@@ -311,15 +319,5 @@ class AccountTasker implements AccountTaskerInterface
         }
 
         return $report;
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
     }
 }

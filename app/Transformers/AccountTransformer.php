@@ -157,17 +157,31 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * TODO duplicated in the V2 transformer.
-     * @return Carbon
+     * @param  Account  $account
+     * @param  string|null  $accountRole
+     * @param  string  $accountType
+     *
+     * @return array
      */
-    private function getDate(): Carbon
+    private function getCCInfo(Account $account, ?string $accountRole, string $accountType): array
     {
-        $date = today(config('app.timezone'));
-        if (null !== $this->parameters->get('date')) {
-            $date = $this->parameters->get('date');
+        $monthlyPaymentDate = null;
+        $creditCardType     = null;
+        if ('ccAsset' === $accountRole && 'asset' === $accountType) {
+            $creditCardType     = $this->repository->getMetaValue($account, 'cc_type');
+            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'cc_monthly_payment_date');
+        }
+        if (null !== $monthlyPaymentDate) {
+            // try classic date:
+            if (10 === strlen($monthlyPaymentDate)) {
+                $monthlyPaymentDate = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'))->toAtomString();
+            }
+            if (10 !== strlen($monthlyPaymentDate)) {
+                $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
+            }
         }
 
-        return $date;
+        return [$creditCardType, $monthlyPaymentDate];
     }
 
     /**
@@ -194,31 +208,35 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
+     * TODO duplicated in the V2 transformer.
+     * @return Carbon
+     */
+    private function getDate(): Carbon
+    {
+        $date = today(config('app.timezone'));
+        if (null !== $this->parameters->get('date')) {
+            $date = $this->parameters->get('date');
+        }
+
+        return $date;
+    }
+
+    /**
      * @param  Account  $account
-     * @param  string|null  $accountRole
      * @param  string  $accountType
      *
      * @return array
      */
-    private function getCCInfo(Account $account, ?string $accountRole, string $accountType): array
+    private function getInterest(Account $account, string $accountType): array
     {
-        $monthlyPaymentDate = null;
-        $creditCardType     = null;
-        if ('ccAsset' === $accountRole && 'asset' === $accountType) {
-            $creditCardType     = $this->repository->getMetaValue($account, 'cc_type');
-            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'cc_monthly_payment_date');
-        }
-        if (null !== $monthlyPaymentDate) {
-            // try classic date:
-            if(10 === strlen($monthlyPaymentDate)) {
-                $monthlyPaymentDate = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'))->toAtomString();
-            }
-            if(10 !== strlen($monthlyPaymentDate)) {
-                $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
-            }
+        $interest       = null;
+        $interestPeriod = null;
+        if ('liabilities' === $accountType) {
+            $interest       = $this->repository->getMetaValue($account, 'interest');
+            $interestPeriod = $this->repository->getMetaValue($account, 'interest_period');
         }
 
-        return [$creditCardType, $monthlyPaymentDate];
+        return [$interest, $interestPeriod];
     }
 
     /**
@@ -243,23 +261,5 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return [$openingBalance, $openingBalanceDate];
-    }
-
-    /**
-     * @param  Account  $account
-     * @param  string  $accountType
-     *
-     * @return array
-     */
-    private function getInterest(Account $account, string $accountType): array
-    {
-        $interest       = null;
-        $interestPeriod = null;
-        if ('liabilities' === $accountType) {
-            $interest       = $this->repository->getMetaValue($account, 'interest');
-            $interestPeriod = $this->repository->getMetaValue($account, 'interest_period');
-        }
-
-        return [$interest, $interestPeriod];
     }
 }

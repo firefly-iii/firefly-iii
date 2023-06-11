@@ -73,22 +73,20 @@ class BudgetLimit extends Model
      * @var array
      */
     protected $casts
-        = [
+                                = [
             'created_at'  => 'datetime',
             'updated_at'  => 'datetime',
             'start_date'  => 'date',
             'end_date'    => 'date',
             'auto_budget' => 'boolean',
         ];
-
-    /** @var array Fields that can be filled */
-    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount', 'transaction_currency_id'];
-
     protected $dispatchesEvents = [
         'created' => Created::class,
         'updated' => Updated::class,
         'deleted' => Deleted::class,
     ];
+    /** @var array Fields that can be filled */
+    protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount', 'transaction_currency_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

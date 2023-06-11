@@ -53,8 +53,6 @@ class FixPostgresSequences extends Command
     public function handle(): int
     {
         if (DB::connection()->getName() !== 'pgsql') {
-            $this->info('Command executed successfully.');
-
             return 0;
         }
         $this->line('Going to verify PostgreSQL table sequences.');
