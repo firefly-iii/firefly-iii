@@ -201,7 +201,21 @@ class UserEventHandler
         /** @var array $entry */
         foreach ($list as $index => $entry) {
             if (false === $entry['notified']) {
-                Notification::send($user, new UserLogin($ipAddress));
+                try {
+                    Notification::send($user, new UserLogin($ipAddress));
+                } catch (Exception $e) {
+                    $message = $e->getMessage();
+                    if (str_contains($message, 'Bcc')) {
+                        Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                        return;
+                    }
+                    if (str_contains($message, 'RFC 2822')) {
+                        Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                        return;
+                    }
+                    Log::error($e->getMessage());
+                    Log::error($e->getTraceAsString());
+                }
             }
             $list[$index]['notified'] = true;
         }
@@ -221,7 +235,21 @@ class UserEventHandler
             $all        = $repository->all();
             foreach ($all as $user) {
                 if ($repository->hasRole($user, 'owner')) {
-                    Notification::send($user, new AdminRegistrationNotification($event->user));
+                    try {
+                        Notification::send($user, new AdminRegistrationNotification($event->user));
+                    } catch (Exception $e) {
+                        $message = $e->getMessage();
+                        if (str_contains($message, 'Bcc')) {
+                            Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                            return;
+                        }
+                        if (str_contains($message, 'RFC 2822')) {
+                            Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                            return;
+                        }
+                        Log::error($e->getMessage());
+                        Log::error($e->getTraceAsString());
+                    }
                 }
             }
         }
@@ -281,7 +309,21 @@ class UserEventHandler
      */
     public function sendNewPassword(RequestedNewPassword $event): void
     {
-        Notification::send($event->user, new UserNewPassword(route('password.reset', [$event->token])));
+        try {
+            Notification::send($event->user, new UserNewPassword(route('password.reset', [$event->token])));
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                return;
+            }
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+        }
     }
 
     /**
@@ -313,7 +355,21 @@ class UserEventHandler
     {
         $sendMail = FireflyConfig::get('notification_user_new_reg', true)->data;
         if ($sendMail) {
-            Notification::send($event->user, new UserRegistrationNotification());
+            try {
+                Notification::send($event->user, new UserRegistrationNotification());
+            } catch (Exception $e) {
+                $message = $e->getMessage();
+                if (str_contains($message, 'Bcc')) {
+                    Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                    return;
+                }
+                if (str_contains($message, 'RFC 2822')) {
+                    Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                    return;
+                }
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+            }
         }
     }
 
