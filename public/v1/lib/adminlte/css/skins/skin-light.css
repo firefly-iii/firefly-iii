@@ -5,10 +5,10 @@
  */
 .skin-firefly-iii ::-moz-selection {
   /* Code for Firefox */
-  background: #86bad8;
+  background: #acd0e5;
 }
 .skin-firefly-iii ::selection {
-  background: #fafcfd;
+  background: #acd0e5;
 }
 .skin-firefly-iii .money-neutral {
   color: #999;
