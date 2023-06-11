@@ -53,10 +53,7 @@ class ForgotPasswordController extends Controller
         parent::__construct();
         $this->middleware('guest');
 
-        $loginProvider = config('firefly.login_provider');
-        $authGuard     = config('firefly.authentication_guard');
-
-        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
+        if ('web' !== config('firefly.authentication_guard')) {
             throw new FireflyException('Using external identity provider. Cannot continue.');
         }
     }
@@ -72,10 +69,8 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
         Log::info('Start of sendResetLinkEmail()');
-        $loginProvider = config('firefly.login_provider');
-
-        if ('eloquent' !== $loginProvider) {
-            $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
+        if ('web' !== config('firefly.authentication_guard')) {
+            $message = sprintf('Cannot reset password when authenticating over "%s".', config('firefly.authentication_guard'));
             Log::error($message);
 
             return view('error', compact('message'));
@@ -117,9 +112,8 @@ class ForgotPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
-        $loginProvider = config('firefly.login_provider');
-        if ('eloquent' !== $loginProvider) {
-            $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
+        if ('web' !== config('firefly.authentication_guard')) {
+            $message = sprintf('Cannot reset password when authenticating over "%s".', config('firefly.authentication_guard'));
 
             return view('error', compact('message'));
         }
