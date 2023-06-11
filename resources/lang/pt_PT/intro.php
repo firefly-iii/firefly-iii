@@ -97,7 +97,7 @@ return [
     'reports_report_tag_pieCharts'              => 'Estes gráficos dar-lhe-ão informações de despesas e receitas por etiqueta, conta, categoria ou orçamento.',
     'reports_report_tag_incomeAndExpensesChart' => 'Este gráfico mostra-lhe as suas despesas e receitas por etiqueta.',
 
-    'reports_report_budget_intro'                             => 'Este relatório irá-lhe dar informações de um ou múltiplos orçamentos.',
+    'reports_report_budget_intro'                             => 'Este relatório dar-lhe-á informações de um ou múltiplos orçamentos.',
     'reports_report_budget_pieCharts'                         => 'Estes gráficos dar-lhe-ão perspetiva sobre despesas por orçamento ou por conta.',
     'reports_report_budget_incomeAndExpensesChart'            => 'Este gráfico mostra-lhe as suas despesas por orçamento.',
 
@@ -136,22 +136,22 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Quaisquer adições ou remoções também serão listadas aqui.',
 
     // bill index
-    'bills_index_rules'                                       => 'Aqui pode ver que regras serão validadas se esta despesa ocorrer',
-    'bills_index_paid_in_period'                              => 'Este campo indica o último pagamento desta despesa.',
-    'bills_index_expected_in_period'                          => 'Este campo indica, para cada despesa, se, e quando, ocorrerá novamente.',
+    'bills_index_rules'                                       => 'Aqui pode ver as regras que serão validadas se este encargo ocorrer',
+    'bills_index_paid_in_period'                              => 'Este campo indica o último pagamento deste encargo.',
+    'bills_index_expected_in_period'                          => 'Este campo indica para cada encargo, se e quando ocorrerá novamente.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'Esta tabela mostra alguma informação geral sobre esta despesa.',
-    'bills_show_billButtons'                                  => 'Usa este botão para tornar a analisar transações antigas para ser feita correspondência com esta despesa.',
-    'bills_show_billChart'                                    => 'Este gráfico mostra as transações associadas a esta despesa.',
+    'bills_show_billInfo'                                     => 'Esta tabela mostra alguma informação geral sobre este encargo.',
+    'bills_show_billButtons'                                  => 'Usa este botão para reanalisar transações antigas para ser feita correspondência com este encargo.',
+    'bills_show_billChart'                                    => 'Este gráfico mostra as transações associadas a este encargo.',
 
     // create bill
-    'bills_create_intro'                                      => 'Use as Despesas para controlar o montante de dinheiro que terá de despender em cada período. Pensa nas despesas como rendas, seguros ou pagamentos de hipotecas.',
+    'bills_create_intro'                                      => 'Use os encargos para controlar o montante de dinheiro que terá de despender em cada período. Pense nos encargos como rendas de casa, seguros ou pagamentos de hipotecas.',
     'bills_create_name'                                       => 'Use um nome descritivo como "Renda" ou "Seguro de Vida".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Selecione um montante mínimo e máximo para esta despesa.',
-    'bills_create_repeat_freq_holder'                         => 'A maioria das despesas são mensais, mas pode definir outra frequência aqui.',
-    'bills_create_skip_holder'                                => 'Se uma despesa se repete a cada 2 semanas, o campo "saltar" deve ser colocado como "1" para saltar semana sim, semana não.',
+    'bills_create_amount_min_holder'                          => 'Selecione um montante mínimo e máximo para este encargo.',
+    'bills_create_repeat_freq_holder'                         => 'A maioria dos encargos são mensais, mas pode definir outra frequência aqui.',
+    'bills_create_skip_holder'                                => 'Se um encargo se repete a cada 2 semanas, o campo "saltar" deve ser colocado como "1" para saltar semana sim, semana não.',
 
     // rules index
     'rules_index_intro'                                       => 'O Firefly III permite-lhe gerir regras, que serão aplicadas automaticamente a qualquer transação que cria ou altere.',
@@ -185,11 +185,11 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'O Firefly III suporta multiplas divisas que podes mudar nesta pagina.',
-    'currencies_index_default'                                => 'O Firefly III tem uma divisa de defeito.',
+    'currencies_index_default'                                => 'O Firefly III tem uma moeda predefinida.',
     'currencies_index_buttons'                                => 'Use os botões para alterar a moeda padrão ou habilitar outras moedas.',
 
     // create currency
-    'currencies_create_code'                                  => 'Este codigo deve ser compativel com ISO (procura pela tua nova moeda no google).',
+    'currencies_create_code'                                  => 'Este código deve ser compatível com ISO (procure a sua nova moeda no Google).',
 ];
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.

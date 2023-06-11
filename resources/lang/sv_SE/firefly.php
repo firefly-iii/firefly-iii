@@ -1706,7 +1706,7 @@ return [
     'auto_budget_none'                          => 'Ingen auto-budget',
     'auto_budget_reset'                         => 'Ange ett fast belopp varje period',
     'auto_budget_rollover'                      => 'Lägg till ett belopp varje period',
-    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
+    'auto_budget_adjusted'                      => 'Lägg till ett belopp varje period och korrigera för överkonsumtion',
     'auto_budget_period_daily'                  => 'Dagligen',
     'auto_budget_period_weekly'                 => 'Veckovis',
     'auto_budget_period_monthly'                => 'Månadsvis',
@@ -1716,7 +1716,7 @@ return [
     'auto_budget_help'                          => 'Du kan läsa mer om denna funktion i hjälpen. Klicka på (?) ikonen uppe till höger.',
     'auto_budget_reset_icon'                    => 'Denna budget kommer att fastställas periodvis',
     'auto_budget_rollover_icon'                 => 'Budgetbeloppet kommer att öka periodiskt',
-    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
+    'auto_budget_adjusted_icon'                 => 'Budgetbeloppet kommer att öka periodiskt och kommer att korrigera för överkonsumtion',
     'remove_budgeted_amount'                    => 'Ta bort budgeterat belopp i :currency',
 
     // bills:
@@ -2295,7 +2295,7 @@ return [
     'budgeted'                                  => 'Budgeterat',
     'period'                                    => 'Period',
     'balance'                                   => 'Saldo',
-    'in_out_period'                             => 'In + out this period',
+    'in_out_period'                             => 'In + ut denna period',
     'sum'                                       => 'Summa',
     'summary'                                   => 'Översikt',
     'average'                                   => 'Medel',

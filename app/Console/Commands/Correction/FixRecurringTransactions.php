@@ -37,8 +37,8 @@ use Illuminate\Console\Command;
  */
 class FixRecurringTransactions extends Command
 {
-    protected                            $description = 'Fixes recurring transactions with the wrong transaction type.';
-    protected                            $signature   = 'firefly-iii:fix-recurring-transactions';
+    protected $description = 'Fixes recurring transactions with the wrong transaction type.';
+    protected $signature   = 'firefly-iii:fix-recurring-transactions';
     private int                          $count       = 0;
     private RecurringRepositoryInterface $recurringRepos;
     private UserRepositoryInterface      $userRepos;
