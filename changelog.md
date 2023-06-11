@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.0.13 - 2023-06-12
+
+### Fixed
+
+- [Issue 7641](https://github.com/firefly-iii/firefly-iii/issues/7641) Crash with AUTHENTICATION_GUARD=web
+
 ## v6.0.12 - 2023-06-12
 
 ### Changed
@@ -21,7 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### API
 
 - [Issue 7588](https://github.com/firefly-iii/firefly-iii/issues/7588) v1/recurrences not able to handle bills on
-  Store & Update
+  store & update
 - [Issue 7589](https://github.com/firefly-iii/firefly-iii/issues/7589) v1/recurrences fails when updating a split
   transaction
 

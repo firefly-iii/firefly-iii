@@ -66,9 +66,7 @@ class UserController extends Controller
             }
         );
         $this->middleware(IsDemoUser::class)->except(['index', 'show']);
-        $loginProvider          = config('firefly.login_provider');
-        $authGuard              = config('firefly.authentication_guard');
-        $this->externalIdentity = 'eloquent' !== $loginProvider || 'web' !== $authGuard;
+        $this->externalIdentity = 'web' !== config('firefly.authentication_guard');
     }
 
     /**
