@@ -58,6 +58,11 @@ class ReportSum extends Command
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
             $sum = (string)$user->transactions()->sum('amount');
+            if (!is_numeric($sum)) {
+                $message = sprintf('Error: Transactions for user #%d (%s) have an invalid sum ("%s").', $user->id, $user->email, $sum);
+                $this->error($message);
+                continue;
+            }
             if (0 !== bccomp($sum, '0')) {
                 $message = sprintf('Error: Transactions for user #%d (%s) are off by %s!', $user->id, $user->email, $sum);
                 $this->error($message);

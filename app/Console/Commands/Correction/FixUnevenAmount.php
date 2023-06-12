@@ -51,6 +51,14 @@ class FixUnevenAmount extends Command
                       ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
+            $sum = (string)$entry->the_sum;
+            if (!is_numeric($sum)) {
+                $message = sprintf('Journal #%d has an invalid sum ("%s"). No sure what to do.', $entry->transaction_journal_id, $entry->the_sum);
+                $this->warn($message);
+                app('log')->warning($message);
+                $count++;
+                continue;
+            }
             if (0 !== bccomp((string)$entry->the_sum, '0')) {
                 $message = sprintf('Sum of journal #%d is %s instead of zero.', $entry->transaction_journal_id, $entry->the_sum);
                 $this->warn($message);
