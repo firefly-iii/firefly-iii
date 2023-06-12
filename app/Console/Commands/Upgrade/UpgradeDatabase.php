@@ -65,6 +65,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:upgrade-liabilities',
             'firefly-iii:liabilities-600',
             'firefly-iii:budget-limit-periods',
+            'firefly-iii:restore-oauth-keys',
         ];
         $args     = [];
         if ($this->option('force')) {
