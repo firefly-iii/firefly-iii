@@ -152,6 +152,11 @@ class AccountForm
         return $this->select($name, $grouped, $value, $options);
     }
 
+    /**
+     * @param  array  $types
+     * @param  AccountRepositoryInterface|null  $repository
+     * @return array
+     */
     private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
     {
         if (null === $repository) {
