@@ -247,7 +247,7 @@ class SearchRuleEngine implements RuleEngineInterface
                     $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);
                 }
                 $key = sprintf('%d%s', $group['id'], $str);
-                Log::debug(sprintf('Return key: %s ', $key));
+                //Log::debug(sprintf('Return key: %s ', $key));
 
                 return $key;
             }
