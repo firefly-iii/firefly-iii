@@ -171,13 +171,14 @@ class AccountForm
             $role = (string)$repository->getMetaValue($account, 'account_role');
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = sprintf('l_%s', $account->accountType->type);
-            } elseif ('' === $role) {
+            }
+            if ('' === $role) {
+                $role = 'no_account_type';
                 if (AccountType::EXPENSE === $account->accountType->type) {
                     $role = 'expense_account';
-                } elseif (AccountType::REVENUE === $account->accountType->type) {
+                }
+                if (AccountType::REVENUE === $account->accountType->type) {
                     $role = 'revenue_account';
-                } else {
-                    $role = 'no_account_type';
                 }
             }
             $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
