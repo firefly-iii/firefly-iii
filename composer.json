@@ -98,7 +98,7 @@
     "league/fractal": "0.*",
     "nunomaduro/collision": "^7.6",
     "pragmarx/google2fa": "^8.0",
-    "predis/predis": "^2.1",
+    "predis/predis": "^2.2",
     "psr/log": "<4",
     "ramsey/uuid": "^4.7",
     "rcrowe/twigbridge": "^0.14",
