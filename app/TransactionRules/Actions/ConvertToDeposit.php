@@ -206,7 +206,7 @@ class ConvertToDeposit implements ActionInterface
 
         // update the source transaction and put in the new revenue ID.
         DB::table('transactions')
-          ->where('transaction_journal_id', '=', )
+          ->where('transaction_journal_id', '=', $journal->id)
           ->where('amount', '<', 0)
           ->update(['account_id' => $opposingAccount->id]);
 
