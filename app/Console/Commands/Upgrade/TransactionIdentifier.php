@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -39,6 +40,8 @@ use Schema;
  */
 class TransactionIdentifier extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '480_transaction_identifier';
     protected $description = 'Fixes transaction identifiers.';
     protected $signature   = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
@@ -64,7 +67,7 @@ class TransactionIdentifier extends Command
         $this->stupidLaravel();
 
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
@@ -81,10 +84,10 @@ class TransactionIdentifier extends Command
         }
 
         if (0 === $this->count) {
-            $this->line('Correct: all split journal transaction identifiers are OK.');
+            $this->friendlyPositive('All split journal transaction identifiers are OK.');
         }
         if (0 !== $this->count) {
-            $this->line(sprintf('Correct: fixed %d split journal transaction identifier(s).', $this->count));
+            $this->friendlyInfo(sprintf('Fixed %d split journal transaction identifier(s).', $this->count));
         }
 
         $this->markAsExecuted();
@@ -111,10 +114,10 @@ class TransactionIdentifier extends Command
                                    ->first();
         } catch (QueryException $e) {
             Log::error($e->getMessage());
-            $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');
-            $this->error(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
-            $this->error('Please run "php artisan migrate" to add this field to the table.');
-            $this->info('Then, run "php artisan firefly:upgrade-database" to try again.');
+            $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
+            $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
+            $this->friendlyError('Please run "php artisan migrate" to add this field to the table.');
+            $this->friendlyError('Then, run "php artisan firefly:upgrade-database" to try again.');
 
             return null;
         }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
@@ -33,6 +34,8 @@ use Illuminate\Support\Facades\Log;
  */
 class TransferBudgets extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Removes budgets from transfers.';
     protected $signature   = 'firefly-iii:fix-transfer-budgets';
 
@@ -52,19 +55,19 @@ class TransferBudgets extends Command
         /** @var TransactionJournal $entry */
         foreach ($set as $entry) {
             $message = sprintf('Transaction journal #%d is a %s, so has no longer a budget.', $entry->id, $entry->transactionType->type);
-            $this->info($message);
+            $this->friendlyInfo($message);
             Log::debug($message);
             $entry->budgets()->sync([]);
             $count++;
         }
         if (0 === $count) {
-            $message = 'Correct: no invalid budget/journal entries.';
-            $this->info($message);
+            $message = 'No invalid budget/journal entries.';
+            $this->friendlyPositive($message);
         }
         if (0 !== $count) {
             $message = sprintf('Corrected %d invalid budget/journal entries (entry).', $count);
             Log::debug($message);
-            $this->line($message);
+            $this->friendlyInfo($message);
         }
         return 0;
     }

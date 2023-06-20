@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\TransactionType;
@@ -37,6 +38,8 @@ use Illuminate\Console\Command;
  */
 class FixRecurringTransactions extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Fixes recurring transactions with the wrong transaction type.';
     protected $signature   = 'firefly-iii:fix-recurring-transactions';
     private int                          $count       = 0;
@@ -53,7 +56,7 @@ class FixRecurringTransactions extends Command
         $this->stupidLaravel();
         $this->correctTransactions();
         if (0 === $this->count) {
-            $this->info('Correct: all recurring transactions are OK.');
+            $this->friendlyPositive('All recurring transactions are OK.');
         }
 
         return 0;
@@ -93,7 +96,7 @@ class FixRecurringTransactions extends Command
         $type        = $recurrence->transactionType;
         $link        = config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
         if (null !== $link && strtolower($type->type) !== strtolower($link)) {
-            $this->warn(
+            $this->friendlyWarning(
                 sprintf('Recurring transaction #%d should be a "%s" but is a "%s" and will be corrected.', $recurrence->id, $link, $type->type)
             );
             $transactionType = TransactionType::whereType($link)->first();

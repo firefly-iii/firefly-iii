@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use Exception;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Console\Command;
 
@@ -32,6 +33,8 @@ use Illuminate\Console\Command;
  */
 class DeleteEmptyGroups extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Delete empty transaction groups.';
     protected $signature   = 'firefly-iii:delete-empty-groups';
 
@@ -50,7 +53,7 @@ class DeleteEmptyGroups extends Command
 
         $total = count($groupIds);
         if ($total > 0) {
-            $this->info(sprintf('Deleted %d empty transaction group(s).', $total));
+            $this->friendlyInfo(sprintf('Deleted %d empty transaction group(s).', $total));
 
             // again, chunks for SQLite.
             $chunks = array_chunk($groupIds, 500);
@@ -59,7 +62,7 @@ class DeleteEmptyGroups extends Command
             }
         }
         if (0 === $total) {
-            $this->info('Correct: verified empty groups.');
+            $this->friendlyInfo('Verified there are no empty groups.');
         }
 
         return 0;

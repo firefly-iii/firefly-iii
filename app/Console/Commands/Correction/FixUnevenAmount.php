@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use DB;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
@@ -34,6 +35,8 @@ use stdClass;
  */
 class FixUnevenAmount extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Fix journals with uneven amounts.';
     protected $signature   = 'firefly-iii:fix-uneven-amount';
 
@@ -54,21 +57,21 @@ class FixUnevenAmount extends Command
             $sum = (string)$entry->the_sum;
             if (!is_numeric($sum)) {
                 $message = sprintf('Journal #%d has an invalid sum ("%s"). No sure what to do.', $entry->transaction_journal_id, $entry->the_sum);
-                $this->warn($message);
+                $this->friendlyWarning($message);
                 app('log')->warning($message);
                 $count++;
                 continue;
             }
             if (0 !== bccomp((string)$entry->the_sum, '0')) {
                 $message = sprintf('Sum of journal #%d is %s instead of zero.', $entry->transaction_journal_id, $entry->the_sum);
-                $this->warn($message);
+                $this->friendlyWarning($message);
                 app('log')->warning($message);
                 $this->fixJournal((int)$entry->transaction_journal_id);
                 $count++;
             }
         }
         if (0 === $count) {
-            $this->info('Correct: Database amount integrity is OK');
+            $this->friendlyPositive('Database amount integrity is OK');
         }
 
         return 0;
@@ -88,7 +91,7 @@ class FixUnevenAmount extends Command
         $source = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
-            $this->error(
+            $this->friendlyError(
                 sprintf(
                     'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
                     $journal->id ?? 0,
@@ -108,7 +111,7 @@ class FixUnevenAmount extends Command
         $destination = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {
-            $this->error(
+            $this->friendlyError(
                 sprintf(
                     'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
                     $journal->id ?? 0,
@@ -126,6 +129,6 @@ class FixUnevenAmount extends Command
         $destination->save();
 
         $message = sprintf('Corrected amount in transaction journal #%d', $param);
-        $this->line($message);
+        $this->friendlyInfo($message);
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
@@ -32,6 +33,8 @@ use Illuminate\Console\Command;
  */
 class RemoveBills extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Remove bills from transactions that shouldn\'t have one.';
     protected $signature   = 'firefly-iii:remove-bills';
 
@@ -50,14 +53,14 @@ class RemoveBills extends Command
         $journals = TransactionJournal::whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->get();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $this->line(sprintf('Transaction journal #%d should not be linked to bill #%d.', $journal->id, $journal->bill_id));
+            $this->friendlyWarning(sprintf('Transaction journal #%d will be unlinked from bill #%d.', $journal->id, $journal->bill_id));
             $journal->bill_id = null;
             $journal->save();
         }
         if ($journals->count() > 0) {
-            $this->info('Fixed all transaction journals so they have correct bill information.');
+            $this->friendlyInfo('Fixed all transaction journals so they have correct bill information.');
         }
-        $this->info('Correct: verified bills / journals in %s seconds');
+        $this->friendlyPositive('All bills and journals are OK');
 
         return 0;
     }

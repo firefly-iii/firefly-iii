@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Console\Command;
@@ -34,6 +35,8 @@ use Illuminate\Support\Collection;
  */
 class FixIbans extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Removes spaces from IBANs';
     protected $signature   = 'firefly-iii:fix-ibans';
     private int $count       = 0;
@@ -49,7 +52,7 @@ class FixIbans extends Command
         $this->filterIbans($accounts);
         $this->countAndCorrectIbans($accounts);
         if (0 === $this->count) {
-            $this->info('Correct: All IBANs are valid.');
+            $this->friendlyPositive('All IBANs are valid.');
         }
 
         return 0;
@@ -82,7 +85,7 @@ class FixIbans extends Command
                     && // allowed combination
                     !(AccountType::REVENUE === $set[$userId][$iban] && AccountType::EXPENSE === $type) // also allowed combination.
                 ) {
-                    $this->line(
+                    $this->friendlyWarning(
                         sprintf(
                             'IBAN "%s" is used more than once and will be removed from %s #%d ("%s")',
                             $iban,
@@ -118,7 +121,7 @@ class FixIbans extends Command
                 if ('' !== $iban) {
                     $account->iban = $iban;
                     $account->save();
-                    $this->line(sprintf('Removed spaces from IBAN of account #%d', $account->id));
+                    $this->friendlyInfo(sprintf('Removed spaces from IBAN of account #%d', $account->id));
                     $this->count++;
                 }
             }

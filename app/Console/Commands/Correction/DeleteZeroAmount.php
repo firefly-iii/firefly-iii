@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
@@ -32,6 +33,8 @@ use Illuminate\Console\Command;
  */
 class DeleteZeroAmount extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -57,13 +60,13 @@ class DeleteZeroAmount extends Command
         $journals = TransactionJournal::whereIn('id', $set)->get();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $this->info(sprintf('Deleted transaction journal #%d because the amount is zero (0.00).', $journal->id));
+            $this->friendlyWarning(sprintf('Deleted transaction journal #%d because the amount is zero (0.00).', $journal->id));
             $journal->delete();
 
             Transaction::where('transaction_journal_id', $journal->id)->delete();
         }
         if (0 === $journals->count()) {
-            $this->info('Correct: no zero-amount transaction journals.');
+            $this->friendlyPositive('No zero-amount transaction journals.');
         }
 
         return 0;

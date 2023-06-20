@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Integrity;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
 
@@ -32,6 +33,8 @@ use Illuminate\Console\Command;
  */
 class RestoreOAuthKeys extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Will restore the OAuth keys generated for the system.';
     protected $signature   = 'firefly-iii:restore-oauth-keys';
 
@@ -87,30 +90,30 @@ class RestoreOAuthKeys extends Command
         if (!$this->keysInDatabase() && !$this->keysOnDrive()) {
             $this->generateKeys();
             $this->storeKeysInDB();
-            $this->line('Correct: generated and stored new keys.');
+            $this->friendlyInfo('Generated and stored new keys.');
 
             return;
         }
         if ($this->keysInDatabase() && !$this->keysOnDrive()) {
             $result = $this->restoreKeysFromDB();
             if (true === $result) {
-                $this->line('Correct: restored OAuth keys from database.');
+                $this->friendlyInfo('Restored OAuth keys from database.');
 
                 return;
             }
             $this->generateKeys();
             $this->storeKeysInDB();
-            $this->line('Correct: generated and stored new keys.');
+            $this->friendlyInfo('Generated and stored new keys.');
 
             return;
         }
         if (!$this->keysInDatabase() && $this->keysOnDrive()) {
             $this->storeKeysInDB();
-            $this->line('Correct: stored OAuth keys in database.');
+            $this->friendlyInfo('Stored OAuth keys in database.');
 
             return;
         }
-        $this->line('Correct: OAuth keys are OK');
+        $this->friendlyPositive('OAuth keys are OK');
     }
 
     /**

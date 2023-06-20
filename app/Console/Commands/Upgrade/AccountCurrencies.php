@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -42,6 +43,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class AccountCurrencies extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '480_account_currencies';
 
     protected $description = 'Give all accounts proper currency info.';
@@ -59,17 +62,17 @@ class AccountCurrencies extends Command
     {
         $this->stupidLaravel();
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
         $this->updateAccountCurrencies();
 
         if (0 === $this->count) {
-            $this->info('Correct: all account currencies are OK.');
+            $this->friendlyPositive('All account currencies are OK.');
         }
         if (0 !== $this->count) {
-            $this->line(sprintf('Corrected %d account(s).', $this->count));
+            $this->friendlyInfo(sprintf('Corrected %d account(s).', $this->count));
         }
 
         $this->markAsExecuted();
@@ -122,7 +125,7 @@ class AccountCurrencies extends Command
         if (0 === $accountCurrency && 0 === $obCurrency) {
             AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
-            $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
+            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
             $this->count++;
 
             return;
@@ -131,7 +134,7 @@ class AccountCurrencies extends Command
         // account is set to 0, opening balance is not?
         if (0 === $accountCurrency && $obCurrency > 0) {
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
-            $this->line(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
+            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
             $this->count++;
 
             return;
@@ -147,7 +150,7 @@ class AccountCurrencies extends Command
                     $transaction->save();
                 }
             );
-            $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
+            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
             $this->count++;
         }
     }
@@ -186,7 +189,7 @@ class AccountCurrencies extends Command
 
         if (null === $defaultCurrency) {
             Log::error(sprintf('Users currency pref "%s" does not exist!', $defaultCurrencyCode));
-            $this->error(sprintf('User has a preference for "%s", but this currency does not exist.', $defaultCurrencyCode));
+            $this->friendlyError(sprintf('User has a preference for "%s", but this currency does not exist.', $defaultCurrencyCode));
 
             return;
         }

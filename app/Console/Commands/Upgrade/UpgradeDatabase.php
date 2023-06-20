@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 set_time_limit(0);
 
 use Artisan;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
 /**
@@ -35,6 +36,8 @@ use Illuminate\Console\Command;
  */
 class UpgradeDatabase extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Upgrades the database to the latest version.';
     protected $signature   = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
@@ -72,7 +75,7 @@ class UpgradeDatabase extends Command
             $args = ['--force' => true];
         }
         foreach ($commands as $command) {
-            $this->line(sprintf('Now executing %s', $command));
+            $this->friendlyLine(sprintf('Now executing %s', $command));
             $this->call($command, $args);
         }
         // set new DB version.

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use DB;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
 /**
@@ -31,6 +32,8 @@ use Illuminate\Console\Command;
  */
 class RenameMetaFields extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Rename changed meta fields.';
     protected $signature   = 'firefly-iii:rename-meta-fields';
 
@@ -63,10 +66,10 @@ class RenameMetaFields extends Command
             $this->rename($original, $update);
         }
         if (0 === $this->count) {
-            $this->info('Correct: all meta fields are correct.');
+            $this->friendlyPositive('All meta fields are correct.');
         }
         if (0 !== $this->count) {
-            $this->info(sprintf('Renamed %d meta field(s).', $this->count));
+            $this->friendlyInfo(sprintf('Renamed %d meta field(s).', $this->count));
         }
         return 0;
     }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use DB;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -40,6 +41,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class BackToJournals extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '480_back_to_journals';
     /**
      * The console command description.
@@ -65,20 +68,20 @@ class BackToJournals extends Command
     public function handle(): int
     {
         if (!$this->isMigrated()) {
-            $this->error('Please run firefly-iii:migrate-to-groups first.');
+            $this->friendlyError('Please run firefly-iii:migrate-to-groups first.');
         }
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
         if (true === $this->option('force')) {
-            $this->warn('Forcing the command.');
+            $this->friendlyWarning('Forcing the command.');
         }
 
 
         $this->migrateAll();
-        $this->info('Correct: updated category and budget info for all transaction journals');
+        $this->friendlyInfo('Updated category and budget info for all transaction journals');
         $this->markAsExecuted();
 
         return 0;
@@ -177,7 +180,6 @@ class BackToJournals extends Command
             $collected = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'budgets', 'transactions.budgets'])->get();
             $journals  = $journals->merge($collected);
         }
-        $this->line(sprintf('Check %d transaction journal(s) for budget info.', count($journals)));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->migrateBudgetsForJournal($journal);
@@ -193,7 +195,7 @@ class BackToJournals extends Command
         /** @var Transaction|null $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
-            $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
+            $this->friendlyInfo(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
         }
@@ -246,7 +248,7 @@ class BackToJournals extends Command
         /** @var Transaction|null $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
-            $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
+            $this->friendlyInfo(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
         }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Integrity;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
@@ -37,6 +38,8 @@ use Illuminate\Support\Facades\Log;
  */
 class CreateGroupMemberships extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '560_create_group_memberships';
     protected $description = 'Update group memberships';
     protected $signature   = 'firefly-iii:create-group-memberships';
@@ -88,7 +91,7 @@ class CreateGroupMemberships extends Command
     public function handle(): int
     {
         $this->createGroupMemberships();
-        $this->info('Correct: validated group memberships');
+        $this->friendlyPositive('Validated group memberships');
 
         return 0;
     }

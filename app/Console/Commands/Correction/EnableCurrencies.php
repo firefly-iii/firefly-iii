@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
@@ -37,6 +38,8 @@ use Illuminate\Support\Facades\Log;
  */
 class EnableCurrencies extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Enables all currencies in use.';
     protected $signature   = 'firefly-iii:enable-currencies';
 
@@ -85,10 +88,10 @@ class EnableCurrencies extends Command
         );
         $disabled = TransactionCurrency::whereIn('id', $found)->where('enabled', false)->count();
         if ($disabled > 0) {
-            $this->info(sprintf('%d were (was) still disabled. This has been corrected.', $disabled));
+            $this->friendlyInfo(sprintf('%d currencies were (was) disabled while in use by transactions. This has been corrected.', $disabled));
         }
         if (0 === $disabled) {
-            $this->info('Correct: All currencies are correctly enabled or disabled.');
+            $this->friendlyPositive('All currencies are correctly enabled or disabled.');
         }
         TransactionCurrency::whereIn('id', $found)->update(['enabled' => true]);
 

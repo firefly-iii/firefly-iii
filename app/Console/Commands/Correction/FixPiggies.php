@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
@@ -34,6 +35,8 @@ use Illuminate\Console\Command;
  */
 class FixPiggies extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Fixes common issues with piggy banks.';
     protected $signature   = 'firefly-iii:fix-piggies';
 
@@ -63,10 +66,10 @@ class FixPiggies extends Command
             }
         }
         if (0 === $count) {
-            $this->info('Correct: all piggy bank events are OK.');
+            $this->friendlyPositive('All piggy bank events are OK.');
         }
         if (0 !== $count) {
-            $this->line(sprintf('Fixed %d piggy bank event(s).', $count));
+            $this->friendlyInfo(sprintf('Fixed %d piggy bank event(s).', $count));
         }
 
         return 0;

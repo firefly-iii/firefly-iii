@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -44,6 +45,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class UpgradeLiabilitiesEight extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '600_upgrade_liabilities';
     protected $description = 'Upgrade liabilities to new 6.0.0 structure.';
     protected $signature   = 'firefly-iii:liabilities-600 {--F|force : Force the execution of this command.}';
@@ -59,7 +62,7 @@ class UpgradeLiabilitiesEight extends Command
     public function handle(): int
     {
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
@@ -257,12 +260,12 @@ class UpgradeLiabilitiesEight extends Command
         if ('credit' === $direction && $this->hasBadOpening($account)) {
             $this->deleteCreditTransaction($account);
             $this->reverseOpeningBalance($account);
-            $this->line(sprintf('Corrected opening balance for liability #%d ("%s")', $account->id, $account->name));
+            $this->friendlyInfo(sprintf('Corrected opening balance for liability #%d ("%s")', $account->id, $account->name));
         }
         if ('credit' === $direction) {
             $count = $this->deleteTransactions($account);
             if ($count > 0) {
-                $this->line(sprintf('Removed %d old format transaction(s) for liability #%d ("%s")', $count, $account->id, $account->name));
+                $this->friendlyInfo(sprintf('Removed %d old format transaction(s) for liability #%d ("%s")', $count, $account->id, $account->name));
             }
         }
     }

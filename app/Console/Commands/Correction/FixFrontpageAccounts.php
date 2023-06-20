@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -36,6 +37,8 @@ use Illuminate\Console\Command;
  */
 class FixFrontpageAccounts extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Fixes a preference that may include deleted accounts or accounts of another type.';
     protected $signature   = 'firefly-iii:fix-frontpage-accounts';
 
@@ -54,7 +57,7 @@ class FixFrontpageAccounts extends Command
                 $this->fixPreference($preference);
             }
         }
-        $this->info('Correct: account preferences are OK');
+        $this->friendlyPositive('Account preferences are OK');
 
         return 0;
     }

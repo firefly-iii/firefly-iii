@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
@@ -35,6 +36,8 @@ use Storage;
  */
 class VerifySecurityAlerts extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -80,23 +83,23 @@ class VerifySecurityAlerts extends Command
                 // depends on level
                 if ('info' === $array['level']) {
                     Log::debug('INFO level alert');
-                    $this->info($array['message']);
+                    $this->friendlyInfo($array['message']);
 
                     return 0;
                 }
                 if ('warning' === $array['level']) {
                     Log::debug('WARNING level alert');
-                    $this->warn('------------------------ :o');
-                    $this->warn($array['message']);
-                    $this->warn('------------------------ :o');
+                    $this->friendlyWarning('------------------------ :o');
+                    $this->friendlyWarning($array['message']);
+                    $this->friendlyWarning('------------------------ :o');
 
                     return 0;
                 }
                 if ('danger' === $array['level']) {
                     Log::debug('DANGER level alert');
-                    $this->error('------------------------ :-(');
-                    $this->error($array['message']);
-                    $this->error('------------------------ :-(');
+                    $this->friendlyError('------------------------ :-(');
+                    $this->friendlyError($array['message']);
+                    $this->friendlyError('------------------------ :-(');
 
                     return 0;
                 }
@@ -104,8 +107,8 @@ class VerifySecurityAlerts extends Command
                 return 0;
             }
         }
-        Log::debug('This version is not mentioned.');
-
+        Log::debug(sprintf('No security alerts for version %s', $version));
+        $this->friendlyPositive(sprintf('No security alerts for version %s', $version));
         return 0;
     }
 

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use DB;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
 /**
@@ -32,6 +33,8 @@ use Illuminate\Console\Command;
  */
 class FixPostgresSequences extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -55,7 +58,7 @@ class FixPostgresSequences extends Command
         if (DB::connection()->getName() !== 'pgsql') {
             return 0;
         }
-        $this->line('Going to verify PostgreSQL table sequences.');
+        $this->friendlyLine('Going to verify PostgreSQL table sequences.');
         $tablesToCheck = [
             '2fa_tokens',
             'account_meta',
@@ -116,12 +119,13 @@ class FixPostgresSequences extends Command
         ];
 
         foreach ($tablesToCheck as $tableToCheck) {
-            $this->info(sprintf('Checking the next id sequence for table "%s".', $tableToCheck));
+            $this->friendlyLine(sprintf('Checking the next id sequence for table "%s".', $tableToCheck));
 
             $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
             $nextId    = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
             if (null === $nextId) {
-                $this->line(sprintf('nextval is NULL for table "%s", go to next table.', $tableToCheck));
+                $this->friendlyInfo();
+                e(sprintf('nextval is NULL for table "%s", go to next table.', $tableToCheck));
                 continue;
             }
 
@@ -130,14 +134,14 @@ class FixPostgresSequences extends Command
                 $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
                 $nextId    = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
                 if ($nextId->nextval > $highestId->max) {
-                    $this->info(sprintf('Table "%s" autoincrement corrected.', $tableToCheck));
+                    $this->friendlyInfo(sprintf('Table "%s" autoincrement corrected.', $tableToCheck));
                 }
                 if ($nextId->nextval <= $highestId->max) {
-                    $this->warn(sprintf('Arff! The nextval sequence is still all screwed up on table "%s".', $tableToCheck));
+                    $this->friendlyWarning(sprintf('Arff! The nextval sequence is still all screwed up on table "%s".', $tableToCheck));
                 }
             }
             if ($nextId->nextval >= $highestId->max) {
-                $this->info(sprintf('Table "%s" autoincrement is correct.', $tableToCheck));
+                $this->friendlyPositive(sprintf('Table "%s" autoincrement is correct.', $tableToCheck));
             }
         }
 

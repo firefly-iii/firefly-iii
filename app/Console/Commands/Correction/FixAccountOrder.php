@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
@@ -32,6 +33,8 @@ use Illuminate\Console\Command;
  */
 class FixAccountOrder extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Make sure account order is correct.';
     protected $signature   = 'firefly-iii:fix-account-order';
 
@@ -52,7 +55,7 @@ class FixAccountOrder extends Command
             $this->repository->resetAccountOrder();
         }
 
-        $this->info('Correct: All accounts are ordered correctly');
+        $this->friendlyPositive('All accounts are ordered correctly');
 
         return 0;
     }

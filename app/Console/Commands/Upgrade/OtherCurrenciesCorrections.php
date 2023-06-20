@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -43,6 +44,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class OtherCurrenciesCorrections extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '480_other_currencies';
     protected $description = 'Update all journal currency information.';
     protected $signature   = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
@@ -66,7 +69,7 @@ class OtherCurrenciesCorrections extends Command
         $this->stupidLaravel();
 
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
@@ -75,7 +78,7 @@ class OtherCurrenciesCorrections extends Command
         $this->updateOtherJournalsCurrencies();
         $this->markAsExecuted();
 
-        $this->info('Correct: verified and fixed transaction currencies.');
+        $this->friendlyPositive('Verified and fixed transaction currencies.');
 
         return 0;
     }
@@ -202,7 +205,7 @@ class OtherCurrenciesCorrections extends Command
         $leadTransaction = $this->getLeadTransaction($journal);
 
         if (null === $leadTransaction) {
-            $this->error(sprintf('Could not reliably determine which transaction is in the lead for transaction journal #%d.', $journal->id));
+            $this->friendlyError(sprintf('Could not reliably determine which transaction is in the lead for transaction journal #%d.', $journal->id));
 
             return;
         }
@@ -210,7 +213,7 @@ class OtherCurrenciesCorrections extends Command
         $account  = $leadTransaction->account;
         $currency = $this->getCurrency($account);
         if (null === $currency) {
-            $this->error(
+            $this->friendlyError(
                 sprintf(
                     'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
                     $account->id,
