@@ -124,8 +124,7 @@ class FixPostgresSequences extends Command
             $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
             $nextId    = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
             if (null === $nextId) {
-                $this->friendlyInfo();
-                e(sprintf('nextval is NULL for table "%s", go to next table.', $tableToCheck));
+                $this->friendlyInfo(sprintf('nextval is NULL for table "%s", go to next table.', $tableToCheck));
                 continue;
             }
 
