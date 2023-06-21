@@ -21,7 +21,8 @@
                 </h3>
             </div>
             <div class="box-body">
-                <p><em>{{ array.description }}</em></p>
+                <h4>{{ 'transaction_journal_meta'|_ }}</h4>
+                <p>{{ 'description'|_ }}: <em>{{ array.description }}</em></p>
 
                 {% if array.active == false %}
                     <p>
@@ -34,6 +35,8 @@
                         <li>{{ rep.description }}</li>
                     {% endfor %}
                 </ul>
+                <h4>{{ 'attachments'|_ }}</h4>
+                {% include 'list.attachments' with {attachments: array.attachments} %}
             </div>
             <div class="box-footer">
                 <div class="btn-group">

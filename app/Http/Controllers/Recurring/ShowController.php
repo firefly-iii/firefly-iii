@@ -26,9 +26,12 @@ namespace FireflyIII\Http\Controllers\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
@@ -71,13 +74,14 @@ class ShowController extends Controller
     /**
      * Show a single recurring transaction.
      *
-     * @param  Recurrence  $recurrence
+     * @param Recurrence $recurrence
      *
      * @return Factory|View
      * @throws FireflyException
      */
     public function show(Recurrence $recurrence)
     {
+        $repos = app(AttachmentRepositoryInterface::class);
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
@@ -93,10 +97,23 @@ class ShowController extends Controller
                 $date                                               = (new Carbon($occurrence))->startOfDay();
                 $set                                                = [
                     'date'  => $date,
-                    'fired' => $this->recurring->createdPreviously($recurrence, $date) || $this->recurring->getJournalCount($recurrence, $date) > 0,
+                    'fired' => $this->recurring->createdPreviously($recurrence, $date)
+                               || $this->recurring->getJournalCount($recurrence, $date) > 0,
                 ];
                 $array['repetitions'][$index]['occurrences'][$item] = $set;
             }
+        }
+
+        // add attachments to the recurrence object.
+        $attachments           = $recurrence->attachments()->get();
+        $array['attachments']  = [];
+        $attachmentTransformer = app(AttachmentTransformer::class);
+        /** @var Attachment $attachment */
+        foreach ($attachments as $attachment) {
+            $item                   = $attachmentTransformer->transform($attachment);
+            $item['file_exists']    = $repos->exists($attachment); // TODO this should be part of the transformer
+            $array['attachments'][] = $item;
+
         }
 
         $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
