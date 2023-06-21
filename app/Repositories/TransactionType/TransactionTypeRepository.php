@@ -33,20 +33,8 @@ use Illuminate\Support\Facades\Log;
 class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
     /**
-     * @param  string  $type
-     *
-     * @return TransactionType|null
-     */
-    public function findByType(string $type): ?TransactionType
-    {
-        $search = ucfirst($type);
-
-        return TransactionType::whereType($search)->first();
-    }
-
-    /**
-     * @param  TransactionType|null  $type
-     * @param  string|null  $typeString
+     * @param TransactionType|null $type
+     * @param string|null          $typeString
      *
      * @return TransactionType
      */
@@ -69,8 +57,20 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
     }
 
     /**
-     * @param  string  $query
-     * @param  int  $limit
+     * @param string $type
+     *
+     * @return TransactionType|null
+     */
+    public function findByType(string $type): ?TransactionType
+    {
+        $search = ucfirst($type);
+
+        return TransactionType::whereType($search)->first();
+    }
+
+    /**
+     * @param string $query
+     * @param int    $limit
      *
      * @return Collection
      */

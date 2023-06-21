@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update a bill.
      *
-     * @param  UpdateRequest  $request
-     * @param  Bill  $bill
+     * @param UpdateRequest $request
+     * @param Bill          $bill
      *
      * @return JsonResponse
      */

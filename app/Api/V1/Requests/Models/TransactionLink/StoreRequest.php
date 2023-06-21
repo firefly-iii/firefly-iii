@@ -74,7 +74,7 @@ class StoreRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param  Validator  $validator
+     * @param Validator $validator
      *
      * @return void
      */
@@ -88,7 +88,7 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     private function validateExistingLink(Validator $validator): void
     {

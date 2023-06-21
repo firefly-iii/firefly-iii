@@ -37,7 +37,7 @@ class IsValidBulkClause implements Rule
     private array  $rules;
 
     /**
-     * @param  string  $type
+     * @param string $type
      */
     public function __construct(string $type)
     {
@@ -54,8 +54,8 @@ class IsValidBulkClause implements Rule
     }
 
     /**
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      */
@@ -72,7 +72,7 @@ class IsValidBulkClause implements Rule
     /**
      * Does basic rule based validation.
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return bool
      */
@@ -94,7 +94,7 @@ class IsValidBulkClause implements Rule
             }
             /**
              * @var string $arrayKey
-             * @var mixed $arrayValue
+             * @var mixed  $arrayValue
              */
             foreach ($array[$clause] as $arrayKey => $arrayValue) {
                 if (!array_key_exists($arrayKey, $this->rules[$clause])) {

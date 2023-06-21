@@ -47,7 +47,7 @@ class ObjectGroupTransformer extends AbstractTransformer
     /**
      * Transform the account.
      *
-     * @param  ObjectGroup  $objectGroup
+     * @param ObjectGroup $objectGroup
      *
      * @return array
      */
@@ -64,7 +64,7 @@ class ObjectGroupTransformer extends AbstractTransformer
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/object_groups/'.$objectGroup->id,
+                    'uri' => '/object_groups/' . $objectGroup->id,
                 ],
             ],
         ];

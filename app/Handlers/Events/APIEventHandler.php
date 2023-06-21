@@ -39,7 +39,7 @@ class APIEventHandler
     /**
      * Respond to the creation of an access token.
      *
-     * @param  AccessTokenCreated  $event
+     * @param AccessTokenCreated $event
      *
      * @throws FireflyException
      */

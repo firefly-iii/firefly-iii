@@ -34,8 +34,46 @@ use Illuminate\Support\Facades\Log;
 trait ConvertsDataTypes
 {
     /**
-     * @param  string|null  $string
-     * @param  bool  $keepNewlines
+     * Return integer value.
+     *
+     * @param string $field
+     *
+     * @return int
+     */
+    public function convertInteger(string $field): int
+    {
+        return (int)$this->get($field);
+    }
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param string     $key
+     * @param mixed|null $default
+     * @return mixed
+     */
+    abstract public function get(string $key, mixed $default = null): mixed;
+
+    /**
+     * Return string value.
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    public function convertString(string $field): string
+    {
+        $entry = $this->get($field);
+        if (!is_scalar($entry)) {
+            return '';
+        }
+        return $this->clearString((string)$entry, false);
+    }
+
+    /**
+     * @param string|null $string
+     * @param bool        $keepNewlines
      *
      * @return string|null
      */
@@ -115,56 +153,9 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Return integer value.
-     *
-     * @param  string  $field
-     *
-     * @return int
-     */
-    public function convertInteger(string $field): int
-    {
-        return (int)$this->get($field);
-    }
-
-    /**
-     * Return string value.
-     *
-     * @param  string  $field
-     *
-     * @return string
-     */
-    public function convertString(string $field): string
-    {
-        $entry = $this->get($field);
-        if (!is_scalar($entry)) {
-            return '';
-        }
-        return $this->clearString((string)$entry, false);
-    }
-
-    /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param  string  $key
-     * @param  mixed|null  $default
-     * @return mixed
-     */
-    abstract public function get(string $key, mixed $default = null): mixed;
-
-    /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param  mixed  $key
-     * @return mixed
-     */
-    abstract public function has($key);
-
-    /**
      * Return string value with newlines.
      *
-     * @param  string  $field
+     * @param string $field
      *
      * @return string
      */
@@ -174,7 +165,7 @@ trait ConvertsDataTypes
     }
 
     /**
-     * @param  mixed  $array
+     * @param mixed $array
      *
      * @return array|null
      */
@@ -194,7 +185,7 @@ trait ConvertsDataTypes
     }
 
     /**
-     * @param  string|null  $value
+     * @param string|null $value
      *
      * @return bool
      */
@@ -260,7 +251,7 @@ trait ConvertsDataTypes
     /**
      * Return floating value.
      *
-     * @param  string  $field
+     * @param string $field
      *
      * @return float|null
      */
@@ -275,7 +266,7 @@ trait ConvertsDataTypes
     }
 
     /**
-     * @param  string|null  $string
+     * @param string|null $string
      *
      * @return Carbon|null
      */
@@ -307,7 +298,7 @@ trait ConvertsDataTypes
      * Returns all data in the request, or omits the field if not set,
      * according to the config from the request. This is the way.
      *
-     * @param  array  $fields
+     * @param array $fields
      *
      * @return array
      */
@@ -325,9 +316,18 @@ trait ConvertsDataTypes
     }
 
     /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param mixed $key
+     * @return mixed
+     */
+    abstract public function has($key);
+
+    /**
      * Return date or NULL.
      *
-     * @param  string  $field
+     * @param string $field
      *
      * @return Carbon|null
      */
@@ -349,7 +349,7 @@ trait ConvertsDataTypes
     /**
      * Parse to integer
      *
-     * @param  string|null  $string
+     * @param string|null $string
      *
      * @return int|null
      */
@@ -368,7 +368,7 @@ trait ConvertsDataTypes
     /**
      * Return integer value, or NULL when it's not set.
      *
-     * @param  string  $field
+     * @param string $field
      *
      * @return int|null
      */

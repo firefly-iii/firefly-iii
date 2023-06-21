@@ -40,8 +40,8 @@ class InterestingMessage
     /**
      * Flashes the user an interesting message if the URL parameters warrant it.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
+     * @param Request $request
+     * @param Closure $next
      *
      * @return mixed
      *
@@ -73,35 +73,16 @@ class InterestingMessage
     }
 
     /**
-     * @param  Request  $request
-     *
      * @return bool
      */
-    private function accountMessage(Request $request): bool
+    private function testing(): bool
     {
-        // get parameters from request.
-        $accountId = $request->get('account_id');
-        $message   = $request->get('message');
-
-        return null !== $accountId && null !== $message;
+        // ignore middleware in test environment.
+        return 'testing' === config('app.env') || !auth()->check();
     }
 
     /**
-     * @param  Request  $request
-     *
-     * @return bool
-     */
-    private function billMessage(Request $request): bool
-    {
-        // get parameters from request.
-        $billId  = $request->get('bill_id');
-        $message = $request->get('message');
-
-        return null !== $billId && null !== $message;
-    }
-
-    /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return bool
      */
@@ -115,56 +96,7 @@ class InterestingMessage
     }
 
     /**
-     * @param  Request  $request
-     */
-    private function handleAccountMessage(Request $request): void
-    {
-        // get parameters from request.
-        $accountId = $request->get('account_id');
-        $message   = $request->get('message');
-
-        /** @var Account $account */
-        $account = auth()->user()->accounts()->withTrashed()->find($accountId);
-
-        if (null === $account) {
-            return;
-        }
-        if ('deleted' === $message) {
-            session()->flash('success', (string)trans('firefly.account_deleted', ['name' => $account->name]));
-        }
-        if ('created' === $message) {
-            session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
-        }
-        if ('updated' === $message) {
-            session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
-        }
-    }
-
-    /**
-     * @param  Request  $request
-     */
-    private function handleBillMessage(Request $request): void
-    {
-        // get parameters from request.
-        $billId  = $request->get('bill_id');
-        $message = $request->get('message');
-
-        /** @var Bill $bill */
-        $bill = auth()->user()->bills()->withTrashed()->find($billId);
-
-        if (null === $bill) {
-            return;
-        }
-        if ('deleted' === $message) {
-            session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $bill->name]));
-        }
-        if ('created' === $message) {
-            session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
-        }
-    }
-
-    /**
-     * @param  Request  $request
+     * @param Request $request
      */
     private function handleGroupMessage(Request $request): void
     {
@@ -205,7 +137,98 @@ class InterestingMessage
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function accountMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $accountId = $request->get('account_id');
+        $message   = $request->get('message');
+
+        return null !== $accountId && null !== $message;
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function handleAccountMessage(Request $request): void
+    {
+        // get parameters from request.
+        $accountId = $request->get('account_id');
+        $message   = $request->get('message');
+
+        /** @var Account $account */
+        $account = auth()->user()->accounts()->withTrashed()->find($accountId);
+
+        if (null === $account) {
+            return;
+        }
+        if ('deleted' === $message) {
+            session()->flash('success', (string)trans('firefly.account_deleted', ['name' => $account->name]));
+        }
+        if ('created' === $message) {
+            session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
+        }
+        if ('updated' === $message) {
+            session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
+        }
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function billMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $billId  = $request->get('bill_id');
+        $message = $request->get('message');
+
+        return null !== $billId && null !== $message;
+    }
+
+    /**
+     * @param Request $request
+     */
+    private function handleBillMessage(Request $request): void
+    {
+        // get parameters from request.
+        $billId  = $request->get('bill_id');
+        $message = $request->get('message');
+
+        /** @var Bill $bill */
+        $bill = auth()->user()->bills()->withTrashed()->find($billId);
+
+        if (null === $bill) {
+            return;
+        }
+        if ('deleted' === $message) {
+            session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $bill->name]));
+        }
+        if ('created' === $message) {
+            session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
+        }
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function webhookMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $billId  = $request->get('webhook_id');
+        $message = $request->get('message');
+
+        return null !== $billId && null !== $message;
+    }
+
+    /**
+     * @param Request $request
      */
     private function handleWebhookMessage(Request $request): void
     {
@@ -228,28 +251,5 @@ class InterestingMessage
         if ('created' === $message) {
             session()->flash('success', (string)trans('firefly.stored_new_webhook', ['title' => $webhook->title]));
         }
-    }
-
-    /**
-     * @return bool
-     */
-    private function testing(): bool
-    {
-        // ignore middleware in test environment.
-        return 'testing' === config('app.env') || !auth()->check();
-    }
-
-    /**
-     * @param  Request  $request
-     *
-     * @return bool
-     */
-    private function webhookMessage(Request $request): bool
-    {
-        // get parameters from request.
-        $billId  = $request->get('webhook_id');
-        $message = $request->get('message');
-
-        return null !== $billId && null !== $message;
     }
 }

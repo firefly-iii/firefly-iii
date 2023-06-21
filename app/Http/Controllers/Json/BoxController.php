@@ -127,7 +127,7 @@ class BoxController extends Controller
     /**
      * Current total balance.
      *
-     * @param  CurrencyRepositoryInterface  $repository
+     * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
      */

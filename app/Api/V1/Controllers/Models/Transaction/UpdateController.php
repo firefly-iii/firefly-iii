@@ -70,8 +70,8 @@ class UpdateController extends Controller
      *
      * Update a transaction.
      *
-     * @param  UpdateRequest  $request
-     * @param  TransactionGroup  $transactionGroup
+     * @param UpdateRequest    $request
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      */

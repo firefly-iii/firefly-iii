@@ -42,8 +42,8 @@ class TransactionController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/search/searchTransactions
      *
-     * @param  Request  $request
-     * @param  SearchInterface  $searcher
+     * @param Request         $request
+     * @param SearchInterface $searcher
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -60,7 +60,7 @@ class TransactionController extends Controller
         $searcher->setLimit($pageSize);
         $groups     = $searcher->searchTransactions();
         $parameters = ['search' => $fullQuery];
-        $url        = route('api.v1.search.transactions').'?'.http_build_query($parameters);
+        $url        = route('api.v1.search.transactions') . '?' . http_build_query($parameters);
         $groups->setPath($url);
         $transactions = $groups->getCollection();
 

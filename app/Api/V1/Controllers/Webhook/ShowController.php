@@ -80,7 +80,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.webhooks.index') . $this->buildParams());
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
@@ -98,7 +98,7 @@ class ShowController extends Controller
      *
      * Show single instance.
      *
-     * @param  Webhook  $webhook
+     * @param Webhook $webhook
      *
      * @return JsonResponse
      */
@@ -120,8 +120,8 @@ class ShowController extends Controller
      *
      * This method recycles part of the code of the StoredGroupEventHandler.
      *
-     * @param  Webhook  $webhook
-     * @param  TransactionGroup  $group
+     * @param Webhook          $webhook
+     * @param TransactionGroup $group
      *
      * @return JsonResponse
      */

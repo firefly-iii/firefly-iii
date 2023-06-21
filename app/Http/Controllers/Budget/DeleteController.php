@@ -64,7 +64,7 @@ class DeleteController extends Controller
     /**
      * Deletes a budget.
      *
-     * @param  Budget  $budget
+     * @param Budget $budget
      *
      * @return Factory|View
      */
@@ -81,8 +81,8 @@ class DeleteController extends Controller
     /**
      * Destroys a budget.
      *
-     * @param  Request  $request
-     * @param  Budget  $budget
+     * @param Request $request
+     * @param Budget  $budget
      *
      * @return RedirectResponse|Redirector
      */

@@ -46,9 +46,9 @@ class RequestedNewPassword extends Event
     /**
      * Create a new event instance. This event is triggered when a users tries to reset his or her password.
      *
-     * @param  User  $user
-     * @param  string  $token
-     * @param  string  $ipAddress
+     * @param User   $user
+     * @param string $token
+     * @param string $ipAddress
      */
     public function __construct(User $user, string $token, string $ipAddress)
     {

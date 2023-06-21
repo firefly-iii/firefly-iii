@@ -42,7 +42,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     /**
      * Returns transaction by ID. Used to validate attachments.
      *
-     * @param  int  $transactionId
+     * @param int $transactionId
      *
      * @return Transaction|null
      */
@@ -59,7 +59,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
      *
      * Return all attachments for journal.
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return Collection
      */
@@ -94,7 +94,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     /**
      * Get all piggy bank events for a journal.
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return Collection
      */
@@ -111,9 +111,9 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void
+    public function setUser(User | Authenticatable | null $user): void
     {
         if (null !== $user) {
             $this->user = $user;

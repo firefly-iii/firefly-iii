@@ -126,7 +126,7 @@ class VerifySecurityAlerts extends Command
     }
 
     /**
-     * @param  array  $array
+     * @param array $array
      *
      * @return void
      */

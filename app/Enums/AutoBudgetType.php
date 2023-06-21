@@ -29,7 +29,7 @@ namespace FireflyIII\Enums;
  */
 enum AutoBudgetType: int
 {
-    case AUTO_BUDGET_RESET = 1;
+    case AUTO_BUDGET_RESET    = 1;
     case AUTO_BUDGET_ROLLOVER = 2;
     case AUTO_BUDGET_ADJUSTED = 3;
 }

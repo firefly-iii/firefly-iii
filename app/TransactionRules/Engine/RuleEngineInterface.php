@@ -34,7 +34,7 @@ interface RuleEngineInterface
     /**
      * Add operators added to each search by the rule engine.
      *
-     * @param  array  $operator
+     * @param array $operator
      */
     public function addOperator(array $operator): void;
 
@@ -56,7 +56,7 @@ interface RuleEngineInterface
     public function getResults(): int;
 
     /**
-     * @param  bool  $refreshTriggers
+     * @param bool $refreshTriggers
      * @return void
      */
     public function setRefreshTriggers(bool $refreshTriggers): void;
@@ -64,19 +64,19 @@ interface RuleEngineInterface
     /**
      * Add entire rule groups for the engine to execute.
      *
-     * @param  Collection  $ruleGroups
+     * @param Collection $ruleGroups
      */
     public function setRuleGroups(Collection $ruleGroups): void;
 
     /**
      * Add rules for the engine to execute.
      *
-     * @param  Collection  $rules
+     * @param Collection $rules
      */
     public function setRules(Collection $rules): void;
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void;
 }

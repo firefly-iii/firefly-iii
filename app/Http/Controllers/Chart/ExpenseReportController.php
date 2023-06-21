@@ -73,10 +73,10 @@ class ExpenseReportController extends Controller
      *
      * TODO this chart is not multi currency aware.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $expense
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $expense
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      * @throws JsonException
@@ -106,34 +106,34 @@ class ExpenseReportController extends Controller
 
         // prep chart data:
         /**
-         * @var string $name
+         * @var string     $name
          * @var Collection $combination
          */
         foreach ($combined as $name => $combination) {
             // first is always expense account:
             /** @var Account $exp */
-            $exp                        = $combination->first();
-            $chartData[$exp->id.'-in']  = [
+            $exp                          = $combination->first();
+            $chartData[$exp->id . '-in']  = [
                 'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.income')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
-            $chartData[$exp->id.'-out'] = [
+            $chartData[$exp->id . '-out'] = [
                 'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.expenses')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             // total in, total out:
-            $chartData[$exp->id.'-total-in']  = [
+            $chartData[$exp->id . '-total-in']  = [
                 'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.sum_of_income')),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
-            $chartData[$exp->id.'-total-out'] = [
+            $chartData[$exp->id . '-total-out'] = [
                 'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.sum_of_expenses')),
                 'type'    => 'line',
                 'fill'    => false,
@@ -158,10 +158,10 @@ class ExpenseReportController extends Controller
                 // first is always expense account:
                 /** @var Account $exp */
                 $exp            = $combination->first();
-                $labelIn        = $exp->id.'-in';
-                $labelOut       = $exp->id.'-out';
-                $labelSumIn     = $exp->id.'-total-in';
-                $labelSumOut    = $exp->id.'-total-out';
+                $labelIn        = $exp->id . '-in';
+                $labelOut       = $exp->id . '-out';
+                $labelSumIn     = $exp->id . '-total-in';
+                $labelSumOut    = $exp->id . '-total-out';
                 $currentIncome  = bcmul($income[$name] ?? '0', '-1');
                 $currentExpense = $expenses[$name] ?? '0';
 

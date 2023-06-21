@@ -57,7 +57,7 @@ class EditController extends Controller
     }
 
     /**
-     * @param  TransactionGroup  $transactionGroup
+     * @param TransactionGroup $transactionGroup
      *
      * @return Factory|View|RedirectResponse|Redirector
      */

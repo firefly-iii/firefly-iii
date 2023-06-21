@@ -77,10 +77,10 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param  Request  $request
-     * @param  Account  $account
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Request     $request
+     * @param Account     $account
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return RedirectResponse|Redirector|Factory|View
      * @throws FireflyException
@@ -162,8 +162,8 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param  Request  $request
-     * @param  Account  $account
+     * @param Request $request
+     * @param Account $account
      *
      * @return RedirectResponse|Redirector|Factory|View
      * @throws FireflyException
@@ -183,7 +183,7 @@ class ShowController extends Controller
         $end          = today(config('app.timezone'));
         $today        = today(config('app.timezone'));
         $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();

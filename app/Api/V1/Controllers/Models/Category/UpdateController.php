@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update the category.
      *
-     * @param  UpdateRequest  $request
-     * @param  Category  $category
+     * @param UpdateRequest $request
+     * @param Category      $category
      *
      * @return JsonResponse
      */

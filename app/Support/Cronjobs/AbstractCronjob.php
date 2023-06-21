@@ -59,7 +59,7 @@ abstract class AbstractCronjob
     abstract public function fire(): void;
 
     /**
-     * @param  Carbon  $date
+     * @param Carbon $date
      */
     final public function setDate(Carbon $date): void
     {
@@ -68,7 +68,7 @@ abstract class AbstractCronjob
     }
 
     /**
-     * @param  bool  $force
+     * @param bool $force
      */
     final public function setForce(bool $force): void
     {

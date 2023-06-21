@@ -42,7 +42,7 @@ class VersionCheckEventHandler
     /**
      * Checks with GitHub to see if there is a new version.
      *
-     * @param  RequestedVersionCheckStatus  $event
+     * @param RequestedVersionCheckStatus $event
      *
      * @throws FireflyException
      * @throws ContainerExceptionInterface
@@ -91,7 +91,7 @@ class VersionCheckEventHandler
     }
 
     /**
-     * @param  RequestedVersionCheckStatus  $event
+     * @param RequestedVersionCheckStatus $event
      *
      * @throws FireflyException
      * @throws ContainerExceptionInterface

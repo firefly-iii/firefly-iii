@@ -31,8 +31,8 @@ use Illuminate\Routing\Route;
 interface BinderInterface
 {
     /**
-     * @param  string  $value
-     * @param  Route  $route
+     * @param string $value
+     * @param Route  $route
      *
      * @return mixed
      */

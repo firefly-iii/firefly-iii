@@ -69,7 +69,7 @@ class TagFormRequest extends FormRequest
         $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag';
         if (null !== $tag) {
             $idRule  = 'belongsToUser:tags';
-            $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag,'.$tag->id;
+            $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag,' . $tag->id;
         }
 
         $rules = [

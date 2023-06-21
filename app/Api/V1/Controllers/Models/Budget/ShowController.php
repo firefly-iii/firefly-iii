@@ -86,7 +86,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.index') . $this->buildParams());
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
@@ -101,7 +101,7 @@ class ShowController extends Controller
     /**
      * Show a budget.
      *
-     * @param  Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
      */

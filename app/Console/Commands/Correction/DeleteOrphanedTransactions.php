@@ -65,38 +65,6 @@ class DeleteOrphanedTransactions extends Command
         return 0;
     }
 
-    /**
-     *
-     */
-    private function deleteFromOrphanedAccounts(): void
-    {
-        $set
-               = Transaction::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-                            ->whereNotNull('accounts.deleted_at')
-                            ->get(['transactions.*']);
-        $count = 0;
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            // delete journals
-            $journal = TransactionJournal::find((int)$transaction->transaction_journal_id);
-            if ($journal) {
-                $journal->delete();
-            }
-            Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
-            $this->friendlyWarning(
-                sprintf(
-                    'Deleted transaction journal #%d because account #%d was already deleted.',
-                    $transaction->transaction_journal_id,
-                    $transaction->account_id
-                )
-            );
-            $count++;
-        }
-        if (0 === $count) {
-            $this->friendlyPositive('No orphaned accounts.');
-        }
-    }
-
     private function deleteOrphanedJournals(): void
     {
         $set   = TransactionJournal::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
@@ -157,6 +125,38 @@ class DeleteOrphanedTransactions extends Command
         }
         if (0 === $count) {
             $this->friendlyPositive('No orphaned transactions.');
+        }
+    }
+
+    /**
+     *
+     */
+    private function deleteFromOrphanedAccounts(): void
+    {
+        $set
+               = Transaction::leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+                            ->whereNotNull('accounts.deleted_at')
+                            ->get(['transactions.*']);
+        $count = 0;
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            // delete journals
+            $journal = TransactionJournal::find((int)$transaction->transaction_journal_id);
+            if ($journal) {
+                $journal->delete();
+            }
+            Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
+            $this->friendlyWarning(
+                sprintf(
+                    'Deleted transaction journal #%d because account #%d was already deleted.',
+                    $transaction->transaction_journal_id,
+                    $transaction->account_id
+                )
+            );
+            $count++;
+        }
+        if (0 === $count) {
+            $this->friendlyPositive('No orphaned accounts.');
         }
     }
 }

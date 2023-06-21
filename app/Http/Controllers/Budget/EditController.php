@@ -67,8 +67,8 @@ class EditController extends Controller
     /**
      * Budget edit form.
      *
-     * @param  Request  $request
-     * @param  Budget  $budget
+     * @param Request $request
+     * @param Budget  $budget
      *
      * @return Factory|View
      */
@@ -118,8 +118,8 @@ class EditController extends Controller
     /**
      * Budget update routine.
      *
-     * @param  BudgetFormUpdateRequest  $request
-     * @param  Budget  $budget
+     * @param BudgetFormUpdateRequest $request
+     * @param Budget                  $budget
      *
      * @return RedirectResponse
      */

@@ -35,18 +35,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class InvitedUser
  *
- * @property-read User $user
+ * @property-read User   $user
  * @method static Builder|InvitedUser newModelQuery()
  * @method static Builder|InvitedUser newQuery()
  * @method static Builder|InvitedUser query()
- * @property int $id
+ * @property int         $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property int $user_id
- * @property string $email
- * @property string $invite_code
- * @property Carbon $expires
- * @property bool $redeemed
+ * @property int         $user_id
+ * @property string      $email
+ * @property string      $invite_code
+ * @property Carbon      $expires
+ * @property bool        $redeemed
  * @method static Builder|InvitedUser whereCreatedAt($value)
  * @method static Builder|InvitedUser whereEmail($value)
  * @method static Builder|InvitedUser whereExpires($value)
@@ -69,7 +69,7 @@ class InvitedUser extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return WebhookAttempt
      * @throws NotFoundHttpException

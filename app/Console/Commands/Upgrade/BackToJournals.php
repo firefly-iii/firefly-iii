@@ -32,7 +32,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -88,54 +87,6 @@ class BackToJournals extends Command
     }
 
     /**
-     * @return array
-     */
-    private function getIdsForBudgets(): array
-    {
-        $transactions = DB::table('budget_transaction')->distinct()->pluck('transaction_id')->toArray();
-        $array        = [];
-        $chunks       = array_chunk($transactions, 500);
-
-        foreach ($chunks as $chunk) {
-            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->pluck('transaction_journal_id')->toArray();
-            $array = array_merge($array, $set);
-        }
-
-        return $array;
-    }
-
-    /**
-     * @return array
-     */
-    private function getIdsForCategories(): array
-    {
-        $transactions = DB::table('category_transaction')->distinct()->pluck('transaction_id')->toArray();
-        $array        = [];
-        $chunks       = array_chunk($transactions, 500);
-
-        foreach ($chunks as $chunk) {
-            $set   = DB::table('transactions')
-                       ->whereIn('transactions.id', $chunk)
-                       ->pluck('transaction_journal_id')->toArray();
-            $array = array_merge($array, $set);
-        }
-
-        return $array;
-    }
-
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-
-        return (bool)$configVar->data;
-    }
-
-    /**
      * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -148,11 +99,15 @@ class BackToJournals extends Command
     }
 
     /**
-     *
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function markAsExecuted(): void
+    private function isExecuted(): bool
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+
+        return (bool)$configVar->data;
     }
 
     /**
@@ -187,7 +142,24 @@ class BackToJournals extends Command
     }
 
     /**
-     * @param  TransactionJournal  $journal
+     * @return array
+     */
+    private function getIdsForBudgets(): array
+    {
+        $transactions = DB::table('budget_transaction')->distinct()->pluck('transaction_id')->toArray();
+        $array        = [];
+        $chunks       = array_chunk($transactions, 500);
+
+        foreach ($chunks as $chunk) {
+            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->pluck('transaction_journal_id')->toArray();
+            $array = array_merge($array, $set);
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param TransactionJournal $journal
      */
     private function migrateBudgetsForJournal(TransactionJournal $journal): void
     {
@@ -240,7 +212,26 @@ class BackToJournals extends Command
     }
 
     /**
-     * @param  TransactionJournal  $journal
+     * @return array
+     */
+    private function getIdsForCategories(): array
+    {
+        $transactions = DB::table('category_transaction')->distinct()->pluck('transaction_id')->toArray();
+        $array        = [];
+        $chunks       = array_chunk($transactions, 500);
+
+        foreach ($chunks as $chunk) {
+            $set   = DB::table('transactions')
+                       ->whereIn('transactions.id', $chunk)
+                       ->pluck('transaction_journal_id')->toArray();
+            $array = array_merge($array, $set);
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param TransactionJournal $journal
      */
     private function migrateCategoriesForJournal(TransactionJournal $journal): void
     {
@@ -267,5 +258,13 @@ class BackToJournals extends Command
         if (null !== $category && null === $journalCategory) {
             $journal->categories()->sync([(int)$category->id]);
         }
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

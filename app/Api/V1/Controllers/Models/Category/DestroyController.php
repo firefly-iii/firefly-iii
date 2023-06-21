@@ -59,7 +59,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return JsonResponse
      */

@@ -63,7 +63,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listAttachmentByPiggyBank
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -79,7 +79,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy-banks.attachments', [$piggyBank->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.piggy-banks.attachments', [$piggyBank->id]) . $this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -97,7 +97,7 @@ class ListController extends Controller
      *
      * List single resource.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -114,7 +114,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy-banks.events', [$piggyBank->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.piggy-banks.events', [$piggyBank->id]) . $this->buildParams());
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);

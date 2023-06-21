@@ -73,7 +73,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param  TransactionGroup  $transactionGroup
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      */
@@ -113,7 +113,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param  TransactionJournal  $transactionJournal
+     * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
      */

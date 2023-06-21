@@ -63,7 +63,7 @@ class StoreController extends Controller
      *
      * Store a new instance.
      *
-     * @param  StoreRequest  $request
+     * @param StoreRequest $request
      *
      * @return JsonResponse
      */

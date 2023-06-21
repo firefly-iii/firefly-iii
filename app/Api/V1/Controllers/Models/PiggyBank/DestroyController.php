@@ -59,7 +59,7 @@ class DestroyController extends Controller
      *
      * Delete the resource.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
      */

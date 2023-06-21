@@ -46,7 +46,7 @@ class ExpandTransactionsTable extends Migration
                         $table->dropColumn('identifier');
                     }
                 );
-            } catch (QueryException|ColumnDoesNotExist $e) {
+            } catch (QueryException | ColumnDoesNotExist $e) {
                 Log::error(sprintf('Could not drop column "identifier": %s', $e->getMessage()));
                 Log::error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
             }

@@ -42,7 +42,7 @@ trait ModelInformation
     /**
      * Get actions based on a bill.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return array
      * @throws FireflyException
@@ -109,7 +109,7 @@ trait ModelInformation
     /**
      * Create fake triggers to match the bill's properties
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return array
      * @throws FireflyException
@@ -161,7 +161,7 @@ trait ModelInformation
     }
 
     /**
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return array
      * @throws FireflyException

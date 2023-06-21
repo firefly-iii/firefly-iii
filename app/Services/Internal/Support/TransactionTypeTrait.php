@@ -38,7 +38,7 @@ trait TransactionTypeTrait
      * Get the transaction type. Since this is mandatory, will throw an exception when nothing comes up. Will always
      * use TransactionType repository.
      *
-     * @param  string  $type
+     * @param string $type
      *
      * @return TransactionType
      * @throws FireflyException

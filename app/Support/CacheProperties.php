@@ -50,7 +50,7 @@ class CacheProperties
     }
 
     /**
-     * @param  mixed  $property
+     * @param mixed $property
      */
     public function addProperty($property): void
     {
@@ -87,14 +87,6 @@ class CacheProperties
     }
 
     /**
-     * @param  mixed  $data
-     */
-    public function store($data): void
-    {
-        Cache::forever($this->hash, $data);
-    }
-
-    /**
      */
     private function hash(): void
     {
@@ -108,5 +100,13 @@ class CacheProperties
             }
         }
         $this->hash = substr(hash('sha256', $content), 0, 16);
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function store($data): void
+    {
+        Cache::forever($this->hash, $data);
     }
 }

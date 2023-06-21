@@ -32,7 +32,7 @@ interface ActionInterface
      * Execute the action on an array. Returns "true" if the action was a success and the action
      * was applied. Returns false if otherwise.
      *
-     * @param  array  $journal
+     * @param array $journal
      *
      * @return bool
      */

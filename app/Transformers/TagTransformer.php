@@ -36,7 +36,7 @@ class TagTransformer extends AbstractTransformer
      *
      * TODO add spent, earned, transferred, etc.
      *
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return array
      */
@@ -67,7 +67,7 @@ class TagTransformer extends AbstractTransformer
             'links'       => [
                 [
                     'rel' => 'self',
-                    'uri' => '/tags/'.$tag->id,
+                    'uri' => '/tags/' . $tag->id,
                 ],
             ],
         ];

@@ -39,8 +39,8 @@ class DetectedNewIPAddress extends Event
     /**
      * Create a new event instance. This event is triggered when a new user registers.
      *
-     * @param  User  $user
-     * @param  string  $ipAddress
+     * @param User   $user
+     * @param string $ipAddress
      */
     public function __construct(User $user, string $ipAddress)
     {

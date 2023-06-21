@@ -45,10 +45,10 @@ class ChangedPiggyBankAmount extends Event
     /**
      * Create a new event instance.
      *
-     * @param  PiggyBank  $piggyBank
-     * @param  string  $amount
-     * @param  TransactionJournal|null  $transactionJournal
-     * @param  TransactionGroup|null  $transactionGroup
+     * @param PiggyBank               $piggyBank
+     * @param string                  $amount
+     * @param TransactionJournal|null $transactionJournal
+     * @param TransactionGroup|null   $transactionGroup
      */
     public function __construct(PiggyBank $piggyBank, string $amount, ?TransactionJournal $transactionJournal, ?TransactionGroup $transactionGroup)
     {

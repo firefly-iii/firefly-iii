@@ -61,8 +61,8 @@ class PiggyBankController extends Controller
      *
      * TODO this chart is not multi currency aware.
      *
-     * @param  PiggyBankRepositoryInterface  $repository
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBankRepositoryInterface $repository
+     * @param PiggyBank                    $piggyBank
      *
      * @return JsonResponse
      * @throws FireflyException

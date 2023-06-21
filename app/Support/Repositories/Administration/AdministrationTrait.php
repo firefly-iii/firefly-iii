@@ -47,20 +47,13 @@ trait AdministrationTrait
     }
 
     /**
-     * @param  int  $administrationId
+     * @param int $administrationId
      * @throws FireflyException
      */
     public function setAdministrationId(int $administrationId): void
     {
         $this->administrationId = $administrationId;
         $this->refreshAdministration();
-    }
-
-    public function setUser(Authenticatable|User|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
     }
 
     /**
@@ -79,5 +72,12 @@ trait AdministrationTrait
             return;
         }
         throw new FireflyException(sprintf('Cannot validate administration for user #%d', $this->user->id));
+    }
+
+    public function setUser(Authenticatable | User | null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
     }
 }

@@ -33,8 +33,8 @@ use FireflyIII\Models\TransactionCurrency;
 class CurrencyUpdateService
 {
     /**
-     * @param  TransactionCurrency  $currency
-     * @param  array  $data
+     * @param TransactionCurrency $currency
+     * @param array               $data
      *
      * @return TransactionCurrency
      */

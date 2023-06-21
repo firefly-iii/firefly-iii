@@ -32,12 +32,12 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\Configuration
  *
- * @property int $id
+ * @property int         $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property string $name
- * @property mixed $data
+ * @property string      $name
+ * @property mixed       $data
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Configuration newQuery()
  * @method static Builder|Configuration onlyTrashed()
@@ -74,7 +74,7 @@ class Configuration extends Model
      * TODO can be replaced with native laravel code.
      *
      *
-     * @param  mixed  $value
+     * @param mixed $value
      *
      * @return mixed
      */
@@ -85,7 +85,7 @@ class Configuration extends Model
 
     /**
      *
-     * @param  mixed  $value
+     * @param mixed $value
      */
     public function setDataAttribute($value): void
     {

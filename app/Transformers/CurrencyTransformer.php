@@ -33,7 +33,7 @@ class CurrencyTransformer extends AbstractTransformer
     /**
      * Transform the currency.
      *
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      *
      * @return array
      */
@@ -58,7 +58,7 @@ class CurrencyTransformer extends AbstractTransformer
             'links'          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/currencies/'.$currency->id,
+                    'uri' => '/currencies/' . $currency->id,
                 ],
             ],
         ];

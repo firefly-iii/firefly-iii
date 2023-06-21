@@ -65,8 +65,8 @@ class EditController extends Controller
     /**
      * Edit a rule group.
      *
-     * @param  Request  $request
-     * @param  RuleGroup  $ruleGroup
+     * @param Request   $request
+     * @param RuleGroup $ruleGroup
      *
      * @return Factory|View
      */
@@ -91,7 +91,7 @@ class EditController extends Controller
     /**
      * Move a rule group in either direction.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -123,8 +123,8 @@ class EditController extends Controller
     /**
      * Update the rule group.
      *
-     * @param  RuleGroupFormRequest  $request
-     * @param  RuleGroup  $ruleGroup
+     * @param RuleGroupFormRequest $request
+     * @param RuleGroup            $ruleGroup
      *
      * @return $this|RedirectResponse|Redirector
      */

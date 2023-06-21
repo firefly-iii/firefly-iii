@@ -68,10 +68,10 @@ class BudgetController extends Controller
     /**
      * Partial used in the budget report.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View
      * @throws FireflyException
@@ -95,10 +95,10 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View
      */
@@ -151,10 +151,10 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException
@@ -204,10 +204,10 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View
      */
@@ -274,9 +274,9 @@ class BudgetController extends Controller
     /**
      * Show partial overview of budgets.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException
@@ -301,9 +301,9 @@ class BudgetController extends Controller
     /**
      * Show budget overview for a period.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return mixed|string
      * @throws FireflyException
@@ -364,10 +364,10 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException

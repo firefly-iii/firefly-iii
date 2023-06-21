@@ -55,7 +55,7 @@ class ChartColour
         ];
 
     /**
-     * @param  int  $index
+     * @param int $index
      *
      * @return string
      */

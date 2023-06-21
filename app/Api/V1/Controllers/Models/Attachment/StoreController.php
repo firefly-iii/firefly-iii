@@ -71,7 +71,7 @@ class StoreController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @param  StoreRequest  $request
+     * @param StoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -96,8 +96,8 @@ class StoreController extends Controller
      * Upload an attachment.
      *
      *
-     * @param  Request  $request
-     * @param  Attachment  $attachment
+     * @param Request    $request
+     * @param Attachment $attachment
      *
      * @return JsonResponse
      */

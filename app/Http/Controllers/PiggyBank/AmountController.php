@@ -68,7 +68,7 @@ class AmountController extends Controller
     /**
      * Add money to piggy bank.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */
@@ -89,7 +89,7 @@ class AmountController extends Controller
     /**
      * Add money to piggy bank (for mobile devices).
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */
@@ -113,8 +113,8 @@ class AmountController extends Controller
     /**
      * Add money to piggy bank.
      *
-     * @param  Request  $request
-     * @param  PiggyBank  $piggyBank
+     * @param Request   $request
+     * @param PiggyBank $piggyBank
      *
      * @return RedirectResponse
      */
@@ -140,7 +140,7 @@ class AmountController extends Controller
             return redirect(route('piggy-banks.index'));
         }
 
-        Log::error('Cannot add '.$amount.' because canAddAmount returned false.');
+        Log::error('Cannot add ' . $amount . ' because canAddAmount returned false.');
         session()->flash(
             'error',
             (string)trans(
@@ -155,8 +155,8 @@ class AmountController extends Controller
     /**
      * Remove money from piggy bank.
      *
-     * @param  Request  $request
-     * @param  PiggyBank  $piggyBank
+     * @param Request   $request
+     * @param PiggyBank $piggyBank
      *
      * @return RedirectResponse
      */
@@ -197,7 +197,7 @@ class AmountController extends Controller
     /**
      * Remove money from piggy bank form.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */
@@ -212,7 +212,7 @@ class AmountController extends Controller
     /**
      * Remove money from piggy bank (for mobile devices).
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */

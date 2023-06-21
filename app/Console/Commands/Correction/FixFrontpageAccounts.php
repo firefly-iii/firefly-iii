@@ -63,7 +63,7 @@ class FixFrontpageAccounts extends Command
     }
 
     /**
-     * @param  Preference  $preference
+     * @param Preference $preference
      */
     private function fixPreference(Preference $preference): void
     {

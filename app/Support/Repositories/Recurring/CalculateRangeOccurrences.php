@@ -33,11 +33,12 @@ use Illuminate\Support\Facades\Log;
 trait CalculateRangeOccurrences
 {
     /**
-     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
+     * $skipMod-1 occurrences.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  int  $skipMod
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
      *
      * @return array
      */
@@ -57,12 +58,13 @@ trait CalculateRangeOccurrences
     }
 
     /**
-     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
+     * $skipMod-1 occurrences.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  int  $skipMod
-     * @param  string  $moment
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     * @param string $moment
      *
      * @return array
      *
@@ -90,12 +92,13 @@ trait CalculateRangeOccurrences
     }
 
     /**
-     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
+     * $skipMod-1 occurrences.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  int  $skipMod
-     * @param  string  $moment
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     * @param string $moment
      *
      * @return array
      */
@@ -122,12 +125,13 @@ trait CalculateRangeOccurrences
     }
 
     /**
-     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
+     * $skipMod-1 occurrences.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  int  $skipMod
-     * @param  string  $moment
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     * @param string $moment
      *
      * @return array
      *
@@ -166,12 +170,13 @@ trait CalculateRangeOccurrences
     }
 
     /**
-     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every
+     * $skipMod-1 occurrences.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  int  $skipMod
-     * @param  string  $moment
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     * @param string $moment
      *
      * @return array
      *

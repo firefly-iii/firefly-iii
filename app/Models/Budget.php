@@ -39,26 +39,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Budget
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $user_id
- * @property string $name
- * @property bool $active
- * @property bool $encrypted
- * @property int $order
- * @property-read Collection|Attachment[] $attachments
- * @property-read int|null $attachments_count
- * @property-read Collection|AutoBudget[] $autoBudgets
- * @property-read int|null $auto_budgets_count
- * @property-read Collection|BudgetLimit[] $budgetlimits
- * @property-read int|null $budgetlimits_count
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
+ * @property int                                  $user_id
+ * @property string                               $name
+ * @property bool                                 $active
+ * @property bool                                 $encrypted
+ * @property int                                  $order
+ * @property-read Collection|Attachment[]         $attachments
+ * @property-read int|null                        $attachments_count
+ * @property-read Collection|AutoBudget[]         $autoBudgets
+ * @property-read int|null                        $auto_budgets_count
+ * @property-read Collection|BudgetLimit[]        $budgetlimits
+ * @property-read int|null                        $budgetlimits_count
  * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null $transaction_journals_count
- * @property-read Collection|Transaction[] $transactions
- * @property-read int|null $transactions_count
- * @property-read User $user
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read Collection|Transaction[]        $transactions
+ * @property-read int|null                        $transactions_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newQuery()
  * @method static Builder|Budget onlyTrashed()
@@ -74,11 +74,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserId($value)
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
- * @property string $email
- * @property int|null $user_group_id
+ * @property string                               $email
+ * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserGroupId($value)
- * @property-read Collection|Note[] $notes
- * @property-read int|null $notes_count
+ * @property-read Collection|Note[]               $notes
+ * @property-read int|null                        $notes_count
  * @mixin Eloquent
  */
 class Budget extends Model
@@ -106,7 +106,7 @@ class Budget extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return Budget
      * @throws NotFoundHttpException
@@ -124,6 +124,14 @@ class Budget extends Model
             }
         }
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -172,13 +180,5 @@ class Budget extends Model
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

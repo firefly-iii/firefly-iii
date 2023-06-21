@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 class DestroyedGroupEventHandler
 {
     /**
-     * @param  DestroyedTransactionGroup  $destroyedGroupEvent
+     * @param DestroyedTransactionGroup $destroyedGroupEvent
      */
     public function triggerWebhooks(DestroyedTransactionGroup $destroyedGroupEvent): void
     {

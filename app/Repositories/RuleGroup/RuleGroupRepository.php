@@ -64,6 +64,14 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->ruleGroups()->orderBy('order', 'ASC')->get();
+    }
+
+    /**
      * @return int
      */
     public function count(): int
@@ -72,8 +80,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  RuleGroup  $ruleGroup
-     * @param  RuleGroup|null  $moveTo
+     * @param RuleGroup      $ruleGroup
+     * @param RuleGroup|null $moveTo
      *
      * @return bool
      * @throws Exception
@@ -102,6 +110,108 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @return bool
+     */
+    public function resetOrder(): bool
+    {
+        $set   = $this->user
+            ->ruleGroups()
+            ->whereNull('deleted_at')
+            ->orderBy('order', 'ASC')
+            ->orderBy('title', 'DESC')
+            ->get();
+        $count = 1;
+        /** @var RuleGroup $entry */
+        foreach ($set as $entry) {
+            if ($entry->order !== $count) {
+                $entry->order = $count;
+                $entry->save();
+            }
+
+            // also update rules in group.
+            $this->resetRuleOrder($entry);
+
+            ++$count;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return bool
+     */
+    public function resetRuleOrder(RuleGroup $ruleGroup): bool
+    {
+        $set   = $ruleGroup->rules()
+                           ->orderBy('order', 'ASC')
+                           ->orderBy('title', 'DESC')
+                           ->orderBy('updated_at', 'DESC')
+                           ->get(['rules.*']);
+        $count = 1;
+        /** @var Rule $entry */
+        foreach ($set as $entry) {
+            if ((int)$entry->order !== $count) {
+                Log::debug(sprintf('Rule #%d was on spot %d but must be on spot %d', $entry->id, $entry->order, $count));
+                $entry->order = $count;
+                $entry->save();
+            }
+            $this->resetRuleActionOrder($entry);
+            $this->resetRuleTriggerOrder($entry);
+
+            ++$count;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Rule $rule
+     */
+    private function resetRuleActionOrder(Rule $rule): void
+    {
+        $actions = $rule->ruleActions()
+                        ->orderBy('order', 'ASC')
+                        ->orderBy('active', 'DESC')
+                        ->orderBy('action_type', 'ASC')
+                        ->get();
+        $index   = 1;
+        /** @var RuleAction $action */
+        foreach ($actions as $action) {
+            if ((int)$action->order !== $index) {
+                $action->order = $index;
+                $action->save();
+                Log::debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
+            }
+            $index++;
+        }
+    }
+
+    /**
+     * @param Rule $rule
+     */
+    private function resetRuleTriggerOrder(Rule $rule): void
+    {
+        $triggers = $rule->ruleTriggers()
+                         ->orderBy('order', 'ASC')
+                         ->orderBy('active', 'DESC')
+                         ->orderBy('trigger_type', 'ASC')
+                         ->get();
+        $index    = 1;
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $order = (int)$trigger->order;
+            if ($order !== $index) {
+                $trigger->order = $index;
+                $trigger->save();
+                Log::debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
+            }
+            $index++;
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     public function destroyAll(): void
@@ -115,7 +225,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  int  $ruleGroupId
+     * @param int $ruleGroupId
      *
      * @return RuleGroup|null
      */
@@ -125,7 +235,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  string  $title
+     * @param string $title
      *
      * @return RuleGroup|null
      */
@@ -137,21 +247,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     /**
      * @return Collection
      */
-    public function get(): Collection
-    {
-        return $this->user->ruleGroups()->orderBy('order', 'ASC')->get();
-    }
-
-    /**
-     * @return Collection
-     */
     public function getActiveGroups(): Collection
     {
         return $this->user->ruleGroups()->with(['rules'])->where('rule_groups.active', true)->orderBy('order', 'ASC')->get(['rule_groups.*']);
     }
 
     /**
-     * @param  RuleGroup  $group
+     * @param RuleGroup $group
      *
      * @return Collection
      */
@@ -163,7 +265,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  RuleGroup  $group
+     * @param RuleGroup $group
      *
      * @return Collection
      */
@@ -178,7 +280,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  RuleGroup  $group
+     * @param RuleGroup $group
      *
      * @return Collection
      */
@@ -193,7 +295,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  string|null  $filter
+     * @param string|null $filter
      *
      * @return Collection
      */
@@ -255,7 +357,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  string|null  $filter
+     * @param string|null $filter
      *
      * @return Collection
      */
@@ -308,7 +410,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  RuleGroup  $group
+     * @param RuleGroup $group
      *
      * @return Collection
      */
@@ -327,63 +429,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @return bool
-     */
-    public function resetOrder(): bool
-    {
-        $set   = $this->user
-            ->ruleGroups()
-            ->whereNull('deleted_at')
-            ->orderBy('order', 'ASC')
-            ->orderBy('title', 'DESC')
-            ->get();
-        $count = 1;
-        /** @var RuleGroup $entry */
-        foreach ($set as $entry) {
-            if ($entry->order !== $count) {
-                $entry->order = $count;
-                $entry->save();
-            }
-
-            // also update rules in group.
-            $this->resetRuleOrder($entry);
-
-            ++$count;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param  RuleGroup  $ruleGroup
-     *
-     * @return bool
-     */
-    public function resetRuleOrder(RuleGroup $ruleGroup): bool
-    {
-        $set   = $ruleGroup->rules()
-                           ->orderBy('order', 'ASC')
-                           ->orderBy('title', 'DESC')
-                           ->orderBy('updated_at', 'DESC')
-                           ->get(['rules.*']);
-        $count = 1;
-        /** @var Rule $entry */
-        foreach ($set as $entry) {
-            if ((int)$entry->order !== $count) {
-                Log::debug(sprintf('Rule #%d was on spot %d but must be on spot %d', $entry->id, $entry->order, $count));
-                $entry->order = $count;
-                $entry->save();
-            }
-            $this->resetRuleActionOrder($entry);
-            $this->resetRuleTriggerOrder($entry);
-
-            ++$count;
-        }
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function searchRuleGroup(string $query, int $limit): Collection
@@ -396,6 +441,41 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                ->orderBy('rule_groups.title', 'ASC');
 
         return $search->take($limit)->get(['id', 'title', 'description']);
+    }
+
+    /**
+     * @param User|Authenticatable|null $user
+     */
+    public function setUser(User | Authenticatable | null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return RuleGroup
+     */
+    public function store(array $data): RuleGroup
+    {
+        $newRuleGroup = new RuleGroup(
+            [
+                'user_id'     => $this->user->id,
+                'title'       => $data['title'],
+                'description' => $data['description'],
+                'order'       => 31337,
+                'active'      => array_key_exists('active', $data) ? $data['active'] : true,
+            ]
+        );
+        $newRuleGroup->save();
+        $this->resetOrder();
+        if (array_key_exists('order', $data)) {
+            $this->setOrder($newRuleGroup, $data['order']);
+        }
+
+        return $newRuleGroup;
     }
 
     /**
@@ -425,43 +505,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
-     * @param  array  $data
-     *
-     * @return RuleGroup
-     */
-    public function store(array $data): RuleGroup
-    {
-        $newRuleGroup = new RuleGroup(
-            [
-                'user_id'     => $this->user->id,
-                'title'       => $data['title'],
-                'description' => $data['description'],
-                'order'       => 31337,
-                'active'      => array_key_exists('active', $data) ? $data['active'] : true,
-            ]
-        );
-        $newRuleGroup->save();
-        $this->resetOrder();
-        if (array_key_exists('order', $data)) {
-            $this->setOrder($newRuleGroup, $data['order']);
-        }
-
-        return $newRuleGroup;
-    }
-
-    /**
-     * @param  RuleGroup  $ruleGroup
-     * @param  array  $data
+     * @param RuleGroup $ruleGroup
+     * @param array     $data
      *
      * @return RuleGroup
      */
@@ -486,50 +531,5 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $ruleGroup->save();
 
         return $ruleGroup;
-    }
-
-    /**
-     * @param  Rule  $rule
-     */
-    private function resetRuleActionOrder(Rule $rule): void
-    {
-        $actions = $rule->ruleActions()
-                        ->orderBy('order', 'ASC')
-                        ->orderBy('active', 'DESC')
-                        ->orderBy('action_type', 'ASC')
-                        ->get();
-        $index   = 1;
-        /** @var RuleAction $action */
-        foreach ($actions as $action) {
-            if ((int)$action->order !== $index) {
-                $action->order = $index;
-                $action->save();
-                Log::debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
-            }
-            $index++;
-        }
-    }
-
-    /**
-     * @param  Rule  $rule
-     */
-    private function resetRuleTriggerOrder(Rule $rule): void
-    {
-        $triggers = $rule->ruleTriggers()
-                         ->orderBy('order', 'ASC')
-                         ->orderBy('active', 'DESC')
-                         ->orderBy('trigger_type', 'ASC')
-                         ->get();
-        $index    = 1;
-        /** @var RuleTrigger $trigger */
-        foreach ($triggers as $trigger) {
-            $order = (int)$trigger->order;
-            if ($order !== $index) {
-                $trigger->order = $index;
-                $trigger->save();
-                Log::debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
-            }
-            $index++;
-        }
     }
 }

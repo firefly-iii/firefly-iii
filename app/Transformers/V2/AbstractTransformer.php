@@ -36,7 +36,7 @@ abstract class AbstractTransformer extends TransformerAbstract
     protected ParameterBag $parameters;
 
     /**
-     * @param  Collection  $objects
+     * @param Collection $objects
      * @return void
      */
     abstract public function collectMetaData(Collection $objects): void;
@@ -51,7 +51,7 @@ abstract class AbstractTransformer extends TransformerAbstract
     }
 
     /**
-     * @param  ParameterBag  $parameters
+     * @param ParameterBag $parameters
      */
     final public function setParameters(ParameterBag $parameters): void
     {

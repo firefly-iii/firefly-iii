@@ -41,7 +41,7 @@ class AutomationHandler
     /**
      * Respond to the creation of X journals.
      *
-     * @param  RequestedReportOnJournals  $event
+     * @param RequestedReportOnJournals $event
      * @throws FireflyException
      */
     public function reportJournals(RequestedReportOnJournals $event): void

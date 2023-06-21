@@ -34,14 +34,7 @@ use Illuminate\Support\Facades\Log;
 trait OBValidation
 {
     /**
-     * @param  array  $accountTypes
-     *
-     * @return bool
-     */
-    abstract protected function canCreateTypes(array $accountTypes): bool;
-
-    /**
-     * @param  array  $array
+     * @param array $array
      *
      * @return bool
      */
@@ -87,10 +80,17 @@ trait OBValidation
     }
 
     /**
+     * @param array $accountTypes
+     *
+     * @return bool
+     */
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    /**
      * Source of an opening balance can either be an asset account
      * or an "initial balance account". The latter can be created.
      *
-     * @param  array  $array
+     * @param array $array
      *
      * @return bool
      */

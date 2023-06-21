@@ -49,7 +49,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     private $user;
 
     /**
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return bool
      * @throws Exception
@@ -71,28 +71,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param  Attachment  $attachment
-     *
-     * @return bool
-     */
-    public function exists(Attachment $attachment): bool
-    {
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $disk->exists($attachment->fileName());
-    }
-
-    /**
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return $this->user->attachments()->get();
-    }
-
-    /**
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return string
      */
@@ -117,9 +96,30 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
+     * @param Attachment $attachment
+     *
+     * @return bool
+     */
+    public function exists(Attachment $attachment): bool
+    {
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $disk->exists($attachment->fileName());
+    }
+
+    /**
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->attachments()->get();
+    }
+
+    /**
      * Get attachment note text or empty string.
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return string|null
      */
@@ -134,17 +134,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return Attachment
      * @throws FireflyException
@@ -163,8 +153,18 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param  Attachment  $attachment
-     * @param  array  $data
+     * @param User|Authenticatable|null $user
+     */
+    public function setUser(User | Authenticatable | null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
+     * @param Attachment $attachment
+     * @param array      $data
      *
      * @return Attachment
      */
@@ -194,8 +194,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param  Attachment  $attachment
-     * @param  string  $note
+     * @param Attachment $attachment
+     * @param string     $note
      *
      * @return bool
      */

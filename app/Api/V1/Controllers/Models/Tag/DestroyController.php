@@ -63,7 +63,7 @@ class DestroyController extends Controller
      *
      * Delete the resource.
      *
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return JsonResponse
      */

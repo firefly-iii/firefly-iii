@@ -89,7 +89,7 @@ return [
         // daily, used in stack 'stack' by default:
         'daily'        => [
             'driver' => 'daily',
-            'path'   => storage_path('logs/ff3-'.PHP_SAPI.'.log'),
+            'path'   => storage_path('logs/ff3-' . PHP_SAPI . '.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],

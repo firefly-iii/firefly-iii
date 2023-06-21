@@ -34,7 +34,7 @@ use FireflyIII\Models\Category;
 class CategoryDestroyService
 {
     /**
-     * @param  Category  $category
+     * @param Category $category
      */
     public function destroy(Category $category): void
     {

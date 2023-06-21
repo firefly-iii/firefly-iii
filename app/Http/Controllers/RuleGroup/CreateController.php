@@ -82,7 +82,7 @@ class CreateController extends Controller
     /**
      * Store the rule group.
      *
-     * @param  RuleGroupFormRequest  $request
+     * @param RuleGroupFormRequest $request
      *
      * @return RedirectResponse|Redirector
      */

@@ -82,7 +82,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.recurrences.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.recurrences.index') . $this->buildParams());
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
@@ -100,7 +100,7 @@ class ShowController extends Controller
      *
      * List single resource.
      *
-     * @param  Recurrence  $recurrence
+     * @param Recurrence $recurrence
      *
      * @return JsonResponse
      */

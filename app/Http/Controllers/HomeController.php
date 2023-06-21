@@ -60,7 +60,7 @@ class HomeController extends Controller
     /**
      * Change index date range.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return JsonResponse
      * @throws Exception
@@ -111,7 +111,7 @@ class HomeController extends Controller
     /**
      * Show index.
      *
-     * @param  AccountRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $repository
      *
      * @return mixed
      * @throws FireflyException

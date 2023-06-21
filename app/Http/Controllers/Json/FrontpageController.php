@@ -39,7 +39,7 @@ class FrontpageController extends Controller
     /**
      * Piggy bank pie chart.
      *
-     * @param  PiggyBankRepositoryInterface  $repository
+     * @param PiggyBankRepositoryInterface $repository
      *
      * @return JsonResponse
      * @throws FireflyException

@@ -71,7 +71,7 @@ class ShowController extends Controller
      *
      * Download an attachment.
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return LaravelResponse
      * @throws   FireflyException
@@ -96,7 +96,7 @@ class ShowController extends Controller
             $response
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
-                ->header('Content-Disposition', 'attachment; filename='.$quoted)
+                ->header('Content-Disposition', 'attachment; filename=' . $quoted)
                 ->header('Content-Transfer-Encoding', 'binary')
                 ->header('Connection', 'Keep-Alive')
                 ->header('Expires', '0')
@@ -132,7 +132,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.attachments.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.attachments.index') . $this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -150,7 +150,7 @@ class ShowController extends Controller
      *
      * Display the specified resource.
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return JsonResponse
      */

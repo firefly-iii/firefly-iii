@@ -50,8 +50,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      */
@@ -92,9 +92,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param  string  $objectType
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param string $objectType
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      */
@@ -145,9 +145,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param  string  $objectType
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param string $objectType
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      */
@@ -198,9 +198,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param  string  $objectType
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param string $objectType
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      */

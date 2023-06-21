@@ -33,12 +33,12 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\AccountType
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string $type
+ * @property int                       $id
+ * @property Carbon|null               $created_at
+ * @property Carbon|null               $updated_at
+ * @property string                    $type
  * @property-read Collection|Account[] $accounts
- * @property-read int|null $accounts_count
+ * @property-read int|null             $accounts_count
  * @method static Builder|AccountType newModelQuery()
  * @method static Builder|AccountType newQuery()
  * @method static Builder|AccountType query()

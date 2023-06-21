@@ -47,10 +47,10 @@ class OperationsRepository implements OperationsRepositoryInterface
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $tags
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $tags
      *
      * @return array
      * @throws ContainerExceptionInterface
@@ -120,14 +120,36 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * @param User|Authenticatable|null $user
+     */
+    public function setUser(User | Authenticatable | null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
+     * @return Collection
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function getTags(): Collection
+    {
+        $repository = app(TagRepositoryInterface::class);
+
+        return $repository->get();
+    }
+
+    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $tags
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $tags
      *
      * @return array
      * @throws ContainerExceptionInterface
@@ -198,22 +220,12 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
      * Sum of withdrawal journals in period for a set of tags, grouped per currency. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $tags
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $tags
      *
      * @return array
      * @throws FireflyException
@@ -226,10 +238,10 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * Sum of income journals in period for a set of tags, grouped per currency. Amounts are always positive.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $tags
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $tags
      *
      * @return array
      * @throws FireflyException
@@ -237,17 +249,5 @@ class OperationsRepository implements OperationsRepositoryInterface
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
-    }
-
-    /**
-     * @return Collection
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function getTags(): Collection
-    {
-        $repository = app(TagRepositoryInterface::class);
-
-        return $repository->get();
     }
 }

@@ -73,7 +73,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listAttachmentByAccount
      *
-     * @param  Account  $account
+     * @param Account $account
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -89,7 +89,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.accounts.attachments', [$account->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.accounts.attachments', [$account->id]) . $this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -105,7 +105,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listPiggyBankByAccount
      *
-     * @param  Account  $account
+     * @param Account $account
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -125,7 +125,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.accounts.piggy-banks', [$account->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.accounts.piggy-banks', [$account->id]) . $this->buildParams());
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -144,8 +144,8 @@ class ListController extends Controller
      * Show all transaction groups related to the account.
      *
      *
-     * @param  Request  $request
-     * @param  Account  $account
+     * @param Request $request
+     * @param Account $account
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -177,7 +177,7 @@ class ListController extends Controller
         }
 
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]) . $this->buildParams());
         $groups = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

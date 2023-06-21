@@ -34,7 +34,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -71,48 +70,6 @@ class UpgradeLiabilities extends Command
     }
 
     /**
-     * @param  Account  $account
-     * @param  TransactionJournal  $openingBalance
-     */
-    private function correctOpeningBalance(Account $account, TransactionJournal $openingBalance): void
-    {
-        $source      = $this->getSourceTransaction($openingBalance);
-        $destination = $this->getDestinationTransaction($openingBalance);
-        if (null === $source || null === $destination) {
-            return;
-        }
-        // source MUST be the liability.
-        if ((int)$destination->account_id === (int)$account->id) {
-            // so if not, switch things around:
-            $sourceAccountId         = (int)$source->account_id;
-            $source->account_id      = $destination->account_id;
-            $destination->account_id = $sourceAccountId;
-            $source->save();
-            $destination->save();
-        }
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Transaction|null
-     */
-    private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
-    {
-        return $journal->transactions()->where('amount', '>', 0)->first();
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Transaction|null
-     */
-    private function getSourceTransaction(TransactionJournal $journal): ?Transaction
-    {
-        return $journal->transactions()->where('amount', '<', 0)->first();
-    }
-
-    /**
      * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -130,13 +87,17 @@ class UpgradeLiabilities extends Command
     /**
      *
      */
-    private function markAsExecuted(): void
+    private function upgradeLiabilities(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        $users = User::get();
+        /** @var User $user */
+        foreach ($users as $user) {
+            $this->upgradeForUser($user);
+        }
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     private function upgradeForUser(User $user): void
     {
@@ -154,19 +115,7 @@ class UpgradeLiabilities extends Command
     }
 
     /**
-     *
-     */
-    private function upgradeLiabilities(): void
-    {
-        $users = User::get();
-        /** @var User $user */
-        foreach ($users as $user) {
-            $this->upgradeForUser($user);
-        }
-    }
-
-    /**
-     * @param  Account  $account
+     * @param Account $account
      */
     private function upgradeLiability(Account $account): void
     {
@@ -188,5 +137,55 @@ class UpgradeLiabilities extends Command
             $factory = app(AccountMetaFactory::class);
             $factory->crud($account, 'liability_direction', 'debit');
         }
+    }
+
+    /**
+     * @param Account            $account
+     * @param TransactionJournal $openingBalance
+     */
+    private function correctOpeningBalance(Account $account, TransactionJournal $openingBalance): void
+    {
+        $source      = $this->getSourceTransaction($openingBalance);
+        $destination = $this->getDestinationTransaction($openingBalance);
+        if (null === $source || null === $destination) {
+            return;
+        }
+        // source MUST be the liability.
+        if ((int)$destination->account_id === (int)$account->id) {
+            // so if not, switch things around:
+            $sourceAccountId         = (int)$source->account_id;
+            $source->account_id      = $destination->account_id;
+            $destination->account_id = $sourceAccountId;
+            $source->save();
+            $destination->save();
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction|null
+     */
+    private function getSourceTransaction(TransactionJournal $journal): ?Transaction
+    {
+        return $journal->transactions()->where('amount', '<', 0)->first();
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction|null
+     */
+    private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
+    {
+        return $journal->transactions()->where('amount', '>', 0)->first();
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

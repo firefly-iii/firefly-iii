@@ -45,7 +45,7 @@ class NewIPAddressWarningMail extends Mailable
     /**
      * OAuthTokenCreatedMail constructor.
      *
-     * @param  string  $ipAddress
+     * @param string $ipAddress
      */
     public function __construct(string $ipAddress)
     {

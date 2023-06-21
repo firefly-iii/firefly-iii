@@ -70,8 +70,8 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/links/listTransactionByLinkType
      *
-     * @param  Request  $request
-     * @param  LinkType  $linkType
+     * @param Request  $request
+     * @param LinkType $linkType
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -110,7 +110,7 @@ class ListController extends Controller
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.transactions.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

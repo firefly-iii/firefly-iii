@@ -62,7 +62,7 @@ class DestroyController extends Controller
      *
      * Delete the resource.
      *
-     * @param  TransactionJournalLink  $link
+     * @param TransactionJournalLink $link
      *
      * @return JsonResponse
      */

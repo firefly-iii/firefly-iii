@@ -63,7 +63,7 @@ class DeleteController extends Controller
     /**
      * Delete a category.
      *
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return Factory|View
      */
@@ -80,8 +80,8 @@ class DeleteController extends Controller
     /**
      * Destroy a category.
      *
-     * @param  Request  $request
-     * @param  Category  $category
+     * @param Request  $request
+     * @param Category $category
      *
      * @return RedirectResponse|Redirector
      */

@@ -36,8 +36,8 @@ use Illuminate\Support\Facades\Log;
 class PiggyBankEventFactory
 {
     /**
-     * @param  TransactionJournal  $journal
-     * @param  PiggyBank|null  $piggyBank
+     * @param TransactionJournal $journal
+     * @param PiggyBank|null     $piggyBank
      */
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): void
     {

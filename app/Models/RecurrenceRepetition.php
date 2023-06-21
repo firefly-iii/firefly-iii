@@ -33,15 +33,15 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\RecurrenceRepetition
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $recurrence_id
- * @property string $repetition_type
- * @property string $repetition_moment
- * @property int $repetition_skip
- * @property int $weekend
+ * @property int             $id
+ * @property Carbon|null     $created_at
+ * @property Carbon|null     $updated_at
+ * @property Carbon|null     $deleted_at
+ * @property int             $recurrence_id
+ * @property string          $repetition_type
+ * @property string          $repetition_moment
+ * @property int             $repetition_skip
+ * @property int             $weekend
  * @property-read Recurrence $recurrence
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newQuery()

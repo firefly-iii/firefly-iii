@@ -29,7 +29,7 @@ namespace FireflyIII\Support\Request;
 trait GetRecurrenceData
 {
     /**
-     * @param  array  $transaction
+     * @param array $transaction
      *
      * @return array
      */

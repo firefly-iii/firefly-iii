@@ -50,8 +50,8 @@ class SelectTransactionsRequest extends FormRequest
         $today        = today(config('app.timezone'))->addDay()->format('Y-m-d');
 
         return [
-            'start'      => 'required|date|after:'.$first,
-            'end'        => 'required|date|before:'.$today,
+            'start'      => 'required|date|after:' . $first,
+            'end'        => 'required|date|before:' . $today,
             'accounts'   => 'required',
             'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];

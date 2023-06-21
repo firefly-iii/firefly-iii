@@ -69,8 +69,8 @@ class UpdateController extends Controller
      *
      * Update object.
      *
-     * @param  UpdateRequest  $request
-     * @param  TransactionJournalLink  $journalLink
+     * @param UpdateRequest          $request
+     * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
      */

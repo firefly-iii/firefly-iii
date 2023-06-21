@@ -35,10 +35,11 @@ trait DateCalculation
      * Calculate the number of days passed left until end date, as seen from start date.
      * If today is between start and end, today will be used instead of end.
      *
-     * If both are in the past OR both are in the future, simply return the number of days in the period with a minimum of 1
+     * If both are in the past OR both are in the future, simply return the number of days in the period with a minimum
+     * of 1
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return int
      */
@@ -59,8 +60,8 @@ trait DateCalculation
      *
      * If both are in the past OR both are in the future, simply return the period between them with a minimum of 1
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return int
      */
@@ -77,8 +78,8 @@ trait DateCalculation
     }
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -103,8 +104,8 @@ trait DateCalculation
      * Get a list of the periods that will occur after this date. For example,
      * March 2018, April 2018, etc.
      *
-     * @param  Carbon  $date
-     * @param  string  $range
+     * @param Carbon $date
+     * @param string $range
      *
      * @return array
      */
@@ -139,8 +140,8 @@ trait DateCalculation
      * Get a list of the periods that occurred before the start date. For example,
      * March 2018, February 2018, etc.
      *
-     * @param  Carbon  $date
-     * @param  string  $range
+     * @param Carbon $date
+     * @param string $range
      *
      * @return array
      */

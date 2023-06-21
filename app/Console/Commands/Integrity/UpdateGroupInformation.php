@@ -103,9 +103,9 @@ class UpdateGroupInformation extends Command
     }
 
     /**
-     * @param  User  $user
-     * @param  UserGroup  $group
-     * @param  string  $className
+     * @param User      $user
+     * @param UserGroup $group
+     * @param string    $className
      *
      * @return void
      */

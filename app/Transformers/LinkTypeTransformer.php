@@ -34,7 +34,7 @@ class LinkTypeTransformer extends AbstractTransformer
     /**
      * Transform the currency.
      *
-     * @param  LinkType  $linkType
+     * @param LinkType $linkType
      *
      * @return array
      */
@@ -51,7 +51,7 @@ class LinkTypeTransformer extends AbstractTransformer
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/link_types/'.$linkType->id,
+                    'uri' => '/link_types/' . $linkType->id,
                 ],
             ],
         ];

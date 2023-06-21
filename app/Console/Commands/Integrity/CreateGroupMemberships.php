@@ -31,7 +31,6 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreateGroupMemberships
@@ -45,9 +44,36 @@ class CreateGroupMemberships extends Command
     protected $signature   = 'firefly-iii:create-group-memberships';
 
     /**
+     * Execute the console command.
+     *
+     * @return int
+     * @throws FireflyException
+     */
+    public function handle(): int
+    {
+        $this->createGroupMemberships();
+        $this->friendlyPositive('Validated group memberships');
+
+        return 0;
+    }
+
+    /**
+     *
+     * @throws FireflyException
+     */
+    private function createGroupMemberships(): void
+    {
+        $users = User::get();
+        /** @var User $user */
+        foreach ($users as $user) {
+            self::createGroupMembership($user);
+        }
+    }
+
+    /**
      * TODO move to helper.
      *
-     * @param  User  $user
+     * @param User $user
      *
      * @throws FireflyException
      */
@@ -79,33 +105,6 @@ class CreateGroupMemberships extends Command
         if (null === $user->user_group_id) {
             $user->user_group_id = $userGroup->id;
             $user->save();
-        }
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     * @throws FireflyException
-     */
-    public function handle(): int
-    {
-        $this->createGroupMemberships();
-        $this->friendlyPositive('Validated group memberships');
-
-        return 0;
-    }
-
-    /**
-     *
-     * @throws FireflyException
-     */
-    private function createGroupMemberships(): void
-    {
-        $users = User::get();
-        /** @var User $user */
-        foreach ($users as $user) {
-            self::createGroupMembership($user);
         }
     }
 }

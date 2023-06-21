@@ -33,13 +33,13 @@ use Illuminate\Support\Facades\Log;
 trait CalculateXOccurrencesSince
 {
     /**
-     * Calculates the number of daily occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
-     * over $skipMod -1 recurrences.
+     * Calculates the number of daily occurrences for a recurring transaction, starting at the date, until $count is
+     * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param  Carbon  $date
-     * @param  Carbon  $afterDate
-     * @param  int  $count
-     * @param  int  $skipMod
+     * @param Carbon $date
+     * @param Carbon $afterDate
+     * @param int    $count
+     * @param int    $skipMod
      *
      * @return array
      */
@@ -63,14 +63,14 @@ trait CalculateXOccurrencesSince
     }
 
     /**
-     * Calculates the number of monthly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
-     * over $skipMod -1 recurrences.
+     * Calculates the number of monthly occurrences for a recurring transaction, starting at the date, until $count is
+     * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param  Carbon  $date
-     * @param  Carbon  $afterDate
-     * @param  int  $count
-     * @param  int  $skipMod
-     * @param  string  $moment
+     * @param Carbon $date
+     * @param Carbon $afterDate
+     * @param int    $count
+     * @param int    $skipMod
+     * @param string $moment
      *
      * @return array
      */
@@ -106,14 +106,14 @@ trait CalculateXOccurrencesSince
     }
 
     /**
-     * Calculates the number of NDOM occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
-     * over $skipMod -1 recurrences.
+     * Calculates the number of NDOM occurrences for a recurring transaction, starting at the date, until $count is
+     * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param  Carbon  $date
-     * @param  Carbon  $afterDate
-     * @param  int  $count
-     * @param  int  $skipMod
-     * @param  string  $moment
+     * @param Carbon $date
+     * @param Carbon $afterDate
+     * @param int    $count
+     * @param int    $skipMod
+     * @param string $moment
      *
      * @return array
      */
@@ -146,14 +146,14 @@ trait CalculateXOccurrencesSince
     }
 
     /**
-     * Calculates the number of weekly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
-     * over $skipMod -1 recurrences.
+     * Calculates the number of weekly occurrences for a recurring transaction, starting at the date, until $count is
+     * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param  Carbon  $date
-     * @param  Carbon  $afterDate
-     * @param  int  $count
-     * @param  int  $skipMod
-     * @param  string  $moment
+     * @param Carbon $date
+     * @param Carbon $afterDate
+     * @param int    $count
+     * @param int    $skipMod
+     * @param string $moment
      *
      * @return array
      */
@@ -191,14 +191,14 @@ trait CalculateXOccurrencesSince
     }
 
     /**
-     * Calculates the number of yearly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
-     * over $skipMod -1 recurrences.
+     * Calculates the number of yearly occurrences for a recurring transaction, starting at the date, until $count is
+     * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param  Carbon  $date
-     * @param  Carbon  $afterDate
-     * @param  int  $count
-     * @param  int  $skipMod
-     * @param  string  $moment
+     * @param Carbon $date
+     * @param Carbon $afterDate
+     * @param int    $count
+     * @param int    $skipMod
+     * @param string $moment
      *
      * @return array
      */

@@ -185,8 +185,8 @@ class UpdateRequest extends FormRequest
     /**
      * For each field, add it to the array if a reference is present in the request:
      *
-     * @param  array  $current
-     * @param  array  $transaction
+     * @param array $current
+     * @param array $transaction
      *
      * @return array
      */
@@ -202,8 +202,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param  array  $current
-     * @param  array  $transaction
+     * @param array $current
+     * @param array $transaction
      *
      * @return array
      */
@@ -219,8 +219,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param  array  $current
-     * @param  array  $transaction
+     * @param array $current
+     * @param array $transaction
      *
      * @return array
      */
@@ -236,8 +236,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param  array  $current
-     * @param  array  $transaction
+     * @param array $current
+     * @param array $transaction
      *
      * @return array
      */
@@ -255,8 +255,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param  array  $current
-     * @param  array  $transaction
+     * @param array $current
+     * @param array $transaction
      *
      * @return array
      */
@@ -272,8 +272,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param  array  $current
-     * @param  array  $transaction
+     * @param array $current
+     * @param array $transaction
      *
      * @return array
      */
@@ -289,8 +289,8 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * @param  array  $current
-     * @param  array  $transaction
+     * @param array $current
+     * @param array $transaction
      *
      * @return array
      */
@@ -398,7 +398,7 @@ class UpdateRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param  Validator  $validator
+     * @param Validator $validator
      *
      * @return void
      */

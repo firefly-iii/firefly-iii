@@ -36,41 +36,7 @@ class TagFactory
     private User $user;
 
     /**
-     * @param  array  $data
-     *
-     * @return Tag|null
-     */
-    public function create(array $data): ?Tag
-    {
-        $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
-        $latitude  = 0.0 === (float)$data['latitude'] ? null : (float)$data['latitude'];   // intentional float
-        $longitude = 0.0 === (float)$data['longitude'] ? null : (float)$data['longitude']; // intentional float
-        $array     = [
-            'user_id'     => $this->user->id,
-            'tag'         => trim($data['tag']),
-            'tagMode'     => 'nothing',
-            'date'        => $data['date'],
-            'description' => $data['description'],
-            'latitude'    => null,
-            'longitude'   => null,
-            'zoomLevel'   => null,
-        ];
-        $tag       = Tag::create($array);
-        if (null !== $tag && null !== $latitude && null !== $longitude) {
-            // create location object.
-            $location             = new Location();
-            $location->latitude   = $latitude;
-            $location->longitude  = $longitude;
-            $location->zoom_level = $zoomLevel;
-            $location->locatable()->associate($tag);
-            $location->save();
-        }
-
-        return $tag;
-    }
-
-    /**
-     * @param  string  $tag
+     * @param string $tag
      *
      * @return Tag|null
      */
@@ -107,7 +73,41 @@ class TagFactory
     }
 
     /**
-     * @param  User  $user
+     * @param array $data
+     *
+     * @return Tag|null
+     */
+    public function create(array $data): ?Tag
+    {
+        $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
+        $latitude  = 0.0 === (float)$data['latitude'] ? null : (float)$data['latitude'];   // intentional float
+        $longitude = 0.0 === (float)$data['longitude'] ? null : (float)$data['longitude']; // intentional float
+        $array     = [
+            'user_id'     => $this->user->id,
+            'tag'         => trim($data['tag']),
+            'tagMode'     => 'nothing',
+            'date'        => $data['date'],
+            'description' => $data['description'],
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoomLevel'   => null,
+        ];
+        $tag       = Tag::create($array);
+        if (null !== $tag && null !== $latitude && null !== $longitude) {
+            // create location object.
+            $location             = new Location();
+            $location->latitude   = $latitude;
+            $location->longitude  = $longitude;
+            $location->zoom_level = $zoomLevel;
+            $location->locatable()->associate($tag);
+            $location->save();
+        }
+
+        return $tag;
+    }
+
+    /**
+     * @param User $user
      */
     public function setUser(User $user): void
     {

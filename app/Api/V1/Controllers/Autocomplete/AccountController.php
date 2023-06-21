@@ -67,7 +67,7 @@ class AccountController extends Controller
      * Documentation for this endpoint:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getAccountsAC
      *
-     * @param  AutocompleteRequest  $request
+     * @param AutocompleteRequest $request
      *
      * @return JsonResponse
      * @throws JsonException

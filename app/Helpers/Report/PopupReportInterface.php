@@ -35,9 +35,9 @@ interface PopupReportInterface
     /**
      * Get balances for budget.
      *
-     * @param  Budget  $budget
-     * @param  Account  $account
-     * @param  array  $attributes
+     * @param Budget  $budget
+     * @param Account $account
+     * @param array   $attributes
      *
      * @return array
      */
@@ -46,8 +46,8 @@ interface PopupReportInterface
     /**
      * Get balances for transactions without a budget.
      *
-     * @param  Account  $account
-     * @param  array  $attributes
+     * @param Account $account
+     * @param array   $attributes
      *
      * @return array
      */
@@ -56,8 +56,8 @@ interface PopupReportInterface
     /**
      * Group by budget.
      *
-     * @param  Budget  $budget
-     * @param  array  $attributes
+     * @param Budget $budget
+     * @param array  $attributes
      *
      * @return array
      */
@@ -66,8 +66,8 @@ interface PopupReportInterface
     /**
      * Group by category.
      *
-     * @param  Category|null  $category
-     * @param  array  $attributes
+     * @param Category|null $category
+     * @param array         $attributes
      *
      * @return array
      */
@@ -76,8 +76,8 @@ interface PopupReportInterface
     /**
      * Do something with expense. Sorry, I am not very inspirational here.
      *
-     * @param  Account  $account
-     * @param  array  $attributes
+     * @param Account $account
+     * @param array   $attributes
      *
      * @return array
      */
@@ -86,8 +86,8 @@ interface PopupReportInterface
     /**
      * Do something with income. Sorry, I am not very inspirational here.
      *
-     * @param  Account  $account
-     * @param  array  $attributes
+     * @param Account $account
+     * @param array   $attributes
      *
      * @return array
      */

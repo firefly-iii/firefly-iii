@@ -42,22 +42,22 @@ interface MessageGeneratorInterface
     public function getVersion(): int;
 
     /**
-     * @param  Collection  $objects
+     * @param Collection $objects
      */
     public function setObjects(Collection $objects): void;
 
     /**
-     * @param  int  $trigger
+     * @param int $trigger
      */
     public function setTrigger(int $trigger): void;
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void;
 
     /**
-     * @param  Collection  $webhooks
+     * @param Collection $webhooks
      * @return void
      */
     public function setWebhooks(Collection $webhooks): void;

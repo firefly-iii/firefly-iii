@@ -31,7 +31,7 @@ use Illuminate\Validation\Validator;
 trait ValidatesAutoBudgetRequest
 {
     /**
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     protected function validateAutoBudgetAmount(Validator $validator): void
     {

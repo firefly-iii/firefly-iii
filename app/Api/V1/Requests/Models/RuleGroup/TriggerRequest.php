@@ -50,14 +50,13 @@ class TriggerRequest extends FormRequest
     }
 
     /**
-     * @return array
+     * @param string $field
+     *
+     * @return Carbon|null
      */
-    public function rules(): array
+    private function getDate(string $field): ?Carbon
     {
-        return [
-            'start' => 'date',
-            'end'   => 'date|after_or_equal:start',
-        ];
+        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
     }
 
     /**
@@ -69,12 +68,13 @@ class TriggerRequest extends FormRequest
     }
 
     /**
-     * @param  string  $field
-     *
-     * @return Carbon|null
+     * @return array
      */
-    private function getDate(string $field): ?Carbon
+    public function rules(): array
     {
-        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
+        return [
+            'start' => 'date',
+            'end'   => 'date|after_or_equal:start',
+        ];
     }
 }

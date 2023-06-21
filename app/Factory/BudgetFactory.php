@@ -34,8 +34,8 @@ class BudgetFactory
     private User $user;
 
     /**
-     * @param  int|null  $budgetId
-     * @param  null|string  $budgetName
+     * @param int|null    $budgetId
+     * @param null|string $budgetName
      *
      * @return Budget|null
      */
@@ -68,7 +68,7 @@ class BudgetFactory
     }
 
     /**
-     * @param  string  $name
+     * @param string $name
      *
      * @return Budget|null
      */
@@ -78,7 +78,7 @@ class BudgetFactory
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void
     {

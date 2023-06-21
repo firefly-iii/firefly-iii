@@ -64,7 +64,7 @@ class DeleteController extends Controller
     /**
      * Delete a rule group.
      *
-     * @param  RuleGroup  $ruleGroup
+     * @param RuleGroup $ruleGroup
      *
      * @return Factory|View
      */
@@ -81,8 +81,8 @@ class DeleteController extends Controller
     /**
      * Actually destroy the rule group.
      *
-     * @param  Request  $request
-     * @param  RuleGroup  $ruleGroup
+     * @param Request   $request
+     * @param RuleGroup $ruleGroup
      *
      * @return RedirectResponse|Redirector
      */

@@ -36,8 +36,8 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 /**
  * Class ExportData
@@ -141,61 +141,52 @@ class ExportData extends Command
     }
 
     /**
-     * @param  array  $options
-     * @param  array  $data
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
      *
-     * @throws FireflyException
+
      */
-    private function exportData(array $options, array $data): void
+    private function stupidLaravel(): void
     {
-        $date = date('Y_m_d');
-        foreach ($data as $key => $content) {
-            $file = sprintf('%s%s_%s.csv', $options['directory'], $date, $key);
-            if (false === $options['force'] && file_exists($file)) {
-                throw new FireflyException(sprintf('File "%s" exists already. Use --force to overwrite.', $file));
-            }
-            if (true === $options['force'] && file_exists($file)) {
-                $this->friendlyWarning(sprintf('File "%s" exists already but will be replaced.', $file));
-            }
-            // continue to write to file.
-            file_put_contents($file, $content);
-            $this->friendlyPositive(sprintf('Wrote %s-export to file "%s".', $key, $file));
-        }
+        $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
     /**
-     * @return Collection
+     * @return array
      * @throws FireflyException
+     * @throws Exception
      */
-    private function getAccountsParameter(): Collection
+    private function parseOptions(): array
     {
-        $final       = new Collection();
-        $accounts    = new Collection();
-        $accountList = $this->option('accounts');
-        $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string)$accountList) {
-            $accountIds = explode(',', $accountList);
-            $accounts   = $this->accountRepository->getAccountsById($accountIds);
-        }
-        if (null === $accountList) {
-            $accounts = $this->accountRepository->getAccountsByType($types);
-        }
-        // filter accounts,
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if (in_array($account->accountType->type, $types, true)) {
-                $final->push($account);
-            }
-        }
-        if (0 === $final->count()) {
-            throw new FireflyException('300007: Ended up with zero valid accounts to export from.');
-        }
+        $start    = $this->getDateParameter('start');
+        $end      = $this->getDateParameter('end');
+        $accounts = $this->getAccountsParameter();
+        $export   = $this->getExportDirectory();
 
-        return $final;
+        return [
+            'export'    => [
+                'transactions' => $this->option('export-transactions'),
+                'accounts'     => $this->option('export-accounts'),
+                'budgets'      => $this->option('export-budgets'),
+                'categories'   => $this->option('export-categories'),
+                'tags'         => $this->option('export-tags'),
+                'recurring'    => $this->option('export-recurring'),
+                'rules'        => $this->option('export-rules'),
+                'bills'        => $this->option('export-bills'),
+                'piggies'      => $this->option('export-piggies'),
+            ],
+            'start'     => $start,
+            'end'       => $end,
+            'accounts'  => $accounts,
+            'directory' => $export,
+            'force'     => $this->option('force'),
+        ];
     }
 
     /**
-     * @param  string  $field
+     * @param string $field
      *
      * @return Carbon
      * @throws Exception
@@ -236,6 +227,37 @@ class ExportData extends Command
     }
 
     /**
+     * @return Collection
+     * @throws FireflyException
+     */
+    private function getAccountsParameter(): Collection
+    {
+        $final       = new Collection();
+        $accounts    = new Collection();
+        $accountList = $this->option('accounts');
+        $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        if (null !== $accountList && '' !== (string)$accountList) {
+            $accountIds = explode(',', $accountList);
+            $accounts   = $this->accountRepository->getAccountsById($accountIds);
+        }
+        if (null === $accountList) {
+            $accounts = $this->accountRepository->getAccountsByType($types);
+        }
+        // filter accounts,
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if (in_array($account->accountType->type, $types, true)) {
+                $final->push($account);
+            }
+        }
+        if (0 === $final->count()) {
+            throw new FireflyException('300007: Ended up with zero valid accounts to export from.');
+        }
+
+        return $final;
+    }
+
+    /**
      * @return string
      * @throws FireflyException
      *
@@ -254,47 +276,25 @@ class ExportData extends Command
     }
 
     /**
-     * @return array
-     * @throws FireflyException
-     * @throws Exception
-     */
-    private function parseOptions(): array
-    {
-        $start    = $this->getDateParameter('start');
-        $end      = $this->getDateParameter('end');
-        $accounts = $this->getAccountsParameter();
-        $export   = $this->getExportDirectory();
-
-        return [
-            'export'    => [
-                'transactions' => $this->option('export-transactions'),
-                'accounts'     => $this->option('export-accounts'),
-                'budgets'      => $this->option('export-budgets'),
-                'categories'   => $this->option('export-categories'),
-                'tags'         => $this->option('export-tags'),
-                'recurring'    => $this->option('export-recurring'),
-                'rules'        => $this->option('export-rules'),
-                'bills'        => $this->option('export-bills'),
-                'piggies'      => $this->option('export-piggies'),
-            ],
-            'start'     => $start,
-            'end'       => $end,
-            'accounts'  => $accounts,
-            'directory' => $export,
-            'force'     => $this->option('force'),
-        ];
-    }
-
-    /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
+     * @param array $options
+     * @param array $data
      *
-
+     * @throws FireflyException
      */
-    private function stupidLaravel(): void
+    private function exportData(array $options, array $data): void
     {
-        $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $date = date('Y_m_d');
+        foreach ($data as $key => $content) {
+            $file = sprintf('%s%s_%s.csv', $options['directory'], $date, $key);
+            if (false === $options['force'] && file_exists($file)) {
+                throw new FireflyException(sprintf('File "%s" exists already. Use --force to overwrite.', $file));
+            }
+            if (true === $options['force'] && file_exists($file)) {
+                $this->friendlyWarning(sprintf('File "%s" exists already but will be replaced.', $file));
+            }
+            // continue to write to file.
+            file_put_contents($file, $content);
+            $this->friendlyPositive(sprintf('Wrote %s-export to file "%s".', $key, $file));
+        }
     }
 }

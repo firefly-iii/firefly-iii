@@ -66,7 +66,7 @@ class UpdateRequest extends FormRequest
         $ruleGroup = $this->route()->parameter('ruleGroup');
 
         return [
-            'title'       => 'between:1,100|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id,
+            'title'       => 'between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id,
             'description' => 'between:1,5000|nullable',
             'active'      => [new IsBoolean()],
         ];

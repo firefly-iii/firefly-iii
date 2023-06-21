@@ -34,16 +34,16 @@ use Illuminate\Support\Carbon;
 /**
  * Class GroupMembership
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property int $user_id
- * @property int $user_group_id
- * @property int $user_role_id
- * @property-read User $user
+ * @property int            $id
+ * @property Carbon|null    $created_at
+ * @property Carbon|null    $updated_at
+ * @property string|null    $deleted_at
+ * @property int            $user_id
+ * @property int            $user_group_id
+ * @property int            $user_role_id
+ * @property-read User      $user
  * @property-read UserGroup $userGroup
- * @property-read UserRole $userRole
+ * @property-read UserRole  $userRole
  * @method static Builder|GroupMembership newModelQuery()
  * @method static Builder|GroupMembership newQuery()
  * @method static Builder|GroupMembership query()

@@ -74,7 +74,7 @@ class UpdateRequest extends FormRequest
         $piggyBank = $this->route()->parameter('piggyBank');
 
         return [
-            'name'           => 'between:1,255|uniquePiggyBankForUser:'.$piggyBank->id,
+            'name'           => 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id,
             'current_amount' => ['numeric', 'gte:0', new LessThanPiggyTarget()],
             'target_amount'  => 'numeric|gte:0',
             'start_date'     => 'date|nullable',

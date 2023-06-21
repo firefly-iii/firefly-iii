@@ -22,12 +22,12 @@
 $current = __DIR__;
 
 $paths = [
-    $current.'/../../app',
-    $current.'/../../config',
-    $current.'/../../database',
-    $current.'/../../routes',
-    $current.'/../../tests',
-    $current.'/../../resources/lang',
+    $current . '/../../app',
+    $current . '/../../config',
+    $current . '/../../database',
+    $current . '/../../routes',
+    $current . '/../../tests',
+    $current . '/../../resources/lang',
 ];
 
 $finder = PhpCsFixer\Finder::create()
@@ -36,9 +36,9 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-    '@PSR12'               => true,
-    'declare_strict_types' => true,
-    'strict_param'         => true,
-    'array_syntax'         => ['syntax' => 'short'],
-])
+                             '@PSR12'               => true,
+                             'declare_strict_types' => true,
+                             'strict_param'         => true,
+                             'array_syntax'         => ['syntax' => 'short'],
+                         ])
               ->setFinder($finder);

@@ -31,16 +31,6 @@ use Illuminate\Support\Facades\Log;
 trait AppendsLocationData
 {
     /**
-     * Abstract method stolen from "InteractsWithInput".
-     *
-     * @param  null  $key
-     * @param  bool  $default
-     *
-     * @return mixed
-     */
-    abstract public function boolean($key = null, $default = false);
-
-    /**
      * Abstract method.
      *
      * @param $key
@@ -50,27 +40,11 @@ trait AppendsLocationData
     abstract public function has($key);
 
     /**
-     * Abstract method.
-     *
-     * @return string
-     */
-    abstract public function method();
-
-    /**
-     * Abstract method.
-     *
-     * @param  mixed  ...$patterns
-     *
-     * @return mixed
-     */
-    abstract public function routeIs(...$patterns);
-
-    /**
      * Read the submitted Request data and add new or updated Location data to the array.
      *
-     * @param  array  $data
+     * @param array       $data
      *
-     * @param  string|null  $prefix
+     * @param string|null $prefix
      *
      * @return array
      */
@@ -126,8 +100,8 @@ trait AppendsLocationData
     }
 
     /**
-     * @param  string|null  $prefix
-     * @param  string  $key
+     * @param string|null $prefix
+     * @param string      $key
      *
      * @return string
      */
@@ -141,28 +115,7 @@ trait AppendsLocationData
     }
 
     /**
-     * @param  string|null  $prefix
-     *
-     * @return bool
-     */
-    private function isValidEmptyPUT(?string $prefix): bool
-    {
-        $longitudeKey = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
-
-        return (
-            null === $this->get($longitudeKey)
-            && null === $this->get($latitudeKey)
-            && null === $this->get($zoomLevelKey))
-               && (
-                   'PUT' === $this->method()
-                   || ('POST' === $this->method() && $this->routeIs('*.update'))
-               );
-    }
-
-    /**
-     * @param  string|null  $prefix
+     * @param string|null $prefix
      *
      * @return bool
      */
@@ -205,7 +158,33 @@ trait AppendsLocationData
     }
 
     /**
-     * @param  string|null  $prefix
+     * Abstract method.
+     *
+     * @return string
+     */
+    abstract public function method();
+
+    /**
+     * Abstract method.
+     *
+     * @param mixed ...$patterns
+     *
+     * @return mixed
+     */
+    abstract public function routeIs(...$patterns);
+
+    /**
+     * Abstract method stolen from "InteractsWithInput".
+     *
+     * @param null $key
+     * @param bool $default
+     *
+     * @return mixed
+     */
+    abstract public function boolean($key = null, $default = false);
+
+    /**
+     * @param string|null $prefix
      *
      * @return bool
      */
@@ -247,5 +226,26 @@ trait AppendsLocationData
         Log::debug('Fields not present');
 
         return false;
+    }
+
+    /**
+     * @param string|null $prefix
+     *
+     * @return bool
+     */
+    private function isValidEmptyPUT(?string $prefix): bool
+    {
+        $longitudeKey = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
+
+        return (
+            null === $this->get($longitudeKey)
+            && null === $this->get($latitudeKey)
+            && null === $this->get($zoomLevelKey))
+               && (
+                   'PUT' === $this->method()
+                   || ('POST' === $this->method() && $this->routeIs('*.update'))
+               );
     }
 }

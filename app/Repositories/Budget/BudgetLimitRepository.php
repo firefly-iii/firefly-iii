@@ -48,10 +48,10 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      * Tells you which amount has been budgeted (for the given budgets)
      * in the selected query. Returns a positive amount as a string.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  TransactionCurrency  $currency
-     * @param  Collection|null  $budgets
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param TransactionCurrency $currency
+     * @param Collection|null     $budgets
      *
      * @return string
      */
@@ -120,7 +120,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     /**
      * Destroy a budget limit.
      *
-     * @param  BudgetLimit  $budgetLimit
+     * @param BudgetLimit $budgetLimit
      */
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void
     {
@@ -128,24 +128,24 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
-     * @param  Budget  $budget
-     * @param  TransactionCurrency  $currency
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param TransactionCurrency $currency
+     * @param Carbon|null         $start
+     * @param Carbon|null         $end
      *
-     * @return BudgetLimit|null
+     * @return Collection
      */
-    public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection
     {
-        return $budget->budgetlimits()
-                      ->where('transaction_currency_id', $currency->id)
-                      ->where('start_date', $start->format('Y-m-d'))
-                      ->where('end_date', $end->format('Y-m-d'))->first();
+        return $this->getAllBudgetLimits($start, $end)->filter(
+            static function (BudgetLimit $budgetLimit) use ($currency) {
+                return $budgetLimit->transaction_currency_id === $currency->id;
+            }
+        );
     }
 
     /**
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Collection
      */
@@ -212,25 +212,9 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
-     * @param  TransactionCurrency  $currency
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
-     *
-     * @return Collection
-     */
-    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection
-    {
-        return $this->getAllBudgetLimits($start, $end)->filter(
-            static function (BudgetLimit $budgetLimit) use ($currency) {
-                return $budgetLimit->transaction_currency_id === $currency->id;
-            }
-        );
-    }
-
-    /**
-     * @param  Budget  $budget
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Budget      $budget
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Collection
      */
@@ -288,9 +272,9 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void
+    public function setUser(User | Authenticatable | null $user): void
     {
         if (null !== $user) {
             $this->user = $user;
@@ -298,7 +282,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return BudgetLimit
      * @throws FireflyException
@@ -347,8 +331,24 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
-     * @param  BudgetLimit  $budgetLimit
-     * @param  array  $data
+     * @param Budget              $budget
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return BudgetLimit|null
+     */
+    public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit
+    {
+        return $budget->budgetlimits()
+                      ->where('transaction_currency_id', $currency->id)
+                      ->where('start_date', $start->format('Y-m-d'))
+                      ->where('end_date', $end->format('Y-m-d'))->first();
+    }
+
+    /**
+     * @param BudgetLimit $budgetLimit
+     * @param array       $data
      *
      * @return BudgetLimit
      * @throws FireflyException
@@ -384,10 +384,10 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
-     * @param  Budget  $budget
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  string  $amount
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $amount
      *
      * @return BudgetLimit|null
      *

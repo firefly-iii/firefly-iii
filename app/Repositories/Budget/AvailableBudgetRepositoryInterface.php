@@ -41,23 +41,23 @@ interface AvailableBudgetRepositoryInterface
     public function destroyAll(): void;
 
     /**
-     * @param  AvailableBudget  $availableBudget
+     * @param AvailableBudget $availableBudget
      */
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void;
 
     /**
      * Find existing AB.
      *
-     * @param  TransactionCurrency  $currency
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
      *
      * @return AvailableBudget|null
      */
     public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget;
 
     /**
-     * @param  int  $id
+     * @param int $id
      *
      * @return AvailableBudget|null
      */
@@ -66,17 +66,17 @@ interface AvailableBudgetRepositoryInterface
     /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
      *
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Collection
      */
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection;
 
     /**
-     * @param  TransactionCurrency  $currency
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
      *
      * @return string
      * @deprecated
@@ -84,8 +84,8 @@ interface AvailableBudgetRepositoryInterface
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -94,7 +94,7 @@ interface AvailableBudgetRepositoryInterface
     /**
      * Returns all available budget objects.
      *
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      *
      * @return Collection
      */
@@ -103,8 +103,8 @@ interface AvailableBudgetRepositoryInterface
     /**
      * Returns all available budget objects.
      *
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Collection
      *
@@ -114,19 +114,19 @@ interface AvailableBudgetRepositoryInterface
     /**
      * Get by transaction currency and date. Should always result in one entry or NULL.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  TransactionCurrency  $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param TransactionCurrency $currency
      *
      * @return null|AvailableBudget
      */
     public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget;
 
     /**
-     * @param  TransactionCurrency  $currency
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  string  $amount
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param string              $amount
      *
      * @return AvailableBudget
      * @deprecated
@@ -134,28 +134,28 @@ interface AvailableBudgetRepositoryInterface
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return AvailableBudget|null
      */
     public function store(array $data): ?AvailableBudget;
 
     /**
-     * @param  AvailableBudget  $availableBudget
-     * @param  array  $data
+     * @param AvailableBudget $availableBudget
+     * @param array           $data
      *
      * @return AvailableBudget
      */
     public function update(AvailableBudget $availableBudget, array $data): AvailableBudget;
 
     /**
-     * @param  AvailableBudget  $availableBudget
-     * @param  array  $data
+     * @param AvailableBudget $availableBudget
+     * @param array           $data
      *
      * @return AvailableBudget
      */

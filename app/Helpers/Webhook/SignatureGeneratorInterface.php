@@ -31,7 +31,7 @@ use FireflyIII\Models\WebhookMessage;
 interface SignatureGeneratorInterface
 {
     /**
-     * @param  WebhookMessage  $message
+     * @param WebhookMessage $message
      *
      * @return string
      */

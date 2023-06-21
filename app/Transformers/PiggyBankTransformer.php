@@ -55,7 +55,7 @@ class PiggyBankTransformer extends AbstractTransformer
     /**
      * Transform the piggy bank.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return array
      * @throws FireflyException
@@ -133,7 +133,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_banks/'.$piggyBank->id,
+                    'uri' => '/piggy_banks/' . $piggyBank->id,
                 ],
             ],
         ];

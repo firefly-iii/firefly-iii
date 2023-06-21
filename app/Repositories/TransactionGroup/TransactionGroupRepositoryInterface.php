@@ -38,21 +38,21 @@ use Illuminate\Support\Collection;
 interface TransactionGroupRepositoryInterface
 {
     /**
-     * @param  int  $journalId
+     * @param int $journalId
      *
      * @return int
      */
     public function countAttachments(int $journalId): int;
 
     /**
-     * @param  TransactionGroup  $group
+     * @param TransactionGroup $group
      */
     public function destroy(TransactionGroup $group): void;
 
     /**
      * Return a group and expand all meta data etc.
      *
-     * @param  TransactionGroup  $group
+     * @param TransactionGroup $group
      *
      * @return array
      */
@@ -61,7 +61,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Find a transaction group by its ID.
      *
-     * @param  int  $groupId
+     * @param int $groupId
      *
      * @return TransactionGroup|null
      */
@@ -70,7 +70,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Return all attachments for all journals in the group.
      *
-     * @param  TransactionGroup  $group
+     * @param TransactionGroup $group
      *
      * @return array
      */
@@ -79,7 +79,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Return all journal links for all journals in the group.
      *
-     * @param  TransactionGroup  $group
+     * @param TransactionGroup $group
      *
      * @return array
      */
@@ -88,7 +88,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Get the location of a journal or NULL.
      *
-     * @param  int  $journalId
+     * @param int $journalId
      *
      * @return Location|null
      */
@@ -97,8 +97,8 @@ interface TransactionGroupRepositoryInterface
     /**
      * Return object with all found meta field things as Carbon objects.
      *
-     * @param  int  $journalId
-     * @param  array  $fields
+     * @param int   $journalId
+     * @param array $fields
      *
      * @return NullArrayObject
      */
@@ -107,8 +107,8 @@ interface TransactionGroupRepositoryInterface
     /**
      * Return object with all found meta field things.
      *
-     * @param  int  $journalId
-     * @param  array  $fields
+     * @param int   $journalId
+     * @param array $fields
      *
      * @return NullArrayObject
      */
@@ -117,7 +117,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Get the note text for a journal (by ID).
      *
-     * @param  int  $journalId
+     * @param int $journalId
      *
      * @return string|null
      */
@@ -126,7 +126,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Return all piggy bank events for all journals in the group.
      *
-     * @param  TransactionGroup  $group
+     * @param TransactionGroup $group
      *
      * @return array
      */
@@ -135,7 +135,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Get the tags for a journal (by ID) as Tag objects.
      *
-     * @param  int  $journalId
+     * @param int $journalId
      *
      * @return Collection
      */
@@ -144,21 +144,21 @@ interface TransactionGroupRepositoryInterface
     /**
      * Get the tags for a journal (by ID).
      *
-     * @param  int  $journalId
+     * @param int $journalId
      *
      * @return array
      */
     public function getTags(int $journalId): array;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
     /**
      * Create a new transaction group.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
@@ -169,8 +169,8 @@ interface TransactionGroupRepositoryInterface
     /**
      * Update an existing transaction group.
      *
-     * @param  TransactionGroup  $transactionGroup
-     * @param  array  $data
+     * @param TransactionGroup $transactionGroup
+     * @param array            $data
      *
      * @return TransactionGroup
      */

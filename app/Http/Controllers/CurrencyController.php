@@ -72,7 +72,7 @@ class CurrencyController extends Controller
     /**
      * Create a currency.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
@@ -103,7 +103,7 @@ class CurrencyController extends Controller
     /**
      * Make currency the default currency.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
@@ -132,8 +132,8 @@ class CurrencyController extends Controller
     /**
      * Deletes a currency.
      *
-     * @param  Request  $request
-     * @param  TransactionCurrency  $currency
+     * @param Request             $request
+     * @param TransactionCurrency $currency
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
@@ -168,8 +168,8 @@ class CurrencyController extends Controller
     /**
      * Destroys a currency.
      *
-     * @param  Request  $request
-     * @param  TransactionCurrency  $currency
+     * @param Request             $request
+     * @param TransactionCurrency $currency
      *
      * @return RedirectResponse|Redirector
      */
@@ -207,7 +207,7 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      * @throws FireflyException
      */
@@ -260,8 +260,8 @@ class CurrencyController extends Controller
     /**
      * Edit a currency.
      *
-     * @param  Request  $request
-     * @param  TransactionCurrency  $currency
+     * @param Request             $request
+     * @param TransactionCurrency $currency
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
@@ -299,7 +299,7 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function enableCurrency(Request $request): JsonResponse
@@ -323,7 +323,7 @@ class CurrencyController extends Controller
     /**
      * Show overview of currencies.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      * @throws ContainerExceptionInterface
@@ -354,7 +354,7 @@ class CurrencyController extends Controller
     /**
      * Store new currency.
      *
-     * @param  CurrencyFormRequest  $request
+     * @param CurrencyFormRequest $request
      *
      * @return $this|RedirectResponse|Redirector
      */
@@ -364,7 +364,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         $data = $request->getCurrencyData();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            Log::error('User '.auth()->user()->id.' is not admin, but tried to store a currency.');
+            Log::error('User ' . auth()->user()->id . ' is not admin, but tried to store a currency.');
             Log::channel('audit')->info('Tried to create (POST) currency without admin rights.', $data);
 
             return redirect($this->getPreviousUrl('currencies.create.url'));
@@ -397,8 +397,8 @@ class CurrencyController extends Controller
     /**
      * Updates a currency.
      *
-     * @param  CurrencyFormRequest  $request
-     * @param  TransactionCurrency  $currency
+     * @param CurrencyFormRequest $request
+     * @param TransactionCurrency $currency
      *
      * @return RedirectResponse|Redirector
      */

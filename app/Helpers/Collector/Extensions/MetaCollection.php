@@ -54,9 +54,28 @@ trait MetaCollection
     }
 
     /**
+     * Will include bill name + ID, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBillInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasBillInformation) {
+            // join bill table
+            $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
+            // add fields
+            $this->fields[]           = 'bills.id as bill_id';
+            $this->fields[]           = 'bills.name as bill_name';
+            $this->hasBillInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Exclude a specific budget.
      *
-     * @param  Budget  $budget
+     * @param Budget $budget
      *
      * @return GroupCollectorInterface
      */
@@ -68,6 +87,27 @@ trait MetaCollection
             $q2->where('budgets.id', '!=', $budget->id);
             $q2->orWhereNull('budgets.id');
         });
+
+        return $this;
+    }
+
+    /**
+     * Will include budget ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBudgetInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasBudgetInformation) {
+            // join link table
+            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            // join cat table
+            $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
+            // add fields
+            $this->fields[]             = 'budgets.id as budget_id';
+            $this->fields[]             = 'budgets.name as budget_name';
+            $this->hasBudgetInformation = true;
+        }
 
         return $this;
     }
@@ -105,9 +145,30 @@ trait MetaCollection
     }
 
     /**
+     * Will include category ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withCategoryInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasCatInformation) {
+            // join link table
+            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            // join cat table
+            $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
+            // add fields
+            $this->fields[]          = 'categories.id as category_id';
+            $this->fields[]          = 'categories.name as category_name';
+            $this->hasCatInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Exclude a specific category.
      *
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return GroupCollectorInterface
      */
@@ -133,6 +194,19 @@ trait MetaCollection
         $this->query->where('journal_meta.data', '!=', sprintf('%s', json_encode($externalId)));
 
         return $this;
+    }
+
+    /**
+     * Join table to get tag information.
+     */
+    protected function joinMetaDataTables(): void
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+            $this->fields[] = 'journal_meta.name as meta_name';
+            $this->fields[] = 'journal_meta.data as meta_data';
+        }
     }
 
     /**
@@ -245,7 +319,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $url
+     * @param string $url
      * @return GroupCollectorInterface
      */
     public function externalUrlContains(string $url): GroupCollectorInterface
@@ -260,7 +334,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $url
+     * @param string $url
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotContain(string $url): GroupCollectorInterface
@@ -275,7 +349,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $url
+     * @param string $url
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface
@@ -290,7 +364,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $url
+     * @param string $url
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotStart(string $url): GroupCollectorInterface
@@ -307,7 +381,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $url
+     * @param string $url
      * @return GroupCollectorInterface
      */
     public function externalUrlEnds(string $url): GroupCollectorInterface
@@ -322,7 +396,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $url
+     * @param string $url
      * @return GroupCollectorInterface
      */
     public function externalUrlStarts(string $url): GroupCollectorInterface
@@ -349,6 +423,37 @@ trait MetaCollection
         $this->query->whereNotNull('tag_transaction_journal.tag_id');
 
         return $this;
+    }
+
+    /**
+     * @return GroupCollectorInterface
+     */
+    public function withTagInformation(): GroupCollectorInterface
+    {
+        $this->fields[] = 'tags.id as tag_id';
+        $this->fields[] = 'tags.tag as tag_name';
+        $this->fields[] = 'tags.date as tag_date';
+        $this->fields[] = 'tags.description as tag_description';
+        $this->fields[] = 'tags.latitude as tag_latitude';
+        $this->fields[] = 'tags.longitude as tag_longitude';
+        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
+
+        $this->joinTagTables();
+
+        return $this;
+    }
+
+    /**
+     * Join table to get tag information.
+     */
+    protected function joinTagTables(): void
+    {
+        if (false === $this->hasJoinedTagTables) {
+            // join some extra tables:
+            $this->hasJoinedTagTables = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
+        }
     }
 
     /**
@@ -424,7 +529,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $value
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
@@ -437,7 +542,30 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $value
+     * @inheritDoc
+     */
+    public function withNotes(): GroupCollectorInterface
+    {
+        if (false === $this->hasNotesInformation) {
+            // join bill table
+            $this->query->leftJoin(
+                'notes',
+                static function (JoinClause $join) {
+                    $join->on('notes.noteable_id', '=', 'transaction_journals.id');
+                    $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
+                    $join->whereNull('notes.deleted_at');
+                }
+            );
+            // add fields
+            $this->fields[]            = 'notes.text as notes';
+            $this->hasNotesInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
@@ -453,7 +581,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $value
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
@@ -469,7 +597,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $value
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
@@ -485,7 +613,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $value
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
@@ -498,7 +626,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $value
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
@@ -511,7 +639,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $value
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
@@ -527,7 +655,7 @@ trait MetaCollection
     }
 
     /**
-     * @param  string  $value
+     * @param string $value
      *
      * @return GroupCollectorInterface
      */
@@ -542,7 +670,7 @@ trait MetaCollection
     /**
      * Limit the search to a specific bill.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return GroupCollectorInterface
      */
@@ -557,7 +685,7 @@ trait MetaCollection
     /**
      * Limit the search to a specific set of bills.
      *
-     * @param  Collection  $bills
+     * @param Collection $bills
      *
      * @return GroupCollectorInterface
      */
@@ -572,7 +700,7 @@ trait MetaCollection
     /**
      * Limit the search to a specific budget.
      *
-     * @param  Budget  $budget
+     * @param Budget $budget
      *
      * @return GroupCollectorInterface
      */
@@ -587,7 +715,7 @@ trait MetaCollection
     /**
      * Limit the search to a specific set of budgets.
      *
-     * @param  Collection  $budgets
+     * @param Collection $budgets
      *
      * @return GroupCollectorInterface
      */
@@ -604,7 +732,7 @@ trait MetaCollection
     /**
      * Limit the search to a specific bunch of categories.
      *
-     * @param  Collection  $categories
+     * @param Collection $categories
      *
      * @return GroupCollectorInterface
      */
@@ -621,7 +749,7 @@ trait MetaCollection
     /**
      * Limit the search to a specific category.
      *
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return GroupCollectorInterface
      */
@@ -698,7 +826,7 @@ trait MetaCollection
     /**
      * Limit results to a specific tag.
      *
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return GroupCollectorInterface
      */
@@ -713,7 +841,7 @@ trait MetaCollection
     /**
      * Limit results to a specific set of tags.
      *
-     * @param  Collection  $tags
+     * @param Collection $tags
      *
      * @return GroupCollectorInterface
      */
@@ -728,7 +856,7 @@ trait MetaCollection
     /**
      * Without tags
      *
-     * @param  Collection  $tags
+     * @param Collection $tags
      *
      * @return GroupCollectorInterface
      */
@@ -779,25 +907,6 @@ trait MetaCollection
     }
 
     /**
-     * Will include bill name + ID, if any.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withBillInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasBillInformation) {
-            // join bill table
-            $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
-            // add fields
-            $this->fields[]           = 'bills.id as bill_id';
-            $this->fields[]           = 'bills.name as bill_name';
-            $this->hasBillInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Limit results to a transactions without a budget..
      *
      * @return GroupCollectorInterface
@@ -811,27 +920,6 @@ trait MetaCollection
     }
 
     /**
-     * Will include budget ID + name, if any.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withBudgetInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasBudgetInformation) {
-            // join link table
-            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            // join cat table
-            $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
-            // add fields
-            $this->fields[]             = 'budgets.id as budget_id';
-            $this->fields[]             = 'budgets.name as budget_name';
-            $this->hasBudgetInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
      * Limit results to a transactions without a category.
      *
      * @return GroupCollectorInterface
@@ -840,27 +928,6 @@ trait MetaCollection
     {
         $this->withCategoryInformation();
         $this->query->whereNotNull('category_transaction_journal.category_id');
-
-        return $this;
-    }
-
-    /**
-     * Will include category ID + name, if any.
-     *
-     * @return GroupCollectorInterface
-     */
-    public function withCategoryInformation(): GroupCollectorInterface
-    {
-        if (false === $this->hasCatInformation) {
-            // join link table
-            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            // join cat table
-            $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
-            // add fields
-            $this->fields[]          = 'categories.id as category_id';
-            $this->fields[]          = 'categories.name as category_name';
-            $this->hasCatInformation = true;
-        }
 
         return $this;
     }
@@ -885,47 +952,6 @@ trait MetaCollection
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->whereNotNull('journal_meta.data');
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withNotes(): GroupCollectorInterface
-    {
-        if (false === $this->hasNotesInformation) {
-            // join bill table
-            $this->query->leftJoin(
-                'notes',
-                static function (JoinClause $join) {
-                    $join->on('notes.noteable_id', '=', 'transaction_journals.id');
-                    $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
-                    $join->whereNull('notes.deleted_at');
-                }
-            );
-            // add fields
-            $this->fields[]            = 'notes.text as notes';
-            $this->hasNotesInformation = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return GroupCollectorInterface
-     */
-    public function withTagInformation(): GroupCollectorInterface
-    {
-        $this->fields[] = 'tags.id as tag_id';
-        $this->fields[] = 'tags.tag as tag_name';
-        $this->fields[] = 'tags.date as tag_date';
-        $this->fields[] = 'tags.description as tag_description';
-        $this->fields[] = 'tags.latitude as tag_latitude';
-        $this->fields[] = 'tags.longitude as tag_longitude';
-        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
-
-        $this->joinTagTables();
 
         return $this;
     }
@@ -1035,31 +1061,5 @@ trait MetaCollection
         $this->query->whereNull('tag_transaction_journal.tag_id');
 
         return $this;
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinMetaDataTables(): void
-    {
-        if (false === $this->hasJoinedMetaTables) {
-            $this->hasJoinedMetaTables = true;
-            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[] = 'journal_meta.name as meta_name';
-            $this->fields[] = 'journal_meta.data as meta_data';
-        }
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinTagTables(): void
-    {
-        if (false === $this->hasJoinedTagTables) {
-            // join some extra tables:
-            $this->hasJoinedTagTables = true;
-            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
-        }
     }
 }

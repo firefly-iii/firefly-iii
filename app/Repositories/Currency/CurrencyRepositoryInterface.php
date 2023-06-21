@@ -38,14 +38,14 @@ use Illuminate\Support\Collection;
 interface CurrencyRepositoryInterface
 {
     /**
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      *
      * @return int
      */
     public function countJournals(TransactionCurrency $currency): int;
 
     /**
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      *
      * @return bool
      */
@@ -54,14 +54,14 @@ interface CurrencyRepositoryInterface
     /**
      * Currency is in use where exactly.
      *
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      *
      * @return string|null
      */
     public function currencyInUseAt(TransactionCurrency $currency): ?string;
 
     /**
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      *
      * @return bool
      */
@@ -70,14 +70,14 @@ interface CurrencyRepositoryInterface
     /**
      * Disables a currency
      *
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      */
     public function disable(TransactionCurrency $currency): void;
 
     /**
      * Enables a currency
      *
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      */
     public function enable(TransactionCurrency $currency): void;
 
@@ -89,7 +89,7 @@ interface CurrencyRepositoryInterface
     /**
      * Find by ID, return NULL if not found.
      *
-     * @param  int  $currencyId
+     * @param int $currencyId
      *
      * @return TransactionCurrency|null
      */
@@ -98,7 +98,7 @@ interface CurrencyRepositoryInterface
     /**
      * Find by currency code, return NULL if unfound.
      *
-     * @param  string  $currencyCode
+     * @param string $currencyCode
      *
      * @return TransactionCurrency|null
      */
@@ -107,7 +107,7 @@ interface CurrencyRepositoryInterface
     /**
      * Find by currency code, return NULL if unfound.
      *
-     * @param  string  $currencyCode
+     * @param string $currencyCode
      *
      * @return TransactionCurrency|null
      */
@@ -116,7 +116,7 @@ interface CurrencyRepositoryInterface
     /**
      * Find by currency name.
      *
-     * @param  string  $currencyName
+     * @param string $currencyName
      *
      * @return TransactionCurrency|null
      */
@@ -125,7 +125,7 @@ interface CurrencyRepositoryInterface
     /**
      * Find by currency name.
      *
-     * @param  string  $currencyName
+     * @param string $currencyName
      *
      * @return TransactionCurrency|null
      */
@@ -134,7 +134,7 @@ interface CurrencyRepositoryInterface
     /**
      * Find by currency symbol.
      *
-     * @param  string  $currencySymbol
+     * @param string $currencySymbol
      *
      * @return TransactionCurrency|null
      */
@@ -143,7 +143,7 @@ interface CurrencyRepositoryInterface
     /**
      * Find by currency symbol.
      *
-     * @param  string  $currencySymbol
+     * @param string $currencySymbol
      *
      * @return TransactionCurrency|null
      */
@@ -152,8 +152,8 @@ interface CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns user default or system default.
      *
-     * @param  int|null  $currencyId
-     * @param  string|null  $currencyCode
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
      *
      * @return TransactionCurrency
      */
@@ -162,8 +162,8 @@ interface CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns NULL if nothing found.
      *
-     * @param  int|null  $currencyId
-     * @param  string|null  $currencyCode
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
      *
      * @return TransactionCurrency|null
      */
@@ -180,14 +180,14 @@ interface CurrencyRepositoryInterface
     public function getAll(): Collection;
 
     /**
-     * @param  array  $ids
+     * @param array $ids
      *
      * @return Collection
      */
     public function getByIds(array $ids): Collection;
 
     /**
-     * @param  Preference  $preference
+     * @param Preference $preference
      *
      * @return TransactionCurrency
      */
@@ -196,24 +196,24 @@ interface CurrencyRepositoryInterface
     /**
      * Get currency exchange rate.
      *
-     * @param  TransactionCurrency  $fromCurrency
-     * @param  TransactionCurrency  $toCurrency
-     * @param  Carbon  $date
+     * @param TransactionCurrency $fromCurrency
+     * @param TransactionCurrency $toCurrency
+     * @param Carbon              $date
      *
      * @return CurrencyExchangeRate|null
      */
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
 
     /**
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      *
      * @return bool
      */
     public function isFallbackCurrency(TransactionCurrency $currency): bool;
 
     /**
-     * @param  string  $search
-     * @param  int  $limit
+     * @param string $search
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -221,21 +221,22 @@ interface CurrencyRepositoryInterface
 
     /**
      * TODO must be a factory
-     * @param  TransactionCurrency  $fromCurrency
-     * @param  TransactionCurrency  $toCurrency
-     * @param  Carbon  $date
-     * @param  float  $rate
+     *
+     * @param TransactionCurrency $fromCurrency
+     * @param TransactionCurrency $toCurrency
+     * @param Carbon              $date
+     * @param float               $rate
      * @return CurrencyExchangeRate
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return TransactionCurrency
      * @throws FireflyException
@@ -243,8 +244,8 @@ interface CurrencyRepositoryInterface
     public function store(array $data): TransactionCurrency;
 
     /**
-     * @param  TransactionCurrency  $currency
-     * @param  array  $data
+     * @param TransactionCurrency $currency
+     * @param array               $data
      *
      * @return TransactionCurrency
      */

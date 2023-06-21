@@ -38,7 +38,7 @@ class AttachmentFactory
     private User $user;
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return Attachment|null
      * @throws FireflyException
@@ -87,7 +87,7 @@ class AttachmentFactory
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void
     {

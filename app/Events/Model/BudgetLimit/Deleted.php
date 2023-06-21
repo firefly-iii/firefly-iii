@@ -37,7 +37,7 @@ class Deleted extends Event
     public BudgetLimit $budgetLimit;
 
     /**
-     * @param  BudgetLimit  $budgetLimit
+     * @param BudgetLimit $budgetLimit
      */
     public function __construct(BudgetLimit $budgetLimit)
     {

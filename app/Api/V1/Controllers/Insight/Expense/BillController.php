@@ -61,7 +61,7 @@ class BillController extends Controller
      *
      * Expenses per bill, possibly filtered by bill and account.
      *
-     * @param  GenericRequest  $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */
@@ -124,7 +124,7 @@ class BillController extends Controller
      *
      * Expenses for no bill filtered by account.
      *
-     * @param  GenericRequest  $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */

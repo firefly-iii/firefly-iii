@@ -47,7 +47,7 @@ class FixUnevenAmount extends Command
      */
     public function handle(): int
     {
-        $count = 0;
+        $count    = 0;
         $journals = DB::table('transactions')
                       ->groupBy('transaction_journal_id')
                       ->whereNull('deleted_at')

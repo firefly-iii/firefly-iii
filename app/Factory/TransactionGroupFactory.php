@@ -51,7 +51,7 @@ class TransactionGroupFactory
     /**
      * Store a new transaction journal.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
@@ -92,7 +92,7 @@ class TransactionGroupFactory
     /**
      * Set the user.
      *
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void
     {

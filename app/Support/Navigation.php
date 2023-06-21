@@ -36,9 +36,9 @@ use Psr\Container\NotFoundExceptionInterface;
 class Navigation
 {
     /**
-     * @param  Carbon  $theDate
-     * @param  string  $repeatFreq
-     * @param  int  $skip
+     * @param Carbon $theDate
+     * @param string $repeatFreq
+     * @param int    $skip
      *
      * @return Carbon
      */
@@ -113,9 +113,9 @@ class Navigation
     }
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  string  $range
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $range
      *
      * @return array
      *
@@ -174,8 +174,73 @@ class Navigation
     }
 
     /**
-     * @param  Carbon  $end
-     * @param  string  $repeatFreq
+     * @param Carbon $theDate
+     * @param string $repeatFreq
+     *
+     * @return Carbon
+     */
+    public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
+    {
+        $date = clone $theDate;
+
+        $functionMap = [
+            '1D'        => 'startOfDay',
+            'daily'     => 'startOfDay',
+            '1W'        => 'startOfWeek',
+            'week'      => 'startOfWeek',
+            'weekly'    => 'startOfWeek',
+            'month'     => 'startOfMonth',
+            '1M'        => 'startOfMonth',
+            'monthly'   => 'startOfMonth',
+            '3M'        => 'firstOfQuarter',
+            'quarter'   => 'firstOfQuarter',
+            'quarterly' => 'firstOfQuarter',
+            'year'      => 'startOfYear',
+            'yearly'    => 'startOfYear',
+            '1Y'        => 'startOfYear',
+        ];
+        if (array_key_exists($repeatFreq, $functionMap)) {
+            $function = $functionMap[$repeatFreq];
+            $date->$function();
+
+            return $date;
+        }
+        if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
+            $month = $date->month;
+            $date->startOfYear();
+            if ($month >= 7) {
+                $date->addMonths(6);
+            }
+
+            return $date;
+        }
+
+        $result = match ($repeatFreq) {
+            'last7' => $date->subDays(7)->startOfDay(),
+            'last30' => $date->subDays(30)->startOfDay(),
+            'last90' => $date->subDays(90)->startOfDay(),
+            'last365' => $date->subDays(365)->startOfDay(),
+            'MTD' => $date->startOfMonth()->startOfDay(),
+            'QTD' => $date->firstOfQuarter()->startOfDay(),
+            'YTD' => $date->startOfYear()->startOfDay(),
+            default => null,
+        };
+        if (null !== $result) {
+            return $result;
+        }
+
+
+        if ('custom' === $repeatFreq) {
+            return $date; // the date is already at the start.
+        }
+        Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
+
+        return $theDate;
+    }
+
+    /**
+     * @param Carbon $end
+     * @param string $repeatFreq
      *
      * @return Carbon
      */
@@ -269,9 +334,9 @@ class Navigation
     }
 
     /**
-     * @param  Carbon  $theCurrentEnd
-     * @param  string  $repeatFreq
-     * @param  Carbon|null  $maxDate
+     * @param Carbon      $theCurrentEnd
+     * @param string      $repeatFreq
+     * @param Carbon|null $maxDate
      *
      * @return Carbon
      */
@@ -311,7 +376,8 @@ class Navigation
     /**
      * Returns the user's view range and if necessary, corrects the dynamic view
      * range to a normal range.
-     * @param  bool  $correct
+     *
+     * @param bool $correct
      * @return string
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -340,8 +406,8 @@ class Navigation
     }
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      * @throws FireflyException
@@ -377,8 +443,31 @@ class Navigation
     }
 
     /**
-     * @param  Carbon  $theDate
-     * @param  string  $repeatFrequency
+     * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is
+     * less than a year, method returns "Y-m". If the date difference is larger, method returns "Y".
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function preferredCarbonFormat(Carbon $start, Carbon $end): string
+    {
+        $format = 'Y-m-d';
+        if ($start->diffInMonths($end) > 1) {
+            $format = 'Y-m';
+        }
+
+        if ($start->diffInMonths($end) > 12) {
+            $format = 'Y';
+        }
+
+        return $format;
+    }
+
+    /**
+     * @param Carbon $theDate
+     * @param string $repeatFrequency
      *
      * @return string
      */
@@ -417,34 +506,12 @@ class Navigation
     }
 
     /**
-     * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
-     * method returns "Y-m". If the date difference is larger, method returns "Y".
+     * If the date difference between start and end is less than a month, method returns trans(config.month_and_day).
+     * If the difference is less than a year, method returns "config.month". If the date difference is larger, method
+     * returns "config.year".
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return string
-     */
-    public function preferredCarbonFormat(Carbon $start, Carbon $end): string
-    {
-        $format = 'Y-m-d';
-        if ($start->diffInMonths($end) > 1) {
-            $format = 'Y-m';
-        }
-
-        if ($start->diffInMonths($end) > 12) {
-            $format = 'Y';
-        }
-
-        return $format;
-    }
-
-    /**
-     * If the date difference between start and end is less than a month, method returns trans(config.month_and_day). If the difference is less than a year,
-     * method returns "config.month". If the date difference is larger, method returns "config.year".
-     *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -464,11 +531,11 @@ class Navigation
     }
 
     /**
-     * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference is less than a year,
-     * method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
+     * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference
+     * is less than a year, method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -487,11 +554,11 @@ class Navigation
     }
 
     /**
-     * If the date difference between start and end is less than a month, method returns "1D". If the difference is less than a year,
-     * method returns "1M". If the date difference is larger, method returns "1Y".
+     * If the date difference between start and end is less than a month, method returns "1D". If the difference is
+     * less than a year, method returns "1M". If the date difference is larger, method returns "1Y".
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -510,11 +577,11 @@ class Navigation
     }
 
     /**
-     * If the date difference between start and end is less than a month, method returns "%Y-%m-%d". If the difference is less than a year,
-     * method returns "%Y-%m". If the date difference is larger, method returns "%Y".
+     * If the date difference between start and end is less than a month, method returns "%Y-%m-%d". If the difference
+     * is less than a year, method returns "%Y-%m". If the date difference is larger, method returns "%Y".
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -533,74 +600,9 @@ class Navigation
     }
 
     /**
-     * @param  Carbon  $theDate
-     * @param  string  $repeatFreq
-     *
-     * @return Carbon
-     */
-    public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
-    {
-        $date = clone $theDate;
-
-        $functionMap = [
-            '1D'        => 'startOfDay',
-            'daily'     => 'startOfDay',
-            '1W'        => 'startOfWeek',
-            'week'      => 'startOfWeek',
-            'weekly'    => 'startOfWeek',
-            'month'     => 'startOfMonth',
-            '1M'        => 'startOfMonth',
-            'monthly'   => 'startOfMonth',
-            '3M'        => 'firstOfQuarter',
-            'quarter'   => 'firstOfQuarter',
-            'quarterly' => 'firstOfQuarter',
-            'year'      => 'startOfYear',
-            'yearly'    => 'startOfYear',
-            '1Y'        => 'startOfYear',
-        ];
-        if (array_key_exists($repeatFreq, $functionMap)) {
-            $function = $functionMap[$repeatFreq];
-            $date->$function();
-
-            return $date;
-        }
-        if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
-            $month = $date->month;
-            $date->startOfYear();
-            if ($month >= 7) {
-                $date->addMonths(6);
-            }
-
-            return $date;
-        }
-
-        $result = match ($repeatFreq) {
-            'last7' => $date->subDays(7)->startOfDay(),
-            'last30' => $date->subDays(30)->startOfDay(),
-            'last90' => $date->subDays(90)->startOfDay(),
-            'last365' => $date->subDays(365)->startOfDay(),
-            'MTD' => $date->startOfMonth()->startOfDay(),
-            'QTD' => $date->firstOfQuarter()->startOfDay(),
-            'YTD' => $date->startOfYear()->startOfDay(),
-            default => null,
-        };
-        if (null !== $result) {
-            return $result;
-        }
-
-
-        if ('custom' === $repeatFreq) {
-            return $date; // the date is already at the start.
-        }
-        Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
-
-        return $theDate;
-    }
-
-    /**
-     * @param  Carbon  $theDate
-     * @param  string  $repeatFreq
-     * @param  int|null  $subtract
+     * @param Carbon   $theDate
+     * @param string   $repeatFreq
+     * @param int|null $subtract
      *
      * @return Carbon
      *
@@ -687,8 +689,8 @@ class Navigation
     }
 
     /**
-     * @param  string  $range
-     * @param  Carbon  $start
+     * @param string $range
+     * @param Carbon $start
      *
      * @return Carbon
      *
@@ -750,8 +752,8 @@ class Navigation
     }
 
     /**
-     * @param  string  $range
-     * @param  Carbon  $start
+     * @param string $range
+     * @param Carbon $start
      *
      * @return Carbon
      *

@@ -38,15 +38,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionGroup
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $user_id
- * @property string|null $title
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
+ * @property int                                  $user_id
+ * @property string|null                          $title
  * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null $transaction_journals_count
- * @property-read User $user
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newQuery()
  * @method static Builder|TransactionGroup onlyTrashed()
@@ -59,7 +59,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserId($value)
  * @method static Builder|TransactionGroup withTrashed()
  * @method static Builder|TransactionGroup withoutTrashed()
- * @property int|null $user_group_id
+ * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -88,7 +88,7 @@ class TransactionGroup extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return TransactionGroup
      * @throws NotFoundHttpException
@@ -116,18 +116,18 @@ class TransactionGroup extends Model
     }
 
     /**
-     * @return HasMany
-     */
-    public function transactionJournals(): HasMany
-    {
-        return $this->hasMany(TransactionJournal::class);
-    }
-
-    /**
      * @return BelongsTo
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transactionJournals(): HasMany
+    {
+        return $this->hasMany(TransactionJournal::class);
     }
 }

@@ -36,7 +36,7 @@ trait ReconciliationValidation
     public ?Account $source;
 
     /**
-     * @param  array  $array
+     * @param array $array
      *
      * @return bool
      */
@@ -72,7 +72,8 @@ trait ReconciliationValidation
 
     /**
      * Basically the same check
-     * @param  array  $array
+     *
+     * @param array $array
      *
      * @return bool
      */

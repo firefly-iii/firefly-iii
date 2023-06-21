@@ -41,50 +41,50 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $user_id
- * @property int $transaction_type_id
- * @property int|null $transaction_group_id
- * @property int|null $bill_id
- * @property int|null $transaction_currency_id
- * @property string $description
- * @property Carbon $date
- * @property Carbon|null $interest_date
- * @property Carbon|null $book_date
- * @property Carbon|null $process_date
- * @property int $order
- * @property int $tag_count
- * @property string $transaction_type_type
- * @property bool $encrypted
- * @property bool $completed
- * @property-read Collection|Attachment[] $attachments
- * @property-read int|null $attachments_count
- * @property-read Bill|null $bill
- * @property-read Collection|Budget[] $budgets
- * @property-read int|null $budgets_count
- * @property-read Collection|Category[] $categories
- * @property-read int|null $categories_count
+ * @property int                                      $id
+ * @property Carbon|null                              $created_at
+ * @property Carbon|null                              $updated_at
+ * @property Carbon|null                              $deleted_at
+ * @property int                                      $user_id
+ * @property int                                      $transaction_type_id
+ * @property int|null                                 $transaction_group_id
+ * @property int|null                                 $bill_id
+ * @property int|null                                 $transaction_currency_id
+ * @property string                                   $description
+ * @property Carbon                                   $date
+ * @property Carbon|null                              $interest_date
+ * @property Carbon|null                              $book_date
+ * @property Carbon|null                              $process_date
+ * @property int                                      $order
+ * @property int                                      $tag_count
+ * @property string                                   $transaction_type_type
+ * @property bool                                     $encrypted
+ * @property bool                                     $completed
+ * @property-read Collection|Attachment[]             $attachments
+ * @property-read int|null                            $attachments_count
+ * @property-read Bill|null                           $bill
+ * @property-read Collection|Budget[]                 $budgets
+ * @property-read int|null                            $budgets_count
+ * @property-read Collection|Category[]               $categories
+ * @property-read int|null                            $categories_count
  * @property-read Collection|TransactionJournalLink[] $destJournalLinks
- * @property-read int|null $dest_journal_links_count
- * @property-read Collection|Note[] $notes
- * @property-read int|null $notes_count
- * @property-read Collection|PiggyBankEvent[] $piggyBankEvents
- * @property-read int|null $piggy_bank_events_count
+ * @property-read int|null                            $dest_journal_links_count
+ * @property-read Collection|Note[]                   $notes
+ * @property-read int|null                            $notes_count
+ * @property-read Collection|PiggyBankEvent[]         $piggyBankEvents
+ * @property-read int|null                            $piggy_bank_events_count
  * @property-read Collection|TransactionJournalLink[] $sourceJournalLinks
- * @property-read int|null $source_journal_links_count
- * @property-read Collection|Tag[] $tags
- * @property-read int|null $tags_count
- * @property-read TransactionCurrency|null $transactionCurrency
- * @property-read TransactionGroup|null $transactionGroup
+ * @property-read int|null                            $source_journal_links_count
+ * @property-read Collection|Tag[]                    $tags
+ * @property-read int|null                            $tags_count
+ * @property-read TransactionCurrency|null            $transactionCurrency
+ * @property-read TransactionGroup|null               $transactionGroup
  * @property-read Collection|TransactionJournalMeta[] $transactionJournalMeta
- * @property-read int|null $transaction_journal_meta_count
- * @property-read TransactionType $transactionType
- * @property-read Collection|Transaction[] $transactions
- * @property-read int|null $transactions_count
- * @property-read User $user
+ * @property-read int|null                            $transaction_journal_meta_count
+ * @property-read TransactionType                     $transactionType
+ * @property-read Collection|Transaction[]            $transactions
+ * @property-read int|null                            $transactions_count
+ * @property-read User                                $user
  * @method static EloquentBuilder|TransactionJournal after(Carbon $date)
  * @method static EloquentBuilder|TransactionJournal before(Carbon $date)
  * @method static EloquentBuilder|TransactionJournal newModelQuery()
@@ -112,10 +112,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|TransactionJournal whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
- * @property-read Collection|Location[] $locations
- * @property-read int|null $locations_count
- * @property int $the_count
- * @property int|null $user_group_id
+ * @property-read Collection|Location[]               $locations
+ * @property-read int|null                            $locations_count
+ * @property int                                      $the_count
+ * @property int|null                                 $user_group_id
  * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -161,33 +161,9 @@ class TransactionJournal extends Model
     protected $hidden = ['encrypted'];
 
     /**
-     * Checks if tables are joined.
-     *
-     *
-     * @param  Builder  $query
-     * @param  string  $table
-     *
-     * @return bool
-     */
-    public static function isJoined(Builder $query, string $table): bool
-    {
-        $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
-        foreach ($joins as $join) {
-            if ($join->table === $table) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return TransactionJournal
      * @throws NotFoundHttpException
@@ -206,6 +182,14 @@ class TransactionJournal extends Model
         }
 
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -286,8 +270,8 @@ class TransactionJournal extends Model
 
     /**
      *
-     * @param  EloquentBuilder  $query
-     * @param  Carbon  $date
+     * @param EloquentBuilder $query
+     * @param Carbon          $date
      *
      * @return EloquentBuilder
      */
@@ -298,8 +282,8 @@ class TransactionJournal extends Model
 
     /**
      *
-     * @param  EloquentBuilder  $query
-     * @param  Carbon  $date
+     * @param EloquentBuilder $query
+     * @param Carbon          $date
      *
      * @return EloquentBuilder
      */
@@ -310,8 +294,8 @@ class TransactionJournal extends Model
 
     /**
      *
-     * @param  EloquentBuilder  $query
-     * @param  array  $types
+     * @param EloquentBuilder $query
+     * @param array           $types
      */
     public function scopeTransactionTypes(EloquentBuilder $query, array $types): void
     {
@@ -321,6 +305,30 @@ class TransactionJournal extends Model
         if (0 !== count($types)) {
             $query->whereIn('transaction_types.type', $types);
         }
+    }
+
+    /**
+     * Checks if tables are joined.
+     *
+     *
+     * @param Builder $query
+     * @param string  $table
+     *
+     * @return bool
+     */
+    public static function isJoined(Builder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+        if (null === $joins) {
+            return false;
+        }
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -377,13 +385,5 @@ class TransactionJournal extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

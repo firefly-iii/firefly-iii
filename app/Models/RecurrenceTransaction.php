@@ -36,25 +36,25 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\RecurrenceTransaction
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $recurrence_id
- * @property int $transaction_currency_id
- * @property int|null $foreign_currency_id
- * @property int $source_id
- * @property int $destination_id
- * @property string $amount
- * @property string|null $foreign_amount
- * @property string $description
- * @property-read Account $destinationAccount
- * @property-read TransactionCurrency|null $foreignCurrency
- * @property-read Recurrence $recurrence
+ * @property int                                         $id
+ * @property Carbon|null                                 $created_at
+ * @property Carbon|null                                 $updated_at
+ * @property Carbon|null                                 $deleted_at
+ * @property int                                         $recurrence_id
+ * @property int                                         $transaction_currency_id
+ * @property int|null                                    $foreign_currency_id
+ * @property int                                         $source_id
+ * @property int                                         $destination_id
+ * @property string                                      $amount
+ * @property string|null                                 $foreign_amount
+ * @property string                                      $description
+ * @property-read Account                                $destinationAccount
+ * @property-read TransactionCurrency|null               $foreignCurrency
+ * @property-read Recurrence                             $recurrence
  * @property-read Collection|RecurrenceTransactionMeta[] $recurrenceTransactionMeta
- * @property-read int|null $recurrence_transaction_meta_count
- * @property-read Account $sourceAccount
- * @property-read TransactionCurrency $transactionCurrency
+ * @property-read int|null                               $recurrence_transaction_meta_count
+ * @property-read Account                                $sourceAccount
+ * @property-read TransactionCurrency                    $transactionCurrency
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction newQuery()
  * @method static Builder|RecurrenceTransaction onlyTrashed()
@@ -73,9 +73,9 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction whereUpdatedAt($value)
  * @method static Builder|RecurrenceTransaction withTrashed()
  * @method static Builder|RecurrenceTransaction withoutTrashed()
- * @property int|null $transaction_type_id
+ * @property int|null                                    $transaction_type_id
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction whereTransactionTypeId($value)
- * @property-read TransactionType|null $transactionType
+ * @property-read TransactionType|null                   $transactionType
  * @mixin Eloquent
  */
 class RecurrenceTransaction extends Model

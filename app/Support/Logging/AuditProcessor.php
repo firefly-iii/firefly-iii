@@ -34,7 +34,7 @@ use Monolog\LogRecord;
 class AuditProcessor
 {
     /**
-     * @param  LogRecord  $record
+     * @param LogRecord $record
      *
      * @return LogRecord
      */

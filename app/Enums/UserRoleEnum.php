@@ -26,12 +26,12 @@ namespace FireflyIII\Enums;
 
 enum UserRoleEnum: string
 {
-    case CHANGE_PIGGY_BANKS = 'change_piggies';
-    case CHANGE_REPETITIONS = 'change_reps';
-    case CHANGE_RULES = 'change_rules';
+    case CHANGE_PIGGY_BANKS  = 'change_piggies';
+    case CHANGE_REPETITIONS  = 'change_reps';
+    case CHANGE_RULES        = 'change_rules';
     case CHANGE_TRANSACTIONS = 'change_tx';
-    case FULL = 'full';
-    case OWNER = 'owner';
-    case READ_ONLY = 'ro';
-    case VIEW_REPORTS = 'view_reports';
+    case FULL                = 'full';
+    case OWNER               = 'owner';
+    case READ_ONLY           = 'ro';
+    case VIEW_REPORTS        = 'view_reports';
 }

@@ -70,9 +70,9 @@ class EditController extends Controller
     /**
      * Edit account overview.
      *
-     * @param  Request  $request
-     * @param  Account  $account
-     * @param  AccountRepositoryInterface  $repository
+     * @param Request                    $request
+     * @param Account                    $account
+     * @param AccountRepositoryInterface $repository
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
@@ -178,8 +178,8 @@ class EditController extends Controller
     /**
      * Update the account.
      *
-     * @param  AccountFormRequest  $request
-     * @param  Account  $account
+     * @param AccountFormRequest $request
+     * @param Account            $account
      *
      * @return $this|RedirectResponse|Redirector
      */

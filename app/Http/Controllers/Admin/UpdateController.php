@@ -91,7 +91,7 @@ class UpdateController extends Controller
     /**
      * Post new settings.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
      */

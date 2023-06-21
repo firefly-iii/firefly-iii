@@ -81,67 +81,43 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getVersion(): int
-    {
-        return $this->version;
-    }
-
-    /**
-     * @param  Collection  $objects
-     */
-    public function setObjects(Collection $objects): void
-    {
-        $this->objects = $objects;
-    }
-
-    /**
-     * @param  int  $trigger
-     */
-    public function setTrigger(int $trigger): void
-    {
-        $this->trigger = $trigger;
-    }
-
-    /**
-     * @param  User  $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setWebhooks(Collection $webhooks): void
-    {
-        $this->webhooks = $webhooks;
-    }
-
-    /**
-     * @param  TransactionGroup  $transactionGroup
-     *
      * @return Collection
      */
-    private function collectAccounts(TransactionGroup $transactionGroup): Collection
+    private function getWebhooks(): Collection
     {
-        $accounts = new Collection();
-        /** @var TransactionJournal $journal */
-        foreach ($transactionGroup->transactionJournals as $journal) {
-            /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
-                $accounts->push($transaction->account);
-            }
-        }
-
-        return $accounts->unique();
+        return $this->user->webhooks()->where('active', true)->where('trigger', $this->trigger)->get(['webhooks.*']);
     }
 
     /**
-     * @param  Webhook  $webhook
-     * @param  Model  $model
+     *
+     */
+    private function run(): void
+    {
+        Log::debug('Now in StandardMessageGenerator::run');
+        /** @var Webhook $webhook */
+        foreach ($this->webhooks as $webhook) {
+            $this->runWebhook($webhook);
+        }
+        Log::debug('Done with StandardMessageGenerator::run');
+    }
+
+    /**
+     * @param Webhook $webhook
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    private function runWebhook(Webhook $webhook): void
+    {
+        Log::debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
+        /** @var Model $object */
+        foreach ($this->objects as $object) {
+            $this->generateMessage($webhook, $object);
+        }
+    }
+
+    /**
+     * @param Webhook $webhook
+     * @param Model   $model
      * @throws FireflyException
      * @throws JsonException
      */
@@ -212,43 +188,35 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param TransactionGroup $transactionGroup
+     *
      * @return Collection
      */
-    private function getWebhooks(): Collection
+    private function collectAccounts(TransactionGroup $transactionGroup): Collection
     {
-        return $this->user->webhooks()->where('active', true)->where('trigger', $this->trigger)->get(['webhooks.*']);
-    }
-
-    /**
-     *
-     */
-    private function run(): void
-    {
-        Log::debug('Now in StandardMessageGenerator::run');
-        /** @var Webhook $webhook */
-        foreach ($this->webhooks as $webhook) {
-            $this->runWebhook($webhook);
+        $accounts = new Collection();
+        /** @var TransactionJournal $journal */
+        foreach ($transactionGroup->transactionJournals as $journal) {
+            /** @var Transaction $transaction */
+            foreach ($journal->transactions as $transaction) {
+                $accounts->push($transaction->account);
+            }
         }
-        Log::debug('Done with StandardMessageGenerator::run');
+
+        return $accounts->unique();
     }
 
     /**
-     * @param  Webhook  $webhook
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    private function runWebhook(Webhook $webhook): void
-    {
-        Log::debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
-        /** @var Model $object */
-        foreach ($this->objects as $object) {
-            $this->generateMessage($webhook, $object);
-        }
-    }
-
-    /**
-     * @param  Webhook  $webhook
-     * @param  array  $message
+     * @param Webhook $webhook
+     * @param array   $message
      *
      * @return void
      */
@@ -262,5 +230,37 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $webhookMessage->message = $message;
         $webhookMessage->save();
         Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
+    }
+
+    /**
+     * @param Collection $objects
+     */
+    public function setObjects(Collection $objects): void
+    {
+        $this->objects = $objects;
+    }
+
+    /**
+     * @param int $trigger
+     */
+    public function setTrigger(int $trigger): void
+    {
+        $this->trigger = $trigger;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setWebhooks(Collection $webhooks): void
+    {
+        $this->webhooks = $webhooks;
     }
 }

@@ -30,7 +30,7 @@ namespace FireflyIII\Services\FireflyIIIOrg\Update;
 interface UpdateRequestInterface
 {
     /**
-     * @param  string  $channel
+     * @param string $channel
      *
      * @return array
      */

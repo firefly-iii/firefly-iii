@@ -44,7 +44,7 @@ class BillFactory
     private User $user;
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return Bill|null
      * @throws FireflyException
@@ -109,8 +109,8 @@ class BillFactory
     }
 
     /**
-     * @param  int|null  $billId
-     * @param  null|string  $billName
+     * @param int|null    $billId
+     * @param null|string $billName
      *
      * @return Bill|null
      */
@@ -134,7 +134,7 @@ class BillFactory
     }
 
     /**
-     * @param  string  $name
+     * @param string $name
      *
      * @return Bill|null
      */
@@ -144,7 +144,7 @@ class BillFactory
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void
     {

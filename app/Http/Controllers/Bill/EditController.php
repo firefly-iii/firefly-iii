@@ -66,8 +66,8 @@ class EditController extends Controller
     /**
      * Edit a bill.
      *
-     * @param  Request  $request
-     * @param  Bill  $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return Factory|View
      */
@@ -78,7 +78,7 @@ class EditController extends Controller
         $billPeriods = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string)trans('firefly.'.$current);
+            $periods[$current] = (string)trans('firefly.' . $current);
         }
 
         $subTitle = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
@@ -115,8 +115,8 @@ class EditController extends Controller
     /**
      * Update a bill.
      *
-     * @param  BillUpdateRequest  $request
-     * @param  Bill  $bill
+     * @param BillUpdateRequest $request
+     * @param Bill              $bill
      *
      * @return RedirectResponse
      */

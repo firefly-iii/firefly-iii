@@ -26,8 +26,8 @@ namespace FireflyIII\Enums;
 
 enum RecurrenceRepetitionWeekend: int
 {
-    case WEEKEND_DO_NOTHING = 1;
+    case WEEKEND_DO_NOTHING    = 1;
     case WEEKEND_SKIP_CREATION = 2;
-    case WEEKEND_TO_FRIDAY = 3;
-    case WEEKEND_TO_MONDAY = 4;
+    case WEEKEND_TO_FRIDAY     = 3;
+    case WEEKEND_TO_MONDAY     = 4;
 }

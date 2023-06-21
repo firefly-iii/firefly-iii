@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Notification;
 class AdminEventHandler
 {
     /**
-     * @param  InvitationCreated  $event
+     * @param InvitationCreated $event
      * @return void
      */
     public function sendInvitationNotification(InvitationCreated $event): void
@@ -78,7 +78,7 @@ class AdminEventHandler
     /**
      * Send new version message to admin.
      *
-     * @param  NewVersionAvailable  $event
+     * @param NewVersionAvailable $event
      * @return void
      */
     public function sendNewVersion(NewVersionAvailable $event): void
@@ -115,7 +115,7 @@ class AdminEventHandler
     /**
      * Sends a test message to an administrator.
      *
-     * @param  AdminRequestedTestMessage  $event
+     * @param AdminRequestedTestMessage $event
      *
      * @return void
      */

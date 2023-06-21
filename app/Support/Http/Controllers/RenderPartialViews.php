@@ -48,7 +48,7 @@ trait RenderPartialViews
     /**
      * View for transactions in a budget for an account.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      *
      * @return string
      * @throws FireflyException
@@ -104,7 +104,7 @@ trait RenderPartialViews
     /**
      * View for spent in a single budget.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      *
      * @return string
      * @throws FireflyException
@@ -137,7 +137,7 @@ trait RenderPartialViews
     /**
      * View for transactions in a category.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      *
      * @return string
      * @throws FireflyException
@@ -232,7 +232,7 @@ trait RenderPartialViews
     /**
      * Returns all the expenses that went to the given expense account.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      *
      * @return string
      * @throws FireflyException
@@ -267,7 +267,7 @@ trait RenderPartialViews
     /**
      * Get current (from system) rule actions.
      *
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return array
      * @throws FireflyException
@@ -306,7 +306,7 @@ trait RenderPartialViews
     /**
      * Get current (from DB) rule triggers.
      *
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return array
      * @throws FireflyException
@@ -362,7 +362,7 @@ trait RenderPartialViews
     /**
      * Returns all the incomes that went to the given asset account.
      *
-     * @param  array  $attributes
+     * @param array $attributes
      *
      * @return string
      * @throws FireflyException

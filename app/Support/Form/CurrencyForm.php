@@ -41,9 +41,9 @@ class CurrencyForm
     use FormSupport;
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -54,134 +54,10 @@ class CurrencyForm
     }
 
     /**
-     * TODO describe and cleanup.
-     *
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public function balanceAll(string $name, $value = null, array $options = null): string
-    {
-        return $this->allCurrencyField($name, 'balance', $value, $options);
-    }
-
-    /**
-     * TODO cleanup and describe
-     *
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
-     *
-     * @return string
-     */
-    public function currencyList(string $name, $value = null, array $options = null): string
-    {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
-        // get all currencies:
-        $list  = $currencyRepos->get();
-        $array = [];
-        /** @var TransactionCurrency $currency */
-        foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
-        }
-
-        return $this->select($name, $array, $value, $options);
-    }
-
-    /**
-     * TODO cleanup and describe
-     *
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
-     *
-     * @return string
-     */
-    public function currencyListEmpty(string $name, $value = null, array $options = null): string
-    {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
-        // get all currencies:
-        $list  = $currencyRepos->get();
-        $array = [
-            0 => (string)trans('firefly.no_currency'),
-        ];
-        /** @var TransactionCurrency $currency */
-        foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
-        }
-
-        return $this->select($name, $array, $value, $options);
-    }
-
-    /**
-     * TODO describe and cleanup
-     *
-     * @param  string  $name
-     * @param  string  $view
-     * @param  mixed  $value
-     * @param  array|null  $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = 'any';
-        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
-        /** @var Collection $currencies */
-        $currencies = app('amount')->getAllCurrencies();
-        unset($options['currency'], $options['placeholder']);
-
-        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled = session('preFilled');
-        if (!is_array($preFilled)) {
-            $preFilled = [];
-        }
-        $key            = 'amount_currency_id_'.$name;
-        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
-
-        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
-
-        // find this currency in set of currencies:
-        foreach ($currencies as $currency) {
-            if ($currency->id === $sentCurrencyId) {
-                $defaultCurrency = $currency;
-                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
-                break;
-            }
-        }
-
-        // make sure value is formatted nicely:
-        if (null !== $value && '' !== $value) {
-            $value = app('steam')->bcround($value, $defaultCurrency->decimal_places);
-        }
-        try {
-            $html = view('form.'.$view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
-            $html = 'Could not render currencyField.';
-            throw new FireflyException($html, 0, $e);
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param  string  $name
-     * @param  string  $view
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param string     $view
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -203,7 +79,7 @@ class CurrencyForm
         if (!is_array($preFilled)) {
             $preFilled = [];
         }
-        $key            = 'amount_currency_id_'.$name;
+        $key            = 'amount_currency_id_' . $name;
         $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
 
         Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
@@ -222,7 +98,7 @@ class CurrencyForm
             $value = app('steam')->bcround($value, $defaultCurrency->decimal_places);
         }
         try {
-            $html = view('form.'.$view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
@@ -230,5 +106,129 @@ class CurrencyForm
         }
 
         return $html;
+    }
+
+    /**
+     * TODO describe and cleanup.
+     *
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function balanceAll(string $name, $value = null, array $options = null): string
+    {
+        return $this->allCurrencyField($name, 'balance', $value, $options);
+    }
+
+    /**
+     * TODO describe and cleanup
+     *
+     * @param string     $name
+     * @param string     $view
+     * @param mixed      $value
+     * @param array|null $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
+        /** @var Collection $currencies */
+        $currencies = app('amount')->getAllCurrencies();
+        unset($options['currency'], $options['placeholder']);
+
+        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
+        $preFilled = session('preFilled');
+        if (!is_array($preFilled)) {
+            $preFilled = [];
+        }
+        $key            = 'amount_currency_id_' . $name;
+        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
+
+        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+
+        // find this currency in set of currencies:
+        foreach ($currencies as $currency) {
+            if ($currency->id === $sentCurrencyId) {
+                $defaultCurrency = $currency;
+                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
+                break;
+            }
+        }
+
+        // make sure value is formatted nicely:
+        if (null !== $value && '' !== $value) {
+            $value = app('steam')->bcround($value, $defaultCurrency->decimal_places);
+        }
+        try {
+            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            $html = 'Could not render currencyField.';
+            throw new FireflyException($html, 0, $e);
+        }
+
+        return $html;
+    }
+
+    /**
+     * TODO cleanup and describe
+     *
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
+     *
+     * @return string
+     */
+    public function currencyList(string $name, $value = null, array $options = null): string
+    {
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $currencyRepos->get();
+        $array = [];
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+        }
+
+        return $this->select($name, $array, $value, $options);
+    }
+
+    /**
+     * TODO cleanup and describe
+     *
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
+     *
+     * @return string
+     */
+    public function currencyListEmpty(string $name, $value = null, array $options = null): string
+    {
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $currencyRepos->get();
+        $array = [
+            0 => (string)trans('firefly.no_currency'),
+        ];
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+        }
+
+        return $this->select($name, $array, $value, $options);
     }
 }

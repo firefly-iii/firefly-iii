@@ -29,7 +29,7 @@ namespace FireflyIII\Generator\Chart\Basic;
 interface GeneratorInterface
 {
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -63,7 +63,7 @@ interface GeneratorInterface
      *
      *  // it's five.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -74,7 +74,7 @@ interface GeneratorInterface
      *
      * key => value
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -85,8 +85,8 @@ interface GeneratorInterface
      *
      * 'label-of-entry' => value
      *
-     * @param  string  $setLabel
-     * @param  array  $data
+     * @param string $setLabel
+     * @param array  $data
      *
      * @return array
      */

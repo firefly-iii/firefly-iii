@@ -145,7 +145,7 @@ class AccountController extends Controller
 
         // loop all found currencies and build the data array for the chart.
         /**
-         * @var int $currencyId
+         * @var int                 $currencyId
          * @var TransactionCurrency $currency
          */
         foreach ($currencies as $currencyId => $currency) {
@@ -174,11 +174,27 @@ class AccountController extends Controller
     }
 
     /**
+     * Expenses per budget for all time, as shown on account overview.
+     *
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
+     *
+     * @return JsonResponse
+     */
+    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    {
+        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $end   = today(config('app.timezone'));
+
+        return $this->expenseBudget($account, $start, $end);
+    }
+
+    /**
      * Expenses per budget, as shown on account overview.
      *
-     * @param  Account  $account
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return JsonResponse
      */
@@ -232,27 +248,27 @@ class AccountController extends Controller
     }
 
     /**
-     * Expenses per budget for all time, as shown on account overview.
+     * Expenses grouped by category for account.
      *
-     * @param  AccountRepositoryInterface  $repository
-     * @param  Account  $account
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return JsonResponse
      */
-    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
         $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
         $end   = today(config('app.timezone'));
 
-        return $this->expenseBudget($account, $start, $end);
+        return $this->expenseCategory($account, $start, $end);
     }
 
     /**
      * Expenses per category for one single account.
      *
-     * @param  Account  $account
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return JsonResponse
      */
@@ -304,25 +320,9 @@ class AccountController extends Controller
     }
 
     /**
-     * Expenses grouped by category for account.
-     *
-     * @param  AccountRepositoryInterface  $repository
-     * @param  Account  $account
-     *
-     * @return JsonResponse
-     */
-    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
-    {
-        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $end   = today(config('app.timezone'));
-
-        return $this->expenseCategory($account, $start, $end);
-    }
-
-    /**
      * Shows the balances for all the user's frontpage accounts.
      *
-     * @param  AccountRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -348,11 +348,27 @@ class AccountController extends Controller
     }
 
     /**
+     * Shows the income grouped by category for an account, in all time.
+     *
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
+     *
+     * @return JsonResponse
+     */
+    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    {
+        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $end   = today(config('app.timezone'));
+
+        return $this->incomeCategory($account, $start, $end);
+    }
+
+    /**
      * Shows all income per account for each category.
      *
-     * @param  Account  $account
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return JsonResponse
      */
@@ -404,28 +420,12 @@ class AccountController extends Controller
     }
 
     /**
-     * Shows the income grouped by category for an account, in all time.
-     *
-     * @param  AccountRepositoryInterface  $repository
-     * @param  Account  $account
-     *
-     * @return JsonResponse
-     */
-    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
-    {
-        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $end   = today(config('app.timezone'));
-
-        return $this->incomeCategory($account, $start, $end);
-    }
-
-    /**
      * Shows overview of account during a single period.
      *
-     * @param  Account  $account
-     * @param  Carbon  $start
+     * @param Account $account
+     * @param Carbon  $start
      *
-     * @param  Carbon  $end
+     * @param Carbon  $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -461,14 +461,62 @@ class AccountController extends Controller
     }
 
     /**
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param Account             $account
+     * @param TransactionCurrency $currency
+     *
+     * @return array
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
+    {
+        $locale  = app('steam')->getLocale();
+        $step    = $this->calculateStep($start, $end);
+        $result  = [
+            'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
+            'currency_symbol' => $currency->symbol,
+            'currency_code'   => $currency->code,
+        ];
+        $entries = [];
+        $current = clone $start;
+        if ('1D' === $step) {
+            // per day the entire period, balance for every day.
+            $format   = (string)trans('config.month_and_day_js', [], $locale);
+            $range    = app('steam')->balanceInRange($account, $start, $end, $currency);
+            $previous = array_values($range)[0];
+            while ($end >= $current) {
+                $theDate         = $current->format('Y-m-d');
+                $balance         = $range[$theDate] ?? $previous;
+                $label           = $current->isoFormat($format);
+                $entries[$label] = (float)$balance;
+                $previous        = $balance;
+                $current->addDay();
+            }
+        }
+        if ('1W' === $step || '1M' === $step || '1Y' === $step) {
+            while ($end >= $current) {
+                $balance         = (float)app('steam')->balance($account, $current, $currency);
+                $label           = app('navigation')->periodShow($current, $step);
+                $entries[$label] = $balance;
+                $current         = app('navigation')->addPeriod($current, $step, 0);
+            }
+        }
+        $result['entries'] = $entries;
+
+        return $result;
+    }
+
+    /**
      * Shows the balances for a given set of dates and accounts.
      *
      * TODO this chart is not multi currency aware.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
@@ -544,7 +592,7 @@ class AccountController extends Controller
 
         // loop all found currencies and build the data array for the chart.
         /**
-         * @var int $currencyId
+         * @var int                 $currencyId
          * @var TransactionCurrency $currency
          */
         foreach ($currencies as $currencyId => $currency) {
@@ -570,53 +618,5 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-    }
-
-    /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Account  $account
-     * @param  TransactionCurrency  $currency
-     *
-     * @return array
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
-    {
-        $locale  = app('steam')->getLocale();
-        $step    = $this->calculateStep($start, $end);
-        $result  = [
-            'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
-            'currency_symbol' => $currency->symbol,
-            'currency_code'   => $currency->code,
-        ];
-        $entries = [];
-        $current = clone $start;
-        if ('1D' === $step) {
-            // per day the entire period, balance for every day.
-            $format   = (string)trans('config.month_and_day_js', [], $locale);
-            $range    = app('steam')->balanceInRange($account, $start, $end, $currency);
-            $previous = array_values($range)[0];
-            while ($end >= $current) {
-                $theDate         = $current->format('Y-m-d');
-                $balance         = $range[$theDate] ?? $previous;
-                $label           = $current->isoFormat($format);
-                $entries[$label] = (float)$balance;
-                $previous        = $balance;
-                $current->addDay();
-            }
-        }
-        if ('1W' === $step || '1M' === $step || '1Y' === $step) {
-            while ($end >= $current) {
-                $balance         = (float)app('steam')->balance($account, $current, $currency);
-                $label           = app('navigation')->periodShow($current, $step);
-                $entries[$label] = $balance;
-                $current         = app('navigation')->addPeriod($current, $step, 0);
-            }
-        }
-        $result['entries'] = $entries;
-
-        return $result;
     }
 }

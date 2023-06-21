@@ -38,11 +38,11 @@ use Illuminate\Support\Facades\Log;
 class FireflyConfig
 {
     /**
-     * @param  string  $name
+     * @param string $name
      */
     public function delete(string $name): void
     {
-        $fullName = 'ff-config-'.$name;
+        $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -50,15 +50,25 @@ class FireflyConfig
     }
 
     /**
-     * @param  string  $name
-     * @param  bool|string|int|null  $default
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool
+    {
+        return Configuration::where('name', $name)->count() === 1;
+    }
+
+    /**
+     * @param string               $name
+     * @param bool|string|int|null $default
      *
      * @return Configuration|null
      * @throws FireflyException
      */
     public function get(string $name, $default = null): ?Configuration
     {
-        $fullName = 'ff-config-'.$name;
+        $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
@@ -66,7 +76,7 @@ class FireflyConfig
         try {
             /** @var Configuration|null $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (QueryException|Exception $e) {
+        } catch (QueryException | Exception $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
@@ -84,49 +94,8 @@ class FireflyConfig
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  $default
-     *
-     * @return Configuration|null
-     */
-    public function getFresh(string $name, $default = null): ?Configuration
-    {
-        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        if ($config) {
-            return $config;
-        }
-        // no preference found and default is null:
-        if (null === $default) {
-            return null;
-        }
-
-        return $this->set($name, $default);
-    }
-
-    /**
-     * @param  string  $name
-     *
-     * @return bool
-     */
-    public function has(string $name): bool
-    {
-        return Configuration::where('name', $name)->count() === 1;
-    }
-
-    /**
-     * @param  string  $name
-     * @param  mixed  $value
-     *
-     * @return Configuration
-     */
-    public function put(string $name, $value): Configuration
-    {
-        return $this->set($name, $value);
-    }
-
-    /**
-     * @param  string  $name
-     * @param  mixed  $value
+     * @param string $name
+     * @param mixed  $value
      *
      * @return Configuration
      */
@@ -148,14 +117,45 @@ class FireflyConfig
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            Cache::forget('ff-config-'.$name);
+            Cache::forget('ff-config-' . $name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        Cache::forget('ff-config-'.$name);
+        Cache::forget('ff-config-' . $name);
 
         return $config;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $default
+     *
+     * @return Configuration|null
+     */
+    public function getFresh(string $name, $default = null): ?Configuration
+    {
+        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
+        if ($config) {
+            return $config;
+        }
+        // no preference found and default is null:
+        if (null === $default) {
+            return null;
+        }
+
+        return $this->set($name, $default);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return Configuration
+     */
+    public function put(string $name, $value): Configuration
+    {
+        return $this->set($name, $value);
     }
 }

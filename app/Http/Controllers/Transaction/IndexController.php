@@ -69,10 +69,10 @@ class IndexController extends Controller
     /**
      * Index for a range of transactions.
      *
-     * @param  Request  $request
-     * @param  string  $objectType
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Request     $request
+     * @param string      $objectType
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Factory|View
      * @throws FireflyException
@@ -85,8 +85,8 @@ class IndexController extends Controller
             $objectType = 'transfer';
         }
 
-        $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
-        $types        = config('firefly.transactionTypesByType.'.$objectType);
+        $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
+        $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         if (null === $start) {
@@ -130,8 +130,8 @@ class IndexController extends Controller
     /**
      * Index for ALL transactions.
      *
-     * @param  Request  $request
-     * @param  string  $objectType
+     * @param Request $request
+     * @param string  $objectType
      *
      * @return Factory|View
      * @throws ContainerExceptionInterface
@@ -139,8 +139,8 @@ class IndexController extends Controller
      */
     public function indexAll(Request $request, string $objectType)
     {
-        $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
-        $types        = config('firefly.transactionTypesByType.'.$objectType);
+        $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
+        $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
@@ -148,7 +148,7 @@ class IndexController extends Controller
         $start        = null === $first ? new Carbon() : $first->date;
         $last         = $this->repository->getLast();
         $end          = $last ? $last->date : today(config('app.timezone'));
-        $subTitle     = (string)trans('firefly.all_'.$objectType);
+        $subTitle     = (string)trans('firefly.all_' . $objectType);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

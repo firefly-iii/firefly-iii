@@ -37,8 +37,8 @@ trait FiltersWeekends
     /**
      * Filters out all weekend entries, if necessary.
      *
-     * @param  RecurrenceRepetition  $repetition
-     * @param  array  $dates
+     * @param RecurrenceRepetition $repetition
+     * @param array                $dates
      *
      * @return array
      *

@@ -59,7 +59,7 @@ class MessageController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/getWebhookMessages
      *
-     * @param  Webhook  $webhook
+     * @param Webhook $webhook
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -75,7 +75,7 @@ class MessageController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($messages, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.messages.index', [$webhook->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.webhooks.messages.index', [$webhook->id]) . $this->buildParams());
 
         /** @var WebhookMessageTransformer $transformer */
         $transformer = app(WebhookMessageTransformer::class);
@@ -93,8 +93,8 @@ class MessageController extends Controller
      *
      * Show single instance.
      *
-     * @param  Webhook  $webhook
-     * @param  WebhookMessage  $message
+     * @param Webhook        $webhook
+     * @param WebhookMessage $message
      *
      * @return JsonResponse
      * @throws FireflyException

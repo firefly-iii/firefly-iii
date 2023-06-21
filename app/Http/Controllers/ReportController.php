@@ -80,9 +80,9 @@ class ReportController extends Controller
     /**
      * Show audit report.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View|string
      *
@@ -115,10 +115,10 @@ class ReportController extends Controller
     /**
      * Show budget report.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View|string
      *
@@ -152,10 +152,10 @@ class ReportController extends Controller
     /**
      * Show category report.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View|string
      *
@@ -189,9 +189,9 @@ class ReportController extends Controller
     /**
      * Show default report.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View|string
      *
@@ -225,10 +225,10 @@ class ReportController extends Controller
     /**
      * Show account report.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $expense
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $expense
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException
@@ -262,7 +262,7 @@ class ReportController extends Controller
     /**
      * Show index.
      *
-     * @param  AccountRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $repository
      *
      * @return Factory|View
      * @throws ContainerExceptionInterface
@@ -305,7 +305,7 @@ class ReportController extends Controller
     /**
      * Show options for reports.
      *
-     * @param  string  $reportType
+     * @param string $reportType
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -326,7 +326,7 @@ class ReportController extends Controller
     /**
      * Process the submit of report.
      *
-     * @param  ReportFormRequest  $request
+     * @param ReportFormRequest $request
      *
      * @return RedirectResponse|Redirector
      *
@@ -395,10 +395,10 @@ class ReportController extends Controller
     /**
      * Get a tag report.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $tags
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $tags
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View|string
      * @throws FireflyException

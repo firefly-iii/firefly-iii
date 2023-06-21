@@ -38,7 +38,7 @@ class RuleController extends Controller
     /**
      * Render HTML form for rule action.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -49,7 +49,7 @@ class RuleController extends Controller
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
-            $actions[$key] = (string)trans('firefly.rule_action_'.$key.'_choice');
+            $actions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
         }
         try {
             $view = view('rules.partials.action', compact('actions', 'count'))->render();
@@ -65,7 +65,7 @@ class RuleController extends Controller
     /**
      * Render HTML for rule trigger.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return JsonResponse
      * @throws FireflyException

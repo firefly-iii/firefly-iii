@@ -47,24 +47,24 @@ interface NetWorthInterface
      * This repeats for each currency the user has transactions in.
      * Result of this method is cached.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $date
+     * @param Collection $accounts
+     * @param Carbon     $date
      * @return array
      * @deprecated
      */
     public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
     /**
      * TODO move to repository
      *
      * Same as above but cleaner function with less dependencies.
      *
-     * @param  Carbon  $date
+     * @param Carbon $date
      *
      * @return array
      */

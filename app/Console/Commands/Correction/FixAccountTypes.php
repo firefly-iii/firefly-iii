@@ -31,8 +31,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class FixAccountTypes
@@ -74,10 +74,83 @@ class FixAccountTypes extends Command
     }
 
     /**
-     * @param  TransactionJournal  $journal
-     * @param  string  $type
-     * @param  Transaction  $source
-     * @param  Transaction  $dest
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count = 0;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @throws FireflyException
+     */
+    private function inspectJournal(TransactionJournal $journal): void
+    {
+        $transactions = $journal->transactions()->count();
+        if (2 !== $transactions) {
+            Log::debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
+            $this->friendlyError(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
+
+            return;
+        }
+        $type              = $journal->transactionType->type;
+        $sourceTransaction = $this->getSourceTransaction($journal);
+        $destTransaction   = $this->getDestinationTransaction($journal);
+        $sourceAccount     = $sourceTransaction->account;
+        $sourceAccountType = $sourceAccount->accountType->type;
+        $destAccount       = $destTransaction->account;
+        $destAccountType   = $destAccount->accountType->type;
+
+        if (!array_key_exists($type, $this->expected)) {
+            Log::info(sprintf('No source/destination info for transaction type %s.', $type));
+            $this->friendlyError(sprintf('No source/destination info for transaction type %s.', $type));
+
+            return;
+        }
+        if (!array_key_exists($sourceAccountType, $this->expected[$type])) {
+            Log::debug(sprintf('Going to fix journal #%d', $journal->id));
+            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
+
+            return;
+        }
+        $expectedTypes = $this->expected[$type][$sourceAccountType];
+        if (!in_array($destAccountType, $expectedTypes, true)) {
+            Log::debug(sprintf('Going to fix journal #%d', $journal->id));
+            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction
+     */
+    private function getSourceTransaction(TransactionJournal $journal): Transaction
+    {
+        return $journal->transactions->firstWhere('amount', '<', 0);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction
+     */
+    private function getDestinationTransaction(TransactionJournal $journal): Transaction
+    {
+        return $journal->transactions->firstWhere('amount', '>', 0);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string             $type
+     * @param Transaction        $source
+     * @param Transaction        $dest
      *
      * @throws FireflyException
      * @throws JsonException
@@ -166,78 +239,5 @@ class FixAccountTypes extends Command
 
                 break;
         }
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Transaction
-     */
-    private function getDestinationTransaction(TransactionJournal $journal): Transaction
-    {
-        return $journal->transactions->firstWhere('amount', '>', 0);
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @return Transaction
-     */
-    private function getSourceTransaction(TransactionJournal $journal): Transaction
-    {
-        return $journal->transactions->firstWhere('amount', '<', 0);
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-     * @throws FireflyException
-     */
-    private function inspectJournal(TransactionJournal $journal): void
-    {
-        $transactions = $journal->transactions()->count();
-        if (2 !== $transactions) {
-            Log::debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
-            $this->friendlyError(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
-
-            return;
-        }
-        $type              = $journal->transactionType->type;
-        $sourceTransaction = $this->getSourceTransaction($journal);
-        $destTransaction   = $this->getDestinationTransaction($journal);
-        $sourceAccount     = $sourceTransaction->account;
-        $sourceAccountType = $sourceAccount->accountType->type;
-        $destAccount       = $destTransaction->account;
-        $destAccountType   = $destAccount->accountType->type;
-
-        if (!array_key_exists($type, $this->expected)) {
-            Log::info(sprintf('No source/destination info for transaction type %s.', $type));
-            $this->friendlyError(sprintf('No source/destination info for transaction type %s.', $type));
-
-            return;
-        }
-        if (!array_key_exists($sourceAccountType, $this->expected[$type])) {
-            Log::debug(sprintf('Going to fix journal #%d', $journal->id));
-            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
-
-            return;
-        }
-        $expectedTypes = $this->expected[$type][$sourceAccountType];
-        if (!in_array($destAccountType, $expectedTypes, true)) {
-            Log::debug(sprintf('Going to fix journal #%d', $journal->id));
-            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
-        }
-    }
-
-    /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
-     */
-    private function stupidLaravel(): void
-    {
-        $this->count = 0;
     }
 }

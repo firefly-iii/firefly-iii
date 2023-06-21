@@ -40,7 +40,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Get all transaction journals with a specific type, regardless of user.
      *
-     * @param  array  $types
+     * @param array $types
      *
      * @return Collection
      */
@@ -55,7 +55,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return int
      */
@@ -76,7 +76,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return int
      */
@@ -107,8 +107,8 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return Carbon value of a meta field (or NULL).
      *
-     * @param  TransactionJournal  $journal
-     * @param  string  $field
+     * @param TransactionJournal $journal
+     * @param string             $field
      *
      * @return null|Carbon
      */
@@ -137,8 +137,8 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return value of a meta field (or NULL) as a string.
      *
-     * @param  TransactionJournal  $journal
-     * @param  string  $field
+     * @param TransactionJournal $journal
+     * @param string             $field
      *
      * @return null|string
      */
@@ -177,7 +177,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return text of a note attached to journal, or NULL
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return string|null
      */
@@ -218,7 +218,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     /**
      * Return all tags as strings in an array.
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return array
      */
@@ -228,9 +228,9 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void
+    public function setUser(User | Authenticatable | null $user): void
     {
         // empty
     }

@@ -62,7 +62,7 @@ class DeleteController extends Controller
     /**
      * Delete a given rule.
      *
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return Factory|View
      */
@@ -79,7 +79,7 @@ class DeleteController extends Controller
     /**
      * Actually destroy the given rule.
      *
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return RedirectResponse
      */

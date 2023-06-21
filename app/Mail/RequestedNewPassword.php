@@ -43,7 +43,7 @@ class RequestedNewPassword extends Mailable
     /**
      * RequestedNewPassword constructor.
      *
-     * @param  string  $url
+     * @param string $url
      */
     public function __construct(string $url)
     {

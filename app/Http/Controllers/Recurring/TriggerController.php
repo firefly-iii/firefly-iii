@@ -39,8 +39,8 @@ use Illuminate\Support\Facades\Log;
 class TriggerController extends Controller
 {
     /**
-     * @param  Recurrence  $recurrence
-     * @param  TriggerRecurrenceRequest  $request
+     * @param Recurrence               $recurrence
+     * @param TriggerRecurrenceRequest $request
      * @return RedirectResponse
      */
     public function trigger(Recurrence $recurrence, TriggerRecurrenceRequest $request): RedirectResponse

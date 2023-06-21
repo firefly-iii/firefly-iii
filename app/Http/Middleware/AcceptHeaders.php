@@ -37,8 +37,8 @@ class AcceptHeaders
     /**
      * Handle the incoming requests.
      *
-     * @param  Request  $request
-     * @param  callable  $next
+     * @param Request  $request
+     * @param callable $next
      * @return Response
      * @throws BadHttpHeaderException
      */
@@ -76,8 +76,8 @@ class AcceptHeaders
     }
 
     /**
-     * @param  string  $content
-     * @param  array  $accepted
+     * @param string $content
+     * @param array  $accepted
      * @return bool
      */
     private function acceptsHeader(string $content, array $accepted): bool

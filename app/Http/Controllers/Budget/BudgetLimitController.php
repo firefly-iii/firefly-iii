@@ -77,9 +77,9 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @param  Budget  $budget
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Factory|View
      */
@@ -107,8 +107,8 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  BudgetLimit  $budgetLimit
+     * @param Request     $request
+     * @param BudgetLimit $budgetLimit
      *
      * @return RedirectResponse|Redirector
      */
@@ -122,12 +122,13 @@ class BudgetLimitController extends Controller
 
     /**
      * TODO why redirect AND json response?
-     * @param  Request  $request
+     *
+     * @param Request $request
      *
      * @return RedirectResponse|JsonResponse
      * @throws FireflyException
      */
-    public function store(Request $request): RedirectResponse|JsonResponse
+    public function store(Request $request): RedirectResponse | JsonResponse
     {
         Log::debug('Going to store new budget-limit.', $request->all());
         // first search for existing one and update it if necessary.
@@ -202,8 +203,8 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  BudgetLimit  $budgetLimit
+     * @param Request     $request
+     * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
      */

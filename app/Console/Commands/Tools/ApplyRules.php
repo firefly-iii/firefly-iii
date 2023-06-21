@@ -154,49 +154,6 @@ class ApplyRules extends Command
     }
 
     /**
-     * @return Collection
-     */
-    private function getRulesToApply(): Collection
-    {
-        $rulesToApply = new Collection();
-        /** @var RuleGroup $group */
-        foreach ($this->groups as $group) {
-            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
-            /** @var Rule $rule */
-            foreach ($rules as $rule) {
-                // if in rule selection, or group in selection or all rules, it's included.
-                $test = $this->includeRule($rule, $group);
-                if (true === $test) {
-                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
-                    $rulesToApply->push($rule);
-                }
-            }
-        }
-
-        return $rulesToApply;
-    }
-
-    /**
-     */
-    private function grabAllRules(): void
-    {
-        $this->groups = $this->ruleGroupRepository->getActiveGroups();
-    }
-
-    /**
-     * @param  Rule  $rule
-     * @param  RuleGroup  $group
-     *
-     * @return bool
-     */
-    private function includeRule(Rule $rule, RuleGroup $group): bool
-    {
-        return in_array($group->id, $this->ruleGroupSelection, true)
-               || in_array($rule->id, $this->ruleSelection, true)
-               || $this->allRules;
-    }
-
-    /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
@@ -275,42 +232,6 @@ class ApplyRules extends Command
     }
 
     /**
-     * @throws FireflyException
-     */
-    private function verifyInputDates(): void
-    {
-        // parse start date.
-        $inputStart  = today(config('app.timezone'))->startOfMonth();
-        $startString = $this->option('start_date');
-        if (null === $startString) {
-            /** @var JournalRepositoryInterface $repository */
-            $repository = app(JournalRepositoryInterface::class);
-            $repository->setUser($this->getUser());
-            $first = $repository->firstNull();
-            if (null !== $first) {
-                $inputStart = $first->date;
-            }
-        }
-        if (null !== $startString && '' !== $startString) {
-            $inputStart = Carbon::createFromFormat('Y-m-d', $startString);
-        }
-
-        // parse end date
-        $inputEnd  = today(config('app.timezone'));
-        $endString = $this->option('end_date');
-        if (null !== $endString && '' !== $endString) {
-            $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
-        }
-
-        if ($inputStart > $inputEnd) {
-            [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
-        }
-
-        $this->startDate = $inputStart;
-        $this->endDate   = $inputEnd;
-    }
-
-    /**
      * @return bool
      */
     private function verifyInputRuleGroups(): bool
@@ -355,5 +276,84 @@ class ApplyRules extends Command
         }
 
         return true;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function verifyInputDates(): void
+    {
+        // parse start date.
+        $inputStart  = today(config('app.timezone'))->startOfMonth();
+        $startString = $this->option('start_date');
+        if (null === $startString) {
+            /** @var JournalRepositoryInterface $repository */
+            $repository = app(JournalRepositoryInterface::class);
+            $repository->setUser($this->getUser());
+            $first = $repository->firstNull();
+            if (null !== $first) {
+                $inputStart = $first->date;
+            }
+        }
+        if (null !== $startString && '' !== $startString) {
+            $inputStart = Carbon::createFromFormat('Y-m-d', $startString);
+        }
+
+        // parse end date
+        $inputEnd  = today(config('app.timezone'));
+        $endString = $this->option('end_date');
+        if (null !== $endString && '' !== $endString) {
+            $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
+        }
+
+        if ($inputStart > $inputEnd) {
+            [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
+        }
+
+        $this->startDate = $inputStart;
+        $this->endDate   = $inputEnd;
+    }
+
+    /**
+     */
+    private function grabAllRules(): void
+    {
+        $this->groups = $this->ruleGroupRepository->getActiveGroups();
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getRulesToApply(): Collection
+    {
+        $rulesToApply = new Collection();
+        /** @var RuleGroup $group */
+        foreach ($this->groups as $group) {
+            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
+            /** @var Rule $rule */
+            foreach ($rules as $rule) {
+                // if in rule selection, or group in selection or all rules, it's included.
+                $test = $this->includeRule($rule, $group);
+                if (true === $test) {
+                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
+                    $rulesToApply->push($rule);
+                }
+            }
+        }
+
+        return $rulesToApply;
+    }
+
+    /**
+     * @param Rule      $rule
+     * @param RuleGroup $group
+     *
+     * @return bool
+     */
+    private function includeRule(Rule $rule, RuleGroup $group): bool
+    {
+        return in_array($group->id, $this->ruleGroupSelection, true)
+               || in_array($rule->id, $this->ruleSelection, true)
+               || $this->allRules;
     }
 }

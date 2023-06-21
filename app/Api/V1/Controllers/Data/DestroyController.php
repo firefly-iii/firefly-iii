@@ -58,7 +58,7 @@ class DestroyController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/destroyData
      *
-     * @param  DestroyRequest  $request
+     * @param DestroyRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -202,7 +202,92 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param  array  $types
+     *
+     */
+    private function destroyBudgets(): void
+    {
+        /** @var AvailableBudgetRepositoryInterface $abRepository */
+        $abRepository = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository->destroyAll();
+
+        /** @var BudgetLimitRepositoryInterface $blRepository */
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
+        $blRepository->destroyAll();
+
+        /** @var BudgetRepositoryInterface $budgetRepository */
+        $budgetRepository = app(BudgetRepositoryInterface::class);
+        $budgetRepository->destroyAll();
+    }
+
+    /**
+     *
+     */
+    private function destroyBills(): void
+    {
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
+        $repository->destroyAll();
+    }
+
+    /**
+     *
+     */
+    private function destroyPiggyBanks(): void
+    {
+        /** @var PiggyBankRepositoryInterface $repository */
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->destroyAll();
+    }
+
+    /**
+     *
+     */
+    private function destroyRules(): void
+    {
+        /** @var RuleGroupRepositoryInterface $repository */
+        $repository = app(RuleGroupRepositoryInterface::class);
+        $repository->destroyAll();
+    }
+
+    /**
+     *
+     */
+    private function destroyRecurringTransactions(): void
+    {
+        /** @var RecurringRepositoryInterface $repository */
+        $repository = app(RecurringRepositoryInterface::class);
+        $repository->destroyAll();
+    }
+
+    /**
+     *
+     */
+    private function destroyCategories(): void
+    {
+        /** @var CategoryRepositoryInterface $categoryRepos */
+        $categoryRepos = app(CategoryRepositoryInterface::class);
+        $categoryRepos->destroyAll();
+    }
+
+    /**
+     *
+     */
+    private function destroyTags(): void
+    {
+        /** @var TagRepositoryInterface $tagRepository */
+        $tagRepository = app(TagRepositoryInterface::class);
+        $tagRepository->destroyAll();
+    }
+
+    private function destroyObjectGroups(): void
+    {
+        /** @var ObjectGroupRepositoryInterface $repository */
+        $repository = app(ObjectGroupRepositoryInterface::class);
+        $repository->deleteAll();
+    }
+
+    /**
+     * @param array $types
      */
     private function destroyAccounts(array $types): void
     {
@@ -227,92 +312,7 @@ class DestroyController extends Controller
     }
 
     /**
-     *
-     */
-    private function destroyBills(): void
-    {
-        /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class);
-        $repository->destroyAll();
-    }
-
-    /**
-     *
-     */
-    private function destroyBudgets(): void
-    {
-        /** @var AvailableBudgetRepositoryInterface $abRepository */
-        $abRepository = app(AvailableBudgetRepositoryInterface::class);
-        $abRepository->destroyAll();
-
-        /** @var BudgetLimitRepositoryInterface $blRepository */
-        $blRepository = app(BudgetLimitRepositoryInterface::class);
-        $blRepository->destroyAll();
-
-        /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = app(BudgetRepositoryInterface::class);
-        $budgetRepository->destroyAll();
-    }
-
-    /**
-     *
-     */
-    private function destroyCategories(): void
-    {
-        /** @var CategoryRepositoryInterface $categoryRepos */
-        $categoryRepos = app(CategoryRepositoryInterface::class);
-        $categoryRepos->destroyAll();
-    }
-
-    private function destroyObjectGroups(): void
-    {
-        /** @var ObjectGroupRepositoryInterface $repository */
-        $repository = app(ObjectGroupRepositoryInterface::class);
-        $repository->deleteAll();
-    }
-
-    /**
-     *
-     */
-    private function destroyPiggyBanks(): void
-    {
-        /** @var PiggyBankRepositoryInterface $repository */
-        $repository = app(PiggyBankRepositoryInterface::class);
-        $repository->destroyAll();
-    }
-
-    /**
-     *
-     */
-    private function destroyRecurringTransactions(): void
-    {
-        /** @var RecurringRepositoryInterface $repository */
-        $repository = app(RecurringRepositoryInterface::class);
-        $repository->destroyAll();
-    }
-
-    /**
-     *
-     */
-    private function destroyRules(): void
-    {
-        /** @var RuleGroupRepositoryInterface $repository */
-        $repository = app(RuleGroupRepositoryInterface::class);
-        $repository->destroyAll();
-    }
-
-    /**
-     *
-     */
-    private function destroyTags(): void
-    {
-        /** @var TagRepositoryInterface $tagRepository */
-        $tagRepository = app(TagRepositoryInterface::class);
-        $tagRepository->destroyAll();
-    }
-
-    /**
-     * @param  array  $types
+     * @param array $types
      */
     private function destroyTransactions(array $types): void
     {

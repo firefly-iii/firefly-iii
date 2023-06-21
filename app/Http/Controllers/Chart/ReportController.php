@@ -67,9 +67,9 @@ class ReportController extends Controller
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -120,7 +120,7 @@ class ReportController extends Controller
                 $label      = $current->isoFormat((string)trans('config.month_and_day_js', [], $locale));
                 if (!array_key_exists($currencyId, $chartData)) {
                     $chartData[$currencyId] = [
-                        'label'           => 'Net worth in '.$netWorthItem['currency']->name,
+                        'label'           => 'Net worth in ' . $netWorthItem['currency']->name,
                         'type'            => 'line',
                         'currency_symbol' => $netWorthItem['currency']->symbol,
                         'currency_code'   => $netWorthItem['currency']->code,
@@ -141,9 +141,9 @@ class ReportController extends Controller
     /**
      * Shows income and expense, debit/credit: operations.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      * @throws JsonException

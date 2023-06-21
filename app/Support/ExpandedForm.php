@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Amount as Amt;
 use Eloquent;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Form\FormSupport;
@@ -42,9 +41,9 @@ class ExpandedForm
     use FormSupport;
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -75,10 +74,10 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  int|null  $value
-     * @param  mixed  $checked
-     * @param  array|null  $options
+     * @param string     $name
+     * @param int|null   $value
+     * @param mixed      $checked
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -112,9 +111,9 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -138,8 +137,8 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  array|null  $options
+     * @param string     $name
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -162,9 +161,9 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -189,9 +188,9 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -215,7 +214,7 @@ class ExpandedForm
     }
 
     /**
-     * @param  Collection  $set
+     * @param Collection $set
      *
      * @return array
      *
@@ -244,8 +243,8 @@ class ExpandedForm
 
 
     /**
-     * @param  null  $value
-     * @param  array|null  $options
+     * @param null       $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -275,8 +274,8 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $type
-     * @param  string  $name
+     * @param string $type
+     * @param string $name
      *
      * @return string
      * @throws FireflyException
@@ -295,8 +294,8 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  array|null  $options
+     * @param string     $name
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -320,9 +319,9 @@ class ExpandedForm
     /**
      * Function to render a percentage.
      *
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -347,9 +346,9 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -371,9 +370,9 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException
@@ -396,9 +395,9 @@ class ExpandedForm
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      * @throws FireflyException

@@ -60,7 +60,7 @@ class TagController extends Controller
      *
      * Expenses for no tag filtered by account.
      *
-     * @param  GenericRequest  $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */
@@ -113,7 +113,7 @@ class TagController extends Controller
      *
      * Expenses per tag, possibly filtered by tag and account.
      *
-     * @param  GenericRequest  $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */

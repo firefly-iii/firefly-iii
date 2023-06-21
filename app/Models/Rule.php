@@ -37,25 +37,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Rule
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $user_id
- * @property int $rule_group_id
- * @property string $title
- * @property string|null $description
- * @property int $order
- * @property bool $active
- * @property bool $stop_processing
- * @property bool $strict
- * @property-read string $action_value
+ * @property int                          $id
+ * @property Carbon|null                  $created_at
+ * @property Carbon|null                  $updated_at
+ * @property Carbon|null                  $deleted_at
+ * @property int                          $user_id
+ * @property int                          $rule_group_id
+ * @property string                       $title
+ * @property string|null                  $description
+ * @property int                          $order
+ * @property bool                         $active
+ * @property bool                         $stop_processing
+ * @property bool                         $strict
+ * @property-read string                  $action_value
  * @property-read Collection|RuleAction[] $ruleActions
- * @property-read int|null $rule_actions_count
- * @property-read RuleGroup $ruleGroup
- * @property Collection|RuleTrigger[] $ruleTriggers
- * @property-read int|null $rule_triggers_count
- * @property-read User $user
+ * @property-read int|null                $rule_actions_count
+ * @property-read RuleGroup               $ruleGroup
+ * @property Collection|RuleTrigger[]     $ruleTriggers
+ * @property-read int|null                $rule_triggers_count
+ * @property-read User                    $user
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newQuery()
  * @method static Builder|Rule onlyTrashed()
@@ -74,7 +74,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserId($value)
  * @method static Builder|Rule withTrashed()
  * @method static Builder|Rule withoutTrashed()
- * @property int|null $user_group_id
+ * @property int|null                     $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -104,7 +104,7 @@ class Rule extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return Rule
      * @throws NotFoundHttpException
@@ -122,6 +122,14 @@ class Rule extends Model
             }
         }
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -149,20 +157,12 @@ class Rule extends Model
     }
 
     /**
-     * @param  mixed  $value
+     * @param mixed $value
      *
 
      */
     public function setDescriptionAttribute($value): void
     {
         $this->attributes['description'] = e($value);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

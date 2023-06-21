@@ -49,7 +49,7 @@ class JournalRepository implements JournalRepositoryInterface
     private $user;
 
     /**
-     * @param  TransactionGroup  $transactionGroup
+     * @param TransactionGroup $transactionGroup
      *
      */
     public function destroyGroup(TransactionGroup $transactionGroup): void
@@ -60,7 +60,7 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      */
     public function destroyJournal(TransactionJournal $journal): void
@@ -68,18 +68,6 @@ class JournalRepository implements JournalRepositoryInterface
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
         $service->destroy($journal);
-    }
-
-    /**
-     * Find a specific journal.
-     *
-     * @param  int  $journalId
-     *
-     * @return TransactionJournal|null
-     */
-    public function find(int $journalId): ?TransactionJournal
-    {
-        return $this->user->transactionJournals()->find($journalId);
     }
 
     /**
@@ -128,7 +116,7 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * Return total amount of journal. Is always positive.
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return string
      */
@@ -165,7 +153,7 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param  TransactionJournalLink  $link
+     * @param TransactionJournalLink $link
      *
      * @return string
      */
@@ -183,8 +171,8 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * Return Carbon value of a meta field (or NULL).
      *
-     * @param  int  $journalId
-     * @param  string  $field
+     * @param int    $journalId
+     * @param string $field
      *
      * @return null|Carbon
      */
@@ -224,7 +212,7 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param  int  $journalId
+     * @param int $journalId
      */
     public function reconcileById(int $journalId): void
     {
@@ -234,10 +222,22 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Find a specific journal.
+     *
+     * @param int $journalId
+     *
+     * @return TransactionJournal|null
+     */
+    public function find(int $journalId): ?TransactionJournal
+    {
+        return $this->user->transactionJournals()->find($journalId);
+    }
+
+    /**
      * Search in journal descriptions.
      *
-     * @param  string  $search
-     * @param  int  $limit
+     * @param string $search
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -253,9 +253,9 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void
+    public function setUser(User | Authenticatable | null $user): void
     {
         if (null !== $user) {
             $this->user = $user;
@@ -265,8 +265,8 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * Update budget for a journal.
      *
-     * @param  TransactionJournal  $journal
-     * @param  int  $budgetId
+     * @param TransactionJournal $journal
+     * @param int                $budgetId
      *
      * @return TransactionJournal
      */
@@ -290,8 +290,8 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * Update category for a journal.
      *
-     * @param  TransactionJournal  $journal
-     * @param  string  $category
+     * @param TransactionJournal $journal
+     * @param string             $category
      *
      * @return TransactionJournal
      */
@@ -314,8 +314,8 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * Update tag(s) for a journal.
      *
-     * @param  TransactionJournal  $journal
-     * @param  array  $tags
+     * @param TransactionJournal $journal
+     * @param array              $tags
      *
      * @return TransactionJournal
      */

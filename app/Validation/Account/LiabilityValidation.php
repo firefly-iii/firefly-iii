@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 trait LiabilityValidation
 {
     /**
-     * @param  array  $array
+     * @param array $array
      *
      * @return bool
      */
@@ -72,7 +72,7 @@ trait LiabilityValidation
     /**
      * Source of a liability credit must be a liability or liability credit account.
      *
-     * @param  array  $array
+     * @param array $array
      *
      * @return bool
      */

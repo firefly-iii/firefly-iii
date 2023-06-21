@@ -67,10 +67,10 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -103,10 +103,10 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -138,10 +138,10 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -173,10 +173,10 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -209,10 +209,10 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -245,10 +245,10 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Category  $category
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Category   $category
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      *
@@ -320,10 +320,35 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * TODO duplicate function
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -356,10 +381,10 @@ class CategoryReportController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -389,30 +414,5 @@ class CategoryReportController extends Controller
         $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
-    }
-
-    /**
-     * TODO duplicate function
-     *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return array
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->isoFormat($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
     }
 }

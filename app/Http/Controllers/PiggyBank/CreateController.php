@@ -86,7 +86,7 @@ class CreateController extends Controller
     /**
      * Store a new piggy bank.
      *
-     * @param  PiggyBankStoreRequest  $request
+     * @param PiggyBankStoreRequest $request
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException

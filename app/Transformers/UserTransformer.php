@@ -38,7 +38,7 @@ class UserTransformer extends AbstractTransformer
     /**
      * Transform user.
      *
-     * @param  User  $user
+     * @param User $user
      *
      * @return array
      * @throws FireflyException
@@ -59,7 +59,7 @@ class UserTransformer extends AbstractTransformer
             'links'             => [
                 [
                     'rel' => 'self',
-                    'uri' => '/users/'.$user->id,
+                    'uri' => '/users/' . $user->id,
                 ],
             ],
         ];

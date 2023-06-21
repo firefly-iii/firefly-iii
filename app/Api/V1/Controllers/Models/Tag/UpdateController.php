@@ -66,8 +66,8 @@ class UpdateController extends Controller
      *
      * Update a rule.
      *
-     * @param  UpdateRequest  $request
-     * @param  Tag  $tag
+     * @param UpdateRequest $request
+     * @param Tag           $tag
      *
      * @return JsonResponse
      */

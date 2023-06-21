@@ -38,9 +38,9 @@ use Illuminate\Support\Collection;
 class AutoSum
 {
     /**
-     * @param  Collection  $objects
-     * @param  Closure  $getCurrency
-     * @param  Closure  $getSum
+     * @param Collection $objects
+     * @param Closure    $getCurrency
+     * @param Closure    $getSum
      *
      * @return array
      * @throws FireflyException

@@ -41,8 +41,8 @@ class UniqueIban implements ValidationRule
      * Create a new rule instance.
      *
      *
-     * @param  Account|null  $account
-     * @param  string|null  $expectedType
+     * @param Account|null $account
+     * @param string|null  $expectedType
      */
     public function __construct(?Account $account, ?string $expectedType)
     {
@@ -79,10 +79,20 @@ class UniqueIban implements ValidationRule
     }
 
     /**
+     * @inheritDoc
+     */
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+        if (!$this->passes($attribute, $value)) {
+            $fail((string)trans('validation.unique_iban_for_user'));
+        }
+    }
+
+    /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      *
@@ -119,42 +129,6 @@ class UniqueIban implements ValidationRule
     }
 
     /**
-     * @inheritDoc
-     */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
-    {
-        if (!$this->passes($attribute, $value)) {
-            $fail((string)trans('validation.unique_iban_for_user'));
-        }
-    }
-
-    /**
-     * @param  string  $type
-     * @param  string  $iban
-     *
-     * @return int
-     */
-    private function countHits(string $type, string $iban): int
-    {
-        $typesArray = [$type];
-        if ('liabilities' === $type) {
-            $typesArray = [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        }
-        $query
-            = auth()->user()
-                    ->accounts()
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->where('accounts.iban', $iban)
-                    ->whereIn('account_types.type', $typesArray);
-
-        if (null !== $this->account) {
-            $query->where('accounts.id', '!=', $this->account->id);
-        }
-
-        return $query->count();
-    }
-
-    /**
      * @return array
      *
      */
@@ -179,5 +153,31 @@ class UniqueIban implements ValidationRule
         }
 
         return $maxCounts;
+    }
+
+    /**
+     * @param string $type
+     * @param string $iban
+     *
+     * @return int
+     */
+    private function countHits(string $type, string $iban): int
+    {
+        $typesArray = [$type];
+        if ('liabilities' === $type) {
+            $typesArray = [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        }
+        $query
+            = auth()->user()
+                    ->accounts()
+                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                    ->where('accounts.iban', $iban)
+                    ->whereIn('account_types.type', $typesArray);
+
+        if (null !== $this->account) {
+            $query->where('accounts.id', '!=', $this->account->id);
+        }
+
+        return $query->count();
     }
 }

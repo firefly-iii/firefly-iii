@@ -75,8 +75,8 @@ class IndexController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  ObjectGroup  $objectGroup
+     * @param Request     $request
+     * @param ObjectGroup $objectGroup
      *
      * @return JsonResponse
      */

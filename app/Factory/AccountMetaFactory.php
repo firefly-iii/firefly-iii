@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountMetaFactory
@@ -34,21 +33,11 @@ use Illuminate\Support\Facades\Log;
 class AccountMetaFactory
 {
     /**
-     * @param  array  $data
-     *
-     * @return AccountMeta|null
-     */
-    public function create(array $data): ?AccountMeta
-    {
-        return AccountMeta::create($data);
-    }
-
-    /**
      * Create update or delete meta data.
      *
-     * @param  Account  $account
-     * @param  string  $field
-     * @param  string  $value
+     * @param Account $account
+     * @param string  $field
+     * @param string  $value
      *
      * @return AccountMeta|null
      */
@@ -74,5 +63,15 @@ class AccountMetaFactory
         }
 
         return $entry;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return AccountMeta|null
+     */
+    public function create(array $data): ?AccountMeta
+    {
+        return AccountMeta::create($data);
     }
 }

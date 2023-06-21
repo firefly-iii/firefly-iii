@@ -35,21 +35,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionCurrency
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property bool $enabled
- * @property string $code
- * @property string $name
- * @property string $symbol
- * @property int $decimal_places
- * @property-read Collection|BudgetLimit[] $budgetLimits
- * @property-read int|null $budget_limits_count
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
+ * @property bool                                 $enabled
+ * @property string                               $code
+ * @property string                               $name
+ * @property string                               $symbol
+ * @property int                                  $decimal_places
+ * @property-read Collection|BudgetLimit[]        $budgetLimits
+ * @property-read int|null                        $budget_limits_count
  * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null $transaction_journals_count
- * @property-read Collection|Transaction[] $transactions
- * @property-read int|null $transactions_count
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read Collection|Transaction[]        $transactions
+ * @property-read int|null                        $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newQuery()
  * @method static Builder|TransactionCurrency onlyTrashed()
@@ -90,7 +90,7 @@ class TransactionCurrency extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return TransactionCurrency
      * @throws NotFoundHttpException

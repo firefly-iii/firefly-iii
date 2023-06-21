@@ -33,7 +33,6 @@ use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
-use JsonException;
 
 /**
  * Class RecurrenceUpdateService
@@ -52,8 +51,8 @@ class RecurrenceUpdateService
      *
      * TODO if the user updates the type, the accounts must be validated again.
      *
-     * @param  Recurrence  $recurrence
-     * @param  array  $data
+     * @param Recurrence $recurrence
+     * @param array      $data
      *
      * @return Recurrence
      * @throws FireflyException
@@ -113,19 +112,72 @@ class RecurrenceUpdateService
     }
 
     /**
-     * @param  Recurrence  $recurrence
-     * @param  int  $transactionId
-     * @return void
+     * @param Recurrence $recurrence
+     * @param string     $text
      */
-    private function deleteTransaction(Recurrence $recurrence, int $transactionId): void
+    private function setNoteText(Recurrence $recurrence, string $text): void
     {
-        Log::debug(sprintf('Will delete transaction #%d in recurrence #%d.', $transactionId, $recurrence->id));
-        $recurrence->recurrenceTransactions()->where('id', $transactionId)->delete();
+        $dbNote = $recurrence->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note();
+                $dbNote->noteable()->associate($recurrence);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        $dbNote?->delete();
     }
 
     /**
-     * @param  Recurrence  $recurrence
-     * @param  array  $data
+     *
+     * @param Recurrence $recurrence
+     * @param array      $repetitions
+     *
+     * @throws FireflyException
+     */
+    private function updateRepetitions(Recurrence $recurrence, array $repetitions): void
+    {
+        $originalCount = $recurrence->recurrenceRepetitions()->count();
+        if (0 === count($repetitions)) {
+            // won't drop repetition, rather avoid.
+            return;
+        }
+        // user added or removed repetitions, delete all and recreate:
+        if ($originalCount !== count($repetitions)) {
+            Log::debug('Delete existing repetitions and create new ones.');
+            $this->deleteRepetitions($recurrence);
+            $this->createRepetitions($recurrence, $repetitions);
+
+            return;
+        }
+        // loop all and try to match them:
+        Log::debug('Loop and find');
+        foreach ($repetitions as $current) {
+            $match = $this->matchRepetition($recurrence, $current);
+            if (null === $match) {
+                throw new FireflyException('Cannot match recurring repetition to existing repetition. Not sure what to do. Break.');
+            }
+            $fields = [
+                'type'    => 'repetition_type',
+                'moment'  => 'repetition_moment',
+                'skip'    => 'repetition_skip',
+                'weekend' => 'weekend',
+            ];
+            foreach ($fields as $field => $column) {
+                if (array_key_exists($field, $current)) {
+                    $match->$column = $current[$field];
+                    $match->save();
+                }
+            }
+        }
+    }
+
+    /**
+     * @param Recurrence $recurrence
+     * @param array      $data
      *
      * @return RecurrenceRepetition|null
      */
@@ -156,28 +208,69 @@ class RecurrenceUpdateService
     }
 
     /**
-     * @param  Recurrence  $recurrence
-     * @param  string  $text
+     * TODO this method is very complex.
+     *
+     * @param Recurrence $recurrence
+     * @param array      $transactions
      */
-    private function setNoteText(Recurrence $recurrence, string $text): void
+    private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
-        $dbNote = $recurrence->notes()->first();
-        if ('' !== $text) {
-            if (null === $dbNote) {
-                $dbNote = new Note();
-                $dbNote->noteable()->associate($recurrence);
-            }
-            $dbNote->text = trim($text);
-            $dbNote->save();
-
+        Log::debug('Now in updateTransactions()');
+        $originalCount = $recurrence->recurrenceTransactions()->count();
+        Log::debug(sprintf('Original count is %d', $originalCount));
+        if (0 === count($transactions)) {
+            // won't drop transactions, rather avoid.
+            Log::warning('No transactions to update, too scared to continue!');
             return;
         }
-        $dbNote?->delete();
+        $combinations         = [];
+        $originalTransactions = $recurrence->recurrenceTransactions()->get()->toArray();
+        /**
+         * First, make sure to loop all existing transactions and match them to a counterpart in the submitted transactions array.
+         */
+        foreach ($originalTransactions as $i => $originalTransaction) {
+            foreach ($transactions as $ii => $submittedTransaction) {
+                if (array_key_exists('id', $submittedTransaction) && (int)$originalTransaction['id'] === (int)$submittedTransaction['id']) {
+                    Log::debug(sprintf('Match original transaction #%d with an entry in the submitted array.', $originalTransaction['id']));
+                    $combinations[] = [
+                        'original'  => $originalTransaction,
+                        'submitted' => $submittedTransaction,
+                    ];
+                    unset($originalTransactions[$i]);
+                    unset($transactions[$ii]);
+                }
+            }
+        }
+        /**
+         * If one left of both we can match those as well and presto.
+         */
+        if (1 === count($originalTransactions) && 1 === count($transactions)) {
+            $first = array_shift($originalTransactions);
+            Log::debug(sprintf('One left of each, link them (ID is #%d)', $first['id']));
+            $combinations[] = [
+                'original'  => $first,
+                'submitted' => array_shift($transactions),
+            ];
+            unset($first);
+        }
+        // if they are both empty, we can safely loop all combinations and update them.
+        if (0 === count($originalTransactions) && 0 === count($transactions)) {
+            foreach ($combinations as $combination) {
+                $this->updateCombination($recurrence, $combination);
+            }
+        }
+        // anything left in the original transactions array can be deleted.
+        foreach ($originalTransactions as $original) {
+            Log::debug(sprintf('Original transaction #%d is unmatched, delete it!', $original['id']));
+            $this->deleteTransaction($recurrence, (int)$original['id']);
+        }
+        // anything left is new.
+        $this->createTransactions($recurrence, $transactions);
     }
 
     /**
-     * @param  Recurrence  $recurrence
-     * @param  array  $combination
+     * @param Recurrence $recurrence
+     * @param array      $combination
      * @return void
      */
     private function updateCombination(Recurrence $recurrence, array $combination): void
@@ -257,107 +350,13 @@ class RecurrenceUpdateService
     }
 
     /**
-     *
-     * @param  Recurrence  $recurrence
-     * @param  array  $repetitions
-     *
-     * @throws FireflyException
+     * @param Recurrence $recurrence
+     * @param int        $transactionId
+     * @return void
      */
-    private function updateRepetitions(Recurrence $recurrence, array $repetitions): void
+    private function deleteTransaction(Recurrence $recurrence, int $transactionId): void
     {
-        $originalCount = $recurrence->recurrenceRepetitions()->count();
-        if (0 === count($repetitions)) {
-            // won't drop repetition, rather avoid.
-            return;
-        }
-        // user added or removed repetitions, delete all and recreate:
-        if ($originalCount !== count($repetitions)) {
-            Log::debug('Delete existing repetitions and create new ones.');
-            $this->deleteRepetitions($recurrence);
-            $this->createRepetitions($recurrence, $repetitions);
-
-            return;
-        }
-        // loop all and try to match them:
-        Log::debug('Loop and find');
-        foreach ($repetitions as $current) {
-            $match = $this->matchRepetition($recurrence, $current);
-            if (null === $match) {
-                throw new FireflyException('Cannot match recurring repetition to existing repetition. Not sure what to do. Break.');
-            }
-            $fields = [
-                'type'    => 'repetition_type',
-                'moment'  => 'repetition_moment',
-                'skip'    => 'repetition_skip',
-                'weekend' => 'weekend',
-            ];
-            foreach ($fields as $field => $column) {
-                if (array_key_exists($field, $current)) {
-                    $match->$column = $current[$field];
-                    $match->save();
-                }
-            }
-        }
-    }
-
-    /**
-     * TODO this method is very complex.
-     *
-     * @param  Recurrence  $recurrence
-     * @param  array  $transactions
-     */
-    private function updateTransactions(Recurrence $recurrence, array $transactions): void
-    {
-        Log::debug('Now in updateTransactions()');
-        $originalCount = $recurrence->recurrenceTransactions()->count();
-        Log::debug(sprintf('Original count is %d', $originalCount));
-        if (0 === count($transactions)) {
-            // won't drop transactions, rather avoid.
-            Log::warning('No transactions to update, too scared to continue!');
-            return;
-        }
-        $combinations         = [];
-        $originalTransactions = $recurrence->recurrenceTransactions()->get()->toArray();
-        /**
-         * First, make sure to loop all existing transactions and match them to a counterpart in the submitted transactions array.
-         */
-        foreach ($originalTransactions as $i => $originalTransaction) {
-            foreach ($transactions as $ii => $submittedTransaction) {
-                if (array_key_exists('id', $submittedTransaction) && (int)$originalTransaction['id'] === (int)$submittedTransaction['id']) {
-                    Log::debug(sprintf('Match original transaction #%d with an entry in the submitted array.', $originalTransaction['id']));
-                    $combinations[] = [
-                        'original'  => $originalTransaction,
-                        'submitted' => $submittedTransaction,
-                    ];
-                    unset($originalTransactions[$i]);
-                    unset($transactions[$ii]);
-                }
-            }
-        }
-        /**
-         * If one left of both we can match those as well and presto.
-         */
-        if (1 === count($originalTransactions) && 1 === count($transactions)) {
-            $first = array_shift($originalTransactions);
-            Log::debug(sprintf('One left of each, link them (ID is #%d)', $first['id']));
-            $combinations[] = [
-                'original'  => $first,
-                'submitted' => array_shift($transactions),
-            ];
-            unset($first);
-        }
-        // if they are both empty, we can safely loop all combinations and update them.
-        if (0 === count($originalTransactions) && 0 === count($transactions)) {
-            foreach ($combinations as $combination) {
-                $this->updateCombination($recurrence, $combination);
-            }
-        }
-        // anything left in the original transactions array can be deleted.
-        foreach ($originalTransactions as $original) {
-            Log::debug(sprintf('Original transaction #%d is unmatched, delete it!', $original['id']));
-            $this->deleteTransaction($recurrence, (int)$original['id']);
-        }
-        // anything left is new.
-        $this->createTransactions($recurrence, $transactions);
+        Log::debug(sprintf('Will delete transaction #%d in recurrence #%d.', $transactionId, $recurrence->id));
+        $recurrence->recurrenceTransactions()->where('id', $transactionId)->delete();
     }
 }

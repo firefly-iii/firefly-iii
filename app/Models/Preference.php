@@ -34,13 +34,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Preference
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property int $user_id
- * @property string $name
+ * @property int                   $id
+ * @property Carbon|null           $created_at
+ * @property Carbon|null           $updated_at
+ * @property int                   $user_id
+ * @property string                $name
  * @property int|string|array|null $data
- * @property-read User $user
+ * @property-read User             $user
  * @method static Builder|Preference newModelQuery()
  * @method static Builder|Preference newQuery()
  * @method static Builder|Preference query()
@@ -72,7 +72,7 @@ class Preference extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return Preference
      * @throws NotFoundHttpException

@@ -73,7 +73,7 @@ class ResetPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|JsonResponse|RedirectResponse|View
      * @throws ValidationException
@@ -117,8 +117,8 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param  Request  $request
-     * @param  null  $token
+     * @param Request $request
+     * @param null    $token
      *
      * @return Factory|View
      * @throws FireflyException

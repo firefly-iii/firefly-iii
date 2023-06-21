@@ -57,8 +57,8 @@ class EitherConfigKey
         ];
 
     /**
-     * @param  string  $value
-     * @param  Route  $route
+     * @param string $value
+     * @param Route  $route
      *
      * @return string
      * @throws NotFoundHttpException

@@ -47,7 +47,7 @@ class Authenticate
     /**
      * Create a new middleware instance.
      *
-     * @param  Auth  $auth
+     * @param Auth $auth
      *
      * @return void
      */
@@ -59,9 +59,9 @@ class Authenticate
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
-     * @param  string[]  ...$guards
+     * @param Request  $request
+     * @param Closure  $next
+     * @param string[] ...$guards
      *
      * @return mixed
      *
@@ -78,8 +78,8 @@ class Authenticate
     /**
      * Determine if the user is logged in to any of the given guards.
      *
-     * @param  mixed  $request
-     * @param  array  $guards
+     * @param mixed $request
+     * @param array $guards
      *
      * @return mixed
      * @throws FireflyException
@@ -119,8 +119,8 @@ class Authenticate
     }
 
     /**
-     * @param  User|null  $user
-     * @param  array  $guards
+     * @param User|null $user
+     * @param array     $guards
      * @return void
      * @throws AuthenticationException
      */

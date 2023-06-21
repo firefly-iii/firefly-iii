@@ -31,7 +31,7 @@ use FireflyIII\Models\Bill;
 class BillDestroyService
 {
     /**
-     * @param  Bill  $bill
+     * @param Bill $bill
      */
     public function destroy(Bill $bill): void
     {

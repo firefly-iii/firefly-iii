@@ -70,8 +70,8 @@ class SelectController extends Controller
     /**
      * Execute the given rule on a set of existing transactions.
      *
-     * @param  SelectTransactionsRequest  $request
-     * @param  Rule  $rule
+     * @param SelectTransactionsRequest $request
+     * @param Rule                      $rule
      *
      * @return RedirectResponse
      */
@@ -106,7 +106,7 @@ class SelectController extends Controller
     /**
      * View to select transactions by a rule.
      *
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return Factory|View
      */
@@ -129,7 +129,7 @@ class SelectController extends Controller
      * This method allows the user to test a certain set of rule triggers. The rule triggers are passed along
      * using the URL parameters (GET), and are usually put there using a Javascript thing.
      *
-     * @param  TestRuleFormRequest  $request
+     * @param TestRuleFormRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -196,7 +196,7 @@ class SelectController extends Controller
      * This method allows the user to test a certain set of rule triggers. The rule triggers are grabbed from
      * the rule itself.
      *
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return JsonResponse
      * @throws FireflyException

@@ -37,10 +37,10 @@ trait TransactionCalculation
     /**
      * Get all expenses for a set of accounts.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $opposing
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $opposing
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -61,10 +61,10 @@ trait TransactionCalculation
     /**
      * Get all expenses by tags.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $tags
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $tags
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      *
@@ -83,10 +83,10 @@ trait TransactionCalculation
     /**
      * Helper function that collects expenses for the given budgets.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -103,10 +103,10 @@ trait TransactionCalculation
     /**
      * Get all expenses in a period for categories.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -127,10 +127,10 @@ trait TransactionCalculation
     /**
      * Get all income for a period and a bunch of categories.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -147,10 +147,10 @@ trait TransactionCalculation
     /**
      * Get the income for a set of accounts.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $opposing
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $opposing
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -167,10 +167,10 @@ trait TransactionCalculation
     /**
      * Get all income by tag.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $tags
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $tags
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */

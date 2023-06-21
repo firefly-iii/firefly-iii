@@ -104,7 +104,7 @@ class StoreRequest extends FormRequest
         $type           = $this->convertString('type');
         $rules          = [
             'name'                 => 'required|max:1024|min:1|uniqueAccountForUser',
-            'type'                 => 'required|max:1024|min:1|'.sprintf('in:%s', $types),
+            'type'                 => 'required|max:1024|min:1|' . sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
             'bic'                  => 'bic|nullable',
             'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber(null, $type)],

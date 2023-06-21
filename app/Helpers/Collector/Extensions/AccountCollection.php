@@ -36,7 +36,7 @@ trait AccountCollection
     /**
      * These accounts must not be included.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
@@ -56,7 +56,7 @@ trait AccountCollection
     /**
      * These accounts must not be destination accounts.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
@@ -75,7 +75,7 @@ trait AccountCollection
     /**
      * These accounts must not be source accounts.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
@@ -94,7 +94,7 @@ trait AccountCollection
     /**
      * Define which accounts can be part of the source and destination transactions.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
@@ -117,7 +117,7 @@ trait AccountCollection
     /**
      * Both source AND destination must be in this list of accounts.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
@@ -140,7 +140,7 @@ trait AccountCollection
     /**
      * Define which accounts can be part of the source and destination transactions.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
@@ -159,7 +159,7 @@ trait AccountCollection
     /**
      * Define which accounts can NOT be part of the source and destination transactions.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
@@ -182,7 +182,7 @@ trait AccountCollection
     /**
      * Define which accounts can be part of the source and destination transactions.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */
@@ -201,7 +201,7 @@ trait AccountCollection
     /**
      * Either account can be set, but NOT both. This effectively excludes internal transfers.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return GroupCollectorInterface
      */

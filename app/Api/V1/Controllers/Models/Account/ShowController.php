@@ -71,7 +71,7 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -98,7 +98,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.accounts.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.accounts.index') . $this->buildParams());
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
@@ -116,7 +116,7 @@ class ShowController extends Controller
      *
      * Show single instance.
      *
-     * @param  Account  $account
+     * @param Account $account
      *
      * @return JsonResponse
      */

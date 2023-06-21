@@ -70,7 +70,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      *
      * @return Application|Factory|RedirectResponse|Redirector|View
      */
@@ -88,7 +88,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param  InvitedUser  $invitedUser
+     * @param InvitedUser $invitedUser
      * @return RedirectResponse
      */
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
@@ -108,7 +108,7 @@ class UserController extends Controller
     /**
      * Destroy a user.
      *
-     * @param  User  $user
+     * @param User $user
      *
      * @return RedirectResponse|Redirector
      */
@@ -128,7 +128,7 @@ class UserController extends Controller
     /**
      * Edit user form.
      *
-     * @param  User  $user
+     * @param User $user
      *
      * @return Factory|View
      */
@@ -191,7 +191,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param  InviteUserFormRequest  $request
+     * @param InviteUserFormRequest $request
      * @return RedirectResponse
      */
     public function invite(InviteUserFormRequest $request): RedirectResponse
@@ -209,7 +209,7 @@ class UserController extends Controller
     /**
      * Show single user.
      *
-     * @param  User  $user
+     * @param User $user
      *
      * @return Factory|View
      */
@@ -237,8 +237,8 @@ class UserController extends Controller
     /**
      * Update single user.
      *
-     * @param  UserFormRequest  $request
-     * @param  User  $user
+     * @param UserFormRequest $request
+     * @param User            $user
      *
      * @return $this|RedirectResponse|Redirector
      */

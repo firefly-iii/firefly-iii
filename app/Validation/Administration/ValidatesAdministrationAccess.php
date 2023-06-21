@@ -37,8 +37,8 @@ use Illuminate\Validation\Validator;
 trait ValidatesAdministrationAccess
 {
     /**
-     * @param  Validator  $validator
-     * @param  array  $allowedRoles
+     * @param Validator $validator
+     * @param array     $allowedRoles
      * @return void
      * @throws AuthenticationException
      * @throws FireflyException

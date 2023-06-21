@@ -37,20 +37,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\ObjectGroup
  *
- * @property int $id
- * @property int $user_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property string $title
- * @property int $order
- * @property-read Collection|Account[] $accounts
- * @property-read int|null $accounts_count
- * @property-read Collection|Bill[] $bills
- * @property-read int|null $bills_count
+ * @property int                         $id
+ * @property int                         $user_id
+ * @property Carbon|null                 $created_at
+ * @property Carbon|null                 $updated_at
+ * @property Carbon|null                 $deleted_at
+ * @property string                      $title
+ * @property int                         $order
+ * @property-read Collection|Account[]   $accounts
+ * @property-read int|null               $accounts_count
+ * @property-read Collection|Bill[]      $bills
+ * @property-read int|null               $bills_count
  * @property-read Collection|PiggyBank[] $piggyBanks
- * @property-read int|null $piggy_banks_count
- * @property-read User $user
+ * @property-read int|null               $piggy_banks_count
+ * @property-read User                   $user
  * @method static Builder|ObjectGroup newModelQuery()
  * @method static Builder|ObjectGroup newQuery()
  * @method static Builder|ObjectGroup query()
@@ -82,7 +82,7 @@ class ObjectGroup extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return ObjectGroup
      * @throws NotFoundHttpException
@@ -99,6 +99,14 @@ class ObjectGroup extends Model
             }
         }
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -123,13 +131,5 @@ class ObjectGroup extends Model
     public function piggyBanks()
     {
         return $this->morphedByMany(PiggyBank::class, 'object_groupable');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

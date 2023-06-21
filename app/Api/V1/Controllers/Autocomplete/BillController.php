@@ -60,7 +60,7 @@ class BillController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getBillsAC
      * TODO expand API to add active field.
      *
-     * @param  AutocompleteRequest  $request
+     * @param AutocompleteRequest $request
      *
      * @return JsonResponse
      */

@@ -48,7 +48,7 @@ class ConvertToWithdrawal implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param  RuleAction  $action
+     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
@@ -84,7 +84,7 @@ class ConvertToWithdrawal implements ActionInterface
             Log::debug('Going to transform a deposit to a withdrawal.');
             try {
                 $res = $this->convertDepositArray($object);
-            } catch (JsonException|FireflyException $e) {
+            } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
                 Log::error($e->getMessage());
                 return false;
@@ -98,7 +98,7 @@ class ConvertToWithdrawal implements ActionInterface
 
             try {
                 $res = $this->convertTransferArray($object);
-            } catch (JsonException|FireflyException $e) {
+            } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
                 Log::error($e->getMessage());
                 return false;
@@ -112,7 +112,7 @@ class ConvertToWithdrawal implements ActionInterface
     }
 
     /**
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      * @return bool
      * @throws FireflyException
      * @throws JsonException
@@ -166,10 +166,40 @@ class ConvertToWithdrawal implements ActionInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     * @return Account
+     * @throws FireflyException
+     */
+    private function getSourceAccount(TransactionJournal $journal): Account
+    {
+        /** @var Transaction|null $sourceTransaction */
+        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        if (null === $sourceTransaction) {
+            throw new FireflyException(sprintf('Cannot find source transaction for journal #%d', $journal->id));
+        }
+        return $sourceTransaction->account;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @return Account
+     * @throws FireflyException
+     */
+    private function getDestinationAccount(TransactionJournal $journal): Account
+    {
+        /** @var Transaction|null $destAccount */
+        $destAccount = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $destAccount) {
+            throw new FireflyException(sprintf('Cannot find destination transaction for journal #%d', $journal->id));
+        }
+        return $destAccount->account;
+    }
+
+    /**
      * Input is a transfer from A to B.
      * Output is a withdrawal from A to C.
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return bool
      * @throws FireflyException
@@ -215,35 +245,5 @@ class ConvertToWithdrawal implements ActionInterface
         Log::debug('Converted transfer to withdrawal.');
 
         return true;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     * @return Account
-     * @throws FireflyException
-     */
-    private function getDestinationAccount(TransactionJournal $journal): Account
-    {
-        /** @var Transaction|null $destAccount */
-        $destAccount = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null === $destAccount) {
-            throw new FireflyException(sprintf('Cannot find destination transaction for journal #%d', $journal->id));
-        }
-        return $destAccount->account;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     * @return Account
-     * @throws FireflyException
-     */
-    private function getSourceAccount(TransactionJournal $journal): Account
-    {
-        /** @var Transaction|null $sourceTransaction */
-        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-        if (null === $sourceTransaction) {
-            throw new FireflyException(sprintf('Cannot find source transaction for journal #%d', $journal->id));
-        }
-        return $sourceTransaction->account;
     }
 }

@@ -63,7 +63,7 @@ class AccountController extends Controller
      * This endpoint is documented at
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/charts/getChartAccountOverview
      *
-     * @param  DateRequest  $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws ContainerExceptionInterface

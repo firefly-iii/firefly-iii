@@ -65,7 +65,7 @@ class PreferencesController extends Controller
     /**
      * Show overview of preferences.
      *
-     * @param  AccountRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $repository
      *
      * @return Factory|View
      * @throws FireflyException
@@ -106,7 +106,7 @@ class PreferencesController extends Controller
         $slackUrl           = app('preferences')->get('slack_webhook_url', '')->data;
         $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart    = date('Y').'-'.$fiscalYearStartStr;
+        $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
         $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $availableDarkModes = config('firefly.available_dark_modes');
 
@@ -159,7 +159,7 @@ class PreferencesController extends Controller
     /**
      * Store new preferences.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
