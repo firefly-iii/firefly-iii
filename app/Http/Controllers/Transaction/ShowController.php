@@ -66,7 +66,7 @@ class ShowController extends Controller
     }
 
     /**
-     * @param  TransactionGroup  $transactionGroup
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      */
@@ -76,8 +76,8 @@ class ShowController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  TransactionGroup  $transactionGroup
+     * @param Request          $request
+     * @param TransactionGroup $transactionGroup
      *
      * @return Factory|View
      * @throws FireflyException
@@ -106,11 +106,14 @@ class ShowController extends Controller
         $accounts = $this->getAccounts($groupArray);
 
         foreach ($groupArray['transactions'] as $index => $transaction) {
-            $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects($groupArray['transactions'][$index]['transaction_journal_id']);
+            $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects(
+                $groupArray['transactions'][$index]['transaction_journal_id']
+            );
         }
 
         // get audit log entries:
-        $logEntries = [];
+        $groupLogEntries = $this->aleRepository->getForObject($transactionGroup);
+        $logEntries      = [];
         foreach ($transactionGroup->transactionJournals as $journal) {
             $logEntries[$journal->id] = $this->aleRepository->getForObject($journal);
         }
@@ -128,6 +131,7 @@ class ShowController extends Controller
                 'first',
                 'type',
                 'logEntries',
+                'groupLogEntries',
                 'subTitle',
                 'splits',
                 'groupArray',
@@ -140,7 +144,49 @@ class ShowController extends Controller
     }
 
     /**
-     * @param  array  $group
+     * @param array $group
+     *
+     * @return array
+     */
+    private function getAmounts(array $group): array
+    {
+        $amounts = [];
+        foreach ($group['transactions'] as $transaction) {
+            $symbol = $transaction['currency_symbol'];
+            if (!array_key_exists($symbol, $amounts)) {
+                $amounts[$symbol] = [
+                    'amount'         => '0',
+                    'symbol'         => $symbol,
+                    'decimal_places' => $transaction['currency_decimal_places'],
+                ];
+            }
+            $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
+            if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount']
+                && bccomp(
+                    '0',
+                    $transaction['foreign_amount']
+                ) !== 0) {
+                // same for foreign currency:
+                $foreignSymbol = $transaction['foreign_currency_symbol'];
+                if (!array_key_exists($foreignSymbol, $amounts)) {
+                    $amounts[$foreignSymbol] = [
+                        'amount'         => '0',
+                        'symbol'         => $foreignSymbol,
+                        'decimal_places' => $transaction['foreign_currency_decimal_places'],
+                    ];
+                }
+                $amounts[$foreignSymbol]['amount'] = bcadd(
+                    $amounts[$foreignSymbol]['amount'],
+                    $transaction['foreign_amount']
+                );
+            }
+        }
+
+        return $amounts;
+    }
+
+    /**
+     * @param array $group
      *
      * @return array
      */
@@ -167,40 +213,5 @@ class ShowController extends Controller
         $accounts['destination'] = array_unique($accounts['destination'], SORT_REGULAR);
 
         return $accounts;
-    }
-
-    /**
-     * @param  array  $group
-     *
-     * @return array
-     */
-    private function getAmounts(array $group): array
-    {
-        $amounts = [];
-        foreach ($group['transactions'] as $transaction) {
-            $symbol = $transaction['currency_symbol'];
-            if (!array_key_exists($symbol, $amounts)) {
-                $amounts[$symbol] = [
-                    'amount'         => '0',
-                    'symbol'         => $symbol,
-                    'decimal_places' => $transaction['currency_decimal_places'],
-                ];
-            }
-            $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
-            if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount'] && bccomp('0', $transaction['foreign_amount']) !== 0) {
-                // same for foreign currency:
-                $foreignSymbol = $transaction['foreign_currency_symbol'];
-                if (!array_key_exists($foreignSymbol, $amounts)) {
-                    $amounts[$foreignSymbol] = [
-                        'amount'         => '0',
-                        'symbol'         => $foreignSymbol,
-                        'decimal_places' => $transaction['foreign_currency_decimal_places'],
-                    ];
-                }
-                $amounts[$foreignSymbol]['amount'] = bcadd($amounts[$foreignSymbol]['amount'], $transaction['foreign_amount']);
-            }
-        }
-
-        return $amounts;
     }
 }

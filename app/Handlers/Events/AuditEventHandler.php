@@ -24,16 +24,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Carbon\Carbon;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 
+/**
+ * Class AuditEventHandler
+ */
 class AuditEventHandler
 {
     /**
-     * @param  TriggeredAuditLog  $event
+     * @param TriggeredAuditLog $event
+     *
      * @return void
      */
-    public function storeAuditEvent(TriggeredAuditLog $event)
+    public function storeAuditEvent(TriggeredAuditLog $event): void
     {
         $array = [
             'auditable' => $event->auditable,
@@ -42,6 +47,24 @@ class AuditEventHandler
             'before'    => $event->before,
             'after'     => $event->after,
         ];
+
+        if ($event->before === $event->after) {
+            app('log')->debug('Will not store event log because before and after are the same.');
+
+            return;
+        }
+        if ($event->before instanceof Carbon && $event->after instanceof Carbon && $event->before->eq($event->after)) {
+            app('log')->debug('Will not store event log because before and after Carbon values are the same.');
+
+            return;
+        }
+        if ($event->before instanceof Carbon && $event->after instanceof Carbon) {
+            $array['before'] = $event->before->toIso8601String();
+            $array['after']  = $event->after->toIso8601String();
+            app('log')->debug(sprintf('Converted "before" to "%s".', $event->before));
+            app('log')->debug(sprintf('Converted "after" to "%s".', $event->after));
+        }
+
         /** @var ALERepositoryInterface $repository */
         $repository = app(ALERepositoryInterface::class);
         $repository->store($array);
