@@ -709,14 +709,16 @@ class BillRepository implements BillRepositoryInterface
 
             /** @var TransactionJournal $transactionJournal */
             foreach ($set as $transactionJournal) {
-                /** @var Transaction $sourceTransaction */
+                /** @var Transaction|null $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
-                $amount            = (string)$sourceTransaction->amount;
-                if ((int)$sourceTransaction->foreign_currency_id === (int)$currency->id) {
-                    // use foreign amount instead!
-                    $amount = (string)$sourceTransaction->foreign_amount;
+                if (null !== $sourceTransaction) {
+                    $amount = (string)$sourceTransaction->amount;
+                    if ((int)$sourceTransaction->foreign_currency_id === (int)$currency->id) {
+                        // use foreign amount instead!
+                        $amount = (string)$sourceTransaction->foreign_amount;
+                    }
+                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
                 }
-                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
             }
         }
         return $return;

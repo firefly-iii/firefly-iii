@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use Artisan;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Schema;
 
@@ -34,6 +35,8 @@ use Schema;
  */
 class CorrectDatabase extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Will correct the integrity of your database, if necessary.';
     protected $signature   = 'firefly-iii:correct-database';
 
@@ -44,7 +47,7 @@ class CorrectDatabase extends Command
     {
         // if table does not exist, return false
         if (!Schema::hasTable('users')) {
-            $this->error('No "users"-table, will not continue.');
+            $this->friendlyError('No "users"-table, will not continue.');
 
             return 1;
         }
@@ -76,7 +79,7 @@ class CorrectDatabase extends Command
             'firefly-iii:trigger-credit-recalculation',
         ];
         foreach ($commands as $command) {
-            $this->line(sprintf('Now executing command "%s"', $command));
+            $this->friendlyLine(sprintf('Now executing command "%s"', $command));
             $this->call($command);
         }
 

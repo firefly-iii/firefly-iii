@@ -37,7 +37,7 @@ declare(strict_types=1);
 return [
     // new user:
     'bank_name'                 => 'Numele băncii',
-    'bank_balance'              => 'Balanța',
+    'bank_balance'              => 'Balanță',
     'savings_balance'           => 'Soldul de economii',
     'credit_card_limit'         => 'Limita cardului de credit',
     'automatch'                 => 'Se potrivește automat',

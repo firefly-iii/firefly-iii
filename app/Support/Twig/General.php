@@ -109,7 +109,11 @@ class General extends AbstractExtension
                 [, $route, $objectType] = func_get_args();
                 $activeObjectType = $context['objectType'] ?? false;
 
-                if ($objectType === $activeObjectType && false !== stripos(Route::getCurrentRoute()->getName(), $route)) {
+                if ($objectType === $activeObjectType
+                    && false !== stripos(
+                        Route::getCurrentRoute()->getName(),
+                        $route
+                    )) {
                     return 'active';
                 }
 
@@ -171,7 +175,7 @@ class General extends AbstractExtension
         return new TwigFunction(
             'carbonize',
             static function (string $date): Carbon {
-                return new Carbon($date);
+                return new Carbon($date, config('app.timezone'));
             }
         );
     }
@@ -205,15 +209,15 @@ class General extends AbstractExtension
             static function (int $size): string {
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2).' MB';
+                    return round($size / (1024 * 1024), 2) . ' MB';
                 }
 
                 // less than one MB
                 if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2).' KB';
+                    return round($size / 1024, 2) . ' KB';
                 }
 
-                return $size.' bytes';
+                return $size . ' bytes';
             }
         );
     }
@@ -245,6 +249,7 @@ class General extends AbstractExtension
             'getRootSearchOperator',
             static function (string $operator): string {
                 $result = OperatorQuerySearch::getRootOperator($operator);
+
                 return str_replace('-', 'not_', $result);
             }
         );

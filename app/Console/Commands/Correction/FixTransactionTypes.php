@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -37,6 +38,8 @@ use Illuminate\Support\Collection;
  */
 class FixTransactionTypes extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Make sure all transactions are of the correct type, based on source + dest.';
     protected $signature   = 'firefly-iii:fix-transaction-types';
 
@@ -57,11 +60,11 @@ class FixTransactionTypes extends Command
             }
         }
         if ($count > 0) {
-            $this->info('Corrected transaction type of %d transaction journals.', $count);
+            $this->friendlyInfo('Corrected transaction type of %d transaction journals.', $count);
 
             return 0;
         }
-        $this->info('Correct: all transaction journals are of the correct transaction type');
+        $this->friendlyPositive('All transaction journals are of the correct transaction type');
 
         return 0;
     }
@@ -102,13 +105,13 @@ class FixTransactionTypes extends Command
             $source      = $this->getSourceAccount($journal);
             $destination = $this->getDestinationAccount($journal);
         } catch (FireflyException $e) {
-            $this->error($e->getMessage());
+            $this->friendlyError($e->getMessage());
 
             return false;
         }
         $expectedType = (string)config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
         if ($expectedType !== $type) {
-            $this->line(
+            $this->friendlyWarning(
                 sprintf(
                     'Transaction journal #%d was of type "%s" but is corrected to "%s" (%s -> %s)',
                     $journal->id,

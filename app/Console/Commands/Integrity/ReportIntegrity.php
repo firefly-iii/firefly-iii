@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Integrity;
 
 use Artisan;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Schema;
 
@@ -34,6 +35,8 @@ use Schema;
  */
 class ReportIntegrity extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -60,11 +63,10 @@ class ReportIntegrity extends Command
             'firefly-iii:create-group-memberships',
             'firefly-iii:report-empty-objects',
             'firefly-iii:report-sum',
-            'firefly-iii:restore-oauth-keys',
             'firefly-iii:upgrade-group-information',
         ];
         foreach ($commands as $command) {
-            $this->line(sprintf('Now executing %s', $command));
+            $this->friendlyLine(sprintf('Now executing %s', $command));
             $this->call($command);
         }
 

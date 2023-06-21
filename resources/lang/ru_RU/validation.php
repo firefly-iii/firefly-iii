@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
-    'withdrawal_source_bad_data'  => 'Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
-    'withdrawal_dest_need_data'   => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
 
     'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
 
-    'generic_source_bad_data' => 'Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
-    'deposit_source_bad_data'  => 'Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
-    'deposit_dest_need_data'   => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
     'deposit_dest_wrong_type'  => 'Сохраняемый счёт назначения - некорректный.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
-    'transfer_source_bad_data'  => 'Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
-    'transfer_dest_need_data'   => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
     'need_id_in_edit'           => 'Каждая разделённая транзакция должна иметь transaction_journal_id (либо действительный ID, либо 0).',
 
     'ob_source_need_data'           => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
     'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'             => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
     'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 

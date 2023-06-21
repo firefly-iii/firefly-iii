@@ -8,9 +8,9 @@
                 <div class="checkbox" style="margin-left:2em;">
                     <label>
                         {% if account in selected or (selected|length == 0 and options.select_all == true) %}
-                            {{ Html.checkbox(name~'[]',true).id(id) }}
+                            {{ Html.checkbox(name~'[]',true, id).id(id) }}
                         {% else %}
-                            {{ Html.checkbox(name~'[]',false).id(id) }}
+                            {{ Html.checkbox(name~'[]',false, id).id(id) }}
                         {% endif %}
                         {{ account|escape }}
                     </label>

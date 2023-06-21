@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use Exception;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
@@ -33,6 +34,8 @@ use Illuminate\Console\Command;
  */
 class CreateAccessTokens extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -66,12 +69,12 @@ class CreateAccessTokens extends Command
             if (null === $pref) {
                 $token = $user->generateAccessToken();
                 app('preferences')->setForUser($user, 'access_token', $token);
-                $this->line(sprintf('Generated access token for user %s', $user->email));
+                $this->friendlyInfo(sprintf('Generated access token for user %s', $user->email));
                 ++$count;
             }
         }
         if (0 === $count) {
-            $this->info('Correct: Verified access tokens.');
+            $this->friendlyPositive('Verified access tokens.');
         }
 
         return 0;

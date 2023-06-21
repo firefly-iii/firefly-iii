@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
@@ -36,6 +37,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class MigrateJournalNotes extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '480_migrate_notes';
     /**
      * The console command description.
@@ -63,7 +66,7 @@ class MigrateJournalNotes extends Command
         $start = microtime(true);
 
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
@@ -88,14 +91,14 @@ class MigrateJournalNotes extends Command
         }
 
         if (0 === $count) {
-            $this->info('Correct: No notes to migrate.');
+            $this->friendlyPositive('No notes to migrate.');
         }
         if (0 !== $count) {
-            $this->line(sprintf('Migrated %d note(s).', $count));
+            $this->friendlyInfo(sprintf('Migrated %d note(s).', $count));
         }
 
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Migrated notes in %s seconds.', $end));
+        $this->friendlyInfo(sprintf('Migrated notes in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;

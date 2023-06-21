@@ -4,13 +4,16 @@
             <th style="width:20%;" scope="row">
                 {# link to object: #}
                 {% if 'FireflyIII\\Models\\Rule' == logEntry.changer_type %}
-                    <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
-                {% endif %}
-                {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""}) }}
-                #{{ logEntry.changer_id }}
+                <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
+                    {% endif %}
+                    {% if 'FireflyIII\\User' == logEntry.changer_type %}
+                    <a href="{{ route('profile.index') }}">
+                        {% endif %}
+                        {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""})|replace({"FireflyIII\\": ""}) }}
+                        #{{ logEntry.changer_id }}
                     </a>
             </th>
-            <td style="width:30%;">
+            <td style="width:30%;" title="{{ logEntry.created_at.isoFormat(dateTimeFormat) }}">
                 {{ trans('firefly.ale_action_'~logEntry.action) }}
             </td>
             <td>
@@ -18,8 +21,11 @@
                 {% if 'add_tag' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
                 {% endif %}
-                {% if 'clear_budget' == logEntry.action %}
+
+                {% if 'update_group_title' == logEntry.action %}
                     <code><s>{{ logEntry.before }}</s></code>
+                    &rarr;
+                    <code>{{ logEntry.after }}</code>
                 {% endif %}
                 {% if 'clear_category' == logEntry.action %}
                     <code><s>{{ logEntry.before }}</s></code>
@@ -50,6 +56,11 @@
                 {% endif %}
                 {% if 'set_destination' == logEntry.action %}
                     <code>{{ logEntry.after }}</code>
+                {% endif %}
+                {% if 'update_date' == logEntry.action %}
+                    <code><s>{{ carbonize(logEntry.before).isoFormat(dateTimeFormat) }}</s></code>
+                    &rarr;
+                    <code>{{ carbonize(logEntry.after).isoFormat(dateTimeFormat) }}</code>
                 {% endif %}
                 {% if 'update_transaction_type' == logEntry.action %}
                     {{ trans('firefly.'~logEntry.before) }} &rarr; {{ trans('firefly.'~logEntry.after) }}

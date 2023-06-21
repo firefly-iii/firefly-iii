@@ -61,10 +61,10 @@ return [
     'invalid_selection'              => 'Ihre Auswahl ist ungültig.',
     'belongs_user'                   => 'Dieser Wert ist für dieses Feld ungültig.',
     'at_least_one_transaction'       => 'Sie brauchen mindestens eine Transaktion.',
-    'recurring_transaction_id'       => 'Need at least one transaction.',
-    'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',
-    'too_many_unmatched'             => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
-    'id_does_not_match'              => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
+    'recurring_transaction_id'       => 'Sie benötigen mindestens eine Buchung.',
+    'need_id_to_match'               => 'Sie müssen diesen Eintrag mit einer ID übermitteln, damit die API ihn zuordnen kann.',
+    'too_many_unmatched'             => 'Zu viele eingereichte Vorgänge können nicht mit den entsprechenden Datenbankeinträgen abgeglichen werden. Stellen Sie sicher, dass vorhandene Einträge eine gültige ID besitzen.',
+    'id_does_not_match'              => 'Übermittelte ID #:id stimmt nicht mit der erwarteten ID überein. Stellen Sie sicher, dass sie übereinstimmt, oder lassen Sie das Feld leer.',
     'at_least_one_repetition'        => 'Mindestens eine Wiederholung erforderlich.',
     'require_repeat_until'           => 'Erfordert entweder eine Anzahl von Wiederholungen oder ein Enddatum (repeat_until). Nicht beides.',
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
-    'withdrawal_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
-    'withdrawal_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
 
     'reconciliation_source_bad_data' => 'Bei der Suche nach ID „:id” oder Name „:name” konnte kein gültiges Ausgleichskonto gefunden werden.',
 
-    'generic_source_bad_data' => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
-    'deposit_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
-    'deposit_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
     'deposit_dest_wrong_type'  => 'Das übermittelte Zielkonto entspricht nicht dem geforderten Typ.',
 
@@ -261,22 +261,22 @@ return [
 
 
     'transfer_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
-    'transfer_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
-    'transfer_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
     'need_id_in_edit'           => 'Jeder Aufteilungen muss eine transaction_journal_id (entweder gültige ID oder 0) aufweisen.',
 
     'ob_source_need_data'           => 'Sie benötigen eine gültige Quellkontonummer und/oder einen gültigen Quellkontonamen, um fortzufahren.',
     'lc_source_need_data'           => 'Zum Fortfahren wird eine gültige Quellkonto-ID benötigt.',
-    'ob_dest_need_data'             => 'Sie benötigen eine gültige Zielkontennummer und/oder einen gültigen Zielkontonamen, um fortzufahren.',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => 'Bei der Suche nach der ID ":id" oder dem Namen ":name" konnte kein gültiges Zielkonto gefunden werden.',
     'reconciliation_either_account' => 'Um einen Abgleich zu übermitteln, müssen Sie entweder ein Quell- oder ein Zielkonto angeben. Nicht beides, nicht keines von beiden.',
 
     'generic_invalid_source'      => 'Sie können dieses Konto nicht als Quellkonto verwenden.',
     'generic_invalid_destination' => 'Sie können dieses Konto nicht als Zielkonto verwenden.',
 
-    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'      => 'Sie müssen Informationen zum Quellkonto oder eine Transaktions-Journal-ID angeben.',
+    'generic_no_destination' => 'Sie müssen Informationen zum Zielkonto oder eine Transaktions-Journal-ID angeben.',
 
     'gte.numeric' => ':attribute muss größer oder gleich :value sein.',
     'gt.numeric'  => ':attribute muss größer als :value sein.',

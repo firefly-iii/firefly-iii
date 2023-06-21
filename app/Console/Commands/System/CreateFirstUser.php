@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -36,6 +37,8 @@ use Str;
  */
 class CreateFirstUser extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -58,14 +61,14 @@ class CreateFirstUser extends Command
     public function handle(): int
     {
         if ('testing' !== env('APP_ENV', 'local')) {
-            $this->error('This command only works in the testing environment.');
+            $this->friendlyError('This command only works in the testing environment.');
 
             return 1;
         }
         $this->stupidLaravel();
         $count = $this->repository->count();
         if ($count > 0) {
-            $this->error('Already have more than zero users in DB.');
+            $this->friendlyError('Already have more than zero users in DB.');
 
             return 1;
         }
@@ -81,8 +84,8 @@ class CreateFirstUser extends Command
         $user->save();
         $user->setRememberToken(Str::random(60));
 
-        $this->info(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));
-        $this->error('Change this password.');
+        $this->friendlyInfo(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));
+        $this->friendlyWarning('Change this password.');
 
         return 0;
     }

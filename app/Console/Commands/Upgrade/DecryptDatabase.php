@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use Crypt;
 use DB;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use Illuminate\Console\Command;
@@ -41,6 +42,8 @@ use stdClass;
  */
 class DecryptDatabase extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Decrypts the database.';
     protected $signature   = 'firefly-iii:decrypt-all';
 
@@ -98,7 +101,7 @@ class DecryptDatabase extends Command
             $newValue = json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
         } catch (JsonException $e) {
             $message = sprintf('Could not JSON decode preference row #%d: %s. This does not have to be a problem.', $id, $e->getMessage());
-            $this->error($message);
+            $this->friendlyError($message);
             app('log')->warning($message);
             app('log')->warning($value);
             app('log')->warning($e->getTraceAsString());
@@ -132,7 +135,7 @@ class DecryptDatabase extends Command
             $value = $this->tryDecrypt($original);
         } catch (FireflyException $e) {
             $message = sprintf('Could not decrypt field "%s" in row #%d of table "%s": %s', $field, $id, $table, $e->getMessage());
-            $this->error($message);
+            $this->friendlyError($message);
             Log::error($message);
             Log::error($e->getTraceAsString());
         }
@@ -159,14 +162,14 @@ class DecryptDatabase extends Command
     private function decryptTable(string $table, array $fields): void
     {
         if ($this->isDecrypted($table)) {
-            $this->info(sprintf('Correct: no decryption required for table "%s".', $table));
+            $this->friendlyInfo(sprintf('No decryption required for table "%s".', $table));
 
             return;
         }
         foreach ($fields as $field) {
             $this->decryptField($table, $field);
         }
-        $this->line(sprintf('Correct: decrypted the data in table "%s".', $table));
+        $this->friendlyPositive(sprintf('Decrypted the data in table "%s".', $table));
         // mark as decrypted:
         $configName = sprintf('is_decrypted_%s', $table);
         app('fireflyconfig')->set($configName, true);

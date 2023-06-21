@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Preference;
@@ -41,6 +42,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class MigrateToRules extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '480_bills_to_rules';
     /**
      * The console command description.
@@ -75,11 +78,9 @@ class MigrateToRules extends Command
     public function handle(): int
     {
         $this->stupidLaravel();
-        $start = microtime(true);
-
 
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
@@ -92,14 +93,12 @@ class MigrateToRules extends Command
         }
 
         if (0 === $this->count) {
-            $this->info('Correct: all bills are OK.');
+            $this->friendlyPositive('All bills are OK.');
         }
         if (0 !== $this->count) {
-            $this->line(sprintf('Verified and fixed %d bill(s).', $this->count));
+            $this->friendlyInfo(sprintf('Verified and fixed %d bill(s).', $this->count));
         }
 
-        $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified and fixed bills in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;

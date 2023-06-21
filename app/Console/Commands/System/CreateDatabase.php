@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use PDO;
 use PDOException;
@@ -33,6 +34,8 @@ use PDOException;
  */
 class CreateDatabase extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -54,7 +57,7 @@ class CreateDatabase extends Command
     public function handle(): int
     {
         if ('mysql' !== env('DB_CONNECTION', 'mysql')) {
-            $this->info(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
+            $this->friendlyInfo(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
 
             return 0;
         }
@@ -67,7 +70,7 @@ class CreateDatabase extends Command
         if ('' !== env('DB_SOCKET', '')) {
             $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', env('DB_SOCKET', ''));
         }
-        $this->info(sprintf('DSN is %s', $dsn));
+        $this->friendlyLine(sprintf('DSN is %s', $dsn));
 
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -79,7 +82,7 @@ class CreateDatabase extends Command
         try {
             $pdo = new PDO($dsn, env('DB_USERNAME'), env('DB_PASSWORD'), $options);
         } catch (PDOException $e) {
-            $this->error(sprintf('Error when connecting to DB: %s', $e->getMessage()));
+            $this->friendlyError(sprintf('Error when connecting to DB: %s', $e->getMessage()));
         }
 
         // only continue when no error.
@@ -96,14 +99,14 @@ class CreateDatabase extends Command
             }
         }
         if (false === $exists && true === $checked) {
-            $this->error(sprintf('Database "%s" does not exist.', env('DB_DATABASE')));
+            $this->friendlyError(sprintf('Database "%s" does not exist.', env('DB_DATABASE')));
 
             // try to create it.
             $pdo->exec(sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', env('DB_DATABASE')));
-            $this->info(sprintf('Created database "%s"', env('DB_DATABASE')));
+            $this->friendlyInfo(sprintf('Created database "%s"', env('DB_DATABASE')));
         }
         if (true === $exists && true === $checked) {
-            $this->info(sprintf('Database "%s" exists.', env('DB_DATABASE')));
+            $this->friendlyInfo(sprintf('Database "%s" exists.', env('DB_DATABASE')));
         }
 
         return 0;

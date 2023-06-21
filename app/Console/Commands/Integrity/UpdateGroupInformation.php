@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Integrity;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\AvailableBudget;
@@ -48,6 +49,8 @@ use Illuminate\Database\QueryException;
  */
 class UpdateGroupInformation extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Makes sure that every object is linked to a group';
     protected $signature   = 'firefly-iii:upgrade-group-information';
 
@@ -74,7 +77,7 @@ class UpdateGroupInformation extends Command
     {
         $group = $user->userGroup;
         if (null === $group) {
-            $this->warn(sprintf('User "%s" has no group.', $user->email));
+            $this->friendlyWarning(sprintf('User "%s" has no group.', $user->email));
 
             return;
         }
@@ -111,12 +114,12 @@ class UpdateGroupInformation extends Command
         try {
             $result = $className::where('user_id', $user->id)->where('user_group_id', null)->update(['user_group_id' => $group->id]);
         } catch (QueryException $e) {
-            $this->error(sprintf('Could not update group information for "%s" because of error "%s"', $className, $e->getMessage()));
+            $this->friendlyError(sprintf('Could not update group information for "%s" because of error "%s"', $className, $e->getMessage()));
 
             return;
         }
         if (0 !== $result) {
-            $this->info(sprintf('Correct: Moved %d %s objects to the correct group.', $result, str_replace('FireflyIII\\Models\\', '', $className)));
+            $this->friendlyPositive(sprintf('Moved %d %s objects to the correct group.', $result, str_replace('FireflyIII\\Models\\', '', $className)));
         }
     }
 }

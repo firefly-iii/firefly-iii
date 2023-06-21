@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
-    'withdrawal_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
-    'withdrawal_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
 
     'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
 
-    'generic_source_bad_data' => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
-    'deposit_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
-    'deposit_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
     'deposit_dest_wrong_type'  => 'Det inskickade destinationskontot är inte av rätt typ.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
-    'transfer_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
-    'transfer_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
     'need_id_in_edit'           => 'Varje delad transaktion kräver transaction_journal_id (giltigt ID eller 0).',
 
     'ob_source_need_data'           => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
     'lc_source_need_data'           => 'Behöver få ett giltigt källkontonummer för att fortsätta.',
-    'ob_dest_need_data'             => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
     'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 

@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
-    'withdrawal_source_bad_data'  => 'Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller kontonavn ":name".',
-    'withdrawal_dest_need_data'   => 'Det er nødvendigt at have et gyldigt destinationskonto ID og/eller gyldigt destinationskontonavn for at fortsætte.',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller navn ":name".',
 
     'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
 
-    'generic_source_bad_data' => 'Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller kontonavn ":name".',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
-    'deposit_source_bad_data'  => 'Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller kontonavn ":name".',
-    'deposit_dest_need_data'   => 'Det er nødvendigt at have et gyldigt destinationskonto ID og/eller gyldigt destinationskontonavn for at fortsætte.',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller kontonavn ":name".',
     'deposit_dest_wrong_type'  => 'Den foreslåede destinationskonto er ikke af den rigtige type.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
-    'transfer_source_bad_data'  => 'Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller kontonavn ":name".',
-    'transfer_dest_need_data'   => 'Det er nødvendigt at have et gyldigt destinationskonto ID og/eller gyldigt destinationskontonavn for at fortsætte.',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller kontonavn ":name".',
     'need_id_in_edit'           => 'Hver opdeling skal have et transaction_journal_id (enten gyldigt ID eller 0).',
 
     'ob_source_need_data'           => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
     'lc_source_need_data'           => 'Du skal bruge et gyldigt konto-id for at fortsætte.',
-    'ob_dest_need_data'             => 'Det er nødvendigt at have et gyldigt destinationskonto ID og/eller gyldigt destinationskontonavn for at fortsætte.',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller kontonavn ":name".',
     'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 

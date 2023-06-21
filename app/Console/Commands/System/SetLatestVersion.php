@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
 /**
@@ -31,6 +32,8 @@ use Illuminate\Console\Command;
  */
 class SetLatestVersion extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -52,13 +55,13 @@ class SetLatestVersion extends Command
     public function handle(): int
     {
         if (!$this->option('james-is-cool')) {
-            $this->error('Am too!');
+            $this->friendlyError('Am too!');
 
             return 0;
         }
         app('fireflyconfig')->set('db_version', config('firefly.db_version'));
         app('fireflyconfig')->set('ff3_version', config('firefly.version'));
-        $this->line('Updated version.');
+        $this->friendlyInfo('Updated version.');
 
         return 0;
     }

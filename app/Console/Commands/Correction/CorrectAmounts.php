@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
@@ -39,6 +40,8 @@ use Illuminate\Console\Command;
  */
 class CorrectAmounts extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
     protected $signature   = 'firefly-iii:fix-amount-pos-neg';
 
@@ -78,7 +81,7 @@ class CorrectAmounts extends Command
         $set   = AutoBudget::where('amount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('Correct: All auto budget amounts are positive.');
+            $this->friendlyPositive('All auto budget amounts are positive.');
 
             return;
         }
@@ -87,7 +90,7 @@ class CorrectAmounts extends Command
             $item->amount = app('steam')->positive((string)$item->amount);
             $item->save();
         }
-        $this->line(sprintf('Corrected %d auto budget amount(s).', $count));
+        $this->friendlyInfo(sprintf('Corrected %d auto budget amount(s).', $count));
     }
 
     /**
@@ -98,7 +101,7 @@ class CorrectAmounts extends Command
         $set   = AvailableBudget::where('amount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('Correct: All available budget amounts are positive.');
+            $this->friendlyPositive('All available budget amounts are positive.');
 
             return;
         }
@@ -107,7 +110,7 @@ class CorrectAmounts extends Command
             $item->amount = app('steam')->positive((string)$item->amount);
             $item->save();
         }
-        $this->line(sprintf('Corrected %d available budget amount(s).', $count));
+        $this->friendlyInfo(sprintf('Corrected %d available budget amount(s).', $count));
     }
 
     /**
@@ -118,7 +121,7 @@ class CorrectAmounts extends Command
         $set   = Bill::where('amount_min', '<', 0)->orWhere('amount_max', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('Correct: All bill amounts are positive.');
+            $this->friendlyPositive('All bill amounts are positive.');
 
             return;
         }
@@ -128,6 +131,7 @@ class CorrectAmounts extends Command
             $item->amount_max = app('steam')->positive((string)$item->amount_max);
             $item->save();
         }
+        $this->friendlyInfo(sprintf('Corrected %d bill amount(s).', $count));
     }
 
     /**
@@ -138,7 +142,7 @@ class CorrectAmounts extends Command
         $set   = BudgetLimit::where('amount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('Correct: All budget limit amounts are positive.');
+            $this->friendlyPositive('All budget limit amounts are positive.');
 
             return;
         }
@@ -147,7 +151,7 @@ class CorrectAmounts extends Command
             $item->amount = app('steam')->positive((string)$item->amount);
             $item->save();
         }
-        $this->line(sprintf('Corrected %d budget limit amount(s).', $count));
+        $this->friendlyInfo(sprintf('Corrected %d budget limit amount(s).', $count));
     }
 
     /**
@@ -158,7 +162,7 @@ class CorrectAmounts extends Command
         $set   = CurrencyExchangeRate::where('rate', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('Correct: All currency exchange rates are positive.');
+            $this->friendlyPositive('All currency exchange rates are positive.');
 
             return;
         }
@@ -167,7 +171,7 @@ class CorrectAmounts extends Command
             $item->rate = app('steam')->positive((string)$item->rate);
             $item->save();
         }
-        $this->line(sprintf('Corrected %d currency exchange rate(s).', $count));
+        $this->friendlyInfo(sprintf('Corrected %d currency exchange rate(s).', $count));
     }
 
     /**
@@ -178,7 +182,7 @@ class CorrectAmounts extends Command
         $set   = PiggyBank::where('targetamount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('Correct: All piggy bank amounts are positive.');
+            $this->friendlyPositive('All piggy bank amounts are positive.');
 
             return;
         }
@@ -187,7 +191,7 @@ class CorrectAmounts extends Command
             $item->targetamount = app('steam')->positive((string)$item->targetamount);
             $item->save();
         }
-        $this->line(sprintf('Corrected %d piggy bank amount(s).', $count));
+        $this->friendlyInfo(sprintf('Corrected %d piggy bank amount(s).', $count));
     }
 
     /**
@@ -200,7 +204,7 @@ class CorrectAmounts extends Command
                                       ->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('Correct: All recurring transaction amounts are positive.');
+            $this->friendlyPositive('All recurring transaction amounts are positive.');
 
             return;
         }
@@ -210,7 +214,7 @@ class CorrectAmounts extends Command
             $item->foreign_amount = app('steam')->positive((string)$item->foreign_amount);
             $item->save();
         }
-        $this->line(sprintf('Corrected %d recurring transaction amount(s).', $count));
+        $this->friendlyInfo(sprintf('Corrected %d recurring transaction amount(s).', $count));
     }
 
     /**
@@ -221,7 +225,7 @@ class CorrectAmounts extends Command
         $set   = PiggyBankRepetition::where('currentamount', '<', 0)->get();
         $count = $set->count();
         if (0 === $count) {
-            $this->info('Correct: All piggy bank repetition amounts are positive.');
+            $this->friendlyPositive('All piggy bank repetition amounts are positive.');
 
             return;
         }
@@ -230,7 +234,7 @@ class CorrectAmounts extends Command
             $item->currentamount = app('steam')->positive((string)$item->currentamount);
             $item->save();
         }
-        $this->line(sprintf('Corrected %d piggy bank repetition amount(s).', $count));
+        $this->friendlyInfo(sprintf('Corrected %d piggy bank repetition amount(s).', $count));
     }
 
     /**
@@ -250,11 +254,11 @@ class CorrectAmounts extends Command
             }
         }
         if (0 === $fixed) {
-            $this->info('Correct: All rule trigger amounts are positive.');
+            $this->friendlyPositive('All rule trigger amounts are positive.');
 
             return;
         }
-        $this->line(sprintf('Corrected %d rule trigger amount(s).', $fixed));
+        $this->friendlyInfo(sprintf('Corrected %d rule trigger amount(s).', $fixed));
     }
 
 }

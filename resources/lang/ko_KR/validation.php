@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
-    'withdrawal_source_bad_data'  => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
-    'withdrawal_dest_need_data'   => '계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
 
     'reconciliation_source_bad_data' => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 조정 계정을 찾을 수 없습니다.',
 
-    'generic_source_bad_data' => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
-    'deposit_source_bad_data'  => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
-    'deposit_dest_need_data'   => '계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
     'deposit_dest_wrong_type'  => '제출된 대상 계정이 올바른 유형이 아닙니다.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
-    'transfer_source_bad_data'  => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
-    'transfer_dest_need_data'   => '계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
     'need_id_in_edit'           => '각 분할에는 transaction_journal_id(유효한 ​​ID 또는 0) 가 있어야 합니다.',
 
     'ob_source_need_data'           => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
     'lc_source_need_data'           => '계속하려면 유효한 소스 계정 ID가 필요합니다.',
-    'ob_dest_need_data'             => '계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
     'reconciliation_either_account' => '조정을 제출하려면 소스 계정 또는 대상 계정 중 하나를 제출해야 합니다.',
 

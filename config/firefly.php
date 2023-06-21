@@ -107,7 +107,7 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '6.0.13',
+    'version'                      => '6.0.14',
     'api_version'                  => '2.0.4',
     'db_version'                   => 19,
 

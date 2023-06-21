@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -39,6 +40,8 @@ use Illuminate\Support\Collection;
  */
 class CorrectOpeningBalanceCurrencies extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Will make sure that opening balance transaction currencies match the account they\'re for.';
     protected $signature   = 'firefly-iii:fix-ob-currencies';
 
@@ -58,11 +61,11 @@ class CorrectOpeningBalanceCurrencies extends Command
 
         if ($count > 0) {
             $message = sprintf('Corrected %d opening balance transaction(s).', $count);
-            $this->line($message);
+            $this->friendlyInfo($message);
         }
         if (0 === $count) {
-            $message = 'Correct: There was nothing to fix in the opening balance transactions.';
-            $this->info($message);
+            $message = 'There was nothing to fix in the opening balance transactions.';
+            $this->friendlyPositive($message);
         }
 
         return 0;
@@ -80,7 +83,7 @@ class CorrectOpeningBalanceCurrencies extends Command
         if (null === $account) {
             $message = sprintf('Transaction journal #%d has no valid account. Can\'t fix this line.', $journal->id);
             app('log')->warning($message);
-            $this->warn($message);
+            $this->friendlyError($message);
 
             return 0;
         }

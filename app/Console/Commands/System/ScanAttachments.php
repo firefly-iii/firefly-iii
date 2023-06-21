@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use Crypt;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Attachment;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -37,6 +38,8 @@ use Storage;
  */
 class ScanAttachments extends Command
 {
+    use ShowsFriendlyMessages;
+
     /**
      * The console command description.
      *
@@ -79,7 +82,7 @@ class ScanAttachments extends Command
             $attachment->md5  = $md5;
             $attachment->mime = $mime;
             $attachment->save();
-            $this->line(sprintf('Fixed attachment #%d', $attachment->id));
+            $this->friendlyInfo(sprintf('Fixed attachment #%d', $attachment->id));
         }
 
         return 0;

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
@@ -36,6 +37,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class MigrateTagLocations extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '500_migrate_tag_locations';
     /**
      * The console command description.
@@ -61,7 +64,7 @@ class MigrateTagLocations extends Command
     public function handle(): int
     {
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }

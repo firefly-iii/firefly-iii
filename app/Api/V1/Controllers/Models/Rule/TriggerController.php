@@ -96,6 +96,7 @@ class TriggerController extends Controller
             $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
 
+
         // file the rule(s)
         $transactions = $ruleEngine->find();
         $count        = $transactions->count();
@@ -148,6 +149,7 @@ class TriggerController extends Controller
         if (array_key_exists('accounts', $parameters) && is_array($parameters['accounts']) && count($parameters['accounts']) > 0) {
             $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
+
 
         // fire the rule(s)
         $ruleEngine->fire();

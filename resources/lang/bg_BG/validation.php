@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
-    'withdrawal_source_bad_data'  => 'Не може да се намери валидна разходна сметка при търсене на ID ":id" или име ":name".',
-    'withdrawal_dest_need_data'   => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
 
     'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
 
-    'generic_source_bad_data' => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
-    'deposit_source_bad_data'  => 'Не може да се намери валидна разходна сметка при търсене на ID ":id" или име ":name".',
-    'deposit_dest_need_data'   => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
     'deposit_dest_wrong_type'  => 'Използваната приходна сметка не е от правилния тип.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
-    'transfer_source_bad_data'  => 'Не може да се намери валидна разходна сметка при търсене на ID ":id" или име ":name".',
-    'transfer_dest_need_data'   => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
     'need_id_in_edit'           => 'Всяко разделяне трябва да има transaction_journal_id (или валидно ID или 0).',
 
     'ob_source_need_data'           => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
     'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'             => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
     'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 

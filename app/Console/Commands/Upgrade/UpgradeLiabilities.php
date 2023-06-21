@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
@@ -42,6 +43,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class UpgradeLiabilities extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '560_upgrade_liabilities';
     protected $description = 'Upgrade liabilities to new 5.6.0 structure.';
     protected $signature   = 'firefly-iii:upgrade-liabilities {--F|force : Force the execution of this command.}';
@@ -57,7 +60,7 @@ class UpgradeLiabilities extends Command
     public function handle(): int
     {
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }

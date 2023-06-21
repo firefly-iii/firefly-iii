@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use DB;
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Handlers\Events\UpdatedGroupEventHandler;
 use FireflyIII\Models\TransactionGroup;
@@ -36,6 +37,8 @@ use Illuminate\Console\Command;
  */
 class FixGroupAccounts extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Unify the source / destination accounts of split groups.';
     protected $signature   = 'firefly-iii:unify-group-accounts';
 
@@ -62,7 +65,7 @@ class FixGroupAccounts extends Command
             $handler->unifyAccounts($event);
         }
 
-        $this->info('Correct: updated possible inconsistent transaction groups.');
+        $this->friendlyPositive('Updated possible inconsistent transaction groups.');
 
         return 0;
     }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AutoBudget;
@@ -51,6 +52,8 @@ use Illuminate\Support\Facades\Log;
  */
 class ForceDecimalSize extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
     protected $signature   = 'firefly-iii:force-decimal-size';
     private string $cast;
@@ -96,8 +99,8 @@ class ForceDecimalSize extends Command
         Log::debug('Now in ForceDecimalSize::handle()');
         $this->determineDatabaseType();
 
-        $this->error('Running this command is dangerous and can cause data loss.');
-        $this->error('Please do not continue.');
+        $this->friendlyError('Running this command is dangerous and can cause data loss.');
+        $this->friendlyError('Please do not continue.');
         $question = $this->confirm('Do you want to continue?');
         if (true === $question) {
             $this->correctAmounts();
@@ -136,7 +139,7 @@ class ForceDecimalSize extends Command
         });
         $result = $query->get(['accounts.*']);
         if (0 === $result->count()) {
-            $this->line(sprintf('Correct: All accounts in %s', $currency->code));
+            $this->friendlyPositive(sprintf('All accounts in %s are OK', $currency->code));
 
             return;
         }
@@ -150,7 +153,7 @@ class ForceDecimalSize extends Command
                 // fix $field by rounding it down correctly.
                 $pow     = pow(10, (int)$currency->decimal_places);
                 $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
-                $this->line(sprintf('Account #%d has %s with value "%s", this has been corrected to "%s".', $account->id, $field, $value, $correct));
+                $this->friendlyInfo(sprintf('Account #%d has %s with value "%s", this has been corrected to "%s".', $account->id, $field, $value, $correct));
                 Account::find($account->id)->update([$field => $correct]);
             }
         }
@@ -174,7 +177,7 @@ class ForceDecimalSize extends Command
         }
 
         if (!in_array((string)config('database.default'), ['mysql', 'pgsql', 'sqlite'], true)) {
-            $this->line(sprintf('Skip correcting amounts, does not support "%s"...', (string)config('database.default')));
+            $this->friendlyWarning(sprintf('Skip correcting amounts, does not support "%s"...', (string)config('database.default')));
 
             return;
         }
@@ -188,7 +191,6 @@ class ForceDecimalSize extends Command
      */
     private function correctAmountsByCurrency(): void
     {
-        $this->line('Going to correct amounts.');
         /** @var Collection $enabled */
         $enabled = TransactionCurrency::whereEnabled(1)->get();
         /** @var TransactionCurrency $currency */
@@ -207,7 +209,6 @@ class ForceDecimalSize extends Command
      */
     private function correctByCurrency(TransactionCurrency $currency): void
     {
-        $this->line(sprintf('Going to correct amounts in currency %s ("%s").', $currency->code, $currency->name));
         /**
          * @var string $name
          * @var array $fields
@@ -216,7 +217,7 @@ class ForceDecimalSize extends Command
             switch ($name) {
                 default:
                     $message = sprintf('Cannot handle table "%s"', $name);
-                    $this->line($message);
+                    $this->friendlyError($message);
                     throw new FireflyException($message);
                 case 'accounts':
                     $this->correctAccountAmounts($currency, $fields);
@@ -279,7 +280,7 @@ class ForceDecimalSize extends Command
 
         $result = $query->get(['*']);
         if (0 === $result->count()) {
-            $this->line(sprintf('Correct: All %s in %s', $table, $currency->code));
+            $this->friendlyPositive(sprintf('All %s in %s are OK', $table, $currency->code));
 
             return;
         }
@@ -293,7 +294,7 @@ class ForceDecimalSize extends Command
                 // fix $field by rounding it down correctly.
                 $pow     = pow(10, (int)$currency->decimal_places);
                 $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
-                $this->line(sprintf('%s #%d has %s with value "%s", this has been corrected to "%s".', $table, $item->id, $field, $value, $correct));
+                $this->friendlyWarning(sprintf('%s #%d has %s with value "%s", this has been corrected to "%s".', $table, $item->id, $field, $value, $correct));
                 $class::find($item->id)->update([$field => $correct]);
             }
         }
@@ -330,7 +331,7 @@ class ForceDecimalSize extends Command
 
         $result = $query->get(['piggy_banks.*']);
         if (0 === $result->count()) {
-            $this->line(sprintf('Correct: All piggy banks in %s', $currency->code));
+            $this->friendlyPositive(sprintf('All piggy banks in %s are OK', $currency->code));
 
             return;
         }
@@ -344,7 +345,7 @@ class ForceDecimalSize extends Command
                 // fix $field by rounding it down correctly.
                 $pow     = pow(10, (int)$currency->decimal_places);
                 $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
-                $this->line(sprintf('Piggy bank #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct));
+                $this->friendlyWarning(sprintf('Piggy bank #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct));
                 PiggyBank::find($item->id)->update([$field => $correct]);
             }
         }
@@ -382,7 +383,7 @@ class ForceDecimalSize extends Command
 
         $result = $query->get(['piggy_bank_events.*']);
         if (0 === $result->count()) {
-            $this->line(sprintf('Correct: All piggy bank events in %s', $currency->code));
+            $this->friendlyPositive(sprintf('All piggy bank events in %s are OK', $currency->code));
 
             return;
         }
@@ -396,7 +397,9 @@ class ForceDecimalSize extends Command
                 // fix $field by rounding it down correctly.
                 $pow     = pow(10, (int)$currency->decimal_places);
                 $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
-                $this->line(sprintf('Piggy bank event #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct));
+                $this->friendlyWarning(
+                    sprintf('Piggy bank event #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct)
+                );
                 PiggyBankEvent::find($item->id)->update([$field => $correct]);
             }
         }
@@ -434,7 +437,7 @@ class ForceDecimalSize extends Command
 
         $result = $query->get(['piggy_bank_repetitions.*']);
         if (0 === $result->count()) {
-            $this->line(sprintf('Correct: All piggy bank repetitions in %s', $currency->code));
+            $this->friendlyPositive(sprintf('All piggy bank repetitions in %s', $currency->code));
 
             return;
         }
@@ -448,7 +451,9 @@ class ForceDecimalSize extends Command
                 // fix $field by rounding it down correctly.
                 $pow     = pow(10, (int)$currency->decimal_places);
                 $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
-                $this->line(sprintf('Piggy bank repetition #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct));
+                $this->friendlyWarning(
+                    sprintf('Piggy bank repetition #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct)
+                );
                 PiggyBankRepetition::find($item->id)->update([$field => $correct]);
             }
         }
@@ -473,7 +478,7 @@ class ForceDecimalSize extends Command
 
         $result = $query->get(['transactions.*']);
         if (0 === $result->count()) {
-            $this->line(sprintf('Correct: All transactions in %s', $currency->code));
+            $this->friendlyPositive(sprintf('All transactions in %s are OK', $currency->code));
         }
 
         /** @var Transaction $item */
@@ -485,7 +490,7 @@ class ForceDecimalSize extends Command
             // fix $field by rounding it down correctly.
             $pow     = pow(10, (int)$currency->decimal_places);
             $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
-            $this->line(sprintf('Transaction #%d has amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct));
+            $this->friendlyWarning(sprintf('Transaction #%d has amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct));
             Transaction::find($item->id)->update(['amount' => $correct]);
         }
 
@@ -499,7 +504,7 @@ class ForceDecimalSize extends Command
 
         $result = $query->get(['*']);
         if (0 === $result->count()) {
-            $this->line(sprintf('Correct: All transactions in foreign currency %s', $currency->code));
+            $this->friendlyPositive(sprintf('All transactions in foreign currency %s are OK', $currency->code));
 
             return;
         }
@@ -512,7 +517,9 @@ class ForceDecimalSize extends Command
             // fix $field by rounding it down correctly.
             $pow     = pow(10, (int)$currency->decimal_places);
             $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
-            $this->line(sprintf('Transaction #%d has foreign amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct));
+            $this->friendlyWarning(
+                sprintf('Transaction #%d has foreign amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct)
+            );
             Transaction::find($item->id)->update(['foreign_amount' => $correct]);
         }
     }
@@ -538,7 +545,7 @@ class ForceDecimalSize extends Command
      */
     private function updateDecimals(): void
     {
-        $this->info('Going to force the size of DECIMAL columns. Please hold.');
+        $this->friendlyInfo('Going to force the size of DECIMAL columns. Please hold.');
         $type = (string)config('database.default');
 
         /**
@@ -548,11 +555,11 @@ class ForceDecimalSize extends Command
         foreach ($this->tables as $name => $fields) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $this->line(sprintf('Updating table "%s", field "%s"...', $name, $field));
+                $this->friendlyLine(sprintf('Updating table "%s", field "%s"...', $name, $field));
 
                 switch ($type) {
                     default:
-                        $this->error(sprintf('Cannot handle database type "%s".', $type));
+                        $this->friendlyError(sprintf('Cannot handle database type "%s".', $type));
 
                         return;
                     case 'pgsql':

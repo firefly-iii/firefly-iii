@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
@@ -34,6 +35,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class BudgetLimitCurrency extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '480_bl_currency';
     /**
      * The console command description.
@@ -59,7 +62,7 @@ class BudgetLimitCurrency extends Command
     public function handle(): int
     {
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
@@ -77,7 +80,7 @@ class BudgetLimitCurrency extends Command
                         $currency                             = app('amount')->getDefaultCurrencyByUser($user);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
-                        $this->line(
+                        $this->friendlyInfo(
                             sprintf('Budget limit #%d (part of budget "%s") now has a currency setting (%s).', $budgetLimit->id, $budget->name, $currency->name)
                         );
                         $count++;
@@ -86,7 +89,7 @@ class BudgetLimitCurrency extends Command
             }
         }
         if (0 === $count) {
-            $this->info('Correct: all budget limits are OK.');
+            $this->friendlyPositive('All budget limits are OK.');
         }
         $this->markAsExecuted();
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Integrity;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
@@ -32,6 +33,8 @@ use Illuminate\Console\Command;
  */
 class ReportSum extends Command
 {
+    use ShowsFriendlyMessages;
+
     protected $description = 'Report on the total sum of transactions. Must be 0.';
     protected $signature   = 'firefly-iii:report-sum';
 
@@ -58,12 +61,17 @@ class ReportSum extends Command
         /** @var User $user */
         foreach ($userRepository->all() as $user) {
             $sum = (string)$user->transactions()->sum('amount');
+            if (!is_numeric($sum)) {
+                $message = sprintf('Error: Transactions for user #%d (%s) have an invalid sum ("%s").', $user->id, $user->email, $sum);
+                $this->friendlyError($message);
+                continue;
+            }
             if (0 !== bccomp($sum, '0')) {
                 $message = sprintf('Error: Transactions for user #%d (%s) are off by %s!', $user->id, $user->email, $sum);
-                $this->error($message);
+                $this->friendlyError($message);
             }
             if (0 === bccomp($sum, '0')) {
-                $this->info(sprintf('Correct: Amount integrity OK for user #%d', $user->id));
+                $this->friendlyPositive(sprintf('Amount integrity OK for user #%d', $user->id));
             }
         }
     }

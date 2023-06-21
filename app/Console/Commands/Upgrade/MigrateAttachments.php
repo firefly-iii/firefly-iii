@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
@@ -36,6 +37,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class MigrateAttachments extends Command
 {
+    use ShowsFriendlyMessages;
+
     public const CONFIG_NAME = '480_migrate_attachments';
     /**
      * The console command description.
@@ -62,7 +65,7 @@ class MigrateAttachments extends Command
     {
         $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('Correct: this command has already been executed.');
+            $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
@@ -94,13 +97,13 @@ class MigrateAttachments extends Command
             }
         }
         if (0 === $count) {
-            $this->info('Correct: all attachments are OK.');
+            $this->friendlyPositive('All attachments are OK.');
         }
         if (0 !== $count) {
-            $this->line(sprintf('Updated %d attachment(s).', $count));
+            $this->friendlyInfo(sprintf('Updated %d attachment(s).', $count));
         }
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Migrated attachment notes in %s seconds.', $end));
+        $this->friendlyInfo(sprintf('Migrated attachment notes in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;
