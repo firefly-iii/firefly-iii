@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.14 - 2023-06-22
+
+### Added
+
+- Editing some fields will generate audit logs visible when you view a transaction. The number of fields monitored will
+  increase over time
+
+### Changed
+
+- Account validation includes IBANs now, this helps the data importer
+- Unified and cleaned up all command line output
+
+### Fixed
+
+- [Issue 7630](https://github.com/firefly-iii/firefly-iii/issues/7630) Errors when upgrading using SQLite
+- [Issue 7642](https://github.com/firefly-iii/firefly-iii/issues/7642) nn_NO wasn't available for users
+- [Issue 7609](https://github.com/firefly-iii/firefly-iii/issues/7609), [issue 7659](https://github.com/firefly-iii/firefly-iii/issues/7659) Rule execution form was broken
+- [Issue 7677](https://github.com/firefly-iii/firefly-iii/issues/7677) Amount was negative instead of positive in view
+- [Issue 7649](https://github.com/firefly-iii/firefly-iii/issues/7649) Bill edit screen would always suggest "daily" repeat frequency
+- Nullpointer in bill repository class
+- Missing param in rule action, thanks @timendum!
+- Missing attachment overview in recurring transactions
+
 ## v6.0.13 - 2023-06-12
 
 ### Fixed

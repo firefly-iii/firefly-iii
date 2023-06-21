@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => '続行するには有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
-    'withdrawal_source_bad_data'  => 'ID「:id」、名称「:name」で検索した結果、有効な引き出し元口座が見つかりませんでした。',
-    'withdrawal_dest_need_data'   => '続行するには、有効な預け入れ口座 ID および（または）有効な預け入れ口座名を取得する必要があります。',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ口座が見つかりませんでした。',
 
     'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
 
-    'generic_source_bad_data' => 'ID「:id」、名称「:name」で検索した結果、有効な引き出し元口座が見つかりませんでした。',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
-    'deposit_source_bad_data'  => 'ID「:id」、名称「:name」で検索した結果、有効な引き出し元口座が見つかりませんでした。',
-    'deposit_dest_need_data'   => '続行するには、有効な預け入れ先口座 ID および（または）有効な預け入れ先口座名を取得する必要があります。',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
     'deposit_dest_wrong_type'  => '預け入れ先口座が適切なタイプではありません。',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
-    'transfer_source_bad_data'  => 'ID「:id」、名称「:name」で検索した結果、有効な引き出し元口座が見つかりませんでした。',
-    'transfer_dest_need_data'   => '続行するには、有効な預け入れ先口座 ID および（または）有効な預け入れ先口座名を取得する必要があります。',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
     'need_id_in_edit'           => '各分割は transaction_journal_id (有効な ID または 0 のいずれか) でなければなりません。',
 
     'ob_source_need_data'           => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
     'lc_source_need_data'           => '続行するには有効な引き出し元口座 ID が必要です。',
-    'ob_dest_need_data'             => '続行するには、有効な預け入れ口座 ID および（または）有効な預け入れ口座名を取得する必要があります。',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
     'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 

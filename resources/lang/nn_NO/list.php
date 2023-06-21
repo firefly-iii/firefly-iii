@@ -115,7 +115,7 @@ return [
     'blocked_code'            => 'Blokkert kode',
     'source_account'          => 'Kjeldekonto',
     'destination_account'     => 'Målkonto',
-    'accounts_count'          => 'Antall kontoer',
+    'accounts_count'          => 'Antal kontoar',
     'journals_count'          => 'Antall transaksjonar',
     'attachments_count'       => 'Antall vedlegg',
     'bills_count'             => 'Antall rekningar',

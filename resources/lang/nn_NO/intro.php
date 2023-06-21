@@ -41,7 +41,7 @@ return [
     'index_box_out_holder'                  => 'Denne lille boksen og boksane ved sida av gir deg rask oversikt over din økonomiske situasjon.',
     'index_help'                            => 'Om du treng hjelp til ein side eller eit skjema, trykker du på denne knappen.',
     'index_outro'                           => 'Dei fleste sidene av Firefly III vil starte med ein liten gjennomgang slik som denne. Ta kontakt med meg om du har spørsmål eller kommentarer. Sett igang!',
-    'index_sidebar-toggle'                  => 'For å oppretta nye transaksjonar, kontoer eller andre ting, bruk menyen under dette ikonet.',
+    'index_sidebar-toggle'                  => 'For å oppretta nye transaksjonar, kontoar eller andre ting, bruk menyen under dette ikonet.',
     'index_cash_account'                    => 'Dette er kontoane som er oppretta så langt. Du kan bruka kontantkontoen til å spore kontantutgifter, men det er sjølvsagt ikkje obligatorisk.',
 
     // transactions
@@ -52,8 +52,8 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Gi kontoane dine ein gyldig IBAN. Dette gjer dataimport lettare i framtida.',
-    'accounts_create_asset_opening_balance' => 'Aktivakontoer kan ha ein "åpningssaldo" som indikerar starten på denne kontoens historie i Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III støttar fleire valutaer. Aktivakontoer har ein hovedvaluta, som du må definera her.',
+    'accounts_create_asset_opening_balance' => 'Aktivakontoar kan ha ein "åpningssaldo" som indikerar starten på denne kontoens historie i Firefly III.',
+    'accounts_create_asset_currency'        => 'Firefly III støttar fleire valutaer. Aktivakontoar har ein hovedvaluta, som du må definera her.',
     'accounts_create_asset_virtual'         => 'Nokon gonger kan det hjelpa å gje kontoen din ein virtuell saldo: eit ekstra beløp blir alltid lagt til eller fjerna frå den faktiske saldoen.',
 
     // budgets index
@@ -80,7 +80,7 @@ return [
     // reports (index)
     'reports_index_intro'                   => 'Bruk desse rapportane for å få detaljert innsikt i din økonomi.',
     'reports_index_inputReportType'         => 'Vel ein rapporttype. Sjekk ut hjelpesidene for å sjå kva kvar rapport visar deg.',
-    'reports_index_inputAccountsSelect'     => 'Du kan ekskludere eller inkludere aktivakontoer etter eget ønske.',
+    'reports_index_inputAccountsSelect'     => 'Du kan ekskludere eller inkludere aktivakontoar etter eget ønske.',
     'reports_index_inputDateRange'          => 'Den valde datoperioden er heilt opp til deg: frå ein dag, og opptil 10 år.',
     'reports_index_extra-options-box'       => 'Avhengig av hvilken rapport du har valt, kan du velga ekstra filtre og alternativ her. Følg med på denne boksen når du endrer rapporttyper.',
 

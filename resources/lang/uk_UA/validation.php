@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Щоб продовжити, необхідно вказати дійсний ID рахунку і/або його назву.',
-    'withdrawal_source_bad_data'  => 'Не вдалося знайти дійсний рахунок з ID ":id" або іменем ":name".',
-    'withdrawal_dest_need_data'   => 'Щоб продовжити, необхідно вказати дійсний ID рахунку і/або його назву.',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Не вдалося знайти дійсний рахунок з ID ":id" або іменем ":name".',
 
     'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
 
-    'generic_source_bad_data' => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Щоб продовжити, необхідно вказати дійсний ID вихідного рахунку і/або його назву.',
-    'deposit_source_bad_data'  => 'Не вдалося знайти дійсний вихідний рахунок при пошуку ID ":id" або імені ":name".',
-    'deposit_dest_need_data'   => 'Щоб продовжити, необхідно вказати дійсний ID рахунку призначення і/або його назву.',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => 'Не вдалося знайти дійсний рахунок призначення з ID ":id" або іменем ":name".',
     'deposit_dest_wrong_type'  => 'Збережений рахунок призначення - некоректний.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => 'Щоб продовжити, необхідно вказати дійсний ID вихідного рахунку і/або його назву.',
-    'transfer_source_bad_data'  => 'Не вдалося знайти дійсний вихідний рахунок з ID ":id" або іменем ":name".',
-    'transfer_dest_need_data'   => 'Щоб продовжити, необхідно вказати дійсний ID рахунку призначення і/або його назву.',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Не вдалося знайти дійсний рахунок призначення з ID ":id" або іменем ":name".',
     'need_id_in_edit'           => 'Кожна розділена транзакція повинна мати transaction_journal_id (дійсний ID або 0).',
 
     'ob_source_need_data'           => 'Щоб продовжити, необхідно вказати дійсний ID вихідного рахунку і/або його назву.',
     'lc_source_need_data'           => 'Need to get a valid source account ID to continue.',
-    'ob_dest_need_data'             => 'Щоб продовжити, необхідно вказати дійсний ID рахунку призначення і/або його назву.',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => 'Не вдалося знайти дійсний рахунок призначення з ID ":id" або іменем ":name".',
     'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
 

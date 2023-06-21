@@ -51,7 +51,7 @@ return [
     'edit_piggyBank'   => 'Rediger sparegris ":name"',
     'preferences'      => 'Innstillinger',
     'profile'          => 'Profil',
-    'accounts'         => 'Kontoer',
+    'accounts'         => 'Kontoar',
     'changePassword'   => 'Endre passord',
     'change_email'     => 'Endre din epostadresse',
     'bills'            => 'Rekningar',
@@ -97,7 +97,7 @@ return [
     'logout_others'          => 'Logg ut andre økter',
     'asset_accounts'         => 'Aktivakonto',
     'expense_accounts'       => 'Utgiftskonto',
-    'revenue_accounts'       => 'Inntektskontoer',
+    'revenue_accounts'       => 'Inntektskontoar',
     'liabilities_accounts'   => 'Gjeld',
     'placeholder'            => '[Placeholder]',
 ];

@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
-    'withdrawal_source_bad_data'  => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',
-    'withdrawal_dest_need_data'   => '需要一个有效的目标账户 ID 和/或目标账户名称才能继续',
+    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
 
     'reconciliation_source_bad_data' => '在搜索ID“:id”或名称“:name”时，没有找到有效的对账帐户',
 
-    'generic_source_bad_data' => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',
+    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
-    'deposit_source_bad_data'  => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',
-    'deposit_dest_need_data'   => '需要一个有效的目标账户 ID 和/或目标账户名称才能继续',
+    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'deposit_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
     'deposit_dest_wrong_type'  => '提交的目标账户的类型不正确',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
-    'transfer_source_bad_data'  => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',
-    'transfer_dest_need_data'   => '需要一个有效的目标账户 ID 和/或目标账户名称才能继续',
+    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
     'need_id_in_edit'           => '每笔拆分必须有 transaction_journal_id (有效的 ID 或 0)。',
 
     'ob_source_need_data'           => '需要一个有效的来源账户ID和/或来源账户名称才能继续。',
     'lc_source_need_data'           => '需要获取一个有效的来源账户 ID 才能继续。',
-    'ob_dest_need_data'             => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
+    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'              => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
     'reconciliation_either_account' => '要提交对账，您必须提交来源或目标帐户。不要都提交，也不要都不提交。',
 
