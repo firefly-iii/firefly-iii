@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] Bei der Suche nach der ID „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'withdrawal_dest_need_data'   => '[a] Sie benötigen eine gültige Zielkonto-ID und/oder einen gültigen Zielkontonamen, um fortzufahren.',
     'withdrawal_dest_bad_data'    => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
 
     'reconciliation_source_bad_data' => 'Bei der Suche nach ID „:id” oder Name „:name” konnte kein gültiges Ausgleichskonto gefunden werden.',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] Bei der Suche nach der ID „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
 
     'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
-    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'  => '[b] Bei der Suche nach der ID „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'deposit_dest_need_data'   => '[b] Sie benötigen eine gültige Zielkonto-ID und/oder einen gültigen Zielkontonamen, um fortzufahren.',
     'deposit_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
     'deposit_dest_wrong_type'  => 'Das übermittelte Zielkonto entspricht nicht dem geforderten Typ.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
-    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_source_bad_data'  => '[c] Bei der Suche nach der ID „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'transfer_dest_need_data'   => '[c] Sie benötigen eine gültige Zielkonto-ID und/oder einen gültigen Zielkontonamen, um fortzufahren.',
     'transfer_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
     'need_id_in_edit'           => 'Jeder Aufteilungen muss eine transaction_journal_id (entweder gültige ID oder 0) aufweisen.',
 
     'ob_source_need_data'           => 'Sie benötigen eine gültige Quellkontonummer und/oder einen gültigen Quellkontonamen, um fortzufahren.',
     'lc_source_need_data'           => 'Zum Fortfahren wird eine gültige Quellkonto-ID benötigt.',
-    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'             => '[d] Sie benötigen eine gültige Zielkonto-ID und/oder einen gültigen Zielkontonamen, um fortzufahren.',
     'ob_dest_bad_data'              => 'Bei der Suche nach der ID ":id" oder dem Namen ":name" konnte kein gültiges Zielkonto gefunden werden.',
     'reconciliation_either_account' => 'Um einen Abgleich zu übermitteln, müssen Sie entweder ein Quell- oder ein Zielkonto angeben. Nicht beides, nicht keines von beiden.',
 

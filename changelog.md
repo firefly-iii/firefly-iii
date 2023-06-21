@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.15 - 2023-06-22
+
+### Fixed
+
+- [Issue 7678](https://github.com/firefly-iii/firefly-iii/issues/7678) Missing argument in postgres maintenance code breaks startup.
+
 ## 6.0.14 - 2023-06-22
 
 ### Added
@@ -19,9 +25,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - [Issue 7630](https://github.com/firefly-iii/firefly-iii/issues/7630) Errors when upgrading using SQLite
 - [Issue 7642](https://github.com/firefly-iii/firefly-iii/issues/7642) nn_NO wasn't available for users
-- [Issue 7609](https://github.com/firefly-iii/firefly-iii/issues/7609), [issue 7659](https://github.com/firefly-iii/firefly-iii/issues/7659) Rule execution form was broken
+- [Issue 7609](https://github.com/firefly-iii/firefly-iii/issues/7609), [issue 7659](https://github.com/firefly-iii/firefly-iii/issues/7659)
+  Rule execution form was broken
 - [Issue 7677](https://github.com/firefly-iii/firefly-iii/issues/7677) Amount was negative instead of positive in view
-- [Issue 7649](https://github.com/firefly-iii/firefly-iii/issues/7649) Bill edit screen would always suggest "daily" repeat frequency
+- [Issue 7649](https://github.com/firefly-iii/firefly-iii/issues/7649) Bill edit screen would always suggest "daily"
+  repeat frequency
 - Nullpointer in bill repository class
 - Missing param in rule action, thanks @timendum!
 - Missing attachment overview in recurring transactions

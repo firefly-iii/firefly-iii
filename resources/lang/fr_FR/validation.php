@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'withdrawal_dest_need_data'   => '[a] Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'withdrawal_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
     'reconciliation_source_bad_data' => 'Impossible de trouver un compte de rapprochement valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
     'deposit_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
-    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'  => '[b] Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'deposit_dest_need_data'   => '[b] Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'deposit_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
     'deposit_dest_wrong_type'  => 'Le compte de destination saisi n\'est pas du bon type.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
-    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_source_bad_data'  => '[c] Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'transfer_dest_need_data'   => '[c] Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'transfer_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
     'need_id_in_edit'           => 'Chaque ventilation doit avoir transaction_journal_id (ID valide ou 0).',
 
     'ob_source_need_data'           => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
     'lc_source_need_data'           => 'Besoin d\'un identifiant de compte source valide pour continuer.',
-    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'             => '[d] Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'ob_dest_bad_data'              => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
     'reconciliation_either_account' => 'Pour soumettre un rapprochement, vous devez soumettre soit une source soit un compte de destination. Ni les deux, ni aucun.',
 
