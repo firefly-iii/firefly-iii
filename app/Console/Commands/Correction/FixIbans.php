@@ -59,7 +59,29 @@ class FixIbans extends Command
     }
 
     /**
-     * @param  Collection  $accounts
+     * @param Collection $accounts
+     *
+     * @return void
+     */
+    private function filterIbans(Collection $accounts): void
+    {
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $iban = $account->iban;
+            if (str_contains($iban, ' ')) {
+                $iban = app('steam')->filterSpaces((string)$account->iban);
+                if ('' !== $iban) {
+                    $account->iban = $iban;
+                    $account->save();
+                    $this->friendlyInfo(sprintf('Removed spaces from IBAN of account #%d', $account->id));
+                    $this->count++;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param Collection $accounts
      *
      * @return void
      */
@@ -102,28 +124,6 @@ class FixIbans extends Command
 
             if (!array_key_exists($iban, $set[$userId])) {
                 $set[$userId][$iban] = $type;
-            }
-        }
-    }
-
-    /**
-     * @param  Collection  $accounts
-     *
-     * @return void
-     */
-    private function filterIbans(Collection $accounts): void
-    {
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $iban = $account->iban;
-            if (str_contains($iban, ' ')) {
-                $iban = app('steam')->filterSpaces((string)$account->iban);
-                if ('' !== $iban) {
-                    $account->iban = $iban;
-                    $account->save();
-                    $this->friendlyInfo(sprintf('Removed spaces from IBAN of account #%d', $account->id));
-                    $this->count++;
-                }
             }
         }
     }

@@ -37,7 +37,7 @@ interface JournalAPIRepositoryInterface
     /**
      * Returns transaction by ID. Used to validate attachments.
      *
-     * @param  int  $transactionId
+     * @param int $transactionId
      *
      * @return Transaction|null
      */
@@ -46,7 +46,7 @@ interface JournalAPIRepositoryInterface
     /**
      * Return all attachments for journal.
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return Collection
      */
@@ -55,7 +55,7 @@ interface JournalAPIRepositoryInterface
     /**
      * Return all journal links for journal.
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return Collection
      */
@@ -64,14 +64,14 @@ interface JournalAPIRepositoryInterface
     /**
      * Get all piggy bank events for a journal.
      *
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return Collection
      */
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 }

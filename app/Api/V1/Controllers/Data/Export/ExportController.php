@@ -57,7 +57,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportAccounts
      *
-     * @param  ExportRequest  $request
+     * @param ExportRequest $request
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -70,139 +70,7 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBills
-     *
-     * @param  ExportRequest  $request
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     */
-    public function bills(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportBills(true);
-
-        return $this->returnExport('bills');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBudgets
-     *
-     * @param  ExportRequest  $request
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     */
-    public function budgets(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportBudgets(true);
-
-        return $this->returnExport('budgets');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportCategories
-     *
-     * @param  ExportRequest  $request
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     */
-    public function categories(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportCategories(true);
-
-        return $this->returnExport('categories');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportPiggies
-     *
-     * @param  ExportRequest  $request
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     */
-    public function piggyBanks(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportPiggies(true);
-
-        return $this->returnExport('piggies');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRecurring
-     *
-     * @param  ExportRequest  $request
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     */
-    public function recurring(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportRecurring(true);
-
-        return $this->returnExport('recurrences');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRules
-     *
-     * @param  ExportRequest  $request
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     */
-    public function rules(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportRules(true);
-
-        return $this->returnExport('rules');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTags
-     *
-     * @param  ExportRequest  $request
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     */
-    public function tags(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportTags(true);
-
-        return $this->returnExport('tags');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTransactions
-     *
-     * @param  ExportRequest  $request
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     */
-    public function transactions(ExportRequest $request): LaravelResponse
-    {
-        $params = $request->getAll();
-        $this->exporter->setStart($params['start']);
-        $this->exporter->setEnd($params['end']);
-        $this->exporter->setAccounts($params['accounts']);
-        $this->exporter->setExportTransactions(true);
-
-        return $this->returnExport('transactions');
-    }
-
-    /**
-     * @param  string  $key
+     * @param string $key
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -218,7 +86,7 @@ class ExportController extends Controller
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')
-            ->header('Content-Disposition', 'attachment; filename='.$fileName)
+            ->header('Content-Disposition', 'attachment; filename=' . $fileName)
             ->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')
@@ -227,5 +95,137 @@ class ExportController extends Controller
             ->header('Content-Length', (string)strlen($data[$key]));
 
         return $response;
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBills
+     *
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws FireflyException
+     */
+    public function bills(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportBills(true);
+
+        return $this->returnExport('bills');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBudgets
+     *
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws FireflyException
+     */
+    public function budgets(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportBudgets(true);
+
+        return $this->returnExport('budgets');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportCategories
+     *
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws FireflyException
+     */
+    public function categories(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportCategories(true);
+
+        return $this->returnExport('categories');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportPiggies
+     *
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws FireflyException
+     */
+    public function piggyBanks(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportPiggies(true);
+
+        return $this->returnExport('piggies');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRecurring
+     *
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws FireflyException
+     */
+    public function recurring(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportRecurring(true);
+
+        return $this->returnExport('recurrences');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRules
+     *
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws FireflyException
+     */
+    public function rules(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportRules(true);
+
+        return $this->returnExport('rules');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTags
+     *
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws FireflyException
+     */
+    public function tags(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportTags(true);
+
+        return $this->returnExport('tags');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTransactions
+     *
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws FireflyException
+     */
+    public function transactions(ExportRequest $request): LaravelResponse
+    {
+        $params = $request->getAll();
+        $this->exporter->setStart($params['start']);
+        $this->exporter->setEnd($params['end']);
+        $this->exporter->setAccounts($params['accounts']);
+        $this->exporter->setExportTransactions(true);
+
+        return $this->returnExport('transactions');
     }
 }

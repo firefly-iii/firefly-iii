@@ -75,7 +75,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return bool
      *
@@ -107,32 +107,18 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * Find a category or return NULL
+     * Returns a list of all the categories belonging to a user.
      *
-     * @param  int  $categoryId
-     *
-     * @return Category|null
+     * @return Collection
      */
-    public function find(int $categoryId): ?Category
+    public function getCategories(): Collection
     {
-        return $this->user->categories()->find($categoryId);
+        return $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
     }
 
     /**
-     * Find a category.
-     *
-     * @param  string  $name
-     *
-     * @return Category|null
-     */
-    public function findByName(string $name): ?Category
-    {
-        return $this->user->categories()->where('name', $name)->first(['categories.*']);
-    }
-
-    /**
-     * @param  int|null  $categoryId
-     * @param  string|null  $categoryName
+     * @param int|null    $categoryId
+     * @param string|null $categoryName
      *
      * @return Category|null
      * @throws FireflyException
@@ -159,154 +145,31 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param  Category  $category
+     * Find a category or return NULL
      *
-     * @return Carbon|null
+     * @param int $categoryId
      *
+     * @return Category|null
      */
-    public function firstUseDate(Category $category): ?Carbon
+    public function find(int $categoryId): ?Category
     {
-        $firstJournalDate     = $this->getFirstJournalDate($category);
-        $firstTransactionDate = $this->getFirstTransactionDate($category);
-
-        if (null === $firstTransactionDate && null === $firstJournalDate) {
-            return null;
-        }
-        if (null === $firstTransactionDate) {
-            return $firstJournalDate;
-        }
-        if (null === $firstJournalDate) {
-            return $firstTransactionDate;
-        }
-
-        if ($firstTransactionDate < $firstJournalDate) {
-            return $firstTransactionDate;
-        }
-
-        return $firstJournalDate;
+        return $this->user->categories()->find($categoryId);
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getAttachments(Category $category): Collection
-    {
-        $set = $category->attachments()->get();
-
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $set->each(
-            static function (Attachment $attachment) use ($disk) {
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
-
-                return $attachment;
-            }
-        );
-    }
-
-    /**
-     * Get all categories with ID's.
+     * Find a category.
      *
-     * @param  array  $categoryIds
+     * @param string $name
      *
-     * @return Collection
+     * @return Category|null
      */
-    public function getByIds(array $categoryIds): Collection
+    public function findByName(string $name): ?Category
     {
-        return $this->user->categories()->whereIn('id', $categoryIds)->get();
+        return $this->user->categories()->where('name', $name)->first(['categories.*']);
     }
 
     /**
-     * Returns a list of all the categories belonging to a user.
-     *
-     * @return Collection
-     */
-    public function getCategories(): Collection
-    {
-        return $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getNoteText(Category $category): ?string
-    {
-        $dbNote = $category->notes()->first();
-        if (null === $dbNote) {
-            return null;
-        }
-
-        return $dbNote->text;
-    }
-
-    /**
-     * @param  Category  $category
-     * @param  Collection  $accounts
-     *
-     * @return Carbon|null
-     * @throws Exception
-     */
-    public function lastUseDate(Category $category, Collection $accounts): ?Carbon
-    {
-        $lastJournalDate     = $this->getLastJournalDate($category, $accounts);
-        $lastTransactionDate = $this->getLastTransactionDate($category, $accounts);
-
-        if (null === $lastTransactionDate && null === $lastJournalDate) {
-            return null;
-        }
-        if (null === $lastTransactionDate) {
-            return $lastJournalDate;
-        }
-        if (null === $lastJournalDate) {
-            return $lastTransactionDate;
-        }
-
-        if ($lastTransactionDate > $lastJournalDate) {
-            return $lastTransactionDate;
-        }
-
-        return $lastJournalDate;
-    }
-
-    /**
-     * @param  Category  $category
-     */
-    public function removeNotes(Category $category): void
-    {
-        $category->notes()->delete();
-    }
-
-    /**
-     * @param  string  $query
-     * @param  int  $limit
-     *
-     * @return Collection
-     */
-    public function searchCategory(string $query, int $limit): Collection
-    {
-        $search = $this->user->categories();
-        if ('' !== $query) {
-            $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
-        }
-
-        return $search->take($limit)->get();
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return Category
      * @throws FireflyException
@@ -334,19 +197,21 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param  Category  $category
-     * @param  array  $data
-     *
-     * @return Category
-     * @throws Exception
+     * @param User|Authenticatable|null $user
      */
-    public function update(Category $category, array $data): Category
+    public function setUser(User | Authenticatable | null $user): void
     {
-        /** @var CategoryUpdateService $service */
-        $service = app(CategoryUpdateService::class);
-        $service->setUser($this->user);
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
 
-        return $service->update($category, $data);
+    /**
+     * @param Category $category
+     */
+    public function removeNotes(Category $category): void
+    {
+        $category->notes()->delete();
     }
 
     /**
@@ -364,7 +229,35 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param  Category  $category
+     * @param Category $category
+     *
+     * @return Carbon|null
+     *
+     */
+    public function firstUseDate(Category $category): ?Carbon
+    {
+        $firstJournalDate     = $this->getFirstJournalDate($category);
+        $firstTransactionDate = $this->getFirstTransactionDate($category);
+
+        if (null === $firstTransactionDate && null === $firstJournalDate) {
+            return null;
+        }
+        if (null === $firstTransactionDate) {
+            return $firstJournalDate;
+        }
+        if (null === $firstJournalDate) {
+            return $firstTransactionDate;
+        }
+
+        if ($firstTransactionDate < $firstJournalDate) {
+            return $firstTransactionDate;
+        }
+
+        return $firstJournalDate;
+    }
+
+    /**
+     * @param Category $category
      *
      * @return Carbon|null
      */
@@ -381,7 +274,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return Carbon|null
      */
@@ -401,8 +294,83 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param  Category  $category
-     * @param  Collection  $accounts
+     * @inheritDoc
+     */
+    public function getAttachments(Category $category): Collection
+    {
+        $set = $category->attachments()->get();
+
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+    }
+
+    /**
+     * Get all categories with ID's.
+     *
+     * @param array $categoryIds
+     *
+     * @return Collection
+     */
+    public function getByIds(array $categoryIds): Collection
+    {
+        return $this->user->categories()->whereIn('id', $categoryIds)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNoteText(Category $category): ?string
+    {
+        $dbNote = $category->notes()->first();
+        if (null === $dbNote) {
+            return null;
+        }
+
+        return $dbNote->text;
+    }
+
+    /**
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @return Carbon|null
+     * @throws Exception
+     */
+    public function lastUseDate(Category $category, Collection $accounts): ?Carbon
+    {
+        $lastJournalDate     = $this->getLastJournalDate($category, $accounts);
+        $lastTransactionDate = $this->getLastTransactionDate($category, $accounts);
+
+        if (null === $lastTransactionDate && null === $lastJournalDate) {
+            return null;
+        }
+        if (null === $lastTransactionDate) {
+            return $lastJournalDate;
+        }
+        if (null === $lastJournalDate) {
+            return $lastTransactionDate;
+        }
+
+        if ($lastTransactionDate > $lastJournalDate) {
+            return $lastTransactionDate;
+        }
+
+        return $lastJournalDate;
+    }
+
+    /**
+     * @param Category   $category
+     * @param Collection $accounts
      *
      * @return Carbon|null
      */
@@ -425,8 +393,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param  Category  $category
-     * @param  Collection  $accounts
+     * @param Category   $category
+     * @param Collection $accounts
      *
      * @return Carbon|null
      * @throws Exception
@@ -448,5 +416,37 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchCategory(string $query, int $limit): Collection
+    {
+        $search = $this->user->categories();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
+        }
+
+        return $search->take($limit)->get();
+    }
+
+    /**
+     * @param Category $category
+     * @param array    $data
+     *
+     * @return Category
+     * @throws Exception
+     */
+    public function update(Category $category, array $data): Category
+    {
+        /** @var CategoryUpdateService $service */
+        $service = app(CategoryUpdateService::class);
+        $service->setUser($this->user);
+
+        return $service->update($category, $data);
     }
 }

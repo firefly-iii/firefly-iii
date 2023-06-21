@@ -41,7 +41,7 @@ interface WebhookSenderInterface
     public function send(): void;
 
     /**
-     * @param  WebhookMessage  $message
+     * @param WebhookMessage $message
      */
     public function setMessage(WebhookMessage $message): void;
 }

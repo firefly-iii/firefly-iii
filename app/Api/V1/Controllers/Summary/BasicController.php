@@ -90,7 +90,7 @@ class BasicController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/summary/getBasicSummary
      *
-     * @param  DateRequest  $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws Exception
@@ -122,32 +122,8 @@ class BasicController extends Controller
     }
 
     /**
-     * Check if date is outside session range.
-     *
-     * @param  Carbon  $date
-     *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return bool
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
-    {
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -220,8 +196,8 @@ class BasicController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'value_parsed'            => app('amount')->formatAnything($currency, $sums[$currencyId] ?? '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false).
-                                             ' + '.app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
+                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false) .
+                                             ' + ' . app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -253,8 +229,8 @@ class BasicController extends Controller
     }
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -310,8 +286,8 @@ class BasicController extends Controller
     }
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      * @throws Exception
@@ -364,8 +340,8 @@ class BasicController extends Controller
     }
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -421,5 +397,29 @@ class BasicController extends Controller
         }
 
         return $return;
+    }
+
+    /**
+     * Check if date is outside session range.
+     *
+     * @param Carbon $date
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return bool
+     */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    {
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
     }
 }

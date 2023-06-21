@@ -62,7 +62,7 @@ class DeleteController extends Controller
     /**
      * Delete a piggy bank.
      *
-     * @param  ObjectGroup  $objectGroup
+     * @param ObjectGroup $objectGroup
      *
      * @return Factory|View
      */
@@ -80,7 +80,7 @@ class DeleteController extends Controller
     /**
      * Destroy the piggy bank.
      *
-     * @param  ObjectGroup  $objectGroup
+     * @param ObjectGroup $objectGroup
      *
      * @return RedirectResponse
      */

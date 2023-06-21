@@ -67,7 +67,7 @@ class CreateController extends Controller
     /**
      * Create a new bill.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      */
@@ -77,7 +77,7 @@ class CreateController extends Controller
         /** @var array $billPeriods */
         $billPeriods = config('firefly.bill_periods');
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string)trans('firefly.repeat_freq_'.$current);
+            $periods[$current] = (string)trans('firefly.repeat_freq_' . $current);
         }
         $subTitle        = (string)trans('firefly.create_new_bill');
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -94,7 +94,7 @@ class CreateController extends Controller
     /**
      * Store a new bill.
      *
-     * @param  BillStoreRequest  $request
+     * @param BillStoreRequest $request
      *
      * @return RedirectResponse
      *

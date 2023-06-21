@@ -42,8 +42,8 @@ class Installer
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
+     * @param Request $request
+     * @param Closure $next
      *
      * @return mixed
      *
@@ -76,30 +76,6 @@ class Installer
         // update scheme version
         // update firefly version
         return $next($request);
-    }
-
-    /**
-     * Is access denied error.
-     *
-     * @param  string  $message
-     *
-     * @return bool
-     */
-    protected function isAccessDenied(string $message): bool
-    {
-        return false !== stripos($message, 'Access denied');
-    }
-
-    /**
-     * Is no tables exist error.
-     *
-     * @param  string  $message
-     *
-     * @return bool
-     */
-    protected function noTablesExist(string $message): bool
-    {
-        return false !== stripos($message, 'Base table or view not found');
     }
 
     /**
@@ -136,6 +112,30 @@ class Installer
         //Log::debug('Everything seems OK with the tables.');
 
         return false;
+    }
+
+    /**
+     * Is access denied error.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    protected function isAccessDenied(string $message): bool
+    {
+        return false !== stripos($message, 'Access denied');
+    }
+
+    /**
+     * Is no tables exist error.
+     *
+     * @param string $message
+     *
+     * @return bool
+     */
+    protected function noTablesExist(string $message): bool
+    {
+        return false !== stripos($message, 'Base table or view not found');
     }
 
     /**

@@ -64,8 +64,8 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param  Budget  $budget
-     * @param  BudgetLimit  $budgetLimit
+     * @param Budget      $budget
+     * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
      * @throws FireflyException

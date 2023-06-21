@@ -85,7 +85,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.tags.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.tags.index') . $this->buildParams());
 
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
@@ -103,7 +103,7 @@ class ShowController extends Controller
      *
      * List single resource.
      *
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return JsonResponse
      */

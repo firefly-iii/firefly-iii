@@ -52,8 +52,8 @@ class FrontpageChartGenerator
     /**
      * FrontpageChartGenerator constructor.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      */
     public function __construct(Carbon $start, Carbon $end)
     {
@@ -99,24 +99,8 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param  array  $currency
-     */
-    private function addCurrency(array $currency): void
-    {
-        $currencyId = (int)$currency['currency_id'];
-
-        $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
-            'currency_id'             => $currencyId,
-            'currency_name'           => $currency['currency_name'],
-            'currency_symbol'         => $currency['currency_symbol'],
-            'currency_code'           => $currency['currency_code'],
-            'currency_decimal_places' => $currency['currency_decimal_places'],
-        ];
-    }
-
-    /**
-     * @param  Category  $category
-     * @param  Collection  $accounts
+     * @param Category   $category
+     * @param Collection $accounts
      *
      * @return array
      */
@@ -138,7 +122,23 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param  Collection  $accounts
+     * @param array $currency
+     */
+    private function addCurrency(array $currency): void
+    {
+        $currencyId = (int)$currency['currency_id'];
+
+        $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
+            'currency_id'             => $currencyId,
+            'currency_name'           => $currency['currency_name'],
+            'currency_symbol'         => $currency['currency_symbol'],
+            'currency_code'           => $currency['currency_code'],
+            'currency_decimal_places' => $currency['currency_decimal_places'],
+        ];
+    }
+
+    /**
+     * @param Collection $accounts
      *
      * @return array
      */
@@ -160,7 +160,7 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -185,8 +185,8 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param  array  $currencyData
-     * @param  array  $monetaryData
+     * @param array $currencyData
+     * @param array $monetaryData
      *
      * @return array
      */

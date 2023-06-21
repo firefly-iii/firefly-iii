@@ -72,8 +72,8 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  Request  $request
-     * @param  Throwable  $e
+     * @param Request   $request
+     * @param Throwable $e
      *
      * @return mixed
      * @throws Throwable
@@ -176,7 +176,7 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  Throwable  $e
+     * @param Throwable $e
      *
      * @return void
      * @throws Throwable
@@ -226,14 +226,31 @@ class Handler extends ExceptionHandler
     }
 
     /**
+     * @param Throwable $e
+     *
+     * @return bool
+     */
+    private function shouldntReportLocal(Throwable $e): bool
+    {
+        return !is_null(
+            Arr::first(
+                $this->dontReport,
+                function ($type) use ($e) {
+                    return $e instanceof $type;
+                }
+            )
+        );
+    }
+
+    /**
      * Convert a validation exception into a response.
      *
-     * @param  Request  $request
-     * @param  LaravelValidationException  $exception
+     * @param Request                    $request
+     * @param LaravelValidationException $exception
      *
      * @return Application|RedirectResponse|Redirector
      */
-    protected function invalid($request, LaravelValidationException $exception): Application|RedirectResponse|Redirector
+    protected function invalid($request, LaravelValidationException $exception): Application | RedirectResponse | Redirector
     {
         // protect against open redirect when submitting invalid forms.
         $previous = app('steam')->getSafePreviousUrl();
@@ -247,7 +264,7 @@ class Handler extends ExceptionHandler
     /**
      * Only return the redirectTo property from the exception if it is a valid URL. Return NULL otherwise.
      *
-     * @param  LaravelValidationException  $exception
+     * @param LaravelValidationException $exception
      *
      * @return string|null
      */
@@ -262,22 +279,5 @@ class Handler extends ExceptionHandler
         $safeHost     = parse_url($safe, PHP_URL_HOST);
 
         return null !== $previousHost && $previousHost === $safeHost ? $previous : $safe;
-    }
-
-    /**
-     * @param  Throwable  $e
-     *
-     * @return bool
-     */
-    private function shouldntReportLocal(Throwable $e): bool
-    {
-        return !is_null(
-            Arr::first(
-                $this->dontReport,
-                function ($type) use ($e) {
-                    return $e instanceof $type;
-                }
-            )
-        );
     }
 }

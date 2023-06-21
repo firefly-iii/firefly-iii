@@ -53,7 +53,7 @@ class BillController extends Controller
     /**
      * Shows all bills and whether or not they've been paid this month (pie chart).
      *
-     * @param  BillRepositoryInterface  $repository
+     * @param BillRepositoryInterface $repository
      *
      * @return JsonResponse
      */
@@ -107,7 +107,7 @@ class BillController extends Controller
     /**
      * Shows overview for a single bill.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      * @throws FireflyException

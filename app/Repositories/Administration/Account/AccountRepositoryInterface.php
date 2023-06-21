@@ -31,9 +31,9 @@ use Illuminate\Support\Collection;
 interface AccountRepositoryInterface
 {
     /**
-     * @param  string  $query
-     * @param  array  $types
-     * @param  int  $limit
+     * @param string $query
+     * @param array  $types
+     * @param int    $limit
      *
      * @return Collection
      */

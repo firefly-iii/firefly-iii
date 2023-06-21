@@ -76,7 +76,7 @@ class StoreController extends Controller
      *
      * Store a new transaction.
      *
-     * @param  StoreRequest  $request
+     * @param StoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException|ValidationException

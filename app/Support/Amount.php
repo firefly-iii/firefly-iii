@@ -41,86 +41,12 @@ use Psr\Container\NotFoundExceptionInterface;
 class Amount
 {
     /**
-     * bool $sepBySpace is $localeconv['n_sep_by_space']
-     * int $signPosn = $localeconv['n_sign_posn']
-     * string $sign = $localeconv['negative_sign']
-     * bool $csPrecedes = $localeconv['n_cs_precedes'].
-     *
-     * @param  bool  $sepBySpace
-     * @param  int  $signPosn
-     * @param  string  $sign
-     * @param  bool  $csPrecedes
-     *
-     * @return string
-     *
-     */
-    public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
-    {
-        // negative first:
-        $space = ' ';
-
-        // require space between symbol and amount?
-        if (false === $sepBySpace) {
-            $space = ''; // no
-        }
-
-        // there are five possible positions for the "+" or "-" sign (if it is even used)
-        // pos_a and pos_e could be the ( and ) symbol.
-        $posA = ''; // before everything
-        $posB = ''; // before currency symbol
-        $posC = ''; // after currency symbol
-        $posD = ''; // before amount
-        $posE = ''; // after everything
-
-        // format would be (currency before amount)
-        // AB%sC_D%vE
-        // or:
-        // AD%v_B%sCE (amount before currency)
-        // the _ is the optional space
-
-        // switch on how to display amount:
-        switch ($signPosn) {
-            default:
-            case 0:
-                // ( and ) around the whole thing
-                $posA = '(';
-                $posE = ')';
-                break;
-            case 1:
-                // The sign string precedes the quantity and currency_symbol
-                $posA = $sign;
-                break;
-            case 2:
-                // The sign string succeeds the quantity and currency_symbol
-                $posE = $sign;
-                break;
-            case 3:
-                // The sign string immediately precedes the currency_symbol
-                $posB = $sign;
-                break;
-            case 4:
-                // The sign string immediately succeeds the currency_symbol
-                $posC = $sign;
-        }
-
-        // default is amount before currency
-        $format = $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
-
-        if ($csPrecedes) {
-            // alternative is currency before amount
-            $format = $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
-        }
-
-        return $format;
-    }
-
-    /**
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param  TransactionCurrency  $format
-     * @param  string  $amount
-     * @param  bool  $coloured
+     * @param TransactionCurrency $format
+     * @param string              $amount
+     * @param bool                $coloured
      *
      * @return string
      * @throws FireflyException
@@ -134,10 +60,10 @@ class Amount
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param  string  $symbol
-     * @param  int  $decimalPlaces
-     * @param  string  $amount
-     * @param  bool  $coloured
+     * @param string $symbol
+     * @param int    $decimalPlaces
+     * @param string $amount
+     * @param bool   $coloured
      *
      * @return string
      *
@@ -224,7 +150,7 @@ class Amount
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      *
      * @return TransactionCurrency
      * @throws FireflyException
@@ -256,6 +182,22 @@ class Amount
     }
 
     /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function tryDecrypt(string $value): string
+    {
+        try {
+            $value = Crypt::decrypt($value); // verified
+        } catch (DecryptException $e) {
+            // @ignoreException
+        }
+
+        return $value;
+    }
+
+    /**
      * This method returns the correct format rules required by accounting.js,
      * the library used to format amounts in charts.
      *
@@ -279,26 +221,6 @@ class Amount
                 'zero' => $positive,
             ],
         ];
-    }
-
-    /**
-     * @return TransactionCurrency
-     */
-    public function getSystemCurrency(): TransactionCurrency
-    {
-        return TransactionCurrency::where('code', 'EUR')->first();
-    }
-
-    /**
-     * @param  array  $info
-     * @param  string  $field
-     *
-     * @return bool
-     */
-    private function getLocaleField(array $info, string $field): bool
-    {
-        return (is_bool($info[$field]) && true === $info[$field])
-               || (is_int($info[$field]) && 1 === $info[$field]);
     }
 
     /**
@@ -330,18 +252,96 @@ class Amount
     }
 
     /**
-     * @param  string  $value
+     * @param array  $info
+     * @param string $field
+     *
+     * @return bool
+     */
+    private function getLocaleField(array $info, string $field): bool
+    {
+        return (is_bool($info[$field]) && true === $info[$field])
+               || (is_int($info[$field]) && 1 === $info[$field]);
+    }
+
+    /**
+     * bool $sepBySpace is $localeconv['n_sep_by_space']
+     * int $signPosn = $localeconv['n_sign_posn']
+     * string $sign = $localeconv['negative_sign']
+     * bool $csPrecedes = $localeconv['n_cs_precedes'].
+     *
+     * @param bool   $sepBySpace
+     * @param int    $signPosn
+     * @param string $sign
+     * @param bool   $csPrecedes
      *
      * @return string
+     *
      */
-    private function tryDecrypt(string $value): string
+    public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
-        try {
-            $value = Crypt::decrypt($value); // verified
-        } catch (DecryptException $e) {
-            // @ignoreException
+        // negative first:
+        $space = ' ';
+
+        // require space between symbol and amount?
+        if (false === $sepBySpace) {
+            $space = ''; // no
         }
 
-        return $value;
+        // there are five possible positions for the "+" or "-" sign (if it is even used)
+        // pos_a and pos_e could be the ( and ) symbol.
+        $posA = ''; // before everything
+        $posB = ''; // before currency symbol
+        $posC = ''; // after currency symbol
+        $posD = ''; // before amount
+        $posE = ''; // after everything
+
+        // format would be (currency before amount)
+        // AB%sC_D%vE
+        // or:
+        // AD%v_B%sCE (amount before currency)
+        // the _ is the optional space
+
+        // switch on how to display amount:
+        switch ($signPosn) {
+            default:
+            case 0:
+                // ( and ) around the whole thing
+                $posA = '(';
+                $posE = ')';
+                break;
+            case 1:
+                // The sign string precedes the quantity and currency_symbol
+                $posA = $sign;
+                break;
+            case 2:
+                // The sign string succeeds the quantity and currency_symbol
+                $posE = $sign;
+                break;
+            case 3:
+                // The sign string immediately precedes the currency_symbol
+                $posB = $sign;
+                break;
+            case 4:
+                // The sign string immediately succeeds the currency_symbol
+                $posC = $sign;
+        }
+
+        // default is amount before currency
+        $format = $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
+
+        if ($csPrecedes) {
+            // alternative is currency before amount
+            $format = $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
+        }
+
+        return $format;
+    }
+
+    /**
+     * @return TransactionCurrency
+     */
+    public function getSystemCurrency(): TransactionCurrency
+    {
+        return TransactionCurrency::where('code', 'EUR')->first();
     }
 }

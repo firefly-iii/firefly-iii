@@ -49,7 +49,7 @@ class FixLdapConfiguration extends Migration
                         $table->dropColumn(['objectguid']);
                     }
                 );
-            } catch (QueryException|ColumnDoesNotExist $e) {
+            } catch (QueryException | ColumnDoesNotExist $e) {
                 Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
                 Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }

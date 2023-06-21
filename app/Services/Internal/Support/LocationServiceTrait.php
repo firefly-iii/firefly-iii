@@ -33,8 +33,8 @@ use Illuminate\Database\Eloquent\Model;
 trait LocationServiceTrait
 {
     /**
-     * @param  Model  $model
-     * @param  array  $data
+     * @param Model $model
+     * @param array $data
      *
      * @return Location|null
      */

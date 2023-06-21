@@ -37,13 +37,13 @@ class RuleForm
     use FormSupport;
 
     /**
-     * @param  string  $name
-     * @param  mixed  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      */
-    public function ruleGroupList(string $name, $value = null, array $options = null): string
+    public function ruleGroupList(string $name, mixed $value = null, array $options = null): string
     {
         /** @var RuleGroupRepositoryInterface $groupRepos */
         $groupRepos = app(RuleGroupRepositoryInterface::class);
@@ -60,9 +60,9 @@ class RuleForm
     }
 
     /**
-     * @param  string  $name
-     * @param  null  $value
-     * @param  array|null  $options
+     * @param string     $name
+     * @param null       $value
+     * @param array|null $options
      *
      * @return HtmlString
      */

@@ -46,7 +46,7 @@ class AttachmentTransformer extends AbstractTransformer
     /**
      * Transform attachment.
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return array
      */
@@ -71,7 +71,7 @@ class AttachmentTransformer extends AbstractTransformer
             'links'           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/attachment/'.$attachment->id,
+                    'uri' => '/attachment/' . $attachment->id,
                 ],
             ],
         ];

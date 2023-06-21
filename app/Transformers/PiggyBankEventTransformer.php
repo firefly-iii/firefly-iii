@@ -54,7 +54,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
     /**
      * Convert piggy bank event.
      *
-     * @param  PiggyBankEvent  $event
+     * @param PiggyBankEvent $event
      *
      * @return array
      * @throws FireflyException
@@ -95,7 +95,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_bank_events/'.$event->id,
+                    'uri' => '/piggy_bank_events/' . $event->id,
                 ],
             ],
         ];

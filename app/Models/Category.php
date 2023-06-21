@@ -38,23 +38,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Category
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property string $name
- * @property Carbon $lastActivity
- * @property bool $encrypted
- * @property-read Collection|Attachment[] $attachments
- * @property-read int|null $attachments_count
- * @property-read Collection|Note[] $notes
- * @property-read int|null $notes_count
+ * @property int                                  $id
+ * @property \Illuminate\Support\Carbon|null      $created_at
+ * @property \Illuminate\Support\Carbon|null      $updated_at
+ * @property \Illuminate\Support\Carbon|null      $deleted_at
+ * @property int                                  $user_id
+ * @property string                               $name
+ * @property Carbon                               $lastActivity
+ * @property bool                                 $encrypted
+ * @property-read Collection|Attachment[]         $attachments
+ * @property-read int|null                        $attachments_count
+ * @property-read Collection|Note[]               $notes
+ * @property-read int|null                        $notes_count
  * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null $transaction_journals_count
- * @property-read Collection|Transaction[] $transactions
- * @property-read int|null $transactions_count
- * @property-read User $user
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read Collection|Transaction[]        $transactions
+ * @property-read int|null                        $transactions_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
  * @method static Builder|Category onlyTrashed()
@@ -68,7 +68,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserId($value)
  * @method static Builder|Category withTrashed()
  * @method static Builder|Category withoutTrashed()
- * @property int|null $user_group_id
+ * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -96,7 +96,7 @@ class Category extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return Category
      * @throws NotFoundHttpException
@@ -114,6 +114,14 @@ class Category extends Model
             }
         }
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -146,13 +154,5 @@ class Category extends Model
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

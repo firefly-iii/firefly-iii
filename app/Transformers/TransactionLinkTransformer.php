@@ -46,7 +46,7 @@ class TransactionLinkTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  TransactionJournalLink  $link
+     * @param TransactionJournalLink $link
      *
      * @return array
      */
@@ -65,7 +65,7 @@ class TransactionLinkTransformer extends AbstractTransformer
             'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => '/transaction_links/'.$link->id,
+                    'uri' => '/transaction_links/' . $link->id,
                 ],
             ],
         ];

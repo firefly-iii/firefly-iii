@@ -80,8 +80,8 @@ class EditController extends Controller
     /**
      * Edit a recurring transaction.
      *
-     * @param  Request  $request
-     * @param  Recurrence  $recurrence
+     * @param Request    $request
+     * @param Recurrence $recurrence
      *
      * @return Factory|View
      * @throws FireflyException
@@ -107,7 +107,7 @@ class EditController extends Controller
         $repetition     = $recurrence->recurrenceRepetitions()->first();
         $currentRepType = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
-            $currentRepType .= ','.$repetition->repetition_moment;
+            $currentRepType .= ',' . $repetition->repetition_moment;
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -167,8 +167,8 @@ class EditController extends Controller
     /**
      * Update the recurring transaction.
      *
-     * @param  RecurrenceFormRequest  $request
-     * @param  Recurrence  $recurrence
+     * @param RecurrenceFormRequest $request
+     * @param Recurrence            $recurrence
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException

@@ -39,7 +39,53 @@ class RuleFormRequest extends FormRequest
     use ChecksLogin;
 
     /**
-     * @param  array  $array
+     * Get all data for controller.
+     *
+     * @return array
+     *
+     */
+    public function getRuleData(): array
+    {
+        return [
+            'title'           => $this->convertString('title'),
+            'rule_group_id'   => $this->convertInteger('rule_group_id'),
+            'active'          => $this->boolean('active'),
+            'trigger'         => $this->convertString('trigger'),
+            'description'     => $this->stringWithNewlines('description'),
+            'stop_processing' => $this->boolean('stop_processing'),
+            'strict'          => $this->boolean('strict'),
+            'triggers'        => $this->getRuleTriggerData(),
+            'actions'         => $this->getRuleActionData(),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getRuleTriggerData(): array
+    {
+        $return      = [];
+        $triggerData = $this->get('triggers');
+        if (is_array($triggerData)) {
+            foreach ($triggerData as $trigger) {
+                $stopProcessing = $trigger['stop_processing'] ?? '0';
+                $prohibited     = $trigger['prohibited'] ?? '0';
+                $set            = [
+                    'type'            => $trigger['type'] ?? 'invalid',
+                    'value'           => $trigger['value'] ?? '',
+                    'stop_processing' => 1 === (int)$stopProcessing,
+                    'prohibited'      => 1 === (int)$prohibited,
+                ];
+                $set            = self::replaceAmountTrigger($set);
+                $return[]       = $set;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param array $array
      * @return array
      */
     public static function replaceAmountTrigger(array $array): array
@@ -67,24 +113,24 @@ class RuleFormRequest extends FormRequest
     }
 
     /**
-     * Get all data for controller.
-     *
      * @return array
-     *
      */
-    public function getRuleData(): array
+    private function getRuleActionData(): array
     {
-        return [
-            'title'           => $this->convertString('title'),
-            'rule_group_id'   => $this->convertInteger('rule_group_id'),
-            'active'          => $this->boolean('active'),
-            'trigger'         => $this->convertString('trigger'),
-            'description'     => $this->stringWithNewlines('description'),
-            'stop_processing' => $this->boolean('stop_processing'),
-            'strict'          => $this->boolean('strict'),
-            'triggers'        => $this->getRuleTriggerData(),
-            'actions'         => $this->getRuleActionData(),
-        ];
+        $return     = [];
+        $actionData = $this->get('actions');
+        if (is_array($actionData)) {
+            foreach ($actionData as $action) {
+                $stopProcessing = $action['stop_processing'] ?? '0';
+                $return[]       = [
+                    'type'            => $action['type'] ?? 'invalid',
+                    'value'           => $action['value'] ?? '',
+                    'stop_processing' => 1 === (int)$stopProcessing,
+                ];
+            }
+        }
+
+        return $return;
     }
 
     /**
@@ -110,9 +156,9 @@ class RuleFormRequest extends FormRequest
             'stop_processing'  => 'boolean',
             'rule_group_id'    => 'required|belongsToUser:rule_groups',
             'trigger'          => 'required|in:store-journal,update-journal',
-            'triggers.*.type'  => 'required|in:'.implode(',', $validTriggers),
+            'triggers.*.type'  => 'required|in:' . implode(',', $validTriggers),
             'triggers.*.value' => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
-            'actions.*.type'   => 'required|in:'.implode(',', $validActions),
+            'actions.*.type'   => 'required|in:' . implode(',', $validActions),
             'actions.*.value'  => sprintf('required_if:actions.*.type,%s|min:0|max:1024|ruleActionValue', $contextActions),
             'strict'           => 'in:0,1',
         ];
@@ -121,55 +167,9 @@ class RuleFormRequest extends FormRequest
         $rule = $this->route()->parameter('rule');
 
         if (null !== $rule) {
-            $rules['title'] = 'required|between:1,100|uniqueObjectForUser:rules,title,'.$rule->id;
+            $rules['title'] = 'required|between:1,100|uniqueObjectForUser:rules,title,' . $rule->id;
         }
 
         return $rules;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRuleActionData(): array
-    {
-        $return     = [];
-        $actionData = $this->get('actions');
-        if (is_array($actionData)) {
-            foreach ($actionData as $action) {
-                $stopProcessing = $action['stop_processing'] ?? '0';
-                $return[]       = [
-                    'type'            => $action['type'] ?? 'invalid',
-                    'value'           => $action['value'] ?? '',
-                    'stop_processing' => 1 === (int)$stopProcessing,
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRuleTriggerData(): array
-    {
-        $return      = [];
-        $triggerData = $this->get('triggers');
-        if (is_array($triggerData)) {
-            foreach ($triggerData as $trigger) {
-                $stopProcessing = $trigger['stop_processing'] ?? '0';
-                $prohibited     = $trigger['prohibited'] ?? '0';
-                $set            = [
-                    'type'            => $trigger['type'] ?? 'invalid',
-                    'value'           => $trigger['value'] ?? '',
-                    'stop_processing' => 1 === (int)$stopProcessing,
-                    'prohibited'      => 1 === (int)$prohibited,
-                ];
-                $set            = self::replaceAmountTrigger($set);
-                $return[]       = $set;
-            }
-        }
-
-        return $return;
     }
 }

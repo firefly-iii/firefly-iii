@@ -43,7 +43,7 @@ trait RecurrenceValidation
      *
      * TODO Must always trigger when the type of the recurrence changes.
      *
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     public function valUpdateAccountInfo(Validator $validator): void
     {
@@ -119,7 +119,7 @@ trait RecurrenceValidation
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     public function validateOneRepetition(Validator $validator): void
     {
@@ -134,7 +134,7 @@ trait RecurrenceValidation
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      *
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     public function validateOneRepetitionUpdate(Validator $validator): void
     {
@@ -153,7 +153,7 @@ trait RecurrenceValidation
      * Validates that the recurrence has valid repetition information. It either doesn't stop,
      * or stops after X times or at X date. Not both of them.,
      *
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     public function validateRecurrenceRepetition(Validator $validator): void
     {
@@ -186,7 +186,7 @@ trait RecurrenceValidation
     }
 
     /**
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     public function validateRepetitionMoment(Validator $validator): void
     {
@@ -198,7 +198,7 @@ trait RecurrenceValidation
             return;
         }
         /**
-         * @var int $index
+         * @var int   $index
          * @var array $repetition
          */
         foreach ($repetitions as $index => $repetition) {
@@ -237,9 +237,9 @@ trait RecurrenceValidation
     /**
      * If the repetition type is daily, the moment should be empty.
      *
-     * @param  Validator  $validator
-     * @param  int  $index
-     * @param  string  $moment
+     * @param Validator $validator
+     * @param int       $index
+     * @param string    $moment
      */
     protected function validateDaily(Validator $validator, int $index, string $moment): void
     {
@@ -251,9 +251,9 @@ trait RecurrenceValidation
     /**
      * If the repetition type is monthly, the moment should be a day between 1-31 (inclusive).
      *
-     * @param  Validator  $validator
-     * @param  int  $index
-     * @param  int  $dayOfMonth
+     * @param Validator $validator
+     * @param int       $index
+     * @param int       $dayOfMonth
      */
     protected function validateMonthly(Validator $validator, int $index, int $dayOfMonth): void
     {
@@ -266,9 +266,9 @@ trait RecurrenceValidation
      * If the repetition type is "ndom", the first part must be between 1-5 (inclusive), for the week in the month,
      * and the second one must be between 1-7 (inclusive) for the day of the week.
      *
-     * @param  Validator  $validator
-     * @param  int  $index
-     * @param  string  $moment
+     * @param Validator $validator
+     * @param int       $index
+     * @param string    $moment
      */
     protected function validateNdom(Validator $validator, int $index, string $moment): void
     {
@@ -291,7 +291,38 @@ trait RecurrenceValidation
     }
 
     /**
-     * @param  Validator  $validator
+     * If the repetition type is weekly, the moment should be a day between 1-7 (inclusive).
+     *
+     * @param Validator $validator
+     * @param int       $index
+     * @param int       $dayOfWeek
+     */
+    protected function validateWeekly(Validator $validator, int $index, int $dayOfWeek): void
+    {
+        if ($dayOfWeek < 1 || $dayOfWeek > 7) {
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
+        }
+    }
+
+    /**
+     * If the repetition type is yearly, the moment should be a valid date.
+     *
+     * @param Validator $validator
+     * @param int       $index
+     * @param string    $moment
+     */
+    protected function validateYearly(Validator $validator, int $index, string $moment): void
+    {
+        try {
+            Carbon::createFromFormat('Y-m-d', $moment);
+        } catch (InvalidArgumentException $e) {
+            Log::debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
+        }
+    }
+
+    /**
+     * @param Validator $validator
      * @return void
      */
     protected function validateTransactionId(Recurrence $recurrence, Validator $validator): void
@@ -386,37 +417,5 @@ trait RecurrenceValidation
             return;
         }
         Log::debug('Done with ID validation.');
-    }
-
-
-    /**
-     * If the repetition type is weekly, the moment should be a day between 1-7 (inclusive).
-     *
-     * @param  Validator  $validator
-     * @param  int  $index
-     * @param  int  $dayOfWeek
-     */
-    protected function validateWeekly(Validator $validator, int $index, int $dayOfWeek): void
-    {
-        if ($dayOfWeek < 1 || $dayOfWeek > 7) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
-        }
-    }
-
-    /**
-     * If the repetition type is yearly, the moment should be a valid date.
-     *
-     * @param  Validator  $validator
-     * @param  int  $index
-     * @param  string  $moment
-     */
-    protected function validateYearly(Validator $validator, int $index, string $moment): void
-    {
-        try {
-            Carbon::createFromFormat('Y-m-d', $moment);
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
-        }
     }
 }

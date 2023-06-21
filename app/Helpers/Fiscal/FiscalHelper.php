@@ -45,7 +45,7 @@ class FiscalHelper implements FiscalHelperInterface
     }
 
     /**
-     * @param  Carbon  $date
+     * @param Carbon $date
      *
      * @return Carbon date object
      * @throws FireflyException
@@ -70,7 +70,7 @@ class FiscalHelper implements FiscalHelperInterface
     }
 
     /**
-     * @param  Carbon  $date
+     * @param Carbon $date
      *
      * @return Carbon date object
      * @throws ContainerExceptionInterface

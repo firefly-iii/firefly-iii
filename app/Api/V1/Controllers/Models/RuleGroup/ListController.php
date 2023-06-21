@@ -66,7 +66,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/listRuleByGroup
      *
-     * @param  RuleGroup  $group
+     * @param RuleGroup $group
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -84,7 +84,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rule-groups.rules', [$group->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.rule-groups.rules', [$group->id]) . $this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);

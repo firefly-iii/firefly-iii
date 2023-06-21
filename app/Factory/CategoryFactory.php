@@ -37,18 +37,8 @@ class CategoryFactory
     private User $user;
 
     /**
-     * @param  string  $name
-     *
-     * @return Category|null
-     */
-    public function findByName(string $name): ?Category
-    {
-        return $this->user->categories()->where('name', $name)->first();
-    }
-
-    /**
-     * @param  int|null  $categoryId
-     * @param  null|string  $categoryName
+     * @param int|null    $categoryId
+     * @param null|string $categoryName
      *
      * @return Category|null
      * @throws FireflyException
@@ -94,7 +84,17 @@ class CategoryFactory
     }
 
     /**
-     * @param  User  $user
+     * @param string $name
+     *
+     * @return Category|null
+     */
+    public function findByName(string $name): ?Category
+    {
+        return $this->user->categories()->where('name', $name)->first();
+    }
+
+    /**
+     * @param User $user
      */
     public function setUser(User $user): void
     {

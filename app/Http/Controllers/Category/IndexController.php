@@ -65,7 +65,7 @@ class IndexController extends Controller
     /**
      * Show all categories.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      * @throws ContainerExceptionInterface

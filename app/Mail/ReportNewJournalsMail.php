@@ -48,7 +48,7 @@ class ReportNewJournalsMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      *
-     * @param  Collection  $groups
+     * @param Collection $groups
      */
     public function __construct(Collection $groups)
     {

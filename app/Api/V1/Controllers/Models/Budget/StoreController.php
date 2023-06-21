@@ -62,7 +62,7 @@ class StoreController extends Controller
      *
      * Store a budget.
      *
-     * @param  StoreRequest  $request
+     * @param StoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException

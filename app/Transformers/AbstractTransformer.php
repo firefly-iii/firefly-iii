@@ -43,7 +43,7 @@ abstract class AbstractTransformer extends TransformerAbstract
     }
 
     /**
-     * @param  ParameterBag  $parameters
+     * @param ParameterBag $parameters
      */
     final public function setParameters(ParameterBag $parameters): void
     {

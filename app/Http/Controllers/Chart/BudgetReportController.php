@@ -71,10 +71,10 @@ class BudgetReportController extends Controller
     /**
      * Chart that groups the expenses by budget.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -107,10 +107,10 @@ class BudgetReportController extends Controller
     /**
      * Chart that groups the expenses by budget.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -144,10 +144,10 @@ class BudgetReportController extends Controller
     /**
      * Chart that groups expenses by the account.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -181,10 +181,10 @@ class BudgetReportController extends Controller
     /**
      * Main overview of a budget in the budget report.
      *
-     * @param  Collection  $accounts
-     * @param  Budget  $budget
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Budget     $budget
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -227,12 +227,35 @@ class BudgetReportController extends Controller
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
+    }
+
+    /**
      * Chart that groups expenses by the account.
      *
-     * @param  Collection  $accounts
-     * @param  Collection  $budgets
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $budgets
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return JsonResponse
      */
@@ -261,28 +284,5 @@ class BudgetReportController extends Controller
         $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
-    }
-
-    /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     *
-     * @return array
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->isoFormat($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
     }
 }

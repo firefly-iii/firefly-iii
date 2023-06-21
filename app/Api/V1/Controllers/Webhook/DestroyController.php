@@ -60,7 +60,7 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param  Webhook  $webhook
+     * @param Webhook $webhook
      *
      * @return JsonResponse
      */
@@ -78,9 +78,9 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param  Webhook  $webhook
-     * @param  WebhookMessage  $message
-     * @param  WebhookAttempt  $attempt
+     * @param Webhook        $webhook
+     * @param WebhookMessage $message
+     * @param WebhookAttempt $attempt
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -106,8 +106,8 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param  Webhook  $webhook
-     * @param  WebhookMessage  $message
+     * @param Webhook        $webhook
+     * @param WebhookMessage $message
      *
      * @return JsonResponse
      * @throws FireflyException

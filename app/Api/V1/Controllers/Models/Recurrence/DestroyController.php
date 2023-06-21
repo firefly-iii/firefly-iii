@@ -59,7 +59,7 @@ class DestroyController extends Controller
      *
      * Delete the resource.
      *
-     * @param  Recurrence  $recurrence
+     * @param Recurrence $recurrence
      *
      * @return JsonResponse
      */

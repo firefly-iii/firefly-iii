@@ -54,12 +54,26 @@ class IsValidAttachmentModel implements Rule
      * IsValidAttachmentModel constructor.
      *
      *
-     * @param  string  $model
+     * @param string $model
      */
     public function __construct(string $model)
     {
         $model       = $this->normalizeModel($model);
         $this->model = $model;
+    }
+
+    /**
+     * @param string $model
+     *
+     * @return string
+     */
+    private function normalizeModel(string $model): string
+    {
+        $search  = ['FireflyIII\Models\\'];
+        $replace = '';
+        $model   = str_replace($search, $replace, $model);
+
+        return sprintf('FireflyIII\Models\%s', $model);
     }
 
     /**
@@ -75,8 +89,8 @@ class IsValidAttachmentModel implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      */
@@ -106,21 +120,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  string  $model
-     *
-     * @return string
-     */
-    private function normalizeModel(string $model): string
-    {
-        $search  = ['FireflyIII\Models\\'];
-        $replace = '';
-        $model   = str_replace($search, $replace, $model);
-
-        return sprintf('FireflyIII\Models\%s', $model);
-    }
-
-    /**
-     * @param  int  $value
+     * @param int $value
      *
      * @return bool
      */
@@ -134,7 +134,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  int  $value
+     * @param int $value
      *
      * @return bool
      */
@@ -148,7 +148,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  int  $value
+     * @param int $value
      *
      * @return bool
      */
@@ -162,7 +162,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  int  $value
+     * @param int $value
      *
      * @return bool
      */
@@ -176,7 +176,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  int  $value
+     * @param int $value
      *
      * @return bool
      */
@@ -189,7 +189,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  int  $value
+     * @param int $value
      *
      * @return bool
      */
@@ -203,7 +203,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  int  $value
+     * @param int $value
      *
      * @return bool
      */
@@ -217,7 +217,7 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * @param  int  $value
+     * @param int $value
      *
      * @return bool
      */

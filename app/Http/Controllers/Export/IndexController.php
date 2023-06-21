@@ -92,7 +92,7 @@ class IndexController extends Controller
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'text/x-csv')
-            ->header('Content-Disposition', 'attachment; filename='.$quoted)
+            ->header('Content-Disposition', 'attachment; filename=' . $quoted)
             //->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')

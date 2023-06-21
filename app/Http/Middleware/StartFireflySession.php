@@ -37,8 +37,8 @@ class StartFireflySession extends StartSession
     /**
      * Store the current URL for the request if necessary.
      *
-     * @param  Request  $request
-     * @param  Session  $session
+     * @param Request $request
+     * @param Session $session
      */
     protected function storeCurrentUrl(Request $request, $session): void
     {

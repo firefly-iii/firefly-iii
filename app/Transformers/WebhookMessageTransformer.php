@@ -35,7 +35,7 @@ class WebhookMessageTransformer extends AbstractTransformer
     /**
      * Transform the preference
      *
-     * @param  WebhookMessage  $message
+     * @param WebhookMessage $message
      *
      * @return array
      */

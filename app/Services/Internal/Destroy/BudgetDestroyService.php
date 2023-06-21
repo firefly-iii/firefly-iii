@@ -34,7 +34,7 @@ use FireflyIII\Models\Budget;
 class BudgetDestroyService
 {
     /**
-     * @param  Budget  $budget
+     * @param Budget $budget
      */
     public function destroy(Budget $budget): void
     {

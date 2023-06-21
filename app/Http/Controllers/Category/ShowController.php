@@ -73,10 +73,10 @@ class ShowController extends Controller
     /**
      * Show a single category.
      *
-     * @param  Request  $request
-     * @param  Category  $category
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Request     $request
+     * @param Category    $category
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Factory|View
      * @throws FireflyException
@@ -120,8 +120,8 @@ class ShowController extends Controller
     /**
      * Show all transactions within a category.
      *
-     * @param  Request  $request
-     * @param  Category  $category
+     * @param Request  $request
+     * @param Category $category
      *
      * @return Factory|View
      * @throws ContainerExceptionInterface

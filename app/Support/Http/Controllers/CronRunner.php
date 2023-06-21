@@ -38,8 +38,8 @@ use Psr\Container\NotFoundExceptionInterface;
 trait CronRunner
 {
     /**
-     * @param  bool  $force
-     * @param  Carbon  $date
+     * @param bool   $force
+     * @param Carbon $date
      *
      * @return array
      * @throws ContainerExceptionInterface
@@ -71,8 +71,8 @@ trait CronRunner
     }
 
     /**
-     * @param  bool  $force
-     * @param  Carbon  $date
+     * @param bool   $force
+     * @param Carbon $date
      *
      * @return array
      */
@@ -102,8 +102,8 @@ trait CronRunner
     }
 
     /**
-     * @param  bool  $force
-     * @param  Carbon  $date
+     * @param bool   $force
+     * @param Carbon $date
      *
      * @return array
      */
@@ -133,8 +133,8 @@ trait CronRunner
     }
 
     /**
-     * @param  bool  $force
-     * @param  Carbon  $date
+     * @param bool   $force
+     * @param Carbon $date
      *
      * @return array
      * @throws ContainerExceptionInterface

@@ -86,7 +86,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rules.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.rules.index') . $this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
@@ -104,7 +104,7 @@ class ShowController extends Controller
      *
      * List single resource.
      *
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return JsonResponse
      */

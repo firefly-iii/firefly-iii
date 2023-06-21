@@ -34,7 +34,7 @@ use JsonException;
 trait ValidatesBulkTransactionQuery
 {
     /**
-     * @param  Validator  $validator
+     * @param Validator $validator
      *
      * @throws JsonException
      */

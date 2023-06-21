@@ -83,7 +83,7 @@ class AccountValidator
     }
 
     /**
-     * @param  Account|null  $account
+     * @param Account|null $account
      */
     public function setSource(?Account $account): void
     {
@@ -97,7 +97,7 @@ class AccountValidator
     }
 
     /**
-     * @param  Account|null  $account
+     * @param Account|null $account
      */
     public function setDestination(?Account $account): void
     {
@@ -111,7 +111,7 @@ class AccountValidator
     }
 
     /**
-     * @param  string  $transactionType
+     * @param string $transactionType
      */
     public function setTransactionType(string $transactionType): void
     {
@@ -120,7 +120,7 @@ class AccountValidator
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void
     {
@@ -129,7 +129,7 @@ class AccountValidator
     }
 
     /**
-     * @param  array  $array
+     * @param array $array
      *
      * @return bool
      */
@@ -174,7 +174,7 @@ class AccountValidator
     }
 
     /**
-     * @param  array  $array
+     * @param array $array
      *
      * @return bool
      */
@@ -212,22 +212,7 @@ class AccountValidator
     }
 
     /**
-     * @param  string  $accountType
-     *
-     * @return bool
-     */
-    protected function canCreateType(string $accountType): bool
-    {
-        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
-        if (in_array($accountType, $canCreate, true)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param  array  $accountTypes
+     * @param array $accountTypes
      *
      * @return bool
      */
@@ -248,8 +233,23 @@ class AccountValidator
     }
 
     /**
-     * @param  array  $validTypes
-     * @param  array  $data
+     * @param string $accountType
+     *
+     * @return bool
+     */
+    protected function canCreateType(string $accountType): bool
+    {
+        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
+        if (in_array($accountType, $canCreate, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $validTypes
+     * @param array $data
      *
      * @return Account|null
      */

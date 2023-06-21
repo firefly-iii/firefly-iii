@@ -42,7 +42,7 @@ class DestroyedTransactionGroup extends Event
     /**
      * Create a new event instance.
      *
-     * @param  TransactionGroup  $transactionGroup
+     * @param TransactionGroup $transactionGroup
      */
     public function __construct(TransactionGroup $transactionGroup)
     {

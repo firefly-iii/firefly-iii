@@ -33,7 +33,7 @@ use FireflyIII\Models\TransactionCurrency;
 class CurrencyDestroyService
 {
     /**
-     * @param  TransactionCurrency  $currency
+     * @param TransactionCurrency $currency
      */
     public function destroy(TransactionCurrency $currency): void
     {

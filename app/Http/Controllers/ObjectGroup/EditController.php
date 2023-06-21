@@ -65,7 +65,7 @@ class EditController extends Controller
     /**
      * Edit an object group.
      *
-     * @param  ObjectGroup  $objectGroup
+     * @param ObjectGroup $objectGroup
      *
      * @return Factory|View
      */
@@ -85,8 +85,8 @@ class EditController extends Controller
     /**
      * Update a piggy bank.
      *
-     * @param  ObjectGroupFormRequest  $request
-     * @param  ObjectGroup  $objectGroup
+     * @param ObjectGroupFormRequest $request
+     * @param ObjectGroup            $objectGroup
      *
      * @return Application|RedirectResponse|Redirector
      */

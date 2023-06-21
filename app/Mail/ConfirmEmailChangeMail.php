@@ -46,9 +46,9 @@ class ConfirmEmailChangeMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      *
-     * @param  string  $newEmail
-     * @param  string  $oldEmail
-     * @param  string  $url
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @param string $url
      */
     public function __construct(string $newEmail, string $oldEmail, string $url)
     {

@@ -52,7 +52,7 @@ class AccountTransformer extends AbstractTransformer
     /**
      * Transform the account.
      *
-     * @param  Account  $account
+     * @param Account $account
      *
      * @return array
      * @throws FireflyException
@@ -133,16 +133,16 @@ class AccountTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/'.$account->id,
+                    'uri' => '/accounts/' . $account->id,
                 ],
             ],
         ];
     }
 
     /**
-     * @param  Account  $account
+     * @param Account $account
      *
-     * @param  string  $accountType
+     * @param string  $accountType
      *
      * @return string|null
      */
@@ -157,9 +157,47 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  Account  $account
-     * @param  string|null  $accountRole
-     * @param  string  $accountType
+     * TODO duplicated in the V2 transformer.
+     *
+     * @return Carbon
+     */
+    private function getDate(): Carbon
+    {
+        $date = today(config('app.timezone'));
+        if (null !== $this->parameters->get('date')) {
+            $date = $this->parameters->get('date');
+        }
+
+        return $date;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return array
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    private function getCurrency(Account $account): array
+    {
+        $currency = $this->repository->getAccountCurrency($account);
+
+        // only grab default when result is null:
+        if (null === $currency) {
+            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
+        }
+        $currencyId     = (string)$currency->id;
+        $currencyCode   = $currency->code;
+        $decimalPlaces  = $currency->decimal_places;
+        $currencySymbol = $currency->symbol;
+
+        return [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces];
+    }
+
+    /**
+     * @param Account     $account
+     * @param string|null $accountRole
+     * @param string      $accountType
      *
      * @return array
      */
@@ -185,63 +223,8 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  Account  $account
-     *
-     * @return array
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    private function getCurrency(Account $account): array
-    {
-        $currency = $this->repository->getAccountCurrency($account);
-
-        // only grab default when result is null:
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
-        }
-        $currencyId     = (string)$currency->id;
-        $currencyCode   = $currency->code;
-        $decimalPlaces  = $currency->decimal_places;
-        $currencySymbol = $currency->symbol;
-
-        return [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces];
-    }
-
-    /**
-     * TODO duplicated in the V2 transformer.
-     * @return Carbon
-     */
-    private function getDate(): Carbon
-    {
-        $date = today(config('app.timezone'));
-        if (null !== $this->parameters->get('date')) {
-            $date = $this->parameters->get('date');
-        }
-
-        return $date;
-    }
-
-    /**
-     * @param  Account  $account
-     * @param  string  $accountType
-     *
-     * @return array
-     */
-    private function getInterest(Account $account, string $accountType): array
-    {
-        $interest       = null;
-        $interestPeriod = null;
-        if ('liabilities' === $accountType) {
-            $interest       = $this->repository->getMetaValue($account, 'interest');
-            $interestPeriod = $this->repository->getMetaValue($account, 'interest_period');
-        }
-
-        return [$interest, $interestPeriod];
-    }
-
-    /**
-     * @param  Account  $account
-     * @param  string  $accountType
+     * @param Account $account
+     * @param string  $accountType
      *
      * @return array
      *
@@ -261,5 +244,23 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return [$openingBalance, $openingBalanceDate];
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $accountType
+     *
+     * @return array
+     */
+    private function getInterest(Account $account, string $accountType): array
+    {
+        $interest       = null;
+        $interestPeriod = null;
+        if ('liabilities' === $accountType) {
+            $interest       = $this->repository->getMetaValue($account, 'interest');
+            $interestPeriod = $this->repository->getMetaValue($account, 'interest_period');
+        }
+
+        return [$interest, $interestPeriod];
     }
 }

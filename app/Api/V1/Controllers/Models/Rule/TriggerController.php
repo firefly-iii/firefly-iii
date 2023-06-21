@@ -69,8 +69,8 @@ class TriggerController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/testRule
      *
-     * @param  TestRequest  $request
-     * @param  Rule  $rule
+     * @param TestRequest $request
+     * @param Rule        $rule
      *
      * @return JsonResponse
      */
@@ -102,7 +102,7 @@ class TriggerController extends Controller
         $count        = $transactions->count();
 
         $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rules.test', [$rule->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.rules.test', [$rule->id]) . $this->buildParams());
 
         // resulting list is presented as JSON thing.
         $manager = $this->getManager();
@@ -122,8 +122,8 @@ class TriggerController extends Controller
      *
      * Execute the given rule group on a set of existing transactions.
      *
-     * @param  TriggerRequest  $request
-     * @param  Rule  $rule
+     * @param TriggerRequest $request
+     * @param Rule           $rule
      *
      * @return JsonResponse
      */

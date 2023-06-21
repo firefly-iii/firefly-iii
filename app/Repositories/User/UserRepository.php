@@ -44,44 +44,11 @@ use Str;
 class UserRepository implements UserRepositoryInterface
 {
     /**
-     * @return Collection
-     */
-    public function all(): Collection
-    {
-        return User::orderBy('id', 'DESC')->get(['users.*']);
-    }
-
-    /**
-     * @param  User  $user
-     * @param  string  $role
-     *
-     * @return bool
-     */
-    public function attachRole(User $user, string $role): bool
-    {
-        $roleObject = Role::where('name', $role)->first();
-        if (null === $roleObject) {
-            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
-
-            return false;
-        }
-
-        try {
-            $user->roles()->attach($roleObject);
-        } catch (QueryException $e) {
-            // don't care
-            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
-        }
-
-        return true;
-    }
-
-    /**
      * This updates the users email address and records some things so it can be confirmed or undone later.
      * The user is blocked until the change is confirmed.
      *
-     * @param  User  $user
-     * @param  string  $newEmail
+     * @param User   $user
+     * @param string $newEmail
      *
      * @return bool
      * @throws Exception
@@ -94,7 +61,7 @@ class UserRepository implements UserRepositoryInterface
 
         // save old email as pref
         app('preferences')->setForUser($user, 'previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'previous_email_'.date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
 
         // set undo and confirm token:
         app('preferences')->setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
@@ -110,8 +77,8 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param  User  $user
-     * @param  string  $password
+     * @param User   $user
+     * @param string $password
      *
      * @return bool
      */
@@ -124,9 +91,9 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param  User  $user
-     * @param  bool  $isBlocked
-     * @param  string  $code
+     * @param User   $user
+     * @param bool   $isBlocked
+     * @param string $code
      *
      * @return bool
      */
@@ -141,23 +108,41 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @return int
-     */
-    public function count(): int
-    {
-        return $this->all()->count();
-    }
-
-    /**
-     * @param  string  $name
-     * @param  string  $displayName
-     * @param  string  $description
+     * @param string $name
+     * @param string $displayName
+     * @param string $description
      *
      * @return Role
      */
     public function createRole(string $name, string $displayName, string $description): Role
     {
         return Role::create(['name' => $name, 'display_name' => $displayName, 'description' => $description]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteInvite(InvitedUser $invite): void
+    {
+        Log::debug(sprintf('Deleting invite #%d', $invite->id));
+        $invite->delete();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function destroy(User $user): bool
+    {
+        Log::debug(sprintf('Calling delete() on user %d', $user->id));
+
+        $user->groupMemberships()->delete();
+        $user->delete();
+        $this->deleteEmptyGroups();
+
+        return true;
     }
 
     /**
@@ -177,43 +162,23 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @inheritDoc
+     * @return int
      */
-    public function deleteInvite(InvitedUser $invite): void
+    public function count(): int
     {
-        Log::debug(sprintf('Deleting invite #%d', $invite->id));
-        $invite->delete();
+        return $this->all()->count();
     }
 
     /**
-     * @param  User  $user
-     *
-     * @return bool
-     * @throws Exception
+     * @return Collection
      */
-    public function destroy(User $user): bool
+    public function all(): Collection
     {
-        Log::debug(sprintf('Calling delete() on user %d', $user->id));
-
-        $user->groupMemberships()->delete();
-        $user->delete();
-        $this->deleteEmptyGroups();
-
-        return true;
+        return User::orderBy('id', 'DESC')->get(['users.*']);
     }
 
     /**
-     * @param  int  $userId
-     *
-     * @return User|null
-     */
-    public function find(int $userId): ?User
-    {
-        return User::find($userId);
-    }
-
-    /**
-     * @param  string  $email
+     * @param string $email
      *
      * @return User|null
      */
@@ -241,17 +206,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param  string  $role
-     *
-     * @return Role|null
-     */
-    public function getRole(string $role): ?Role
-    {
-        return Role::where('name', $role)->first();
-    }
-
-    /**
-     * @param  User  $user
+     * @param User $user
      *
      * @return string|null
      */
@@ -288,9 +243,19 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param int $userId
+     *
+     * @return User|null
+     */
+    public function find(int $userId): ?User
+    {
+        return User::find($userId);
+    }
+
+    /**
      * Return basic user information.
      *
-     * @param  User  $user
+     * @param User $user
      *
      * @return array
      */
@@ -325,12 +290,12 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     * @param  string  $role
+     * @param User|Authenticatable|null $user
+     * @param string                    $role
      *
      * @return bool
      */
-    public function hasRole(User|Authenticatable|null $user, string $role): bool
+    public function hasRole(User | Authenticatable | null $user, string $role): bool
     {
         if (null === $user) {
             return false;
@@ -348,7 +313,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function inviteUser(User|Authenticatable|null $user, string $email): InvitedUser
+    public function inviteUser(User | Authenticatable | null $user, string $email): InvitedUser
     {
         $now = today(config('app.timezone'));
         $now->addDays(2);
@@ -376,25 +341,10 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Remove any role the user has.
-     *
-     * @param  User  $user
-     * @param  string  $role
-     */
-    public function removeRole(User $user, string $role): void
-    {
-        $roleObj = $this->getRole($role);
-        if (null === $roleObj) {
-            return;
-        }
-        $user->roles()->detach($roleObj->id);
-    }
-
-    /**
      * Set MFA code.
      *
-     * @param  User  $user
-     * @param  string|null  $code
+     * @param User        $user
+     * @param string|null $code
      */
     public function setMFACode(User $user, ?string $code): void
     {
@@ -403,7 +353,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return User
      */
@@ -426,7 +376,32 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param  User  $user
+     * @param User   $user
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function attachRole(User $user, string $role): bool
+    {
+        $roleObject = Role::where('name', $role)->first();
+        if (null === $roleObject) {
+            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
+
+            return false;
+        }
+
+        try {
+            $user->roles()->attach($roleObject);
+        } catch (QueryException $e) {
+            // don't care
+            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
+        }
+
+        return true;
+    }
+
+    /**
+     * @param User $user
      */
     public function unblockUser(User $user): void
     {
@@ -438,8 +413,8 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Update user info.
      *
-     * @param  User  $user
-     * @param  array  $data
+     * @param User  $user
+     * @param array $data
      *
      * @return User
      * @throws FireflyException
@@ -464,11 +439,11 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the undo/confirm routine can't catch this one.
-     * The user is NOT blocked.
+     * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the
+     * undo/confirm routine can't catch this one. The user is NOT blocked.
      *
-     * @param  User  $user
-     * @param  string  $newEmail
+     * @param User   $user
+     * @param string $newEmail
      *
      * @return bool
      * @throws FireflyException
@@ -483,12 +458,37 @@ class UserRepository implements UserRepositoryInterface
 
         // save old email as pref
         app('preferences')->setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'admin_previous_email_'.date('Y-m-d-H-i-s'), $oldEmail);
+        app('preferences')->setForUser($user, 'admin_previous_email_' . date('Y-m-d-H-i-s'), $oldEmail);
 
         $user->email = $newEmail;
         $user->save();
 
         return true;
+    }
+
+    /**
+     * Remove any role the user has.
+     *
+     * @param User   $user
+     * @param string $role
+     */
+    public function removeRole(User $user, string $role): void
+    {
+        $roleObj = $this->getRole($role);
+        if (null === $roleObj) {
+            return;
+        }
+        $user->roles()->detach($roleObj->id);
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return Role|null
+     */
+    public function getRole(string $role): ?Role
+    {
+        return Role::where('name', $role)->first();
     }
 
     /**

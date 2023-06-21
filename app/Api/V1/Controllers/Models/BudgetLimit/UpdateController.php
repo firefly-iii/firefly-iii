@@ -69,9 +69,9 @@ class UpdateController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/updateBudgetLimit
      *
-     * @param  UpdateRequest  $request
-     * @param  Budget  $budget
-     * @param  BudgetLimit  $budgetLimit
+     * @param UpdateRequest $request
+     * @param Budget        $budget
+     * @param BudgetLimit   $budgetLimit
      *
      * @return JsonResponse
      * @throws FireflyException

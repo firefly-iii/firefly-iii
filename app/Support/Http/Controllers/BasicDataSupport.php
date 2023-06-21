@@ -34,8 +34,8 @@ trait BasicDataSupport
     /**
      * Find the ID in a given array. Return '0' if not there (amount).
      *
-     * @param  array  $array
-     * @param  int  $entryId
+     * @param array $array
+     * @param int   $entryId
      *
      * @return null|mixed
      */
@@ -47,8 +47,8 @@ trait BasicDataSupport
     /**
      * Find the ID in a given array. Return null if not there (amount).
      *
-     * @param  array  $array
-     * @param  int  $entryId
+     * @param array $array
+     * @param int   $entryId
      *
      * @return null|Carbon
      */

@@ -49,7 +49,7 @@ class BudgetLimitTransformer extends AbstractTransformer
     /**
      * Include Budget
      *
-     * @param  BudgetLimit  $limit
+     * @param BudgetLimit $limit
      *
      * @return Item
      */
@@ -61,7 +61,7 @@ class BudgetLimitTransformer extends AbstractTransformer
     /**
      * Transform the note.
      *
-     * @param  BudgetLimit  $budgetLimit
+     * @param BudgetLimit $budgetLimit
      *
      * @return array
      */

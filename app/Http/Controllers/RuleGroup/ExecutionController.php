@@ -66,8 +66,8 @@ class ExecutionController extends Controller
     /**
      * Execute the given rulegroup on a set of existing transactions.
      *
-     * @param  SelectTransactionsRequest  $request
-     * @param  RuleGroup  $ruleGroup
+     * @param SelectTransactionsRequest $request
+     * @param RuleGroup                 $ruleGroup
      *
      * @return RedirectResponse
      * @throws Exception
@@ -103,7 +103,7 @@ class ExecutionController extends Controller
     /**
      * Select transactions to apply the group on.
      *
-     * @param  RuleGroup  $ruleGroup
+     * @param RuleGroup $ruleGroup
      *
      * @return Factory|View
      */

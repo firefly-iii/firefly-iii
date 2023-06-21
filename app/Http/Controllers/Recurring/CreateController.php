@@ -79,7 +79,7 @@ class CreateController extends Controller
     /**
      * Create a new recurring transaction.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      */
@@ -124,8 +124,8 @@ class CreateController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  TransactionJournal  $journal
+     * @param Request            $request
+     * @param TransactionJournal $journal
      *
      * @return Factory|\Illuminate\Contracts\View\View
      */
@@ -221,7 +221,7 @@ class CreateController extends Controller
     /**
      * Store a recurring transaction.
      *
-     * @param  RecurrenceFormRequest  $request
+     * @param RecurrenceFormRequest $request
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException

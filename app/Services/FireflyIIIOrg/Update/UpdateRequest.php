@@ -37,7 +37,7 @@ use JsonException;
 class UpdateRequest implements UpdateRequestInterface
 {
     /**
-     * @param  string  $channel
+     * @param string $channel
      *
      * @return array
      */
@@ -64,7 +64,7 @@ class UpdateRequest implements UpdateRequestInterface
     }
 
     /**
-     * @param  string  $channel
+     * @param string $channel
      *
      * @return array
      */
@@ -134,7 +134,7 @@ class UpdateRequest implements UpdateRequestInterface
     }
 
     /**
-     * @param  array  $information
+     * @param array $information
      *
      * @return array
      */

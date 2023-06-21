@@ -75,8 +75,8 @@ class RenameMetaFields extends Command
     }
 
     /**
-     * @param  string  $original
-     * @param  string  $update
+     * @param string $original
+     * @param string $update
      */
     private function rename(string $original, string $update): void
     {

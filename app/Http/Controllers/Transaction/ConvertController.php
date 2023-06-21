@@ -82,8 +82,8 @@ class ConvertController extends Controller
     /**
      * Show overview of a to be converted transaction.
      *
-     * @param  TransactionType  $destinationType
-     * @param  TransactionGroup  $group
+     * @param TransactionType  $destinationType
+     * @param TransactionGroup $group
      *
      * @return RedirectResponse|Redirector|Factory|View
      * @throws Exception
@@ -104,7 +104,7 @@ class ConvertController extends Controller
 
         $groupTitle   = $group->title ?? $first->description;
         $groupArray   = $transformer->transformObject($group);
-        $subTitle     = (string)trans('firefly.convert_to_'.$destinationType->type, ['description' => $groupTitle]);
+        $subTitle     = (string)trans('firefly.convert_to_' . $destinationType->type, ['description' => $groupTitle]);
         $subTitleIcon = 'fa-exchange';
 
         // get a list of asset accounts and liabilities and stuff, in various combinations:
@@ -120,7 +120,7 @@ class ConvertController extends Controller
 
         if ($sourceType->type === $destinationType->type) { // cannot convert to its own type.
             Log::debug('This is already a transaction of the expected type..');
-            session()->flash('info', (string)trans('firefly.convert_is_already_type_'.$destinationType->type));
+            session()->flash('info', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$group->id]));
         }
@@ -145,11 +145,138 @@ class ConvertController extends Controller
     }
 
     /**
+     * @return array
+     */
+    private function getValidDepositSources(): array
+    {
+        // make repositories
+        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $accountList    = $this->accountRepository
+            ->getActiveAccountsByType([AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $grouped        = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
+            $name = $account->name;
+            if ('' === $role) {
+                $role = 'no_account_type';
+            }
+
+            // maybe it's a liability thing:
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type;
+            }
+            if (AccountType::CASH === $account->accountType->type) {
+                $role = 'cash_account';
+                $name = sprintf('(%s)', trans('firefly.cash'));
+            }
+            if (AccountType::REVENUE === $account->accountType->type) {
+                $role = 'revenue_account';
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $name;
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @return array
+     */
+    private function getValidWithdrawalDests(): array
+    {
+        // make repositories
+        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $accountList    = $this->accountRepository->getActiveAccountsByType(
+            [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
+        );
+        $grouped        = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
+            $name = $account->name;
+            if ('' === $role) {
+                $role = 'no_account_type';
+            }
+
+            // maybe it's a liability thing:
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type;
+            }
+            if (AccountType::CASH === $account->accountType->type) {
+                $role = 'cash_account';
+                $name = sprintf('(%s)', trans('firefly.cash'));
+            }
+            if (AccountType::EXPENSE === $account->accountType->type) {
+                $role = 'expense_account';
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $name;
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    private function getLiabilities(): array
+    {
+        // make repositories
+        $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance                     = app('steam')->balance($account, today());
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role                        = 'l_' . $account->accountType->type;
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    private function getAssetAccounts(): array
+    {
+        // make repositories
+        $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance  = app('steam')->balance($account, today());
+            $currency = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role     = (string)$this->accountRepository->getMetaValue($account, 'account_role');
+            if ('' === $role) {
+                $role = 'no_account_type';
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $grouped;
+    }
+
+    /**
      * Do the conversion.
      *
-     * @param  Request  $request
-     * @param  TransactionType  $destinationType
-     * @param  TransactionGroup  $group
+     * @param Request          $request
+     * @param TransactionType  $destinationType
+     * @param TransactionGroup $group
      *
      * @return RedirectResponse|Redirector
      *
@@ -175,16 +302,16 @@ class ConvertController extends Controller
         // correct transfers:
         $group->refresh();
 
-        session()->flash('success', (string)trans('firefly.converted_to_'.$destinationType->type));
+        session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));
         event(new UpdatedTransactionGroup($group, true, true));
 
         return redirect(route('transactions.show', [$group->id]));
     }
 
     /**
-     * @param  TransactionJournal  $journal
-     * @param  TransactionType  $transactionType
-     * @param  array  $data
+     * @param TransactionJournal $journal
+     * @param TransactionType    $transactionType
+     * @param array              $data
      *
      * @return TransactionJournal
      * @throws FireflyException
@@ -233,132 +360,5 @@ class ConvertController extends Controller
         $journal->refresh();
 
         return $journal;
-    }
-
-    /**
-     * @return array
-     * @throws Exception
-     */
-    private function getAssetAccounts(): array
-    {
-        // make repositories
-        $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account, today());
-            $currency = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role     = (string)$this->accountRepository->getMetaValue($account, 'account_role');
-            if ('' === $role) {
-                $role = 'no_account_type';
-            }
-
-            $key                         = (string)trans('firefly.opt_group_'.$role);
-            $grouped[$key][$account->id] = $account->name.' ('.app('amount')->formatAnything($currency, $balance, false).')';
-        }
-
-        return $grouped;
-    }
-
-    /**
-     * @return array
-     * @throws Exception
-     */
-    private function getLiabilities(): array
-    {
-        // make repositories
-        $accountList     = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $balance                     = app('steam')->balance($account, today());
-            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role                        = 'l_'.$account->accountType->type;
-            $key                         = (string)trans('firefly.opt_group_'.$role);
-            $grouped[$key][$account->id] = $account->name.' ('.app('amount')->formatAnything($currency, $balance, false).')';
-        }
-
-        return $grouped;
-    }
-
-    /**
-     * @return array
-     */
-    private function getValidDepositSources(): array
-    {
-        // make repositories
-        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $accountList    = $this->accountRepository
-            ->getActiveAccountsByType([AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $grouped        = [];
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
-            $name = $account->name;
-            if ('' === $role) {
-                $role = 'no_account_type';
-            }
-
-            // maybe it's a liability thing:
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_'.$account->accountType->type;
-            }
-            if (AccountType::CASH === $account->accountType->type) {
-                $role = 'cash_account';
-                $name = sprintf('(%s)', trans('firefly.cash'));
-            }
-            if (AccountType::REVENUE === $account->accountType->type) {
-                $role = 'revenue_account';
-            }
-
-            $key                         = (string)trans('firefly.opt_group_'.$role);
-            $grouped[$key][$account->id] = $name;
-        }
-
-        return $grouped;
-    }
-
-    /**
-     * @return array
-     */
-    private function getValidWithdrawalDests(): array
-    {
-        // make repositories
-        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $accountList    = $this->accountRepository->getActiveAccountsByType(
-            [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
-        );
-        $grouped        = [];
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
-            $name = $account->name;
-            if ('' === $role) {
-                $role = 'no_account_type';
-            }
-
-            // maybe it's a liability thing:
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_'.$account->accountType->type;
-            }
-            if (AccountType::CASH === $account->accountType->type) {
-                $role = 'cash_account';
-                $name = sprintf('(%s)', trans('firefly.cash'));
-            }
-            if (AccountType::EXPENSE === $account->accountType->type) {
-                $role = 'expense_account';
-            }
-
-            $key                         = (string)trans('firefly.opt_group_'.$role);
-            $grouped[$key][$account->id] = $name;
-        }
-
-        return $grouped;
     }
 }

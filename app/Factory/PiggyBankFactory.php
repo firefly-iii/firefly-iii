@@ -34,8 +34,8 @@ class PiggyBankFactory
     private User $user;
 
     /**
-     * @param  int|null  $piggyBankId
-     * @param  null|string  $piggyBankName
+     * @param int|null    $piggyBankId
+     * @param null|string $piggyBankName
      *
      * @return PiggyBank|null
      */
@@ -68,7 +68,7 @@ class PiggyBankFactory
     }
 
     /**
-     * @param  string  $name
+     * @param string $name
      *
      * @return PiggyBank|null
      */
@@ -78,7 +78,7 @@ class PiggyBankFactory
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void
     {

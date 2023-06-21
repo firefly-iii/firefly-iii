@@ -135,77 +135,7 @@ class IndexController extends Controller
     }
 
     /**
-     * Set the order of a bill.
-     *
-     * @param  Request  $request
-     * @param  Bill  $bill
-     *
-     * @return JsonResponse
-     */
-    public function setOrder(Request $request, Bill $bill): JsonResponse
-    {
-        $objectGroupTitle = (string)$request->get('objectGroupTitle');
-        $newOrder         = (int)$request->get('order');
-        $this->repository->setOrder($bill, $newOrder);
-        if ('' !== $objectGroupTitle) {
-            $this->repository->setObjectGroup($bill, $objectGroupTitle);
-        }
-        if ('' === $objectGroupTitle) {
-            $this->repository->removeObjectGroup($bill);
-        }
-
-        return response()->json(['data' => 'OK']);
-    }
-
-    /**
-     * @param  array  $bill
-     * @param  string  $range
-     *
-     * @return string
-     */
-    private function amountPerPeriod(array $bill, string $range): string
-    {
-        $avg = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
-
-        Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
-        Log::debug(sprintf('Average is %s', $avg));
-        // calculate amount per year:
-        $multiplies = [
-            'yearly'    => '1',
-            'half-year' => '2',
-            'quarterly' => '4',
-            'monthly'   => '12',
-            'weekly'    => '52.17',
-            'daily'     => '365.24',
-        ];
-        $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
-        Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
-
-        // per period:
-        $division  = [
-            '1Y'      => '1',
-            '6M'      => '2',
-            '3M'      => '4',
-            '1M'      => '12',
-            '1W'      => '52.16',
-            '1D'      => '365.24',
-            'YTD'     => '1',
-            'QTD'     => '4',
-            'MTD'     => '12',
-            'last7'   => '52.16',
-            'last30'  => '12',
-            'last90'  => '4',
-            'last365' => '1',
-        ];
-        $perPeriod = bcdiv($yearAmount, $division[$range]);
-
-        Log::debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
-
-        return $perPeriod;
-    }
-
-    /**
-     * @param  array  $bills
+     * @param array $bills
      *
      * @return array
      * @throws FireflyException
@@ -251,7 +181,54 @@ class IndexController extends Controller
     }
 
     /**
-     * @param  array  $sums
+     * @param array  $bill
+     * @param string $range
+     *
+     * @return string
+     */
+    private function amountPerPeriod(array $bill, string $range): string
+    {
+        $avg = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
+
+        Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
+        Log::debug(sprintf('Average is %s', $avg));
+        // calculate amount per year:
+        $multiplies = [
+            'yearly'    => '1',
+            'half-year' => '2',
+            'quarterly' => '4',
+            'monthly'   => '12',
+            'weekly'    => '52.17',
+            'daily'     => '365.24',
+        ];
+        $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
+        Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
+
+        // per period:
+        $division  = [
+            '1Y'      => '1',
+            '6M'      => '2',
+            '3M'      => '4',
+            '1M'      => '12',
+            '1W'      => '52.16',
+            '1D'      => '365.24',
+            'YTD'     => '1',
+            'QTD'     => '4',
+            'MTD'     => '12',
+            'last7'   => '52.16',
+            'last30'  => '12',
+            'last90'  => '4',
+            'last365' => '1',
+        ];
+        $perPeriod = bcdiv($yearAmount, $division[$range]);
+
+        Log::debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
+
+        return $perPeriod;
+    }
+
+    /**
+     * @param array $sums
      *
      * @return array
      */
@@ -266,7 +243,7 @@ class IndexController extends Controller
          */
         foreach ($sums as $array) {
             /**
-             * @var int $currencyId
+             * @var int   $currencyId
              * @var array $entry
              */
             foreach ($array as $currencyId => $entry) {
@@ -286,5 +263,28 @@ class IndexController extends Controller
         }
 
         return $totals;
+    }
+
+    /**
+     * Set the order of a bill.
+     *
+     * @param Request $request
+     * @param Bill    $bill
+     *
+     * @return JsonResponse
+     */
+    public function setOrder(Request $request, Bill $bill): JsonResponse
+    {
+        $objectGroupTitle = (string)$request->get('objectGroupTitle');
+        $newOrder         = (int)$request->get('order');
+        $this->repository->setOrder($bill, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->repository->setObjectGroup($bill, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->repository->removeObjectGroup($bill);
+        }
+
+        return response()->json(['data' => 'OK']);
     }
 }

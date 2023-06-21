@@ -56,7 +56,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return bool
      * @throws Exception
@@ -84,9 +84,17 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  Tag  $tag
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->tags()->orderBy('tag', 'ASC')->get();
+    }
+
+    /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -102,7 +110,17 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  int  $tagId
+     * @param User|Authenticatable|null $user
+     */
+    public function setUser(User | Authenticatable | null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
+     * @param int $tagId
      *
      * @return Tag|null
      */
@@ -112,7 +130,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  string  $tag
+     * @param string $tag
      *
      * @return Tag|null
      */
@@ -123,7 +141,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return Carbon|null
      */
@@ -131,14 +149,6 @@ class TagRepository implements TagRepositoryInterface
     {
         /** @var Carbon|null */
         return $tag->transactionJournals()->orderBy('date', 'ASC')->first()?->date;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function get(): Collection
-    {
-        return $this->user->tags()->orderBy('tag', 'ASC')->get();
     }
 
     /**
@@ -162,16 +172,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getLocation(Tag $tag): ?Location
-    {
-        /** @var Location|null */
-        return $tag->locations()->first();
-    }
-
-    /**
-     * @param  int|null  $year
+     * @param int|null $year
      *
      * @return array
      */
@@ -188,7 +189,7 @@ class TagRepository implements TagRepositoryInterface
 
         if (null !== $year) {
             Log::debug(sprintf('Get tags with year %s.', $year));
-            $tagQuery->where('tags.date', '>=', $year.'-01-01 00:00:00')->where('tags.date', '<=', $year.'-12-31 23:59:59');
+            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
         }
         $collection = $tagQuery->get();
         $return     = [];
@@ -208,9 +209,9 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  Tag  $tag
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -226,7 +227,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return Carbon|null
      */
@@ -259,7 +260,7 @@ class TagRepository implements TagRepositoryInterface
     /**
      * Find one or more tags based on the query.
      *
-     * @param  string  $query
+     * @param string $query
      *
      * @return Collection
      */
@@ -273,8 +274,8 @@ class TagRepository implements TagRepositoryInterface
     /**
      * Search the users tags.
      *
-     * @param  string  $query
-     * @param  int  $limit
+     * @param string $query
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -291,17 +292,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return Tag
      */
@@ -315,9 +306,9 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  Tag  $tag
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return array
      *
@@ -385,9 +376,9 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  Tag  $tag
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -402,8 +393,8 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param  Tag  $tag
-     * @param  array  $data
+     * @param Tag   $tag
+     * @param array $data
      *
      * @return Tag
      */
@@ -454,5 +445,14 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return $tag;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocation(Tag $tag): ?Location
+    {
+        /** @var Location|null */
+        return $tag->locations()->first();
     }
 }

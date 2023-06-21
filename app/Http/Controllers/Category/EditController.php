@@ -66,8 +66,8 @@ class EditController extends Controller
     /**
      * Edit a category.
      *
-     * @param  Request  $request
-     * @param  Category  $category
+     * @param Request  $request
+     * @param Category $category
      *
      * @return Factory|View
      */
@@ -91,8 +91,8 @@ class EditController extends Controller
     /**
      * Update category.
      *
-     * @param  CategoryFormRequest  $request
-     * @param  Category  $category
+     * @param CategoryFormRequest $request
+     * @param Category            $category
      *
      * @return RedirectResponse|Redirector
      */

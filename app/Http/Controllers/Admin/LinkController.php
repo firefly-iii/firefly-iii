@@ -86,8 +86,8 @@ class LinkController extends Controller
     /**
      * Delete a link form.
      *
-     * @param  Request  $request
-     * @param  LinkType  $linkType
+     * @param Request  $request
+     * @param LinkType $linkType
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
@@ -122,8 +122,8 @@ class LinkController extends Controller
     /**
      * Actually destroy the link.
      *
-     * @param  Request  $request
-     * @param  LinkType  $linkType
+     * @param Request  $request
+     * @param LinkType $linkType
      *
      * @return RedirectResponse|Redirector
      */
@@ -143,8 +143,8 @@ class LinkController extends Controller
     /**
      * Edit a link form.
      *
-     * @param  Request  $request
-     * @param  LinkType  $linkType
+     * @param Request  $request
+     * @param LinkType $linkType
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
@@ -193,7 +193,7 @@ class LinkController extends Controller
     /**
      * Show a single link.
      *
-     * @param  LinkType  $linkType
+     * @param LinkType $linkType
      *
      * @return Factory|View
      */
@@ -211,7 +211,7 @@ class LinkController extends Controller
     /**
      * Store the new link.
      *
-     * @param  LinkTypeFormRequest  $request
+     * @param LinkTypeFormRequest $request
      *
      * @return $this|RedirectResponse|Redirector
      */
@@ -242,8 +242,8 @@ class LinkController extends Controller
     /**
      * Update an existing link.
      *
-     * @param  LinkTypeFormRequest  $request
-     * @param  LinkType  $linkType
+     * @param LinkTypeFormRequest $request
+     * @param LinkType            $linkType
      *
      * @return $this|RedirectResponse|Redirector
      */

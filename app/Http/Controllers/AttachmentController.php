@@ -68,7 +68,7 @@ class AttachmentController extends Controller
     /**
      * Form to delete an attachment.
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return Factory|View
      */
@@ -85,8 +85,8 @@ class AttachmentController extends Controller
     /**
      * Destroy attachment.
      *
-     * @param  Request  $request
-     * @param  Attachment  $attachment
+     * @param Request    $request
+     * @param Attachment $attachment
      *
      * @return RedirectResponse|Redirector
      */
@@ -105,7 +105,7 @@ class AttachmentController extends Controller
     /**
      * Download attachment to PC.
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return LaravelResponse
      *
@@ -122,7 +122,7 @@ class AttachmentController extends Controller
             $response
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
-                ->header('Content-Disposition', 'attachment; filename='.$quoted)
+                ->header('Content-Disposition', 'attachment; filename=' . $quoted)
                 ->header('Content-Transfer-Encoding', 'binary')
                 ->header('Connection', 'Keep-Alive')
                 ->header('Expires', '0')
@@ -138,8 +138,8 @@ class AttachmentController extends Controller
     /**
      * Edit an attachment.
      *
-     * @param  Request  $request
-     * @param  Attachment  $attachment
+     * @param Request    $request
+     * @param Attachment $attachment
      *
      * @return Factory|View
      */
@@ -183,8 +183,8 @@ class AttachmentController extends Controller
     /**
      * Update attachment.
      *
-     * @param  AttachmentFormRequest  $request
-     * @param  Attachment  $attachment
+     * @param AttachmentFormRequest $request
+     * @param Attachment            $attachment
      *
      * @return RedirectResponse
      */
@@ -210,8 +210,8 @@ class AttachmentController extends Controller
     /**
      * View attachment in browser.
      *
-     * @param  Request  $request
-     * @param  Attachment  $attachment
+     * @param Request    $request
+     * @param Attachment $attachment
      *
      * @return LaravelResponse
      * @throws FireflyException
@@ -241,7 +241,7 @@ class AttachmentController extends Controller
                 [
                     'Content-Security-Policy' => implode('; ', $csp),
                     'Content-Type'            => $attachment->mime,
-                    'Content-Disposition'     => 'inline; filename="'.$attachment->filename.'"',
+                    'Content-Disposition'     => 'inline; filename="' . $attachment->filename . '"',
                 ]
             );
         }

@@ -66,7 +66,7 @@ class CreateController extends Controller
     /**
      * Create category.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      */
@@ -84,7 +84,7 @@ class CreateController extends Controller
     /**
      * Store new category.
      *
-     * @param  CategoryFormRequest  $request
+     * @param CategoryFormRequest $request
      *
      * @return $this|RedirectResponse|Redirector
      * @throws FireflyException

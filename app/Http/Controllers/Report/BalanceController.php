@@ -62,9 +62,9 @@ class BalanceController extends Controller
     /**
      * Show overview of budget balances.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException

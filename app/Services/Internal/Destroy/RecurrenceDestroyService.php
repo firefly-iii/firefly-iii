@@ -32,9 +32,23 @@ use FireflyIII\Models\RecurrenceTransaction;
 class RecurrenceDestroyService
 {
     /**
+     * Delete recurrence by ID
+     *
+     * @param int $recurrenceId
+     */
+    public function destroyById(int $recurrenceId): void
+    {
+        $recurrence = Recurrence::find($recurrenceId);
+        if (null === $recurrence) {
+            return;
+        }
+        $this->destroy($recurrence);
+    }
+
+    /**
      * Delete recurrence.
      *
-     * @param  Recurrence  $recurrence
+     * @param Recurrence $recurrence
      *
      */
     public function destroy(Recurrence $recurrence): void
@@ -52,19 +66,5 @@ class RecurrenceDestroyService
 
         // delete recurrence
         $recurrence->delete();
-    }
-
-    /**
-     * Delete recurrence by ID
-     *
-     * @param  int  $recurrenceId
-     */
-    public function destroyById(int $recurrenceId): void
-    {
-        $recurrence = Recurrence::find($recurrenceId);
-        if (null === $recurrence) {
-            return;
-        }
-        $this->destroy($recurrence);
     }
 }

@@ -34,34 +34,34 @@ use Illuminate\Support\Collection;
 interface AccountTaskerInterface
 {
     /**
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection  $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return array
      */
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection  $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     * @param Collection $accounts
      *
      * @return array
      */
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 }

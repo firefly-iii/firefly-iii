@@ -5,7 +5,7 @@ updates:
   - package-ecosystem: "composer"
     directory: "/" # Location of package manifests
     target-branch: develop
-    labels: ["bug"]
+    labels: [ "bug" ]
     versioning-strategy: increase
     schedule:
       interval: "weekly"
@@ -14,15 +14,15 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     target-branch: develop
-    labels: ["bug"]
+    labels: [ "bug" ]
     versioning-strategy: increase
     schedule:
       interval: "weekly"
 
   - package-ecosystem: "github-actions"
-    directory: "/" 
+    directory: "/"
     target-branch: develop
-    labels: ["bug"]
+    labels: [ "bug" ]
     versioning-strategy: increase
     schedule:
       interval: "weekly"

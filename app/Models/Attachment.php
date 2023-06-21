@@ -38,26 +38,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Attachment
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $user_id
- * @property int $attachable_id
- * @property string $attachable_type
- * @property bool $file_exists
- * @property string $md5
- * @property string $filename
- * @property string|null $title
- * @property string|null $description
- * @property string $mime
- * @property int $size
- * @property bool $uploaded
- * @property string $notes_text
+ * @property int                 $id
+ * @property Carbon|null         $created_at
+ * @property Carbon|null         $updated_at
+ * @property Carbon|null         $deleted_at
+ * @property int                 $user_id
+ * @property int                 $attachable_id
+ * @property string              $attachable_type
+ * @property bool                $file_exists
+ * @property string              $md5
+ * @property string              $filename
+ * @property string|null         $title
+ * @property string|null         $description
+ * @property string              $mime
+ * @property int                 $size
+ * @property bool                $uploaded
+ * @property string              $notes_text
  * @property-read Model|Eloquent $attachable
- * @property Collection|Note[] $notes
- * @property-read int|null $notes_count
- * @property-read User $user
+ * @property Collection|Note[]   $notes
+ * @property-read int|null       $notes_count
+ * @property-read User           $user
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newQuery()
  * @method static Builder|Attachment onlyTrashed()
@@ -78,7 +78,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserId($value)
  * @method static Builder|Attachment withTrashed()
  * @method static Builder|Attachment withoutTrashed()
- * @property int|null $user_group_id
+ * @property int|null            $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -104,7 +104,7 @@ class Attachment extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return Attachment
      * @throws NotFoundHttpException
@@ -122,6 +122,14 @@ class Attachment extends Model
             }
         }
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -151,13 +159,5 @@ class Attachment extends Model
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

@@ -32,7 +32,7 @@ use FireflyIII\Models\TransactionType;
 class TransactionTypeFactory
 {
     /**
-     * @param  string  $type
+     * @param string $type
      *
      * @return TransactionType|null
      */

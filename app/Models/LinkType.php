@@ -35,17 +35,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\LinkType
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property string $name
- * @property string $outward
- * @property string $inward
- * @property int $journalCount
- * @property bool $editable
+ * @property int                                      $id
+ * @property Carbon|null                              $created_at
+ * @property Carbon|null                              $updated_at
+ * @property Carbon|null                              $deleted_at
+ * @property string                                   $name
+ * @property string                                   $outward
+ * @property string                                   $inward
+ * @property int                                      $journalCount
+ * @property bool                                     $editable
  * @property-read Collection|TransactionJournalLink[] $transactionJournalLinks
- * @property-read int|null $transaction_journal_links_count
+ * @property-read int|null                            $transaction_journal_links_count
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType newQuery()
  * @method static Builder|LinkType onlyTrashed()
@@ -85,7 +85,7 @@ class LinkType extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return LinkType
      *

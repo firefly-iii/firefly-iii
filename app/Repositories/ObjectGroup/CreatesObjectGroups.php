@@ -32,17 +32,7 @@ use FireflyIII\Models\ObjectGroup;
 trait CreatesObjectGroups
 {
     /**
-     * @param  string  $title
-     *
-     * @return null|ObjectGroup
-     */
-    protected function findObjectGroup(string $title): ?ObjectGroup
-    {
-        return $this->user->objectGroups()->where('title', $title)->first();
-    }
-
-    /**
-     * @param  int  $groupId
+     * @param int $groupId
      *
      * @return ObjectGroup|null
      */
@@ -52,7 +42,7 @@ trait CreatesObjectGroups
     }
 
     /**
-     * @param  string  $title
+     * @param string $title
      *
      * @return ObjectGroup|null
      */
@@ -82,12 +72,22 @@ trait CreatesObjectGroups
     }
 
     /**
-     * @param  string  $title
+     * @param string $title
      *
      * @return bool
      */
     protected function hasObjectGroup(string $title): bool
     {
         return 1 === $this->user->objectGroups()->where('title', $title)->count();
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return null|ObjectGroup
+     */
+    protected function findObjectGroup(string $title): ?ObjectGroup
+    {
+        return $this->user->objectGroups()->where('title', $title)->first();
     }
 }

@@ -103,7 +103,7 @@ class TagController extends Controller
     /**
      * Delete a tag.
      *
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return Factory|View
      */
@@ -118,27 +118,9 @@ class TagController extends Controller
     }
 
     /**
-     * Destroy a tag.
-     *
-     * @param  Tag  $tag
-     *
-     * @return RedirectResponse
-     */
-    public function destroy(Tag $tag): RedirectResponse
-    {
-        $tagName = $tag->tag;
-        $this->repository->destroy($tag);
-
-        session()->flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
-        app('preferences')->mark();
-
-        return redirect($this->getPreviousUrl('tags.delete.url'));
-    }
-
-    /**
      * Edit a tag.
      *
-     * @param  Tag  $tag
+     * @param Tag $tag
      *
      * @return Factory|View
      */
@@ -173,7 +155,7 @@ class TagController extends Controller
     /**
      * Edit a tag.
      *
-     * @param  TagRepositoryInterface  $repository
+     * @param TagRepositoryInterface $repository
      *
      * @return Factory|View
      */
@@ -224,12 +206,30 @@ class TagController extends Controller
     }
 
     /**
+     * Destroy a tag.
+     *
+     * @param Tag $tag
+     *
+     * @return RedirectResponse
+     */
+    public function destroy(Tag $tag): RedirectResponse
+    {
+        $tagName = $tag->tag;
+        $this->repository->destroy($tag);
+
+        session()->flash('success', (string)trans('firefly.deleted_tag', ['tag' => $tagName]));
+        app('preferences')->mark();
+
+        return redirect($this->getPreviousUrl('tags.delete.url'));
+    }
+
+    /**
      * Show a single tag.
      *
-     * @param  Request  $request
-     * @param  Tag  $tag
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Request     $request
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Factory|View
      * @throws FireflyException
@@ -276,8 +276,8 @@ class TagController extends Controller
     /**
      * Show a single tag over all time.
      *
-     * @param  Request  $request
-     * @param  Tag  $tag
+     * @param Request $request
+     * @param Tag     $tag
      *
      * @return Factory|View
      * @throws ContainerExceptionInterface
@@ -310,7 +310,7 @@ class TagController extends Controller
     /**
      * Store a tag.
      *
-     * @param  TagFormRequest  $request
+     * @param TagFormRequest $request
      *
      * @return RedirectResponse
      */
@@ -351,8 +351,8 @@ class TagController extends Controller
     /**
      * Update a tag.
      *
-     * @param  TagFormRequest  $request
-     * @param  Tag  $tag
+     * @param TagFormRequest $request
+     * @param Tag            $tag
      *
      * @return RedirectResponse
      */

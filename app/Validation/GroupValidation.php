@@ -37,14 +37,7 @@ use Illuminate\Validation\Validator;
 trait GroupValidation
 {
     /**
-     * @param  Validator  $validator
-     *
-     * @return array
-     */
-    abstract protected function getTransactionsArray(Validator $validator): array;
-
-    /**
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     protected function preventNoAccountInfo(Validator $validator): void
     {
@@ -87,10 +80,17 @@ trait GroupValidation
     }
 
     /**
+     * @param Validator $validator
+     *
+     * @return array
+     */
+    abstract protected function getTransactionsArray(Validator $validator): array;
+
+    /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no
      * journal description.
      *
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     protected function validateDescriptions(Validator $validator): void
     {
@@ -116,7 +116,7 @@ trait GroupValidation
     }
 
     /**
-     * @param  Validator  $validator
+     * @param Validator $validator
      */
     protected function validateGroupDescription(Validator $validator): void
     {
@@ -134,11 +134,12 @@ trait GroupValidation
     }
 
     /**
-     * This method validates if the user has submitted transaction journal ID's for each array they submit, if they've submitted more than 1 transaction
-     * journal. This check is necessary because Firefly III isn't able to distinguish between journals without the ID.
+     * This method validates if the user has submitted transaction journal ID's for each array they submit, if they've
+     * submitted more than 1 transaction journal. This check is necessary because Firefly III isn't able to distinguish
+     * between journals without the ID.
      *
-     * @param  Validator  $validator
-     * @param  TransactionGroup  $transactionGroup
+     * @param Validator        $validator
+     * @param TransactionGroup $transactionGroup
      */
     protected function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
     {
@@ -153,7 +154,7 @@ trait GroupValidation
         }
         // check each array:
         /**
-         * @var int $index
+         * @var int   $index
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
@@ -164,10 +165,10 @@ trait GroupValidation
     /**
      * Do the validation required by validateJournalIds.
      *
-     * @param  Validator  $validator
-     * @param  int  $index
-     * @param  array  $transaction
-     * @param  TransactionGroup  $transactionGroup
+     * @param Validator        $validator
+     * @param int              $index
+     * @param array            $transaction
+     * @param TransactionGroup $transactionGroup
      *
      */
     private function validateJournalId(Validator $validator, int $index, array $transaction, TransactionGroup $transactionGroup): void

@@ -94,7 +94,7 @@ class ShowController extends Controller
      *
      * Show the specified bill.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      */

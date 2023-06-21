@@ -403,6 +403,15 @@ function createAutoComplete(input, URL) {
             url: URL + urlParamSplit + 'uid=' + uid,
             filter: function (list) {
                 return $.map(list, function (item) {
+                    if (item.hasOwnProperty('active') && item.active === true) {
+                        return {name: item.name};
+                    }
+                    if (item.hasOwnProperty('active') && item.active === false) {
+                        return;
+                    }
+                    if (item.hasOwnProperty('active')) {
+                        console.log(item.active);
+                    }
                     return {name: item.name};
                 });
             }
@@ -412,6 +421,15 @@ function createAutoComplete(input, URL) {
             wildcard: '%QUERY',
             filter: function (list) {
                 return $.map(list, function (item) {
+                    if (item.hasOwnProperty('active') && item.active === true) {
+                        return {name: item.name};
+                    }
+                    if (item.hasOwnProperty('active') && item.active === false) {
+                        return;
+                    }
+                    if (item.hasOwnProperty('active')) {
+                        console.log(item.active);
+                    }
                     return {name: item.name};
                 });
             }

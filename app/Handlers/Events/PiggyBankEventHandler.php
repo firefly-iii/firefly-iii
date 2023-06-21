@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 class PiggyBankEventHandler
 {
     /**
-     * @param  ChangedPiggyBankAmount  $event
+     * @param ChangedPiggyBankAmount $event
      * @return void
      */
     public function changePiggyAmount(ChangedPiggyBankAmount $event): void

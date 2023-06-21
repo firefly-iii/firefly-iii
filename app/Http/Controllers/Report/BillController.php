@@ -38,9 +38,9 @@ use Throwable;
 class BillController extends Controller
 {
     /**
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return mixed|string
      * @throws FireflyException

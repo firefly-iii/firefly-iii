@@ -73,9 +73,9 @@ class NoCategoryController extends Controller
     /**
      * Show transactions without a category.
      *
-     * @param  Request  $request
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Request     $request
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Factory|View
      * @throws FireflyException
@@ -116,7 +116,7 @@ class NoCategoryController extends Controller
     /**
      * Show all transactions without a category.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      * @throws FireflyException

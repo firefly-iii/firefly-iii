@@ -59,3 +59,5 @@ fi
 
 # restore .env file
 mv $SCRIPT_DIR/../.env.backup $SCRIPT_DIR/../.env
+
+cd $SCRIPT_DIR/..

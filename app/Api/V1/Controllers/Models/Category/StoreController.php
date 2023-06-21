@@ -62,7 +62,7 @@ class StoreController extends Controller
      *
      * Store new category.
      *
-     * @param  StoreRequest  $request
+     * @param StoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException

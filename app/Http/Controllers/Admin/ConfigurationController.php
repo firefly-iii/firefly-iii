@@ -89,7 +89,7 @@ class ConfigurationController extends Controller
     /**
      * Store new configuration values.
      *
-     * @param  ConfigurationRequest  $request
+     * @param ConfigurationRequest $request
      *
      * @return RedirectResponse
      */

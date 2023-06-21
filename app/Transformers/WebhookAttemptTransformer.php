@@ -33,7 +33,7 @@ class WebhookAttemptTransformer extends AbstractTransformer
     /**
      * Transform the preference
      *
-     * @param  WebhookAttempt  $attempt
+     * @param WebhookAttempt $attempt
      *
      * @return array
      */

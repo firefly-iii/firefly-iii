@@ -80,9 +80,9 @@ class IndexController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  Rule  $rule
-     * @param  RuleGroup  $ruleGroup
+     * @param Request   $request
+     * @param Rule      $rule
+     * @param RuleGroup $ruleGroup
      *
      * @return JsonResponse
      */
@@ -95,7 +95,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return RedirectResponse
      */

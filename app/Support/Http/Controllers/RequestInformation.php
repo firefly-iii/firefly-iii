@@ -60,27 +60,9 @@ trait RequestInformation
     }
 
     /**
-     * @return string
-     */
-    final protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', RouteFacade::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     *
-     * @return string
-     */
-    final protected function getSpecificPageName(): string // get request info
-    {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_'.RouteFacade::current()->parameter('objectType');
-    }
-
-    /**
      * Get a list of triggers.
      *
-     * @param  TestRuleFormRequest  $request
+     * @param TestRuleFormRequest $request
      *
      * @return array
      */
@@ -134,9 +116,27 @@ trait RequestInformation
     }
 
     /**
+     * @return string
+     */
+    final protected function getPageName(): string // get request info
+    {
+        return str_replace('.', '_', RouteFacade::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     *
+     * @return string
+     */
+    final protected function getSpecificPageName(): string // get request info
+    {
+        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
+    }
+
+    /**
      * Check if date is outside session range.
      *
-     * @param  Carbon  $date
+     * @param Carbon $date
      *
      * @return bool
      *
@@ -162,7 +162,7 @@ trait RequestInformation
     /**
      * Parses attributes from URL
      *
-     * @param  array  $attributes
+     * @param array $attributes
      *
      * @return array
      */
@@ -192,9 +192,9 @@ trait RequestInformation
     /**
      * Validate users new password.
      *
-     * @param  User  $user
-     * @param  string  $current
-     * @param  string  $new
+     * @param User   $user
+     * @param string $current
+     * @param string $new
      *
      * @return bool
      *
@@ -216,7 +216,7 @@ trait RequestInformation
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return ValidatorContract
      */

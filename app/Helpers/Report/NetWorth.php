@@ -57,8 +57,8 @@ class NetWorth implements NetWorthInterface
      * This repeats for each currency the user has transactions in.
      * Result of this method is cached.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $date
+     * @param Collection $accounts
+     * @param Carbon     $date
      *
      * @return array
      * @throws JsonException
@@ -129,9 +129,9 @@ class NetWorth implements NetWorthInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void
+    public function setUser(User | Authenticatable | null $user): void
     {
         if (null === $user) {
             return;

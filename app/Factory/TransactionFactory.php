@@ -62,8 +62,8 @@ class TransactionFactory
     /**
      * Create transaction with negative amount (for source accounts).
      *
-     * @param  string  $amount
-     * @param  string|null  $foreignAmount
+     * @param string      $amount
+     * @param string|null $foreignAmount
      *
      * @return Transaction
      * @throws FireflyException
@@ -81,97 +81,8 @@ class TransactionFactory
     }
 
     /**
-     * Create transaction with positive amount (for destination accounts).
-     *
-     * @param  string  $amount
-     * @param  string|null  $foreignAmount
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    public function createPositive(string $amount, ?string $foreignAmount): Transaction
-    {
-        if ('' === $foreignAmount) {
-            $foreignAmount = null;
-        }
-        if (null !== $foreignAmount) {
-            $foreignAmount = app('steam')->positive($foreignAmount);
-        }
-
-        return $this->create(app('steam')->positive($amount), $foreignAmount);
-    }
-
-    /**
-     * @param  Account  $account
-     *
-
-     */
-    public function setAccount(Account $account): void
-    {
-        $this->account = $account;
-    }
-
-    /**
-     * @param  array  $accountInformation
-     */
-    public function setAccountInformation(array $accountInformation): void
-    {
-        $this->accountInformation = $accountInformation;
-    }
-
-    /**
-     * @param  TransactionCurrency  $currency
-     *
-
-     */
-    public function setCurrency(TransactionCurrency $currency): void
-    {
-        $this->currency = $currency;
-    }
-
-    /**
-     * @param  TransactionCurrency|null  $foreignCurrency  |null
-     *
-
-     */
-    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
-    {
-        $this->foreignCurrency = $foreignCurrency;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     *
-
-     */
-    public function setJournal(TransactionJournal $journal): void
-    {
-        $this->journal = $journal;
-    }
-
-    /**
-     * @param  bool  $reconciled
-     *
-
-     */
-    public function setReconciled(bool $reconciled): void
-    {
-        $this->reconciled = $reconciled;
-    }
-
-    /**
-     * @param  User  $user
-     *
-
-     */
-    public function setUser(User $user): void
-    {
-        // empty function.
-    }
-
-    /**
-     * @param  string  $amount
-     * @param  string|null  $foreignAmount
+     * @param string      $amount
+     * @param string|null $foreignAmount
      *
      * @return Transaction
      * @throws FireflyException
@@ -259,5 +170,94 @@ class TransactionFactory
         Log::debug('Will update account with IBAN information.');
         $service = app(AccountUpdateService::class);
         $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
+    }
+
+    /**
+     * Create transaction with positive amount (for destination accounts).
+     *
+     * @param string      $amount
+     * @param string|null $foreignAmount
+     *
+     * @return Transaction
+     * @throws FireflyException
+     */
+    public function createPositive(string $amount, ?string $foreignAmount): Transaction
+    {
+        if ('' === $foreignAmount) {
+            $foreignAmount = null;
+        }
+        if (null !== $foreignAmount) {
+            $foreignAmount = app('steam')->positive($foreignAmount);
+        }
+
+        return $this->create(app('steam')->positive($amount), $foreignAmount);
+    }
+
+    /**
+     * @param Account $account
+     *
+
+     */
+    public function setAccount(Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @param array $accountInformation
+     */
+    public function setAccountInformation(array $accountInformation): void
+    {
+        $this->accountInformation = $accountInformation;
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+
+     */
+    public function setCurrency(TransactionCurrency $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+    /**
+     * @param TransactionCurrency|null $foreignCurrency |null
+     *
+
+     */
+    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
+    {
+        $this->foreignCurrency = $foreignCurrency;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+
+     */
+    public function setJournal(TransactionJournal $journal): void
+    {
+        $this->journal = $journal;
+    }
+
+    /**
+     * @param bool $reconciled
+     *
+
+     */
+    public function setReconciled(bool $reconciled): void
+    {
+        $this->reconciled = $reconciled;
+    }
+
+    /**
+     * @param User $user
+     *
+
+     */
+    public function setUser(User $user): void
+    {
+        // empty function.
     }
 }

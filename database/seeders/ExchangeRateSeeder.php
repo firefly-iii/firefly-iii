@@ -72,11 +72,36 @@ class ExchangeRateSeeder extends Seeder
     }
 
     /**
-     * @param  User  $user
-     * @param  TransactionCurrency  $from
-     * @param  TransactionCurrency  $to
-     * @param  string  $date
-     * @param  float  $rate
+     * @param string $code
+     * @return TransactionCurrency|null
+     */
+    private function getCurrency(string $code): ?TransactionCurrency
+    {
+        return TransactionCurrency::whereNull('deleted_at')->where('code', $code)->first();
+    }
+
+    /**
+     * @param User                $user
+     * @param TransactionCurrency $from
+     * @param TransactionCurrency $to
+     * @param string              $date
+     * @return bool
+     */
+    private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool
+    {
+        return $user->currencyExchangeRates()
+                    ->where('from_currency_id', $from->id)
+                    ->where('to_currency_id', $to->id)
+                    ->where('date', $date)
+                    ->count() > 0;
+    }
+
+    /**
+     * @param User                $user
+     * @param TransactionCurrency $from
+     * @param TransactionCurrency $to
+     * @param string              $date
+     * @param float               $rate
      * @return void
      */
     private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void
@@ -91,30 +116,5 @@ class ExchangeRateSeeder extends Seeder
                 'rate'             => $rate,
             ]
         );
-    }
-
-    /**
-     * @param  string  $code
-     * @return TransactionCurrency|null
-     */
-    private function getCurrency(string $code): ?TransactionCurrency
-    {
-        return TransactionCurrency::whereNull('deleted_at')->where('code', $code)->first();
-    }
-
-    /**
-     * @param  User  $user
-     * @param  TransactionCurrency  $from
-     * @param  TransactionCurrency  $to
-     * @param  string  $date
-     * @return bool
-     */
-    private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool
-    {
-        return $user->currencyExchangeRates()
-                    ->where('from_currency_id', $from->id)
-                    ->where('to_currency_id', $to->id)
-                    ->where('date', $date)
-                    ->count() > 0;
     }
 }

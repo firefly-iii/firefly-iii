@@ -58,7 +58,7 @@ class TagController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightTransferNoTag
      *
-     * @param  GenericRequest  $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */
@@ -114,7 +114,7 @@ class TagController extends Controller
      *
      * Transfers per tag, possibly filtered by tag and account.
      *
-     * @param  GenericRequest  $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */

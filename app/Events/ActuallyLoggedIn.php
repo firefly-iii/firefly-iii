@@ -37,7 +37,7 @@ class ActuallyLoggedIn extends Event
     public User $user;
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function __construct(User $user)
     {

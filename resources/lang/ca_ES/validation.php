@@ -234,17 +234,17 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Necessites obtenir un ID de compte d\'origen vàlid i/o un nom de compte d\'origen vàlid per continuar.',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] No s\'ha pogut trobar un compte font vàlid en cercar per l\'ID ":id" o el nom ":name".',
+    'withdrawal_dest_need_data'   => '[a] Cal obtenir un identificador o nom del compte destí per a continuar.',
     'withdrawal_dest_bad_data'    => 'No s\'ha pogut trobar un compte de destí vàlid buscant l\'ID ":id" o el nom ":name".',
 
     'reconciliation_source_bad_data' => 'No s\'ha pogut trobar un compte de consolidació vàlid al cercar per la ID ":id" o el nom ":name".',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] No s\'ha pogut trobar un compte font vàlid en cercar per l\'identificador ":id" o el nom ":name".',
 
     'deposit_source_need_data' => 'Necessites obtenir un ID de compte d\'origen vàlid i/o un nom de compte d\'origen vàlid per continuar.',
-    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'  => '[b] No s\'ha pogut trobar un compte font vàlid en cercar per l\'identificador ":id" o el nom ":name".',
+    'deposit_dest_need_data'   => '[b] Cal obtenir un identificador i/o nom vàlid d\'un compte destí per a continuar.',
     'deposit_dest_bad_data'    => 'No s\'ha pogut trobar un compte de destí vàlid buscant l\'ID ":id" o el nom ":name".',
     'deposit_dest_wrong_type'  => 'El compte de destí enviat no és del tipus correcte.',
 
@@ -261,14 +261,14 @@ return [
 
 
     'transfer_source_need_data' => 'Necessites obtenir un ID de compte d\'origen vàlid i/o un nom de compte d\'origen vàlid per continuar.',
-    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_source_bad_data'  => '[c] No s\'ha pogut trobar un compte font vàlid en cercar per l\'identificador ":id" o el nom ":name".',
+    'transfer_dest_need_data'   => '[c] Cal obtenir un identificador i/o nom vàlid d\'un compte destí per a continuar.',
     'transfer_dest_bad_data'    => 'No s\'ha pogut trobar un compte de destí vàlid buscant l\'ID ":id" o el nom ":name".',
     'need_id_in_edit'           => 'Cada divisió ha de tenir transaction_journal_id (ID vàlid o 0).',
 
     'ob_source_need_data'           => 'Necessites obtenir un ID de compte d\'origen vàlid i/o un nom de compte d\'origen vàlid per continuar.',
     'lc_source_need_data'           => 'Necessites obtenir un ID de compte d\'origen vàlid per continuar.',
-    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'             => '[d] Cal obtenir un identificador i/o nom vàlid d\'un compte destí per a continuar.',
     'ob_dest_bad_data'              => 'No s\'ha pogut trobar un compte de destí vàlid buscant l\'ID ":id" o el nom ":name".',
     'reconciliation_either_account' => 'Per enviar una consolidació, has d\'enviar un compte d\'origen o de destí. Ni ambdós, ni cap.',
 

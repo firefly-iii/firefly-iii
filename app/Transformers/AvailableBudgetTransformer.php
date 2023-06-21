@@ -52,7 +52,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
     /**
      * Transform the note.
      *
-     * @param  AvailableBudget  $availableBudget
+     * @param AvailableBudget $availableBudget
      *
      * @return array
      */
@@ -77,7 +77,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/'.$availableBudget->id,
+                    'uri' => '/available_budgets/' . $availableBudget->id,
                 ],
             ],
         ];

@@ -70,7 +70,7 @@ class BulkController extends Controller
      *
      * TODO user wont be able to tell if the journal is part of a split.
      *
-     * @param  array  $journals
+     * @param array $journals
      *
      * @return Factory|View
      */
@@ -93,7 +93,7 @@ class BulkController extends Controller
     /**
      * Update all journals.
      *
-     * @param  BulkEditJournalRequest  $request
+     * @param BulkEditJournalRequest $request
      *
      * @return Application|RedirectResponse|Redirector
      */
@@ -135,9 +135,9 @@ class BulkController extends Controller
     }
 
     /**
-     * @param  TransactionJournal  $journal
-     * @param  bool  $ignoreUpdate
-     * @param  int  $budgetId
+     * @param TransactionJournal $journal
+     * @param bool               $ignoreUpdate
+     * @param int                $budgetId
      *
      * @return bool
      */
@@ -153,27 +153,9 @@ class BulkController extends Controller
     }
 
     /**
-     * @param  TransactionJournal  $journal
-     * @param  bool  $ignoreUpdate
-     * @param  string  $category
-     *
-     * @return bool
-     */
-    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
-    {
-        if (true === $ignoreUpdate) {
-            return false;
-        }
-        Log::debug(sprintf('Set budget to %s', $category));
-        $this->repository->updateCategory($journal, $category);
-
-        return true;
-    }
-
-    /**
-     * @param  TransactionJournal  $journal
-     * @param  string  $action
-     * @param  array  $tags
+     * @param TransactionJournal $journal
+     * @param string             $action
+     * @param array              $tags
      *
      * @return bool
      */
@@ -188,6 +170,24 @@ class BulkController extends Controller
             $new      = array_unique(array_merge($tags, $existing));
             $this->repository->updateTags($journal, $new);
         }
+
+        return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param bool               $ignoreUpdate
+     * @param string             $category
+     *
+     * @return bool
+     */
+    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
+    {
+        if (true === $ignoreUpdate) {
+            return false;
+        }
+        Log::debug(sprintf('Set budget to %s', $category));
+        $this->repository->updateCategory($journal, $category);
 
         return true;
     }

@@ -35,8 +35,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CLIToken implements BinderInterface
 {
     /**
-     * @param  string  $value
-     * @param  Route  $route
+     * @param string $value
+     * @param Route  $route
      *
      * @return mixed
      * @throws FireflyException

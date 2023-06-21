@@ -69,7 +69,7 @@ class LinkController extends Controller
     /**
      * Delete a link.
      *
-     * @param  TransactionJournalLink  $link
+     * @param TransactionJournalLink $link
      *
      * @return Factory|View
      */
@@ -85,7 +85,7 @@ class LinkController extends Controller
     /**
      * Actually destroy it.
      *
-     * @param  TransactionJournalLink  $link
+     * @param TransactionJournalLink $link
      *
      * @return RedirectResponse|Redirector
      */
@@ -100,7 +100,7 @@ class LinkController extends Controller
     }
 
     /**
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return Factory|View
      */
@@ -114,8 +114,8 @@ class LinkController extends Controller
     /**
      * Store a new link.
      *
-     * @param  JournalLinkRequest  $request
-     * @param  TransactionJournal  $journal
+     * @param JournalLinkRequest $request
+     * @param TransactionJournal $journal
      *
      * @return RedirectResponse|Redirector
      */
@@ -154,7 +154,7 @@ class LinkController extends Controller
     /**
      * Switch link from A <> B to B <> A.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return RedirectResponse|Redirector
      */
     public function switchLink(Request $request)

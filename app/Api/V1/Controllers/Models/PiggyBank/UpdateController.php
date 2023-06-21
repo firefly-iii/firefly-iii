@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update piggy bank.
      *
-     * @param  UpdateRequest  $request
-     * @param  PiggyBank  $piggyBank
+     * @param UpdateRequest $request
+     * @param PiggyBank     $piggyBank
      *
      * @return JsonResponse
      */

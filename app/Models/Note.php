@@ -33,14 +33,14 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\Note
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $noteable_id
- * @property string $noteable_type
- * @property string|null $title
- * @property string|null $text
+ * @property int                 $id
+ * @property Carbon|null         $created_at
+ * @property Carbon|null         $updated_at
+ * @property Carbon|null         $deleted_at
+ * @property int                 $noteable_id
+ * @property string              $noteable_type
+ * @property string|null         $title
+ * @property string|null         $text
  * @property-read Model|Eloquent $noteable
  * @method static \Illuminate\Database\Eloquent\Builder|Note newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Note newQuery()

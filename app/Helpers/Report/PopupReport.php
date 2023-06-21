@@ -43,9 +43,9 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect the transactions for one account and one budget.
      *
-     * @param  Budget  $budget
-     * @param  Account  $account
-     * @param  array  $attributes
+     * @param Budget  $budget
+     * @param Account $account
+     * @param array   $attributes
      *
      * @return array
      */
@@ -65,8 +65,8 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect the transactions for one account and no budget.
      *
-     * @param  Account  $account
-     * @param  array  $attributes
+     * @param Account $account
+     * @param array   $attributes
      *
      * @return array
      */
@@ -100,8 +100,8 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect the transactions for a budget.
      *
-     * @param  Budget  $budget
-     * @param  array  $attributes
+     * @param Budget $budget
+     * @param array  $attributes
      *
      * @return array
      */
@@ -140,8 +140,8 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect journals by a category.
      *
-     * @param  Category|null  $category
-     * @param  array  $attributes
+     * @param Category|null $category
+     * @param array         $attributes
      *
      * @return array
      */
@@ -183,8 +183,8 @@ class PopupReport implements PopupReportInterface
     /**
      * Group transactions by expense.
      *
-     * @param  Account  $account
-     * @param  array  $attributes
+     * @param Account $account
+     * @param array   $attributes
      *
      * @return array
      */
@@ -229,8 +229,8 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect transactions by income.
      *
-     * @param  Account  $account
-     * @param  array  $attributes
+     * @param Account $account
+     * @param array   $attributes
      *
      * @return array
      */

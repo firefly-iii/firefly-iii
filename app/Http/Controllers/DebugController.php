@@ -78,7 +78,7 @@ class DebugController extends Controller
     /**
      * Clear log and session.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
@@ -109,7 +109,7 @@ class DebugController extends Controller
     /**
      * Show debug info.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      * @throws FireflyException
@@ -212,7 +212,7 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|'.substr($logContent, -8192);
+            $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
         }
 
         return view(
@@ -261,7 +261,7 @@ class DebugController extends Controller
     /**
      * Flash all types of messages.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
      */

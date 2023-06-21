@@ -74,7 +74,7 @@ class MassController extends Controller
     /**
      * Mass delete transactions.
      *
-     * @param  array  $journals
+     * @param array $journals
      *
      * @return IlluminateView
      */
@@ -91,7 +91,7 @@ class MassController extends Controller
     /**
      * Do the mass delete.
      *
-     * @param  MassDeleteJournalRequest  $request
+     * @param MassDeleteJournalRequest $request
      *
      * @return Application|Redirector|RedirectResponse
      *
@@ -127,7 +127,7 @@ class MassController extends Controller
     /**
      * Mass edit of journals.
      *
-     * @param  array  $journals
+     * @param array $journals
      *
      * @return IlluminateView
      */
@@ -165,7 +165,7 @@ class MassController extends Controller
     /**
      * Mass update of journals.
      *
-     * @param  MassEditJournalRequest  $request
+     * @param MassEditJournalRequest $request
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException
@@ -197,75 +197,8 @@ class MassController extends Controller
     }
 
     /**
-     * @param  MassEditJournalRequest  $request
-     * @param  int  $journalId
-     * @param  string  $key
-     *
-     * @return Carbon|null
-     */
-    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
-    {
-        $value = $request->get($key);
-        if (!is_array($value)) {
-            return null;
-        }
-        if (!array_key_exists($journalId, $value)) {
-            return null;
-        }
-        try {
-            $carbon = Carbon::parse($value[$journalId]);
-        } catch (InvalidArgumentException $e) {
-            $e->getMessage();
-
-            return null;
-        }
-
-        return $carbon;
-    }
-
-    /**
-     * @param  MassEditJournalRequest  $request
-     * @param  int  $journalId
-     * @param  string  $string
-     *
-     * @return int|null
-     */
-    private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
-    {
-        $value = $request->get($string);
-        if (!is_array($value)) {
-            return null;
-        }
-        if (!array_key_exists($journalId, $value)) {
-            return null;
-        }
-
-        return (int)$value[$journalId];
-    }
-
-    /**
-     * @param  MassEditJournalRequest  $request
-     * @param  int  $journalId
-     * @param  string  $string
-     *
-     * @return string|null
-     */
-    private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
-    {
-        $value = $request->get($string);
-        if (!is_array($value)) {
-            return null;
-        }
-        if (!array_key_exists($journalId, $value)) {
-            return null;
-        }
-
-        return (string)$value[$journalId];
-    }
-
-    /**
-     * @param  int  $journalId
-     * @param  MassEditJournalRequest  $request
+     * @param int                    $journalId
+     * @param MassEditJournalRequest $request
      *
      * @throws FireflyException
      */
@@ -298,5 +231,72 @@ class MassController extends Controller
         $service->update();
         // trigger rules
         event(new UpdatedTransactionGroup($journal->transactionGroup, true, true));
+    }
+
+    /**
+     * @param MassEditJournalRequest $request
+     * @param int                    $journalId
+     * @param string                 $key
+     *
+     * @return Carbon|null
+     */
+    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
+    {
+        $value = $request->get($key);
+        if (!is_array($value)) {
+            return null;
+        }
+        if (!array_key_exists($journalId, $value)) {
+            return null;
+        }
+        try {
+            $carbon = Carbon::parse($value[$journalId]);
+        } catch (InvalidArgumentException $e) {
+            $e->getMessage();
+
+            return null;
+        }
+
+        return $carbon;
+    }
+
+    /**
+     * @param MassEditJournalRequest $request
+     * @param int                    $journalId
+     * @param string                 $string
+     *
+     * @return string|null
+     */
+    private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
+    {
+        $value = $request->get($string);
+        if (!is_array($value)) {
+            return null;
+        }
+        if (!array_key_exists($journalId, $value)) {
+            return null;
+        }
+
+        return (string)$value[$journalId];
+    }
+
+    /**
+     * @param MassEditJournalRequest $request
+     * @param int                    $journalId
+     * @param string                 $string
+     *
+     * @return int|null
+     */
+    private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
+    {
+        $value = $request->get($string);
+        if (!is_array($value)) {
+            return null;
+        }
+        if (!array_key_exists($journalId, $value)) {
+            return null;
+        }
+
+        return (int)$value[$journalId];
     }
 }

@@ -85,8 +85,8 @@ class NewUserController extends Controller
     /**
      * Store his new settings.
      *
-     * @param  NewUserFormRequest  $request
-     * @param  CurrencyRepositoryInterface  $currencyRepository
+     * @param NewUserFormRequest          $request
+     * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException

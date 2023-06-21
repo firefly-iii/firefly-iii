@@ -62,8 +62,8 @@ class UpdateController extends Controller
      *
      * Update single recurrence.
      *
-     * @param  UpdateRequest  $request
-     * @param  Recurrence  $recurrence
+     * @param UpdateRequest $request
+     * @param Recurrence    $recurrence
      *
      * @return JsonResponse
      */

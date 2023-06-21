@@ -38,29 +38,29 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\PiggyBank
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $account_id
- * @property string $name
- * @property string $targetamount
- * @property Carbon|null $startdate
- * @property Carbon|null $targetdate
- * @property int $order
- * @property bool $active
- * @property bool $encrypted
- * @property-read Account $account
- * @property-read Collection|Attachment[] $attachments
- * @property-read int|null $attachments_count
- * @property-read Collection|Note[] $notes
- * @property-read int|null $notes_count
- * @property-read Collection|ObjectGroup[] $objectGroups
- * @property-read int|null $object_groups_count
- * @property-read Collection|PiggyBankEvent[] $piggyBankEvents
- * @property-read int|null $piggy_bank_events_count
+ * @property int                                   $id
+ * @property Carbon|null                           $created_at
+ * @property Carbon|null                           $updated_at
+ * @property Carbon|null                           $deleted_at
+ * @property int                                   $account_id
+ * @property string                                $name
+ * @property string                                $targetamount
+ * @property Carbon|null                           $startdate
+ * @property Carbon|null                           $targetdate
+ * @property int                                   $order
+ * @property bool                                  $active
+ * @property bool                                  $encrypted
+ * @property-read Account                          $account
+ * @property-read Collection|Attachment[]          $attachments
+ * @property-read int|null                         $attachments_count
+ * @property-read Collection|Note[]                $notes
+ * @property-read int|null                         $notes_count
+ * @property-read Collection|ObjectGroup[]         $objectGroups
+ * @property-read int|null                         $object_groups_count
+ * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
+ * @property-read int|null                         $piggy_bank_events_count
  * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read int|null $piggy_bank_repetitions_count
+ * @property-read int|null                         $piggy_bank_repetitions_count
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank newQuery()
  * @method static Builder|PiggyBank onlyTrashed()
@@ -109,7 +109,7 @@ class PiggyBank extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return PiggyBank
      * @throws NotFoundHttpException
@@ -178,7 +178,7 @@ class PiggyBank extends Model
 
     /**
      *
-     * @param  mixed  $value
+     * @param mixed $value
      */
     public function setTargetamountAttribute($value): void
     {

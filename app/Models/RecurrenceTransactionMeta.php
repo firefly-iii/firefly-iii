@@ -33,13 +33,13 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\RecurrenceTransactionMeta
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $rt_id
- * @property string $name
- * @property mixed $value
+ * @property int                        $id
+ * @property Carbon|null                $created_at
+ * @property Carbon|null                $updated_at
+ * @property Carbon|null                $deleted_at
+ * @property int                        $rt_id
+ * @property string                     $name
+ * @property mixed                      $value
  * @property-read RecurrenceTransaction $recurrenceTransaction
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransactionMeta newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransactionMeta newQuery()

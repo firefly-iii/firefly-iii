@@ -59,7 +59,7 @@ class DeleteController extends Controller
     /**
      * Delete account screen.
      *
-     * @param  Webhook  $webhook
+     * @param Webhook $webhook
      *
      * @return Factory|Application|View
      */

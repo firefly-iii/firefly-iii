@@ -44,7 +44,7 @@ class RegisteredUser extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param  string  $address
+     * @param string $address
      */
     public function __construct(string $address)
     {

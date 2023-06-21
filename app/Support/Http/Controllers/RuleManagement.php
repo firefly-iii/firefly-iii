@@ -37,7 +37,7 @@ use Throwable;
 trait RuleManagement
 {
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      * @throws FireflyException
@@ -72,7 +72,7 @@ trait RuleManagement
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array
      * @throws FireflyException
@@ -119,7 +119,7 @@ trait RuleManagement
     }
 
     /**
-     * @param  array  $submittedOperators
+     * @param array $submittedOperators
      *
      * @return array
      * @throws FireflyException

@@ -45,7 +45,7 @@ class SetSourceAccount implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param  RuleAction  $action
+     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
@@ -128,7 +128,7 @@ class SetSourceAccount implements ActionInterface
     }
 
     /**
-     * @param  string  $type
+     * @param string $type
      *
      * @return Account|null
      */

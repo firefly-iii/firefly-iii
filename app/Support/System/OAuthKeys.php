@@ -44,21 +44,22 @@ class OAuthKeys
     /**
      *
      */
-    public static function generateKeys(): void
+    public static function verifyKeysRoutine(): void
     {
-        Artisan::registerCommand(new KeysCommand());
-        Artisan::call('passport:keys');
-    }
+        if (!self::keysInDatabase() && !self::hasKeyFiles()) {
+            self::generateKeys();
+            self::storeKeysInDB();
 
-    /**
-     * @return bool
-     */
-    public static function hasKeyFiles(): bool
-    {
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
+            return;
+        }
+        if (self::keysInDatabase() && !self::hasKeyFiles()) {
+            self::restoreKeysFromDB();
 
-        return file_exists($private) && file_exists($public);
+            return;
+        }
+        if (!self::keysInDatabase() && self::hasKeyFiles()) {
+            self::storeKeysInDB();
+        }
     }
 
     /**
@@ -73,7 +74,7 @@ class OAuthKeys
             try {
                 $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
                 $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
-            } catch (ContainerExceptionInterface|NotFoundExceptionInterface|FireflyException $e) {
+            } catch (ContainerExceptionInterface | NotFoundExceptionInterface | FireflyException $e) {
                 Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
@@ -83,6 +84,37 @@ class OAuthKeys
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function hasKeyFiles(): bool
+    {
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
+
+        return file_exists($private) && file_exists($public);
+    }
+
+    /**
+     *
+     */
+    public static function generateKeys(): void
+    {
+        Artisan::registerCommand(new KeysCommand());
+        Artisan::call('passport:keys');
+    }
+
+    /**
+     *
+     */
+    public static function storeKeysInDB(): void
+    {
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
+        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
+        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
     }
 
     /**
@@ -113,37 +145,5 @@ class OAuthKeys
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
         return true;
-    }
-
-    /**
-     *
-     */
-    public static function storeKeysInDB(): void
-    {
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
-        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
-        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
-    }
-
-    /**
-     *
-     */
-    public static function verifyKeysRoutine(): void
-    {
-        if (!self::keysInDatabase() && !self::hasKeyFiles()) {
-            self::generateKeys();
-            self::storeKeysInDB();
-
-            return;
-        }
-        if (self::keysInDatabase() && !self::hasKeyFiles()) {
-            self::restoreKeysFromDB();
-
-            return;
-        }
-        if (!self::keysInDatabase() && self::hasKeyFiles()) {
-            self::storeKeysInDB();
-        }
     }
 }

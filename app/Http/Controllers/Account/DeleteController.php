@@ -65,7 +65,7 @@ class DeleteController extends Controller
     /**
      * Delete account screen.
      *
-     * @param  Account  $account
+     * @param Account $account
      *
      * @return Factory|RedirectResponse|Redirector|View
      */
@@ -90,8 +90,8 @@ class DeleteController extends Controller
     /**
      * Delete the account.
      *
-     * @param  Request  $request
-     * @param  Account  $account
+     * @param Request $request
+     * @param Account $account
      *
      * @return RedirectResponse|Redirector
      */

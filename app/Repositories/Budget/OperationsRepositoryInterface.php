@@ -39,17 +39,17 @@ interface OperationsRepositoryInterface
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
      *
-     * @param  Budget  $budget
+     * @param Budget $budget
      *
      * @return string
      */
     public function budgetedPerDay(Budget $budget): string;
 
     /**
-     * @param  Collection  $budgets
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      * @deprecated
@@ -61,28 +61,28 @@ interface OperationsRepositoryInterface
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $budgets
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $budgets
      *
      * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
 
     /**
      * Return multi-currency spent information.
      *
-     * @param  Collection  $budgets
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      * @deprecated
@@ -91,20 +91,21 @@ interface OperationsRepositoryInterface
 
     /**
      * TODO this method was marked as deprecated but I'm not sure why.
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $budgets
-     * @param  TransactionCurrency|null  $currency
+     *
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param Collection|null          $accounts
+     * @param Collection|null          $budgets
+     * @param TransactionCurrency|null $currency
      *
      * @return array
      *
      */
     public function sumExpenses(
-        Carbon $start,
-        Carbon $end,
-        ?Collection $accounts = null,
-        ?Collection $budgets = null,
+        Carbon               $start,
+        Carbon               $end,
+        ?Collection          $accounts = null,
+        ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null
     ): array;
 }

@@ -70,7 +70,7 @@ class EditController extends Controller
     /**
      * Edit a piggy bank.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */
@@ -113,8 +113,8 @@ class EditController extends Controller
     /**
      * Update a piggy bank.
      *
-     * @param  PiggyBankUpdateRequest  $request
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBankUpdateRequest $request
+     * @param PiggyBank              $piggyBank
      *
      * @return RedirectResponse|Redirector
      */

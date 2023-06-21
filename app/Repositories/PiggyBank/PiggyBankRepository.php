@@ -59,31 +59,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param  int  $piggyBankId
-     *
-     * @return PiggyBank|null
-     */
-    public function find(int $piggyBankId): ?PiggyBank
-    {
-        // phpstan doesn't get the Model.
-        return $this->user->piggyBanks()->find($piggyBankId); // @phpstan-ignore-line
-    }
-
-    /**
-     * Find by name or return NULL.
-     *
-     * @param  string  $name
-     *
-     * @return PiggyBank|null
-     */
-    public function findByName(string $name): ?PiggyBank
-    {
-        return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first(['piggy_banks.*']);
-    }
-
-    /**
-     * @param  int|null  $piggyBankId
-     * @param  string|null  $piggyBankName
+     * @param int|null    $piggyBankId
+     * @param string|null $piggyBankName
      *
      * @return PiggyBank|null
      */
@@ -113,6 +90,29 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @param int $piggyBankId
+     *
+     * @return PiggyBank|null
+     */
+    public function find(int $piggyBankId): ?PiggyBank
+    {
+        // phpstan doesn't get the Model.
+        return $this->user->piggyBanks()->find($piggyBankId); // @phpstan-ignore-line
+    }
+
+    /**
+     * Find by name or return NULL.
+     *
+     * @param string $name
+     *
+     * @return PiggyBank|null
+     */
+    public function findByName(string $name): ?PiggyBank
+    {
+        return $this->user->piggyBanks()->where('piggy_banks.name', $name)->first(['piggy_banks.*']);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getAttachments(PiggyBank $piggyBank): Collection
@@ -136,7 +136,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * Get current amount saved in piggy bank.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return string
      */
@@ -151,7 +151,17 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
+     *
+     * @return PiggyBankRepetition|null
+     */
+    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
+    {
+        return $piggyBank->piggyBankRepetitions()->first();
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
      *
      * @return Collection
      */
@@ -163,9 +173,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * Used for connecting to a piggy bank.
      *
-     * @param  PiggyBank  $piggyBank
-     * @param  PiggyBankRepetition  $repetition
-     * @param  TransactionJournal  $journal
+     * @param PiggyBank           $piggyBank
+     * @param PiggyBankRepetition $repetition
+     * @param TransactionJournal  $journal
      *
      * @return string
      * @throws FireflyException
@@ -265,6 +275,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @param User|Authenticatable|null $user
+     */
+    public function setUser(User | Authenticatable | null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
      * @return int
      */
     public function getMaxOrder(): int
@@ -275,7 +295,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * Return note for piggy bank.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return string
      */
@@ -288,6 +308,26 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         return $note->text;
+    }
+
+    /**
+     * Also add amount in name.
+     *
+     * @return Collection
+     */
+    public function getPiggyBanksWithAmount(): Collection
+    {
+        $currency = app('amount')->getDefaultCurrency();
+
+        $set = $this->getPiggyBanks();
+
+        /** @var PiggyBank $piggy */
+        foreach ($set as $piggy) {
+            $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';
+            $piggy->name   = $piggy->name . ' (' . app('amount')->formatAnything($currency, $currentAmount, false) . ')';
+        }
+
+        return $set;
     }
 
     /**
@@ -307,39 +347,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * Also add amount in name.
-     *
-     * @return Collection
-     */
-    public function getPiggyBanksWithAmount(): Collection
-    {
-        $currency = app('amount')->getDefaultCurrency();
-
-        $set = $this->getPiggyBanks();
-
-        /** @var PiggyBank $piggy */
-        foreach ($set as $piggy) {
-            $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';
-            $piggy->name   = $piggy->name.' ('.app('amount')->formatAnything($currency, $currentAmount, false).')';
-        }
-
-        return $set;
-    }
-
-    /**
-     * @param  PiggyBank  $piggyBank
-     *
-     * @return PiggyBankRepetition|null
-     */
-    public function getRepetition(PiggyBank $piggyBank): ?PiggyBankRepetition
-    {
-        return $piggyBank->piggyBankRepetitions()->first();
-    }
-
-    /**
      * Returns the suggested amount the user should save per month, or "".
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return string
      *
@@ -374,8 +384,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * Get for piggy account what is left to put in piggies.
      *
-     * @param  PiggyBank  $piggyBank
-     * @param  Carbon  $date
+     * @param PiggyBank $piggyBank
+     * @param Carbon    $date
      *
      * @return string
      * @throws JsonException
@@ -411,15 +421,5 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                ->orderBy('piggy_banks.name', 'ASC');
 
         return $search->take($limit)->get();
-    }
-
-    /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
     }
 }

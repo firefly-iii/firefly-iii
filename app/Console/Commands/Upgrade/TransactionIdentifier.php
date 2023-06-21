@@ -49,13 +49,14 @@ class TransactionIdentifier extends Command
     private int                           $count;
 
     /**
-     * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
-     * to easier to match to their counterpart. When a journal is split, it has two or three transactions: -3, -4 and -5 for example.
+     * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they
+     * are easier to easier to match to their counterpart. When a journal is split, it has two or three transactions:
+     * -3, -4 and -5 for example.
      *
      * In the database this is reflected as 6 transactions: -3/+3, -4/+4, -5/+5.
      *
-     * When either of these are the same amount, FF3 can't keep them apart: +3/-3, +3/-3, +3/-3. This happens more often than you would
-     * think. So each set gets a number (1,2,3) to keep them apart.
+     * When either of these are the same amount, FF3 can't keep them apart: +3/-3, +3/-3, +3/-3. This happens more
+     * often than you would think. So each set gets a number (1,2,3) to keep them apart.
      *
      * @return int
      * @throws ContainerExceptionInterface
@@ -96,8 +97,65 @@ class TransactionIdentifier extends Command
     }
 
     /**
-     * @param  Transaction  $transaction
-     * @param  array  $exclude
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+
+     */
+    private function stupidLaravel(): void
+    {
+        $this->cliRepository = app(JournalCLIRepositoryInterface::class);
+        $this->count         = 0;
+    }
+
+    /**
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function isExecuted(): bool
+    {
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        if (null !== $configVar) {
+            return (bool)$configVar->data;
+        }
+
+        return false;
+    }
+
+    /**
+     * Grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing
+     * one which has 0 as an identifier and give it the same identifier.
+     *
+     * @param TransactionJournal $transactionJournal
+     */
+    private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
+    {
+        $identifier   = 0;
+        $exclude      = []; // transactions already processed.
+        $transactions = $transactionJournal->transactions()->where('amount', '>', 0)->get();
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $opposing = $this->findOpposing($transaction, $exclude);
+            if (null !== $opposing) {
+                // give both a new identifier:
+                $transaction->identifier = $identifier;
+                $opposing->identifier    = $identifier;
+                $transaction->save();
+                $opposing->save();
+                $exclude[] = $transaction->id;
+                $exclude[] = $opposing->id;
+                $this->count++;
+            }
+            ++$identifier;
+        }
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param array       $exclude
      *
      * @return Transaction|null
      */
@@ -126,67 +184,10 @@ class TransactionIdentifier extends Command
     }
 
     /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
-
-        return false;
-    }
-
-    /**
      *
      */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
-    /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
-     */
-    private function stupidLaravel(): void
-    {
-        $this->cliRepository = app(JournalCLIRepositoryInterface::class);
-        $this->count         = 0;
-    }
-
-    /**
-     * Grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing one
-     * which has 0 as an identifier and give it the same identifier.
-     *
-     * @param  TransactionJournal  $transactionJournal
-     */
-    private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
-    {
-        $identifier   = 0;
-        $exclude      = []; // transactions already processed.
-        $transactions = $transactionJournal->transactions()->where('amount', '>', 0)->get();
-
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $opposing = $this->findOpposing($transaction, $exclude);
-            if (null !== $opposing) {
-                // give both a new identifier:
-                $transaction->identifier = $identifier;
-                $opposing->identifier    = $identifier;
-                $transaction->save();
-                $opposing->save();
-                $exclude[] = $transaction->id;
-                $exclude[] = $opposing->id;
-                $this->count++;
-            }
-            ++$identifier;
-        }
     }
 }

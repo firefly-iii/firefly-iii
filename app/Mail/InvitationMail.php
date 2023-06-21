@@ -41,9 +41,9 @@ class InvitationMail extends Mailable
     /**
      * OAuthTokenCreatedMail constructor.
      *
-     * @param  string  $invitee
-     * @param  string  $admin
-     * @param  string  $url
+     * @param string $invitee
+     * @param string $admin
+     * @param string $url
      */
     public function __construct(string $invitee, string $admin, string $url)
     {

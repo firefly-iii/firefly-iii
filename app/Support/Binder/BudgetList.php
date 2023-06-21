@@ -34,8 +34,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BudgetList implements BinderInterface
 {
     /**
-     * @param  string  $value
-     * @param  Route  $route
+     * @param string $value
+     * @param Route  $route
      *
      * @return Collection
      * @throws NotFoundHttpException

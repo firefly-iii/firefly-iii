@@ -35,14 +35,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class WebhookAttempt
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property int $webhook_message_id
- * @property int $status_code
- * @property string|null $logs
- * @property string|null $response
+ * @property int                 $id
+ * @property Carbon|null         $created_at
+ * @property Carbon|null         $updated_at
+ * @property string|null         $deleted_at
+ * @property int                 $webhook_message_id
+ * @property int                 $status_code
+ * @property string|null         $logs
+ * @property string|null         $response
  * @property-read WebhookMessage $webhookMessage
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newQuery()
@@ -67,7 +67,7 @@ class WebhookAttempt extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return WebhookAttempt
      * @throws NotFoundHttpException

@@ -68,7 +68,7 @@ class UserController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param  User  $user
+     * @param User $user
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -111,7 +111,7 @@ class UserController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($users, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.users.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.users.index') . $this->buildParams());
 
         // make resource
         /** @var UserTransformer $transformer */
@@ -130,7 +130,7 @@ class UserController extends Controller
      *
      * Show a single user.
      *
-     * @param  User  $user
+     * @param User $user
      *
      * @return JsonResponse
      */
@@ -154,7 +154,7 @@ class UserController extends Controller
      *
      * Store a new user.
      *
-     * @param  UserStoreRequest  $request
+     * @param UserStoreRequest $request
      *
      * @return JsonResponse
      */
@@ -181,8 +181,8 @@ class UserController extends Controller
      *
      * Update a user.
      *
-     * @param  UserUpdateRequest  $request
-     * @param  User  $user
+     * @param UserUpdateRequest $request
+     * @param User              $user
      *
      * @return JsonResponse
      */

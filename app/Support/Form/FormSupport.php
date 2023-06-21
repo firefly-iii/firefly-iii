@@ -36,10 +36,10 @@ use Throwable;
 trait FormSupport
 {
     /**
-     * @param  string  $name
-     * @param  array|null  $list
-     * @param  mixed  $selected
-     * @param  array|null  $options
+     * @param string     $name
+     * @param array|null $list
+     * @param mixed      $selected
+     * @param array|null $options
      *
      * @return string
      */
@@ -62,9 +62,26 @@ trait FormSupport
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed  $label
-     * @param  array|null  $options
+     * @param string     $name
+     * @param array|null $options
+     *
+     * @return string
+     */
+    protected function label(string $name, array $options = null): string
+    {
+        $options = $options ?? [];
+        if (array_key_exists('label', $options)) {
+            return $options['label'];
+        }
+        $name = str_replace('[]', '', $name);
+
+        return (string)trans('form.' . $name);
+    }
+
+    /**
+     * @param string     $name
+     * @param mixed      $label
+     * @param array|null $options
      *
      * @return array
      */
@@ -73,7 +90,7 @@ trait FormSupport
         $options                 = $options ?? [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
-        $options['id']           = 'ffInput_'.$name;
+        $options['id']           = 'ffInput_' . $name;
         $options['autocomplete'] = 'off';
         $options['placeholder']  = ucfirst($label);
 
@@ -81,8 +98,27 @@ trait FormSupport
     }
 
     /**
-     * @param  string  $name
-     * @param  mixed|null  $value
+     * @param string $name
+     *
+     * @return string
+     */
+    protected function getHolderClasses(string $name): string
+    {
+        // Get errors from session:
+        /** @var MessageBag $errors */
+        $errors  = session('errors');
+        $classes = 'form-group';
+
+        if (null !== $errors && $errors->has($name)) {
+            $classes = 'form-group has-error has-feedback';
+        }
+
+        return $classes;
+    }
+
+    /**
+     * @param string     $name
+     * @param mixed|null $value
      *
      * @return mixed
      */
@@ -126,41 +162,5 @@ trait FormSupport
         }
 
         return $date;
-    }
-
-    /**
-     * @param  string  $name
-     *
-     * @return string
-     */
-    protected function getHolderClasses(string $name): string
-    {
-        // Get errors from session:
-        /** @var MessageBag $errors */
-        $errors  = session('errors');
-        $classes = 'form-group';
-
-        if (null !== $errors && $errors->has($name)) {
-            $classes = 'form-group has-error has-feedback';
-        }
-
-        return $classes;
-    }
-
-    /**
-     * @param  string  $name
-     * @param  array|null  $options
-     *
-     * @return string
-     */
-    protected function label(string $name, array $options = null): string
-    {
-        $options = $options ?? [];
-        if (array_key_exists('label', $options)) {
-            return $options['label'];
-        }
-        $name = str_replace('[]', '', $name);
-
-        return (string)trans('form.'.$name);
     }
 }

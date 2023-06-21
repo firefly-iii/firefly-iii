@@ -69,7 +69,7 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/listAttachmentByCategory
      *
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -85,7 +85,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.categories.attachments', [$category->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.categories.attachments', [$category->id]) . $this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -103,9 +103,9 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param  Request  $request
+     * @param Request  $request
      *
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -143,7 +143,7 @@ class ListController extends Controller
         }
 
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.categories.transactions', [$category->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.categories.transactions', [$category->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

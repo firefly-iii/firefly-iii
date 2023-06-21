@@ -47,7 +47,7 @@ trait AugumentData
     /**
      * Searches for the opposing account.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return array
      */
@@ -74,7 +74,7 @@ trait AugumentData
     /**
      * Small helper function for the revenue and expense account charts.
      *
-     * @param  array  $names
+     * @param array $names
      *
      * @return array
      */
@@ -91,7 +91,7 @@ trait AugumentData
     /**
      * Small helper function for the revenue and expense account charts.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return array
      */
@@ -109,7 +109,7 @@ trait AugumentData
     /**
      * Get the account names belonging to a bunch of account ID's.
      *
-     * @param  array  $accountIds
+     * @param array $accountIds
      *
      * @return array
      */
@@ -135,7 +135,7 @@ trait AugumentData
     /**
      * Get the budget names from a set of budget ID's.
      *
-     * @param  array  $budgetIds
+     * @param array $budgetIds
      *
      * @return array
      */
@@ -159,7 +159,7 @@ trait AugumentData
     /**
      * Get the category names from a set of category ID's. Small helper function for some of the charts.
      *
-     * @param  array  $categoryIds
+     * @param array $categoryIds
      *
      * @return array
      */
@@ -185,9 +185,9 @@ trait AugumentData
     /**
      * Gets all budget limits for a budget.
      *
-     * @param  Budget  $budget
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
      */
@@ -233,7 +233,7 @@ trait AugumentData
     /**
      * Group set of transactions by name of opposing account.
      *
-     * @param  array  $array
+     * @param array $array
      *
      * @return array
      */
@@ -261,10 +261,10 @@ trait AugumentData
     /**
      * Spent in a period.
      *
-     * @param  Collection  $assets
-     * @param  Collection  $opposing
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $assets
+     * @param Collection $opposing
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */

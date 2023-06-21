@@ -35,7 +35,7 @@ class NewVersionAvailable extends Event
     /**
      * Create a new event instance. This event is triggered when a new version is available.
      *
-     * @param  string  $message
+     * @param string $message
      */
     public function __construct(string $message)
     {

@@ -47,8 +47,8 @@ class BillUpdateService
     protected User $user;
 
     /**
-     * @param  Bill  $bill
-     * @param  array  $data
+     * @param Bill  $bill
+     * @param array $data
      *
      * @return Bill
      * @throws FireflyException
@@ -141,19 +141,8 @@ class BillUpdateService
     }
 
     /**
-     * @param  Rule  $rule
-     * @param  string  $key
-     *
-     * @return RuleTrigger|null
-     */
-    private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
-    {
-        return $rule->ruleTriggers()->where('trigger_type', $key)->first();
-    }
-
-    /**
-     * @param  Bill  $bill
-     * @param  array  $data
+     * @param Bill  $bill
+     * @param array $data
      *
      * @return Bill
      */
@@ -196,9 +185,32 @@ class BillUpdateService
     }
 
     /**
-     * @param  Bill  $bill
-     * @param  array  $oldData
-     * @param  array  $newData
+     * @param Bill $bill
+     * @param int  $oldOrder
+     * @param int  $newOrder
+     */
+    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
+    {
+        if ($newOrder > $oldOrder) {
+            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+                       ->where('bills.id', '!=', $bill->id)
+                       ->decrement('bills.order');
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+        if ($newOrder < $oldOrder) {
+            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+                       ->where('bills.id', '!=', $bill->id)
+                       ->increment('bills.order');
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+    }
+
+    /**
+     * @param Bill  $bill
+     * @param array $oldData
+     * @param array $newData
      */
     private function updateBillTriggers(Bill $bill, array $oldData, array $newData): void
     {
@@ -232,33 +244,10 @@ class BillUpdateService
     }
 
     /**
-     * @param  Bill  $bill
-     * @param  int  $oldOrder
-     * @param  int  $newOrder
-     */
-    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
-    {
-        if ($newOrder > $oldOrder) {
-            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
-                       ->where('bills.id', '!=', $bill->id)
-                       ->decrement('bills.order');
-            $bill->order = $newOrder;
-            $bill->save();
-        }
-        if ($newOrder < $oldOrder) {
-            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
-                       ->where('bills.id', '!=', $bill->id)
-                       ->increment('bills.order');
-            $bill->order = $newOrder;
-            $bill->save();
-        }
-    }
-
-    /**
-     * @param  Collection  $rules
-     * @param  string  $key
-     * @param  string  $oldValue
-     * @param  string  $newValue
+     * @param Collection $rules
+     * @param string     $key
+     * @param string     $oldValue
+     * @param string     $newValue
      */
     private function updateRules(Collection $rules, string $key, string $oldValue, string $newValue): void
     {
@@ -278,5 +267,16 @@ class BillUpdateService
                 $trigger->save();
             }
         }
+    }
+
+    /**
+     * @param Rule   $rule
+     * @param string $key
+     *
+     * @return RuleTrigger|null
+     */
+    private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
+    {
+        return $rule->ruleTriggers()->where('trigger_type', $key)->first();
     }
 }

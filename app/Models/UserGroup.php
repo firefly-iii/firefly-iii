@@ -34,13 +34,13 @@ use Illuminate\Support\Carbon;
 /**
  * Class UserGroup
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property string $title
+ * @property int                               $id
+ * @property Carbon|null                       $created_at
+ * @property Carbon|null                       $updated_at
+ * @property string|null                       $deleted_at
+ * @property string                            $title
  * @property-read Collection|GroupMembership[] $groupMemberships
- * @property-read int|null $group_memberships_count
+ * @property-read int|null                     $group_memberships_count
  * @method static Builder|UserGroup newModelQuery()
  * @method static Builder|UserGroup newQuery()
  * @method static Builder|UserGroup query()
@@ -49,11 +49,12 @@ use Illuminate\Support\Carbon;
  * @method static Builder|UserGroup whereId($value)
  * @method static Builder|UserGroup whereTitle($value)
  * @method static Builder|UserGroup whereUpdatedAt($value)
- * @property-read Collection<int, Account> $accounts
- * @property-read int|null $accounts_count
- * @property-read Collection<int, Account> $accounts
- * @property-read Collection<int, Account> $accounts
- * @property-read Collection<int, Account> $accounts
+ * @property-read Collection<int, Account>     $accounts
+ * @property-read int|null                     $accounts_count
+ * @property-read Collection<int, Account>     $accounts
+ * @property-read Collection<int, Account>     $accounts
+ * @property-read Collection<int, Account>     $accounts
+ * @property-read Collection<int, \FireflyIII\Models\Account> $accounts
  * @mixin Eloquent
  */
 class UserGroup extends Model

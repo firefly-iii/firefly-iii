@@ -33,8 +33,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CurrencyCode implements BinderInterface
 {
     /**
-     * @param  string  $value
-     * @param  Route  $route
+     * @param string $value
+     * @param Route  $route
      *
      * @return TransactionCurrency
      * @throws NotFoundHttpException

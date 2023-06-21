@@ -67,8 +67,8 @@ class UpdateController extends Controller
      *
      * Update the specified resource in storage.
      *
-     * @param  UpdateRequest  $request
-     * @param  Attachment  $attachment
+     * @param UpdateRequest $request
+     * @param Attachment    $attachment
      *
      * @return JsonResponse
      */

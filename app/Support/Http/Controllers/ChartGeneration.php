@@ -42,9 +42,9 @@ trait ChartGeneration
     /**
      * Shows an overview of the account balances for a set of accounts.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      * @throws FireflyException

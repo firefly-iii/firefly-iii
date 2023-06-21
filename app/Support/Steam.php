@@ -48,58 +48,8 @@ use ValueError;
 class Steam
 {
     /**
-     * Gets balance at the end of current month by default
-     *
-     * @param  Account  $account
-     * @param  Carbon  $date
-     * @param  TransactionCurrency|null  $currency
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
-    {
-        // abuse chart properties:
-        $cache = new CacheProperties();
-        $cache->addProperty($account->id);
-        $cache->addProperty('balance');
-        $cache->addProperty($date);
-        $cache->addProperty($currency ? $currency->id : 0);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        if (null === $currency) {
-            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
-        }
-        // first part: get all balances in own currency:
-        $transactions  = $account->transactions()
-                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                 ->where('transactions.transaction_currency_id', $currency->id)
-                                 ->get(['transactions.amount'])->toArray();
-        $nativeBalance = $this->sumTransactions($transactions, 'amount');
-        // get all balances in foreign currency:
-        $transactions   = $account->transactions()
-                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                  ->where('transactions.foreign_currency_id', $currency->id)
-                                  ->where('transactions.transaction_currency_id', '!=', $currency->id)
-                                  ->get(['transactions.foreign_amount'])->toArray();
-        $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
-        $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
-        $balance        = bcadd($balance, $virtual);
-
-        $cache->store($balance);
-
-        return $balance;
-    }
-
-    /**
-     * @param  Account  $account
-     * @param  Carbon  $date
+     * @param Account $account
+     * @param Carbon  $date
      *
      * @return string
      */
@@ -130,14 +80,33 @@ class Steam
     }
 
     /**
+     * @param array  $transactions
+     * @param string $key
+     *
+     * @return string
+     */
+    public function sumTransactions(array $transactions, string $key): string
+    {
+        $sum = '0';
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $value = (string)($transaction[$key] ?? '0');
+            $value = '' === $value ? '0' : $value;
+            $sum   = bcadd($sum, $value);
+        }
+
+        return $sum;
+    }
+
+    /**
      * Gets the balance for the given account during the whole range, using this format:.
      *
      * [yyyy-mm-dd] => 123,2
      *
-     * @param  Account  $account
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  TransactionCurrency|null  $currency
+     * @param Account                  $account
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param TransactionCurrency|null $currency
      *
      * @return array
      * @throws FireflyException
@@ -220,41 +189,60 @@ class Steam
     }
 
     /**
-     * @param  Account  $account
-     * @param  Carbon  $date
+     * Gets balance at the end of current month by default
      *
-     * @return array
+     * @param Account                  $account
+     * @param Carbon                   $date
+     * @param TransactionCurrency|null $currency
+     *
+     * @return string
+     * @throws FireflyException
      */
-    public function balancePerCurrency(Account $account, Carbon $date): array
+    public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
         // abuse chart properties:
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
-        $cache->addProperty('balance-per-currency');
+        $cache->addProperty('balance');
         $cache->addProperty($date);
+        $cache->addProperty($currency ? $currency->id : 0);
         if ($cache->has()) {
             return $cache->get();
         }
-        $query    = $account->transactions()
-                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                            ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]);
-        $return   = [];
-        /** @var stdClass $entry */
-        foreach ($balances as $entry) {
-            $return[(int)$entry->transaction_currency_id] = (string)$entry->sum_for_currency;
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        if (null === $currency) {
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
         }
-        $cache->store($return);
+        // first part: get all balances in own currency:
+        $transactions  = $account->transactions()
+                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                                 ->where('transactions.transaction_currency_id', $currency->id)
+                                 ->get(['transactions.amount'])->toArray();
+        $nativeBalance = $this->sumTransactions($transactions, 'amount');
+        // get all balances in foreign currency:
+        $transactions   = $account->transactions()
+                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                                  ->where('transactions.foreign_currency_id', $currency->id)
+                                  ->where('transactions.transaction_currency_id', '!=', $currency->id)
+                                  ->get(['transactions.foreign_amount'])->toArray();
+        $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
+        $balance        = bcadd($nativeBalance, $foreignBalance);
+        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $balance        = bcadd($balance, $virtual);
 
-        return $return;
+        $cache->store($balance);
+
+        return $balance;
     }
 
     /**
      * This method always ignores the virtual balance.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $date
+     * @param Collection $accounts
+     * @param Carbon     $date
      *
      * @return array
      * @throws FireflyException
@@ -286,8 +274,8 @@ class Steam
     /**
      * Same as above, but also groups per currency.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $date
+     * @param Collection $accounts
+     * @param Carbon     $date
      *
      * @return array
      */
@@ -316,10 +304,41 @@ class Steam
     }
 
     /**
+     * @param Account $account
+     * @param Carbon  $date
+     *
+     * @return array
+     */
+    public function balancePerCurrency(Account $account, Carbon $date): array
+    {
+        // abuse chart properties:
+        $cache = new CacheProperties();
+        $cache->addProperty($account->id);
+        $cache->addProperty('balance-per-currency');
+        $cache->addProperty($date);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $query    = $account->transactions()
+                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                            ->groupBy('transactions.transaction_currency_id');
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]);
+        $return   = [];
+        /** @var stdClass $entry */
+        foreach ($balances as $entry) {
+            $return[(int)$entry->transaction_currency_id] = (string)$entry->sum_for_currency;
+        }
+        $cache->store($return);
+
+        return $return;
+    }
+
+    /**
      * https://stackoverflow.com/questions/1642614/how-to-ceil-floor-and-round-bcmath-numbers
      *
-     * @param  null|string  $number
-     * @param  int  $precision
+     * @param null|string $number
+     * @param int         $precision
      * @return string
      */
     public function bcround(?string $number, int $precision = 0): string
@@ -338,17 +357,17 @@ class Steam
         // Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ($number[0] !== '-') {
-                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
+                return bcadd($number, '0.' . str_repeat('0', $precision) . '5', $precision);
             }
 
-            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
+            return bcsub($number, '0.' . str_repeat('0', $precision) . '5', $precision);
         }
 
         return $number;
     }
 
     /**
-     * @param  string  $string
+     * @param string $string
      *
      * @return string
      */
@@ -410,37 +429,7 @@ class Steam
     }
 
     /**
-     * https://framework.zend.com/downloads/archives
-     *
-     * Convert a scientific notation to float
-     * Additionally fixed a problem with PHP <= 5.2.x with big integers
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function floatalize(string $value): string
-    {
-        $value = strtoupper($value);
-        if (!str_contains($value, 'E')) {
-            return $value;
-        }
-
-        $number = substr($value, 0, strpos($value, 'E'));
-        if (str_contains($number, '.')) {
-            $post   = strlen(substr($number, strpos($number, '.') + 1));
-            $mantis = substr($value, strpos($value, 'E') + 1);
-            if ($mantis < 0) {
-                $post += abs((int)$mantis);
-            }
-            // TODO careless float could break financial math.
-            return number_format((float)$value, $post, '.', '');
-        }
-        // TODO careless float could break financial math.
-        return number_format((float)$value, 0, '.', '');
-    }
-
-    /**
-     * @param  string  $ipAddress
+     * @param string $ipAddress
      * @return string
      * @throws FireflyException
      */
@@ -455,24 +444,7 @@ class Steam
     }
 
     /**
-     * Get user's language.
-     *
-     * @return string
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function getLanguage(): string // get preference
-    {
-        $preference = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
-        if (!is_string($preference)) {
-            throw new FireflyException(sprintf('Preference "language" must be a string, but is unexpectedly a "%s".', gettype($preference)));
-        }
-        return $preference;
-    }
-
-    /**
-     * @param  array  $accounts
+     * @param array $accounts
      *
      * @return array
      */
@@ -518,7 +490,24 @@ class Steam
     }
 
     /**
-     * @param  string  $locale
+     * Get user's language.
+     *
+     * @return string
+     * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getLanguage(): string // get preference
+    {
+        $preference = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+        if (!is_string($preference)) {
+            throw new FireflyException(sprintf('Preference "language" must be a string, but is unexpectedly a "%s".', gettype($preference)));
+        }
+        return $preference;
+    }
+
+    /**
+     * @param string $locale
      *
      * @return array
      */
@@ -551,8 +540,8 @@ class Steam
     /**
      * Make sure URL is safe.
      *
-     * @param  string  $unknownUrl
-     * @param  string  $safeUrl
+     * @param string $unknownUrl
+     * @param string $safeUrl
      *
      * @return string
      */
@@ -577,7 +566,7 @@ class Steam
     }
 
     /**
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return string
      */
@@ -596,7 +585,37 @@ class Steam
     }
 
     /**
-     * @param  string|null  $amount
+     * https://framework.zend.com/downloads/archives
+     *
+     * Convert a scientific notation to float
+     * Additionally fixed a problem with PHP <= 5.2.x with big integers
+     *
+     * @param string $value
+     * @return string
+     */
+    public function floatalize(string $value): string
+    {
+        $value = strtoupper($value);
+        if (!str_contains($value, 'E')) {
+            return $value;
+        }
+
+        $number = substr($value, 0, strpos($value, 'E'));
+        if (str_contains($number, '.')) {
+            $post   = strlen(substr($number, strpos($number, '.') + 1));
+            $mantis = substr($value, strpos($value, 'E') + 1);
+            if ($mantis < 0) {
+                $post += abs((int)$mantis);
+            }
+            // TODO careless float could break financial math.
+            return number_format((float)$value, $post, '.', '');
+        }
+        // TODO careless float could break financial math.
+        return number_format((float)$value, 0, '.', '');
+    }
+
+    /**
+     * @param string|null $amount
      *
      * @return string|null
      */
@@ -610,7 +629,7 @@ class Steam
     }
 
     /**
-     * @param  string  $string
+     * @param string $string
      *
      * @return int
      */
@@ -643,7 +662,7 @@ class Steam
     }
 
     /**
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return string
      */
@@ -663,24 +682,5 @@ class Steam
         }
 
         return $amount;
-    }
-
-    /**
-     * @param  array  $transactions
-     * @param  string  $key
-     *
-     * @return string
-     */
-    public function sumTransactions(array $transactions, string $key): string
-    {
-        $sum = '0';
-        /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $value = (string)($transaction[$key] ?? '0');
-            $value = '' === $value ? '0' : $value;
-            $sum   = bcadd($sum, $value);
-        }
-
-        return $sum;
     }
 }

@@ -127,8 +127,64 @@ class Cron extends Command
     }
 
     /**
-     * @param  bool  $force
-     * @param  Carbon|null  $date
+     * @param bool        $force
+     * @param Carbon|null $date
+     */
+    private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
+    {
+        $exchangeRates = new ExchangeRatesCronjob();
+        $exchangeRates->setForce($force);
+        // set date in cron job:
+        if (null !== $date) {
+            $exchangeRates->setDate($date);
+        }
+
+        $exchangeRates->fire();
+
+        if ($exchangeRates->jobErrored) {
+            $this->friendlyError(sprintf('Error in "exchange rates" cron: %s', $exchangeRates->message));
+        }
+        if ($exchangeRates->jobFired) {
+            $this->friendlyInfo(sprintf('"Exchange rates" cron fired: %s', $exchangeRates->message));
+        }
+        if ($exchangeRates->jobSucceeded) {
+            $this->friendlyPositive(sprintf('"Exchange rates" cron ran with success: %s', $exchangeRates->message));
+        }
+    }
+
+    /**
+     * @param bool        $force
+     * @param Carbon|null $date
+     *
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     */
+    private function recurringCronJob(bool $force, ?Carbon $date): void
+    {
+        $recurring = new RecurringCronjob();
+        $recurring->setForce($force);
+
+        // set date in cron job:
+        if (null !== $date) {
+            $recurring->setDate($date);
+        }
+
+        $recurring->fire();
+        if ($recurring->jobErrored) {
+            $this->friendlyError(sprintf('Error in "create recurring transactions" cron: %s', $recurring->message));
+        }
+        if ($recurring->jobFired) {
+            $this->friendlyInfo(sprintf('"Create recurring transactions" cron fired: %s', $recurring->message));
+        }
+        if ($recurring->jobSucceeded) {
+            $this->friendlyPositive(sprintf('"Create recurring transactions" cron ran with success: %s', $recurring->message));
+        }
+    }
+
+    /**
+     * @param bool        $force
+     * @param Carbon|null $date
      *
      */
     private function autoBudgetCronJob(bool $force, ?Carbon $date): void
@@ -154,8 +210,8 @@ class Cron extends Command
     }
 
     /**
-     * @param  bool  $force
-     * @param  Carbon|null  $date
+     * @param bool        $force
+     * @param Carbon|null $date
      *
      * @throws FireflyException
      * @throws ContainerExceptionInterface
@@ -180,62 +236,6 @@ class Cron extends Command
         }
         if ($autoBudget->jobSucceeded) {
             $this->friendlyPositive(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
-        }
-    }
-
-    /**
-     * @param  bool  $force
-     * @param  Carbon|null  $date
-     */
-    private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
-    {
-        $exchangeRates = new ExchangeRatesCronjob();
-        $exchangeRates->setForce($force);
-        // set date in cron job:
-        if (null !== $date) {
-            $exchangeRates->setDate($date);
-        }
-
-        $exchangeRates->fire();
-
-        if ($exchangeRates->jobErrored) {
-            $this->friendlyError(sprintf('Error in "exchange rates" cron: %s', $exchangeRates->message));
-        }
-        if ($exchangeRates->jobFired) {
-            $this->friendlyInfo(sprintf('"Exchange rates" cron fired: %s', $exchangeRates->message));
-        }
-        if ($exchangeRates->jobSucceeded) {
-            $this->friendlyPositive(sprintf('"Exchange rates" cron ran with success: %s', $exchangeRates->message));
-        }
-    }
-
-    /**
-     * @param  bool  $force
-     * @param  Carbon|null  $date
-     *
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     */
-    private function recurringCronJob(bool $force, ?Carbon $date): void
-    {
-        $recurring = new RecurringCronjob();
-        $recurring->setForce($force);
-
-        // set date in cron job:
-        if (null !== $date) {
-            $recurring->setDate($date);
-        }
-
-        $recurring->fire();
-        if ($recurring->jobErrored) {
-            $this->friendlyError(sprintf('Error in "create recurring transactions" cron: %s', $recurring->message));
-        }
-        if ($recurring->jobFired) {
-            $this->friendlyInfo(sprintf('"Create recurring transactions" cron fired: %s', $recurring->message));
-        }
-        if ($recurring->jobSucceeded) {
-            $this->friendlyPositive(sprintf('"Create recurring transactions" cron ran with success: %s', $recurring->message));
         }
     }
 }

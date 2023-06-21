@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Notification;
 class BillEventHandler
 {
     /**
-     * @param  WarnUserAboutBill  $event
+     * @param WarnUserAboutBill $event
      * @return void
      */
     public function warnAboutBill(WarnUserAboutBill $event): void

@@ -63,7 +63,7 @@ class UserEventHandler
     /**
      * This method will bestow upon a user the "owner" role if he is the first user in the system.
      *
-     * @param  RegisteredUser  $event
+     * @param RegisteredUser $event
      */
     public function attachUserRole(RegisteredUser $event): void
     {
@@ -80,7 +80,7 @@ class UserEventHandler
     /**
      * Fires to see if a user is admin.
      *
-     * @param  Login  $event
+     * @param Login $event
      */
     public function checkSingleUserIsAdmin(Login $event): void
     {
@@ -108,7 +108,7 @@ class UserEventHandler
     }
 
     /**
-     * @param  RegisteredUser  $event
+     * @param RegisteredUser $event
      */
     public function createExchangeRates(RegisteredUser $event): void
     {
@@ -117,7 +117,7 @@ class UserEventHandler
     }
 
     /**
-     * @param  RegisteredUser  $event
+     * @param RegisteredUser $event
      *
      * @throws FireflyException
      */
@@ -162,7 +162,7 @@ class UserEventHandler
     /**
      * Set the demo user back to English.
      *
-     * @param  Login  $event
+     * @param Login $event
      *
      * @throws FireflyException
      */
@@ -182,7 +182,7 @@ class UserEventHandler
     }
 
     /**
-     * @param  DetectedNewIPAddress  $event
+     * @param DetectedNewIPAddress $event
      *
      * @throws FireflyException
      */
@@ -224,7 +224,7 @@ class UserEventHandler
     }
 
     /**
-     * @param  RegisteredUser  $event
+     * @param RegisteredUser $event
      */
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
@@ -259,7 +259,7 @@ class UserEventHandler
      * Send email to confirm email change. Will not be made into a notification, because
      * this requires some custom fields from the user and not just the "user" object.
      *
-     * @param  UserChangedEmail  $event
+     * @param UserChangedEmail $event
      *
      * @throws FireflyException
      */
@@ -283,7 +283,7 @@ class UserEventHandler
      * Send email to be able to undo email change. Will not be made into a notification, because
      * this requires some custom fields from the user and not just the "user" object.
      *
-     * @param  UserChangedEmail  $event
+     * @param UserChangedEmail $event
      *
      * @throws FireflyException
      */
@@ -305,7 +305,8 @@ class UserEventHandler
 
     /**
      * Send a new password to the user.
-     * @param  RequestedNewPassword  $event
+     *
+     * @param RequestedNewPassword $event
      */
     public function sendNewPassword(RequestedNewPassword $event): void
     {
@@ -327,7 +328,7 @@ class UserEventHandler
     }
 
     /**
-     * @param  InvitationCreated  $event
+     * @param InvitationCreated $event
      * @return void
      * @throws FireflyException
      */
@@ -348,7 +349,7 @@ class UserEventHandler
      * This method will send the user a registration mail, welcoming him or her to Firefly III.
      * This message is only sent when the configuration of Firefly III says so.
      *
-     * @param  RegisteredUser  $event
+     * @param RegisteredUser $event
      *
      */
     public function sendRegistrationMail(RegisteredUser $event): void
@@ -374,7 +375,7 @@ class UserEventHandler
     }
 
     /**
-     * @param  ActuallyLoggedIn  $event
+     * @param ActuallyLoggedIn $event
      * @throws FireflyException
      */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void

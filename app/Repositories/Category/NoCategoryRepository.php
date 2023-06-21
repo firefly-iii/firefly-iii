@@ -43,9 +43,9 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
      *
      * @return array
      */
@@ -91,13 +91,23 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     }
 
     /**
+     * @param User|Authenticatable|null $user
+     */
+    public function setUser(User | Authenticatable | null $user): void
+    {
+        if (null !== $user) {
+            $this->user = $user;
+        }
+    }
+
+    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
      *
      * @return array
      */
@@ -143,21 +153,11 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     }
 
     /**
-     * @param  User|Authenticatable|null  $user
-     */
-    public function setUser(User|Authenticatable|null $user): void
-    {
-        if (null !== $user) {
-            $this->user = $user;
-        }
-    }
-
-    /**
      * Sum of withdrawal journals in period without a category, grouped per currency. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
      *
      * @return array
      */
@@ -192,9 +192,9 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
     /**
      * Sum of income journals in period without a category, grouped per currency. Amounts are always positive.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
      *
      * @return array
      */

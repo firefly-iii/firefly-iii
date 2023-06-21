@@ -72,7 +72,18 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param  TransactionJournal  $journal
+     * @return Collection
+     */
+    private function getJournals(): Collection
+    {
+        /** @var Collection */
+        return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->whereNull('transaction_journals.deleted_at')
+                                 ->where('transaction_types.type', TransactionType::OPENING_BALANCE)->get(['transaction_journals.*']);
+    }
+
+    /**
+     * @param TransactionJournal $journal
      *
      * @return int
      */
@@ -93,7 +104,7 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param  TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return Account|null
      */
@@ -113,33 +124,8 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param  Account  $account
-     *
-     * @return TransactionCurrency
-     */
-    private function getCurrency(Account $account): TransactionCurrency
-    {
-        /** @var AccountRepositoryInterface $repos */
-        $repos = app(AccountRepositoryInterface::class);
-        $repos->setUser($account->user);
-
-        return $repos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getJournals(): Collection
-    {
-        /** @var Collection */
-        return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->whereNull('transaction_journals.deleted_at')
-                                 ->where('transaction_types.type', TransactionType::OPENING_BALANCE)->get(['transaction_journals.*']);
-    }
-
-    /**
-     * @param  Account  $account
-     * @param  TransactionJournal  $journal
+     * @param Account            $account
+     * @param TransactionJournal $journal
      * @return int
      */
     private function setCorrectCurrency(Account $account, TransactionJournal $journal): int
@@ -162,5 +148,19 @@ class CorrectOpeningBalanceCurrencies extends Command
         }
 
         return $count;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionCurrency
+     */
+    private function getCurrency(Account $account): TransactionCurrency
+    {
+        /** @var AccountRepositoryInterface $repos */
+        $repos = app(AccountRepositoryInterface::class);
+        $repos->setUser($account->user);
+
+        return $repos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
     }
 }

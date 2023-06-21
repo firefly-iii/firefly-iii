@@ -34,7 +34,7 @@ interface FiscalHelperInterface
      * This method produces a clone of the Carbon date object passed, checks preferences
      * and calculates the last day of the fiscal year.
      *
-     * @param  Carbon  $date
+     * @param Carbon $date
      *
      * @return Carbon date object
      */
@@ -44,7 +44,7 @@ interface FiscalHelperInterface
      * This method produces a clone of the Carbon date object passed, checks preferences
      * and calculates the first day of the fiscal year.
      *
-     * @param  Carbon  $date
+     * @param Carbon $date
      *
      * @return Carbon date object
      */

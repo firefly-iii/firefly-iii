@@ -35,20 +35,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionJournalLink
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property int $link_type_id
- * @property int $source_id
- * @property int $destination_id
- * @property string|null $comment
+ * @property int                     $id
+ * @property Carbon|null             $created_at
+ * @property Carbon|null             $updated_at
+ * @property int                     $link_type_id
+ * @property int                     $source_id
+ * @property int                     $destination_id
+ * @property string|null             $comment
  * @property-read TransactionJournal $destination
- * @property-read LinkType $linkType
- * @property-read Collection|Note[] $notes
- * @property-read int|null $notes_count
+ * @property-read LinkType           $linkType
+ * @property-read Collection|Note[]  $notes
+ * @property-read int|null           $notes_count
  * @property-read TransactionJournal $source
- * @property-read string $inward
- * @property-read string $outward
+ * @property-read string             $inward
+ * @property-read string             $outward
  * @method static Builder|TransactionJournalLink newModelQuery()
  * @method static Builder|TransactionJournalLink newQuery()
  * @method static Builder|TransactionJournalLink query()
@@ -79,7 +79,7 @@ class TransactionJournalLink extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return TransactionJournalLink
      *

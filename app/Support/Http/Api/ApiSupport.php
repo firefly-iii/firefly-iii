@@ -36,7 +36,7 @@ trait ApiSupport
     /**
      * Small helper function for the revenue and expense account charts.
      *
-     * @param  array  $names
+     * @param array $names
      *
      * @return array
      */
@@ -53,7 +53,7 @@ trait ApiSupport
     /**
      * Small helper function for the revenue and expense account charts.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
      * @return array
      */

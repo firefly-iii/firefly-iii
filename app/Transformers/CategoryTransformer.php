@@ -50,7 +50,7 @@ class CategoryTransformer extends AbstractTransformer
     /**
      * Convert category.
      *
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return array
      */
@@ -80,14 +80,14 @@ class CategoryTransformer extends AbstractTransformer
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/categories/'.$category->id,
+                    'uri' => '/categories/' . $category->id,
                 ],
             ],
         ];
     }
 
     /**
-     * @param  array  $array
+     * @param array $array
      *
      * @return array
      */

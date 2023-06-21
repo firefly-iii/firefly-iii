@@ -101,15 +101,24 @@ class MigrateRecurrenceMeta extends Command
     }
 
     /**
-     *
+     * @return int
+     * @throws JsonException
      */
-    private function markAsExecuted(): void
+    private function migrateMetaData(): int
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        $count = 0;
+        // get all recurrence meta data:
+        $collection = RecurrenceMeta::with('recurrence')->get();
+        /** @var RecurrenceMeta $meta */
+        foreach ($collection as $meta) {
+            $count += $this->migrateEntry($meta);
+        }
+
+        return $count;
     }
 
     /**
-     * @param  RecurrenceMeta  $meta
+     * @param RecurrenceMeta $meta
      *
      * @return int
      * @throws JsonException
@@ -145,19 +154,10 @@ class MigrateRecurrenceMeta extends Command
     }
 
     /**
-     * @return int
-     * @throws JsonException
+     *
      */
-    private function migrateMetaData(): int
+    private function markAsExecuted(): void
     {
-        $count = 0;
-        // get all recurrence meta data:
-        $collection = RecurrenceMeta::with('recurrence')->get();
-        /** @var RecurrenceMeta $meta */
-        foreach ($collection as $meta) {
-            $count += $this->migrateEntry($meta);
-        }
-
-        return $count;
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

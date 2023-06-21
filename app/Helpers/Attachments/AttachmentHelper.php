@@ -70,7 +70,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Returns the content of an attachment.
      *
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return string
      */
@@ -90,7 +90,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Returns the file path relative to upload disk for an attachment,
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return string
      */
@@ -132,8 +132,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Uploads a file as a string.
      *
-     * @param  Attachment  $attachment
-     * @param  string  $content
+     * @param Attachment $attachment
+     * @param string     $content
      *
      * @return bool
      */
@@ -181,8 +181,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Save attachments that get uploaded with models, through the app.
      *
-     * @param  object  $model
-     * @param  array|null  $files
+     * @param object     $model
+     * @param array|null $files
      *
      * @return bool
      * @throws FireflyException
@@ -212,43 +212,10 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     * Check if a model already has this file attached.
-     *
-     * @param  UploadedFile  $file
-     * @param  Model  $model
-     *
-     * @return bool
-     */
-    protected function hasFile(UploadedFile $file, Model $model): bool
-    {
-        $md5   = md5_file($file->getRealPath());
-        $name  = $file->getClientOriginalName();
-        $class = get_class($model);
-        $count = 0;
-        // ignore lines about polymorphic calls.
-        if ($model instanceof PiggyBank) {
-            $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
-        }
-        if (!($model instanceof PiggyBank)) {
-            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(
-            ); // @phpstan-ignore-line
-        }
-        $result = false;
-        if ($count > 0) {
-            $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
-            $this->errors->add('attachments', $msg);
-            Log::error($msg);
-            $result = true;
-        }
-
-        return $result;
-    }
-
-    /**
      * Process the upload of a file.
      *
-     * @param  UploadedFile  $file
-     * @param  Model  $model
+     * @param UploadedFile $file
+     * @param Model        $model
      *
      * @return Attachment|null
      * @throws FireflyException
@@ -302,9 +269,42 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
+     * Verify if the file was uploaded correctly.
+     *
+     * @param UploadedFile $file
+     * @param Model        $model
+     *
+     * @return bool
+     */
+    protected function validateUpload(UploadedFile $file, Model $model): bool
+    {
+        Log::debug('Now in validateUpload()');
+        $result = true;
+        if (!$this->validMime($file)) {
+            $result = false;
+        }
+        if (0 === $file->getSize()) {
+            Log::error('Cannot upload empty file.');
+            $result = false;
+        }
+
+
+        // can't seem to reach this point.
+        if (true === $result && !$this->validSize($file)) {
+            $result = false;
+        }
+
+        if (true === $result && $this->hasFile($file, $model)) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
      * Verify if the mime of a file is valid.
      *
-     * @param  UploadedFile  $file
+     * @param UploadedFile $file
      *
      * @return bool
      */
@@ -332,7 +332,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Verify if the size of a file is valid.
      *
      *
-     * @param  UploadedFile  $file
+     * @param UploadedFile $file
      *
      * @return bool
      */
@@ -353,33 +353,32 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     * Verify if the file was uploaded correctly.
+     * Check if a model already has this file attached.
      *
-     * @param  UploadedFile  $file
-     * @param  Model  $model
+     * @param UploadedFile $file
+     * @param Model        $model
      *
      * @return bool
      */
-    protected function validateUpload(UploadedFile $file, Model $model): bool
+    protected function hasFile(UploadedFile $file, Model $model): bool
     {
-        Log::debug('Now in validateUpload()');
-        $result = true;
-        if (!$this->validMime($file)) {
-            $result = false;
+        $md5   = md5_file($file->getRealPath());
+        $name  = $file->getClientOriginalName();
+        $class = get_class($model);
+        $count = 0;
+        // ignore lines about polymorphic calls.
+        if ($model instanceof PiggyBank) {
+            $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
-        if (0 === $file->getSize()) {
-            Log::error('Cannot upload empty file.');
-            $result = false;
+        if (!($model instanceof PiggyBank)) {
+            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(); // @phpstan-ignore-line
         }
-
-
-        // can't seem to reach this point.
-        if (true === $result && !$this->validSize($file)) {
-            $result = false;
-        }
-
-        if (true === $result && $this->hasFile($file, $model)) {
-            $result = false;
+        $result = false;
+        if ($count > 0) {
+            $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
+            $this->errors->add('attachments', $msg);
+            Log::error($msg);
+            $result = true;
         }
 
         return $result;

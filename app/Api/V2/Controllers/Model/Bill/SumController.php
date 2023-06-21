@@ -58,7 +58,7 @@ class SumController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/transactions-sum/getBillsPaidTrSum
      *
-     * @param  DateRequest  $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      */
@@ -76,7 +76,7 @@ class SumController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/transactions-sum/getBillsUnpaidTrSum
      *
-     * @param  DateRequest  $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      */

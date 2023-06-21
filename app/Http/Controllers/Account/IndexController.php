@@ -71,8 +71,8 @@ class IndexController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  string  $objectType
+     * @param Request $request
+     * @param string  $objectType
      *
      * @return Factory|View
      * @throws FireflyException
@@ -127,8 +127,8 @@ class IndexController extends Controller
     /**
      * Show list of accounts.
      *
-     * @param  Request  $request
-     * @param  string  $objectType
+     * @param Request $request
+     * @param string  $objectType
      *
      * @return Factory|View
      * @throws FireflyException

@@ -40,8 +40,8 @@ use Illuminate\Support\Collection;
 interface RecurringRepositoryInterface
 {
     /**
-     * @param  Recurrence  $recurrence
-     * @param  Carbon  $date
+     * @param Recurrence $recurrence
+     * @param Carbon     $date
      * @return bool
      */
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool;
@@ -49,7 +49,7 @@ interface RecurringRepositoryInterface
     /**
      * Destroy a recurring transaction.
      *
-     * @param  Recurrence  $recurrence
+     * @param Recurrence $recurrence
      */
     public function destroy(Recurrence $recurrence): void;
 
@@ -75,7 +75,7 @@ interface RecurringRepositoryInterface
     /**
      * Get the category from a recurring transaction transaction.
      *
-     * @param  RecurrenceTransaction  $recTransaction
+     * @param RecurrenceTransaction $recTransaction
      *
      * @return null|int
      */
@@ -84,7 +84,7 @@ interface RecurringRepositoryInterface
     /**
      * Get the budget ID from a recurring transaction transaction.
      *
-     * @param  RecurrenceTransaction  $recTransaction
+     * @param RecurrenceTransaction $recTransaction
      *
      * @return null|int
      */
@@ -93,7 +93,7 @@ interface RecurringRepositoryInterface
     /**
      * Get the category from a recurring transaction transaction.
      *
-     * @param  RecurrenceTransaction  $recTransaction
+     * @param RecurrenceTransaction $recTransaction
      *
      * @return null|int
      */
@@ -102,7 +102,7 @@ interface RecurringRepositoryInterface
     /**
      * Get the category from a recurring transaction transaction.
      *
-     * @param  RecurrenceTransaction  $recTransaction
+     * @param RecurrenceTransaction $recTransaction
      *
      * @return null|string
      */
@@ -111,9 +111,9 @@ interface RecurringRepositoryInterface
     /**
      * Returns the count of journals created for this recurrence, possibly limited by time.
      *
-     * @param  Recurrence  $recurrence
-     * @param  Carbon|null  $start
-     * @param  Carbon|null  $end
+     * @param Recurrence  $recurrence
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return int
      */
@@ -122,7 +122,7 @@ interface RecurringRepositoryInterface
     /**
      * Get journal ID's for journals created by this recurring transaction.
      *
-     * @param  Recurrence  $recurrence
+     * @param Recurrence $recurrence
      *
      * @return array
      */
@@ -131,7 +131,7 @@ interface RecurringRepositoryInterface
     /**
      * Get the notes.
      *
-     * @param  Recurrence  $recurrence
+     * @param Recurrence $recurrence
      *
      * @return string
      */
@@ -140,16 +140,16 @@ interface RecurringRepositoryInterface
     /**
      * Generate events in the date range.
      *
-     * @param  RecurrenceRepetition  $repetition
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $start
+     * @param Carbon               $end
      *
      * @return array
      */
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array;
 
     /**
-     * @param  RecurrenceTransaction  $transaction
+     * @param RecurrenceTransaction $transaction
      *
      * @return int|null
      */
@@ -158,23 +158,23 @@ interface RecurringRepositoryInterface
     /**
      * Get the tags from the recurring transaction.
      *
-     * @param  RecurrenceTransaction  $transaction
+     * @param RecurrenceTransaction $transaction
      *
      * @return array
      */
     public function getTags(RecurrenceTransaction $transaction): array;
 
     /**
-     * @param  Recurrence  $recurrence
-     * @param  int  $page
-     * @param  int  $pageSize
+     * @param Recurrence $recurrence
+     * @param int        $page
+     * @param int        $pageSize
      *
      * @return LengthAwarePaginator
      */
     public function getTransactionPaginator(Recurrence $recurrence, int $page, int $pageSize): LengthAwarePaginator;
 
     /**
-     * @param  Recurrence  $recurrence
+     * @param Recurrence $recurrence
      *
      * @return Collection
      */
@@ -184,9 +184,9 @@ interface RecurringRepositoryInterface
      * Calculate the next X iterations starting on the date given in $date.
      * Returns an array of Carbon objects.
      *
-     * @param  RecurrenceRepetition  $repetition
-     * @param  Carbon  $date
-     * @param  int  $count
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
+     * @param int                  $count
      *
      * @return array
      * @throws FireflyException
@@ -199,10 +199,10 @@ interface RecurringRepositoryInterface
      *
      * Only returns them of they are after $afterDate
      *
-     * @param  RecurrenceRepetition  $repetition
-     * @param  Carbon  $date
-     * @param  Carbon  $afterDate
-     * @param  int  $count
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
+     * @param Carbon               $afterDate
+     * @param int                  $count
      *
      * @return array
      * @throws FireflyException
@@ -212,29 +212,29 @@ interface RecurringRepositoryInterface
     /**
      * Parse the repetition in a string that is user readable.
      *
-     * @param  RecurrenceRepetition  $repetition
+     * @param RecurrenceRepetition $repetition
      *
      * @return string
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string;
 
     /**
-     * @param  string  $query
-     * @param  int  $limit
+     * @param string $query
+     * @param int    $limit
      *
      * @return Collection
      */
     public function searchRecurrence(string $query, int $limit): Collection;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
     /**
      * Store a new recurring transaction.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return Recurrence
      * @throws FireflyException
@@ -244,8 +244,8 @@ interface RecurringRepositoryInterface
     /**
      * Calculate how many transactions are to be expected from this recurrence.
      *
-     * @param  Recurrence  $recurrence
-     * @param  RecurrenceRepetition  $repetition
+     * @param Recurrence           $recurrence
+     * @param RecurrenceRepetition $repetition
      *
      * @return int
      */
@@ -254,8 +254,8 @@ interface RecurringRepositoryInterface
     /**
      * Update a recurring transaction.
      *
-     * @param  Recurrence  $recurrence
-     * @param  array  $data
+     * @param Recurrence $recurrence
+     * @param array      $data
      *
      * @return Recurrence
      */

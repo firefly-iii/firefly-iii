@@ -42,17 +42,17 @@ use Illuminate\Support\Carbon;
  * @method static Builder|AuditLogEntry query()
  * @method static \Illuminate\Database\Query\Builder|AuditLogEntry withTrashed()
  * @method static \Illuminate\Database\Query\Builder|AuditLogEntry withoutTrashed()
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $auditable_id
- * @property string $auditable_type
- * @property int $changer_id
- * @property string $changer_type
- * @property string $action
- * @property array|null $before
- * @property array|null $after
+ * @property int                 $id
+ * @property Carbon|null         $created_at
+ * @property Carbon|null         $updated_at
+ * @property Carbon|null         $deleted_at
+ * @property int                 $auditable_id
+ * @property string              $auditable_type
+ * @property int                 $changer_id
+ * @property string              $changer_type
+ * @property string              $action
+ * @property array|null          $before
+ * @property array|null          $after
  * @method static Builder|AuditLogEntry whereAction($value)
  * @method static Builder|AuditLogEntry whereAfter($value)
  * @method static Builder|AuditLogEntry whereAuditableId($value)
@@ -70,13 +70,14 @@ class AuditLogEntry extends Model
 {
     use SoftDeletes;
 
-    protected $casts = [
-        'before'     => 'array',
-        'after'      => 'array',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
-    ];
+    protected $casts
+        = [
+            'before'     => 'array',
+            'after'      => 'array',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
 
     /**
      */

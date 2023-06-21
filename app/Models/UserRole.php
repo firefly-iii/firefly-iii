@@ -34,13 +34,13 @@ use Illuminate\Support\Carbon;
 /**
  * Class UserRole
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property string $title
+ * @property int                               $id
+ * @property Carbon|null                       $created_at
+ * @property Carbon|null                       $updated_at
+ * @property string|null                       $deleted_at
+ * @property string                            $title
  * @property-read Collection|GroupMembership[] $groupMemberships
- * @property-read int|null $group_memberships_count
+ * @property-read int|null                     $group_memberships_count
  * @method static Builder|UserRole newModelQuery()
  * @method static Builder|UserRole newQuery()
  * @method static Builder|UserRole query()

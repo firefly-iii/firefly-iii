@@ -57,7 +57,7 @@ trait VerifiesAccessToken
     /**
      * Abstract method to make sure trait knows about method "option".
      *
-     * @param  string|null  $key
+     * @param string|null $key
      *
      * @return mixed
      */

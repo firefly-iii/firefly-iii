@@ -41,9 +41,9 @@ class WarnUserAboutBill extends Event
     public string $field;
 
     /**
-     * @param  Bill  $bill
-     * @param  string  $field
-     * @param  int  $diff
+     * @param Bill   $bill
+     * @param string $field
+     * @param int    $diff
      */
     public function __construct(Bill $bill, string $field, int $diff)
     {

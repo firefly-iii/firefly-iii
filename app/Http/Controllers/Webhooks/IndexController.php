@@ -55,7 +55,7 @@ class IndexController extends Controller
     /**
      * Show debug info.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      */

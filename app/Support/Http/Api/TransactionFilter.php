@@ -35,7 +35,7 @@ trait TransactionFilter
     /**
      * All the types you can request.
      *
-     * @param  string  $type
+     * @param string $type
      *
      * @return array
      */

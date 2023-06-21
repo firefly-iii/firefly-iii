@@ -58,7 +58,7 @@ class BudgetTransformer extends AbstractTransformer
     /**
      * Transform a budget.
      *
-     * @param  Budget  $budget
+     * @param Budget $budget
      *
      * @return array
      */
@@ -117,7 +117,7 @@ class BudgetTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  array  $array
+     * @param array $array
      *
      * @return array
      */

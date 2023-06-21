@@ -68,10 +68,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View
      */
@@ -167,10 +167,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View
      */
@@ -271,10 +271,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException
@@ -324,10 +324,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException
@@ -377,10 +377,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return Factory|View
      */
@@ -487,9 +487,9 @@ class CategoryController extends Controller
     /**
      * Show overview of expenses in category.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return mixed|string
      * @throws FireflyException
@@ -567,10 +567,10 @@ class CategoryController extends Controller
     /**
      * Show overview of income in category.
      *
-     * @param  Collection  $accounts
+     * @param Collection $accounts
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException
@@ -646,9 +646,9 @@ class CategoryController extends Controller
     /**
      * Show overview of category transactions on the default report.
      *
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException
@@ -687,10 +687,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException
@@ -738,10 +738,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param  Collection  $accounts
-     * @param  Collection  $categories
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Collection $accounts
+     * @param Collection $categories
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return string
      * @throws FireflyException

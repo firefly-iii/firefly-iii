@@ -68,9 +68,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param  TransactionCurrency  $currency
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
      *
      * @return JsonResponse
      */

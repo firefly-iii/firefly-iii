@@ -52,16 +52,21 @@ class TestRequest extends FormRequest
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function rules(): array
+    private function getPage(): int
     {
-        return [
-            'start'      => 'date',
-            'end'        => 'date|after_or_equal:start',
-            'accounts'   => '',
-            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
-        ];
+        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    private function getDate(string $field): ?Carbon
+    {
+        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
     }
 
     /**
@@ -73,20 +78,15 @@ class TestRequest extends FormRequest
     }
 
     /**
-     * @param  string  $field
-     *
-     * @return Carbon|null
+     * @return array
      */
-    private function getDate(string $field): ?Carbon
+    public function rules(): array
     {
-        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
-    }
-
-    /**
-     * @return int
-     */
-    private function getPage(): int
-    {
-        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
+        return [
+            'start'      => 'date',
+            'end'        => 'date|after_or_equal:start',
+            'accounts'   => '',
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
+        ];
     }
 }

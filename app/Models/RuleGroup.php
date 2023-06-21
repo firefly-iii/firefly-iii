@@ -37,19 +37,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\RuleGroup
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $user_id
- * @property string $title
- * @property string|null $description
- * @property int $order
- * @property bool $active
- * @property bool $stop_processing
+ * @property int               $id
+ * @property Carbon|null       $created_at
+ * @property Carbon|null       $updated_at
+ * @property Carbon|null       $deleted_at
+ * @property int               $user_id
+ * @property string            $title
+ * @property string|null       $description
+ * @property int               $order
+ * @property bool              $active
+ * @property bool              $stop_processing
  * @property Collection|Rule[] $rules
- * @property-read int|null $rules_count
- * @property-read User $user
+ * @property-read int|null     $rules_count
+ * @property-read User         $user
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newQuery()
  * @method static Builder|RuleGroup onlyTrashed()
@@ -66,7 +66,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserId($value)
  * @method static Builder|RuleGroup withTrashed()
  * @method static Builder|RuleGroup withoutTrashed()
- * @property int|null $user_group_id
+ * @property int|null          $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -95,7 +95,7 @@ class RuleGroup extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return RuleGroup
      * @throws NotFoundHttpException
@@ -116,18 +116,18 @@ class RuleGroup extends Model
     }
 
     /**
-     * @return HasMany
-     */
-    public function rules(): HasMany
-    {
-        return $this->hasMany(Rule::class);
-    }
-
-    /**
      * @return BelongsTo
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function rules(): HasMany
+    {
+        return $this->hasMany(Rule::class);
     }
 }

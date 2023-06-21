@@ -58,7 +58,7 @@ class ChangesForV480 extends Migration
                         }
                         try {
                             $table->dropColumn('transaction_group_id');
-                        } catch (QueryException|ColumnDoesNotExist $e) {
+                        } catch (QueryException | ColumnDoesNotExist $e) {
                             Log::error(sprintf('Could not drop column: %s', $e->getMessage()));
                             Log::error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
@@ -78,7 +78,7 @@ class ChangesForV480 extends Migration
                     static function (Blueprint $table) {
                         try {
                             $table->dropColumn('stop_processing');
-                        } catch (QueryException|ColumnDoesNotExist $e) {
+                        } catch (QueryException | ColumnDoesNotExist $e) {
                             Log::error(sprintf('Could not drop column: %s', $e->getMessage()));
                             Log::error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
@@ -98,7 +98,7 @@ class ChangesForV480 extends Migration
                     static function (Blueprint $table) {
                         try {
                             $table->dropColumn('mfa_secret');
-                        } catch (QueryException|ColumnDoesNotExist $e) {
+                        } catch (QueryException | ColumnDoesNotExist $e) {
                             Log::error(sprintf('Could not drop column: %s', $e->getMessage()));
                             Log::error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }

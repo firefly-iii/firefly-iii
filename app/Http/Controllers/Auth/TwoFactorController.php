@@ -54,7 +54,7 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
      */
@@ -99,20 +99,26 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * @param  string  $mfaCode
+     * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
+     * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
+     *
+     * @param string $mfaCode
+     * @param array  $mfaHistory
+     *
+     * @return bool
      */
-    private function addToMFAHistory(string $mfaCode): void
+    private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
     {
-        /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
-        $entry        = [
-            'time' => time(),
-            'code' => $mfaCode,
-        ];
-        $mfaHistory[] = $entry;
+        $now = time();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($code === $mfaCode && $now - $time <= 300) {
+                return true;
+            }
+        }
 
-        Preferences::set('mfa_history', $mfaHistory);
-        $this->filterMFAHistory();
+        return false;
     }
 
     /**
@@ -138,32 +144,26 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
-     * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
-     *
-     * @param  string  $mfaCode
-     * @param  array  $mfaHistory
-     *
-     * @return bool
+     * @param string $mfaCode
      */
-    private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
+    private function addToMFAHistory(string $mfaCode): void
     {
-        $now = time();
-        foreach ($mfaHistory as $entry) {
-            $time = $entry['time'];
-            $code = $entry['code'];
-            if ($code === $mfaCode && $now - $time <= 300) {
-                return true;
-            }
-        }
+        /** @var array $mfaHistory */
+        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $entry        = [
+            'time' => time(),
+            'code' => $mfaCode,
+        ];
+        $mfaHistory[] = $entry;
 
-        return false;
+        Preferences::set('mfa_history', $mfaHistory);
+        $this->filterMFAHistory();
     }
 
     /**
      * Checks if code is in users backup codes.
      *
-     * @param  string  $mfaCode
+     * @param string $mfaCode
      *
      * @return bool
      */
@@ -180,7 +180,7 @@ class TwoFactorController extends Controller
     /**
      * Remove the used code from the list of backup codes.
      *
-     * @param  string  $mfaCode
+     * @param string $mfaCode
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {

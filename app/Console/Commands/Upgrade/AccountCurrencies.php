@@ -35,8 +35,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountCurrencies
@@ -54,7 +52,8 @@ class AccountCurrencies extends Command
     private UserRepositoryInterface    $userRepos;
 
     /**
-     * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
+     * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's
+     * forced upon the account.
      *
      * @return int
      */
@@ -81,23 +80,6 @@ class AccountCurrencies extends Command
     }
 
     /**
-     * @return bool
-     */
-    private function isExecuted(): bool
-    {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        return (bool)$configVar?->data;
-    }
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
-    /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
@@ -111,8 +93,62 @@ class AccountCurrencies extends Command
     }
 
     /**
-     * @param  Account  $account
-     * @param  TransactionCurrency  $currency
+     * @return bool
+     */
+    private function isExecuted(): bool
+    {
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        return (bool)$configVar?->data;
+    }
+
+    /**
+     *
+     */
+    private function updateAccountCurrencies(): void
+    {
+        $users               = $this->userRepos->all();
+        $defaultCurrencyCode = (string)config('firefly.default_currency', 'EUR');
+        foreach ($users as $user) {
+            $this->updateCurrenciesForUser($user, $defaultCurrencyCode);
+        }
+    }
+
+    /**
+     * @param User   $user
+     * @param string $systemCurrencyCode
+     *
+     * @throws FireflyException
+     */
+    private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void
+    {
+        $this->accountRepos->setUser($user);
+        $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+
+        // get user's currency preference:
+        $defaultCurrencyCode = app('preferences')->getForUser($user, 'currencyPreference', $systemCurrencyCode)->data;
+        if (!is_string($defaultCurrencyCode)) {
+            $defaultCurrencyCode = $systemCurrencyCode;
+        }
+
+        /** @var TransactionCurrency|null $defaultCurrency */
+        $defaultCurrency = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
+
+        if (null === $defaultCurrency) {
+            Log::error(sprintf('Users currency pref "%s" does not exist!', $defaultCurrencyCode));
+            $this->friendlyError(sprintf('User has a preference for "%s", but this currency does not exist.', $defaultCurrencyCode));
+
+            return;
+        }
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $this->updateAccount($account, $defaultCurrency);
+        }
+    }
+
+    /**
+     * @param Account             $account
+     * @param TransactionCurrency $currency
      */
     private function updateAccount(Account $account, TransactionCurrency $currency): void
     {
@@ -158,45 +194,8 @@ class AccountCurrencies extends Command
     /**
      *
      */
-    private function updateAccountCurrencies(): void
+    private function markAsExecuted(): void
     {
-        $users               = $this->userRepos->all();
-        $defaultCurrencyCode = (string)config('firefly.default_currency', 'EUR');
-        foreach ($users as $user) {
-            $this->updateCurrenciesForUser($user, $defaultCurrencyCode);
-        }
-    }
-
-    /**
-     * @param  User  $user
-     * @param  string  $systemCurrencyCode
-     *
-     * @throws FireflyException
-     */
-    private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void
-    {
-        $this->accountRepos->setUser($user);
-        $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-
-        // get user's currency preference:
-        $defaultCurrencyCode = app('preferences')->getForUser($user, 'currencyPreference', $systemCurrencyCode)->data;
-        if (!is_string($defaultCurrencyCode)) {
-            $defaultCurrencyCode = $systemCurrencyCode;
-        }
-
-        /** @var TransactionCurrency|null $defaultCurrency */
-        $defaultCurrency = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
-
-        if (null === $defaultCurrency) {
-            Log::error(sprintf('Users currency pref "%s" does not exist!', $defaultCurrencyCode));
-            $this->friendlyError(sprintf('User has a preference for "%s", but this currency does not exist.', $defaultCurrencyCode));
-
-            return;
-        }
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $this->updateAccount($account, $defaultCurrency);
-        }
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

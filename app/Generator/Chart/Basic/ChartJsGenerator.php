@@ -35,7 +35,7 @@ class ChartJsGenerator implements GeneratorInterface
      *
      * key => [value => x, 'currency_symbol' => 'x']
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -100,7 +100,7 @@ class ChartJsGenerator implements GeneratorInterface
      *
      *  // it's five.
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -149,7 +149,7 @@ class ChartJsGenerator implements GeneratorInterface
      *
      * key => value
      *
-     * @param  array  $data
+     * @param array $data
      *
      * @return array
      */
@@ -190,8 +190,8 @@ class ChartJsGenerator implements GeneratorInterface
      *
      * 'label-of-entry' => value
      *
-     * @param  string  $setLabel
-     * @param  array  $data
+     * @param string $setLabel
+     * @param array  $data
      *
      * @return array
      */

@@ -56,8 +56,8 @@ use function is_string;
 class FireflyValidator extends Validator
 {
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
+     * @param mixed $attribute
+     * @param mixed $value
      *
      * @return bool
      * @throws IncompatibleWithGoogleAuthenticatorException
@@ -81,9 +81,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -100,8 +100,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
+     * @param mixed $attribute
+     * @param mixed $value
      *
      * @return bool
      */
@@ -120,8 +120,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
+     * @param mixed $attribute
+     * @param mixed $value
      *
      * @return bool
      */
@@ -221,7 +221,7 @@ class FireflyValidator extends Validator
         // take
         $first = substr($value, 0, 4);
         $last  = substr($value, 4);
-        $iban  = $last.$first;
+        $iban  = $last . $first;
         $iban  = trim(str_replace($search, $replace, $iban));
         if (0 === strlen($iban)) {
             return false;
@@ -240,9 +240,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -255,9 +255,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -270,9 +270,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -289,9 +289,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  string  $attribute
+     * @param string      $attribute
      *
-     * @param  string|null  $value
+     * @param string|null $value
      *
      * @return bool
      */
@@ -361,8 +361,8 @@ class FireflyValidator extends Validator
     /**
      * $attribute has the format triggers.%d.value.
      *
-     * @param  string  $attribute
-     * @param  string|null  $value
+     * @param string      $attribute
+     * @param string|null $value
      *
      * @return bool
      */
@@ -442,8 +442,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
+     * @param mixed $attribute
+     * @param mixed $value
      *
      * @return bool
      */
@@ -464,9 +464,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -505,9 +505,124 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @return bool
+     */
+    private function validateAccountAnonymously(): bool
+    {
+        if (!array_key_exists('user_id', $this->data)) {
+            return false;
+        }
+
+        $user  = User::find($this->data['user_id']);
+        $type  = AccountType::find($this->data['account_type_id'])->first();
+        $value = $this->data['name'];
+
+        /** @var Account|null $result */
+        $result = $user->accounts()->where('account_type_id', $type->id)->where('name', $value)->first();
+
+        return null === $result;
+    }
+
+    /**
+     * @param string $value
+     * @param array  $parameters
+     * @param string $type
+     *
+     * @return bool
+     */
+    private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
+    {
+        /** @var array|null $search */
+        $search = Config::get('firefly.accountTypeByIdentifier.' . $type);
+
+        if (null === $search) {
+            return false;
+        }
+
+        $accountTypes   = AccountType::whereIn('type', $search)->get();
+        $ignore         = (int)($parameters[0] ?? 0.0);
+        $accountTypeIds = $accountTypes->pluck('id')->toArray();
+        /** @var Account|null $result */
+        $result = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)
+                        ->where('name', $value)
+                        ->first();
+        return null === $result;
+    }
+
+    /**
+     * @param mixed $value
+     * @param mixed $parameters
+     *
+     * @return bool
+     */
+    private function validateByAccountTypeId($value, $parameters): bool
+    {
+        $type   = AccountType::find($this->data['account_type_id'])->first();
+        $ignore = (int)($parameters[0] ?? 0.0);
+
+        /** @var Account|null $result */
+        $result = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+                        ->where('name', $value)
+                        ->first();
+
+        return null === $result;
+    }
+
+    /**
+     * @param int   $accountId
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    private function validateByParameterId(int $accountId, $value): bool
+    {
+        /** @var Account $existingAccount */
+        $existingAccount = Account::find($accountId);
+
+        $type   = $existingAccount->accountType;
+        $ignore = $existingAccount->id;
+
+        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+                       ->where('name', $value)
+                       ->first();
+
+        return null === $entry;
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    private function validateByAccountId($value): bool
+    {
+        /** @var Account $existingAccount */
+        $existingAccount = Account::find($this->data['id']);
+
+        $type   = $existingAccount->accountType;
+        $ignore = $existingAccount->id;
+
+        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+                       ->where('name', $value)
+                       ->first();
+
+        return null === $entry;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    private function validateByAccountName(string $value): bool
+    {
+        return auth()->user()->accounts()->where('name', $value)->count() === 0;
+    }
+
+    /**
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -558,17 +673,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  string  $field
-     * @param  string  $attribute
-     * @param  string  $value
-     * @return bool
-     */
-    public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
-    {
-        return 0 === DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
-    }
-
-    /**
      * @param $attribute
      * @param $value
      * @return bool
@@ -576,6 +680,17 @@ class FireflyValidator extends Validator
     public function validateUniqueCurrencyCode($attribute, $value): bool
     {
         return $this->validateUniqueCurrency('code', (string)$attribute, (string)$value);
+    }
+
+    /**
+     * @param string $field
+     * @param string $attribute
+     * @param string $value
+     * @return bool
+     */
+    public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
+    {
+        return 0 === DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
     }
 
     /**
@@ -599,9 +714,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $value
-     * @param  mixed  $parameters
-     * @param  mixed  $something
+     * @param mixed $value
+     * @param mixed $parameters
+     * @param mixed $something
      *
      * @return bool
      */
@@ -654,9 +769,9 @@ class FireflyValidator extends Validator
      * parameter 1: the field
      * parameter 2: an id to ignore (when editing)
      *
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -686,9 +801,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -707,9 +822,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $attribute
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -727,8 +842,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param  mixed  $value
-     * @param  mixed  $parameters
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -754,120 +869,5 @@ class FireflyValidator extends Validator
         }
 
         return false;
-    }
-
-    /**
-     * @return bool
-     */
-    private function validateAccountAnonymously(): bool
-    {
-        if (!array_key_exists('user_id', $this->data)) {
-            return false;
-        }
-
-        $user  = User::find($this->data['user_id']);
-        $type  = AccountType::find($this->data['account_type_id'])->first();
-        $value = $this->data['name'];
-
-        /** @var Account|null $result */
-        $result = $user->accounts()->where('account_type_id', $type->id)->where('name', $value)->first();
-
-        return null === $result;
-    }
-
-    /**
-     * @param  mixed  $value
-     *
-     * @return bool
-     */
-    private function validateByAccountId($value): bool
-    {
-        /** @var Account $existingAccount */
-        $existingAccount = Account::find($this->data['id']);
-
-        $type   = $existingAccount->accountType;
-        $ignore = $existingAccount->id;
-
-        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-                       ->where('name', $value)
-                       ->first();
-
-        return null === $entry;
-    }
-
-    /**
-     * @param  string  $value
-     *
-     * @return bool
-     */
-    private function validateByAccountName(string $value): bool
-    {
-        return auth()->user()->accounts()->where('name', $value)->count() === 0;
-    }
-
-    /**
-     * @param  mixed  $value
-     * @param  mixed  $parameters
-     *
-     * @return bool
-     */
-    private function validateByAccountTypeId($value, $parameters): bool
-    {
-        $type   = AccountType::find($this->data['account_type_id'])->first();
-        $ignore = (int)($parameters[0] ?? 0.0);
-
-        /** @var Account|null $result */
-        $result = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-                        ->where('name', $value)
-                        ->first();
-
-        return null === $result;
-    }
-
-    /**
-     * @param  string  $value
-     * @param  array  $parameters
-     * @param  string  $type
-     *
-     * @return bool
-     */
-    private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
-    {
-        /** @var array|null $search */
-        $search = Config::get('firefly.accountTypeByIdentifier.'.$type);
-
-        if (null === $search) {
-            return false;
-        }
-
-        $accountTypes   = AccountType::whereIn('type', $search)->get();
-        $ignore         = (int)($parameters[0] ?? 0.0);
-        $accountTypeIds = $accountTypes->pluck('id')->toArray();
-        /** @var Account|null $result */
-        $result = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)
-                        ->where('name', $value)
-                        ->first();
-        return null === $result;
-    }
-
-    /**
-     * @param  int  $accountId
-     * @param  mixed  $value
-     *
-     * @return bool
-     */
-    private function validateByParameterId(int $accountId, $value): bool
-    {
-        /** @var Account $existingAccount */
-        $existingAccount = Account::find($accountId);
-
-        $type   = $existingAccount->accountType;
-        $ignore = $existingAccount->id;
-
-        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-                       ->where('name', $value)
-                       ->first();
-
-        return null === $entry;
     }
 }

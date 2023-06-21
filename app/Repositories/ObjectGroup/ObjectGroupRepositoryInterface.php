@@ -45,7 +45,7 @@ interface ObjectGroupRepositoryInterface
     public function deleteEmpty(): void;
 
     /**
-     * @param  ObjectGroup  $objectGroup
+     * @param ObjectGroup $objectGroup
      */
     public function destroy(ObjectGroup $objectGroup): void;
 
@@ -55,14 +55,14 @@ interface ObjectGroupRepositoryInterface
     public function get(): Collection;
 
     /**
-     * @param  ObjectGroup  $objectGroup
+     * @param ObjectGroup $objectGroup
      *
      * @return Collection
      */
     public function getBills(ObjectGroup $objectGroup): Collection;
 
     /**
-     * @param  ObjectGroup  $objectGroup
+     * @param ObjectGroup $objectGroup
      *
      * @return Collection
      */
@@ -74,29 +74,29 @@ interface ObjectGroupRepositoryInterface
     public function resetOrder(): void;
 
     /**
-     * @param  string  $query
-     * @param  int  $limit
+     * @param string $query
+     * @param int    $limit
      *
      * @return Collection
      */
     public function search(string $query, int $limit): Collection;
 
     /**
-     * @param  ObjectGroup  $objectGroup
-     * @param  int  $newOrder
+     * @param ObjectGroup $objectGroup
+     * @param int         $newOrder
      *
      * @return ObjectGroup
      */
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
     /**
-     * @param  ObjectGroup  $objectGroup
-     * @param  array  $data
+     * @param ObjectGroup $objectGroup
+     * @param array       $data
      *
      * @return ObjectGroup
      */

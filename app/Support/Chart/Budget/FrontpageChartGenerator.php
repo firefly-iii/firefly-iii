@@ -79,61 +79,34 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param  Carbon  $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @param  Carbon  $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * A basic setter for the user. Also updates the repositories with the right user.
+     * For each budget, gets all budget limits for the current time range.
+     * When no limits are present, the time range is used to collect information on money spent.
+     * If limits are present, each limit is processed individually.
      *
-     * @param  User  $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->budgetRepository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-
-        $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
-    }
-
-    /**
-     * If a budget has budget limit, each limit is processed individually.
-     *
-     * @param  array  $data
-     * @param  Budget  $budget
-     * @param  Collection  $limits
+     * @param array  $data
+     * @param Budget $budget
      *
      * @return array
      */
-    private function budgetLimits(array $data, Budget $budget, Collection $limits): array
+    private function processBudget(array $data, Budget $budget): array
     {
-        /** @var BudgetLimit $limit */
-        foreach ($limits as $limit) {
-            $data = $this->processLimit($data, $budget, $limit);
+        // get all limits:
+        $limits = $this->blRepository->getBudgetLimits($budget, $this->start, $this->end);
+
+        // if no limits
+        if (0 === $limits->count()) {
+            return $this->noBudgetLimits($data, $budget);
         }
 
-        return $data;
+        return $this->budgetLimits($data, $budget, $limits);
     }
 
     /**
      * When no limits are present, the expenses of the whole period are collected and grouped.
      * This is grouped per currency. Because there is no limit set, "left to spend" and "overspent" are empty.
      *
-     * @param  array  $data
-     * @param  Budget  $budget
+     * @param array  $data
+     * @param Budget $budget
      *
      * @return array
      */
@@ -152,34 +125,31 @@ class FrontpageChartGenerator
     }
 
     /**
-     * For each budget, gets all budget limits for the current time range.
-     * When no limits are present, the time range is used to collect information on money spent.
-     * If limits are present, each limit is processed individually.
+     * If a budget has budget limit, each limit is processed individually.
      *
-     * @param  array  $data
-     * @param  Budget  $budget
+     * @param array      $data
+     * @param Budget     $budget
+     * @param Collection $limits
      *
      * @return array
      */
-    private function processBudget(array $data, Budget $budget): array
+    private function budgetLimits(array $data, Budget $budget, Collection $limits): array
     {
-        // get all limits:
-        $limits = $this->blRepository->getBudgetLimits($budget, $this->start, $this->end);
-
-        // if no limits
-        if (0 === $limits->count()) {
-            return $this->noBudgetLimits($data, $budget);
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $data = $this->processLimit($data, $budget, $limit);
         }
 
-        return $this->budgetLimits($data, $budget, $limits);
+        return $data;
     }
 
     /**
-     * For each limit, the expenses from the time range of the limit are collected. Each row from the result is processed individually.
+     * For each limit, the expenses from the time range of the limit are collected. Each row from the result is
+     * processed individually.
      *
-     * @param  array  $data
-     * @param  Budget  $budget
-     * @param  BudgetLimit  $limit
+     * @param array       $data
+     * @param Budget      $budget
+     * @param BudgetLimit $limit
      *
      * @return array
      */
@@ -200,13 +170,13 @@ class FrontpageChartGenerator
     /**
      * Each row of expenses from a budget limit is in another currency (note $entry['currency_name']).
      *
-     * Each one is added to the $data array. If the limit's date range is different from the global $start and $end dates,
-     * for example when a limit only partially falls into this month, the title is expanded to clarify.
+     * Each one is added to the $data array. If the limit's date range is different from the global $start and $end
+     * dates, for example when a limit only partially falls into this month, the title is expanded to clarify.
      *
-     * @param  array  $data
-     * @param  Budget  $budget
-     * @param  BudgetLimit  $limit
-     * @param  array  $entry
+     * @param array       $data
+     * @param Budget      $budget
+     * @param BudgetLimit $limit
+     * @param array       $entry
      *
      * @return array
      */
@@ -229,5 +199,36 @@ class FrontpageChartGenerator
         $data[2]['entries'][$title] = 1 === bccomp($limit->amount, $sumSpent) ? '0' : bcmul(bcadd($entry['sum'], $limit->amount), '-1'); // overspent
 
         return $data;
+    }
+
+    /**
+     * @param Carbon $end
+     */
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    /**
+     * @param Carbon $start
+     */
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * A basic setter for the user. Also updates the repositories with the right user.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->budgetRepository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+
+        $locale                  = app('steam')->getLocale();
+        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
     }
 }

@@ -40,7 +40,7 @@ class ReportController extends Controller
     /**
      * Generate popup view.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return JsonResponse
      * @throws FireflyException

@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class EnableCurrencies

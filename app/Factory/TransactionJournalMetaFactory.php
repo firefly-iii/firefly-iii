@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log;
 class TransactionJournalMetaFactory
 {
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return TransactionJournalMeta|null
      */

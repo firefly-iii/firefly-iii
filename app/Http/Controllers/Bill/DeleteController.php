@@ -65,7 +65,7 @@ class DeleteController extends Controller
     /**
      * Delete a bill.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return Factory|View
      */
@@ -81,8 +81,8 @@ class DeleteController extends Controller
     /**
      * Destroy a bill.
      *
-     * @param  Request  $request
-     * @param  Bill  $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return RedirectResponse|Redirector
      */

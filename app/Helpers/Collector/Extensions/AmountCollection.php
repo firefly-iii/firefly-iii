@@ -35,7 +35,7 @@ trait AmountCollection
     /**
      * Get transactions with a specific amount.
      *
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return GroupCollectorInterface
      */
@@ -67,7 +67,7 @@ trait AmountCollection
     /**
      * Get transactions where the amount is less than.
      *
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return GroupCollectorInterface
      */
@@ -85,7 +85,7 @@ trait AmountCollection
     /**
      * Get transactions where the amount is more than.
      *
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return GroupCollectorInterface
      */
@@ -103,7 +103,7 @@ trait AmountCollection
     /**
      * Get transactions with a specific foreign amount.
      *
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return GroupCollectorInterface
      */
@@ -122,7 +122,7 @@ trait AmountCollection
     /**
      * Get transactions with a specific foreign amount.
      *
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return GroupCollectorInterface
      */
@@ -141,7 +141,7 @@ trait AmountCollection
     /**
      * Get transactions where the amount is less than.
      *
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return GroupCollectorInterface
      */
@@ -160,7 +160,7 @@ trait AmountCollection
     /**
      * Get transactions where the amount is more than.
      *
-     * @param  string  $amount
+     * @param string $amount
      *
      * @return GroupCollectorInterface
      */

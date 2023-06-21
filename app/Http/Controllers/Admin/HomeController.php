@@ -107,7 +107,7 @@ class HomeController extends Controller
     /**
      * Send a test message to the admin.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
      */

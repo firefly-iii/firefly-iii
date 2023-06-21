@@ -38,7 +38,7 @@ trait GetConfigurationData
     /**
      * Some common combinations.
      *
-     * @param  int  $value
+     * @param int $value
      *
      * @return string
      */
@@ -60,7 +60,7 @@ trait GetConfigurationData
     /**
      * Get the basic steps from config.
      *
-     * @param  string  $route
+     * @param string $route
      *
      * @return array
      */
@@ -74,7 +74,7 @@ trait GetConfigurationData
                 $currentStep = $options;
 
                 // get the text:
-                $currentStep['intro'] = (string)trans('intro.'.$route.'_'.$key);
+                $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $key);
 
                 // save in array:
                 $steps[] = $currentStep;
@@ -183,8 +183,8 @@ trait GetConfigurationData
     /**
      * Get specific info for special routes.
      *
-     * @param  string  $route
-     * @param  string  $specificPage
+     * @param string $route
+     * @param string $specificPage
      *
      * @return array
      *
@@ -197,13 +197,13 @@ trait GetConfigurationData
         // user is on page with specific instructions:
         if ('' !== $specificPage) {
             $routeKey = str_replace('.', '_', $route);
-            $elements = config(sprintf('intro.%s', $routeKey.'_'.$specificPage));
+            $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
             if (is_array($elements) && count($elements) > 0) {
                 foreach ($elements as $key => $options) {
                     $currentStep = $options;
 
                     // get the text:
-                    $currentStep['intro'] = (string)trans('intro.'.$route.'_'.$specificPage.'_'.$key);
+                    $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $specificPage . '_' . $key);
 
                     // save in array:
                     $steps[] = $currentStep;

@@ -63,7 +63,7 @@ class DestroyController extends Controller
      *
      * Delete the resource.
      *
-     * @param  Rule  $rule
+     * @param Rule $rule
      *
      * @return JsonResponse
      */

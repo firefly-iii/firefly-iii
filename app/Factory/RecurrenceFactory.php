@@ -55,7 +55,7 @@ class RecurrenceFactory
     }
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return Recurrence
      * @throws FireflyException
@@ -148,7 +148,7 @@ class RecurrenceFactory
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      */
     public function setUser(User $user): void
     {

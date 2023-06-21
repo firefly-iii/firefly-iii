@@ -36,8 +36,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Date implements BinderInterface
 {
     /**
-     * @param  string  $value
-     * @param  Route  $route
+     * @param string $value
+     * @param Route  $route
      *
      * @return Carbon
      * @throws NotFoundHttpException

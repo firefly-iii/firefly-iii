@@ -31,7 +31,7 @@ interface Verifier
     /**
      * Verify the given password against (some) service.
      *
-     * @param  string  $password
+     * @param string $password
      *
      * @return bool
      */

@@ -37,18 +37,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\WebhookMessage
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property int $webhook_id
- * @property bool $sent
- * @property bool $errored
- * @property int $attempts
- * @property string $uuid
- * @property array $message
- * @property array|null $logs
- * @property-read Webhook $webhook
+ * @property int                              $id
+ * @property Carbon|null                      $created_at
+ * @property Carbon|null                      $updated_at
+ * @property string|null                      $deleted_at
+ * @property int                              $webhook_id
+ * @property bool                             $sent
+ * @property bool                             $errored
+ * @property int                              $attempts
+ * @property string                           $uuid
+ * @property array                            $message
+ * @property array|null                       $logs
+ * @property-read Webhook                     $webhook
  * @method static Builder|WebhookMessage newModelQuery()
  * @method static Builder|WebhookMessage newQuery()
  * @method static Builder|WebhookMessage query()
@@ -64,7 +64,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|WebhookMessage whereUuid($value)
  * @method static Builder|WebhookMessage whereWebhookId($value)
  * @property-read Collection|WebhookAttempt[] $webhookAttempts
- * @property-read int|null $webhook_attempts_count
+ * @property-read int|null                    $webhook_attempts_count
  * @mixin Eloquent
  */
 class WebhookMessage extends Model
@@ -81,7 +81,7 @@ class WebhookMessage extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return WebhookMessage
      * @throws NotFoundHttpException

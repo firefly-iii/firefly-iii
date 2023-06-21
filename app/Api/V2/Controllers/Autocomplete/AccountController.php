@@ -32,7 +32,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use JsonException;
 
@@ -68,7 +67,7 @@ class AccountController extends Controller
      * Documentation for this endpoint:
      * TODO endpoint is not documented.
      *
-     * @param  AutocompleteRequest  $request
+     * @param AutocompleteRequest $request
      *
      * @return JsonResponse
      * @throws JsonException

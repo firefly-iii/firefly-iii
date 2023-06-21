@@ -83,7 +83,7 @@ class BudgetController extends Controller
     /**
      * Shows overview of a single budget.
      *
-     * @param  Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
      */
@@ -148,8 +148,8 @@ class BudgetController extends Controller
     /**
      * Shows the amount left in a specific budget limit.
      *
-     * @param  Budget  $budget
-     * @param  BudgetLimit  $budgetLimit
+     * @param Budget      $budget
+     * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
      *
@@ -200,8 +200,8 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per asset account.
      *
-     * @param  Budget  $budget
-     * @param  BudgetLimit|null  $budgetLimit
+     * @param Budget           $budget
+     * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
      */
@@ -268,8 +268,8 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per category.
      *
-     * @param  Budget  $budget
-     * @param  BudgetLimit|null  $budgetLimit
+     * @param Budget           $budget
+     * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
      */
@@ -332,8 +332,8 @@ class BudgetController extends Controller
      * Shows how much is spent per expense account.
      *
      *
-     * @param  Budget  $budget
-     * @param  BudgetLimit|null  $budgetLimit
+     * @param Budget           $budget
+     * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
      */
@@ -429,11 +429,11 @@ class BudgetController extends Controller
     /**
      * Shows a budget overview chart (spent and budgeted).
      *
-     * @param  Budget  $budget
-     * @param  TransactionCurrency  $currency
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param Budget              $budget
+     * @param TransactionCurrency $currency
+     * @param Collection          $accounts
+     * @param Carbon              $start
+     * @param Carbon              $end
      *
      * @return JsonResponse
      */
@@ -505,10 +505,10 @@ class BudgetController extends Controller
     /**
      * Shows a chart for transactions without a budget.
      *
-     * @param  TransactionCurrency  $currency
-     * @param  Collection  $accounts
-     * @param  Carbon  $start
-     * @param  Carbon  $end
+     * @param TransactionCurrency $currency
+     * @param Collection          $accounts
+     * @param Carbon              $start
+     * @param Carbon              $end
      *
      * @return JsonResponse
      */

@@ -35,7 +35,7 @@ trait AccountFilter
     /**
      * All the available types.
      *
-     * @param  string  $type
+     * @param string $type
      *
      * @return array
      */

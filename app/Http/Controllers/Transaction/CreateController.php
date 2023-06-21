@@ -65,7 +65,7 @@ class CreateController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -99,7 +99,7 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
-     * @param  string|null  $objectType
+     * @param string|null $objectType
      *
      * @return Factory|View
      * @throws FireflyException

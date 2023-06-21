@@ -33,7 +33,7 @@ class PreferenceTransformer extends AbstractTransformer
     /**
      * Transform the preference
      *
-     * @param  Preference  $preference
+     * @param Preference $preference
      *
      * @return array
      */

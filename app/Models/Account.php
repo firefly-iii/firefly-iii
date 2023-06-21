@@ -42,36 +42,36 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Account
  *
- * @property int $id
+ * @property int                             $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property int $account_type_id
- * @property string $name
- * @property string|null $virtual_balance
- * @property string|null $iban
- * @property bool $active
- * @property bool $encrypted
- * @property int $order
- * @property-read Collection|AccountMeta[] $accountMeta
- * @property-read int|null $account_meta_count
- * @property AccountType $accountType
- * @property-read Collection|Attachment[] $attachments
- * @property-read int|null $attachments_count
- * @property-read string $account_number
- * @property-read string $edit_name
- * @property-read Collection|Location[] $locations
- * @property-read int|null $locations_count
- * @property-read Collection|Note[] $notes
- * @property-read int|null $notes_count
- * @property-read Collection|ObjectGroup[] $objectGroups
- * @property-read int|null $object_groups_count
- * @property-read Collection|PiggyBank[] $piggyBanks
- * @property-read int|null $piggy_banks_count
- * @property-read Collection|Transaction[] $transactions
- * @property-read int|null $transactions_count
- * @property-read User $user
+ * @property int                             $user_id
+ * @property int                             $account_type_id
+ * @property string                          $name
+ * @property string|null                     $virtual_balance
+ * @property string|null                     $iban
+ * @property bool                            $active
+ * @property bool                            $encrypted
+ * @property int                             $order
+ * @property-read Collection|AccountMeta[]   $accountMeta
+ * @property-read int|null                   $account_meta_count
+ * @property AccountType                     $accountType
+ * @property-read Collection|Attachment[]    $attachments
+ * @property-read int|null                   $attachments_count
+ * @property-read string                     $account_number
+ * @property-read string                     $edit_name
+ * @property-read Collection|Location[]      $locations
+ * @property-read int|null                   $locations_count
+ * @property-read Collection|Note[]          $notes
+ * @property-read int|null                   $notes_count
+ * @property-read Collection|ObjectGroup[]   $objectGroups
+ * @property-read int|null                   $object_groups_count
+ * @property-read Collection|PiggyBank[]     $piggyBanks
+ * @property-read int|null                   $piggy_banks_count
+ * @property-read Collection|Transaction[]   $transactions
+ * @property-read int|null                   $transactions_count
+ * @property-read User                       $user
  * @method static EloquentBuilder|Account accountTypeIn($types)
  * @method static EloquentBuilder|Account newModelQuery()
  * @method static EloquentBuilder|Account newQuery()
@@ -91,17 +91,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|Account whereVirtualBalance($value)
  * @method static Builder|Account withTrashed()
  * @method static Builder|Account withoutTrashed()
- * @property Carbon $lastActivityDate
- * @property string $startBalance
- * @property string $endBalance
- * @property string $difference
- * @property string $interest
- * @property string $interestPeriod
- * @property string $accountTypeString
- * @property Location $location
- * @property string $liability_direction
- * @property string $current_debt
- * @property int|null $user_group_id
+ * @property Carbon                          $lastActivityDate
+ * @property string                          $startBalance
+ * @property string                          $endBalance
+ * @property string                          $difference
+ * @property string                          $interest
+ * @property string                          $interestPeriod
+ * @property string                          $accountTypeString
+ * @property Location                        $location
+ * @property string                          $liability_direction
+ * @property string                          $current_debt
+ * @property int|null                        $user_group_id
  * @method static EloquentBuilder|Account whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -133,7 +133,7 @@ class Account extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return Account
      * @throws NotFoundHttpException
@@ -154,11 +154,11 @@ class Account extends Model
     }
 
     /**
-     * @return HasMany
+     * @return BelongsTo
      */
-    public function accountMeta(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(AccountMeta::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -190,6 +190,14 @@ class Account extends Model
                           ->first();
 
         return $metaValue ? $metaValue->data : '';
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function accountMeta(): HasMany
+    {
+        return $this->hasMany(AccountMeta::class);
     }
 
     /**
@@ -240,8 +248,8 @@ class Account extends Model
 
     /**
      *
-     * @param  EloquentBuilder  $query
-     * @param  array  $types
+     * @param EloquentBuilder $query
+     * @param array           $types
      */
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types): void
     {
@@ -254,7 +262,7 @@ class Account extends Model
 
     /**
      *
-     * @param  mixed  $value
+     * @param mixed $value
      *
 
      */
@@ -273,14 +281,6 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**

@@ -36,8 +36,8 @@ bcscale(12);
 
 if (!function_exists('envNonEmpty')) {
     /**
-     * @param  string  $key
-     * @param  null  $default
+     * @param string $key
+     * @param null   $default
      *
      * @return mixed|null
      */
@@ -54,8 +54,8 @@ if (!function_exists('envNonEmpty')) {
 
 if (!function_exists('stringIsEqual')) {
     /**
-     * @param  string  $left
-     * @param  string  $right
+     * @param string $left
+     * @param string $right
      *
      * @return bool
      */
@@ -66,7 +66,7 @@ if (!function_exists('stringIsEqual')) {
 }
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../')
+    realpath(__DIR__ . '/../')
 );
 
 /*

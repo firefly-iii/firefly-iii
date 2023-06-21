@@ -39,10 +39,10 @@ interface OperationsRepositoryInterface
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $categories
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
@@ -53,10 +53,10 @@ interface OperationsRepositoryInterface
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $categories
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
@@ -68,10 +68,10 @@ interface OperationsRepositoryInterface
      * It excludes any transfers between the listed accounts.
      * It's grouped per currency, with as few details in the array as possible. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection  $accounts
-     * @param  Collection|null  $categories
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection      $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
@@ -83,27 +83,27 @@ interface OperationsRepositoryInterface
      * It excludes any transfers between the listed accounts.
      * It's grouped per currency, with as few details in the array as possible. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection  $accounts
-     * @param  Collection|null  $categories
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection      $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
     public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
     /**
      * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $categories
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
@@ -112,10 +112,10 @@ interface OperationsRepositoryInterface
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $categories
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */
@@ -124,10 +124,10 @@ interface OperationsRepositoryInterface
     /**
      * Sum of transfers in period for a set of categories, grouped per currency. Amounts are always positive.
      *
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Collection|null  $accounts
-     * @param  Collection|null  $categories
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
      *
      * @return array
      */

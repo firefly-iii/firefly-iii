@@ -66,7 +66,7 @@ class ShowController extends Controller
     /**
      * Show a single piggy bank.
      *
-     * @param  PiggyBank  $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      * @throws FireflyException

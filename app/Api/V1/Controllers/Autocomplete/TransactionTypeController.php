@@ -55,7 +55,7 @@ class TransactionTypeController extends Controller
      * This endpoint is documented at
      * * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getTransactionTypesAC
      *
-     * @param  AutocompleteRequest  $request
+     * @param AutocompleteRequest $request
      *
      * @return JsonResponse
      */

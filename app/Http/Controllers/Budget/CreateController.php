@@ -65,7 +65,7 @@ class CreateController extends Controller
     /**
      * Form to create a budget.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return Factory|View
      */
@@ -110,7 +110,7 @@ class CreateController extends Controller
     /**
      * Stores a budget.
      *
-     * @param  BudgetFormStoreRequest  $request
+     * @param BudgetFormStoreRequest $request
      *
      * @return RedirectResponse
      * @throws FireflyException

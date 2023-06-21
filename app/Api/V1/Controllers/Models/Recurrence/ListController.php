@@ -69,8 +69,8 @@ class ListController extends Controller
      *
      * Show transactions for this recurrence.
      *
-     * @param  Request  $request
-     * @param  Recurrence  $recurrence
+     * @param Request    $request
+     * @param Recurrence $recurrence
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -109,7 +109,7 @@ class ListController extends Controller
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.transactions.index').$this->buildParams());
+        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

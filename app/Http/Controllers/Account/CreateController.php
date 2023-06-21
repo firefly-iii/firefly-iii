@@ -76,8 +76,8 @@ class CreateController extends Controller
     /**
      * Create a new account.
      *
-     * @param  Request  $request
-     * @param  string  $objectType
+     * @param Request $request
+     * @param string  $objectType
      *
      * @return Factory|View
      */
@@ -134,7 +134,7 @@ class CreateController extends Controller
     /**
      * Store the new account.
      *
-     * @param  AccountFormRequest  $request
+     * @param AccountFormRequest $request
      *
      * @return RedirectResponse|Redirector
      * @throws FireflyException

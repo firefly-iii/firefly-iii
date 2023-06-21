@@ -39,7 +39,7 @@ class StoredAccount extends Event
     /**
      * Create a new event instance.
      *
-     * @param  Account  $account
+     * @param Account $account
      */
     public function __construct(Account $account)
     {

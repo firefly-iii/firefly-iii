@@ -74,8 +74,8 @@ class CreateController extends Controller
     /**
      * Create a new rule. It will be stored under the given $ruleGroup.
      *
-     * @param  Request  $request
-     * @param  RuleGroup|null  $ruleGroup
+     * @param Request        $request
+     * @param RuleGroup|null $ruleGroup
      *
      * @return Factory|View
      * @throws FireflyException
@@ -137,8 +137,8 @@ class CreateController extends Controller
     /**
      * Create a new rule. It will be stored under the given $ruleGroup.
      *
-     * @param  Request  $request
-     * @param  Bill  $bill
+     * @param Request $request
+     * @param Bill    $bill
      *
      * @return Factory|View
      * @throws FireflyException
@@ -189,8 +189,8 @@ class CreateController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  TransactionJournal  $journal
+     * @param Request            $request
+     * @param TransactionJournal $journal
      *
      * @return Factory|\Illuminate\Contracts\View\View
      * @throws FireflyException
@@ -240,7 +240,7 @@ class CreateController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function duplicate(Request $request): JsonResponse
@@ -257,7 +257,7 @@ class CreateController extends Controller
     /**
      * Store the new rule.
      *
-     * @param  RuleFormRequest  $request
+     * @param RuleFormRequest $request
      *
      * @return RedirectResponse|Redirector
      *

@@ -52,7 +52,7 @@ class BillTransformer extends AbstractTransformer
     /**
      * Transform the bill.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return array
      */
@@ -137,63 +137,16 @@ class BillTransformer extends AbstractTransformer
             'links'                    => [
                 [
                     'rel' => 'self',
-                    'uri' => '/bills/'.$bill->id,
+                    'uri' => '/bills/' . $bill->id,
                 ],
             ],
         ];
     }
 
     /**
-     * Returns the latest date in the set, or start when set is empty.
-     *
-     * @param  Collection  $dates
-     * @param  Carbon  $default
-     *
-     * @return Carbon
-     */
-    protected function lastPaidDate(Collection $dates, Carbon $default): Carbon
-    {
-        if (0 === $dates->count()) {
-            return $default;
-        }
-        $latest = $dates->first()->date;
-        /** @var TransactionJournal $journal */
-        foreach ($dates as $journal) {
-            if ($journal->date->gte($latest)) {
-                $latest = $journal->date;
-            }
-        }
-
-        return $latest;
-    }
-
-    /**
-     * Given a bill and a date, this method will tell you at which moment this bill expects its next
-     * transaction. Whether or not it is there already, is not relevant.
-     *
-     * @param  Bill  $bill
-     * @param  Carbon  $date
-     *
-     * @return Carbon
-     */
-    protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
-    {
-        //Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
-        $start = clone $bill->date;
-        //Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
-        while ($start < $date) {
-            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-        }
-
-        //Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
-
-        return $start;
-    }
-
-    /**
      * Get the data the bill was paid and predict the next expected match.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return array
      */
@@ -265,7 +218,31 @@ class BillTransformer extends AbstractTransformer
     }
 
     /**
-     * @param  Bill  $bill
+     * Returns the latest date in the set, or start when set is empty.
+     *
+     * @param Collection $dates
+     * @param Carbon     $default
+     *
+     * @return Carbon
+     */
+    protected function lastPaidDate(Collection $dates, Carbon $default): Carbon
+    {
+        if (0 === $dates->count()) {
+            return $default;
+        }
+        $latest = $dates->first()->date;
+        /** @var TransactionJournal $journal */
+        foreach ($dates as $journal) {
+            if ($journal->date->gte($latest)) {
+                $latest = $journal->date;
+            }
+        }
+
+        return $latest;
+    }
+
+    /**
+     * @param Bill $bill
      *
      * @return array
      */
@@ -302,5 +279,28 @@ class BillTransformer extends AbstractTransformer
         );
 
         return $simple->toArray();
+    }
+
+    /**
+     * Given a bill and a date, this method will tell you at which moment this bill expects its next
+     * transaction. Whether or not it is there already, is not relevant.
+     *
+     * @param Bill   $bill
+     * @param Carbon $date
+     *
+     * @return Carbon
+     */
+    protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
+    {
+        //Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
+        $start = clone $bill->date;
+        //Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
+        while ($start < $date) {
+            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+        }
+
+        //Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
+
+        return $start;
     }
 }

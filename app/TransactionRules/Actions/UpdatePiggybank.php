@@ -44,7 +44,7 @@ class UpdatePiggybank implements ActionInterface
     /**
      * TriggerInterface constructor.
      *
-     * @param  RuleAction  $action
+     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
@@ -135,9 +135,56 @@ class UpdatePiggybank implements ActionInterface
     }
 
     /**
-     * @param  PiggyBank  $piggyBank
-     * @param  TransactionJournal  $journal
-     * @param  string  $amount
+     * @param User $user
+     *
+     * @return PiggyBank|null
+     */
+    private function findPiggyBank(User $user): ?PiggyBank
+    {
+        return $user->piggyBanks()->where('piggy_banks.name', $this->action->action_value)->first();
+    }
+
+    /**
+     * @param PiggyBank          $piggyBank
+     * @param TransactionJournal $journal
+     * @param string             $amount
+     * @return void
+     */
+    private function removeAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
+    {
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser($journal->user);
+
+        // how much can we remove from this piggy bank?
+        $toRemove = $repository->getCurrentAmount($piggyBank);
+        Log::debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
+
+        // if $amount is bigger than $toRemove, shrink it.
+        $amount = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
+        Log::debug(sprintf('Amount is now %s', $amount));
+
+        // if amount is zero, stop.
+        if (0 === bccomp('0', $amount)) {
+            app('log')->warning('Amount left is zero, stop.');
+
+            return;
+        }
+
+        // make sure we can remove amount:
+        if (false === $repository->canRemoveAmount($piggyBank, $amount)) {
+            app('log')->warning(sprintf('Cannot remove %s from piggy bank.', $amount));
+
+            return;
+        }
+        Log::debug(sprintf('Will now remove %s from piggy bank.', $amount));
+
+        $repository->removeAmount($piggyBank, $amount, $journal);
+    }
+
+    /**
+     * @param PiggyBank          $piggyBank
+     * @param TransactionJournal $journal
+     * @param string             $amount
      * @return void
      */
     private function addAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
@@ -175,52 +222,5 @@ class UpdatePiggybank implements ActionInterface
         Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
 
         $repository->addAmount($piggyBank, $amount, $journal);
-    }
-
-    /**
-     * @param  User  $user
-     *
-     * @return PiggyBank|null
-     */
-    private function findPiggyBank(User $user): ?PiggyBank
-    {
-        return $user->piggyBanks()->where('piggy_banks.name', $this->action->action_value)->first();
-    }
-
-    /**
-     * @param  PiggyBank  $piggyBank
-     * @param  TransactionJournal  $journal
-     * @param  string  $amount
-     * @return void
-     */
-    private function removeAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
-    {
-        $repository = app(PiggyBankRepositoryInterface::class);
-        $repository->setUser($journal->user);
-
-        // how much can we remove from this piggy bank?
-        $toRemove = $repository->getCurrentAmount($piggyBank);
-        Log::debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
-
-        // if $amount is bigger than $toRemove, shrink it.
-        $amount = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
-        Log::debug(sprintf('Amount is now %s', $amount));
-
-        // if amount is zero, stop.
-        if (0 === bccomp('0', $amount)) {
-            app('log')->warning('Amount left is zero, stop.');
-
-            return;
-        }
-
-        // make sure we can remove amount:
-        if (false === $repository->canRemoveAmount($piggyBank, $amount)) {
-            app('log')->warning(sprintf('Cannot remove %s from piggy bank.', $amount));
-
-            return;
-        }
-        Log::debug(sprintf('Will now remove %s from piggy bank.', $amount));
-
-        $repository->removeAmount($piggyBank, $amount, $journal);
     }
 }

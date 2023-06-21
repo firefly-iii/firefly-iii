@@ -33,7 +33,7 @@ use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 class UpdatedAccountEventHandler
 {
     /**
-     * @param  UpdatedAccount  $event
+     * @param UpdatedAccount $event
      */
     public function recalculateCredit(UpdatedAccount $event): void
     {

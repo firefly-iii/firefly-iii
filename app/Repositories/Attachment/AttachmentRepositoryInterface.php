@@ -35,14 +35,14 @@ use Illuminate\Support\Collection;
 interface AttachmentRepositoryInterface
 {
     /**
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return bool
      */
     public function destroy(Attachment $attachment): bool;
 
     /**
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return bool
      */
@@ -54,7 +54,7 @@ interface AttachmentRepositoryInterface
     public function get(): Collection;
 
     /**
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return string
      */
@@ -63,19 +63,19 @@ interface AttachmentRepositoryInterface
     /**
      * Get attachment note text or empty string.
      *
-     * @param  Attachment  $attachment
+     * @param Attachment $attachment
      *
      * @return string|null
      */
     public function getNoteText(Attachment $attachment): ?string;
 
     /**
-     * @param  User|Authenticatable|null  $user
+     * @param User|Authenticatable|null $user
      */
-    public function setUser(User|Authenticatable|null $user): void;
+    public function setUser(User | Authenticatable | null $user): void;
 
     /**
-     * @param  array  $data
+     * @param array $data
      *
      * @return Attachment
      * @throws FireflyException
@@ -83,8 +83,8 @@ interface AttachmentRepositoryInterface
     public function store(array $data): Attachment;
 
     /**
-     * @param  Attachment  $attachment
-     * @param  array  $attachmentData
+     * @param Attachment $attachment
+     * @param array      $attachmentData
      *
      * @return Attachment
      */

@@ -72,7 +72,7 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -88,7 +88,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]) . $this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -106,7 +106,7 @@ class ListController extends Controller
      *
      * List all of them.
      *
-     * @param  Bill  $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -125,7 +125,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.bills.rules', [$bill->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.bills.rules', [$bill->id]) . $this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
@@ -142,9 +142,9 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
-     * @param  Bill  $bill
+     * @param Bill    $bill
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -184,7 +184,7 @@ class ListController extends Controller
 
         // get paginator.
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]).$this->buildParams());
+        $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

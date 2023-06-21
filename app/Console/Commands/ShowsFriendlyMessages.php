@@ -29,7 +29,7 @@ namespace FireflyIII\Console\Commands;
 trait ShowsFriendlyMessages
 {
     /**
-     * @param  string  $message
+     * @param string $message
      * @return void
      */
     public function friendlyError(string $message): void
@@ -38,7 +38,7 @@ trait ShowsFriendlyMessages
     }
 
     /**
-     * @param  string  $message
+     * @param string $message
      * @return void
      */
     public function friendlyInfo(string $message): void
@@ -47,16 +47,7 @@ trait ShowsFriendlyMessages
     }
 
     /**
-     * @param  string  $message
-     * @return void
-     */
-    public function friendlyLine(string $message): void
-    {
-        $this->line(sprintf('      %s', trim($message)));
-    }
-
-    /**
-     * @param  string  $message
+     * @param string $message
      * @return void
      */
     public function friendlyNeutral(string $message): void
@@ -65,7 +56,16 @@ trait ShowsFriendlyMessages
     }
 
     /**
-     * @param  string  $message
+     * @param string $message
+     * @return void
+     */
+    public function friendlyLine(string $message): void
+    {
+        $this->line(sprintf('      %s', trim($message)));
+    }
+
+    /**
+     * @param string $message
      * @return void
      */
     public function friendlyPositive(string $message): void
@@ -74,7 +74,7 @@ trait ShowsFriendlyMessages
     }
 
     /**
-     * @param  string  $message
+     * @param string $message
      * @return void
      */
     public function friendlyWarning(string $message): void
