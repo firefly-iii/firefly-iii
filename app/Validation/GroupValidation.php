@@ -178,11 +178,12 @@ trait GroupValidation
             $journalId = $transaction['transaction_journal_id'];
         }
         Log::debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
-        if (0 === $journalId) {
+        if (0 === $journalId || '' === $journalId || '0' === $journalId) {
             Log::debug('Submitted 0, will accept to be used in a new transaction.');
 
             return;
         }
+        $journalId = (int)$journalId;
         $count = $transactionGroup->transactionJournals()->where('transaction_journals.id', $journalId)->count();
         if (null === $journalId || 0 === $count) {
             app('log')->warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
