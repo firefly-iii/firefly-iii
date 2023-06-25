@@ -116,9 +116,9 @@ function respondToFirstDateChange() {
         preSelected = select.val();
     }
 
-    $.getJSON(suggestUrl, {date: date,pre_select: preSelected}).fail(function () {
+    $.getJSON(suggestUrl, {date: date,pre_select: preSelected, past: 'true'}).fail(function () {
         console.error('Could not load repetition suggestions');
-        alert('Could not load repetition suggestions');
+        alert('Could not load repetition suggestions. Please enter a valid date.');
     }).done(parseRepetitionSuggestions);
 }
 
