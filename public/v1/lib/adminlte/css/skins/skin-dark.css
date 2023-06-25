@@ -117,6 +117,9 @@
 .skin-firefly-iii .btn-success.hover {
   background-color: #004726;
 }
+.skin-firefly-iii .btn-info {
+  color: #fff;
+}
 .skin-firefly-iii .dropdown-menu {
   box-shadow: none;
   background-color: #353c42;
