@@ -61,10 +61,10 @@ return [
     'invalid_selection'              => 'Sua seleção é inválida.',
     'belongs_user'                   => 'Esse valor é inválido para este campo.',
     'at_least_one_transaction'       => 'Precisa de ao menos uma transação.',
-    'recurring_transaction_id'       => 'Need at least one transaction.',
-    'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',
-    'too_many_unmatched'             => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
-    'id_does_not_match'              => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
+    'recurring_transaction_id'       => 'Precisa de ao menos uma transação.',
+    'need_id_to_match'               => 'Você precisa enviar esta entrada com um ID para a API poder identificá-la.',
+    'too_many_unmatched'             => 'Muitas transações submetidas não podem ser correspondidas a suas respectivas entradas de banco de dados. Certifique-se de que as entradas existentes possuem um ID válido.',
+    'id_does_not_match'              => 'O ID #:id enviado não corresponde ao ID esperado. Certifique-se de que corresponda ou omita o campo.',
     'at_least_one_repetition'        => 'Precisa de ao menos uma repetição.',
     'require_repeat_until'           => 'É necessário ou um número de repetições ou uma data de término (repetir até). Não ambos.',
     'require_currency_info'          => 'O conteúdo deste campo é inválido sem informações de moeda.',
@@ -237,6 +237,9 @@ return [
     'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
     'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
+
+    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
+    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
 
     'reconciliation_source_bad_data' => 'Não foi possível encontrar uma conta de reconciliação válida ao pesquisar por ID ":id" ou nome ":name".',
 
