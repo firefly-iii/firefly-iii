@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\RecurrenceRepetition;
@@ -150,10 +151,13 @@ class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $request->validate(['date' => ['required', 'date'],]);
-        $string      = $request->get('date') ?? date('Y-m-d');
+        $string      = '' === (string)$request->get('date') ? date('Y-m-d') : (string)$request->get('date');
         $today       = today(config('app.timezone'))->startOfDay();
-        $date        = Carbon::createFromFormat('Y-m-d', $string)->startOfDay();
+        try {
+            $date = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'))->startOfDay();
+        } catch(InvalidFormatException $e) {
+            $date = Carbon::today(config('app.timezone'));
+        }
         $preSelected = (string)$request->get('pre_select');
         $locale      = app('steam')->getLocale();
 

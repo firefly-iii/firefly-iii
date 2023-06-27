@@ -256,6 +256,8 @@ class BillTransformer extends AbstractTransformer
         }
         $set          = new Collection();
         $currentStart = clone $this->parameters->get('start');
+        // 2023-06-23 subDay to fix 7655
+        $currentStart->subDay();
         $loop         = 0;
         while ($currentStart <= $this->parameters->get('end')) {
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);

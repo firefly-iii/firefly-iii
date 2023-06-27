@@ -92,10 +92,11 @@ trait WithdrawalValidation
     {
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
         Log::debug('Now in validateWithdrawalDestination()', $array);
         // source can be any of the following types.
         $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
+        if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL return false,
             // because the destination of a withdrawal can never be created automatically.
             $this->destError = (string)trans('validation.withdrawal_dest_need_data');
@@ -114,6 +115,15 @@ trait WithdrawalValidation
                 }
                 $this->destError = (string)trans('validation.withdrawal_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
 
+                return false;
+            }
+        }
+        // if there is an iban, it can only be in use by a revenue account or we will fail.
+        if(null !== $accountIban && '' !== $accountIban) {
+            app('log')->debug('Check if there is not already an account with this IBAN');
+            $existing = $this->findExistingAccount([AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], ['iban' => $accountIban]);
+            if(null !== $existing) {
+                $this->destError = (string)trans('validation.withdrawal_dest_iban_exists');
                 return false;
             }
         }

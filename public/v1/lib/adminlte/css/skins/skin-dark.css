@@ -97,6 +97,9 @@
 .skin-firefly-iii button.list-group-item {
   color: #bec5cb;
 }
+.skin-firefly-iii .btn-info {
+  color: #fff;
+}
 .skin-firefly-iii .btn-default {
   background-color: #55606a;
   color: #bec5cb;

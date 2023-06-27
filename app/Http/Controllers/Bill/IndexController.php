@@ -82,7 +82,8 @@ class IndexController extends Controller
         $parameters      = new ParameterBag();
         // sub one day from temp start so the last paid date is one day before it should be.
         $tempStart = clone $start;
-        $tempStart->subDay();
+        // 2023-06-23 do not sub one day from temp start, fix is in BillTransformer::payDates instead
+        //$tempStart->subDay();
         $parameters->set('start', $tempStart);
         $parameters->set('end', $end);
 

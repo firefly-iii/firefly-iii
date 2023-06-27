@@ -238,6 +238,9 @@ return [
     'withdrawal_dest_need_data'   => '[a] Necesita obtener un ID de cuenta de destino válido y/o un nombre de cuenta de destino válido para continuar.',
     'withdrawal_dest_bad_data'    => 'No se pudo encontrar una cuenta de destino válida buscando ID ":id" o nombre ":name".',
 
+    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
+    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+
     'reconciliation_source_bad_data' => 'No se ha podido encontrar una cuenta de reconciliación válida al buscar por ID ":id" o nombre ":name".',
 
     'generic_source_bad_data' => '[e] No se pudo encontrar una cuenta de origen válida al buscar por ID ":id" o nombre ":name".',

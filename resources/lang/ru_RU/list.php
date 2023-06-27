@@ -55,8 +55,8 @@ return [
     'lastActivity'          => 'Последняя активность',
     'balanceDiff'           => 'Разность баланса',
     'other_meta_data'       => 'Другие метаданные',
-    'invited_at'            => 'Invited at',
-    'expires'               => 'Invitation expires',
+    'invited_at'            => 'Приглашён в',
+    'expires'               => 'Приглашение истекает',
     'invited_by'            => 'Пригласил',
     'invite_link'           => 'Ссылка на приглашение',
     'account_type'          => 'Тип профиля',
@@ -184,7 +184,7 @@ return [
     'response'            => 'Ответ',
     'delivery'            => 'Доставка',
     'url'                 => 'Ссылка',
-    'secret'              => 'Secret',
+    'secret'              => 'Секрет',
 
 ];
 /*

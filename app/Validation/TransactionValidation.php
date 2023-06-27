@@ -394,25 +394,42 @@ trait TransactionValidation
         // get the transaction type using the original transaction group:
         $accountValidator->setTransactionType($this->getTransactionType($transactionGroup, []));
 
-        // validate if the submitted source and / or name are valid
-        if (array_key_exists('source_id', $transaction) || array_key_exists('source_name', $transaction)) {
+        // validate if the submitted source ID/name/iban/number are valid
+        if (
+            array_key_exists('source_id', $transaction) ||
+            array_key_exists('source_name', $transaction) ||
+            array_key_exists('source_iban', $transaction) ||
+            array_key_exists('source_number', $transaction)
+        ) {
             Log::debug('Will try to validate source account information.');
             $sourceId    = (int)($transaction['source_id'] ?? 0);
             $sourceName  = $transaction['source_name'] ?? null;
-            $validSource = $accountValidator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
+            $sourceIban = $transaction['source_iban'] ?? null;
+            $sourceNumber = $transaction['source_number'] ?? null;
+            $validSource = $accountValidator->validateSource(
+                ['id' => $sourceId, 'name' => $sourceName, 'iban' => $sourceIban, 'number' => $sourceNumber]
+            );
 
             // do something with result:
             if (false === $validSource) {
                 app('log')->warning('Looks like the source account is not valid so complain to the user about it.');
                 $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
                 $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
+                $validator->errors()->add(sprintf('transactions.%d.source_iban', $index), $accountValidator->sourceError);
+                $validator->errors()->add(sprintf('transactions.%d.source_number', $index), $accountValidator->sourceError);
 
                 return;
             }
             Log::debug('Source account info is valid.');
         }
 
-        if (array_key_exists('destination_id', $transaction) || array_key_exists('destination_name', $transaction)) {
+        if (
+            array_key_exists('destination_id', $transaction) ||
+            array_key_exists('destination_name', $transaction) ||
+        array_key_exists('destination_iban', $transaction) ||
+            array_key_exists('destination_number', $transaction)
+
+        ) {
             Log::debug('Will try to validate destination account information.');
             // at this point the validator may not have a source account, because it was never submitted for validation.
             // must add it ourselves or the validator can never check if the destination is correct.
@@ -427,7 +444,9 @@ trait TransactionValidation
             }
             $destinationId    = (int)($transaction['destination_id'] ?? 0);
             $destinationName  = $transaction['destination_name'] ?? null;
-            $array            = ['id' => $destinationId, 'name' => $destinationName,];
+            $destinationIban  = $transaction['destination_iban'] ?? null;
+            $destinationNumber  = $transaction['destination_number'] ?? null;
+            $array            = ['id' => $destinationId, 'name' => $destinationName, 'iban' => $destinationIban, 'number' => $destinationNumber];
             $validDestination = $accountValidator->validateDestination($array);
             // do something with result:
             if (false === $validDestination) {
