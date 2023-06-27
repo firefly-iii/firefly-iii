@@ -102,8 +102,8 @@ Then the things that make you go "yeah OK, makes sense".
 And the things you would hope for but not expect:
 
 * 2 factor authentication for extra security 🔒.
-* Supports [any currency you want](https://docs.firefly-iii.org/firefly-iii/financial-concepts/currencies/), including crypto currencies such as ₿itcoin and Ξthereum.
-* There is a [Docker image](https://docs.firefly-iii.org/firefly-iii/installation/docker/) and an [Heroku script](https://docs.firefly-iii.org/firefly-iii/installation/third-parties/).
+* Supports [any currency you want](https://docs.firefly-iii.org/firefly-iii/financial-concepts/currencies/).
+* There is a [Docker image](https://docs.firefly-iii.org/firefly-iii/installation/docker/).
 
 And to organise everything:
 
@@ -174,7 +174,7 @@ You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you
 
 ## Acknowledgements
 
-Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors). I'm grateful for their your support and code contributions.
+Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors). I'm grateful for their support and code contributions.
 
 The Firefly III logo is made by the excellent Cherie Woo.
 
