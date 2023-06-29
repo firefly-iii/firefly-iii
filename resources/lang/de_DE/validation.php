@@ -238,6 +238,9 @@ return [
     'withdrawal_dest_need_data'   => '[a] Sie benötigen eine gültige Zielkonto-ID und/oder einen gültigen Zielkontonamen, um fortzufahren.',
     'withdrawal_dest_bad_data'    => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
 
+    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
+    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+
     'reconciliation_source_bad_data' => 'Bei der Suche nach ID „:id” oder Name „:name” konnte kein gültiges Ausgleichskonto gefunden werden.',
 
     'generic_source_bad_data' => '[e] Bei der Suche nach der ID „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',

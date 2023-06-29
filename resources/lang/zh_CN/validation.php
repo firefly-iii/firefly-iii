@@ -238,6 +238,9 @@ return [
     'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
 
+    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
+    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+
     'reconciliation_source_bad_data' => '在搜索ID“:id”或名称“:name”时，没有找到有效的对账帐户',
 
     'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',

@@ -43,15 +43,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
-        if ('heroku' === config('app.env')) {
-            URL::forceScheme('https');
-        }
-
         Response::macro('api', function (array $value) {
             $headers = [
                 'Cache-Control' => 'no-store',
             ];
-            $uuid    = (string)request()->header('X-Trace-Id');
+            $uuid = (string)request()->header('X-Trace-Id');
             if ('' !== trim($uuid) && (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)) === 1)) {
                 $headers['X-Trace-Id'] = $uuid;
             }

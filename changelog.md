@@ -3,11 +3,25 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.16 - 2023-06-28
+
+### Changed
+
+- Better IBAN and account validation for new (API) transactions.
+
+### Fixed
+
+- Better transaction split validation in API.
+- [Issue 7683](https://github.com/firefly-iii/firefly-iii/issues/7683) Date validation in recurring transaction form.
+- [Issue 7686](https://github.com/firefly-iii/firefly-iii/issues/7686) Low contrast in dark mode, thanks @MateusBMP!
+- [Issue 7655](https://github.com/firefly-iii/firefly-iii/issues/7655) Bad date display in bills
+
 ## 6.0.15 - 2023-06-22
 
 ### Fixed
 
-- [Issue 7678](https://github.com/firefly-iii/firefly-iii/issues/7678) Missing argument in postgres maintenance code breaks startup.
+- [Issue 7678](https://github.com/firefly-iii/firefly-iii/issues/7678) Missing argument in postgres maintenance code
+  breaks startup.
 
 ## 6.0.14 - 2023-06-22
 
