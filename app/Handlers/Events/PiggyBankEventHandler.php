@@ -35,6 +35,7 @@ class PiggyBankEventHandler
 {
     /**
      * @param ChangedPiggyBankAmount $event
+     *
      * @return void
      */
     public function changePiggyAmount(ChangedPiggyBankAmount $event): void
@@ -45,7 +46,6 @@ class PiggyBankEventHandler
             $journal = $event->transactionGroup->transactionJournals()->first();
         }
         $date = $journal?->date ?? today(config('app.timezone'));
-
         // sanity check: event must not already exist for this journal and piggy bank.
         if (null !== $journal) {
             $exists = PiggyBankEvent::where('piggy_bank_id', $event->piggyBank->id)
