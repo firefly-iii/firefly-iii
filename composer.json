@@ -168,6 +168,12 @@
     "post-install-cmd": [
       "@php artisan firefly:instructions install",
       "@php artisan firefly-iii:verify-security-alerts"
+    ],
+    "unit-test": [
+      "@php vendor/bin/phpunit -c phpunit.xml --testsuite unit"
+    ],
+    "integration-test": [
+      "@php vendor/bin/phpunit -c phpunit.xml --testsuite integration"
     ]
   },
   "config": {

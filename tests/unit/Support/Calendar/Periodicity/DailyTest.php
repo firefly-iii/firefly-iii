@@ -19,31 +19,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Support\Calendar\Periodicity;
+namespace Tests\unit\Support\Calendar\Periodicity;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Calendar\Periodicity\Interval;
 
-class QuarterlyTest extends IntervalTestCase
+/**
+ * @group unit-test
+ * @group support
+ * @group calendar
+ * @group periodicity
+ */
+class DailyTest extends IntervalTestCase
 {
     public static function factory(): Interval
     {
-        return new Periodicity\Quarterly();
+        return new Periodicity\Daily();
     }
 
     public static function provideIntervals(): array
     {
         return [
-            new IntervalProvider(Carbon::now(), Carbon::now()->addMonths(3)),
-            new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2019-04-29')),
-            new IntervalProvider(Carbon::parse('2019-01-30'), Carbon::parse('2019-04-30')),
-            new IntervalProvider(Carbon::parse('2019-01-31'), Carbon::parse('2019-04-30')),
-            new IntervalProvider(Carbon::parse('2018-11-01'), Carbon::parse('2019-02-01')),
-            new IntervalProvider(Carbon::parse('2019-11-29'), Carbon::parse('2020-02-29')),
-            new IntervalProvider(Carbon::parse('2019-11-30'), Carbon::parse('2020-02-29')),
-            new IntervalProvider(Carbon::parse('2020-11-29'), Carbon::parse('2021-02-28')),
-            new IntervalProvider(Carbon::parse('2020-11-30'), Carbon::parse('2021-02-28')),
+            new IntervalProvider(Carbon::now(), Carbon::tomorrow()),
+            new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-01')),
         ];
     }
 }

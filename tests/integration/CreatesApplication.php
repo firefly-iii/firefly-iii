@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\integration;
 
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;

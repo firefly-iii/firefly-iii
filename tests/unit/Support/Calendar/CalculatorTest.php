@@ -19,25 +19,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Support\Calendar;
+namespace Tests\unit\Support\Calendar;
 
-use Carbon\Carbon;
-use FireflyIII\Api\V1\Controllers\Insight\Income\PeriodController;
 use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Periodicity;
-use FireflyIII\Support\Navigation;
-use Tests\Support\Calendar\Periodicity\BimonthlyTest;
-use Tests\Support\Calendar\Periodicity\DailyTest;
-use Tests\Support\Calendar\Periodicity\FortnightlyTest;
-use Tests\Support\Calendar\Periodicity\HalfYearlyTest;
-use Tests\Support\Calendar\Periodicity\IntervalProvider;
-use Tests\Support\Calendar\Periodicity\MonthlyTest;
-use Tests\Support\Calendar\Periodicity\QuarterlyTest;
-use Tests\Support\Calendar\Periodicity\WeeklyTest;
-use Tests\Support\Calendar\Periodicity\YearlyTest;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
+use Tests\unit\Support\Calendar\Periodicity\BimonthlyTest;
+use Tests\unit\Support\Calendar\Periodicity\DailyTest;
+use Tests\unit\Support\Calendar\Periodicity\FortnightlyTest;
+use Tests\unit\Support\Calendar\Periodicity\HalfYearlyTest;
+use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
+use Tests\unit\Support\Calendar\Periodicity\MonthlyTest;
+use Tests\unit\Support\Calendar\Periodicity\QuarterlyTest;
+use Tests\unit\Support\Calendar\Periodicity\WeeklyTest;
+use Tests\unit\Support\Calendar\Periodicity\YearlyTest;
 
+/**
+ * @group unit-test
+ * @group support
+ * @group calendar
+ * @group calculator
+ */
 class CalculatorTest extends TestCase
 {
     private static function convert(Periodicity $periodicity, array $intervals): array

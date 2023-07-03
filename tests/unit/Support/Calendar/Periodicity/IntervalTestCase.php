@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Support\Calendar\Periodicity;
+namespace Tests\unit\Support\Calendar\Periodicity;
 
 use FireflyIII\Support\Calendar\Periodicity\Interval;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 abstract class IntervalTestCase extends TestCase
 {

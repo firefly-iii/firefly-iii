@@ -1,7 +1,7 @@
 <?php
-/*
- * CollectsValues.php
- * Copyright (c) 2020 james@firefly-iii.org
+
+/**
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,22 +19,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tests\unit\Support\Calendar\Periodicity;
 
-namespace Tests\Traits;
+use Carbon\Carbon;
 
-use FireflyIII\User;
-
-/**
- * Trait CollectsValues
- */
-trait CollectsValues
+readonly class IntervalProvider
 {
-    /**
-     * @return User
-     */
-    public function user(): User
+    public Carbon $epoch;
+    public Carbon $expected;
+    public string $label;
+
+    public function __construct(Carbon $epoch, Carbon $expected)
     {
-        return User::where('email', 'james@firefly')->first();
+        $this->epoch    = $epoch;
+        $this->expected = $expected;
+        $this->label    = "given {$epoch->toDateString()} expects {$expected->toDateString()}";
     }
 }

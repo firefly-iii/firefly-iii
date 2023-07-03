@@ -1,7 +1,7 @@
 <?php
-
-/**
- * Copyright (c) 2023 james@firefly-iii.org
+/*
+ * CollectsValues.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,24 +19,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Support\Calendar\Periodicity;
+declare(strict_types=1);
 
-use Carbon\Carbon;
-use FireflyIII\Support\Calendar\Periodicity;
-use FireflyIII\Support\Calendar\Periodicity\Interval;
+namespace Tests\integration\Traits;
 
-class DailyTest extends IntervalTestCase
+use FireflyIII\User;
+
+/**
+ * Trait CollectsValues
+ */
+trait CollectsValues
 {
-    public static function factory(): Interval
+    /**
+     * @return User
+     */
+    public function user(): User
     {
-        return new Periodicity\Daily();
-    }
-
-    public static function provideIntervals(): array
-    {
-        return [
-            new IntervalProvider(Carbon::now(), Carbon::tomorrow()),
-            new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-01')),
-        ];
+        return User::where('email', 'james@firefly')->first();
     }
 }

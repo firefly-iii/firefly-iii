@@ -21,8 +21,11 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="vendor/autoload.php" colors="true" stopOnFailure="true" processIsolation="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
   <coverage/>
   <testsuites>
-    <testsuite name="Api">
-      <directory suffix="Test.php">./tests</directory>
+    <testsuite name="unit">
+      <directory suffix="Test.php">./tests/unit</directory>
+    </testsuite>
+    <testsuite name="integration">
+      <directory suffix="Test.php">./tests/integration</directory>
     </testsuite>
   </testsuites>
   <php>

@@ -19,12 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Support\Calendar\Periodicity;
+namespace Tests\unit\Support\Calendar\Periodicity;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Calendar\Periodicity\Interval;
 
+/**
+ * @group unit-test
+ * @group support
+ * @group calendar
+ * @group periodicity
+ */
 class BimonthlyTest extends IntervalTestCase
 {
     public static function factory(): Interval

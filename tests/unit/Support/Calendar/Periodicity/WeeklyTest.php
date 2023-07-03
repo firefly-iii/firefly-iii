@@ -1,8 +1,7 @@
 <?php
 
 /**
- * TestCase.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,36 +18,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\unit\Support\Calendar\Periodicity;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Tests\Traits\CollectsValues;
+use Carbon\Carbon;
+use FireflyIII\Support\Calendar\Periodicity;
+use FireflyIII\Support\Calendar\Periodicity\Interval;
 
 /**
- * Class TestCase
+ * @group unit-test
+ * @group support
+ * @group calendar
+ * @group periodicity
  */
-abstract class TestCase extends BaseTestCase
+class WeeklyTest extends IntervalTestCase
 {
-    use CreatesApplication;
-    use CollectsValues;
+    public static function factory(): Interval
+    {
+        return new Periodicity\Weekly();
+    }
 
-    protected const MAX_ITERATIONS = 2;
-
-    /**
-     * @return array
-     */
-    public function dateRangeProvider(): array
+    public static function provideIntervals(): array
     {
         return [
-            'one day'      => ['1D'],
-            'one week'     => ['1W'],
-            'one month'    => ['1M'],
-            'three months' => ['3M'],
-            'six months'   => ['6M'],
-            'one year'     => ['1Y'],
-            'custom range' => ['custom'],
+            new IntervalProvider(Carbon::now(), Carbon::now()->addWeek()),
+            new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-07')),
         ];
     }
 }

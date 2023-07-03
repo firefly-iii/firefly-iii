@@ -19,11 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Support\Calendar;
+namespace Tests\unit\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
-use Tests\Support\Calendar\Periodicity\IntervalProvider;
+use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 
 readonly class CalculatorProvider
 {

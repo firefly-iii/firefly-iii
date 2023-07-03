@@ -1,12 +1,17 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\unit\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Navigation;
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @group unit-test
+ * @group support
+ * @group navigation
+ */
 class NavigationTest extends TestCase
 {
     private Navigation $navigation;

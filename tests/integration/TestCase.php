@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Copyright (c) 2023 james@firefly-iii.org
+ * TestCase.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,26 +19,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
-namespace Tests\Support\Calendar\Periodicity;
+namespace Tests\integration;
 
-use Carbon\Carbon;
-use FireflyIII\Support\Calendar\Periodicity;
-use FireflyIII\Support\Calendar\Periodicity\Interval;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\integration\Traits\CollectsValues;
 
-class YearlyTest extends IntervalTestCase
+/**
+ * Class TestCase
+ */
+abstract class TestCase extends BaseTestCase
 {
-    public static function factory(): Interval
-    {
-        return new Periodicity\Yearly();
-    }
+    use CreatesApplication;
+    use CollectsValues;
 
-    public static function provideIntervals(): array
+    protected const MAX_ITERATIONS = 2;
+
+    /**
+     * @return array
+     */
+    public function dateRangeProvider(): array
     {
         return [
-            new IntervalProvider(Carbon::now(), Carbon::now()->addYears(1)),
-            new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2020-01-29')),
-            new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')),
+            'one day'      => ['1D'],
+            'one week'     => ['1W'],
+            'one month'    => ['1M'],
+            'three months' => ['3M'],
+            'six months'   => ['6M'],
+            'one year'     => ['1Y'],
+            'custom range' => ['custom'],
         ];
     }
 }

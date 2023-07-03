@@ -19,20 +19,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Support\Calendar\Periodicity;
+namespace Tests\unit\Support\Calendar\Periodicity;
 
 use Carbon\Carbon;
+use FireflyIII\Support\Calendar\Periodicity;
+use FireflyIII\Support\Calendar\Periodicity\Interval;
 
-readonly class IntervalProvider
+/**
+ * @group unit-test
+ * @group support
+ * @group calendar
+ * @group periodicity
+ */
+class FortnightlyTest extends IntervalTestCase
 {
-    public Carbon $epoch;
-    public Carbon $expected;
-    public string $label;
-
-    public function __construct(Carbon $epoch, Carbon $expected)
+    public static function factory(): Interval
     {
-        $this->epoch    = $epoch;
-        $this->expected = $expected;
-        $this->label    = "given {$epoch->toDateString()} expects {$expected->toDateString()}";
+        return new Periodicity\Fortnightly();
+    }
+
+    public static function provideIntervals(): array
+    {
+        return [
+            new IntervalProvider(Carbon::now(), Carbon::now()->addWeeks(2)),
+            new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-14')),
+        ];
     }
 }
