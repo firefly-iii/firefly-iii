@@ -84,6 +84,17 @@ readonly class CalculatorProvider
             CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-10-30'), Carbon::parse('2024-02-29')), 3),
             CalculatorProvider::from(Periodicity::Monthly, new IntervalProvider(Carbon::parse('2023-10-31'), Carbon::parse('2024-02-29')), 3),
 
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(6)), 2),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-29'), Carbon::parse('2020-02-29')), 2),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-30'), Carbon::parse('2020-02-29')), 2),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-08-31'), Carbon::parse('2020-02-29')), 2),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-10-30'), Carbon::parse('2020-02-29')), 1),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2019-10-31'), Carbon::parse('2020-02-29')), 1),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')), 5),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-29'), Carbon::parse('2021-02-28')), 2),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2021-02-28')), 2),
+            CalculatorProvider::from(Periodicity::Bimonthly, new IntervalProvider(Carbon::parse('2020-08-31'), Carbon::parse('2021-02-28')), 2),
+
             CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(9)), 2),
             CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2019-05-29'), Carbon::parse('2020-02-29')), 2),
             CalculatorProvider::from(Periodicity::Quarterly, new IntervalProvider(Carbon::parse('2019-05-30'), Carbon::parse('2020-02-29')), 2),

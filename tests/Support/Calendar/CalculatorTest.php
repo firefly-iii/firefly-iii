@@ -27,6 +27,7 @@ use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Navigation;
+use Tests\Support\Calendar\Periodicity\BimonthlyTest;
 use Tests\Support\Calendar\Periodicity\DailyTest;
 use Tests\Support\Calendar\Periodicity\FortnightlyTest;
 use Tests\Support\Calendar\Periodicity\HalfYearlyTest;
@@ -58,6 +59,7 @@ class CalculatorTest extends TestCase
         $intervals = array_merge($intervals, self::convert(Periodicity::Weekly, WeeklyTest::provideIntervals()));
         $intervals = array_merge($intervals, self::convert(Periodicity::Fortnightly, FortnightlyTest::provideIntervals()));
         $intervals = array_merge($intervals, self::convert(Periodicity::Monthly, MonthlyTest::provideIntervals()));
+        $intervals = array_merge($intervals, self::convert(Periodicity::Bimonthly, BimonthlyTest::provideIntervals()));
         $intervals = array_merge($intervals, self::convert(Periodicity::Quarterly, QuarterlyTest::provideIntervals()));
         $intervals = array_merge($intervals, self::convert(Periodicity::HalfYearly, HalfYearlyTest::provideIntervals()));
         $intervals = array_merge($intervals, self::convert(Periodicity::Yearly, YearlyTest::provideIntervals()));

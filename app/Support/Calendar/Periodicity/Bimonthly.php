@@ -19,16 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Support\Calendar;
+namespace FireflyIII\Support\Calendar\Periodicity;
 
-enum Periodicity
+final class Bimonthly extends Monthly
 {
-    case Daily;
-    case Weekly;
-    case Fortnightly;
-    case Monthly;
-    case Bimonthly;
-    case Quarterly;
-    case HalfYearly;
-    case Yearly;
+    const INTERVAL = 2;
 }
