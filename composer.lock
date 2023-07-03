@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "465c0d697f7aa0cd9fd705d97ba32522",
+    "content-hash": "99f0c0e3a4fbdd439e03623e5cd9ba38",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3876,16 +3876,16 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v7.6.0",
+            "version": "v7.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "87faf7bc1c42d7fef7c60ec5c143050ce2a6189a"
+                "reference": "69a07197d055456d29911116fca3bc2c985f524b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/87faf7bc1c42d7fef7c60ec5c143050ce2a6189a",
-                "reference": "87faf7bc1c42d7fef7c60ec5c143050ce2a6189a",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/69a07197d055456d29911116fca3bc2c985f524b",
+                "reference": "69a07197d055456d29911116fca3bc2c985f524b",
                 "shasum": ""
             },
             "require": {
@@ -3898,18 +3898,18 @@
                 "phpunit/phpunit": "<10.1.2"
             },
             "require-dev": {
-                "brianium/paratest": "^7.2.0",
-                "laravel/framework": "^10.13.5",
-                "laravel/pint": "^1.10.2",
-                "laravel/sail": "^1.22.0",
+                "brianium/paratest": "^7.2.2",
+                "laravel/framework": "^10.14.1",
+                "laravel/pint": "^1.10.3",
+                "laravel/sail": "^1.23.0",
                 "laravel/sanctum": "^3.2.5",
                 "laravel/tinker": "^2.8.1",
                 "nunomaduro/larastan": "^2.6.3",
-                "orchestra/testbench-core": "^8.5.7",
-                "pestphp/pest": "^2",
+                "orchestra/testbench-core": "^8.5.8",
+                "pestphp/pest": "^2.8.1",
                 "phpunit/phpunit": "^10.2.2",
                 "sebastian/environment": "^6.0.1",
-                "spatie/laravel-ignition": "^2.1.3"
+                "spatie/laravel-ignition": "^2.2.0"
             },
             "type": "library",
             "extra": {
@@ -3968,7 +3968,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-06-15T10:51:08+00:00"
+            "time": "2023-06-29T09:10:16+00:00"
         },
         {
             "name": "nunomaduro/termwind",
