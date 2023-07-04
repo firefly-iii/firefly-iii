@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
@@ -28,7 +30,7 @@ abstract class IntervalTestCase extends TestCase
 {
     abstract public static function factory(): Interval;
 
-    public abstract static function provideIntervals(): array;
+    abstract public static function provideIntervals(): array;
 
     public static function provider(): \Generator
     {

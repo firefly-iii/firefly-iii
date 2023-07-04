@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
@@ -21,10 +23,17 @@
 
 namespace FireflyIII\Support\Calendar\Periodicity;
 
+/**
+ * Class Interval
+ */
 abstract class Interval implements Interspacable
 {
-    const INTERVAL = 1;
+    public const INTERVAL = 1;
 
+    /**
+     * @param int $skip
+     * @return int
+     */
     public function skip(int $skip): int
     {
         return static::INTERVAL * $skip;

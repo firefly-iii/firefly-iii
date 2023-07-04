@@ -40,6 +40,9 @@ class Navigation
 {
     private Calculator $calculator;
 
+    /**
+     * @param Calculator|null $calculator
+     */
     public function __construct(Calculator $calculator = null)
     {
         $this->calculator = ($calculator instanceof Calculator) ?: new Calculator();

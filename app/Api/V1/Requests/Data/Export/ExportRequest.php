@@ -38,6 +38,9 @@ class ExportRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    /**
+     * @return array
+     */
     public function getAll(): array
     {
         $result     = [

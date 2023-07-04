@@ -60,7 +60,6 @@ class MigrateRecurrenceMeta extends Command
      *
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws JsonException
      * @throws NotFoundExceptionInterface
      */

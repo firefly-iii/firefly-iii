@@ -138,7 +138,6 @@ class ConfigurationController extends Controller
      *
      * @return JsonResponse
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
     public function show(string $configKey): JsonResponse

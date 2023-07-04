@@ -399,7 +399,13 @@ trait AccountServiceTrait
      * Create the opposing "credit liability" transaction for credit liabilities.
      *
      *
+     * @param Account $account
+     * @param string $direction
+     * @param string $openingBalance
+     * @param Carbon $openingBalanceDate
+     * @return TransactionGroup
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
@@ -606,11 +612,12 @@ trait AccountServiceTrait
      * Since opening balance and date can still be empty strings, it may fail.
      *
      * @param Account $account
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
+     * @param string $openingBalance
+     * @param Carbon $openingBalanceDate
      *
      * @return TransactionGroup
      * @throws FireflyException
+     * @throws JsonException
      */
     protected function updateOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {

@@ -32,6 +32,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class ForceMigration
+ */
 class ForceMigration extends Command
 {
     use ShowsFriendlyMessages;
@@ -79,6 +82,9 @@ class ForceMigration extends Command
         return 0;
     }
 
+    /**
+     * @return void
+     */
     private function forceMigration(): void
     {
         DB::commit();

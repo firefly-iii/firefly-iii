@@ -42,11 +42,12 @@ class GroupUpdateService
      * Update a transaction group.
      *
      * @param TransactionGroup $transactionGroup
-     * @param array            $data
+     * @param array $data
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
      * @throws FireflyException
+     * @throws JsonException
      */
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
     {

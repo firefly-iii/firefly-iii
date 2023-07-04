@@ -34,6 +34,9 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
+/**
+ * Class UpdateController
+ */
 class UpdateController extends Controller
 {
     private JournalRepositoryInterface  $journalRepository;

@@ -26,6 +26,9 @@ namespace FireflyIII\Events;
 
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class NewVersionAvailable
+ */
 class NewVersionAvailable extends Event
 {
     use SerializesModels;

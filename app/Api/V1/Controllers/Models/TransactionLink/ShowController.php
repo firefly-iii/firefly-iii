@@ -37,6 +37,9 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
+/**
+ * Class ShowController
+ */
 class ShowController extends Controller
 {
     private LinkTypeRepositoryInterface $repository;

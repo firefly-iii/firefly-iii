@@ -480,6 +480,7 @@ class GroupCollector implements GroupCollectorInterface
      * Return the groups.
      *
      * @return Collection
+     * @throws FireflyException
      */
     public function getGroups(): Collection
     {

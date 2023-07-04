@@ -48,7 +48,6 @@ class FiscalHelper implements FiscalHelperInterface
      * @param Carbon $date
      *
      * @return Carbon date object
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

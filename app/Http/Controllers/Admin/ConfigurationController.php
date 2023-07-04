@@ -63,7 +63,6 @@ class ConfigurationController extends Controller
      * Show configuration index.
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
@@ -21,6 +23,9 @@
 
 namespace FireflyIII\Support\Calendar;
 
+/**
+ * Class Periodicity
+ */
 enum Periodicity
 {
     case Daily;

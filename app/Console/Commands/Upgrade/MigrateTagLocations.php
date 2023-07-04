@@ -58,7 +58,6 @@ class MigrateTagLocations extends Command
      *
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
     public function handle(): int
@@ -89,6 +88,9 @@ class MigrateTagLocations extends Command
         return false;
     }
 
+    /**
+     * @return void
+     */
     private function migrateTagLocations(): void
     {
         $tags = Tag::get();

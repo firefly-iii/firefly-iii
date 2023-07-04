@@ -31,6 +31,9 @@ use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Class AppendBudgetLimitPeriods
+ */
 class AppendBudgetLimitPeriods extends Command
 {
     use ShowsFriendlyMessages;
@@ -54,7 +57,6 @@ class AppendBudgetLimitPeriods extends Command
      *
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
     public function handle(): int

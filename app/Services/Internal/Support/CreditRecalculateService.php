@@ -34,6 +34,9 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class CreditRecalculateService
+ */
 class CreditRecalculateService
 {
     private ?Account                   $account;
@@ -203,11 +206,10 @@ class CreditRecalculateService
     }
 
     /**
-     * @param Account     $account
-     * @param string      $direction
+     * @param Account $account
+     * @param string $direction
      * @param Transaction $transaction
-     * @param string      $amount
-     *
+     * @param string $leftOfDebt
      * @return string
      */
     private function processTransaction(Account $account, string $direction, Transaction $transaction, string $leftOfDebt): string

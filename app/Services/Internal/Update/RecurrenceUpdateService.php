@@ -211,7 +211,9 @@ class RecurrenceUpdateService
      * TODO this method is very complex.
      *
      * @param Recurrence $recurrence
-     * @param array      $transactions
+     * @param array $transactions
+     * @throws FireflyException
+     * @throws \JsonException
      */
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {

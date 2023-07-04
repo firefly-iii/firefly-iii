@@ -41,7 +41,6 @@ class APIEventHandler
      *
      * @param AccessTokenCreated $event
      *
-     * @throws FireflyException
      */
     public function accessTokenCreated(AccessTokenCreated $event): void
     {

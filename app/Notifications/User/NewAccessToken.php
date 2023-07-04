@@ -29,6 +29,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Class NewAccessToken
+ */
 class NewAccessToken extends Notification
 {
     use Queueable;

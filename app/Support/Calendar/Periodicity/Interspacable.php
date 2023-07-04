@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
@@ -23,7 +25,15 @@ namespace FireflyIII\Support\Calendar\Periodicity;
 
 use Carbon\Carbon;
 
+/**
+ * Interface Interspacable
+ */
 interface Interspacable
 {
+    /**
+     * @param Carbon $date
+     * @param int $interval
+     * @return Carbon
+     */
     public function nextDate(Carbon $date, int $interval = 1): Carbon;
 }

@@ -89,7 +89,7 @@ class UserController extends Controller
 
     /**
      * @param InvitedUser $invitedUser
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
     {

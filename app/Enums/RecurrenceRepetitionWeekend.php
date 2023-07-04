@@ -24,6 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Enums;
 
+/**
+ * Class RecurrenceRepetitionWeekend
+ */
 enum RecurrenceRepetitionWeekend: int
 {
     case WEEKEND_DO_NOTHING    = 1;

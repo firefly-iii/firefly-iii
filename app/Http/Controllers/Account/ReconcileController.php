@@ -155,12 +155,13 @@ class ReconcileController extends Controller
      * Submit a new reconciliation.
      *
      * @param ReconciliationStoreRequest $request
-     * @param Account                    $account
-     * @param Carbon                     $start
-     * @param Carbon                     $end
+     * @param Account $account
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return RedirectResponse|Redirector
      * @throws DuplicateTransactionException
+     * @throws JsonException
      */
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {

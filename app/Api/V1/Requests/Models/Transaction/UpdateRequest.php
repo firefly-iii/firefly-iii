@@ -59,6 +59,7 @@ class UpdateRequest extends FormRequest
      * Get all data. Is pretty complex because of all the ??-statements.
      *
      * @return array
+     * @throws FireflyException
      */
     public function getAll(): array
     {
@@ -152,6 +153,7 @@ class UpdateRequest extends FormRequest
      * Get transaction data.
      *
      * @return array
+     * @throws FireflyException
      */
     private function getTransactionData(): array
     {

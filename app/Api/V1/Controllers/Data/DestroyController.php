@@ -279,6 +279,9 @@ class DestroyController extends Controller
         $tagRepository->destroyAll();
     }
 
+    /**
+     * @return void
+     */
     private function destroyObjectGroups(): void
     {
         /** @var ObjectGroupRepositoryInterface $repository */

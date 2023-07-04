@@ -29,6 +29,8 @@ use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ExportController
@@ -74,6 +76,8 @@ class ExportController extends Controller
      *
      * @return LaravelResponse
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function returnExport(string $key): LaravelResponse
     {

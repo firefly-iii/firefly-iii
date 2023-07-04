@@ -29,6 +29,9 @@ class TriggerCreditCalculation extends Command
         return 0;
     }
 
+    /**
+     * @return void
+     */
     private function processAccounts(): void
     {
         $accounts = Account::leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')

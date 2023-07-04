@@ -28,6 +28,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * Class UserRegistration
+ */
 class UserRegistration extends Notification
 {
     use Queueable;

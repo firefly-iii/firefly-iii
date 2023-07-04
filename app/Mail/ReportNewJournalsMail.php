@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Mail;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Bus\Queueable;
@@ -69,6 +70,10 @@ class ReportNewJournalsMail extends Mailable
             ->subject((string)trans_choice('email.new_journals_subject', $this->groups->count()));
     }
 
+    /**
+     * @return void
+     * @throws FireflyException
+     */
     private function transform(): void
     {
         /** @var TransactionGroupTransformer $transformer */

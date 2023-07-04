@@ -406,6 +406,9 @@ class General extends AbstractExtension
         );
     }
 
+    /**
+     * @return TwigFunction
+     */
     protected function getRootSearchOperator(): TwigFunction
     {
         return new TwigFunction(

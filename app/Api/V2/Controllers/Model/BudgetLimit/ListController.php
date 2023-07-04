@@ -32,6 +32,9 @@ use FireflyIII\Transformers\V2\BudgetLimitTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * Class ListController
+ */
 class ListController extends Controller
 {
     private BudgetLimitRepositoryInterface $repository;

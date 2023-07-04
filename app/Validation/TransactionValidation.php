@@ -347,8 +347,9 @@ trait TransactionValidation
     /**
      * Validates the given account information. Switches on given transaction type.
      *
-     * @param Validator        $validator
+     * @param Validator $validator
      * @param TransactionGroup $transactionGroup
+     * @throws FireflyException
      */
     public function validateAccountInformationUpdate(Validator $validator, TransactionGroup $transactionGroup): void
     {

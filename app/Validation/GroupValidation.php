@@ -38,6 +38,7 @@ trait GroupValidation
 {
     /**
      * @param Validator $validator
+     * @throws FireflyException
      */
     protected function preventNoAccountInfo(Validator $validator): void
     {

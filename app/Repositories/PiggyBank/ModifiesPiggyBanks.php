@@ -43,6 +43,12 @@ trait ModifiesPiggyBanks
 {
     use CreatesObjectGroups;
 
+    /**
+     * @param PiggyBankRepetition $repetition
+     * @param string $amount
+     * @param TransactionJournal $journal
+     * @return void
+     */
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
     {
         Log::debug(sprintf('addAmountToRepetition: %s', $amount));
@@ -56,6 +62,12 @@ trait ModifiesPiggyBanks
         }
     }
 
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string $amount
+     * @param TransactionJournal|null $journal
+     * @return bool
+     */
     public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
         $repetition = $this->getRepetition($piggyBank);

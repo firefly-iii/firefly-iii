@@ -30,6 +30,9 @@ use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Class DestroyController
+ */
 class DestroyController extends Controller
 {
     private LinkTypeRepositoryInterface $repository;

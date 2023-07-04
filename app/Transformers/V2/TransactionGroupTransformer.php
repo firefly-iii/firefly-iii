@@ -117,6 +117,10 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $return;
     }
 
+    /**
+     * @param array $transaction
+     * @return array
+     */
     private function transformTransaction(array $transaction): array
     {
         $transaction         = new NullArrayObject($transaction);

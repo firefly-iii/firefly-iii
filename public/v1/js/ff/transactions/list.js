@@ -66,6 +66,7 @@ function goToMassEdit() {
     if (bases.length > 0) {
         baseHref = bases[0].href;
     }
+    console.log('baseHref for mass edit is "' + baseHref + '".');
 
     window.location.href = baseHref + 'transactions/mass/edit/' + checkedArray;
     return false;
@@ -86,6 +87,7 @@ function goToBulkEdit() {
     if (bases.length > 0) {
         baseHref = bases[0].href;
     }
+    console.log('baseHref for bulk edit is "' + baseHref + '".');
 
     window.location.href = baseHref + 'transactions/bulk/edit/' + checkedArray;
     return false;

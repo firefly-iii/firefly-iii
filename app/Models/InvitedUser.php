@@ -71,8 +71,7 @@ class InvitedUser extends Model
      *
      * @param string $value
      *
-     * @return WebhookAttempt
-     * @throws NotFoundHttpException
+     * @return InvitedUser
      */
     public static function routeBinder(string $value): InvitedUser
     {

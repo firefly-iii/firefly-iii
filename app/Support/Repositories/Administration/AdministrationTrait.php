@@ -58,6 +58,7 @@ trait AdministrationTrait
 
     /**
      * @return void
+     * @throws FireflyException
      */
     private function refreshAdministration(): void
     {
@@ -74,6 +75,10 @@ trait AdministrationTrait
         throw new FireflyException(sprintf('Cannot validate administration for user #%d', $this->user->id));
     }
 
+    /**
+     * @param Authenticatable|User|null $user
+     * @return void
+     */
     public function setUser(Authenticatable | User | null $user): void
     {
         if (null !== $user) {

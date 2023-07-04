@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\unit\Support;
 
 use Carbon\Carbon;

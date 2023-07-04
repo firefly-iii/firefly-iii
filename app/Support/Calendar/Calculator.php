@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Copyright (c) 2023 Antonio Spinelli https://github.com/tonicospinelli
  *
@@ -24,12 +26,18 @@ namespace FireflyIII\Support\Calendar;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Exceptions\IntervalException;
 
+/**
+ * Class Calculator
+ */
 class Calculator
 {
-    const DEFAULT_INTERVAL = 1;
+    public const DEFAULT_INTERVAL = 1;
     private static array $intervals = [];
     private static ?\SplObjectStorage $intervalMap = null;
 
+    /**
+     * @return \SplObjectStorage
+     */
     private static function loadIntervalMap(): \SplObjectStorage
     {
         if (self::$intervalMap != null) {
@@ -44,16 +52,28 @@ class Calculator
         return self::$intervalMap;
     }
 
+    /**
+     * @param Periodicity $periodicity
+     * @return bool
+     */
     private static function containsInterval(Periodicity $periodicity): bool
     {
         return self::loadIntervalMap()->contains($periodicity);
     }
 
+    /**
+     * @param Periodicity $periodicity
+     * @return bool
+     */
     public function isAvailablePeriodicity(Periodicity $periodicity): bool
     {
         return self::containsInterval($periodicity);
     }
 
+    /**
+     * @param int $skip
+     * @return int
+     */
     private function skipInterval(int $skip): int
     {
         return self::DEFAULT_INTERVAL + $skip;

@@ -873,6 +873,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $newBudget;
     }
 
+    /**
+     * @return int
+     */
     public function getMaxOrder(): int
     {
         return (int)$this->user->budgets()->max('order');

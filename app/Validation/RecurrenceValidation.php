@@ -167,6 +167,10 @@ trait RecurrenceValidation
         }
     }
 
+    /**
+     * @param Validator $validator
+     * @return void
+     */
     public function validateRecurringConfig(Validator $validator)
     {
         $data        = $validator->getData();
@@ -322,6 +326,7 @@ trait RecurrenceValidation
     }
 
     /**
+     * @param Recurrence $recurrence
      * @param Validator $validator
      * @return void
      */

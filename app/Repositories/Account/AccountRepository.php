@@ -766,10 +766,11 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array   $data
+     * @param array $data
      *
      * @return Account
      * @throws FireflyException
+     * @throws JsonException
      */
     public function update(Account $account, array $data): Account
     {

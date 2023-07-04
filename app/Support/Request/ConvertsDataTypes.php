@@ -210,6 +210,10 @@ trait ConvertsDataTypes
         return false;
     }
 
+    /**
+     * @param string|null $string
+     * @return Carbon|null
+     */
     protected function convertDateTime(?string $string): ?Carbon
     {
         $value = $this->get($string);

@@ -31,6 +31,9 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class UserLogin
+ */
 class UserLogin extends Notification
 {
     use Queueable;
