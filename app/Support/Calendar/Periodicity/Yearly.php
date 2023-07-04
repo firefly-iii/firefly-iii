@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2023 james@firefly-iii.org
+ * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
